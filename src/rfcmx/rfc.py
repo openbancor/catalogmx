@@ -192,7 +192,7 @@ class RFCValidator(RFCGeneral):
                 'homoclave': self.validate_homoclave,
                 # 'checksum': self.validate_checksum,
             }
-        return {name: function() for name, function in validations.iteritems()}
+        return {name: function() for name, function in validations.items()}
 
     def validate(self, strict=True):
         """
@@ -200,7 +200,7 @@ class RFCValidator(RFCGeneral):
         :param strict: If True checksum won't be checked:
         :return: True if the RFC is valid, False if the RFC is invalid.
         """
-        return not (False in [result for name, result in self.validators(strict=strict).iteritems()])
+        return not (False in [result for name, result in self.validators(strict=strict).items()])
 
     is_valid = validate
 
@@ -350,10 +350,6 @@ class RFCValidator(RFCGeneral):
                 return str(residual)
 
 
-class RFCGenerator(object):
-    pass
-
-
 class RFCGeneratorUtils(RFCGeneral):
     vocales = 'AEIOU'
     excluded_words_fisicas = [
@@ -425,6 +421,13 @@ class RFCGeneratorUtils(RFCGeneral):
         'SA DE CV MI',
         'COMPA&ÍA',
         'SRL MI',
+        'CV',
+        'S.A.',
+        'S.A',
+        'C.V.',
+        'C.V',
+        'S.C.',
+        'S.R.L.',
     ]
 
     allowed_chars = list('ABCDEFGHIJKLMNÑOPQRSTUVWXYZ&')
@@ -574,3 +577,190 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
         suma = sum(int(cadena[n:n + 2]) * int(cadena[n + 1]) for n in range(len(cadena) - 1)) % 1000
         resultado = (suma // 34, suma % 34)
         return self.homoclave_assign_table[resultado[0]] + self.homoclave_assign_table[resultado[1]]
+
+
+class RFCGeneratorMorales(RFCGeneratorUtils):
+    """
+    RFC Generator for Persona Moral (Legal Entities/Companies)
+
+    The RFC for a legal entity is composed of:
+    - 3 letters derived from the company name
+    - 6 digits for the incorporation/foundation date (YYMMDD)
+    - 2 alphanumeric characters for homoclave
+    - 1 checksum digit
+    Total: 12 characters
+    """
+
+    def __init__(self, razon_social, fecha):
+        """
+        Initialize RFC Generator for Persona Moral
+
+        :param razon_social: Company name (razón social)
+        :param fecha: Incorporation/foundation date
+        """
+        if (razon_social.strip() and isinstance(fecha, datetime.date)):
+            self.razon_social = razon_social
+            self.fecha = fecha
+            self._rfc = ''
+        else:
+            raise ValueError('Invalid Values: razon_social must be non-empty and fecha must be a date')
+
+    @property
+    def razon_social(self):
+        return self._razon_social
+
+    @razon_social.setter
+    def razon_social(self, name):
+        if isinstance(name, string_types):
+            self._razon_social = name.upper().strip()
+        else:
+            raise ValueError('razon_social must be a string')
+
+    @property
+    def fecha(self):
+        return self._fecha
+
+    @fecha.setter
+    def fecha(self, date):
+        if isinstance(date, datetime.date):
+            self._fecha = date
+        else:
+            raise ValueError('fecha must be a datetime.date')
+
+    @property
+    def rfc(self):
+        """Generate and return the complete RFC"""
+        if not self._rfc:
+            partial_rfc = self.generate_letters() + self.generate_date() + self.homoclave
+            self._rfc = partial_rfc + RFCValidator.calculate_last_digit(partial_rfc, with_checksum=False)
+        return self._rfc
+
+    def generate_date(self):
+        """Generate date portion in YYMMDD format"""
+        return self.fecha.strftime('%y%m%d')
+
+    @property
+    def razon_social_calculo(self):
+        """Clean the company name by removing excluded words and special characters"""
+        # Remove excluded words and convert to uppercase
+        words = self.razon_social.upper().strip().split()
+        filtered_words = []
+
+        for word in words:
+            if word not in self.excluded_words_morales:
+                filtered_words.append(word)
+
+        # Join and clean special characters
+        cleaned = " ".join(filtered_words)
+        result = "".join(
+            char if char in self.allowed_chars else unidecode.unidecode(char)
+            for char in cleaned
+        ).strip().upper()
+
+        return result
+
+    def generate_letters(self):
+        """
+        Generate the 3-letter code from company name
+
+        Rules for Persona Moral:
+        1. First letter of the first word
+        2. First letter of the second word
+        3. First letter of the third word
+
+        If there are fewer than 3 words, special rules apply.
+        """
+        cleaned_name = self.razon_social_calculo
+
+        if not cleaned_name:
+            raise ValueError('Company name is empty after cleaning')
+
+        words = cleaned_name.split()
+
+        if not words:
+            raise ValueError('No valid words in company name')
+
+        clave = []
+
+        if len(words) == 1:
+            # Single word: Use first letter, second letter, third letter
+            word = words[0]
+            clave.append(word[0] if len(word) > 0 else 'X')
+            clave.append(word[1] if len(word) > 1 else 'X')
+            clave.append(word[2] if len(word) > 2 else 'X')
+        elif len(words) == 2:
+            # Two words: First letter of first word, first vowel of first word, first letter of second word
+            clave.append(words[0][0])
+            # Find first vowel in first word after the first letter
+            vowel_found = False
+            for char in words[0][1:]:
+                if char in self.vocales:
+                    clave.append(char)
+                    vowel_found = True
+                    break
+            if not vowel_found:
+                # No vowel in first word, use second letter
+                clave.append(words[0][1] if len(words[0]) > 1 else 'X')
+            # Add first letter of second word
+            clave.append(words[1][0])
+        else:
+            # Three or more words: First letter of each of the first three words
+            clave.append(words[0][0])
+            clave.append(words[1][0])
+            clave.append(words[2][0])
+
+        result = "".join(clave)
+
+        # Check for cacophonic words and replace last character with 'X'
+        if result in self.cacophonic_words:
+            result = result[:-1] + 'X'
+
+        return result
+
+    @property
+    def nombre_completo(self):
+        """Return the complete cleaned company name for homoclave calculation"""
+        return self.razon_social_calculo
+
+    @property
+    def cadena_homoclave(self):
+        """Generate the string used for homoclave calculation"""
+        calc_str = ['0']
+        for character in self.nombre_completo:
+            if character in self.quotient_remaining_table:
+                calc_str.append(self.quotient_remaining_table[character])
+            elif character == ' ':
+                calc_str.append(self.quotient_remaining_table[' '])
+        return "".join(calc_str)
+
+    @property
+    def homoclave(self):
+        """Calculate the 2-character homoclave"""
+        cadena = self.cadena_homoclave
+        suma = sum(int(cadena[n:n + 2]) * int(cadena[n + 1]) for n in range(len(cadena) - 1)) % 1000
+        resultado = (suma // 34, suma % 34)
+        return self.homoclave_assign_table[resultado[0]] + self.homoclave_assign_table[resultado[1]]
+
+
+class RFCGenerator(object):
+    """
+    Factory class to generate RFC for either Persona Física or Persona Moral
+    """
+
+    @staticmethod
+    def generate_fisica(nombre, paterno, materno, fecha):
+        """Generate RFC for Persona Física (Individual)"""
+        return RFCGeneratorFisicas(
+            nombre=nombre,
+            paterno=paterno,
+            materno=materno,
+            fecha=fecha
+        ).rfc
+
+    @staticmethod
+    def generate_moral(razon_social, fecha):
+        """Generate RFC for Persona Moral (Legal Entity/Company)"""
+        return RFCGeneratorMorales(
+            razon_social=razon_social,
+            fecha=fecha
+        ).rfc
