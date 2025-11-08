@@ -81,9 +81,26 @@
 - ✅ c_RiesgoPuesto - 5 risk levels (Class I-V) with IMSS premium ranges
 - ✅ c_Banco - 50 banks for payroll deposits
 
-**Phase 5 - Geographic Catalogs** 🔄
-- ✅ SEPOMEX - Postal codes sample (50/~150,000 codes) with settlement types
-- ✅ INEGI Municipios - Municipalities sample (50/2,469) with INEGI codes
+**Phase 5 - Geographic Catalogs** ✅
+- ✅ SEPOMEX - **273 postal codes** covering all 32 states (capitales + ciudades principales + zonas metropolitanas)
+  - Cubre: CDMX (25+ códigos), Guadalajara (15+), Monterrey (10+), todas las capitales estatales
+  - Para catálogo completo (~150,000): Ver [DESCARGA_CATALOGOS_COMPLETOS.md](DESCARGA_CATALOGOS_COMPLETOS.md)
+- ✅ INEGI Municipios - **209 municipalities** covering all 32 states (todas las capitales + ciudades 100k+)
+  - Cubre: Todas las capitales estatales, principales ciudades por estado
+  - Para catálogo completo (2,469): Ver [DESCARGA_CATALOGOS_COMPLETOS.md](DESCARGA_CATALOGOS_COMPLETOS.md)
+
+#### 📥 Catálogos Completos
+
+Los catálogos actuales son **completos para desarrollo** y cubren todos los casos comunes.
+Para **producción con datos completos** (2,469 municipios, ~150k códigos postales):
+
+**Ver instrucciones detalladas**: [DESCARGA_CATALOGOS_COMPLETOS.md](DESCARGA_CATALOGOS_COMPLETOS.md)
+
+**Opciones**:
+1. 🔄 **Descarga automática**: `python scripts/download_inegi_complete.py` (requiere INEGI API)
+2. 📥 **Descarga manual**: Desde sitios oficiales INEGI/SEPOMEX
+3. 🗃️ **SQLite** (recomendado para ~150k registros): `python scripts/create_sepomex_sqlite.py`
+4. 🌐 **Open Source**: Repositorios community-maintained en GitHub
 
 #### 🚧 Coming Soon (Future Phases)
 
