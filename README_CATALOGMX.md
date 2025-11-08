@@ -53,6 +53,9 @@
   - c_TasaOCuota - Tax rates
   - c_Moneda - Currencies
   - c_Pais - Countries
+  - **Comercio Exterior** (Foreign Trade)
+    - c_Estado (for USA/Canada) - US States & Canadian Provinces (ISO 3166-2)
+    - Required for CFDI with foreign trade supplement
 
 - **INEGI Complete** (Phase 3)
   - 2,469 Municipalities
@@ -64,6 +67,15 @@
   - c_ClaveUnidad - ~3,000 unit codes
   - Nomina catalogs (payroll)
   - Código Agrupador (accounting)
+  - **Carta Porte 3.0** (Transportation)
+    - c_Estaciones - Transport stations (bus, train, maritime, air)
+    - c_CodigoTransporteAereo - Airports (IATA/ICAO codes)
+    - c_NumAutorizacionNaviero - Seaports and maritime authorization
+    - c_Carreteras - SCT highway catalog (Guardia Nacional)
+    - c_TipoPermiso - SCT transport permit types
+    - c_ConfigAutotransporte - Vehicle configurations
+    - c_TipoEmbalaje - Packaging types
+    - c_MaterialPeligroso - Hazardous materials
 
 - **SEPOMEX** (Phase 4)
   - ~150,000 postal codes
@@ -74,6 +86,18 @@
   - LADA codes
   - Phone number validation
   - Geographic numbering zones
+
+- **Banxico Financial Data** (Phase 5)
+  - **Historical Interest Rates** (via SIE API)
+    - TIIE (Tasa de Interés Interbancaria de Equilibrio)
+      - 28 days, 91 days, 182 days
+    - CETES (Certificados de la Tesorería)
+      - 28, 91, 182, 364 days
+    - Tasa Objetivo (Target Rate) - Banco de México
+    - Historical data via Banxico SIE REST API
+    - Series codes: SF60648 (TIIE 28d), SF60633 (CETES 28d), SF61745 (Target rate)
+  - Exchange rates (FIX) - Already in Phase 1 planning
+  - Bank holidays - Already in Phase 1 planning
 
 ---
 
@@ -267,6 +291,11 @@ catalogmx/
 - [ ] c_TasaOCuota
 - [ ] c_Moneda
 - [ ] c_Pais
+- [ ] c_TipoRelacion
+- [ ] c_Exportacion
+- [ ] c_ObjetoImp
+- [ ] **Comercio Exterior**
+  - [ ] c_Estado (US States & Canadian Provinces for foreign trade)
 
 ### 📋 Phase 3: INEGI Complete
 - [ ] 2,469 Municipalities
@@ -277,12 +306,36 @@ catalogmx/
 - [ ] c_ClaveProdServ (52k records - SQLite)
 - [ ] c_ClaveUnidad (3k records)
 - [ ] Nomina catalogs
-- [ ] Código Agrupador
+  - [ ] c_TipoContrato
+  - [ ] c_TipoJornada
+  - [ ] c_TipoPercepcion (50+ income types)
+  - [ ] c_TipoDeduccion (20+ deduction types)
+  - [ ] c_TipoRegimen
+  - [ ] c_PeriodicidadPago
+- [ ] Código Agrupador (accounting grouping code)
+- [ ] **Carta Porte 3.0**
+  - [ ] c_Estaciones (transport stations)
+  - [ ] c_CodigoTransporteAereo (airports - IATA/ICAO)
+  - [ ] c_NumAutorizacionNaviero (seaports)
+  - [ ] c_Carreteras (SCT federal highways)
+  - [ ] c_TipoPermiso (SCT permits)
+  - [ ] c_ConfigAutotransporte (vehicle config)
+  - [ ] c_TipoEmbalaje (packaging)
+  - [ ] c_MaterialPeligroso (hazmat)
 
 ### 📋 Phase 5: Complementos
 - [ ] SEPOMEX postal codes (150k - SQLite)
 - [ ] IFT telephony catalogs
+  - [ ] LADA codes
+  - [ ] Phone number validator
+  - [ ] Geographic zones
 - [ ] CONDUSEF financial products
+- [ ] **Banxico SIE API - Historical Financial Data**
+  - [ ] TIIE (28d, 91d, 182d)
+  - [ ] CETES (28d, 91d, 182d, 364d)
+  - [ ] Tasa Objetivo (Banxico target rate)
+  - [ ] Exchange rates (FIX) historical
+  - [ ] Bank holidays
 - [ ] UMA historical values
 - [ ] Minimum wage historical
 
@@ -332,11 +385,24 @@ npm test
 
 All catalog data comes from official Mexican government sources:
 
-- **SAT**: [Anexo 20 - CFDI 4.0](http://omawww.sat.gob.mx/tramitesyservicios/Paginas/anexo_20_version3-3.htm)
-- **Banxico**: [SPEI Participants](https://www.banxico.org.mx/cep-scl/listaInstituciones.do)
-- **INEGI**: [Marco Geoestadístico](https://www.inegi.org.mx/servicios/catalogounico.html)
-- **SEPOMEX**: [Código Postal](https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/CodigoPostal_Exportar.aspx)
-- **IFT**: [Plan de Numeración](https://sns.ift.org.mx:8081/sns-frontend/planes-numeracion/descarga-publica.xhtml)
+- **SAT**:
+  - [Anexo 20 - CFDI 4.0](http://omawww.sat.gob.mx/tramitesyservicios/Paginas/anexo_20_version3-3.htm)
+  - [Carta Porte 3.0 Catalogs](http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/CatalogosCartaPorte30.xls)
+  - [Comercio Exterior Catalogs](http://omawww.sat.gob.mx/tramitesyservicios/Paginas/catalogos_emision_cfdi_complemento_ce.htm)
+- **Banxico**:
+  - [SPEI Participants](https://www.banxico.org.mx/cep-scl/listaInstituciones.do)
+  - [SIE API - Economic Information System](https://www.banxico.org.mx/SieAPIRest/)
+  - [Historical Interest Rates](https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=18&accion=consultarCuadroAnalitico&idCuadro=CA51)
+- **INEGI**:
+  - [Marco Geoestadístico](https://www.inegi.org.mx/servicios/catalogounico.html)
+  - [Web Service API](https://www.inegi.org.mx/servicios/catalogounico.html)
+- **SEPOMEX**:
+  - [Código Postal](https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/CodigoPostal_Exportar.aspx)
+- **IFT**:
+  - [Plan de Numeración](https://sns.ift.org.mx:8081/sns-frontend/planes-numeracion/descarga-publica.xhtml)
+- **SCT**:
+  - [Federal Highways Information](https://www.sct.gob.mx/carreteras/)
+  - [Highway Catalog - Guardia Nacional](https://www.gob.mx/guardianacional/documentos/catalogo-de-carreteras-y-tramos-competencia-de-las-coordinaciones-estatales-de-la-guardia-nacional)
 
 ---
 
