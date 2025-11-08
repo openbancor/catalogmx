@@ -1,5 +1,5 @@
-"""
-catalogmx.catalogs.inegi - Catálogos del INEGI
-"""
+"""Catálogos INEGI"""
 
-__all__ = []
+from .municipios import MunicipiosCatalog
+
+__all__ = ['MunicipiosCatalog']

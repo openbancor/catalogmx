@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "catalog": "c_PeriodicidadPago",
+    "version": "Nómina_1.2",
+    "source": "SAT - Complemento de Nómina 1.2",
+    "description": "Periodicidad de pago de nómina",
+    "last_updated": "2025-11-08",
+    "total_records": 10
+  },
+  "periodicidades": [
+    {"code": "01", "description": "Diario", "days": 1},
+    {"code": "02", "description": "Semanal", "days": 7},
+    {"code": "03", "description": "Catorcenal", "days": 14},
+    {"code": "04", "description": "Quincenal", "days": 15},
+    {"code": "05", "description": "Mensual", "days": 30},
+    {"code": "06", "description": "Bimestral", "days": 60},
+    {"code": "07", "description": "Unidad obra", "days": null},
+    {"code": "08", "description": "Comisión", "days": null},
+    {"code": "09", "description": "Precio alzado", "days": null},
+    {"code": "99", "description": "Otra periodicidad", "days": null}
+  ]
+}

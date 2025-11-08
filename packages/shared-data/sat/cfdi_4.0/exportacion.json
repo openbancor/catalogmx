@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "catalog": "c_Exportacion",
+    "version": "CFDI_4.0",
+    "source": "SAT - Anexo 20",
+    "description": "Clave de exportación",
+    "last_updated": "2025-11-08",
+    "total_records": 4
+  },
+  "exportaciones": [
+    {"code": "01", "description": "No aplica"},
+    {"code": "02", "description": "Definitiva"},
+    {"code": "03", "description": "Temporal"},
+    {"code": "04", "description": "Definitiva con clave A1"}
+  ]
+}

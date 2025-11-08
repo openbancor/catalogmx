@@ -36,54 +36,69 @@
 
 ### 📚 Catalogs
 
-#### ✅ Implemented (Phase 1)
+#### ✅ Implemented
 
+**Phase 1 - Foundation**
 - **Banxico - Banks**: 100+ Mexican banks with SPEI participation status
 - **INEGI - States**: 32 states + Federal District with CURP codes, INEGI codes, abbreviations
 
-#### 🚧 Coming Soon (Phases 2-5)
+**Phase 2 - SAT CFDI 4.0 Core** ✅
+- ✅ c_RegimenFiscal - 26 tax regimes (persona física/moral)
+- ✅ c_UsoCFDI - 25 CFDI usage codes (G01-G03, I01-I08, D01-D10, CP01, CN01)
+- ✅ c_FormaPago - 18 payment methods (efectivo, transferencia, tarjeta, etc.)
+- ✅ c_MetodoPago - 2 payment types (PUE, PPD)
+- ✅ c_TipoComprobante - 5 receipt types (I, E, T, N, P)
+- ✅ c_Impuesto - 4 tax types (ISR, IVA, IEPS) with retention/transfer flags
+- ✅ c_Exportacion - 4 export keys
+- ✅ c_TipoRelacion - 9 CFDI relationship types
+- ✅ c_ObjetoImp - 8 tax object codes (updated Dec 2024)
 
-- **SAT Essentials** (Phase 2)
-  - c_RegimenFiscal - Tax regimes
-  - c_UsoCFDI - CFDI usage codes
-  - c_FormaPago - Payment methods
-  - c_MetodoPago - Payment types
-  - c_TipoComprobante - Receipt types
-  - c_Impuesto - Taxes
-  - c_TasaOCuota - Tax rates
-  - c_Moneda - Currencies (ISO 4217) - ~180 currencies
-  - c_Pais - Countries (ISO 3166-1) - ~250 countries
-  - **Comercio Exterior 2.0** (Foreign Trade Complement - vigente desde enero 2024) ⭐⭐
-    - c_INCOTERM - 11 Incoterms 2020 (EXW, FCA, FOB, CIF, DDP, etc.)
-    - c_ClavePedimento - ~40 customs document keys (A1, V1, C1, etc.)
-    - c_FraccionArancelaria - ~20,000 TIGIE tariff classifications (NICO 10-digit)
-    - c_UnidadAduana - ~30 customs measurement units
-    - c_RegistroIdentTribReceptor - Foreign tax ID types
-    - c_MotivoTraslado - Transfer motives (for CFDI type T)
-    - c_Estado (for USA/Canada) - US States & Canadian Provinces (ISO 3166-2)
+**Phase 2 - SAT Comercio Exterior 2.0** ✅
+- ✅ c_INCOTERM - 11 Incoterms 2020 (EXW, FCA, FOB, CIF, DDP, etc.)
+- ✅ c_ClavePedimento - 42 customs document keys (A1, V1, C1, etc.)
+- ✅ c_Moneda - 150 ISO 4217 currencies with decimal precision
+- ✅ c_Pais - 249 ISO 3166-1 countries (Alpha-3)
+- ✅ c_UnidadAduana - 32 customs measurement units
+- ✅ c_RegistroIdentTribReceptor - 15 foreign tax ID types with regex validation
+- ✅ c_MotivoTraslado - 6 transfer motives (for CFDI type T)
+- ✅ c_Estado (for USA/Canada) - 63 US States/territories + 13 Canadian provinces (ISO 3166-2)
 
-- **INEGI Complete** (Phase 3)
-  - 2,469 Municipalities
-  - Localities
-  - AGEBs (Basic Geostatistical Areas)
+**Phase 3 - SAT Carta Porte 3.0** ✅
+- ✅ c_CodigoTransporteAereo - 76 Mexican airports (IATA/ICAO codes) - sample 20
+- ✅ c_NumAutorizacionNaviero - 100 seaports and maritime authorization - sample 25
+- ✅ c_Carreteras - 200 SCT federal highways - sample 20
+- ✅ c_TipoPermiso - 12 SCT transport permit types
+- ✅ c_ConfigAutotransporte - 15 vehicle configurations (C2, C3, T2S1, T3S2, etc.)
+- ✅ c_TipoEmbalaje - 30 UN packaging types (1A, 4G, 5H, etc.)
+- ✅ c_MaterialPeligroso - 3,000 UN hazardous materials - sample 50
 
-- **SAT Extended** (Phase 4)
+**Phase 4 - SAT Nómina 1.2** ✅
+- ✅ c_TipoNomina - 2 types (ordinaria, extraordinaria)
+- ✅ c_TipoContrato - 10 contract types
+- ✅ c_TipoJornada - 8 work shifts (diurna, nocturna, mixta, etc.)
+- ✅ c_TipoRegimen - 13 regime types (sueldos, asimilados, etc.)
+- ✅ c_PeriodicidadPago - 10 payment frequencies (diario, semanal, quincenal, etc.)
+- ✅ c_RiesgoPuesto - 5 risk levels (Class I-V) with IMSS premium ranges
+- ✅ c_Banco - 50 banks for payroll deposits
+
+**Phase 5 - Geographic Catalogs** 🔄
+- ✅ SEPOMEX - Postal codes sample (50/~150,000 codes) with settlement types
+- ✅ INEGI Municipios - Municipalities sample (50/2,469) with INEGI codes
+
+#### 🚧 Coming Soon (Future Phases)
+
+- **SAT Extended Catalogs**
   - c_ClaveProdServ - ~52,000 product/service codes
   - c_ClaveUnidad - ~3,000 unit codes
-  - Nomina catalogs (payroll)
+  - c_FraccionArancelaria - ~20,000 TIGIE tariff classifications (SQLite)
   - Código Agrupador (accounting)
-  - **Carta Porte 3.0** (Transportation)
-    - c_Estaciones - Transport stations (bus, train, maritime, air)
-    - c_CodigoTransporteAereo - Airports (IATA/ICAO codes)
-    - c_NumAutorizacionNaviero - Seaports and maritime authorization
-    - c_Carreteras - SCT highway catalog (Guardia Nacional)
-    - c_TipoPermiso - SCT transport permit types
-    - c_ConfigAutotransporte - Vehicle configurations
-    - c_TipoEmbalaje - Packaging types
-    - c_MaterialPeligroso - Hazardous materials
 
-- **SEPOMEX** (Phase 4)
-  - ~150,000 postal codes
+- **INEGI Complete**
+  - Localities (~90,000 - SQLite)
+  - AGEBs (Basic Geostatistical Areas ~200,000 - SQLite)
+
+- **SEPOMEX Complete**
+  - Full ~150,000 postal codes (SQLite)
   - Colonia → Municipality → State mapping
   - Settlement types
 
@@ -247,6 +262,105 @@ if result['valid']:
 else:
     for error in result['errors']:
         print(f"Error: {error}")
+
+# CFDI 4.0 Core Catalogs
+from catalogmx.catalogs.sat.cfdi_4 import (
+    RegimenFiscalCatalog,
+    UsoCFDICatalog,
+    FormaPagoCatalog,
+    TipoComprobanteCatalog,
+)
+
+# Validate tax regime
+regimen = RegimenFiscalCatalog.get_regimen('601')
+print(regimen['description'])  # General de Ley Personas Morales
+print(RegimenFiscalCatalog.is_valid_for_persona_moral('601'))  # True
+
+# Validate CFDI usage
+uso = UsoCFDICatalog.get_uso('G03')
+print(uso['description'])  # Gastos en general
+print(UsoCFDICatalog.is_deduction_category('G03'))  # True
+
+# Validate payment method
+forma_pago = FormaPagoCatalog.get_forma('03')
+print(forma_pago['description'])  # Transferencia electrónica de fondos
+
+# CARTA PORTE 3.0 - Transportation Documentation
+from catalogmx.catalogs.sat.carta_porte import (
+    AeropuertosCatalog,
+    PuertosMaritimos,
+    TipoPermisoCatalog,
+    ConfigAutotransporteCatalog,
+)
+
+# Validate airport
+airport = AeropuertosCatalog.get_by_iata('MEX')
+print(airport['name'])  # Aeropuerto Internacional de la Ciudad de México
+print(airport['icao'])  # MMMX
+
+# Validate seaport
+puerto = PuertosMaritimos.get_puerto('016')
+print(puerto['name'])  # Veracruz
+print(puerto['coast'])  # Golfo de México
+
+# Validate transport permit
+permiso = TipoPermisoCatalog.get_permiso('TPAF01')
+print(permiso['name'])  # Autotransporte Federal de Carga General
+print(TipoPermisoCatalog.is_carga_permit('TPAF01'))  # True
+
+# Validate vehicle configuration
+config = ConfigAutotransporteCatalog.get_config('T3S2')
+print(config['name'])  # Tractocamión Semirremolque (5 ejes)
+print(config['axes'])  # 5
+
+# NÓMINA 1.2 - Payroll
+from catalogmx.catalogs.sat.nomina import (
+    TipoContratoCatalog,
+    TipoJornadaCatalog,
+    PeriodicidadPagoCatalog,
+    RiesgoPuestoCatalog,
+    BancoCatalog,
+)
+
+# Validate contract type
+contrato = TipoContratoCatalog.get_contrato('01')
+print(contrato['description'])  # Contrato de trabajo por tiempo indeterminado
+
+# Validate work shift
+jornada = TipoJornadaCatalog.get_jornada('01')
+print(jornada['description'])  # Diurna
+print(jornada['hours'])  # 6:00 a 20:00
+
+# Validate payment frequency
+periodicidad = PeriodicidadPagoCatalog.get_periodicidad('04')
+print(periodicidad['description'])  # Quincenal
+print(periodicidad['days'])  # 15
+
+# Validate risk level and IMSS premium
+riesgo = RiesgoPuestoCatalog.get_riesgo('3')
+print(riesgo['description'])  # Clase III
+print(riesgo['prima_media'])  # 2.59645
+print(RiesgoPuestoCatalog.validate_prima('3', 2.5))  # True (within range)
+
+# Validate bank for payroll
+banco = BancoCatalog.get_banco('002')
+print(banco['name'])  # Banamex
+print(banco['full_name'])  # Banco Nacional de México, S.A.
+
+# GEOGRAPHIC CATALOGS
+from catalogmx.catalogs.sepomex import CodigosPostales
+from catalogmx.catalogs.inegi import MunicipiosCatalog
+
+# Validate postal code
+cp_info = CodigosPostales.get_by_cp('06700')
+print(cp_info[0]['asentamiento'])  # Roma Norte
+print(cp_info[0]['municipio'])  # Cuauhtémoc
+print(CodigosPostales.get_estado('06700'))  # Ciudad de México
+
+# Validate municipality
+municipio = MunicipiosCatalog.get_municipio('09015')
+print(municipio['nom_municipio'])  # Cuauhtémoc
+print(municipio['nom_entidad'])  # Ciudad de México
 ```
 
 ### TypeScript

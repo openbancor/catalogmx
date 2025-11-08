@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "catalog": "c_ConfigAutotransporte",
+    "version": "Carta_Porte_3.0",
+    "source": "SAT - Carta Porte 3.0",
+    "description": "Configuraciones vehiculares para autotransporte",
+    "last_updated": "2025-11-08",
+    "total_records": 15
+  },
+  "configuraciones": [
+    {"code": "C2", "name": "Camión Unitario (2 llantas en el eje delantero y 4 llantas en el eje trasero)", "type": "Unitario", "axes": 2},
+    {"code": "C3", "name": "Camión Unitario (2 llantas en el eje delantero y 6 o 8 llantas en los dos ejes traseros)", "type": "Unitario", "axes": 3},
+    {"code": "C2R2", "name": "Camión-Remolque (4 ejes)", "type": "Articulado", "axes": 4},
+    {"code": "C3R2", "name": "Camión-Remolque (5 ejes)", "type": "Articulado", "axes": 5},
+    {"code": "C2R3", "name": "Camión-Remolque (5 ejes)", "type": "Articulado", "axes": 5},
+    {"code": "C3R3", "name": "Camión-Remolque (6 ejes)", "type": "Articulado", "axes": 6},
+    {"code": "T2S1", "name": "Tractocamión Articulado (3 ejes)", "type": "Articulado", "axes": 3},
+    {"code": "T2S2", "name": "Tractocamión Semirremolque (4 ejes)", "type": "Articulado", "axes": 4},
+    {"code": "T2S3", "name": "Tractocamión Semirremolque (5 ejes)", "type": "Articulado", "axes": 5},
+    {"code": "T3S1", "name": "Tractocamión Semirremolque (4 ejes)", "type": "Articulado", "axes": 4},
+    {"code": "T3S2", "name": "Tractocamión Semirremolque (5 ejes)", "type": "Articulado", "axes": 5},
+    {"code": "T3S3", "name": "Tractocamión Semirremolque (6 ejes)", "type": "Articulado", "axes": 6},
+    {"code": "T2S1R2", "name": "Tractocamión Semirremolque-Remolque (5 ejes)", "type": "Articulado", "axes": 5},
+    {"code": "T3S2R2", "name": "Tractocamión Semirremolque-Remolque (7 ejes)", "type": "Articulado", "axes": 7},
+    {"code": "T3S2R4", "name": "Tractocamión Semirremolque-Remolque (9 ejes)", "type": "Articulado", "axes": 9}
+  ]
+}

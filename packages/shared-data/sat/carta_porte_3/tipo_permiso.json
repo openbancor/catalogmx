@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "catalog": "c_TipoPermiso",
+    "version": "Carta_Porte_3.0",
+    "source": "SAT - Carta Porte 3.0",
+    "description": "Tipos de permiso para autotransporte federal",
+    "last_updated": "2025-11-08",
+    "total_records": 12
+  },
+  "permisos": [
+    {"code": "TPAF01", "name": "Autotransporte Federal de Carga General", "type": "Carga"},
+    {"code": "TPAF02", "name": "Transporte privado de carga", "type": "Carga"},
+    {"code": "TPAF03", "name": "Autotransporte Federal de Pasaje y Turismo", "type": "Pasajeros"},
+    {"code": "TPAF04", "name": "Autotransporte Federal de Pasajeros", "type": "Pasajeros"},
+    {"code": "TPAF05", "name": "Autotransporte Federal de Carga Especializada de Gran Peso y/o Volumen", "type": "Carga"},
+    {"code": "TPAF06", "name": "Transporte de Carga de Materiales y Residuos Peligrosos", "type": "Carga"},
+    {"code": "TPAF07", "name": "Autotransporte Federal de Carga Especializada de Automóviles sin Rodar", "type": "Carga"},
+    {"code": "TPAF08", "name": "Autotransporte Federal de Carga Especializada de Carga Larga y/o Voluminosa", "type": "Carga"},
+    {"code": "TPAF09", "name": "Autotransporte Federal de Carga Especializada Grúas de Arrastre", "type": "Carga"},
+    {"code": "TPAF10", "name": "Autotransporte Federal de Carga Especializada Grúas de Arrastre y Salvamento", "type": "Carga"},
+    {"code": "TPAF11", "name": "Autotransporte Federal de Carga Especializada de Fondos y Valores", "type": "Carga"},
+    {"code": "TPAF12", "name": "Autotransporte Federal de Carga Especializada Blindado para el Traslado de Objetos Valiosos", "type": "Carga"}
+  ]
+}

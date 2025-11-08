@@ -1,5 +1,5 @@
-"""
-catalogmx.catalogs.sepomex - Catálogos de SEPOMEX
-"""
+"""Catálogos SEPOMEX"""
 
-__all__ = []
+from .codigos_postales import CodigosPostales
+
+__all__ = ['CodigosPostales']
