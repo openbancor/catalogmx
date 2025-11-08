@@ -96,8 +96,15 @@
     - Tasa Objetivo (Target Rate) - Banco de México
     - Historical data via Banxico SIE REST API
     - Series codes: SF60648 (TIIE 28d), SF60633 (CETES 28d), SF61745 (Target rate)
-  - Exchange rates (FIX) - Already in Phase 1 planning
-  - Bank holidays - Already in Phase 1 planning
+  - Exchange rates (FIX) historical
+  - **Mexican Holidays Calendar** (3 types) ⭐⭐⭐
+    - **Banking holidays** (CNBV) - 10 days/year
+    - **Labor holidays** (LFT) - 7 mandatory days/year
+    - **Judicial holidays** (SCJN) - Courts calendar
+    - Historical: 2000-2024 (25 years)
+    - Future: 2025-2034 (10 years)
+    - **Key distinction**: Days that are business days but NOT banking days (e.g., Viernes Santo)
+    - Business days calculator API
 
 ---
 
@@ -335,7 +342,13 @@ catalogmx/
   - [ ] CETES (28d, 91d, 182d, 364d)
   - [ ] Tasa Objetivo (Banxico target rate)
   - [ ] Exchange rates (FIX) historical
-  - [ ] Bank holidays
+- [ ] **Mexican Holidays Calendar System**
+  - [ ] Banking holidays (CNBV) - 2000-2034
+  - [ ] Labor holidays (LFT) - 2000-2034
+  - [ ] Judicial holidays (SCJN) - 2000-2034
+  - [ ] Business days calculator
+  - [ ] Banking days calculator
+  - [ ] Holiday type differentiation API
 - [ ] UMA historical values
 - [ ] Minimum wage historical
 

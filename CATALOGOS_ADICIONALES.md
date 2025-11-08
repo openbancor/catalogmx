@@ -486,6 +486,352 @@ class InterestRatesAPI:
 
 ---
 
+---
+
+## 📅 Días Festivos e Inhábiles - Sistema Completo
+
+### ¿Por qué se necesita?
+
+En México existen **3 tipos diferentes** de días inhábiles que **NO coinciden entre sí**:
+
+1. **Días inhábiles laborales** (Ley Federal del Trabajo)
+2. **Días inhábiles bancarios** (CNBV/Banxico)
+3. **Días inhábiles judiciales** (Poder Judicial)
+
+**Diferencia clave**: Hay días que son **hábiles para empresas** pero **inhábiles para bancos**. Por ejemplo, **Viernes Santo**:
+- Es **día hábil laboral** (la mayoría de empresas trabajan)
+- Es **día inhábil bancario** (bancos cerrados)
+
+### Tipos de Días Inhábiles
+
+#### 1. Días Inhábiles Laborales (LFT - Ley Federal del Trabajo)
+
+**Fuente**: Artículo 74 de la Ley Federal del Trabajo + DOF anual
+**Publicación**: Procuraduría Federal de la Defensa del Trabajo (PROFEDET)
+
+**7 días de descanso obligatorio (2025)**:
+1. **1 de enero** - Año Nuevo
+2. **Primer lunes de febrero** (3 feb 2025) - Día de la Constitución (conmemora 5 feb)
+3. **Tercer lunes de marzo** (17 mar 2025) - Natalicio de Benito Juárez (conmemora 21 mar)
+4. **1 de mayo** - Día del Trabajo
+5. **16 de septiembre** - Independencia de México
+6. **Tercer lunes de noviembre** (17 nov 2025) - Revolución Mexicana (conmemora 20 nov)
+7. **25 de diciembre** - Navidad
+
+**Adicional cada 6 años**:
+- **1 de octubre** - Transmisión del Poder Ejecutivo (2024, 2030, 2036...)
+
+**Características**:
+- Si trabajas estos días: salario diario + doble pago (triple pago total)
+- Aplica a TODOS los trabajadores en México
+- Publicado anualmente en DOF
+
+#### 2. Días Inhábiles Bancarios (CNBV)
+
+**Fuente**: Comisión Nacional Bancaria y de Valores + Banxico
+**Publicación**: DOF anual (diciembre del año anterior)
+**URL**: https://www.gob.mx/cnbv/acciones-y-programas/calendario-cnbv
+
+**10 días inhábiles bancarios (2025)**:
+1. **1 de enero** - Año Nuevo
+2. **3 de febrero** - Día de la Constitución
+3. **17 de marzo** - Natalicio de Benito Juárez
+4. **17 de abril (jueves)** - Jueves Santo ⚠️
+5. **18 de abril (viernes)** - Viernes Santo ⚠️
+6. **1 de mayo** - Día del Trabajo
+7. **16 de septiembre** - Independencia
+8. **17 de noviembre** - Revolución Mexicana
+9. **12 de diciembre** - Día del Empleado Bancario ⚠️
+10. **25 de diciembre** - Navidad
+
+⚠️ = **Días que SON hábiles laboralmente pero NO bancariamente**
+
+**Características**:
+- Los bancos NO abren sucursales
+- Cajeros automáticos y banca digital SÍ funcionan
+- Casas de cambio pueden operar
+- SPEI opera 24/7/365 (excepto mantenimientos programados)
+- Publicado con ~1 año de anticipación
+
+#### 3. Días Inhábiles Judiciales (Poder Judicial)
+
+**Fuente**: Suprema Corte de Justicia de la Nación (SCJN)
+**Publicación**: Cada año por cada tribunal
+**URL**: https://www.scjn.gob.mx/
+
+**Días inhábiles generales**:
+- **TODOS los sábados y domingos** del año
+- **1 de enero** - Año Nuevo
+- **5 de febrero** - Día de la Constitución (fecha real, no lunes)
+- **21 de marzo** - Natalicio de Benito Juárez (fecha real, no lunes)
+- **1 de mayo** - Día del Trabajo
+- **5 de mayo** - Batalla de Puebla ⚠️
+- **14 de septiembre** - Incorporación del Batallón de San Patricio ⚠️
+- **16 de septiembre** - Independencia
+- **12 de octubre** - Día de la Raza ⚠️
+- **20 de noviembre** - Revolución Mexicana (fecha real, no lunes)
+- **25 de diciembre** - Navidad
+
+**Períodos vacacionales**:
+- **Semana Santa**: Jueves, Viernes y Sábado Santo + Lunes de Pascua
+- **Receso de verano**: Variable (julio-agosto, aprox. 2 semanas)
+- **Receso de fin de año**: ~20 dic - 6 ene
+
+⚠️ = **Días inhábiles SOLO para tribunales**
+
+**Características**:
+- No corren plazos procesales
+- Cada tribunal puede tener días adicionales
+- Tribunales estatales pueden variar
+- Publicado anualmente por cada órgano judicial
+
+---
+
+### Diferencias Resumidas
+
+| Día | Laboral (LFT) | Bancario (CNBV) | Judicial (SCJN) |
+|-----|---------------|-----------------|-----------------|
+| Viernes Santo | ✅ Hábil | ❌ Inhábil | ❌ Inhábil |
+| Día del Empleado Bancario (12 dic) | ✅ Hábil | ❌ Inhábil | ✅ Hábil |
+| 5 de mayo | ✅ Hábil | ✅ Hábil | ❌ Inhábil |
+| Sábados | ✅ Hábil* | ❌ Inhábil | ❌ Inhábil |
+| Día de la Constitución | ❌ Inhábil (lunes) | ❌ Inhábil (lunes) | ❌ Inhábil (5 feb) |
+
+\* = Para empresas que trabajan sábados
+
+---
+
+### Catálogo Propuesto: `catalogmx`
+
+#### Estructura de Datos
+
+```json
+{
+  "year": 2025,
+  "types": {
+    "labor": {
+      "source": "Ley Federal del Trabajo + DOF",
+      "authority": "PROFEDET",
+      "holidays": [
+        {
+          "date": "2025-01-01",
+          "name": "Año Nuevo",
+          "law_article": "Art. 74 LFT",
+          "mandatory_rest": true,
+          "triple_pay": true
+        },
+        {
+          "date": "2025-02-03",
+          "name": "Día de la Constitución",
+          "commemorates": "2025-02-05",
+          "moved_to_monday": true,
+          "mandatory_rest": true
+        }
+        // ...
+      ]
+    },
+    "banking": {
+      "source": "CNBV + Banxico",
+      "authority": "CNBV",
+      "published_dof": "2024-12-27",
+      "holidays": [
+        {
+          "date": "2025-04-17",
+          "name": "Jueves Santo",
+          "banking_only": true,
+          "labor_working_day": true
+        },
+        {
+          "date": "2025-12-12",
+          "name": "Día del Empleado Bancario",
+          "banking_only": true,
+          "labor_working_day": true
+        }
+        // ...
+      ]
+    },
+    "judicial": {
+      "source": "SCJN",
+      "authority": "Suprema Corte de Justicia de la Nación",
+      "holidays": [
+        {
+          "date": "2025-05-05",
+          "name": "Batalla de Puebla",
+          "judicial_only": true,
+          "labor_working_day": true,
+          "banking_working_day": true
+        }
+        // ...
+      ],
+      "vacation_periods": [
+        {
+          "start": "2025-04-14",
+          "end": "2025-04-21",
+          "name": "Semana Santa"
+        }
+      ]
+    }
+  }
+}
+```
+
+#### API Python Propuesta
+
+```python
+from catalogmx.calendars import MexicanHolidays
+from datetime import date, timedelta
+
+# Inicializar calendario
+cal = MexicanHolidays()
+
+# Verificar si es día hábil
+fecha = date(2025, 4, 18)  # Viernes Santo
+
+cal.is_business_day(fecha)  # True (es hábil para empresas)
+cal.is_banking_day(fecha)   # False (bancos cerrados)
+cal.is_judicial_day(fecha)  # False (tribunales cerrados)
+
+# Obtener siguiente día hábil
+cal.next_business_day(fecha, type='labor')    # 2025-04-21 (lunes)
+cal.next_business_day(fecha, type='banking')  # 2025-04-21 (lunes)
+
+# Calcular días hábiles entre fechas
+start = date(2025, 4, 16)  # Miércoles
+end = date(2025, 4, 22)    # Martes
+cal.business_days_between(start, end, type='banking')  # 3 días (lunes 21, martes 22, miércoles 16)
+
+# Obtener festivos del año
+holidays_2025 = cal.get_holidays(2025, type='banking')
+for h in holidays_2025:
+    print(f"{h['date']}: {h['name']}")
+
+# Verificar tipo de día
+info = cal.get_day_info(date(2025, 12, 12))
+print(info)
+# {
+#   'date': '2025-12-12',
+#   'is_labor_holiday': False,
+#   'is_banking_holiday': True,
+#   'is_judicial_holiday': False,
+#   'banking_holiday_name': 'Día del Empleado Bancario'
+# }
+
+# Obtener histórico de festivos
+historical = cal.get_holidays_range(
+    start_year=2000,
+    end_year=2030,
+    type='banking'
+)
+
+# Calcular días hábiles bancarios para vencimiento
+vencimiento = date(2025, 4, 15)  # Martes antes de Semana Santa
+dias_habiles = 5
+fecha_limite = cal.add_business_days(vencimiento, dias_habiles, type='banking')
+# 2025-04-23 (miércoles) - salta Jueves Santo, Viernes Santo y fin de semana
+```
+
+#### Casos de Uso
+
+**1. Vencimientos de pagos**:
+```python
+# Calcular fecha límite de pago
+fecha_factura = date(2025, 4, 10)
+dias_credito = 30
+fecha_vencimiento = cal.add_business_days(fecha_factura, dias_credito, type='banking')
+```
+
+**2. Nóminas**:
+```python
+# Verificar si es día de pago (quincena)
+fecha_pago_programada = date(2025, 12, 15)
+if not cal.is_banking_day(fecha_pago_programada):
+    fecha_pago_real = cal.previous_business_day(fecha_pago_programada, type='banking')
+```
+
+**3. Cumplimiento legal**:
+```python
+# Verificar días de descanso obligatorio para cálculo de aguinaldo
+year = 2025
+labor_holidays = cal.get_holidays(year, type='labor')
+dias_obligatorios = len(labor_holidays)  # 7 días
+```
+
+**4. Procesos judiciales**:
+```python
+# Calcular plazo de 15 días hábiles para apelación
+fecha_sentencia = date(2025, 4, 10)
+fecha_limite = cal.add_business_days(fecha_sentencia, 15, type='judicial')
+```
+
+---
+
+### Datos Históricos y Futuros
+
+#### Histórico Recomendado
+
+**Mínimo**: 2000-2024 (25 años)
+- Suficiente para análisis financieros
+- Cubre cambios en legislación laboral
+
+**Ideal**: 1990-2024 (35 años)
+- Cubre análisis económicos de largo plazo
+- Incluye crisis económicas importantes
+
+**Fuentes para histórico**:
+- DOF (Diario Oficial de la Federación) - archivo digital desde 2000
+- Banxico - registros históricos de días inhábiles
+- SCJN - acuerdos históricos
+
+#### Futuro Recomendado
+
+**Mínimo**: 2025-2029 (5 años)
+- Suficiente para planificación financiera
+- Cubre periodo sexenal
+
+**Ideal**: 2025-2034 (10 años)
+- Planificación de largo plazo
+- Previsión de presupuestos
+
+**Actualización**:
+- Anual (diciembre) cuando CNBV publica calendario siguiente
+- Automatizable mediante scraping de DOF
+
+---
+
+### Fuentes Oficiales
+
+**Días Inhábiles Laborales**:
+- PROFEDET: https://www.gob.mx/profedet/articulos/dias-de-descanso-obligatorio
+- DOF: https://www.dof.gob.mx/
+
+**Días Inhábiles Bancarios**:
+- CNBV: https://www.gob.mx/cnbv/acciones-y-programas/calendario-cnbv
+- Banxico: https://www.banxico.org.mx/
+- Publicación DOF: https://www.dof.gob.mx/ (diciembre año anterior)
+
+**Días Inhábiles Judiciales**:
+- SCJN: https://www.scjn.gob.mx/
+- Calendario PDF: https://www.scjn.gob.mx/sites/default/files/pagina-micrositios/documentos/2024-11/Calendario_dias_inhabiles_2025.pdf
+
+---
+
+### Priorización
+
+**Alta Prioridad**:
+- Días inhábiles bancarios (2000-2034)
+- Días inhábiles laborales (2000-2034)
+- API de cálculo de días hábiles
+
+**Media Prioridad**:
+- Días inhábiles judiciales (2000-2034)
+- Histórico ampliado (1990-1999)
+
+**Baja Prioridad**:
+- Días inhábiles por estado (pueden variar localmente)
+- Días festivos no oficiales (Día de Muertos, etc.)
+
+---
+
 ## 🔗 Referencias
 
 ### SAT
@@ -503,3 +849,9 @@ class InterestRatesAPI:
 
 ### Guardia Nacional
 - [Catálogo de Carreteras - Competencia GN](https://www.gob.mx/guardianacional/documentos/catalogo-de-carreteras-y-tramos-competencia-de-las-coordinaciones-estatales-de-la-guardia-nacional)
+
+### Días Festivos
+- [PROFEDET - Días de Descanso Obligatorio](https://www.gob.mx/profedet/articulos/dias-de-descanso-obligatorio)
+- [CNBV - Calendario Oficial](https://www.gob.mx/cnbv/acciones-y-programas/calendario-cnbv)
+- [SCJN - Días Inhábiles](https://www.scjn.gob.mx/)
+- [DOF - Diario Oficial](https://www.dof.gob.mx/)
