@@ -1,0 +1,205 @@
+{
+  "states": [
+    {
+      "code": "AS",
+      "name": "AGUASCALIENTES",
+      "abbreviation": "AGS",
+      "clave_inegi": "01"
+    },
+    {
+      "code": "BC",
+      "name": "BAJA CALIFORNIA",
+      "abbreviation": "BC",
+      "clave_inegi": "02"
+    },
+    {
+      "code": "BS",
+      "name": "BAJA CALIFORNIA SUR",
+      "abbreviation": "BCS",
+      "clave_inegi": "03"
+    },
+    {
+      "code": "CC",
+      "name": "CAMPECHE",
+      "abbreviation": "CAMP",
+      "clave_inegi": "04"
+    },
+    {
+      "code": "CL",
+      "name": "COAHUILA",
+      "abbreviation": "COAH",
+      "clave_inegi": "05"
+    },
+    {
+      "code": "CM",
+      "name": "COLIMA",
+      "abbreviation": "COL",
+      "clave_inegi": "06"
+    },
+    {
+      "code": "CS",
+      "name": "CHIAPAS",
+      "abbreviation": "CHIS",
+      "clave_inegi": "07"
+    },
+    {
+      "code": "CH",
+      "name": "CHIHUAHUA",
+      "abbreviation": "CHIH",
+      "clave_inegi": "08"
+    },
+    {
+      "code": "DF",
+      "name": "CIUDAD DE MEXICO",
+      "abbreviation": "CDMX",
+      "clave_inegi": "09",
+      "aliases": ["DISTRITO FEDERAL", "CDMX"]
+    },
+    {
+      "code": "DG",
+      "name": "DURANGO",
+      "abbreviation": "DGO",
+      "clave_inegi": "10"
+    },
+    {
+      "code": "GT",
+      "name": "GUANAJUATO",
+      "abbreviation": "GTO",
+      "clave_inegi": "11"
+    },
+    {
+      "code": "GR",
+      "name": "GUERRERO",
+      "abbreviation": "GRO",
+      "clave_inegi": "12"
+    },
+    {
+      "code": "HG",
+      "name": "HIDALGO",
+      "abbreviation": "HGO",
+      "clave_inegi": "13"
+    },
+    {
+      "code": "JC",
+      "name": "JALISCO",
+      "abbreviation": "JAL",
+      "clave_inegi": "14"
+    },
+    {
+      "code": "MC",
+      "name": "ESTADO DE MEXICO",
+      "abbreviation": "MEX",
+      "clave_inegi": "15",
+      "aliases": ["MEXICO"]
+    },
+    {
+      "code": "MN",
+      "name": "MICHOACAN",
+      "abbreviation": "MICH",
+      "clave_inegi": "16"
+    },
+    {
+      "code": "MS",
+      "name": "MORELOS",
+      "abbreviation": "MOR",
+      "clave_inegi": "17"
+    },
+    {
+      "code": "NT",
+      "name": "NAYARIT",
+      "abbreviation": "NAY",
+      "clave_inegi": "18"
+    },
+    {
+      "code": "NL",
+      "name": "NUEVO LEON",
+      "abbreviation": "NL",
+      "clave_inegi": "19"
+    },
+    {
+      "code": "OC",
+      "name": "OAXACA",
+      "abbreviation": "OAX",
+      "clave_inegi": "20"
+    },
+    {
+      "code": "PL",
+      "name": "PUEBLA",
+      "abbreviation": "PUE",
+      "clave_inegi": "21"
+    },
+    {
+      "code": "QT",
+      "name": "QUERETARO",
+      "abbreviation": "QRO",
+      "clave_inegi": "22"
+    },
+    {
+      "code": "QR",
+      "name": "QUINTANA ROO",
+      "abbreviation": "QROO",
+      "clave_inegi": "23"
+    },
+    {
+      "code": "SP",
+      "name": "SAN LUIS POTOSI",
+      "abbreviation": "SLP",
+      "clave_inegi": "24"
+    },
+    {
+      "code": "SL",
+      "name": "SINALOA",
+      "abbreviation": "SIN",
+      "clave_inegi": "25"
+    },
+    {
+      "code": "SR",
+      "name": "SONORA",
+      "abbreviation": "SON",
+      "clave_inegi": "26"
+    },
+    {
+      "code": "TC",
+      "name": "TABASCO",
+      "abbreviation": "TAB",
+      "clave_inegi": "27"
+    },
+    {
+      "code": "TS",
+      "name": "TAMAULIPAS",
+      "abbreviation": "TAMPS",
+      "clave_inegi": "28"
+    },
+    {
+      "code": "TL",
+      "name": "TLAXCALA",
+      "abbreviation": "TLAX",
+      "clave_inegi": "29"
+    },
+    {
+      "code": "VZ",
+      "name": "VERACRUZ",
+      "abbreviation": "VER",
+      "clave_inegi": "30"
+    },
+    {
+      "code": "YN",
+      "name": "YUCATAN",
+      "abbreviation": "YUC",
+      "clave_inegi": "31"
+    },
+    {
+      "code": "ZS",
+      "name": "ZACATECAS",
+      "abbreviation": "ZAC",
+      "clave_inegi": "32"
+    },
+    {
+      "code": "NE",
+      "name": "NACIDO EN EL EXTRANJERO",
+      "abbreviation": "EXT",
+      "clave_inegi": "99",
+      "aliases": ["EXTRANJERO"]
+    }
+  ]
+}

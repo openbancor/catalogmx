@@ -1,0 +1,141 @@
+{
+  "metadata": {
+    "catalog": "c_RegistroIdentTribReceptor",
+    "version": "2.0",
+    "source": "SAT - Complemento Comercio Exterior 2.0",
+    "description": "Tipos de registro de identificación tributaria del receptor extranjero",
+    "last_updated": "2025-11-08",
+    "total_records": 15,
+    "notes": "Equivalente al RFC mexicano para receptores extranjeros"
+  },
+  "tipos_registro": [
+    {
+      "code": "01",
+      "description": "Número de identificación fiscal",
+      "region": "General",
+      "format_pattern": null,
+      "examples": ["NIF genérico"]
+    },
+    {
+      "code": "02",
+      "description": "Número de identificación tributaria",
+      "region": "General",
+      "format_pattern": null,
+      "examples": ["NIT genérico"]
+    },
+    {
+      "code": "03",
+      "description": "Registro de identificación fiscal",
+      "region": "General",
+      "format_pattern": null,
+      "examples": ["RIF genérico"]
+    },
+    {
+      "code": "04",
+      "description": "Tax ID",
+      "region": "Estados Unidos",
+      "format_pattern": "^\\d{9}$",
+      "format_description": "9 dígitos numéricos",
+      "examples": ["123456789 (EIN)", "987654321 (SSN)"],
+      "notes": "EIN (Employer Identification Number) o SSN (Social Security Number)"
+    },
+    {
+      "code": "05",
+      "description": "Business Number",
+      "region": "Canadá",
+      "format_pattern": "^\\d{9}$",
+      "format_description": "9 dígitos numéricos",
+      "examples": ["123456789"],
+      "notes": "BN (Business Number) canadiense"
+    },
+    {
+      "code": "06",
+      "description": "NIF",
+      "region": "España",
+      "format_pattern": "^[A-Z]\\d{8}$|^\\d{8}[A-Z]$",
+      "format_description": "8 dígitos + letra o letra + 8 dígitos",
+      "examples": ["A12345678", "12345678Z"],
+      "notes": "Número de Identificación Fiscal español"
+    },
+    {
+      "code": "07",
+      "description": "VAT Number",
+      "region": "Unión Europea",
+      "format_pattern": "^[A-Z]{2}[A-Z0-9]+$",
+      "format_description": "Prefijo país (2 letras) + código alfanumérico",
+      "examples": ["GB123456789", "FR12345678901", "DE123456789"],
+      "notes": "Value Added Tax identification number"
+    },
+    {
+      "code": "08",
+      "description": "RFC",
+      "region": "México",
+      "format_pattern": "^[A-ZÑ&]{3,4}\\d{6}[A-Z0-9]{3}$",
+      "format_description": "Formato RFC mexicano (12 o 13 caracteres)",
+      "examples": ["ABC123456ABC", "XAXX010101000"],
+      "notes": "Receptor extranjero con RFC mexicano"
+    },
+    {
+      "code": "09",
+      "description": "RUT",
+      "region": "Chile",
+      "format_pattern": "^\\d{1,8}-[0-9K]$",
+      "format_description": "1-8 dígitos + guion + dígito verificador",
+      "examples": ["12345678-5", "12345678-K"],
+      "notes": "Rol Único Tributario chileno"
+    },
+    {
+      "code": "10",
+      "description": "RUC",
+      "region": "Perú, Ecuador, Paraguay",
+      "format_pattern": "^\\d{11}$",
+      "format_description": "11 dígitos",
+      "examples": ["20123456789"],
+      "notes": "Registro Único de Contribuyentes"
+    },
+    {
+      "code": "11",
+      "description": "CUIT",
+      "region": "Argentina",
+      "format_pattern": "^\\d{2}-\\d{8}-\\d{1}$",
+      "format_description": "XX-XXXXXXXX-X",
+      "examples": ["20-12345678-9"],
+      "notes": "Clave Única de Identificación Tributaria"
+    },
+    {
+      "code": "12",
+      "description": "CNPJ",
+      "region": "Brasil",
+      "format_pattern": "^\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}$",
+      "format_description": "XX.XXX.XXX/XXXX-XX",
+      "examples": ["12.345.678/0001-90"],
+      "notes": "Cadastro Nacional da Pessoa Jurídica"
+    },
+    {
+      "code": "13",
+      "description": "CPF",
+      "region": "Brasil",
+      "format_pattern": "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$",
+      "format_description": "XXX.XXX.XXX-XX",
+      "examples": ["123.456.789-09"],
+      "notes": "Cadastro de Pessoas Físicas"
+    },
+    {
+      "code": "14",
+      "description": "ABN",
+      "region": "Australia",
+      "format_pattern": "^\\d{11}$",
+      "format_description": "11 dígitos",
+      "examples": ["12345678901"],
+      "notes": "Australian Business Number"
+    },
+    {
+      "code": "99",
+      "description": "Otro",
+      "region": "Otros países",
+      "format_pattern": null,
+      "examples": [],
+      "notes": "Cualquier otro tipo de identificación tributaria no especificada"
+    }
+  ]
+}

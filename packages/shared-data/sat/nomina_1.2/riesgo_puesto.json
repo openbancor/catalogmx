@@ -1,0 +1,17 @@
+{
+  "metadata": {
+    "catalog": "c_RiesgoPuesto",
+    "version": "Nómina_1.2",
+    "source": "SAT - Complemento de Nómina 1.2",
+    "description": "Niveles de riesgo del puesto de trabajo",
+    "last_updated": "2025-11-08",
+    "total_records": 5
+  },
+  "riesgos": [
+    {"code": "1", "description": "Clase I", "level": "Mínimo", "prima_min": 0.50000, "prima_media": 0.54355, "prima_max": 0.58710},
+    {"code": "2", "description": "Clase II", "level": "Bajo", "prima_min": 0.58710, "prima_media": 1.11935, "prima_max": 1.65160},
+    {"code": "3", "description": "Clase III", "level": "Medio", "prima_min": 1.65160, "prima_media": 2.59645, "prima_max": 3.54130},
+    {"code": "4", "description": "Clase IV", "level": "Alto", "prima_min": 3.54130, "prima_media": 4.65325, "prima_max": 5.76520},
+    {"code": "5", "description": "Clase V", "level": "Máximo", "prima_min": 5.76520, "prima_media": 6.71000, "prima_max": 7.58875}
+  ]
+}

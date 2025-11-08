@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "catalog": "c_TipoEmbalaje",
+    "version": "Carta_Porte_3.0",
+    "source": "SAT - Carta Porte 3.0 / UN Packaging Codes",
+    "description": "Tipos de embalaje según Recomendaciones de la ONU",
+    "last_updated": "2025-11-08",
+    "total_records": 30
+  },
+  "embalajes": [
+    {"code": "1A", "name": "Bidón de acero", "material": "Acero"},
+    {"code": "1B", "name": "Bidón de aluminio", "material": "Aluminio"},
+    {"code": "1D", "name": "Bidón de madera contrachapada", "material": "Madera"},
+    {"code": "1G", "name": "Bidón de cartón", "material": "Cartón"},
+    {"code": "1H", "name": "Bidón de plástico", "material": "Plástico"},
+    {"code": "1N", "name": "Bidón de metal", "material": "Metal"},
+    {"code": "3A", "name": "Jerrican de acero", "material": "Acero"},
+    {"code": "3B", "name": "Jerrican de aluminio", "material": "Aluminio"},
+    {"code": "3H", "name": "Jerrican de plástico", "material": "Plástico"},
+    {"code": "4A", "name": "Caja de acero", "material": "Acero"},
+    {"code": "4B", "name": "Caja de aluminio", "material": "Aluminio"},
+    {"code": "4C", "name": "Caja de madera natural", "material": "Madera"},
+    {"code": "4D", "name": "Caja de madera contrachapada", "material": "Madera"},
+    {"code": "4F", "name": "Caja de madera reconstituida", "material": "Madera"},
+    {"code": "4G", "name": "Caja de cartón", "material": "Cartón"},
+    {"code": "4H", "name": "Caja de plástico", "material": "Plástico"},
+    {"code": "5H", "name": "Saco de tela plástica", "material": "Plástico"},
+    {"code": "5L", "name": "Saco de tela", "material": "Tela"},
+    {"code": "5M", "name": "Saco de papel", "material": "Papel"},
+    {"code": "6H", "name": "Embalaje compuesto de plástico", "material": "Plástico"},
+    {"code": "6P", "name": "Embalaje compuesto de vidrio", "material": "Vidrio"},
+    {"code": "43", "name": "Contenedor de gran volumen", "material": "Varios"},
+    {"code": "44", "name": "Contenedor de acero", "material": "Acero"},
+    {"code": "AA", "name": "Contenedor intermedio para granel de plástico rígido", "material": "Plástico"},
+    {"code": "AB", "name": "Receptáculo de fibra", "material": "Fibra"},
+    {"code": "BA", "name": "Barril", "material": "Madera"},
+    {"code": "BB", "name": "Bobina", "material": "Varios"},
+    {"code": "BC", "name": "Caja de bebidas", "material": "Varios"},
+    {"code": "BD", "name": "Tabla", "material": "Madera"},
+    {"code": "ZZ", "name": "Embalaje múltiple", "material": "Varios"}
+  ]
+}

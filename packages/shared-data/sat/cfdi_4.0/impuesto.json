@@ -1,0 +1,15 @@
+{
+  "metadata": {
+    "catalog": "c_Impuesto",
+    "version": "CFDI_4.0",
+    "source": "SAT - Anexo 20",
+    "description": "Tipos de impuesto",
+    "last_updated": "2025-11-08",
+    "total_records": 4
+  },
+  "impuestos": [
+    {"code": "001", "description": "ISR", "name": "Impuesto Sobre la Renta", "retention": true, "transfer": false},
+    {"code": "002", "description": "IVA", "name": "Impuesto al Valor Agregado", "retention": true, "transfer": true},
+    {"code": "003", "description": "IEPS", "name": "Impuesto Especial sobre Producción y Servicios", "retention": true, "transfer": true}
+  ]
+}

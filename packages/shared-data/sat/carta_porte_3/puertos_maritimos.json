@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "catalog": "c_NumAutorizacionNaviero",
+    "version": "Carta_Porte_3.0",
+    "source": "SAT - Carta Porte 3.0",
+    "description": "Códigos de puertos marítimos mexicanos",
+    "last_updated": "2025-11-08",
+    "total_records": 25,
+    "notes": "Catálogo de muestra - Requiere descarga completa del SAT (~100 puertos)"
+  },
+  "puertos": [
+    {"code": "001", "name": "Acapulco", "state": "Guerrero", "coast": "Pacífico"},
+    {"code": "002", "name": "Altamira", "state": "Tamaulipas", "coast": "Golfo de México"},
+    {"code": "003", "name": "Coatzacoalcos", "state": "Veracruz", "coast": "Golfo de México"},
+    {"code": "004", "name": "Dos Bocas", "state": "Tabasco", "coast": "Golfo de México"},
+    {"code": "005", "name": "Ensenada", "state": "Baja California", "coast": "Pacífico"},
+    {"code": "006", "name": "Guaymas", "state": "Sonora", "coast": "Golfo de California"},
+    {"code": "007", "name": "Lázaro Cárdenas", "state": "Michoacán", "coast": "Pacífico"},
+    {"code": "008", "name": "Manzanillo", "state": "Colima", "coast": "Pacífico"},
+    {"code": "009", "name": "Mazatlán", "state": "Sinaloa", "coast": "Pacífico"},
+    {"code": "010", "name": "Progreso", "state": "Yucatán", "coast": "Golfo de México"},
+    {"code": "011", "name": "Puerto Vallarta", "state": "Jalisco", "coast": "Pacífico"},
+    {"code": "012", "name": "Salina Cruz", "state": "Oaxaca", "coast": "Pacífico"},
+    {"code": "013", "name": "Tampico", "state": "Tamaulipas", "coast": "Golfo de México"},
+    {"code": "014", "name": "Topolobampo", "state": "Sinaloa", "coast": "Golfo de California"},
+    {"code": "015", "name": "Tuxpan", "state": "Veracruz", "coast": "Golfo de México"},
+    {"code": "016", "name": "Veracruz", "state": "Veracruz", "coast": "Golfo de México"},
+    {"code": "017", "name": "Cabo San Lucas", "state": "Baja California Sur", "coast": "Pacífico"},
+    {"code": "018", "name": "La Paz", "state": "Baja California Sur", "coast": "Golfo de California"},
+    {"code": "019", "name": "Puerto Morelos", "state": "Quintana Roo", "coast": "Caribe"},
+    {"code": "020", "name": "Cozumel", "state": "Quintana Roo", "coast": "Caribe"},
+    {"code": "021", "name": "Playa del Carmen", "state": "Quintana Roo", "coast": "Caribe"},
+    {"code": "022", "name": "Puerto Juárez", "state": "Quintana Roo", "coast": "Caribe"},
+    {"code": "023", "name": "Seybaplaya", "state": "Campeche", "coast": "Golfo de México"},
+    {"code": "024", "name": "Ciudad del Carmen", "state": "Campeche", "coast": "Golfo de México"},
+    {"code": "025", "name": "Puerto Peñasco", "state": "Sonora", "coast": "Golfo de California"}
+  ]
+}
