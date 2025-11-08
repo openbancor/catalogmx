@@ -76,6 +76,537 @@ is_valid = ComercioExteriorCatalog.validate_foreign_address(cfdi_data)
 
 ---
 
+### Catálogos Adicionales del Complemento Comercio Exterior 2.0
+
+El **Complemento de Comercio Exterior versión 2.0** entró en vigor el **18 de enero de 2024** y requiere múltiples catálogos del SAT para su correcta emisión.
+
+**Fuente oficial**: SAT - Anexo 20 CFDI 4.0
+**URL**: http://omawww.sat.gob.mx/tramitesyservicios/Paginas/catalogos_emision_cfdi_complemento_ce.htm
+
+---
+
+#### 1. c_INCOTERM - Términos Internacionales de Comercio
+
+**Descripción**: Los INCOTERMS (International Commercial Terms) definen las responsabilidades entre comprador y vendedor en operaciones de comercio internacional.
+
+**Versión vigente**: INCOTERMS 2020 (ICC - Cámara de Comercio Internacional)
+
+**Total de términos**: 11 INCOTERMS
+
+##### INCOTERMS para cualquier modo de transporte (7):
+
+| Código | Nombre | Descripción | Responsabilidad del vendedor |
+|--------|--------|-------------|------------------------------|
+| **EXW** | Ex Works | En fábrica | Mínima - solo poner mercancía a disposición |
+| **FCA** | Free Carrier | Franco transportista | Entregar al transportista designado |
+| **CPT** | Carriage Paid To | Transporte pagado hasta | Pagar transporte hasta destino |
+| **CIP** | Carriage and Insurance Paid To | Transporte y seguro pagados hasta | CPT + seguro mínimo |
+| **DAP** | Delivered at Place | Entregado en lugar | Hasta el lugar convenido, listo para descarga |
+| **DPU** | Delivered at Place Unloaded | Entregado en lugar descargado | DAP + descarga incluida |
+| **DDP** | Delivered Duty Paid | Entregado con derechos pagados | Máxima - incluye importación y aranceles |
+
+##### INCOTERMS solo para transporte marítimo y vías navegables (4):
+
+| Código | Nombre | Descripción | Responsabilidad del vendedor |
+|--------|--------|-------------|------------------------------|
+| **FAS** | Free Alongside Ship | Franco al costado del buque | Hasta el costado del buque |
+| **FOB** | Free On Board | Franco a bordo | Hasta que mercancía está a bordo |
+| **CFR** | Cost and Freight | Costo y flete | Pagar flete hasta puerto destino |
+| **CIF** | Cost, Insurance and Freight | Costo, seguro y flete | CFR + seguro mínimo |
+
+**Reglas de validación**:
+- Campo **obligatorio** en CFDI con Complemento Comercio Exterior
+- Debe seleccionarse de catálogo c_INCOTERM del SAT
+- Para exportaciones definitivas (clave pedimento A1)
+
+**Caso de uso**:
+```python
+from catalogmx.catalogs.sat import IncotermsValidator
+
+# Validar INCOTERM
+incoterm = IncotermsValidator.get_incoterm('CIF')
+print(incoterm)
+# {
+#   'code': 'CIF',
+#   'name': 'Cost, Insurance and Freight',
+#   'transport_mode': 'maritime',
+#   'seller_responsibility': 'cost_freight_insurance',
+#   'risk_transfer': 'port_of_loading'
+# }
+
+# Verificar si es válido para transporte terrestre
+is_valid = IncotermsValidator.is_valid_for_transport('CIF', 'land')
+print(is_valid)  # False - CIF es solo marítimo
+
+# INCOTERMS multimodales
+multimodal = IncotermsValidator.get_multimodal_incoterms()
+print(multimodal)  # ['EXW', 'FCA', 'CPT', 'CIP', 'DAP', 'DPU', 'DDP']
+```
+
+---
+
+#### 2. c_ClavePedimento - Claves de Pedimento Aduanero
+
+**Descripción**: Identificadores del tipo de operación aduanera que ampara el CFDI.
+
+**Fuente**: Anexo 22 de las RGCE (Reglas Generales de Comercio Exterior)
+
+**Claves más comunes**:
+
+| Clave | Descripción | Régimen |
+|-------|-------------|---------|
+| **A1** | Exportación definitiva | Exportación |
+| **A3** | Exportación temporal | Exportación temporal |
+| **A4** | Exportación temporal para retorno en el mismo estado | Exportación temporal |
+| **V1** | Importación definitiva | Importación |
+| **V5** | Importación temporal de bienes de activo fijo | Importación temporal |
+| **C1** | Retorno de mercancía exportada temporalmente | Retorno |
+| **G1** | Tránsito interno | Tránsito |
+| **K1** | Traslado de mercancías | Traslado |
+
+**Total de claves**: ~40 claves de pedimento
+
+**Reglas de validación**:
+- Campo **obligatorio** para CFDI con Complemento Comercio Exterior
+- Para exportaciones definitivas, usar **A1**
+- Debe corresponder al tipo de operación que se ampara
+
+**Caso de uso**:
+```python
+from catalogmx.catalogs.sat import ClavePedimentoCatalog
+
+# Obtener clave de pedimento
+pedimento = ClavePedimentoCatalog.get_clave('A1')
+print(pedimento)
+# {
+#   'clave': 'A1',
+#   'descripcion': 'Exportación definitiva',
+#   'regimen': 'exportacion',
+#   'requiere_certificado_origen': True
+# }
+
+# Validar que sea para exportación
+is_export = ClavePedimentoCatalog.is_export('A1')
+print(is_export)  # True
+```
+
+---
+
+#### 3. c_FraccionArancelaria - Fracciones Arancelarias (TIGIE)
+
+**Descripción**: Códigos de clasificación arancelaria de mercancías según la **TIGIE** (Tarifa de la Ley de los Impuestos Generales de Importación y de Exportación).
+
+**Sistema**: Nomenclatura armonizada internacional + extensiones nacionales
+
+**Estructura**:
+- **8 dígitos**: Fracción arancelaria (Sistema Armonizado + fracción México)
+  - 2 dígitos: Capítulo
+  - 4 dígitos: Partida
+  - 6 dígitos: Subpartida (internacional)
+  - 8 dígitos: Fracción (México)
+- **10 dígitos**: NICO (Nomenclatura de Identificación de Comercio Exterior) - agregados en 2020
+  - 2 dígitos adicionales para fines estadísticos
+
+**Ejemplo de estructura**:
+```
+8471.30.01.00
+│││││└──┴──┴─── NICO (dígitos 9-10) - fines estadísticos
+││││└────────── Fracción nacional (dígitos 7-8)
+│││└─────────── Subpartida internacional (dígitos 5-6)
+││└──────────── Partida (dígitos 3-4)
+│└───────────── Capítulo (dígitos 1-2)
+└────────────── Sección (agrupación de capítulos)
+
+Capítulo 84: Reactores nucleares, calderas, máquinas
+Partida 8471: Máquinas automáticas para tratamiento de datos
+Subpartida 847130: Computadoras portátiles
+Fracción 8471.30.01: Laptop con procesador específico
+NICO 8471.30.01.00: Clasificación estadística final
+```
+
+**Cantidad de fracciones**: ~13,000 fracciones arancelarias (con NICO ~20,000+)
+
+**Fuentes oficiales**:
+- **SNICE** (Servicio Nacional de Información de Comercio Exterior): https://www.snice.gob.mx
+- **VUCEM** (Ventanilla Única de Comercio Exterior): https://www.ventanillaunica.gob.mx
+- **SIICEX** (Sistema Integrado de Información de Comercio Exterior): http://www.siicex.gob.mx
+
+**Reglas de validación**:
+- Campo **obligatorio** para cada mercancía en Comercio Exterior
+- Debe existir en TIGIE vigente
+- Actualización: Modificaciones periódicas por acuerdos comerciales
+
+**Caso de uso**:
+```python
+from catalogmx.catalogs.sat import FraccionArancelariaCatalog
+
+# Buscar fracción arancelaria
+fraccion = FraccionArancelariaCatalog.get_fraccion('8471300100')
+print(fraccion)
+# {
+#   'nico': '8471300100',
+#   'fraccion': '84713001',
+#   'descripcion': 'Unidades de proceso digitales, portátiles, de peso inferior o igual a 10 kg, que estén constituidas, al menos...',
+#   'unidad_medida': 'Pieza',
+#   'capitulo': '84',
+#   'partida': '8471',
+#   'impuestos': {
+#       'igi': 0,  # Impuesto General de Importación
+#       'ige': 0   # Impuesto General de Exportación
+#   }
+# }
+
+# Buscar por palabra clave
+resultados = FraccionArancelariaCatalog.search('laptop')
+# Retorna lista de fracciones que contienen "laptop" en descripción
+
+# Obtener capítulo completo
+capitulo = FraccionArancelariaCatalog.get_capitulo('84')
+print(capitulo['descripcion'])  # "Reactores nucleares, calderas, máquinas..."
+```
+
+**Consideraciones de implementación**:
+- Base de datos grande (~20,000 registros con NICO)
+- Recomienda SQLite o búsqueda full-text
+- Actualizaciones trimestrales/semestrales
+- Incluir descripciones completas para búsqueda
+
+---
+
+#### 4. c_Moneda - Catálogo de Monedas
+
+**Descripción**: Códigos ISO 4217 de monedas para especificar la divisa en operaciones de comercio exterior.
+
+**Estándar**: ISO 4217 (códigos de 3 letras)
+
+**Monedas más usadas en comercio exterior México**:
+
+| Código | Nombre | País/Región |
+|--------|--------|-------------|
+| **USD** | Dólar estadounidense | Estados Unidos |
+| **MXN** | Peso mexicano | México |
+| **EUR** | Euro | Unión Europea |
+| **CAD** | Dólar canadiense | Canadá |
+| **CNY** | Yuan renminbi | China |
+| **JPY** | Yen japonés | Japón |
+| **GBP** | Libra esterlina | Reino Unido |
+| **CHF** | Franco suizo | Suiza |
+
+**Total**: ~180 monedas activas
+
+**Campos donde se usa**:
+- **TipoCambioUSD**: Tipo de cambio a dólares USD
+- **TotalUSD**: Monto total convertido a USD
+- **Moneda** de la operación comercial
+
+**Reglas de validación**:
+- TipoCambioUSD es **obligatorio** si la moneda != USD
+- Si Moneda = USD, entonces TipoCambioUSD debe ser 1
+- TotalUSD debe calcularse correctamente
+
+**Caso de uso**:
+```python
+from catalogmx.catalogs.sat import MonedaCatalog
+
+# Obtener moneda
+moneda = MonedaCatalog.get_moneda('EUR')
+print(moneda)
+# {
+#   'codigo': 'EUR',
+#   'nombre': 'Euro',
+#   'decimales': 2,
+#   'pais': 'Unión Europea'
+# }
+
+# Validar conversión USD
+comercio_ext = {
+    'moneda': 'EUR',
+    'total': 10000.00,
+    'tipo_cambio_usd': 1.18,
+    'total_usd': 11800.00
+}
+is_valid = MonedaCatalog.validate_conversion_usd(comercio_ext)
+```
+
+---
+
+#### 5. c_Pais - Catálogo de Países
+
+**Descripción**: Códigos ISO 3166-1 Alpha-3 de países para identificar origen/destino de mercancías.
+
+**Estándar**: ISO 3166-1 Alpha-3 (códigos de 3 letras)
+
+**Países más comunes en comercio México**:
+
+| Código | Nombre |
+|--------|--------|
+| **USA** | Estados Unidos de América |
+| **CAN** | Canadá |
+| **CHN** | China |
+| **JPN** | Japón |
+| **DEU** | Alemania |
+| **KOR** | Corea del Sur |
+| **BRA** | Brasil |
+| **ESP** | España |
+| **ITA** | Italia |
+| **FRA** | Francia |
+
+**Total**: ~250 países y territorios
+
+**Campos donde se usa**:
+- **País de origen** de la mercancía
+- **País de destino** final
+- **Domicilio del receptor** (para direcciones extranjeras)
+
+**Reglas especiales**:
+- Si País = **USA** o **CAN**, el campo **Estado/Provincia** es obligatorio
+- Si País = **MEX**, usar catálogos de INEGI (estados mexicanos)
+
+**Caso de uso**:
+```python
+from catalogmx.catalogs.sat import PaisCatalog
+
+# Obtener país
+pais = PaisCatalog.get_pais('USA')
+print(pais)
+# {
+#   'codigo': 'USA',
+#   'nombre': 'Estados Unidos de América',
+#   'iso2': 'US',
+#   'requiere_subdivision': True  # Requiere estado/provincia
+# }
+
+# Verificar si requiere subdivisión (estado/provincia)
+requires_state = PaisCatalog.requires_subdivision('CAN')
+print(requires_state)  # True
+```
+
+---
+
+#### 6. c_UnidadAduana - Unidades de Medida Aduanera
+
+**Descripción**: Catálogo de unidades de medida reconocidas por aduanas para declarar cantidad de mercancía.
+
+**Unidades más comunes**:
+
+| Código | Descripción | Tipo |
+|--------|-------------|------|
+| **01** | Kilogramo | Peso |
+| **06** | Litro | Volumen |
+| **11** | Metro cuadrado | Superficie |
+| **12** | Metro cúbico | Volumen |
+| **13** | Metro lineal | Longitud |
+| **14** | Pieza | Unidad |
+| **15** | Par | Unidad |
+| **16** | Tonelada | Peso |
+| **99** | Otras unidades | Varios |
+
+**Total**: ~30 unidades de medida aduanera
+
+**Diferencia con c_ClaveUnidad** (CFDI general):
+- **c_UnidadAduana**: Para aduanas (comercio exterior)
+- **c_ClaveUnidad**: Para facturación CFDI 4.0 (catálogo SAT c_ClaveUnidad con ~1,000 unidades)
+
+**Caso de uso**:
+```python
+from catalogmx.catalogs.sat import UnidadAduanaCatalog
+
+# Obtener unidad aduanera
+unidad = UnidadAduanaCatalog.get_unidad('01')
+print(unidad)
+# {
+#   'codigo': '01',
+#   'descripcion': 'Kilogramo',
+#   'tipo': 'peso'
+# }
+```
+
+---
+
+#### 7. c_RegistroIdentTribReceptor - Tipo de Registro de Identificación Tributaria
+
+**Descripción**: Catálogo para identificar el tipo de registro tributario del receptor extranjero (equivalente al RFC en México).
+
+**Tipos comunes**:
+
+| Código | Descripción | País |
+|--------|-------------|------|
+| **04** | Tax ID | Estados Unidos (EIN, SSN) |
+| **05** | Business Number | Canadá |
+| **06** | NIF (Número de Identificación Fiscal) | España |
+| **07** | VAT Number | Unión Europea |
+| **08** | RFC | México (receptor extranjero con RFC) |
+
+**Reglas**:
+- Campo **NumRegIdTrib** debe cumplir formato según tipo
+- Para USA/CAN: Generalmente 9 dígitos numéricos
+- Para UE: Formato VAT según país (ej. "GB123456789")
+
+**Caso de uso**:
+```python
+from catalogmx.catalogs.sat import RegistroIdentTribCatalog
+
+# Validar Tax ID de EE.UU.
+receptor_data = {
+    'tipo_registro': '04',  # Tax ID (USA)
+    'num_reg_id_trib': '123456789',
+    'pais': 'USA'
+}
+is_valid = RegistroIdentTribCatalog.validate_tax_id(receptor_data)
+```
+
+---
+
+#### 8. c_MotivoTraslado - Motivo de Traslado
+
+**Descripción**: Catálogo para especificar el motivo del traslado de mercancías cuando el CFDI es de tipo **"T" (Traslado)** con complemento de comercio exterior.
+
+**Nota importante**: Solo aplica si TipoDeComprobante = **"T"** (Traslado)
+
+**Motivos principales**:
+
+| Código | Descripción |
+|--------|-------------|
+| **01** | Envío de mercancías propias |
+| **02** | Reubicación de mercancías propias |
+| **03** | Retorno de mercancías |
+| **04** | Importación/Exportación |
+| **05** | Envío de mercancías propiedad de terceros |
+| **06** | Otros |
+
+**Reglas especiales**:
+- Si MotivoTraslado = **"05"**, debe incluirse al menos un nodo **\<Propietario>**
+- Campo **obligatorio** solo si TipoDeComprobante = "T"
+- Si TipoDeComprobante = "I" (Ingreso) o "E" (Egreso), este campo no aplica
+
+**Caso de uso**:
+```python
+from catalogmx.catalogs.sat import MotivoTrasladoCatalog
+
+# Validar motivo traslado
+motivo = MotivoTrasladoCatalog.get_motivo('05')
+print(motivo)
+# {
+#   'codigo': '05',
+#   'descripcion': 'Envío de mercancías propiedad de terceros',
+#   'requiere_propietario': True
+# }
+
+# Verificar si requiere nodo Propietario
+requires_owner = MotivoTrasladoCatalog.requires_propietario('05')
+print(requires_owner)  # True
+```
+
+---
+
+### Cambios en Complemento Comercio Exterior 2.0 (Vigente desde 18 enero 2024)
+
+**Campos ELIMINADOS en versión 2.0**:
+
+1. **TipoOperacion** (era obligatorio en v1.1):
+   - Código "2" para exportación
+   - YA NO SE USA en v2.0
+
+2. **Subdivision** (subdivisiones de países - estados/provincias):
+   - Campo para especificar estados de USA/Canadá
+   - **ELIMINADO en v2.0**
+   - ⚠️ **Sin embargo**, la validación de subdivisiones sigue siendo relevante para direcciones, solo que ahora en diferentes nodos
+
+**Campos MODIFICADOS**:
+
+1. **ClaveDePedimento**: Uso obligatorio ajustado
+2. **CertificadoOrigen**: Ahora obligatorio registrar excepciones de tratados
+3. **ValorUnitarioAduana**: Expandido a 6 decimales (antes 2)
+
+**Nodos AGREGADOS**:
+
+1. **Mercancia > DescripcionesEspecificas**: Requiere descripción detallada del empaque
+
+**Referencia oficial**:
+- Guía de llenado Comercio Exterior 2.0: http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/ComercioExterior_2_0.pdf
+
+---
+
+### Estructura JSON Propuesta
+
+```json
+{
+  "incoterms": [
+    {
+      "code": "CIF",
+      "name": "Cost, Insurance and Freight",
+      "transport_mode": "maritime",
+      "description": "El vendedor paga costo, flete y seguro hasta puerto de destino"
+    }
+  ],
+  "claves_pedimento": [
+    {
+      "clave": "A1",
+      "descripcion": "Exportación definitiva",
+      "regimen": "exportacion",
+      "requiere_certificado_origen": true
+    }
+  ],
+  "monedas": [
+    {
+      "codigo": "USD",
+      "nombre": "Dólar estadounidense",
+      "decimales": 2,
+      "pais": "Estados Unidos"
+    }
+  ],
+  "paises": [
+    {
+      "codigo": "USA",
+      "nombre": "Estados Unidos de América",
+      "iso2": "US",
+      "requiere_subdivision": true
+    }
+  ]
+}
+```
+
+### API Python Propuesta
+
+```python
+from catalogmx.catalogs.sat.comercio_exterior import ComercioExteriorValidator
+
+# Validación completa de CFDI Comercio Exterior
+cfdi_ce = {
+    'tipo_comprobante': 'I',
+    'incoterm': 'CIF',
+    'clave_pedimento': 'A1',
+    'certificado_origen': '0',  # No aplica
+    'moneda': 'USD',
+    'tipo_cambio_usd': 1.0,
+    'total_usd': 50000.00,
+    'mercancias': [
+        {
+            'fraccion_arancelaria': '8471300100',
+            'cantidad_aduana': 100,
+            'unidad_aduana': '14',  # Pieza
+            'valor_unitario_aduana': 500.00,
+            'pais_origen': 'USA'
+        }
+    ],
+    'receptor': {
+        'pais': 'USA',
+        'estado': 'CA',
+        'tipo_registro_trib': '04',  # Tax ID
+        'num_reg_id_trib': '123456789'
+    }
+}
+
+# Validar estructura completa
+resultado = ComercioExteriorValidator.validate(cfdi_ce)
+
+if not resultado['valid']:
+    for error in resultado['errors']:
+        print(f"Error en {error['field']}: {error['message']}")
+```
+
+---
+
 ## 🚛 Carta Porte 3.0 - Infraestructura de Transporte
 
 El **Complemento Carta Porte** es obligatorio para el transporte de bienes y mercancías en territorio nacional. Versión actual: 3.0 (vigente 2025).

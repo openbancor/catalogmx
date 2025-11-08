@@ -51,11 +51,16 @@
   - c_TipoComprobante - Receipt types
   - c_Impuesto - Taxes
   - c_TasaOCuota - Tax rates
-  - c_Moneda - Currencies
-  - c_Pais - Countries
-  - **Comercio Exterior** (Foreign Trade)
+  - c_Moneda - Currencies (ISO 4217) - ~180 currencies
+  - c_Pais - Countries (ISO 3166-1) - ~250 countries
+  - **Comercio Exterior 2.0** (Foreign Trade Complement - vigente desde enero 2024) ⭐⭐
+    - c_INCOTERM - 11 Incoterms 2020 (EXW, FCA, FOB, CIF, DDP, etc.)
+    - c_ClavePedimento - ~40 customs document keys (A1, V1, C1, etc.)
+    - c_FraccionArancelaria - ~20,000 TIGIE tariff classifications (NICO 10-digit)
+    - c_UnidadAduana - ~30 customs measurement units
+    - c_RegistroIdentTribReceptor - Foreign tax ID types
+    - c_MotivoTraslado - Transfer motives (for CFDI type T)
     - c_Estado (for USA/Canada) - US States & Canadian Provinces (ISO 3166-2)
-    - Required for CFDI with foreign trade supplement
 
 - **INEGI Complete** (Phase 3)
   - 2,469 Municipalities
@@ -301,8 +306,14 @@ catalogmx/
 - [ ] c_TipoRelacion
 - [ ] c_Exportacion
 - [ ] c_ObjetoImp
-- [ ] **Comercio Exterior**
-  - [ ] c_Estado (US States & Canadian Provinces for foreign trade)
+- [ ] **Comercio Exterior 2.0** (Complement for foreign trade) ⭐⭐
+  - [ ] c_INCOTERM (11 Incoterms 2020)
+  - [ ] c_ClavePedimento (~40 customs keys)
+  - [ ] c_FraccionArancelaria (~20,000 TIGIE tariff codes - SQLite)
+  - [ ] c_UnidadAduana (~30 customs units)
+  - [ ] c_RegistroIdentTribReceptor (foreign tax ID types)
+  - [ ] c_MotivoTraslado (transfer motives)
+  - [ ] c_Estado (US States & Canadian Provinces - ISO 3166-2)
 
 ### 📋 Phase 3: INEGI Complete
 - [ ] 2,469 Municipalities
