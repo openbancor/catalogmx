@@ -1,12 +1,10 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-from six import string_types
+#!/usr/bin/env python3
 import re
 import datetime
 import unidecode
 
 
-class RFCGeneral(object):
+class RFCGeneral:
     """
     General Functions for RFC, Mexican Tax ID Code (Registro Federal de Contribuyentes),
     Variables:
@@ -68,7 +66,7 @@ class RFCGeneral(object):
         'Y': '35',
         'Z': '36',
         ' ': '37',
-        u'Ñ': '38',
+        'Ñ': '38',
     }
     quotient_remaining_table = {
         ' ': '00',
@@ -157,14 +155,14 @@ class RFCValidator(RFCGeneral):
 
     """
 
-    def __init__(self, rfc):
+    def __init__(self, rfc: str):
         """
 
         :param rfc: The RFC code to be validated, if str then converted to unicode and then to uppercase and stripped.
         :return: RFCValidator instance
         """
         self.rfc = ''
-        if bool(rfc) and isinstance(rfc, string_types):
+        if bool(rfc) and isinstance(rfc, str):
             # if type(rfc) == str:
             #    rfc = rfc.decode('utf-8')
             self.rfc = rfc.upper().strip()
@@ -172,7 +170,7 @@ class RFCValidator(RFCGeneral):
         else:
             self._general_validation = False
 
-    def validators(self, strict=True):
+    def validators(self, strict: bool = True) -> dict:
         """
         Returns a dictionary with the validations.
         :param strict: If False then checksum test won't be checked.
@@ -194,7 +192,7 @@ class RFCValidator(RFCGeneral):
             }
         return {name: function() for name, function in validations.items()}
 
-    def validate(self, strict=True):
+    def validate(self, strict: bool = True) -> bool:
         """
         Retrieves the result of the validations and verifies all of them passed.
         :param strict: If True checksum won't be checked:
@@ -204,7 +202,7 @@ class RFCValidator(RFCGeneral):
 
     is_valid = validate
 
-    def validate_date(self):
+    def validate_date(self) -> bool:
         """
         Checks if the date element in the RFC code is valid
         """
@@ -219,7 +217,7 @@ class RFCValidator(RFCGeneral):
                 return False
         return False
 
-    def validate_homoclave(self):
+    def validate_homoclave(self) -> bool:
         """
         Checks if the homoclave's first 2 characters are correct.
         """
@@ -238,7 +236,7 @@ class RFCValidator(RFCGeneral):
                 return False
         return False
 
-    def validate_general_regex(self):
+    def validate_general_regex(self) -> bool:
         """
         Checks if length of the RFC and a match with the general Regex
         """
@@ -253,7 +251,7 @@ class RFCValidator(RFCGeneral):
             self._general_validation = False
         return self._general_validation
 
-    def detect_fisica_moral(self):
+    def detect_fisica_moral(self) -> str:
         """
         Returns a string based on the kind of RFC, (Persona Moral, Persona Física or Genérico)
         """
@@ -267,7 +265,7 @@ class RFCValidator(RFCGeneral):
         else:
             return 'RFC Inválido'
 
-    def is_generic(self):
+    def is_generic(self) -> bool:
         """
         Checks if the RFC is a Generic one.
 
@@ -282,7 +280,7 @@ class RFCValidator(RFCGeneral):
             return True
         return False
 
-    def is_fisica(self):
+    def is_fisica(self) -> bool:
         """
         Check if the code belongs to a "persona física" (individual)
         """
@@ -294,7 +292,7 @@ class RFCValidator(RFCGeneral):
                 return False
         raise ValueError('Invalid RFC')
 
-    def is_moral(self):
+    def is_moral(self) -> bool:
         """
         Check if the code belongs to "persona moral" (corporation or association)
         """
@@ -306,7 +304,7 @@ class RFCValidator(RFCGeneral):
                 return False
         raise ValueError('Invalid RFC')
 
-    def validate_checksum(self):
+    def validate_checksum(self) -> bool:
         """
         Calculates the checksum of the RFC and verifies it's equal to the last character.
         Generic RFCs' checksums are not calculated since they are incorrect (they're always 0)
@@ -319,14 +317,14 @@ class RFCValidator(RFCGeneral):
         return False
 
     @classmethod
-    def calculate_last_digit(cls, rfc, with_checksum=True):
+    def calculate_last_digit(cls, rfc: str, with_checksum: bool = True) -> str | bool:
         """
         Calculates the checksum of an RFC.
 
         The checksum is calculated with the first 12 digits of the RFC
         If its length is 11 then an extra space is added at the beggining of the string.
         """
-        if bool(rfc) and isinstance(rfc, string_types):
+        if bool(rfc) and isinstance(rfc, str):
             str_rfc = rfc.strip().upper()
         else:
             return False
@@ -418,7 +416,7 @@ class RFCGeneratorUtils(RFCGeneral):
     }
 
     @classmethod
-    def convertir_numero_a_texto(cls, numero_str):
+    def convertir_numero_a_texto(cls, numero_str: str) -> str:
         """Convierte un número (arábigo o romano) a su representación en texto"""
         numero_str = numero_str.strip().upper()
 
@@ -443,7 +441,7 @@ class RFCGeneratorUtils(RFCGeneral):
         return numero_str  # Si no se puede convertir, devolver original
 
     @classmethod
-    def clean_name(cls, nombre):
+    def clean_name(cls, nombre: str) -> str:
         return "".join(char if char in cls.allowed_chars else unidecode.unidecode(char)
                        for char in " ".join(
             elem for elem in nombre.split(" ")
@@ -451,8 +449,8 @@ class RFCGeneratorUtils(RFCGeneral):
                        ).strip().upper()
 
     @staticmethod
-    def name_adapter(name, non_strict=False):
-        if isinstance(name, string_types):
+    def name_adapter(name: str, non_strict: bool = False) -> str:
+        if isinstance(name, str):
             # if isinstance(name, str):
             #    name = name.decode('utf-8')
             return name.upper().strip()
@@ -464,7 +462,7 @@ class RFCGeneratorUtils(RFCGeneral):
 
 
 class RFCGeneratorFisicas(RFCGeneratorUtils):
-    def __init__(self, paterno, materno, nombre, fecha):
+    def __init__(self, paterno: str, materno: str, nombre: str, fecha: datetime.date):
         _dob = datetime.datetime(2000, 1, 1)
         if (paterno.strip()
             and nombre.strip()
@@ -479,49 +477,49 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
             raise ValueError('Invalid Values')
 
     @property
-    def paterno(self):
+    def paterno(self) -> str:
         return self._paterno
 
     @paterno.setter
-    def paterno(self, name):
+    def paterno(self, name: str):
         self._paterno = self.name_adapter(name)
 
     @property
-    def materno(self):
+    def materno(self) -> str:
         return self._materno
 
     @materno.setter
-    def materno(self, name):
+    def materno(self, name: str):
         self._materno = self.name_adapter(name, non_strict=True)
 
     @property
-    def nombre(self):
+    def nombre(self) -> str:
         return self._nombre
 
     @nombre.setter
-    def nombre(self, name):
+    def nombre(self, name: str):
         self._nombre = self.name_adapter(name)
 
     @property
-    def dob(self):
+    def dob(self) -> datetime.date:
         return self._dob
 
     @dob.setter
-    def dob(self, date):
+    def dob(self, date: datetime.date):
         if isinstance(date, datetime.date):
             self._dob = date
 
     @property
-    def rfc(self):
+    def rfc(self) -> str:
         if not self._rfc:
             partial_rfc = self.generate_letters() + self.generate_date() + self.homoclave
             self._rfc = partial_rfc + RFCValidator.calculate_last_digit(partial_rfc, with_checksum=False)
         return self._rfc
 
-    def generate_date(self):
+    def generate_date(self) -> str:
         return self.dob.strftime('%y%m%d')
 
-    def generate_letters(self):
+    def generate_letters(self) -> str:
         extra_letter = False
         clave = []
         clave.append(self.paterno_calculo[0])
@@ -546,22 +544,22 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
         return clave
 
     @property
-    def paterno_calculo(self):
+    def paterno_calculo(self) -> str:
         return self.clean_name(self.paterno)
 
     @property
-    def materno_calculo(self):
+    def materno_calculo(self) -> str:
         return self.clean_name(self.materno)
 
     @property
-    def nombre_calculo(self):
+    def nombre_calculo(self) -> str:
         return self.clean_name(self.nombre)
 
-    def nombre_iscompound(self):
+    def nombre_iscompound(self) -> bool:
         return len(self.nombre_calculo.split(" ")) > 1
 
     @property
-    def nombre_iniciales(self):
+    def nombre_iniciales(self) -> str:
         if self.nombre_iscompound():
             if self.nombre_calculo.split(" ")[0] in ('MARIA', 'JOSE'):
                 return " ".join(self.nombre_calculo.split(" ")[1:])
@@ -571,18 +569,18 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
             return self.nombre_calculo
 
     @property
-    def nombre_completo(self):
+    def nombre_completo(self) -> str:
         return " ".join(comp for comp in (self.paterno_calculo, self.materno_calculo, self.nombre_calculo) if comp)
 
     @property
-    def cadena_homoclave(self):
+    def cadena_homoclave(self) -> str:
         calc_str = ['0', ]
         for character in self.nombre_completo:
             calc_str.append(self.quotient_remaining_table[character])
         return "".join(calc_str)
 
     @property
-    def homoclave(self):
+    def homoclave(self) -> str:
         cadena = self.cadena_homoclave
         suma = sum(int(cadena[n:n + 2]) * int(cadena[n + 1]) for n in range(len(cadena) - 1)) % 1000
         resultado = (suma // 34, suma % 34)
@@ -601,7 +599,7 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
     Total: 12 characters
     """
 
-    def __init__(self, razon_social, fecha):
+    def __init__(self, razon_social: str, fecha: datetime.date):
         """
         Initialize RFC Generator for Persona Moral
 
@@ -616,41 +614,41 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
             raise ValueError('Invalid Values: razon_social must be non-empty and fecha must be a date')
 
     @property
-    def razon_social(self):
+    def razon_social(self) -> str:
         return self._razon_social
 
     @razon_social.setter
-    def razon_social(self, name):
-        if isinstance(name, string_types):
+    def razon_social(self, name: str):
+        if isinstance(name, str):
             self._razon_social = name.upper().strip()
         else:
             raise ValueError('razon_social must be a string')
 
     @property
-    def fecha(self):
+    def fecha(self) -> datetime.date:
         return self._fecha
 
     @fecha.setter
-    def fecha(self, date):
+    def fecha(self, date: datetime.date):
         if isinstance(date, datetime.date):
             self._fecha = date
         else:
             raise ValueError('fecha must be a datetime.date')
 
     @property
-    def rfc(self):
+    def rfc(self) -> str:
         """Generate and return the complete RFC"""
         if not self._rfc:
             partial_rfc = self.generate_letters() + self.generate_date() + self.homoclave
             self._rfc = partial_rfc + RFCValidator.calculate_last_digit(partial_rfc, with_checksum=False)
         return self._rfc
 
-    def generate_date(self):
+    def generate_date(self) -> str:
         """Generate date portion in YYMMDD format"""
         return self.fecha.strftime('%y%m%d')
 
     @property
-    def razon_social_calculo(self):
+    def razon_social_calculo(self) -> str:
         """
         Clean the company name according to SAT official rules:
         - Remove excluded words FIRST (S.A., DE, LA, etc.)
@@ -764,7 +762,7 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
 
         return " ".join(words_final)
 
-    def generate_letters(self):
+    def generate_letters(self) -> str:
         """
         Generate the 3-letter code from company name according to SAT rules:
 
@@ -821,12 +819,12 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         return result
 
     @property
-    def nombre_completo(self):
+    def nombre_completo(self) -> str:
         """Return the complete cleaned company name for homoclave calculation"""
         return self.razon_social_calculo
 
     @property
-    def cadena_homoclave(self):
+    def cadena_homoclave(self) -> str:
         """Generate the string used for homoclave calculation"""
         calc_str = ['0']
         for character in self.nombre_completo:
@@ -837,7 +835,7 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         return "".join(calc_str)
 
     @property
-    def homoclave(self):
+    def homoclave(self) -> str:
         """Calculate the 2-character homoclave"""
         cadena = self.cadena_homoclave
         suma = sum(int(cadena[n:n + 2]) * int(cadena[n + 1]) for n in range(len(cadena) - 1)) % 1000
@@ -845,13 +843,13 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         return self.homoclave_assign_table[resultado[0]] + self.homoclave_assign_table[resultado[1]]
 
 
-class RFCGenerator(object):
+class RFCGenerator:
     """
     Factory class to generate RFC for either Persona Física or Persona Moral
     """
 
     @staticmethod
-    def generate_fisica(nombre, paterno, materno, fecha):
+    def generate_fisica(nombre: str, paterno: str, materno: str, fecha: datetime.date) -> str:
         """Generate RFC for Persona Física (Individual)"""
         return RFCGeneratorFisicas(
             nombre=nombre,
@@ -861,7 +859,7 @@ class RFCGenerator(object):
         ).rfc
 
     @staticmethod
-    def generate_moral(razon_social, fecha):
+    def generate_moral(razon_social: str, fecha: datetime.date) -> str:
         """Generate RFC for Persona Moral (Legal Entity/Company)"""
         return RFCGeneratorMorales(
             razon_social=razon_social,

@@ -9,16 +9,15 @@ Fuente: ICC - International Chamber of Commerce / SAT México
 
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
 
 class IncotermsValidator:
     """Validador y catálogo de INCOTERMS 2020 para Comercio Exterior"""
 
-    _data: Optional[List[Dict]] = None
-    _incoterm_by_code: Optional[Dict[str, Dict]] = None
+    _data: list[dict] | None = None
+    _incoterm_by_code: dict[str, dict] | None = None
 
     @classmethod
-    def _load_data(cls):
+    def _load_data(cls) -> None:
         """Carga los datos del catálogo desde el archivo JSON compartido"""
         if cls._data is None:
             current_file = Path(__file__)
@@ -34,7 +33,7 @@ class IncotermsValidator:
             cls._incoterm_by_code = {item['code']: item for item in cls._data}
 
     @classmethod
-    def get_incoterm(cls, code: str) -> Optional[Dict]:
+    def get_incoterm(cls, code: str) -> dict | None:
         """
         Obtiene un INCOTERM por su código
 
@@ -103,7 +102,7 @@ class IncotermsValidator:
         return transport_type in suitable_for
 
     @classmethod
-    def get_multimodal_incoterms(cls) -> List[str]:
+    def get_multimodal_incoterms(cls) -> list[str]:
         """
         Retorna lista de INCOTERMS válidos para cualquier modo de transporte
 
@@ -123,7 +122,7 @@ class IncotermsValidator:
         ]
 
     @classmethod
-    def get_maritime_incoterms(cls) -> List[str]:
+    def get_maritime_incoterms(cls) -> list[str]:
         """
         Retorna lista de INCOTERMS válidos solo para transporte marítimo
 
@@ -183,7 +182,7 @@ class IncotermsValidator:
         return incoterm.get('seller_pays_insurance', False) if incoterm else False
 
     @classmethod
-    def get_all(cls) -> List[Dict]:
+    def get_all(cls) -> list[dict]:
         """
         Retorna todos los INCOTERMS disponibles
 
@@ -199,7 +198,7 @@ class IncotermsValidator:
         return cls._data.copy()
 
     @classmethod
-    def search(cls, query: str) -> List[Dict]:
+    def search(cls, query: str) -> list[dict]:
         """
         Busca INCOTERMS por nombre o descripción
 

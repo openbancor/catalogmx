@@ -1,16 +1,15 @@
 """Catálogo c_CodigoTransporteAereo - Aeropuertos"""
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
 
 class AeropuertosCatalog:
-    _data: Optional[List[Dict]] = None
-    _by_code: Optional[Dict[str, Dict]] = None
-    _by_iata: Optional[Dict[str, Dict]] = None
-    _by_icao: Optional[Dict[str, Dict]] = None
+    _data: list[dict] | None = None
+    _by_code: dict[str, dict] | None = None
+    _by_iata: dict[str, dict] | None = None
+    _by_icao: dict[str, dict] | None = None
 
     @classmethod
-    def _load_data(cls):
+    def _load_data(cls) -> None:
         if cls._data is None:
             path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'carta_porte_3' / 'aeropuertos.json'
             with open(path, 'r', encoding='utf-8') as f:
@@ -21,19 +20,19 @@ class AeropuertosCatalog:
             cls._by_icao = {item['icao']: item for item in cls._data}
 
     @classmethod
-    def get_aeropuerto(cls, code: str) -> Optional[Dict]:
+    def get_aeropuerto(cls, code: str) -> dict | None:
         """Obtiene aeropuerto por código SAT"""
         cls._load_data()
         return cls._by_code.get(code)
 
     @classmethod
-    def get_by_iata(cls, iata: str) -> Optional[Dict]:
+    def get_by_iata(cls, iata: str) -> dict | None:
         """Obtiene aeropuerto por código IATA"""
         cls._load_data()
         return cls._by_iata.get(iata)
 
     @classmethod
-    def get_by_icao(cls, icao: str) -> Optional[Dict]:
+    def get_by_icao(cls, icao: str) -> dict | None:
         """Obtiene aeropuerto por código ICAO"""
         cls._load_data()
         return cls._by_icao.get(icao)
@@ -44,13 +43,13 @@ class AeropuertosCatalog:
         return cls.get_aeropuerto(code) is not None
 
     @classmethod
-    def get_all(cls) -> List[Dict]:
+    def get_all(cls) -> list[dict]:
         """Obtiene todos los aeropuertos"""
         cls._load_data()
         return cls._data.copy()
 
     @classmethod
-    def get_by_state(cls, state: str) -> List[Dict]:
+    def get_by_state(cls, state: str) -> list[dict]:
         """Obtiene aeropuertos por estado"""
         cls._load_data()
         return [a for a in cls._data if a['state'] == state]

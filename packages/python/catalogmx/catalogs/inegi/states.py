@@ -13,13 +13,13 @@ class StateCatalog:
     Catalog of Mexican states
     """
 
-    _data = None
-    _state_by_code = None
-    _state_by_name = None
-    _state_by_inegi = None
+    _data: list[dict] | None = None
+    _state_by_code: dict[str, dict] | None = None
+    _state_by_name: dict[str, dict] | None = None
+    _state_by_inegi: dict[str, dict] | None = None
 
     @classmethod
-    def _load_data(cls):
+    def _load_data(cls) -> None:
         """Load state data from JSON file"""
         if cls._data is None:
             # Get path to shared data
@@ -42,7 +42,7 @@ class StateCatalog:
                         cls._state_by_name[alias.upper()] = state
 
     @classmethod
-    def get_all_states(cls):
+    def get_all_states(cls) -> list[dict]:
         """
         Get all states in the catalog
 
@@ -52,7 +52,7 @@ class StateCatalog:
         return cls._data.copy()
 
     @classmethod
-    def get_state_by_code(cls, code):
+    def get_state_by_code(cls, code: str) -> dict | None:
         """
         Get state information by CURP code
 
@@ -63,7 +63,7 @@ class StateCatalog:
         return cls._state_by_code.get(code.upper())
 
     @classmethod
-    def get_state_by_name(cls, name):
+    def get_state_by_name(cls, name: str) -> dict | None:
         """
         Get state information by name
 
@@ -74,7 +74,7 @@ class StateCatalog:
         return cls._state_by_name.get(name.upper())
 
     @classmethod
-    def get_state_by_inegi_code(cls, code):
+    def get_state_by_inegi_code(cls, code: str) -> dict | None:
         """
         Get state information by INEGI code
 
@@ -86,7 +86,7 @@ class StateCatalog:
         return cls._state_by_inegi.get(code)
 
     @classmethod
-    def validate_state_code(cls, code):
+    def validate_state_code(cls, code: str) -> bool:
         """
         Validate if a state CURP code exists
 
@@ -96,7 +96,7 @@ class StateCatalog:
         return cls.get_state_by_code(code) is not None
 
     @classmethod
-    def get_state_codes(cls):
+    def get_state_codes(cls) -> dict[str, str]:
         """
         Get dictionary of state names to CURP codes
 
@@ -106,7 +106,7 @@ class StateCatalog:
         return {state['name']: state['code'] for state in cls._data}
 
     @classmethod
-    def get_inegi_codes(cls):
+    def get_inegi_codes(cls) -> dict[str, str]:
         """
         Get dictionary of state names to INEGI codes
 
@@ -117,13 +117,13 @@ class StateCatalog:
 
 
 # Convenience functions
-def get_states_dict():
+def get_states_dict() -> dict[str, dict]:
     """Get dictionary of all states indexed by CURP code"""
     StateCatalog._load_data()
     return StateCatalog._state_by_code.copy()
 
 
-def get_state_names():
+def get_state_names() -> list[str]:
     """Get list of all state names"""
     return [state['name'] for state in StateCatalog.get_all_states()]
 

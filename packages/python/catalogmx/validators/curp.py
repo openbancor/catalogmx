@@ -1,6 +1,4 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-from six import string_types
+#!/usr/bin/env python3
 import re
 import datetime
 import unidecode
@@ -18,7 +16,7 @@ class CURPStructureError(CURPException):
     pass
 
 
-class CURPGeneral(object):
+class CURPGeneral:
     """
     General Functions for CURP (Clave Única de Registro de Población)
 
@@ -116,15 +114,15 @@ class CURPValidator(CURPGeneral):
     Validates a CURP (Clave Única de Registro de Población)
     """
 
-    def __init__(self, curp):
+    def __init__(self, curp: str | None) -> None:
         """
         :param curp: The CURP code to be validated
         """
         self.curp = ''
-        if bool(curp) and isinstance(curp, string_types):
+        if bool(curp) and isinstance(curp, str):
             self.curp = curp.upper().strip()
 
-    def validate(self):
+    def validate(self) -> bool:
         """
         Validates the CURP structure
         :return: True if valid, raises exception if invalid
@@ -137,7 +135,7 @@ class CURPValidator(CURPGeneral):
         else:
             raise CURPStructureError("Invalid CURP structure")
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """
         Checks if CURP is valid without raising exceptions
         :return: True if valid, False otherwise
@@ -147,7 +145,7 @@ class CURPValidator(CURPGeneral):
         except CURPException:
             return False
 
-    def validate_check_digit(self):
+    def validate_check_digit(self) -> bool:
         """
         Valida el dígito verificador (posición 18) del CURP
 
@@ -174,7 +172,7 @@ class CURPGeneratorUtils(CURPGeneral):
     """
 
     @classmethod
-    def clean_name(cls, nombre):
+    def clean_name(cls, nombre: str | None) -> str:
         """Clean name by removing excluded words and special characters"""
         if not nombre:
             return ''
@@ -188,9 +186,9 @@ class CURPGeneratorUtils(CURPGeneral):
         return result
 
     @staticmethod
-    def name_adapter(name, non_strict=False):
+    def name_adapter(name: str | None, non_strict: bool = False) -> str:
         """Adapt name to uppercase and strip"""
-        if isinstance(name, string_types):
+        if isinstance(name, str):
             return name.upper().strip()
         elif non_strict:
             if name is None or not name:
@@ -199,7 +197,7 @@ class CURPGeneratorUtils(CURPGeneral):
             raise ValueError('Name must be a string')
 
     @classmethod
-    def get_first_consonant(cls, word):
+    def get_first_consonant(cls, word: str) -> str:
         """
         Get the first internal consonant from a word
         (the first consonant that is not the first letter)
@@ -213,7 +211,7 @@ class CURPGeneratorUtils(CURPGeneral):
         return 'X'
 
     @classmethod
-    def get_state_code(cls, state):
+    def get_state_code(cls, state: str | None) -> str:
         """
         Get the two-letter state code from state name
         """
@@ -254,7 +252,7 @@ class CURPGenerator(CURPGeneratorUtils):
     - Birth state
     """
 
-    def __init__(self, nombre, paterno, materno, fecha_nacimiento, sexo, estado):
+    def __init__(self, nombre: str, paterno: str, materno: str | None, fecha_nacimiento: datetime.date, sexo: str, estado: str | None) -> None:
         """
         Initialize CURP Generator
 
@@ -283,46 +281,46 @@ class CURPGenerator(CURPGeneratorUtils):
         self._curp = ''
 
     @property
-    def nombre(self):
+    def nombre(self) -> str:
         return self._nombre
 
     @nombre.setter
-    def nombre(self, value):
+    def nombre(self, value: str) -> None:
         self._nombre = self.name_adapter(value)
 
     @property
-    def paterno(self):
+    def paterno(self) -> str:
         return self._paterno
 
     @paterno.setter
-    def paterno(self, value):
+    def paterno(self, value: str) -> None:
         self._paterno = self.name_adapter(value)
 
     @property
-    def materno(self):
+    def materno(self) -> str:
         return self._materno
 
     @materno.setter
-    def materno(self, value):
+    def materno(self, value: str | None) -> None:
         self._materno = self.name_adapter(value, non_strict=True)
 
     @property
-    def nombre_calculo(self):
+    def nombre_calculo(self) -> str:
         """Get cleaned first name"""
         return self.clean_name(self.nombre)
 
     @property
-    def paterno_calculo(self):
+    def paterno_calculo(self) -> str:
         """Get cleaned first surname"""
         return self.clean_name(self.paterno)
 
     @property
-    def materno_calculo(self):
+    def materno_calculo(self) -> str:
         """Get cleaned second surname"""
         return self.clean_name(self.materno) if self.materno else ''
 
     @property
-    def nombre_iniciales(self):
+    def nombre_iniciales(self) -> str:
         """
         Get the first name to use for initials
         Skip common first names like JOSE and MARIA in compound names
@@ -336,7 +334,7 @@ class CURPGenerator(CURPGeneratorUtils):
                 return " ".join(words[1:])
         return self.nombre_calculo
 
-    def generate_letters(self):
+    def generate_letters(self) -> str:
         """
         Generate the first 4 letters of CURP
 
@@ -388,11 +386,11 @@ class CURPGenerator(CURPGeneratorUtils):
 
         return result
 
-    def generate_date(self):
+    def generate_date(self) -> str:
         """Generate date portion in YYMMDD format"""
         return self.fecha_nacimiento.strftime('%y%m%d')
 
-    def generate_consonants(self):
+    def generate_consonants(self) -> str:
         """
         Generate the 3-consonant section
 
@@ -419,7 +417,7 @@ class CURPGenerator(CURPGeneratorUtils):
 
         return "".join(consonants)
 
-    def generate_homoclave(self):
+    def generate_homoclave(self) -> str:
         """
         Generate the 2-character homoclave (positions 17-18)
 
@@ -452,7 +450,7 @@ class CURPGenerator(CURPGeneratorUtils):
         return differentiator + check_digit
 
     @staticmethod
-    def calculate_check_digit(curp_17):
+    def calculate_check_digit(curp_17: str) -> str:
         """
         Calcula el dígito verificador (posición 18) según el algoritmo oficial RENAPO
 
@@ -495,7 +493,7 @@ class CURPGenerator(CURPGeneratorUtils):
         return str(digito)
 
     @property
-    def curp(self):
+    def curp(self) -> str:
         """Generate and return the complete CURP"""
         if not self._curp:
             letters = self.generate_letters()

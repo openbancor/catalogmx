@@ -1,5 +1,4 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 """
 NSS (Número de Seguridad Social) Validator
 
@@ -20,7 +19,6 @@ Example: 12345678903
 
 Note: The check digit uses a modified Luhn algorithm specific to NSS.
 """
-from six import string_types
 
 
 class NSSException(Exception):
@@ -46,15 +44,15 @@ class NSSValidator:
 
     LENGTH = 11
 
-    def __init__(self, nss):
+    def __init__(self, nss: str | None) -> None:
         """
         :param nss: The NSS number to validate
         """
         self.nss = ''
-        if bool(nss) and isinstance(nss, string_types):
+        if bool(nss) and isinstance(nss, str):
             self.nss = nss.strip()
 
-    def validate(self):
+    def validate(self) -> bool:
         """
         Validates the NSS structure and check digit
         :return: True if valid, raises exception if invalid
@@ -75,7 +73,7 @@ class NSSValidator:
 
         return True
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """
         Checks if NSS is valid without raising exceptions
         :return: True if valid, False otherwise
@@ -86,7 +84,7 @@ class NSSValidator:
             return False
 
     @classmethod
-    def calculate_check_digit(cls, nss_10):
+    def calculate_check_digit(cls, nss_10: str) -> str:
         """
         Calculates the check digit for a 10-digit NSS using modified Luhn algorithm
 
@@ -125,7 +123,7 @@ class NSSValidator:
         return str(check_digit)
 
     @classmethod
-    def verify_check_digit(cls, nss):
+    def verify_check_digit(cls, nss: str) -> bool:
         """
         Verifies the check digit of an 11-digit NSS
 
@@ -138,7 +136,7 @@ class NSSValidator:
         calculated = cls.calculate_check_digit(nss[:10])
         return calculated == nss[10]
 
-    def get_subdelegation(self):
+    def get_subdelegation(self) -> str | None:
         """
         Extracts the subdelegation code (first 2 digits)
         :return: Subdelegation code as string
@@ -147,7 +145,7 @@ class NSSValidator:
             return self.nss[:2]
         return None
 
-    def get_year(self):
+    def get_year(self) -> str | None:
         """
         Extracts the registration year (digits 3-4, last 2 digits of year)
         Note: This is ambiguous - could be 19XX or 20XX
@@ -157,7 +155,7 @@ class NSSValidator:
             return self.nss[2:4]
         return None
 
-    def get_serial(self):
+    def get_serial(self) -> str | None:
         """
         Extracts the registration serial (digits 5-6)
         :return: Serial number as string
@@ -166,7 +164,7 @@ class NSSValidator:
             return self.nss[4:6]
         return None
 
-    def get_sequential(self):
+    def get_sequential(self) -> str | None:
         """
         Extracts the sequential number (digits 7-10)
         :return: Sequential number as string
@@ -175,7 +173,7 @@ class NSSValidator:
             return self.nss[6:10]
         return None
 
-    def get_check_digit(self):
+    def get_check_digit(self) -> str | None:
         """
         Extracts the check digit (digit 11)
         :return: Check digit as string
@@ -184,7 +182,7 @@ class NSSValidator:
             return self.nss[10]
         return None
 
-    def get_parts(self):
+    def get_parts(self) -> dict[str, str] | None:
         """
         Returns all NSS parts as a dictionary
         :return: Dictionary with subdelegation, year, serial, sequential, check_digit
@@ -202,7 +200,7 @@ class NSSValidator:
         }
 
 
-def validate_nss(nss):
+def validate_nss(nss: str | None) -> bool:
     """
     Helper function to validate an NSS
 
@@ -213,7 +211,7 @@ def validate_nss(nss):
     return validator.is_valid()
 
 
-def generate_nss(subdelegation, year, serial, sequential):
+def generate_nss(subdelegation: str | int, year: str | int, serial: str | int, sequential: str | int) -> str:
     """
     Generates a complete NSS with check digit
 
@@ -244,7 +242,7 @@ def generate_nss(subdelegation, year, serial, sequential):
     return nss_10 + check_digit
 
 
-def get_nss_info(nss):
+def get_nss_info(nss: str | None) -> dict[str, str] | None:
     """
     Helper function to get information from an NSS
 

@@ -2,16 +2,16 @@
 
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
 
 class MonedaCatalog:
     """Catálogo de monedas para operaciones de comercio exterior"""
 
-    _data: Optional[List[Dict]] = None
-    _moneda_by_code: Optional[Dict[str, Dict]] = None
+    _data: list[dict] | None = None
+    _moneda_by_code: dict[str, dict] | None = None
 
     @classmethod
-    def _load_data(cls):
+    def _load_data(cls) -> None:
+        """Carga los datos del catálogo desde el archivo JSON compartido"""
         if cls._data is None:
             current_file = Path(__file__)
             shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
@@ -24,7 +24,7 @@ class MonedaCatalog:
             cls._moneda_by_code = {item['codigo']: item for item in cls._data}
 
     @classmethod
-    def get_moneda(cls, code: str) -> Optional[Dict]:
+    def get_moneda(cls, code: str) -> dict | None:
         """Obtiene una moneda por su código ISO 4217"""
         cls._load_data()
         return cls._moneda_by_code.get(code.upper())
@@ -35,15 +35,15 @@ class MonedaCatalog:
         return cls.get_moneda(code) is not None
 
     @classmethod
-    def validate_conversion_usd(cls, cfdi_data: Dict) -> Dict:
+    def validate_conversion_usd(cls, cfdi_data: dict) -> dict:
         """
         Valida la conversión a USD según reglas SAT
 
         Args:
-            cfdi_data: Dict con 'moneda', 'total', 'tipo_cambio_usd', 'total_usd'
+            cfdi_data: dict con 'moneda', 'total', 'tipo_cambio_usd', 'total_usd'
 
         Returns:
-            Dict con 'valid' (bool) y 'errors' (list)
+            dict con 'valid' (bool) y 'errors' (list)
         """
         errors = []
         moneda = cfdi_data.get('moneda', '').upper()
@@ -81,13 +81,13 @@ class MonedaCatalog:
         }
 
     @classmethod
-    def get_all(cls) -> List[Dict]:
+    def get_all(cls) -> list[dict]:
         """Retorna todas las monedas"""
         cls._load_data()
         return cls._data.copy()
 
     @classmethod
-    def search(cls, query: str) -> List[Dict]:
+    def search(cls, query: str) -> list[dict]:
         """Busca monedas por código, nombre o país"""
         cls._load_data()
         query_lower = query.lower()

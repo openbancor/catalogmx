@@ -1,14 +1,13 @@
 """Catálogo c_PeriodicidadPago"""
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
 
 class PeriodicidadPagoCatalog:
-    _data: Optional[List[Dict]] = None
-    _by_code: Optional[Dict[str, Dict]] = None
+    _data: list[dict] | None = None
+    _by_code: dict[str, dict] | None = None
 
     @classmethod
-    def _load_data(cls):
+    def _load_data(cls) -> None:
         if cls._data is None:
             path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'nomina_1.2' / 'periodicidad_pago.json'
             with open(path, 'r', encoding='utf-8') as f:
@@ -17,7 +16,7 @@ class PeriodicidadPagoCatalog:
             cls._by_code = {item['code']: item for item in cls._data}
 
     @classmethod
-    def get_periodicidad(cls, code: str) -> Optional[Dict]:
+    def get_periodicidad(cls, code: str) -> dict | None:
         """Obtiene periodicidad de pago por código"""
         cls._load_data()
         return cls._by_code.get(code)
@@ -28,7 +27,7 @@ class PeriodicidadPagoCatalog:
         return cls.get_periodicidad(code) is not None
 
     @classmethod
-    def get_all(cls) -> List[Dict]:
+    def get_all(cls) -> list[dict]:
         """Obtiene todas las periodicidades"""
         cls._load_data()
         return cls._data.copy()

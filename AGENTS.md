@@ -15,8 +15,8 @@ This document provides instructions for AI agents (Claude, GPT-4, etc.) working 
 - Banking: Banxico
 
 **Tech Stack**:
-- Python 3.8+
-- Type hints throughout
+- Python 3.10+
+- Modern type hints (PEP 604 union syntax with `|`)
 - Lazy loading architecture
 - JSON-based catalog data
 - pytest for testing
@@ -116,14 +116,16 @@ packages/
 """Catalog description"""
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
 
 class CatalogName:
-    _data: Optional[List[Dict]] = None
-    _by_code: Optional[Dict[str, Dict]] = None
+    """Catalog description in Spanish"""
+
+    _data: list[dict] | None = None
+    _by_code: dict[str, dict] | None = None
 
     @classmethod
-    def _load_data(cls):
+    def _load_data(cls) -> None:
+        """Carga los datos del catálogo si aún no han sido cargados"""
         if cls._data is None:
             path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'path' / 'file.json'
             with open(path, 'r', encoding='utf-8') as f:
@@ -132,7 +134,7 @@ class CatalogName:
             cls._by_code = {item['code']: item for item in cls._data}
 
     @classmethod
-    def get_item(cls, code: str) -> Optional[Dict]:
+    def get_item(cls, code: str) -> dict | None:
         """Get item by code"""
         cls._load_data()
         return cls._by_code.get(code)
@@ -143,7 +145,7 @@ class CatalogName:
         return cls.get_item(code) is not None
 
     @classmethod
-    def get_all(cls) -> List[Dict]:
+    def get_all(cls) -> list[dict]:
         """Get all items"""
         cls._load_data()
         return cls._data.copy()
@@ -153,8 +155,11 @@ class CatalogName:
 - Use class methods, not instance methods
 - Always call `cls._load_data()` before accessing data
 - Return copies of lists (`cls._data.copy()`)
-- Type hints on all methods
+- Type hints on all methods using Python 3.10+ syntax (no `typing` imports)
 - Docstrings for public methods
+- Use `list[dict]` instead of `List[Dict]`
+- Use `dict | None` instead of `Optional[Dict]`
+- Add `-> None` return type to `_load_data()` methods
 
 ### 5. Naming Conventions
 
@@ -365,17 +370,17 @@ path = "/absolute/path/to/file.json"  # ❌
 
 ```python
 # DO: Lazy load with class variables
-def get_item(cls, code: str):
+def get_item(cls, code: str) -> dict | None:
     cls._load_data()  # ✅ Loads once
     return cls._by_code.get(code)
 
 # DO: Return copies
-def get_all(cls):
+def get_all(cls) -> list[dict]:
     return cls._data.copy()  # ✅ Safe
 
-# DO: Use class variables
+# DO: Use class variables with modern type hints
 class Catalog:
-    _data: Optional[List[Dict]] = None  # ✅
+    _data: list[dict] | None = None  # ✅
 
 # DO: Use relative paths
 path = Path(__file__).parent / 'data.json'  # ✅

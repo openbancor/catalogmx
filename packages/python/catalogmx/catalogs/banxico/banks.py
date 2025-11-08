@@ -14,12 +14,12 @@ class BankCatalog:
     Catalog of Mexican banks
     """
 
-    _data = None
-    _bank_by_code = None
-    _bank_by_name = None
+    _data: list[dict] | None = None
+    _bank_by_code: dict[str, dict] | None = None
+    _bank_by_name: dict[str, dict] | None = None
 
     @classmethod
-    def _load_data(cls):
+    def _load_data(cls) -> None:
         """Load bank data from JSON file"""
         if cls._data is None:
             # Get path to shared data
@@ -35,7 +35,7 @@ class BankCatalog:
             cls._bank_by_name = {bank['name'].upper(): bank for bank in cls._data}
 
     @classmethod
-    def get_all_banks(cls):
+    def get_all_banks(cls) -> list[dict]:
         """
         Get all banks in the catalog
 
@@ -45,7 +45,7 @@ class BankCatalog:
         return cls._data.copy()
 
     @classmethod
-    def get_bank_by_code(cls, code):
+    def get_bank_by_code(cls, code: str) -> dict | None:
         """
         Get bank information by code
 
@@ -57,7 +57,7 @@ class BankCatalog:
         return cls._bank_by_code.get(code)
 
     @classmethod
-    def get_bank_by_name(cls, name):
+    def get_bank_by_name(cls, name: str) -> dict | None:
         """
         Get bank information by name
 
@@ -68,7 +68,7 @@ class BankCatalog:
         return cls._bank_by_name.get(name.upper())
 
     @classmethod
-    def is_spei_participant(cls, code):
+    def is_spei_participant(cls, code: str) -> bool:
         """
         Check if a bank participates in SPEI
 
@@ -79,7 +79,7 @@ class BankCatalog:
         return bank.get('spei', False) if bank else False
 
     @classmethod
-    def get_spei_banks(cls):
+    def get_spei_banks(cls) -> list[dict]:
         """
         Get all banks that participate in SPEI
 
@@ -89,7 +89,7 @@ class BankCatalog:
         return [bank for bank in cls._data if bank.get('spei', False)]
 
     @classmethod
-    def validate_bank_code(cls, code):
+    def validate_bank_code(cls, code: str) -> bool:
         """
         Validate if a bank code exists
 
@@ -100,13 +100,13 @@ class BankCatalog:
 
 
 # Convenience dictionaries for direct access
-def get_banks_dict():
+def get_banks_dict() -> dict[str, dict]:
     """Get dictionary of all banks indexed by code"""
     BankCatalog._load_data()
     return BankCatalog._bank_by_code.copy()
 
 
-def get_spei_banks():
+def get_spei_banks() -> list[dict]:
     """Get list of all SPEI participant banks"""
     return BankCatalog.get_spei_banks()
 

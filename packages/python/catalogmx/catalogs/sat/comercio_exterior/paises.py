@@ -2,17 +2,17 @@
 
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
 
 class PaisCatalog:
     """Catálogo de países para identificar origen/destino en comercio exterior"""
 
-    _data: Optional[List[Dict]] = None
-    _pais_by_code: Optional[Dict[str, Dict]] = None
-    _pais_by_iso2: Optional[Dict[str, Dict]] = None
+    _data: list[dict] | None = None
+    _pais_by_code: dict[str, dict] | None = None
+    _pais_by_iso2: dict[str, dict] | None = None
 
     @classmethod
-    def _load_data(cls):
+    def _load_data(cls) -> None:
+        """Carga los datos del catálogo desde el archivo JSON compartido"""
         if cls._data is None:
             current_file = Path(__file__)
             shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
@@ -26,7 +26,7 @@ class PaisCatalog:
             cls._pais_by_iso2 = {item['iso2']: item for item in cls._data}
 
     @classmethod
-    def get_pais(cls, code: str) -> Optional[Dict]:
+    def get_pais(cls, code: str) -> dict | None:
         """Obtiene un país por su código ISO 3166-1 Alpha-3"""
         cls._load_data()
         code_upper = code.upper()
@@ -59,13 +59,13 @@ class PaisCatalog:
         return pais.get('requiere_subdivision', False) if pais else False
 
     @classmethod
-    def get_all(cls) -> List[Dict]:
+    def get_all(cls) -> list[dict]:
         """Retorna todos los países"""
         cls._load_data()
         return cls._data.copy()
 
     @classmethod
-    def search(cls, query: str) -> List[Dict]:
+    def search(cls, query: str) -> list[dict]:
         """Busca países por código o nombre"""
         cls._load_data()
         query_lower = query.lower()

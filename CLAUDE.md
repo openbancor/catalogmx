@@ -52,12 +52,14 @@ With 40+ catalogs containing thousands of records, loading everything at startup
 
 ```python
 class CatalogExample:
+    """Example catalog using Python 3.10+ type hints"""
+
     # Class variables (shared across all instances)
-    _data: Optional[List[Dict]] = None
-    _by_code: Optional[Dict[str, Dict]] = None
+    _data: list[dict] | None = None
+    _by_code: dict[str, dict] | None = None
 
     @classmethod
-    def _load_data(cls):
+    def _load_data(cls) -> None:
         """Load data only once, on first access"""
         if cls._data is None:
             # Load JSON
@@ -70,7 +72,7 @@ class CatalogExample:
             cls._by_code = {item['code']: item for item in cls._data}
 
     @classmethod
-    def get_item(cls, code: str) -> Optional[Dict]:
+    def get_item(cls, code: str) -> dict | None:
         """Public API - ensures data is loaded before access"""
         cls._load_data()
         return cls._by_code.get(code)
@@ -944,6 +946,45 @@ The architecture balances simplicity with power, making it suitable for everythi
 
 ---
 
+## 🔄 Python 3.10+ Type Hints
+
+catalogmx uses modern Python 3.10+ type hint syntax throughout:
+
+### Union Types (PEP 604)
+```python
+# ❌ Old style (Python 3.8-3.9)
+from typing import Optional, Union, Dict, List
+
+def get_item(code: str) -> Optional[Dict]:
+    pass
+
+# ✅ New style (Python 3.10+)
+def get_item(code: str) -> dict | None:
+    pass
+```
+
+### Built-in Generic Types (PEP 585)
+```python
+# ❌ Old style
+from typing import List, Dict
+
+_data: Optional[List[Dict]] = None
+_by_code: Optional[Dict[str, Dict]] = None
+
+# ✅ New style
+_data: list[dict] | None = None
+_by_code: dict[str, dict] | None = None
+```
+
+### No typing Module Needed
+All type hints use built-in types:
+- `list` instead of `typing.List`
+- `dict` instead of `typing.Dict`
+- `| None` instead of `typing.Optional`
+- `str | int` instead of `typing.Union[str, int]`
+
+---
+
 **Last updated**: 2025-11-08
-**Architecture version**: 1.0
-**Target Python version**: 3.8+
+**Architecture version**: 2.0
+**Target Python version**: 3.10+

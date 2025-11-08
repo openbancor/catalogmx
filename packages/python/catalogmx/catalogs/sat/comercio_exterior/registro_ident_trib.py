@@ -3,16 +3,16 @@
 import json
 import re
 from pathlib import Path
-from typing import Dict, List, Optional
 
 class RegistroIdentTribCatalog:
     """Catálogo de tipos de registro tributario del receptor extranjero"""
 
-    _data: Optional[List[Dict]] = None
-    _tipo_by_code: Optional[Dict[str, Dict]] = None
+    _data: list[dict] | None = None
+    _tipo_by_code: dict[str, dict] | None = None
 
     @classmethod
-    def _load_data(cls):
+    def _load_data(cls) -> None:
+        """Carga los datos del catálogo desde el archivo JSON compartido"""
         if cls._data is None:
             current_file = Path(__file__)
             shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
@@ -25,7 +25,7 @@ class RegistroIdentTribCatalog:
             cls._tipo_by_code = {item['code']: item for item in cls._data}
 
     @classmethod
-    def get_tipo(cls, code: str) -> Optional[Dict]:
+    def get_tipo(cls, code: str) -> dict | None:
         """Obtiene un tipo de registro por su código"""
         cls._load_data()
         return cls._tipo_by_code.get(code)
@@ -36,7 +36,7 @@ class RegistroIdentTribCatalog:
         return cls.get_tipo(code) is not None
 
     @classmethod
-    def validate_tax_id(cls, tipo_registro: str, num_reg_id_trib: str) -> Dict:
+    def validate_tax_id(cls, tipo_registro: str, num_reg_id_trib: str) -> dict:
         """
         Valida un número de identificación tributaria según su tipo
 
@@ -45,7 +45,7 @@ class RegistroIdentTribCatalog:
             num_reg_id_trib: Número de identificación tributaria
 
         Returns:
-            Dict con 'valid' (bool) y 'errors' (list)
+            dict con 'valid' (bool) y 'errors' (list)
         """
         tipo = cls.get_tipo(tipo_registro)
         if not tipo:
@@ -66,7 +66,7 @@ class RegistroIdentTribCatalog:
         }
 
     @classmethod
-    def get_all(cls) -> List[Dict]:
+    def get_all(cls) -> list[dict]:
         """Retorna todos los tipos de registro tributario"""
         cls._load_data()
         return cls._data.copy()

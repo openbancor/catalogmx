@@ -2,16 +2,16 @@
 
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
 
 class UnidadAduanaCatalog:
     """Catálogo de unidades de medida reconocidas por aduanas"""
 
-    _data: Optional[List[Dict]] = None
-    _unidad_by_code: Optional[Dict[str, Dict]] = None
+    _data: list[dict] | None = None
+    _unidad_by_code: dict[str, dict] | None = None
 
     @classmethod
-    def _load_data(cls):
+    def _load_data(cls) -> None:
+        """Carga los datos del catálogo desde el archivo JSON compartido"""
         if cls._data is None:
             current_file = Path(__file__)
             shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
@@ -24,7 +24,7 @@ class UnidadAduanaCatalog:
             cls._unidad_by_code = {item['code']: item for item in cls._data}
 
     @classmethod
-    def get_unidad(cls, code: str) -> Optional[Dict]:
+    def get_unidad(cls, code: str) -> dict | None:
         """Obtiene una unidad de medida por su código"""
         cls._load_data()
         return cls._unidad_by_code.get(code)
@@ -35,13 +35,13 @@ class UnidadAduanaCatalog:
         return cls.get_unidad(code) is not None
 
     @classmethod
-    def get_by_type(cls, unit_type: str) -> List[Dict]:
+    def get_by_type(cls, unit_type: str) -> list[dict]:
         """Obtiene unidades por tipo (weight, volume, length, area, unit, container)"""
         cls._load_data()
         return [item for item in cls._data if item.get('type') == unit_type]
 
     @classmethod
-    def get_all(cls) -> List[Dict]:
+    def get_all(cls) -> list[dict]:
         """Retorna todas las unidades de medida aduanera"""
         cls._load_data()
         return cls._data.copy()

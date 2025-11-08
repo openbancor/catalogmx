@@ -1,14 +1,13 @@
 """Catálogo c_MaterialPeligroso - Materiales Peligrosos ONU"""
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
 
 class MaterialPeligrosoCatalog:
-    _data: Optional[List[Dict]] = None
-    _by_un_number: Optional[Dict[str, Dict]] = None
+    _data: list[dict] | None = None
+    _by_un_number: dict[str, dict] | None = None
 
     @classmethod
-    def _load_data(cls):
+    def _load_data(cls) -> None:
         if cls._data is None:
             path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'carta_porte_3' / 'material_peligroso.json'
             with open(path, 'r', encoding='utf-8') as f:
@@ -17,7 +16,7 @@ class MaterialPeligrosoCatalog:
             cls._by_un_number = {item['un_number']: item for item in cls._data}
 
     @classmethod
-    def get_material(cls, un_number: str) -> Optional[Dict]:
+    def get_material(cls, un_number: str) -> dict | None:
         """Obtiene material peligroso por número ONU"""
         cls._load_data()
         return cls._by_un_number.get(un_number)
@@ -28,19 +27,19 @@ class MaterialPeligrosoCatalog:
         return cls.get_material(un_number) is not None
 
     @classmethod
-    def get_all(cls) -> List[Dict]:
+    def get_all(cls) -> list[dict]:
         """Obtiene todos los materiales peligrosos"""
         cls._load_data()
         return cls._data.copy()
 
     @classmethod
-    def get_by_class(cls, hazard_class: str) -> List[Dict]:
+    def get_by_class(cls, hazard_class: str) -> list[dict]:
         """Obtiene materiales por clase de peligro (1-9)"""
         cls._load_data()
         return [m for m in cls._data if m['class'].startswith(hazard_class)]
 
     @classmethod
-    def get_by_packing_group(cls, packing_group: str) -> List[Dict]:
+    def get_by_packing_group(cls, packing_group: str) -> list[dict]:
         """Obtiene materiales por grupo de embalaje (I, II, III)"""
         cls._load_data()
         return [m for m in cls._data if m.get('packing_group') and packing_group in m['packing_group']]

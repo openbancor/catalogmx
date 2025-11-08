@@ -1,5 +1,4 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 """
 CLABE (Clave Bancaria Estandarizada) Validator
 
@@ -18,7 +17,6 @@ Example: 002010077777777771
     07777777777: Account number
     1: Check digit
 """
-from six import string_types
 
 
 class CLABEException(Exception):
@@ -47,15 +45,15 @@ class CLABEValidator:
     # Weights for check digit calculation (positions 0-16)
     WEIGHTS = [3, 7, 1] * 6  # Pattern repeats: 3,7,1,3,7,1,...
 
-    def __init__(self, clabe):
+    def __init__(self, clabe: str | None) -> None:
         """
         :param clabe: The CLABE number to validate
         """
         self.clabe = ''
-        if bool(clabe) and isinstance(clabe, string_types):
+        if bool(clabe) and isinstance(clabe, str):
             self.clabe = clabe.strip()
 
-    def validate(self):
+    def validate(self) -> bool:
         """
         Validates the CLABE structure and check digit
         :return: True if valid, raises exception if invalid
@@ -76,7 +74,7 @@ class CLABEValidator:
 
         return True
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """
         Checks if CLABE is valid without raising exceptions
         :return: True if valid, False otherwise
@@ -87,7 +85,7 @@ class CLABEValidator:
             return False
 
     @classmethod
-    def calculate_check_digit(cls, clabe_17):
+    def calculate_check_digit(cls, clabe_17: str) -> str:
         """
         Calculates the check digit for a 17-digit CLABE
 
@@ -120,7 +118,7 @@ class CLABEValidator:
         return str(check_digit)
 
     @classmethod
-    def verify_check_digit(cls, clabe):
+    def verify_check_digit(cls, clabe: str) -> bool:
         """
         Verifies the check digit of an 18-digit CLABE
 
@@ -133,7 +131,7 @@ class CLABEValidator:
         calculated = cls.calculate_check_digit(clabe[:17])
         return calculated == clabe[17]
 
-    def get_bank_code(self):
+    def get_bank_code(self) -> str | None:
         """
         Extracts the bank code (first 3 digits)
         :return: Bank code as string
@@ -142,7 +140,7 @@ class CLABEValidator:
             return self.clabe[:3]
         return None
 
-    def get_branch_code(self):
+    def get_branch_code(self) -> str | None:
         """
         Extracts the branch/plaza code (digits 4-6)
         :return: Branch code as string
@@ -151,7 +149,7 @@ class CLABEValidator:
             return self.clabe[3:6]
         return None
 
-    def get_account_number(self):
+    def get_account_number(self) -> str | None:
         """
         Extracts the account number (digits 7-17)
         :return: Account number as string
@@ -160,7 +158,7 @@ class CLABEValidator:
             return self.clabe[6:17]
         return None
 
-    def get_check_digit(self):
+    def get_check_digit(self) -> str | None:
         """
         Extracts the check digit (digit 18)
         :return: Check digit as string
@@ -169,7 +167,7 @@ class CLABEValidator:
             return self.clabe[17]
         return None
 
-    def get_parts(self):
+    def get_parts(self) -> dict[str, str] | None:
         """
         Returns all CLABE parts as a dictionary
         :return: Dictionary with bank_code, branch_code, account_number, check_digit
@@ -186,7 +184,7 @@ class CLABEValidator:
         }
 
 
-def validate_clabe(clabe):
+def validate_clabe(clabe: str | None) -> bool:
     """
     Helper function to validate a CLABE
 
@@ -197,7 +195,7 @@ def validate_clabe(clabe):
     return validator.is_valid()
 
 
-def generate_clabe(bank_code, branch_code, account_number):
+def generate_clabe(bank_code: str | int, branch_code: str | int, account_number: str | int) -> str:
     """
     Generates a complete CLABE with check digit
 
@@ -224,7 +222,7 @@ def generate_clabe(bank_code, branch_code, account_number):
     return clabe_17 + check_digit
 
 
-def get_clabe_info(clabe):
+def get_clabe_info(clabe: str | None) -> dict[str, str] | None:
     """
     Helper function to get information from a CLABE
 

@@ -4,9 +4,10 @@
 
 A complete Python library for validating Mexican identifiers and accessing official catalogs from SAT, Banxico, INEGI, SEPOMEX, and other government agencies.
 
-[![Python](https://img.shields.io/badge/python-3.8+-blue)]()
+[![Python](https://img.shields.io/badge/python-3.10+-blue)]()
 [![License](https://img.shields.io/badge/license-BSD-blue)]()
 [![Catalogs](https://img.shields.io/badge/catalogs-40+-green)]()
+[![Type Hints](https://img.shields.io/badge/type__hints-PEP%20604-blue)]()
 
 ---
 
@@ -323,9 +324,10 @@ catalogmx/
 - Fast initialization
 
 ### Type Safety
-- Comprehensive type hints throughout
-- Python 3.8+ compatible
-- IDE autocomplete support
+- Comprehensive type hints using Python 3.10+ syntax (PEP 604)
+- Modern union types with `|` operator
+- No `typing` module imports needed
+- Full IDE autocomplete and static analysis support
 
 ---
 
