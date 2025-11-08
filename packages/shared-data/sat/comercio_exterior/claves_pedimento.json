@@ -1,0 +1,266 @@
+{
+  "metadata": {
+    "catalog": "c_ClavePedimento",
+    "version": "1.0",
+    "source": "SAT - Anexo 22 de las RGCE (Reglas Generales de Comercio Exterior)",
+    "description": "Claves de pedimento aduanero que amparan operaciones de comercio exterior",
+    "last_updated": "2025-11-08",
+    "total_records": 42
+  },
+  "claves": [
+    {
+      "clave": "A1",
+      "descripcion": "Exportación definitiva",
+      "regimen": "exportacion",
+      "tipo_operacion": "definitiva",
+      "requiere_certificado_origen": true
+    },
+    {
+      "clave": "A2",
+      "descripcion": "Exportación de vehículos usados",
+      "regimen": "exportacion",
+      "tipo_operacion": "definitiva"
+    },
+    {
+      "clave": "A3",
+      "descripcion": "Exportación temporal",
+      "regimen": "exportacion",
+      "tipo_operacion": "temporal"
+    },
+    {
+      "clave": "A4",
+      "descripcion": "Exportación temporal para retorno en el mismo estado",
+      "regimen": "exportacion",
+      "tipo_operacion": "temporal"
+    },
+    {
+      "clave": "V1",
+      "descripcion": "Importación definitiva",
+      "regimen": "importacion",
+      "tipo_operacion": "definitiva"
+    },
+    {
+      "clave": "V2",
+      "descripcion": "Importación de vehículos usados",
+      "regimen": "importacion",
+      "tipo_operacion": "definitiva"
+    },
+    {
+      "clave": "V3",
+      "descripcion": "Importación con donación",
+      "regimen": "importacion",
+      "tipo_operacion": "definitiva"
+    },
+    {
+      "clave": "V4",
+      "descripcion": "Importación con franquicia",
+      "regimen": "importacion",
+      "tipo_operacion": "definitiva"
+    },
+    {
+      "clave": "V5",
+      "descripcion": "Importación temporal de bienes de activo fijo",
+      "regimen": "importacion",
+      "tipo_operacion": "temporal"
+    },
+    {
+      "clave": "V6",
+      "descripcion": "Importación temporal de bienes de capital",
+      "regimen": "importacion",
+      "tipo_operacion": "temporal"
+    },
+    {
+      "clave": "C1",
+      "descripcion": "Retorno de mercancía exportada temporalmente",
+      "regimen": "retorno",
+      "tipo_operacion": "retorno_exportacion"
+    },
+    {
+      "clave": "C2",
+      "descripcion": "Retorno de mercancía importada temporalmente",
+      "regimen": "retorno",
+      "tipo_operacion": "retorno_importacion"
+    },
+    {
+      "clave": "G1",
+      "descripcion": "Tránsito interno",
+      "regimen": "transito",
+      "tipo_operacion": "interno"
+    },
+    {
+      "clave": "G2",
+      "descripcion": "Tránsito internacional de ingreso",
+      "regimen": "transito",
+      "tipo_operacion": "internacional_ingreso"
+    },
+    {
+      "clave": "G3",
+      "descripcion": "Tránsito internacional de salida",
+      "regimen": "transito",
+      "tipo_operacion": "internacional_salida"
+    },
+    {
+      "clave": "K1",
+      "descripcion": "Traslado de mercancías de un almacén a otro",
+      "regimen": "traslado",
+      "tipo_operacion": "interno"
+    },
+    {
+      "clave": "IN",
+      "descripcion": "Introducción a depósito fiscal",
+      "regimen": "deposito_fiscal",
+      "tipo_operacion": "introduccion"
+    },
+    {
+      "clave": "EX",
+      "descripcion": "Extracción de depósito fiscal",
+      "regimen": "deposito_fiscal",
+      "tipo_operacion": "extraccion"
+    },
+    {
+      "clave": "IM",
+      "descripcion": "Importación de maquinaria y equipo IMMEX",
+      "regimen": "immex",
+      "tipo_operacion": "importacion"
+    },
+    {
+      "clave": "RT",
+      "descripcion": "Retorno de maquinaria y equipo IMMEX",
+      "regimen": "immex",
+      "tipo_operacion": "retorno"
+    },
+    {
+      "clave": "F1",
+      "descripcion": "Importación de empresas de la industria automotriz",
+      "regimen": "automotriz",
+      "tipo_operacion": "importacion"
+    },
+    {
+      "clave": "F2",
+      "descripcion": "Exportación de empresas de la industria automotriz",
+      "regimen": "automotriz",
+      "tipo_operacion": "exportacion"
+    },
+    {
+      "clave": "F5",
+      "descripcion": "Retorno de empresas de la industria automotriz",
+      "regimen": "automotriz",
+      "tipo_operacion": "retorno"
+    },
+    {
+      "clave": "E1",
+      "descripcion": "Importación a zona franca",
+      "regimen": "zona_franca",
+      "tipo_operacion": "importacion"
+    },
+    {
+      "clave": "E2",
+      "descripcion": "Exportación de zona franca",
+      "regimen": "zona_franca",
+      "tipo_operacion": "exportacion"
+    },
+    {
+      "clave": "B1",
+      "descripcion": "Importación de menaje de casa",
+      "regimen": "importacion",
+      "tipo_operacion": "definitiva",
+      "notes": "Para personas que cambian de residencia a México"
+    },
+    {
+      "clave": "B3",
+      "descripcion": "Importación temporal de remolques",
+      "regimen": "importacion",
+      "tipo_operacion": "temporal"
+    },
+    {
+      "clave": "B5",
+      "descripcion": "Importación temporal de embarcaciones",
+      "regimen": "importacion",
+      "tipo_operacion": "temporal"
+    },
+    {
+      "clave": "D1",
+      "descripcion": "Depósito de mercancías para elaboración, transformación o reparación",
+      "regimen": "deposito_fiscal",
+      "tipo_operacion": "deposito"
+    },
+    {
+      "clave": "D2",
+      "descripcion": "Extracción de depósito para retorno al extranjero",
+      "regimen": "deposito_fiscal",
+      "tipo_operacion": "extraccion"
+    },
+    {
+      "clave": "H1",
+      "descripcion": "Envío de mercancías al extranjero para elaboración",
+      "regimen": "elaboracion",
+      "tipo_operacion": "envio"
+    },
+    {
+      "clave": "H2",
+      "descripcion": "Retorno de mercancías enviadas al extranjero para elaboración",
+      "regimen": "elaboracion",
+      "tipo_operacion": "retorno"
+    },
+    {
+      "clave": "J1",
+      "descripcion": "Exportación de productos terminados o semiterminados",
+      "regimen": "exportacion",
+      "tipo_operacion": "definitiva"
+    },
+    {
+      "clave": "J3",
+      "descripcion": "Exportación temporal de muestras y muestrarios",
+      "regimen": "exportacion",
+      "tipo_operacion": "temporal"
+    },
+    {
+      "clave": "L1",
+      "descripcion": "Introducción a recinto fiscalizado estratégico",
+      "regimen": "recinto_fiscalizado",
+      "tipo_operacion": "introduccion"
+    },
+    {
+      "clave": "L2",
+      "descripcion": "Extracción de recinto fiscalizado estratégico",
+      "regimen": "recinto_fiscalizado",
+      "tipo_operacion": "extraccion"
+    },
+    {
+      "clave": "M1",
+      "descripcion": "Importación de mercancías para exposiciones",
+      "regimen": "importacion",
+      "tipo_operacion": "temporal"
+    },
+    {
+      "clave": "N1",
+      "descripcion": "Importación de mercancías en consignación",
+      "regimen": "importacion",
+      "tipo_operacion": "temporal"
+    },
+    {
+      "clave": "N2",
+      "descripcion": "Retorno de mercancías en consignación",
+      "regimen": "retorno",
+      "tipo_operacion": "retorno_importacion"
+    },
+    {
+      "clave": "P1",
+      "descripcion": "Exportación en consignación",
+      "regimen": "exportacion",
+      "tipo_operacion": "temporal"
+    },
+    {
+      "clave": "P2",
+      "descripcion": "Retorno de exportación en consignación",
+      "regimen": "retorno",
+      "tipo_operacion": "retorno_exportacion"
+    },
+    {
+      "clave": "V7",
+      "descripcion": "Importación de muestras y muestrarios",
+      "regimen": "importacion",
+      "tipo_operacion": "temporal"
+    }
+  ]
+}

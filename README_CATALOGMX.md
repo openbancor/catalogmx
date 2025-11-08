@@ -182,6 +182,71 @@ print(state['clave_inegi'])  # 14
 
 # Validate NSS (IMSS)
 is_valid_nss = validate_nss('12345678903')
+
+# COMERCIO EXTERIOR - Validate CFDI with Foreign Trade Complement
+from catalogmx.catalogs.sat.comercio_exterior import (
+    IncotermsValidator,
+    ClavePedimentoCatalog,
+    MonedaCatalog,
+    PaisCatalog,
+    EstadoCatalog,
+    ComercioExteriorValidator,
+)
+
+# Validate INCOTERM
+incoterm = IncotermsValidator.get_incoterm('CIF')
+print(incoterm['name'])  # Cost, Insurance and Freight
+print(incoterm['transport_mode'])  # maritime
+print(IncotermsValidator.seller_pays_insurance('CIF'))  # True
+
+# Validate customs key
+pedimento = ClavePedimentoCatalog.get_clave('A1')
+print(pedimento['descripcion'])  # Exportación definitiva
+print(ClavePedimentoCatalog.is_export('A1'))  # True
+
+# Validate currency conversion
+conversion = MonedaCatalog.validate_conversion_usd({
+    'moneda': 'EUR',
+    'total': 10000.00,
+    'tipo_cambio_usd': 1.18,
+    'total_usd': 11800.00
+})
+print(conversion['valid'])  # True
+
+# Validate US state for foreign trade
+estado = EstadoCatalog.get_estado_usa('CA')
+print(estado['name'])  # California
+
+# Validate complete CFDI with Comercio Exterior
+cfdi_ce = {
+    'tipo_comprobante': 'I',
+    'incoterm': 'CIF',
+    'clave_pedimento': 'A1',
+    'moneda': 'USD',
+    'tipo_cambio_usd': 1.0,
+    'total': 50000.00,
+    'total_usd': 50000.00,
+    'mercancias': [{
+        'fraccion_arancelaria': '84713001',
+        'unidad_aduana': '14',
+        'cantidad_aduana': 100,
+        'valor_unitario_aduana': 500.00,
+        'pais_origen': 'USA'
+    }],
+    'receptor': {
+        'pais': 'USA',
+        'estado': 'TX',
+        'tipo_registro_trib': '04',
+        'num_reg_id_trib': '123456789'
+    }
+}
+
+result = ComercioExteriorValidator.validate(cfdi_ce)
+if result['valid']:
+    print("CFDI Comercio Exterior válido")
+else:
+    for error in result['errors']:
+        print(f"Error: {error}")
 ```
 
 ### TypeScript
@@ -301,19 +366,22 @@ catalogmx/
 - [ ] c_TipoComprobante
 - [ ] c_Impuesto
 - [ ] c_TasaOCuota
-- [ ] c_Moneda
-- [ ] c_Pais
+- [ ] c_Moneda (basic - done in CE)
+- [ ] c_Pais (basic - done in CE)
 - [ ] c_TipoRelacion
 - [ ] c_Exportacion
 - [ ] c_ObjetoImp
-- [ ] **Comercio Exterior 2.0** (Complement for foreign trade) ⭐⭐
-  - [ ] c_INCOTERM (11 Incoterms 2020)
-  - [ ] c_ClavePedimento (~40 customs keys)
-  - [ ] c_FraccionArancelaria (~20,000 TIGIE tariff codes - SQLite)
-  - [ ] c_UnidadAduana (~30 customs units)
-  - [ ] c_RegistroIdentTribReceptor (foreign tax ID types)
-  - [ ] c_MotivoTraslado (transfer motives)
-  - [ ] c_Estado (US States & Canadian Provinces - ISO 3166-2)
+- [x] **Comercio Exterior 2.0** (Complement for foreign trade) ⭐⭐ **COMPLETE**
+  - [x] c_INCOTERM (11 Incoterms 2020)
+  - [x] c_ClavePedimento (~40 customs keys)
+  - [ ] c_FraccionArancelaria (~20,000 TIGIE tariff codes - SQLite) **[Pending: TIGIE data download]**
+  - [x] c_UnidadAduana (~30 customs units)
+  - [x] c_RegistroIdentTribReceptor (foreign tax ID types)
+  - [x] c_MotivoTraslado (transfer motives)
+  - [x] c_Moneda (~180 ISO 4217 currencies)
+  - [x] c_Pais (~250 ISO 3166-1 countries)
+  - [x] c_Estado (US States & Canadian Provinces - ISO 3166-2)
+  - [x] ComercioExteriorValidator (complete validation logic)
 
 ### 📋 Phase 3: INEGI Complete
 - [ ] 2,469 Municipalities
