@@ -373,64 +373,72 @@ class RFCGeneratorUtils(RFCGeneral):
                         'MULA', 'PEDA', 'PEDO', 'PENE', 'PUTA', 'PUTO',
                         'QULO', 'RATA', 'RUIN',
                         ]
+    # Lista completa de palabras excluidas según documento SAT
     excluded_words_morales = [
-        'EL',
-        'S DE RL',
-        'DE',
-        'LAS',
-        'DEL',
-        'COMPAÑÍA',
-        'SOCIEDAD',
-        'COOPERATIVA',
-        'S EN C POR A',
-        'S EN NC',
-        'PARA',
-        'POR',
-        'AL',
-        'E',
-        'SCL',
-        'SNC',
-        'OF',
-        'COMPANY',
-        'MC',
-        'VON',
-        'SRL DE CV',
-        'SA MI',
-        'SRL DE CV MI',
-        'LA',
-        'SA DE CV',
-        'LOS',
-        'Y',
-        'SA',
-        'CIA',
-        'SOC',
-        'COOP',
-        'A EN P',
-        'S EN C',
-        'EN',
-        'CON',
-        'SUS',
-        'SC',
-        'SCS',
-        'THE',
-        'AND',
-        'CO',
-        'MAC',
-        'VAN',
-        'A',
-        'SA DE CV MI',
-        'COMPA&ÍA',
-        'SRL MI',
-        'CV',
-        'S.A.',
-        'S.A',
-        'C.V.',
-        'C.V',
-        'S.C.',
-        'S.R.L.',
+        'EL', 'LA', 'DE', 'LOS', 'LAS', 'Y', 'DEL', 'MI',
+        'COMPAÑIA', 'COMPAÑÍA', 'CIA', 'CIA.',
+        'SOCIEDAD', 'SOC', 'SOC.',
+        'COOPERATIVA', 'COOP', 'COOP.',
+        'S.A.', 'SA', 'S.A', 'S. A.', 'S. A',
+        'S. DE R.L.', 'S DE RL', 'SRL', 'S.R.L.', 'S. R. L.',
+        'S. EN C.', 'S EN C', 'S.C.', 'SC',
+        'S. EN C. POR A.', 'S EN C POR A',
+        'S. EN N.C.', 'S EN NC',
+        'A.C.', 'AC', 'A. C.',
+        'A. EN P.', 'A EN P',
+        'S.C.L.', 'SCL',
+        'S.N.C.', 'SNC',
+        'C.V.', 'CV', 'C. V.',
+        'SA DE CV', 'S.A. DE C.V.', 'SA DE CV MI', 'S.A. DE C.V. MI',
+        'SRL DE CV', 'S.R.L. DE C.V.', 'SRL DE CV MI', 'SRL MI',
+        'THE', 'OF', 'COMPANY', 'AND', 'CO', 'CO.',
+        'MC', 'VON', 'MAC', 'VAN',
+        'PARA', 'POR', 'AL', 'E', 'EN', 'CON', 'SUS', 'A',
     ]
 
     allowed_chars = list('ABCDEFGHIJKLMNÑOPQRSTUVWXYZ&')
+
+    # Tabla de conversión de números a texto
+    numeros_texto = {
+        '0': 'CERO', '1': 'UNO', '2': 'DOS', '3': 'TRES', '4': 'CUATRO',
+        '5': 'CINCO', '6': 'SEIS', '7': 'SIETE', '8': 'OCHO', '9': 'NUEVE',
+        '10': 'DIEZ', '11': 'ONCE', '12': 'DOCE', '13': 'TRECE', '14': 'CATORCE',
+        '15': 'QUINCE', '16': 'DIECISEIS', '17': 'DIECISIETE', '18': 'DIECIOCHO',
+        '19': 'DIECINUEVE', '20': 'VEINTE',
+    }
+
+    # Tabla de números romanos a arábigos
+    numeros_romanos = {
+        'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5,
+        'VI': 6, 'VII': 7, 'VIII': 8, 'IX': 9, 'X': 10,
+        'XI': 11, 'XII': 12, 'XIII': 13, 'XIV': 14, 'XV': 15,
+        'XVI': 16, 'XVII': 17, 'XVIII': 18, 'XIX': 19, 'XX': 20,
+    }
+
+    @classmethod
+    def convertir_numero_a_texto(cls, numero_str):
+        """Convierte un número (arábigo o romano) a su representación en texto"""
+        numero_str = numero_str.strip().upper()
+
+        # Intentar como número romano
+        if numero_str in cls.numeros_romanos:
+            numero_arabigo = str(cls.numeros_romanos[numero_str])
+            if numero_arabigo in cls.numeros_texto:
+                return cls.numeros_texto[numero_arabigo]
+
+        # Intentar como número arábigo
+        if numero_str in cls.numeros_texto:
+            return cls.numeros_texto[numero_str]
+
+        # Si no está en la tabla, intentar convertir dígitos
+        try:
+            num = int(numero_str)
+            if 0 <= num <= 20:
+                return cls.numeros_texto[str(num)]
+        except ValueError:
+            pass
+
+        return numero_str  # Si no se puede convertir, devolver original
 
     @classmethod
     def clean_name(cls, nombre):
@@ -641,34 +649,135 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
 
     @property
     def razon_social_calculo(self):
-        """Clean the company name by removing excluded words and special characters"""
-        # Remove excluded words and convert to uppercase
-        words = self.razon_social.upper().strip().split()
+        """
+        Clean the company name according to SAT official rules:
+        - Remove excluded words FIRST (S.A., DE, LA, etc.)
+        - Remove special characters (&, @, %, #, !, $, ", -, /, +, (, ), etc.)
+        - Substitute Ñ with X
+        - Handle initials (F.A.Z. → each letter is a word)
+        - Convert numbers (arabic and roman) to text
+        - Handle consonant compounds (CH → C, LL → L)
+        """
+        razon = self.razon_social.upper().strip()
+
+        # Step 1: First pass - remove excluded words with punctuation patterns
+        # This handles cases like "S.A.", "S. A.", etc.
+        for excluded in self.excluded_words_morales:
+            # Try exact match
+            razon = razon.replace(' ' + excluded + ' ', ' ')
+            razon = razon.replace(' ' + excluded + ',', ' ')
+            razon = razon.replace(' ' + excluded + '.', ' ')
+            # Try at beginning
+            if razon.startswith(excluded + ' '):
+                razon = razon[len(excluded)+1:]
+            # Try at end
+            if razon.endswith(' ' + excluded):
+                razon = razon[:-len(excluded)-1]
+            if razon.endswith(',' + excluded):
+                razon = razon[:-len(excluded)-1]
+
+        # Step 2: Remove special characters except spaces, letters, numbers, and dots
+        # Caracteres especiales a eliminar según SAT: &, @, %, #, !, $, ", -, /, +, (, ), etc.
+        import string
+        allowed_for_processing = string.ascii_uppercase + string.digits + ' .ÑÁÉÍÓÚÜñáéíóúü'
+        razon_limpia = ''.join(c if c in allowed_for_processing else ' ' for c in razon)
+
+        # Step 3: Substitute Ñ with X
+        razon_limpia = razon_limpia.replace('Ñ', 'X').replace('ñ', 'X')
+
+        # Step 4: Handle initials (F.A.Z. → F A Z)
+        # Si hay letras separadas por puntos, expandirlas como palabras individuales
+        # Marcar cuáles son iniciales para no filtrarlas después
+        words_temp = []
+        is_initial = []  # Track which words are initials
+        for word in razon_limpia.split():
+            word = word.strip()
+            if not word:
+                continue
+            # Detectar patrón de iniciales: letra.letra.letra o similar
+            if '.' in word and len(word) <= 15:  # Máximo razonable para iniciales
+                # Separar por puntos y filtrar vacíos
+                parts = [c.strip() for c in word.split('.') if c.strip()]
+                # Si todas las partes son de 1-2 caracteres, son iniciales
+                if parts and all(len(p) <= 2 and p.isalpha() for p in parts):
+                    words_temp.extend(parts)
+                    is_initial.extend([True] * len(parts))  # Mark all as initials
+                    continue
+            # Quitar puntos finales de palabras normales
+            word = word.rstrip('.')
+            if word:
+                words_temp.append(word)
+                is_initial.append(False)
+
+        # Step 5: Convert numbers to text
+        words_converted = []
+        is_initial_converted = []
+        for word, is_init in zip(words_temp, is_initial):
+            # Verificar si es un número (arábigo o romano)
+            if word.isdigit() or word in self.numeros_romanos:
+                converted = self.convertir_numero_a_texto(word)
+                words_converted.append(converted)
+                is_initial_converted.append(is_init)
+            else:
+                words_converted.append(word)
+                is_initial_converted.append(is_init)
+
+        # Step 6: Second pass - Remove excluded words (but keep initials)
         filtered_words = []
+        for word, is_init in zip(words_converted, is_initial_converted):
+            word_clean = word.strip().upper()
+            if not word_clean:
+                continue
+            # Keep initials even if they match excluded words
+            if is_init:
+                filtered_words.append(word_clean)
+            elif word_clean not in self.excluded_words_morales:
+                filtered_words.append(word_clean)
 
-        for word in words:
-            if word not in self.excluded_words_morales:
-                filtered_words.append(word)
-
-        # Join and clean special characters
+        # Step 7: Clean remaining special characters and accents
         cleaned = " ".join(filtered_words)
-        result = "".join(
-            char if char in self.allowed_chars else unidecode.unidecode(char)
-            for char in cleaned
-        ).strip().upper()
+        result = ""
+        for char in cleaned:
+            if char in self.allowed_chars:
+                result += char
+            elif char == ' ':
+                result += ' '
+            else:
+                # Use unidecode for accented characters
+                decoded = unidecode.unidecode(char)
+                if decoded in self.allowed_chars:
+                    result += decoded
 
-        return result
+        result = result.strip().upper()
+
+        # Step 8: Handle consonant compounds (CH → C, LL → L) at the beginning of words
+        words_final = []
+        for word in result.split():
+            if word.startswith('CH'):
+                word = 'C' + word[2:]
+            elif word.startswith('LL'):
+                word = 'L' + word[2:]
+            words_final.append(word)
+
+        return " ".join(words_final)
 
     def generate_letters(self):
         """
-        Generate the 3-letter code from company name
+        Generate the 3-letter code from company name according to SAT rules:
 
-        Rules for Persona Moral:
-        1. First letter of the first word
-        2. First letter of the second word
-        3. First letter of the third word
+        1 word:  First 3 letters (or pad with X if less than 3)
+        2 words: 1st letter of 1st word + 1st letter of 2nd word + 2nd letter of 1st word
+        3+ words: 1st letter of each of the first 3 words
 
-        If there are fewer than 3 words, special rules apply.
+        Note: According to SAT specification for 2 words, it should be:
+        - First letter of first word
+        - First letter of second word
+        - Second letter of first word (or first two letters of second word)
+
+        But empirical evidence shows it's actually:
+        - First letter of first word
+        - First vowel of first word (after first letter)
+        - First letter of second word
         """
         cleaned_name = self.razon_social_calculo
 
@@ -683,26 +792,17 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         clave = []
 
         if len(words) == 1:
-            # Single word: Use first letter, second letter, third letter
+            # Single word: First 3 letters
             word = words[0]
             clave.append(word[0] if len(word) > 0 else 'X')
             clave.append(word[1] if len(word) > 1 else 'X')
             clave.append(word[2] if len(word) > 2 else 'X')
         elif len(words) == 2:
-            # Two words: First letter of first word, first vowel of first word, first letter of second word
-            clave.append(words[0][0])
-            # Find first vowel in first word after the first letter
-            vowel_found = False
-            for char in words[0][1:]:
-                if char in self.vocales:
-                    clave.append(char)
-                    vowel_found = True
-                    break
-            if not vowel_found:
-                # No vowel in first word, use second letter
-                clave.append(words[0][1] if len(words[0]) > 1 else 'X')
-            # Add first letter of second word
-            clave.append(words[1][0])
+            # Two words: Initial of first word, first two letters of second word
+            # According to SAT specification: "se toma la inicial de la primera y las dos primeras letras de la segunda"
+            clave.append(words[0][0])  # First letter of first word
+            clave.append(words[1][0])  # First letter of second word
+            clave.append(words[1][1] if len(words[1]) > 1 else 'X')  # Second letter of second word
         else:
             # Three or more words: First letter of each of the first three words
             clave.append(words[0][0])

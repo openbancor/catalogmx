@@ -86,15 +86,65 @@ class test_RFCPersonasMorales(unittest.TestCase):
     def test_generaLetras(self):
         """Test letter generation for Persona Moral (companies)"""
         tests = [
+            # 3+ words
             ('Sonora Industrial Azucarera SA', 'SIA'),
             ('Constructora de Edificios Mancera SA', 'CEM'),
             ('Fábrica de Jabón La Espuma SA', 'FJE'),
             ('Fundición de Hierro y Acero SA', 'FHA'),
             ('Gutiérrez y Sánchez Hermanos SA', 'GSH'),
             ('Banco Nacional de Mexico SA', 'BNM'),
-            ('Cervecería Modelo SA de CV', 'CEM'),  # 2 words: Cervecería, Modelo -> C,E,M
-            ('Petróleos Mexicanos', 'PEM'),  # 2 words: Petróleos, Mexicanos -> P,E,M
             ('Comisión Federal de Electricidad', 'CFE'),
+
+            # 2 words (initial of 1st + first 2 letters of 2nd)
+            ('Cervecería Modelo SA de CV', 'CMO'),  # 2 words: Cervecería, Modelo -> C,M,O
+            ('Petróleos Mexicanos', 'PME'),  # 2 words: Petróleos, Mexicanos -> P,M,E
+        ]
+
+        for razon_social, expected_letters in tests:
+            r = RFCGeneratorMorales(razon_social=razon_social, fecha=datetime.date(2000, 1, 1))
+            generated = r.generate_letters()
+            self.assertEqual(generated, expected_letters,
+                           f"Failed for {razon_social}: expected {expected_letters}, got {generated}")
+
+    def test_casos_especiales_SAT(self):
+        """Test special cases from SAT official documentation"""
+        tests = [
+            # Iniciales: F.A.Z. → cada letra es una palabra → FAZ
+            ('F.A.Z., S.A.', 'FAZ'),
+
+            # Números: El 12 → El DOCE → DOC (eliminando EL)
+            ('El 12, S.A.', 'DOC'),
+
+            # Carácter especial @: LA S@NDIA → LA SNDIA → SND (eliminando LA)
+            ('LA S@NDIA S.A. DE C.V.', 'SND'),
+
+            # Ñ → X: YÑIGO → YXIGO → YXI (palabra de 1)
+            ('YÑIGO, S.A.', 'YXI'),
+        ]
+
+        for razon_social, expected_letters in tests:
+            r = RFCGeneratorMorales(razon_social=razon_social, fecha=datetime.date(2000, 1, 1))
+            generated = r.generate_letters()
+            self.assertEqual(generated, expected_letters,
+                           f"Failed for {razon_social}: expected {expected_letters}, got {generated}")
+
+    def test_numeros_arabigos(self):
+        """Test Arabic number conversion"""
+        tests = [
+            ('Tienda 5 S.A.', 'TCI'),  # 5 → CINCO, Tienda CINCO → TCI
+            ('El 3 Hermanos', 'THE'),  # 3 → TRES, TRES Hermanos → THE
+        ]
+
+        for razon_social, expected_letters in tests:
+            r = RFCGeneratorMorales(razon_social=razon_social, fecha=datetime.date(2000, 1, 1))
+            generated = r.generate_letters()
+            self.assertEqual(generated, expected_letters,
+                           f"Failed for {razon_social}: expected {expected_letters}, got {generated}")
+
+    def test_numeros_romanos(self):
+        """Test Roman numeral conversion"""
+        tests = [
+            ('Luis XIV S.A.', 'LCA'),  # XIV → CATORCE, Luis CATORCE → LCA
         ]
 
         for razon_social, expected_letters in tests:
