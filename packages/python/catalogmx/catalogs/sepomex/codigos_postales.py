@@ -11,7 +11,7 @@ class CodigosPostales:
     @classmethod
     def _load_data(cls):
         if cls._data is None:
-            path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sepomex' / 'codigos_postales.json'
+            path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sepomex' / 'codigos_postales_completo.json'
             with open(path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 cls._data = data['codigos_postales']
