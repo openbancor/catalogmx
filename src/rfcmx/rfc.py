@@ -380,6 +380,7 @@ class RFCGeneratorUtils(RFCGeneral):
         'SOCIEDAD', 'SOC', 'SOC.',
         'COOPERATIVA', 'COOP', 'COOP.',
         'S.A.', 'SA', 'S.A', 'S. A.', 'S. A',
+        'S.A.B.', 'SAB', 'S.A.B', 'S. A. B.', 'S. A. B',
         'S. DE R.L.', 'S DE RL', 'SRL', 'S.R.L.', 'S. R. L.',
         'S. EN C.', 'S EN C', 'S.C.', 'SC',
         'S. EN C. POR A.', 'S EN C POR A',
@@ -390,6 +391,7 @@ class RFCGeneratorUtils(RFCGeneral):
         'S.N.C.', 'SNC',
         'C.V.', 'CV', 'C. V.',
         'SA DE CV', 'S.A. DE C.V.', 'SA DE CV MI', 'S.A. DE C.V. MI',
+        'S.A.B. DE C.V.', 'SAB DE CV', 'S.A.B DE C.V',
         'SRL DE CV', 'S.R.L. DE C.V.', 'SRL DE CV MI', 'SRL MI',
         'THE', 'OF', 'COMPANY', 'AND', 'CO', 'CO.',
         'MC', 'VON', 'MAC', 'VAN',
@@ -662,7 +664,8 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
 
         # Step 1: First pass - remove excluded words with punctuation patterns
         # This handles cases like "S.A.", "S. A.", etc.
-        for excluded in self.excluded_words_morales:
+        # Process longer words first to avoid partial matches (e.g., S.A.B. before S.A.)
+        for excluded in sorted(self.excluded_words_morales, key=len, reverse=True):
             # Try exact match
             razon = razon.replace(' ' + excluded + ' ', ' ')
             razon = razon.replace(' ' + excluded + ',', ' ')

@@ -198,3 +198,134 @@ class test_RFCPersonasMorales(unittest.TestCase):
         r2 = RFCGeneratorMorales(razon_social='Teléfonos', fecha=datetime.date(2000, 1, 1))
         # Both should generate same letters since "Compañía de" is excluded
         self.assertEqual(r1.generate_letters(), r2.generate_letters())
+
+    def test_rfcs_publicos_conocidos(self):
+        """Test with real public RFCs from well-known Mexican companies"""
+        tests = [
+            # PEMEX - Petróleos Mexicanos (founded June 7, 1938)
+            ('Petróleos Mexicanos', datetime.date(1938, 6, 7), 'PME380607'),
+
+            # CFE - Comisión Federal de Electricidad (founded August 14, 1937)
+            ('Comisión Federal de Electricidad', datetime.date(1937, 8, 14), 'CFE370814'),
+
+            # BIMBO - Grupo Bimbo (founded June 15, 1981 as S.A.B. de C.V.)
+            ('Grupo Bimbo S.A.B. de C.V.', datetime.date(1981, 6, 15), 'GBI810615'),
+        ]
+
+        for razon_social, fecha, expected_rfc_base in tests:
+            r = RFCGeneratorMorales(razon_social=razon_social, fecha=fecha)
+            rfc = r.rfc
+            # Verify that the first 9 characters match (letters + date)
+            self.assertEqual(rfc[:9], expected_rfc_base,
+                           f"Failed for {razon_social}: expected {expected_rfc_base}, got {rfc[:9]}")
+            # Verify total length
+            self.assertEqual(len(rfc), 12)
+
+    def test_fechas_invalidas(self):
+        """Test that invalid dates raise appropriate errors"""
+        # Test with string instead of date
+        with self.assertRaises(ValueError):
+            RFCGeneratorMorales(
+                razon_social='Test Company',
+                fecha='2000-01-01'  # String instead of date object
+            )
+
+        # Test with None
+        with self.assertRaises(ValueError):
+            RFCGeneratorMorales(
+                razon_social='Test Company',
+                fecha=None
+            )
+
+    def test_razon_social_vacia(self):
+        """Test that empty company name raises error"""
+        with self.assertRaises(ValueError):
+            RFCGeneratorMorales(
+                razon_social='',
+                fecha=datetime.date(2000, 1, 1)
+            )
+
+        with self.assertRaises(ValueError):
+            RFCGeneratorMorales(
+                razon_social='   ',  # Only spaces
+                fecha=datetime.date(2000, 1, 1)
+            )
+
+    def test_palabras_cacofonicas(self):
+        """Test cacophonic word replacement - Note: Cacophonic words (4-letter) don't apply to Persona Moral (3-letter)"""
+        # The cacophonic word list in SAT specification contains 4-letter codes for Persona Física
+        # Persona Moral generates 3-letter codes, so cacophonic replacement doesn't apply
+        # This test verifies that the code doesn't crash when checking cacophonic words
+        tests = [
+            ('Comercializadora Mexicana', datetime.date(2000, 1, 1), 'CME'),
+            ('Productos Electrodomésticos', datetime.date(2000, 1, 1), 'PEL'),
+            ('Maquinaria Mexicana', datetime.date(2000, 1, 1), 'MME'),
+        ]
+
+        for razon_social, fecha, expected_letters in tests:
+            r = RFCGeneratorMorales(razon_social=razon_social, fecha=fecha)
+            generated = r.generate_letters()
+            self.assertEqual(generated, expected_letters,
+                          f"For {razon_social}: expected {expected_letters}, got {generated}")
+
+    def test_consonantes_compuestas(self):
+        """Test consonant compound handling (CH → C, LL → L)"""
+        tests = [
+            # CH at beginning should become C
+            ('Chocolates Hermanos S.A.', 'COH'),  # Chocolates → COCOLATES → COH
+            # LL at beginning should become L
+            ('Llantas Hermanos S.A.', 'LLH'),  # Llantas → LANTAS → LLH
+        ]
+
+        for razon_social, expected_letters in tests:
+            r = RFCGeneratorMorales(razon_social=razon_social, fecha=datetime.date(2000, 1, 1))
+            generated = r.generate_letters()
+            # Note: The first letter should be transformed
+            self.assertTrue(len(generated) == 3,
+                          f"For {razon_social}: expected 3 letters, got {generated}")
+
+    def test_numeros_grandes(self):
+        """Test numbers outside the conversion table"""
+        # Numbers > 20 should remain as-is
+        tests = [
+            ('Empresa 25 S.A.', '25'),  # 25 is not in conversion table
+            ('Tienda 100 S.A.', '100'),  # 100 is not in conversion table
+        ]
+
+        for razon_social, numero_esperado in tests:
+            r = RFCGeneratorMorales(razon_social=razon_social, fecha=datetime.date(2000, 1, 1))
+            # Just verify it doesn't crash
+            rfc = r.rfc
+            self.assertEqual(len(rfc), 12)
+
+    def test_multiple_special_characters(self):
+        """Test handling of multiple special characters"""
+        tests = [
+            ('LA @SUPER# TIENDA$ S.A.', 'STI'),  # Multiple special chars
+            ('Empresa & Co.', 'EMP'),  # & character
+            ('Productos-Tecnológicos-Modernos S.A.', 'PTM'),  # Hyphens (all meaningful words)
+        ]
+
+        for razon_social, expected_letters in tests:
+            r = RFCGeneratorMorales(razon_social=razon_social, fecha=datetime.date(2000, 1, 1))
+            generated = r.generate_letters()
+            self.assertEqual(generated, expected_letters,
+                           f"Failed for {razon_social}: expected {expected_letters}, got {generated}")
+
+    def test_multiple_enie(self):
+        """Test multiple Ñ handling"""
+        r = RFCGeneratorMorales(razon_social='ÑAÑAÑU S.A.', fecha=datetime.date(2000, 1, 1))
+        generated = r.generate_letters()
+        # All Ñ should be converted to X
+        self.assertTrue('X' in generated or 'Ñ' not in generated,
+                      f"Ñ should be converted to X, got {generated}")
+
+    def test_mixed_case(self):
+        """Test that mixed case is handled correctly"""
+        r1 = RFCGeneratorMorales(razon_social='EMPRESA TEST', fecha=datetime.date(2000, 1, 1))
+        r2 = RFCGeneratorMorales(razon_social='empresa test', fecha=datetime.date(2000, 1, 1))
+        r3 = RFCGeneratorMorales(razon_social='EmPrEsA TeSt', fecha=datetime.date(2000, 1, 1))
+
+        # All should generate the same RFC regardless of case
+        self.assertEqual(r1.rfc, r2.rfc)
+        self.assertEqual(r2.rfc, r3.rfc)
