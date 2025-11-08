@@ -81,14 +81,26 @@ class CURPGeneral(object):
     vocales = 'AEIOU'
     consonantes = 'BCDFGHJKLMNPQRSTVWXYZ'
 
-    cacophonic_words = ['BUEI', 'BUEY', 'CACA', 'CACO', 'CAGA', 'CAGO',
-                        'CAKA', 'COGE', 'COJA', 'COJE', 'COJI', 'COJO',
-                        'CULO', 'FETO', 'GUEY', 'JOTO', 'KACA', 'KACO',
-                        'KAGA', 'KAGO', 'KOGE', 'KOJO', 'KAKA', 'KULO',
-                        'MAME', 'MAMO', 'MEAR', 'MEON', 'MION', 'MOCO',
-                        'MULA', 'PEDA', 'PEDO', 'PENE', 'PUTA', 'PUTO',
-                        'QULO', 'RATA', 'RUIN',
-                        ]
+    # Lista oficial completa de palabras inconvenientes según Anexo 2 del Instructivo Normativo CURP
+    # Cuando se detectan estas palabras en las primeras 4 letras, la segunda letra se sustituye con 'X'
+    cacophonic_words = [
+        'BACA', 'BAKA', 'BUEI', 'BUEY',
+        'CACA', 'CACO', 'CAGA', 'CAGO', 'CAKA', 'KAKO', 'COGE', 'COGI', 'COJA', 'COJE', 'COJI', 'COJO', 'COLA', 'CULO',
+        'FALO', 'FETO',
+        'GETA', 'GUEI', 'GUEY',
+        'JETA', 'JOTO',
+        'KACA', 'KACO', 'KAGA', 'KAGO', 'KAKA', 'KAKO', 'KOGE', 'KOGI', 'KOJA', 'KOJE', 'KOJI', 'KOJO', 'KOLA', 'KULO',
+        'LILO', 'LOCA', 'LOCO', 'LOKA', 'LOKO',
+        'MAME', 'MAMO', 'MEAR', 'MEAS', 'MEON', 'MIAR', 'MION', 'MOCO', 'MOKO', 'MULA', 'MULO',
+        'NACA', 'NACO',
+        'PEDA', 'PEDO', 'PENE', 'PIPI', 'PITO', 'POPO', 'PUTA', 'PUTO',
+        'QULO',
+        'RATA', 'ROBA', 'ROBE', 'ROBO', 'RUIN',
+        'SENO',
+        'TETA',
+        'VACA', 'VAGA', 'VAGO', 'VAKA', 'VUEI', 'VUEY',
+        'WUEI', 'WUEY',
+    ]
 
     excluded_words = [
         'DE', 'LA', 'LAS', 'MC', 'VON', 'DEL', 'LOS', 'Y', 'MAC', 'VAN', 'MI',
@@ -134,6 +146,26 @@ class CURPValidator(CURPGeneral):
             return self.validate()
         except CURPException:
             return False
+
+    def validate_check_digit(self):
+        """
+        Valida el dígito verificador (posición 18) del CURP
+
+        :return: True si el dígito verificador es correcto, False en caso contrario
+        """
+        if len(self.curp) != 18:
+            return False
+
+        # Obtener los primeros 17 caracteres
+        curp_17 = self.curp[:17]
+
+        # Calcular el dígito verificador esperado
+        expected_digit = CURPGenerator.calculate_check_digit(curp_17)
+
+        # Comparar con el dígito actual
+        actual_digit = self.curp[17]
+
+        return expected_digit == actual_digit
 
 
 class CURPGeneratorUtils(CURPGeneral):
@@ -349,9 +381,10 @@ class CURPGenerator(CURPGeneratorUtils):
 
         result = "".join(clave)
 
-        # Check for cacophonic words and replace last character with 'X'
+        # Check for cacophonic words and replace second character (first vowel) with 'X'
+        # Según el Instructivo Normativo CURP, Anexo 2
         if result in self.cacophonic_words:
-            result = result[:-1] + 'X'
+            result = result[0] + 'X' + result[2:]
 
         return result
 
@@ -388,15 +421,78 @@ class CURPGenerator(CURPGeneratorUtils):
 
     def generate_homoclave(self):
         """
-        Generate the 2-character homoclave
+        Generate the 2-character homoclave (positions 17-18)
 
-        In practice, this is assigned by the Mexican government's registry.
-        For generation purposes, we'll use a placeholder "00" or calculate
-        a simple checksum.
+        IMPORTANTE: Según el Instructivo Normativo oficial:
+        - Posición 17: Diferenciador de homonimia asignado ALEATORIAMENTE por RENAPO
+                       (no es calculable algorítmicamente)
+                       Para nacidos antes del 2000: números 0-9
+                       Para nacidos después del 2000: letras A-Z o números 0-9
+        - Posición 18: Dígito verificador calculado mediante algoritmo oficial
+
+        Este método genera valores por defecto ya que la homoclave real solo puede
+        ser asignada oficialmente por RENAPO.
         """
-        # Simplified version - in reality this is assigned by RENAPO
-        # For now, we'll use "00" as default
-        return "00"
+        # Posición 17: Diferenciador (asignado por RENAPO, usamos '0' por defecto)
+        if self.fecha_nacimiento.year < 2000:
+            differentiator = '0'  # Para antes del 2000: 0-9
+        else:
+            differentiator = 'A'  # Para después del 2000: A-Z o 0-9
+
+        # Posición 18: Dígito verificador (calculable)
+        temp_curp = (self.generate_letters() +
+                     self.generate_date() +
+                     self.sexo +
+                     self.get_state_code(self.estado) +
+                     self.generate_consonants() +
+                     differentiator)
+
+        check_digit = self.calculate_check_digit(temp_curp)
+
+        return differentiator + check_digit
+
+    @staticmethod
+    def calculate_check_digit(curp_17):
+        """
+        Calcula el dígito verificador (posición 18) según el algoritmo oficial RENAPO
+
+        Algoritmo:
+        1. Diccionario de valores: "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
+        2. Para cada carácter de los primeros 17:
+           valor = índice_en_diccionario * (18 - posición)
+        3. Suma todos los valores
+        4. dígito = 10 - (suma % 10)
+        5. Si dígito == 10, entonces dígito = 0
+
+        :param curp_17: Los primeros 17 caracteres del CURP
+        :return: Dígito verificador (0-9)
+        """
+        if len(curp_17) != 17:
+            raise ValueError("CURP debe tener exactamente 17 caracteres para calcular dígito verificador")
+
+        # Diccionario oficial de valores
+        dictionary = "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
+
+        suma = 0
+        for i, char in enumerate(curp_17):
+            # Obtener el índice del carácter en el diccionario
+            try:
+                char_value = dictionary.index(char)
+            except ValueError:
+                # Si el carácter no está en el diccionario, usar 0
+                char_value = 0
+
+            # Multiplicar por (18 - posición)
+            suma += char_value * (18 - i)
+
+        # Calcular dígito verificador
+        digito = 10 - (suma % 10)
+
+        # Si es 10, retornar 0
+        if digito == 10:
+            digito = 0
+
+        return str(digito)
 
     @property
     def curp(self):

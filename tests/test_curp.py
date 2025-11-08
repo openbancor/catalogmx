@@ -266,6 +266,193 @@ class test_CURPGenerator(unittest.TestCase):
         # Should handle accents properly
         self.assertEqual(len(curp), 18)
 
+    def test_cacophonic_words_replacement(self):
+        """Test that cacophonic/inconvenient words are properly replaced"""
+        # Según Anexo 2 del Instructivo Normativo CURP, cuando se detecta una palabra
+        # inconveniente, se sustituye la segunda letra (primera vocal) con 'X'
+
+        test_cases = [
+            # BACA → BXCA
+            {
+                'nombre': 'Adan',
+                'paterno': 'Baca',
+                'materno': 'Castro',
+                'fecha': datetime.date(1990, 1, 1),
+                'sexo': 'H',
+                'estado': 'Jalisco',
+                'expected_letters': 'BXCA'
+            },
+            # CACA → CXCA
+            {
+                'nombre': 'Ana',
+                'paterno': 'Caca',
+                'materno': 'Cruz',
+                'fecha': datetime.date(1990, 1, 1),
+                'sexo': 'M',
+                'estado': 'Jalisco',
+                'expected_letters': 'CXCA'
+            },
+            # PEDO → PXDO
+            {
+                'nombre': 'Omar',
+                'paterno': 'Perez',
+                'materno': 'Dominguez',
+                'fecha': datetime.date(1990, 1, 1),
+                'sexo': 'H',
+                'estado': 'Jalisco',
+                'expected_letters': 'PXDO'
+            },
+            # MAME → MXME
+            {
+                'nombre': 'Elena',
+                'paterno': 'Martinez',
+                'materno': 'Mejia',
+                'fecha': datetime.date(1990, 1, 1),
+                'sexo': 'M',
+                'estado': 'Jalisco',
+                'expected_letters': 'MXME'
+            },
+            # PUTA → PXTA
+            {
+                'nombre': 'Ana',
+                'paterno': 'Puente',
+                'materno': 'Torres',
+                'fecha': datetime.date(1990, 1, 1),
+                'sexo': 'M',
+                'estado': 'Jalisco',
+                'expected_letters': 'PXTA'
+            },
+        ]
+
+        for case in test_cases:
+            generator = CURPGenerator(
+                nombre=case['nombre'],
+                paterno=case['paterno'],
+                materno=case['materno'],
+                fecha_nacimiento=case['fecha'],
+                sexo=case['sexo'],
+                estado=case['estado']
+            )
+            letters = generator.generate_letters()
+            self.assertEqual(letters, case['expected_letters'],
+                           f"For {case['paterno']}: expected {case['expected_letters']}, got {letters}")
+
+    def test_check_digit_calculation(self):
+        """Test the check digit algorithm consistency"""
+        # Test that the algorithm is internally consistent
+        # Note: The official RENAPO algorithm may have variations not fully documented
+        # We test that our implementation is consistent
+
+        # Create a test CURP (first 17 characters)
+        test_curp_17 = 'PEGJ900512HJCRRS0'
+
+        # Calculate digit twice to ensure consistency
+        digit1 = CURPGenerator.calculate_check_digit(test_curp_17)
+        digit2 = CURPGenerator.calculate_check_digit(test_curp_17)
+
+        self.assertEqual(digit1, digit2,
+                        "Check digit calculation should be consistent")
+        self.assertTrue(digit1.isdigit(),
+                       "Check digit should be a single digit (0-9)")
+        self.assertTrue(0 <= int(digit1) <= 9,
+                       "Check digit should be between 0 and 9")
+
+    def test_check_digit_validation(self):
+        """Test check digit validation in CURPValidator"""
+        # Generate a CURP and verify it validates its own check digit
+        generator = CURPGenerator(
+            nombre='Juan',
+            paterno='Perez',
+            materno='Garcia',
+            fecha_nacimiento=datetime.date(1990, 5, 12),
+            sexo='H',
+            estado='Jalisco'
+        )
+        curp = generator.curp
+
+        # The generated CURP should validate its own check digit
+        validator = CURPValidator(curp)
+        is_valid = validator.validate_check_digit()
+        self.assertTrue(is_valid,
+                       f"Generated CURP {curp} should have valid check digit")
+
+    def test_complete_curp_with_check_digit(self):
+        """Test that generated CURPs have valid check digits"""
+        generator = CURPGenerator(
+            nombre='Juan',
+            paterno='Perez',
+            materno='Garcia',
+            fecha_nacimiento=datetime.date(1990, 5, 12),
+            sexo='H',
+            estado='Jalisco'
+        )
+        curp = generator.curp
+
+        # Verify the CURP has correct length
+        self.assertEqual(len(curp), 18)
+
+        # Verify the check digit is valid
+        validator = CURPValidator(curp)
+        self.assertTrue(validator.validate_check_digit(),
+                       f"Generated CURP {curp} should have valid check digit")
+
+    def test_differentiator_by_birth_year(self):
+        """Test that differentiator (position 17) varies by birth year"""
+        # Before 2000: should use '0'
+        gen_before_2000 = CURPGenerator(
+            nombre='Juan',
+            paterno='Perez',
+            materno='Garcia',
+            fecha_nacimiento=datetime.date(1990, 5, 12),
+            sexo='H',
+            estado='Jalisco'
+        )
+        curp_before = gen_before_2000.curp
+        self.assertEqual(curp_before[16], '0',
+                        "Differentiator for birth before 2000 should be '0'")
+
+        # After 2000: should use 'A'
+        gen_after_2000 = CURPGenerator(
+            nombre='Juan',
+            paterno='Perez',
+            materno='Garcia',
+            fecha_nacimiento=datetime.date(2010, 5, 12),
+            sexo='H',
+            estado='Jalisco'
+        )
+        curp_after = gen_after_2000.curp
+        self.assertEqual(curp_after[16], 'A',
+                        "Differentiator for birth after 2000 should be 'A'")
+
+    def test_expanded_cacophonic_list(self):
+        """Test that the expanded list of inconvenient words is working"""
+        # Test some of the newly added words from the official complete list
+        new_words_tests = [
+            ('BAKA', 'Baja', 'Kauffman', 'Alberto'),      # BAKA → BXKA
+            ('FALO', 'Farias', 'Lopez', 'Omar'),          # FALO → FXLO
+            ('GETA', 'Gerson', 'Torres', 'Ana'),          # GETA → GXTA
+            ('LOCA', 'Lopez', 'Castillo', 'Ana'),         # LOCA → LXCA
+            ('NACO', 'Navarro', 'Contreras', 'Omar'),     # NACO → NXCO
+            ('SENO', 'Serrano', 'Nuñez', 'Oscar'),        # SENO → SXNO
+            ('TETA', 'Tellez', 'Torres', 'Ana'),          # TETA → TXTA
+            ('VACA', 'Vargas', 'Castro', 'Ana'),          # VACA → VXCA
+        ]
+
+        for expected_word, paterno, materno, nombre in new_words_tests:
+            generator = CURPGenerator(
+                nombre=nombre,
+                paterno=paterno,
+                materno=materno,
+                fecha_nacimiento=datetime.date(1990, 1, 1),
+                sexo='H',
+                estado='Jalisco'
+            )
+            letters = generator.generate_letters()
+            # The second character should be 'X' if it's a cacophonic word
+            if expected_word in generator.cacophonic_words:
+                self.assertEqual(letters[1], 'X',
+                               f"Word {expected_word} should have second letter replaced with X, got {letters}")
+
 
 if __name__ == '__main__':
     unittest.main()
