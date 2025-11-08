@@ -1,4 +1,4 @@
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 # RFC imports
 from .rfc import (
@@ -17,16 +17,41 @@ from .curp import (
     CURPStructureError,
 )
 
+# Modern helper functions (recommended API)
+from .helpers import (
+    # RFC helpers
+    generate_rfc_persona_fisica,
+    generate_rfc_persona_moral,
+    validate_rfc,
+    detect_rfc_type,
+    is_valid_rfc,
+    # CURP helpers
+    generate_curp,
+    validate_curp,
+    get_curp_info,
+    is_valid_curp,
+)
+
 __all__ = [
-    # RFC
+    # RFC Classes (legacy/advanced usage)
     'RFCValidator',
     'RFCGenerator',
     'RFCGeneratorFisicas',
     'RFCGeneratorMorales',
-    # CURP
+    # CURP Classes (legacy/advanced usage)
     'CURPValidator',
     'CURPGenerator',
     'CURPException',
     'CURPLengthError',
     'CURPStructureError',
+    # Modern helper functions (recommended)
+    'generate_rfc_persona_fisica',
+    'generate_rfc_persona_moral',
+    'validate_rfc',
+    'detect_rfc_type',
+    'is_valid_rfc',
+    'generate_curp',
+    'validate_curp',
+    'get_curp_info',
+    'is_valid_curp',
 ]
