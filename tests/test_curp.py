@@ -453,6 +453,91 @@ class test_CURPGenerator(unittest.TestCase):
                 self.assertEqual(letters[1], 'X',
                                f"Word {expected_word} should have second letter replaced with X, got {letters}")
 
+    def test_check_digit_with_different_differentiators(self):
+        """
+        Test que demuestra cómo RENAPO puede cambiar el diferenciador (posición 17)
+        para evitar homonimias, y cómo esto afecta el dígito verificador (posición 18).
+
+        IMPORTANTE: Aunque el diferenciador es asignado por RENAPO, el dígito verificador
+        es calculable, lo que permite validar cualquier CURP completo.
+        """
+        base_curp = 'PEGJ900512HJCRRS'  # Primeros 16 caracteres
+
+        # RENAPO puede asignar diferentes diferenciadores para personas con los mismos
+        # primeros 16 caracteres. Cada diferenciador genera un dígito verificador distinto.
+        differentiators_and_expected_digits = [
+            ('0', '4'),  # PEGJ900512HJCRRS0 → dígito 4
+            ('1', '2'),  # PEGJ900512HJCRRS1 → dígito 2
+            ('2', '0'),  # PEGJ900512HJCRRS2 → dígito 0
+            ('3', '8'),  # PEGJ900512HJCRRS3 → dígito 8
+            ('4', '6'),  # PEGJ900512HJCRRS4 → dígito 6
+            ('5', '4'),  # PEGJ900512HJCRRS5 → dígito 4
+            ('A', '4'),  # PEGJ900512HJCRRSA → dígito 4 (para nacidos después de 2000)
+            ('B', '2'),  # PEGJ900512HJCRRSB → dígito 2
+            ('C', '0'),  # PEGJ900512HJCRRSC → dígito 0
+        ]
+
+        for diff, expected_digit in differentiators_and_expected_digits:
+            curp_17 = base_curp + diff
+            calculated_digit = CURPGenerator.calculate_check_digit(curp_17)
+
+            # Verificar que el dígito calculado es el esperado
+            self.assertEqual(calculated_digit, expected_digit,
+                           f"For differentiator '{diff}', expected digit {expected_digit}, got {calculated_digit}")
+
+            # Crear el CURP completo
+            full_curp = curp_17 + calculated_digit
+
+            # Validar que el CURP completo es consistente
+            validator = CURPValidator(full_curp)
+            self.assertTrue(validator.validate_check_digit(),
+                          f"CURP {full_curp} should have valid check digit")
+
+    def test_homonymous_curps_validation(self):
+        """
+        Test que demuestra cómo funcionan las homonimias en CURP.
+
+        Si dos personas tienen los mismos primeros 16 caracteres:
+        - RENAPO asigna diferentes diferenciadores (pos 17): 0, 1, 2... o A, B, C...
+        - Cada uno tendrá un dígito verificador diferente (pos 18)
+        - Ambos CURPs son válidos pero únicos
+        """
+        # Caso: Dos personas nacidas antes del 2000 con mismo nombre y fecha
+        base_curp_1999 = 'MAPR990512HJCRRS'
+
+        # Primera persona recibe diferenciador '0'
+        curp_persona_1 = base_curp_1999 + '0' + CURPGenerator.calculate_check_digit(base_curp_1999 + '0')
+        # Segunda persona recibe diferenciador '1'
+        curp_persona_2 = base_curp_1999 + '1' + CURPGenerator.calculate_check_digit(base_curp_1999 + '1')
+
+        # Ambos CURPs deben ser válidos
+        self.assertTrue(CURPValidator(curp_persona_1).validate_check_digit(),
+                       f"CURP persona 1 ({curp_persona_1}) should be valid")
+        self.assertTrue(CURPValidator(curp_persona_2).validate_check_digit(),
+                       f"CURP persona 2 ({curp_persona_2}) should be valid")
+
+        # Pero deben ser diferentes
+        self.assertNotEqual(curp_persona_1, curp_persona_2,
+                          "Homonymous CURPs should be different")
+
+        # Caso: Dos personas nacidas después del 2000 con mismo nombre y fecha
+        base_curp_2010 = 'MAPR100512HJCRRS'
+
+        # Primera persona recibe diferenciador 'A'
+        curp_persona_3 = base_curp_2010 + 'A' + CURPGenerator.calculate_check_digit(base_curp_2010 + 'A')
+        # Segunda persona recibe diferenciador 'B'
+        curp_persona_4 = base_curp_2010 + 'B' + CURPGenerator.calculate_check_digit(base_curp_2010 + 'B')
+
+        # Ambos CURPs deben ser válidos
+        self.assertTrue(CURPValidator(curp_persona_3).validate_check_digit(),
+                       f"CURP persona 3 ({curp_persona_3}) should be valid")
+        self.assertTrue(CURPValidator(curp_persona_4).validate_check_digit(),
+                       f"CURP persona 4 ({curp_persona_4}) should be valid")
+
+        # Pero deben ser diferentes
+        self.assertNotEqual(curp_persona_3, curp_persona_4,
+                          "Homonymous CURPs should be different")
+
 
 if __name__ == '__main__':
     unittest.main()

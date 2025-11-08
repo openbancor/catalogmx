@@ -103,12 +103,27 @@ Se extraen las primeras consonantes internas (que no sean la inicial) de:
 
 ## Diferenciador de Homonimia (Posición 17)
 
-**IMPORTANTE:** Esta posición es **asignada aleatoriamente por RENAPO** y **NO es calculable algorítmicamente**.
+**IMPORTANTE:** Esta posición es **asignada por RENAPO** para evitar duplicados y **NO es calculable algorítmicamente**.
+
+### Reglas de Asignación
 
 - Para personas nacidas **antes del año 2000:** números del 0 al 9
 - Para personas nacidas **del año 2000 en adelante:** letras A-Z o números 0-9
 
-**Nota:** Los generadores automáticos no pueden calcular este valor con precisión. Solo RENAPO puede asignarlo oficialmente.
+### Cómo Funciona
+
+Cuando dos o más personas tienen los mismos primeros 16 caracteres (mismo nombre, apellidos, fecha de nacimiento, género y estado), RENAPO asigna **diferentes diferenciadores** para hacer únicos sus CURPs:
+
+**Ejemplo de Homonimia:**
+```
+Persona 1: MAPR990512HJCRRS0  → diferenciador '0' → dígito verificador calculado
+Persona 2: MAPR990512HJCRRS1  → diferenciador '1' → dígito verificador calculado
+Persona 3: MAPR990512HJCRRS2  → diferenciador '2' → dígito verificador calculado
+```
+
+Cada diferenciador genera un **dígito verificador diferente** (posición 18), por lo que aunque compartan los primeros 16 caracteres, cada CURP es único y válido.
+
+**Nota:** Los generadores automáticos no pueden calcular este valor con precisión. Solo RENAPO puede asignarlo oficialmente al consultar su base de datos de CURPs existentes.
 
 ## Dígito Verificador (Posición 18)
 
@@ -162,19 +177,60 @@ Un CURP es válido si cumple:
 4. ✅ Sexo válido: H o M (posición 11)
 5. ✅ Código de estado válido (posiciones 12-13)
 6. ✅ Consonantes válidas (posiciones 14-16): solo consonantes
-7. ✅ Dígito verificador correcto (posición 18)
+7. ✅ **Dígito verificador correcto (posición 18)** - ¡ESTO ES VALIDABLE!
 
-**Nota:** La validación del diferenciador (posición 17) no es posible sin acceso a la base de datos oficial de RENAPO.
+### Validación del Dígito Verificador
 
-## Limitaciones de Generadores Automáticos
+**IMPORTANTE:** Aunque el diferenciador (posición 17) es asignado por RENAPO, el **dígito verificador (posición 18) SÍ puede validarse** para cualquier CURP completo.
 
-Los generadores automáticos de CURP (como este proyecto) **NO pueden generar CURPs 100% oficiales** porque:
+Esto permite verificar que un CURP es **matemáticamente consistente**:
 
-1. ❌ La posición 17 (diferenciador) es asignada aleatoriamente por RENAPO
-2. ❌ No tienen acceso a la base de datos de CURPs existentes para evitar duplicados
-3. ⚠️ El dígito verificador puede calcularse, pero depende del diferenciador
+```python
+# Ejemplo de validación
+curp = "PEGJ900512HJCRRS04"  # CURP completo
+
+# Extraer primeros 17 caracteres
+curp_17 = curp[:17]  # "PEGJ900512HJCRRS0"
+
+# Calcular dígito verificador esperado
+digito_esperado = calculate_check_digit(curp_17)  # "4"
+
+# Comparar con el dígito actual (posición 18)
+digito_actual = curp[17]  # "4"
+
+es_valido = (digito_esperado == digito_actual)  # True
+```
+
+**Casos de uso:**
+- ✅ Validar CURPs capturados manualmente (detectar errores de tipeo)
+- ✅ Verificar integridad de CURPs almacenados en bases de datos
+- ✅ Confirmar que un CURP oficial de RENAPO es matemáticamente correcto
+
+**Nota:** La validación del diferenciador (posición 17) no es posible sin acceso a la base de datos oficial de RENAPO, pero el dígito verificador (18) sí es validable.
+
+## Capacidades y Limitaciones de Generadores Automáticos
+
+### ✅ Lo que SÍ puede hacer este generador:
+
+1. ✅ Generar las primeras **16 posiciones** del CURP con precisión
+2. ✅ Aplicar todas las reglas oficiales de RENAPO (palabras inconvenientes, nombres especiales, etc.)
+3. ✅ **Calcular el dígito verificador (posición 18)** para cualquier CURP
+4. ✅ **Validar cualquier CURP completo** verificando su dígito verificador
+5. ✅ Generar CURPs válidos para pruebas y desarrollo
+
+### ❌ Lo que NO puede hacer:
+
+1. ❌ Determinar el diferenciador exacto (posición 17) que asignaría RENAPO
+2. ❌ Acceder a la base de datos oficial para verificar duplicados
+3. ❌ Garantizar que el CURP generado coincida 100% con el oficial de RENAPO
+
+### Por qué la posición 17 varía:
+
+RENAPO asigna el diferenciador consultando su base de datos para evitar duplicados. Si hay homonimias (dos personas con los mismos primeros 16 caracteres), cada una recibe un diferenciador único (0, 1, 2... o A, B, C...).
 
 **Para obtener un CURP oficial:** Consultar https://www.gob.mx/curp/
+
+**Para validar un CURP existente:** Use el método `validate_check_digit()` de este proyecto.
 
 ## Referencias Oficiales
 
