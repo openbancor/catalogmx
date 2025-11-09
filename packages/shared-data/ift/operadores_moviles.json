@@ -1,0 +1,231 @@
+{
+  "metadata": {
+    "catalog": "IFT_Operadores_Moviles",
+    "description": "Catálogo de operadores de telefonía móvil en México",
+    "source": "Instituto Federal de Telecomunicaciones (IFT)",
+    "last_updated": "2025-02-01",
+    "notes": "Incluye operadores móviles tradicionales (OMR) y operadores móviles virtuales (OMV)"
+  },
+  "operadores": [
+    {
+      "nombre_comercial": "Telcel",
+      "razon_social": "Radiomóvil Dipsa, S.A. de C.V.",
+      "tipo": "OMR",
+      "grupo_empresarial": "América Móvil",
+      "tecnologias": ["2G", "3G", "4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago", "postpago", "datos"],
+      "market_share_aprox": 65.0,
+      "fecha_inicio_operaciones": "1989-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "AT&T",
+      "razon_social": "AT&T Comunicaciones Digitales, S. de R.L. de C.V.",
+      "tipo": "OMR",
+      "grupo_empresarial": "AT&T Inc.",
+      "tecnologias": ["3G", "4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago", "postpago", "datos"],
+      "market_share_aprox": 18.0,
+      "fecha_inicio_operaciones": "2015-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Movistar",
+      "razon_social": "Pegaso PCS, S.A. de C.V.",
+      "tipo": "OMR",
+      "grupo_empresarial": "Telefónica",
+      "tecnologias": ["2G", "3G", "4G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago", "postpago", "datos"],
+      "market_share_aprox": 15.0,
+      "fecha_inicio_operaciones": "2000-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Altán Redes",
+      "razon_social": "Altán Redes, S.A.P.I. de C.V.",
+      "tipo": "OMR",
+      "grupo_empresarial": "Altán Redes",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["mayorista"],
+      "market_share_aprox": 0.0,
+      "fecha_inicio_operaciones": "2018-03-01",
+      "activo": true,
+      "notas": "Red compartida mayorista (wholesaler)"
+    },
+    {
+      "nombre_comercial": "Diri Móvil",
+      "razon_social": "Diri Servicios, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "AT&T",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago", "postpago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2021-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Izzi Móvil",
+      "razon_social": "Grupo Televisa, S.A.B.",
+      "tipo": "OMV",
+      "red_anfitriona": "AT&T",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["postpago"],
+      "market_share_aprox": 0.3,
+      "fecha_inicio_operaciones": "2020-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Megacable Móvil",
+      "razon_social": "Megacable Comunicaciones de México, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "AT&T",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "regional",
+      "servicios": ["postpago"],
+      "market_share_aprox": 0.2,
+      "fecha_inicio_operaciones": "2020-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Mexmovil",
+      "razon_social": "Servicio Panamericano de Protección, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "Altán Redes",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago", "postpago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2019-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Newww",
+      "razon_social": "Operadora de Servicios Newww, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "Altán Redes",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago", "postpago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2019-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "PilloFon",
+      "razon_social": "Compañía de Telecomunicaciones de El Salvador, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "AT&T",
+      "tecnologias": ["4G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago", "postpago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2020-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Tokamóvil",
+      "razon_social": "Toka Móvil, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "Altán Redes",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2019-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Weex",
+      "razon_social": "Wal-Mart Innovación, S. de R.L. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "AT&T",
+      "tecnologias": ["4G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago"],
+      "market_share_aprox": 0.2,
+      "fecha_inicio_operaciones": "2018-01-01",
+      "activo": true,
+      "notas": "Operado por Walmart México"
+    },
+    {
+      "nombre_comercial": "Oui",
+      "razon_social": "Oui Mobile México, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "AT&T",
+      "tecnologias": ["4G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2019-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Virgin Mobile",
+      "razon_social": "Virgin Mobile México, S. de R.L. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "AT&T",
+      "tecnologias": ["3G", "4G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago", "postpago"],
+      "market_share_aprox": 0.5,
+      "fecha_inicio_operaciones": "2014-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Freedompop",
+      "razon_social": "Freedompop México, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "AT&T",
+      "tecnologias": ["4G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2017-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Unefon",
+      "razon_social": "Telefónica Móviles México, S.A. de C.V.",
+      "tipo": "OMR",
+      "grupo_empresarial": "Telefónica",
+      "tecnologias": ["2G", "3G", "4G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago"],
+      "market_share_aprox": 1.0,
+      "fecha_inicio_operaciones": "2003-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Nextel",
+      "razon_social": "Nextel de México, S.A. de C.V.",
+      "tipo": "OMR",
+      "grupo_empresarial": "AT&T Inc.",
+      "tecnologias": ["iDEN", "3G", "4G"],
+      "cobertura": "nacional",
+      "servicios": ["postpago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "1996-01-01",
+      "activo": false,
+      "fecha_fin_operaciones": "2015-01-30",
+      "notas": "Absorbida por AT&T"
+    }
+  ],
+  "tipos_operador": {
+    "OMR": "Operador Móvil de Red - Opera su propia infraestructura",
+    "OMV": "Operador Móvil Virtual - Utiliza infraestructura de terceros"
+  },
+  "estadisticas": {
+    "total_operadores": 17,
+    "operadores_activos": 16,
+    "omr_activos": 4,
+    "omv_activos": 12,
+    "lineas_totales_mercado": 144800000,
+    "fecha_estadisticas": "2024-03-31"
+  }
+}

@@ -431,3 +431,54 @@ export interface RetencionCalculationResult {
   retencion: number;
   impuesto_base?: number; // Para IVA retenido
 }
+
+// IFT - Operadores Móviles
+export interface OperadorMovil {
+  nombre_comercial: string;
+  razon_social: string;
+  tipo: 'OMR' | 'OMV';
+  grupo_empresarial?: string;
+  red_anfitriona?: string;
+  tecnologias: string[];
+  cobertura: 'nacional' | 'regional';
+  servicios: string[];
+  market_share_aprox: number;
+  fecha_inicio_operaciones: string;
+  activo: boolean;
+  fecha_fin_operaciones?: string;
+  notas?: string;
+}
+
+// IFT - Códigos LADA
+export interface CodigoLADA {
+  lada: string;
+  ciudad: string;
+  estado: string;
+  tipo: 'metropolitana' | 'fronteriza' | 'turistica' | 'normal';
+  region: string;
+}
+
+// Banxico - Instituciones Financieras
+export interface TipoInstitucionFinanciera {
+  codigo: string;
+  tipo: string;
+  descripcion: string;
+  regulador: string;
+  ley_aplicable: string;
+  ejemplos: string[];
+}
+
+// Banxico - Monedas y Divisas
+export interface Moneda {
+  codigo_iso: string;
+  numero_iso: string;
+  moneda: string;
+  pais: string;
+  simbolo: string;
+  decimales: number;
+  moneda_nacional: boolean;
+  tipo_cambio_banxico: boolean;
+  tipo_cambio_fix?: boolean;
+  activa: boolean;
+  notas?: string;
+}

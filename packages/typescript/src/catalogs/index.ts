@@ -5,6 +5,12 @@
 
 // Banxico
 export { BankCatalog } from './banxico/banks';
+export { InstitucionesFinancieras } from './banxico/instituciones-financieras';
+export { MonedasDivisas } from './banxico/monedas-divisas';
+
+// IFT (Instituto Federal de Telecomunicaciones)
+export { OperadoresMoviles } from './ift/operadores-moviles';
+export { CodigosLADA } from './ift/codigos-lada';
 
 // INEGI
 export { StateCatalog } from './inegi/states';
