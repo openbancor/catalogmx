@@ -35,8 +35,10 @@ export interface ValidationResult {
 export interface Bank {
   code: string;
   name: string;
-  short_name: string;
+  short_name?: string;
+  full_name?: string;
   spei: boolean;
+  rfc?: string;
   razon_social?: string;
 }
 
@@ -77,13 +79,17 @@ export interface Localidad {
 }
 
 export interface PostalCode {
-  codigo_postal: string;
+  cp: string;
+  codigo_postal?: string; // Alias for backward compatibility
   asentamiento: string;
   tipo_asentamiento: string;
   municipio: string;
   estado: string;
   ciudad?: string;
-  zona: 'Urbano' | 'Rural';
+  cp_oficina?: string;
+  codigo_estado?: string;
+  codigo_municipio?: string;
+  zona?: 'Urbano' | 'Rural';
 }
 
 // SAT CFDI 4.0 types
@@ -160,15 +166,23 @@ export interface ClavePedimento {
 }
 
 export interface Moneda {
-  code: string;
-  name: string;
-  decimals: number;
+  codigo: string;
+  code?: string; // Alias for backward compatibility
+  nombre: string;
+  name?: string; // Alias for backward compatibility
+  decimales: number;
+  decimals?: number; // Alias for backward compatibility
+  pais?: string;
   countries?: string[];
 }
 
 export interface Pais {
-  code: string; // ISO 3166-1 alpha-3
-  name: string;
+  codigo: string; // ISO 3166-1 alpha-3
+  code?: string; // Alias for backward compatibility
+  nombre: string;
+  name?: string; // Alias for backward compatibility
+  iso2?: string;
+  requiere_subdivision?: boolean;
   agrupacion?: string;
 }
 
@@ -469,7 +483,7 @@ export interface TipoInstitucionFinanciera {
 }
 
 // Banxico - Monedas y Divisas
-export interface Moneda {
+export interface MonedaDivisa {
   codigo_iso: string;
   numero_iso: string;
   moneda: string;

@@ -112,7 +112,7 @@ describe('Banxico Catalogs', () => {
   test('should get currency by ISO code', () => {
     const usd = MonedasDivisas.getPorCodigo('USD');
     expect(usd).toBeDefined();
-    expect(usd?.moneda).toContain('dólar');
+    expect(usd?.moneda.toLowerCase()).toContain('dólar');
   });
 
   test('should get MXN, USD, EUR', () => {

@@ -4,7 +4,7 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
-import { Moneda } from '../../types';
+import { MonedaDivisa } from '../../types';
 
 interface MonedasDivisasData {
   metadata: {
@@ -14,7 +14,7 @@ interface MonedasDivisasData {
     last_updated: string;
     notes: string;
   };
-  monedas: Moneda[];
+  monedas: MonedaDivisa[];
   tipo_cambio_fix: {
     descripcion: string;
     formula: string;
@@ -35,7 +35,7 @@ interface MonedasDivisasData {
 }
 
 export class MonedasDivisas {
-  private static _data: Moneda[] | null = null;
+  private static _data: MonedaDivisa[] | null = null;
 
   private static loadData(): void {
     if (this._data !== null) return;
@@ -52,7 +52,7 @@ export class MonedasDivisas {
   /**
    * Obtener todas las monedas
    */
-  static getAll(): Moneda[] {
+  static getAll(): MonedaDivisa[] {
     this.loadData();
     return this._data!;
   }
@@ -60,7 +60,7 @@ export class MonedasDivisas {
   /**
    * Buscar moneda por código ISO
    */
-  static getPorCodigo(codigoISO: string): Moneda | undefined {
+  static getPorCodigo(codigoISO: string): MonedaDivisa | undefined {
     this.loadData();
     return this._data!.find(
       (m) => m.codigo_iso.toUpperCase() === codigoISO.toUpperCase()
@@ -70,7 +70,7 @@ export class MonedasDivisas {
   /**
    * Buscar monedas por país
    */
-  static getPorPais(pais: string): Moneda[] {
+  static getPorPais(pais: string): MonedaDivisa[] {
     this.loadData();
     return this._data!.filter((m) =>
       m.pais.toLowerCase().includes(pais.toLowerCase())
@@ -80,7 +80,7 @@ export class MonedasDivisas {
   /**
    * Obtener monedas con tipo de cambio publicado por Banxico
    */
-  static getConTipoCambioBanxico(): Moneda[] {
+  static getConTipoCambioBanxico(): MonedaDivisa[] {
     this.loadData();
     return this._data!.filter((m) => m.tipo_cambio_banxico);
   }
@@ -88,7 +88,7 @@ export class MonedasDivisas {
   /**
    * Obtener monedas con tipo de cambio FIX
    */
-  static getConTipoCambioFIX(): Moneda[] {
+  static getConTipoCambioFIX(): MonedaDivisa[] {
     this.loadData();
     return this._data!.filter((m) => m.tipo_cambio_fix === true);
   }
@@ -96,7 +96,7 @@ export class MonedasDivisas {
   /**
    * Obtener monedas de una región específica
    */
-  static getPorRegion(region: string): Moneda[] {
+  static getPorRegion(region: string): MonedaDivisa[] {
     this.loadData();
     const regiones: Record<string, string[]> = {
       'America del Norte': ['USD', 'CAD', 'MXN'],
@@ -132,7 +132,7 @@ export class MonedasDivisas {
   /**
    * Obtener monedas principales para operaciones en México
    */
-  static getPrincipales(): Moneda[] {
+  static getPrincipales(): MonedaDivisa[] {
     this.loadData();
     const principales = ['MXN', 'USD', 'EUR', 'CAD', 'GBP', 'JPY', 'CHF'];
     return this._data!.filter((m) => principales.includes(m.codigo_iso));
@@ -141,7 +141,7 @@ export class MonedasDivisas {
   /**
    * Obtener monedas latinoamericanas
    */
-  static getLatam(): Moneda[] {
+  static getLatam(): MonedaDivisa[] {
     this.loadData();
     const latam = [
       'MXN',
@@ -213,28 +213,28 @@ export class MonedasDivisas {
   /**
    * Obtener peso mexicano (MXN)
    */
-  static getMXN(): Moneda | undefined {
+  static getMXN(): MonedaDivisa | undefined {
     return this.getPorCodigo('MXN');
   }
 
   /**
    * Obtener dólar estadounidense (USD)
    */
-  static getUSD(): Moneda | undefined {
+  static getUSD(): MonedaDivisa | undefined {
     return this.getPorCodigo('USD');
   }
 
   /**
    * Obtener euro (EUR)
    */
-  static getEUR(): Moneda | undefined {
+  static getEUR(): MonedaDivisa | undefined {
     return this.getPorCodigo('EUR');
   }
 
   /**
    * Buscar monedas por nombre
    */
-  static buscarPorNombre(nombre: string): Moneda[] {
+  static buscarPorNombre(nombre: string): MonedaDivisa[] {
     this.loadData();
     return this._data!.filter((m) =>
       m.moneda.toLowerCase().includes(nombre.toLowerCase())
@@ -244,7 +244,7 @@ export class MonedasDivisas {
   /**
    * Obtener monedas activas
    */
-  static getActivas(): Moneda[] {
+  static getActivas(): MonedaDivisa[] {
     this.loadData();
     return this._data!.filter((m) => m.activa);
   }

@@ -40,7 +40,8 @@ export class BankCatalog {
     const searchName = name.toUpperCase();
     return this.getData().find(bank =>
       bank.name.toUpperCase().includes(searchName) ||
-      bank.short_name.toUpperCase().includes(searchName)
+      bank.short_name?.toUpperCase().includes(searchName) ||
+      bank.full_name?.toUpperCase().includes(searchName)
     );
   }
 
@@ -51,7 +52,8 @@ export class BankCatalog {
     const searchTerm = keyword.toUpperCase();
     return this.getData().filter(bank =>
       bank.name.toUpperCase().includes(searchTerm) ||
-      bank.short_name.toUpperCase().includes(searchTerm) ||
+      bank.short_name?.toUpperCase().includes(searchTerm) ||
+      bank.full_name?.toUpperCase().includes(searchTerm) ||
       bank.code.includes(searchTerm)
     );
   }

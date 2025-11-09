@@ -30,14 +30,14 @@ export class CodigosPostales {
    * Get postal code information
    */
   static getByCp(cp: string): PostalCode[] {
-    return this.getData().filter(postal => postal.codigo_postal === cp);
+    return this.getData().filter(postal => postal.cp === cp || postal.codigo_postal === cp);
   }
 
   /**
    * Get state name from postal code
    */
   static getEstado(cp: string): string | undefined {
-    const postal = this.getData().find(p => p.codigo_postal === cp);
+    const postal = this.getData().find(p => p.cp === cp || p.codigo_postal === cp);
     return postal?.estado;
   }
 
@@ -45,7 +45,7 @@ export class CodigosPostales {
    * Get municipality from postal code
    */
   static getMunicipio(cp: string): string | undefined {
-    const postal = this.getData().find(p => p.codigo_postal === cp);
+    const postal = this.getData().find(p => p.cp === cp || p.codigo_postal === cp);
     return postal?.municipio;
   }
 
@@ -83,6 +83,6 @@ export class CodigosPostales {
    * Validate postal code exists
    */
   static isValid(cp: string): boolean {
-    return this.getData().some(postal => postal.codigo_postal === cp);
+    return this.getData().some(postal => postal.cp === cp || postal.codigo_postal === cp);
   }
 }

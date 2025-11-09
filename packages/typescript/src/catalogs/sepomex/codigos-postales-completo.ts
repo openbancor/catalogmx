@@ -105,7 +105,7 @@ export class CodigosPostalesCompleto {
    * Get all unique postal codes
    */
   static getUniqueCPs(): string[] {
-    const cpsSet = new Set(this.getData().map(p => p.codigo_postal));
+    const cpsSet = new Set(this.getData().map(p => p.cp || p.codigo_postal!));
     return Array.from(cpsSet).sort();
   }
 

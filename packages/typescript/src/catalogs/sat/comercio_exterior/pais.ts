@@ -21,18 +21,19 @@ export class PaisCatalog {
   }
 
   static getPais(code: string): Pais | undefined {
-    return this.getData().find(p => p.code === code.toUpperCase());
+    return this.getData().find(p => (p.codigo || p.code) === code.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(p => p.code === code.toUpperCase());
+    return this.getData().some(p => (p.codigo || p.code) === code.toUpperCase());
   }
 
   /**
    * Get country name
    */
   static getName(code: string): string | undefined {
-    return this.getPais(code)?.name;
+    const pais = this.getPais(code);
+    return pais?.nombre || pais?.name;
   }
 
   /**
@@ -41,7 +42,7 @@ export class PaisCatalog {
   static searchByName(keyword: string): Pais[] {
     const search = keyword.toUpperCase();
     return this.getData().filter(p =>
-      p.name.toUpperCase().includes(search)
+      (p.nombre || p.name || '').toUpperCase().includes(search)
     );
   }
 

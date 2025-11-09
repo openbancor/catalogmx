@@ -21,25 +21,27 @@ export class MonedaCatalog {
   }
 
   static getMoneda(code: string): Moneda | undefined {
-    return this.getData().find(m => m.code === code.toUpperCase());
+    return this.getData().find(m => (m.codigo || m.code) === code.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(m => m.code === code.toUpperCase());
+    return this.getData().some(m => (m.codigo || m.code) === code.toUpperCase());
   }
 
   /**
    * Get currency name
    */
   static getName(code: string): string | undefined {
-    return this.getMoneda(code)?.name;
+    const moneda = this.getMoneda(code);
+    return moneda?.nombre || moneda?.name;
   }
 
   /**
    * Get decimal precision for currency
    */
   static getDecimals(code: string): number | undefined {
-    return this.getMoneda(code)?.decimals;
+    const moneda = this.getMoneda(code);
+    return moneda?.decimales || moneda?.decimals;
   }
 
   /**
@@ -70,7 +72,7 @@ export class MonedaCatalog {
 
     // Calculate expected USD total
     const calculatedTotalUsd = data.total * data.tipo_cambio_usd;
-    const decimals = moneda.decimals;
+    const decimals = moneda.decimales || moneda.decimals || 2;
     const tolerance = Math.pow(10, -(decimals + 1));
 
     if (Math.abs(calculatedTotalUsd - data.total_usd) > tolerance) {
@@ -90,8 +92,8 @@ export class MonedaCatalog {
   static searchByName(keyword: string): Moneda[] {
     const search = keyword.toUpperCase();
     return this.getData().filter(m =>
-      m.name.toUpperCase().includes(search) ||
-      m.code.includes(search)
+      (m.nombre || m.name || '').toUpperCase().includes(search) ||
+      (m.codigo || m.code || '').includes(search)
     );
   }
 }

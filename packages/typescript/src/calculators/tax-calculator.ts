@@ -24,11 +24,6 @@ interface IVAData {
   tasa_cero_productos: any[];
 }
 
-interface IEPSData {
-  metadata: object;
-  categorias: IEPSCategoria[];
-}
-
 interface RetencionesData {
   metadata: object;
   isr_retenciones: RetencionISR[];
@@ -165,7 +160,7 @@ export class IVACalculator {
  * Calculadora de IEPS
  */
 export class IEPSCalculator {
-  private static _data: IEPSData | null = null;
+  private static _data: IEPSCategoria[] | null = null;
 
   private static loadData(): void {
     if (this._data !== null) return;
@@ -175,7 +170,7 @@ export class IEPSCalculator {
       '../../../shared-data/sat/impuestos/ieps_tasas.json'
     );
     const rawData = fs.readFileSync(dataPath, 'utf-8');
-    this._data = JSON.parse(rawData) as IEPSData;
+    this._data = JSON.parse(rawData) as IEPSCategoria[];
   }
 
   /**
@@ -185,7 +180,7 @@ export class IEPSCalculator {
    */
   static getCategoria(categoria: string): IEPSCategoria | undefined {
     this.loadData();
-    return this._data!.categorias.find(c => c.categoria === categoria);
+    return this._data!.find(c => c.categoria === categoria);
   }
 
   /**
@@ -276,7 +271,7 @@ export class IEPSCalculator {
    */
   static getAllCategorias(): IEPSCategoria[] {
     this.loadData();
-    return [...this._data!.categorias];
+    return [...this._data!];
   }
 }
 

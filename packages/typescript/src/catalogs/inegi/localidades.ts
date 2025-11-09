@@ -12,25 +12,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Localidad } from '../../types';
 
-interface LocalidadesData {
-  metadata: {
-    catalog: string;
-    version: string;
-    source: string;
-    description: string;
-    last_updated: string;
-    total_records: number;
-    total_states: number;
-    total_population: number;
-    min_population_filter: number;
-    localidades_urbanas: number;
-    localidades_rurales: number;
-    notes: string;
-    download_url: string;
-  };
-  localidades: Localidad[];
-}
-
 export class LocalidadesCatalog {
   private static _data: Localidad[] | null = null;
   private static _byCvegeo: Map<string, Localidad> | null = null;
@@ -45,8 +26,7 @@ export class LocalidadesCatalog {
       '../../../../shared-data/inegi/localidades.json'
     );
     const rawData = fs.readFileSync(dataPath, 'utf-8');
-    const jsonData: LocalidadesData = JSON.parse(rawData);
-    this._data = jsonData.localidades;
+    this._data = JSON.parse(rawData) as Localidad[];
 
     // Crear índices
     this._byCvegeo = new Map();
