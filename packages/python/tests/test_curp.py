@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from rfcmx.curp import CURPValidator, CURPGenerator, CURPException, CURPLengthError, CURPStructureError
+from catalogmx.validators.curp import CURPValidator, CURPGenerator, CURPException, CURPLengthError, CURPStructureError
 import unittest
 import datetime
 

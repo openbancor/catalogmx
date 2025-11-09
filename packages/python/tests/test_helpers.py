@@ -4,7 +4,7 @@
 
 import unittest
 import datetime
-from rfcmx import (
+from catalogmx import (
     # RFC helpers
     generate_rfc_persona_fisica,
     generate_rfc_persona_moral,

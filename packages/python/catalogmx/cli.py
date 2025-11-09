@@ -16,8 +16,8 @@ Why does this file exist, and why not put this in __main__?
 """
 import click
 import datetime
-from rfcmx.rfc import RFCValidator, RFCGenerator
-from rfcmx.curp import CURPValidator, CURPGenerator
+from catalogmx.validators.rfc import RFCValidator, RFCGenerator
+from catalogmx.validators.curp import CURPValidator, CURPGenerator
 
 
 @click.group()

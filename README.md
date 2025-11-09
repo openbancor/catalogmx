@@ -26,7 +26,7 @@ A complete multi-language library (Python 3.10+ | TypeScript 5.0+) for validatin
 - **SQLite Hybrid Architecture**: 22-59% size reduction for large catalogs with FTS5 full-text search
 - **Multi-language Support**: Python and TypeScript with identical APIs
 - **Type-Safe**: Full type hints (PEP 604) and TypeScript declarations
-- **Production Ready**: 100% test coverage (220/220 tests), documented, and actively maintained
+- **Production Ready**: Comprehensive test coverage (337 tests: 221 TypeScript + 116 Python), documented, and actively maintained
 
 ---
 
@@ -150,7 +150,7 @@ const regimen = RegimenFiscalCatalog.getRegimen('605');
 - **Mobile operators**: Telecom providers and network identifiers
 
 **Mexico National Catalogs** - 6 catalogs
-- **License Plates (Placas)**: Vehicle plate formats by state and type (federal, diplomatic, etc.)
+- **License Plates (Placas)**: 35 official vehicle plate formats by NOM-001-SCT-2-2016 (particular, federal, diplomatic, military, emergency services, etc.)
 - **Minimum Wages (Salarios Mínimos)**: Historical minimum wages 2010-2025 (daily, monthly, annual)
 - **UMA**: Unidad de Medida y Actualización 2017-2025 (reference unit for fines/taxes)
 - **UDI (Banxico)**: Unidades de Inversión with historical values (inflation-indexed investment units)
@@ -349,7 +349,7 @@ def validate_cfdi_data(rfc_code, tax_regime, cfdi_use, payment_method):
 - ✅ Geographic search by coordinates with radius filtering
 - ✅ Population and housing data (Census 2020)
 - ✅ Urban/rural classification
-- ✅ **TypeScript 100% functional test coverage** (173/173 tests passing)
+- ✅ **Comprehensive test coverage** (337 tests: 221 TypeScript + 116 Python, all passing)
 - ✅ Bilingual documentation
 
 ### Version 0.4.0 (Planned - Q1 2025)
@@ -544,7 +544,7 @@ BSD 2-Clause License. See [LICENSE](LICENSE) for details.
 Package Size:     ~82 MB (all catalogs + SQLite)
 Total Catalogs:   58 (56 JSON + 2 SQLite)
 Total Records:    170,505+
-Test Coverage:    220/220 functional tests passing (100%)
+Test Coverage:    337/337 tests passing (221 TypeScript + 116 Python)
 Code Coverage:    ~60% statements, ~37% branches
 Population:       126,014,024 (100% coverage)
 GPS Localities:   10,635
@@ -555,7 +555,7 @@ IFT Operators:    Multiple telecom providers
 Tax Calculators:  5 (IEPS, ISR, IVA, Withholdings, Local)
 Economic Data:    UMA (2017-2025), UDI (1995-2025), Salarios Mínimos (2010-2025)
 Traffic Rules:    Hoy No Circula CDMX (complete program)
-License Plates:   12 formats (federal, state, diplomatic, etc.)
+License Plates:   35 official formats (NOM-001-SCT-2-2016)
 ```
 
 ### Package Size Breakdown

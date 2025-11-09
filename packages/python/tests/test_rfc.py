@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from rfcmx.rfc import RFCValidator, RFCGeneratorFisicas, RFCGeneratorMorales, RFCGenerator
+from catalogmx.validators.rfc import RFCValidator, RFCGeneratorFisicas, RFCGeneratorMorales, RFCGenerator
 import unittest
 import datetime
 
