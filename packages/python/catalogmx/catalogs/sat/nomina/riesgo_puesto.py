@@ -33,7 +33,7 @@ class RiesgoPuestoCatalog:
         return cls._data.copy()
 
     @classmethod
-    def get_prima_media(cls, code: str) -> Optional[float]:
+    def get_prima_media(cls, code: str) -> float | None:
         """Obtiene la prima media del nivel de riesgo"""
         riesgo = cls.get_riesgo(code)
         return riesgo.get('prima_media') if riesgo else None
