@@ -73,10 +73,14 @@ export class PlacasFormatosCatalog {
   }
 
   /**
-   * Check if a plate is federal
+   * Check if a plate is federal (government, military, or federal service)
    */
   static isFederal(placa: string): boolean {
     const formato = this.detectFormato(placa);
-    return formato?.tipo === 'federal';
+    return formato?.tipo === 'gobierno_federal' ||
+           formato?.tipo === 'servicio_publico_federal' ||
+           formato?.tipo === 'carga_federal' ||
+           formato?.tipo === 'policia_federal' ||
+           formato?.tipo === 'remolque_federal';
   }
 }

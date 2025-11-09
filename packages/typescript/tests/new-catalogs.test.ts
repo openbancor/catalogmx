@@ -7,8 +7,14 @@ import {
 } from '../src/catalogs';
 
 describe('Placas Formatos Catalog', () => {
-  test('should validate valid license plate', () => {
-    expect(PlacasFormatosCatalog.validatePlaca('ABC-12-34')).toBe(true);
+  test('should validate valid license plate - current format', () => {
+    expect(PlacasFormatosCatalog.validatePlaca('ABC-123-A')).toBe(true);
+  });
+
+  test('should validate valid license plate - old format still valid', () => {
+    // Old format is inactive but pattern still matches
+    const formato = PlacasFormatosCatalog.detectFormato('ABC-12-34');
+    expect(formato).toBeDefined();
   });
 
   test('should reject invalid license plate', () => {
@@ -16,24 +22,27 @@ describe('Placas Formatos Catalog', () => {
   });
 
   test('should detect format for valid plate', () => {
-    const formato = PlacasFormatosCatalog.detectFormato('ABC-12-34');
+    const formato = PlacasFormatosCatalog.detectFormato('ABC-123-A');
     expect(formato).toBeDefined();
-    expect(formato?.formato).toBe('ABC-12-34');
+    expect(formato?.formato).toBe('ABC-123-A');
+    expect(formato?.tipo).toBe('particular');
   });
 
   test('should identify diplomatic plates', () => {
     expect(PlacasFormatosCatalog.isDiplomatica('D-12345')).toBe(true);
-    expect(PlacasFormatosCatalog.isDiplomatica('ABC-12-34')).toBe(false);
+    expect(PlacasFormatosCatalog.isDiplomatica('ABC-123-A')).toBe(false);
   });
 
   test('should identify federal plates', () => {
-    expect(PlacasFormatosCatalog.isFederal('A-12345')).toBe(true);
-    expect(PlacasFormatosCatalog.isFederal('ABC-12-34')).toBe(false);
+    expect(PlacasFormatosCatalog.isFederal('F-12345')).toBe(true); // Gobierno Federal
+    expect(PlacasFormatosCatalog.isFederal('P-12345')).toBe(true); // Policía Federal
+    expect(PlacasFormatosCatalog.isFederal('ABC-123-A')).toBe(false); // Particular
   });
 
   test('should get formats by state', () => {
-    const formatos = PlacasFormatosCatalog.getFormatosPorEstado('Ciudad de México');
+    const formatos = PlacasFormatosCatalog.getFormatosPorEstado('Nacional');
     expect(formatos.length).toBeGreaterThan(0);
+    expect(formatos.length).toBe(35); // All 35 formats are national
   });
 
   test('should get formats by type', () => {
