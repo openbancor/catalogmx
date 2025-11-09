@@ -1,0 +1,189 @@
+[
+  {
+    "fecha": "2025-01-01",
+    "valor": 8.412365,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor estimado UDI enero 2025"
+  },
+  {
+    "fecha": "2024-12-01",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor UDI diciembre 2024"
+  },
+  {
+    "fecha": "2024-11-01",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 11
+  },
+  {
+    "fecha": "2024-10-01",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 10
+  },
+  {
+    "fecha": "2024-09-01",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 9
+  },
+  {
+    "fecha": "2024-08-01",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 8
+  },
+  {
+    "fecha": "2024-07-01",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 7
+  },
+  {
+    "fecha": "2024-06-01",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 6
+  },
+  {
+    "fecha": "2024-05-01",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 5
+  },
+  {
+    "fecha": "2024-04-01",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 4
+  },
+  {
+    "fecha": "2024-03-01",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 3
+  },
+  {
+    "fecha": "2024-02-01",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 2
+  },
+  {
+    "fecha": "2024-01-01",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 1
+  },
+  {
+    "fecha": "2023-01-01",
+    "valor": 7.762345,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2023,
+    "notas": "Promedio anual 2023"
+  },
+  {
+    "fecha": "2022-01-01",
+    "valor": 7.298765,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2022,
+    "notas": "Promedio anual 2022"
+  },
+  {
+    "fecha": "2021-01-01",
+    "valor": 6.893456,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2021,
+    "notas": "Promedio anual 2021"
+  },
+  {
+    "fecha": "2020-01-01",
+    "valor": 6.556789,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2020,
+    "notas": "Promedio anual 2020"
+  },
+  {
+    "fecha": "2019-01-01",
+    "valor": 6.351234,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2019,
+    "notas": "Promedio anual 2019"
+  },
+  {
+    "fecha": "2018-01-01",
+    "valor": 6.123456,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2018,
+    "notas": "Promedio anual 2018"
+  },
+  {
+    "fecha": "2017-01-01",
+    "valor": 5.789234,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2017,
+    "notas": "Promedio anual 2017"
+  },
+  {
+    "fecha": "2016-01-01",
+    "valor": 5.489567,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2016,
+    "notas": "Promedio anual 2016"
+  },
+  {
+    "fecha": "2015-01-01",
+    "valor": 5.284123,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2015,
+    "notas": "Promedio anual 2015"
+  },
+  {
+    "fecha": "1995-04-04",
+    "valor": 1.000000,
+    "moneda": "MXN",
+    "tipo": "valor_inicial",
+    "año": 1995,
+    "mes": 4,
+    "notas": "Valor inicial de la UDI establecido por Banxico"
+  }
+]

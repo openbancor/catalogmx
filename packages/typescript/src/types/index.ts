@@ -504,3 +504,117 @@ export interface MonedaDivisa {
   activa: boolean;
   notas?: string;
 }
+
+// Mexico - Placas (License Plates)
+export interface PlacaFormato {
+  estado: string;
+  codigo_estado: string;
+  formato: string;
+  pattern: string;
+  descripcion: string;
+  tipo: 'particular' | 'motocicleta' | 'diplomatico' | 'federal' | 'transporte_publico' | 'carga' | 'particular_estatal';
+  activo: boolean;
+  vigencia_inicio?: string;
+  vigencia_fin?: string;
+}
+
+// Mexico - Salarios Mínimos
+export interface SalarioMinimo {
+  año: number;
+  vigencia_inicio: string;
+  zona_frontera_norte?: number;
+  resto_pais?: number;
+  zona_general?: number;
+  zona_a?: number;
+  zona_b?: number;
+  zona_c?: number;
+  moneda: string;
+  periodo: 'diario' | 'mensual' | 'anual';
+  notas?: string;
+}
+
+// Mexico - UMA (Unidad de Medida y Actualización)
+export interface UMA {
+  año: number;
+  vigencia_inicio: string;
+  vigencia_fin: string;
+  valor_diario: number;
+  valor_mensual: number;
+  valor_anual: number;
+  moneda: string;
+  publicacion_dof: string;
+  incremento_porcentual: number | null;
+  notas?: string;
+}
+
+// Banxico - UDI (Unidades de Inversión)
+export interface UDI {
+  fecha: string;
+  valor: number;
+  moneda: string;
+  tipo: 'diario' | 'promedio_mensual' | 'promedio_anual' | 'valor_inicial';
+  año: number;
+  mes?: number;
+  notas?: string;
+}
+
+// CDMX - Hoy No Circula
+export interface HoyNoCirculaRestriccion {
+  dia: string;
+  terminacion_placa: string[];
+  engomado: string[];
+  horario_restriccion: string;
+  aplica_sabados?: boolean;
+  aplica_contingencia?: boolean;
+  notas?: string;
+}
+
+export interface HoyNoCirculaHolograma {
+  holograma: '00' | '0' | '1' | '2';
+  exento: boolean;
+  descripcion: string;
+  restriccion_sabatina: boolean;
+  dias_adicionales?: string;
+  notas?: string;
+}
+
+export interface HoyNoCirculaSabado {
+  mes: string;
+  semana: number;
+  terminaciones: string[];
+  fecha_ejemplo: string;
+}
+
+export interface HoyNoCirculaContingencia {
+  fase: string;
+  calidad_aire: string;
+  restriccion_adicional: string;
+  vehiculos_exentos: string[];
+}
+
+export interface HoyNoCirculaPeriodoVerificacion {
+  periodo: string;
+  meses: string[];
+  terminacion_placa: string[];
+}
+
+export interface HoyNoCirculaPrograma {
+  metadata: {
+    programa: string;
+    jurisdiccion: string;
+    vigencia: string;
+    fuente: string;
+    ultima_actualizacion: string;
+  };
+  restricciones_por_dia: HoyNoCirculaRestriccion[];
+  exenciones_por_holograma: HoyNoCirculaHolograma[];
+  calendario_sabados_holograma_2: HoyNoCirculaSabado[];
+  contingencias_ambientales: HoyNoCirculaContingencia[];
+  tipos_vehiculos_exentos: string[];
+  zonas_aplicacion: string[];
+  municipios_edomex: string[];
+  verificacion_vehicular: {
+    periodicidad: string;
+    periodos: HoyNoCirculaPeriodoVerificacion[];
+  };
+}

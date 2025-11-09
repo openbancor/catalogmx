@@ -19,12 +19,14 @@ A complete multi-language library (Python 3.10+ | TypeScript 5.0+) for validatin
 **catalogmx** provides production-ready tools for Mexican data validation and official catalog access:
 
 - **4 Validators**: RFC, CURP, CLABE, NSS with complete algorithms
-- **50+ Official Catalogs**: SAT (CFDI 4.0, Comercio Exterior, Carta Porte, Nómina), INEGI, SEPOMEX, Banxico, IFT
+- **58 Official Catalogs**: SAT (CFDI 4.0, Comercio Exterior, Carta Porte, Nómina), INEGI, SEPOMEX, Banxico, IFT, Mexico National
 - **170,505+ Records**: Complete databases including 157K postal codes, 2.4K municipalities, 10K+ localities with GPS
+- **Economic Indicators**: Salarios Mínimos, UMA, UDI with historical data (2010-2025)
+- **Traffic Regulations**: Hoy No Circula CDMX with hologram exemptions and contingency rules
 - **SQLite Hybrid Architecture**: 22-59% size reduction for large catalogs with FTS5 full-text search
 - **Multi-language Support**: Python and TypeScript with identical APIs
 - **Type-Safe**: Full type hints (PEP 604) and TypeScript declarations
-- **Production Ready**: 100% test coverage (173/173 tests), documented, and actively maintained
+- **Production Ready**: 100% test coverage (220/220 tests), documented, and actively maintained
 
 ---
 
@@ -147,6 +149,14 @@ const regimen = RegimenFiscalCatalog.getRegimen('605');
 - **LADA codes**: Mexican area codes with geographic coverage
 - **Mobile operators**: Telecom providers and network identifiers
 
+**Mexico National Catalogs** - 6 catalogs
+- **License Plates (Placas)**: Vehicle plate formats by state and type (federal, diplomatic, etc.)
+- **Minimum Wages (Salarios Mínimos)**: Historical minimum wages 2010-2025 (daily, monthly, annual)
+- **UMA**: Unidad de Medida y Actualización 2017-2025 (reference unit for fines/taxes)
+- **UDI (Banxico)**: Unidades de Inversión with historical values (inflation-indexed investment units)
+- **Hoy No Circula CDMX**: Traffic restrictions program for Mexico City and Metro Area
+- **Economic Indicators**: Historical data for wages, UMA, and UDI values
+
 ---
 
 ## Statistics
@@ -163,14 +173,16 @@ const regimen = RegimenFiscalCatalog.getRegimen('605');
 | SAT Nómina | 7 catalogs | JSON | <1 MB |
 | SAT Tax Calculators | 5 calculators | JSON | <1 MB |
 | Banxico | 3 catalogs | JSON | 41 KB |
+| Banxico UDI | 24 values | JSON | ~2 KB |
 | IFT Telecom | 2 catalogs | JSON | 38 KB |
-| **TOTAL** | **170,505+ records** | **50 JSON + 2 SQLite** | **~82 MB total** |
+| Mexico National | 6 catalogs | JSON | ~15 KB |
+| **TOTAL** | **170,505+ records** | **56 JSON + 2 SQLite** | **~82 MB total** |
 
 ### Test Coverage (TypeScript)
 
 | Metric | Coverage | Status |
 |--------|----------|--------|
-| **Functional Tests** | **173/173 passing** | ✅ **100%** |
+| **Functional Tests** | **220/220 passing** | ✅ **100%** |
 | Code Statements | 59.83% | ⚠️ Below 80% threshold |
 | Branches | 37.48% | ⚠️ Below 80% threshold |
 | Lines | 61.56% | ⚠️ Below 80% threshold |
@@ -530,9 +542,9 @@ BSD 2-Clause License. See [LICENSE](LICENSE) for details.
 
 ```
 Package Size:     ~82 MB (all catalogs + SQLite)
-Total Catalogs:   52 (50 JSON + 2 SQLite)
+Total Catalogs:   58 (56 JSON + 2 SQLite)
 Total Records:    170,505+
-Test Coverage:    173/173 functional tests passing (100%)
+Test Coverage:    220/220 functional tests passing (100%)
 Code Coverage:    ~60% statements, ~37% branches
 Population:       126,014,024 (100% coverage)
 GPS Localities:   10,635
@@ -541,6 +553,9 @@ Postal Codes:     157,252
 Banks:            110
 IFT Operators:    Multiple telecom providers
 Tax Calculators:  5 (IEPS, ISR, IVA, Withholdings, Local)
+Economic Data:    UMA (2017-2025), UDI (1995-2025), Salarios Mínimos (2010-2025)
+Traffic Rules:    Hoy No Circula CDMX (complete program)
+License Plates:   12 formats (federal, state, diplomatic, etc.)
 ```
 
 ### Package Size Breakdown

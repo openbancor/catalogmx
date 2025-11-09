@@ -7,6 +7,7 @@
 export { BankCatalog } from './banxico/banks';
 export { InstitucionesFinancieras } from './banxico/instituciones-financieras';
 export { MonedasDivisas } from './banxico/monedas-divisas';
+export { UDICatalog } from './banxico/udis';
 
 // IFT (Instituto Federal de Telecomunicaciones)
 export { OperadoresMoviles } from './ift/operadores-moviles';
@@ -73,3 +74,9 @@ export {
   RiesgoPuestoCatalog,
   BancoNominaCatalog
 } from './sat/nomina';
+
+// Mexico - National Catalogs
+export { PlacasFormatosCatalog } from './mexico/placas-formatos';
+export { SalariosMinimos } from './mexico/salarios-minimos';
+export { UMACatalog } from './mexico/uma';
+export { HoyNoCirculaCDMX } from './mexico/hoy-no-circula';

@@ -1,0 +1,118 @@
+[
+  {
+    "estado": "Nacional",
+    "codigo_estado": "00",
+    "formato": "ABC-12-34",
+    "pattern": "^[A-Z]{3}-\\d{2}-\\d{2}$",
+    "descripcion": "Formato nacional estándar (2012-presente)",
+    "tipo": "particular",
+    "activo": true,
+    "vigencia_inicio": "2012-01-01"
+  },
+  {
+    "estado": "Nacional",
+    "codigo_estado": "00",
+    "formato": "ABC-123-D",
+    "pattern": "^[A-Z]{3}-\\d{3}-[A-Z]$",
+    "descripcion": "Formato para motocicletas nacional",
+    "tipo": "motocicleta",
+    "activo": true,
+    "vigencia_inicio": "2012-01-01"
+  },
+  {
+    "estado": "Nacional",
+    "codigo_estado": "00",
+    "formato": "ABC-1234",
+    "pattern": "^[A-Z]{3}-\\d{4}$",
+    "descripcion": "Formato antiguo nacional (pre-2012)",
+    "tipo": "particular",
+    "activo": false,
+    "vigencia_inicio": "1990-01-01",
+    "vigencia_fin": "2012-12-31"
+  },
+  {
+    "estado": "Nacional",
+    "codigo_estado": "00",
+    "formato": "D-12345",
+    "pattern": "^D-\\d{5}$",
+    "descripcion": "Servicio diplomático",
+    "tipo": "diplomatico",
+    "activo": true
+  },
+  {
+    "estado": "Nacional",
+    "codigo_estado": "00",
+    "formato": "A-12345",
+    "pattern": "^A-\\d{5}$",
+    "descripcion": "Servicio público federal",
+    "tipo": "federal",
+    "activo": true
+  },
+  {
+    "estado": "Ciudad de México",
+    "codigo_estado": "09",
+    "formato": "ABC-12-34",
+    "pattern": "^[A-Z]{3}-\\d{2}-\\d{2}$",
+    "descripcion": "Formato CDMX estándar",
+    "tipo": "particular",
+    "activo": true,
+    "vigencia_inicio": "2012-01-01"
+  },
+  {
+    "estado": "Estado de México",
+    "codigo_estado": "15",
+    "formato": "ABC-12-34",
+    "pattern": "^[A-Z]{3}-\\d{2}-\\d{2}$",
+    "descripcion": "Formato EdoMex estándar",
+    "tipo": "particular",
+    "activo": true,
+    "vigencia_inicio": "2012-01-01"
+  },
+  {
+    "estado": "Jalisco",
+    "codigo_estado": "14",
+    "formato": "ABC-12-34",
+    "pattern": "^[A-Z]{3}-\\d{2}-\\d{2}$",
+    "descripcion": "Formato Jalisco estándar",
+    "tipo": "particular",
+    "activo": true,
+    "vigencia_inicio": "2012-01-01"
+  },
+  {
+    "estado": "Nuevo León",
+    "codigo_estado": "19",
+    "formato": "ABC-12-34",
+    "pattern": "^[A-Z]{3}-\\d{2}-\\d{2}$",
+    "descripcion": "Formato Nuevo León estándar",
+    "tipo": "particular",
+    "activo": true,
+    "vigencia_inicio": "2012-01-01"
+  },
+  {
+    "estado": "Nacional",
+    "codigo_estado": "00",
+    "formato": "T-12345",
+    "pattern": "^T-\\d{5}$",
+    "descripcion": "Transporte público federal",
+    "tipo": "transporte_publico",
+    "activo": true
+  },
+  {
+    "estado": "Nacional",
+    "codigo_estado": "00",
+    "formato": "C-12345",
+    "pattern": "^C-\\d{5}$",
+    "descripcion": "Carga federal",
+    "tipo": "carga",
+    "activo": true
+  },
+  {
+    "estado": "Nacional",
+    "codigo_estado": "00",
+    "formato": "P-12345",
+    "pattern": "^P-\\d{5}$",
+    "descripcion": "Servicio particular estatal",
+    "tipo": "particular_estatal",
+    "activo": true
+  }
+]
