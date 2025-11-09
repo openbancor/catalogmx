@@ -1,0 +1,932 @@
+[
+  {
+    "codigo": "AED",
+    "nombre": "UAE Dirham",
+    "pais": "Emiratos Árabes Unidos",
+    "decimales": 2
+  },
+  {
+    "codigo": "AFN",
+    "nombre": "Afghani",
+    "pais": "Afganistán",
+    "decimales": 2
+  },
+  {
+    "codigo": "ALL",
+    "nombre": "Lek",
+    "pais": "Albania",
+    "decimales": 2
+  },
+  {
+    "codigo": "AMD",
+    "nombre": "Armenian Dram",
+    "pais": "Armenia",
+    "decimales": 2
+  },
+  {
+    "codigo": "ANG",
+    "nombre": "Netherlands Antillean Guilder",
+    "pais": "Curazao, Sint Maarten",
+    "decimales": 2
+  },
+  {
+    "codigo": "AOA",
+    "nombre": "Kwanza",
+    "pais": "Angola",
+    "decimales": 2
+  },
+  {
+    "codigo": "ARS",
+    "nombre": "Peso argentino",
+    "pais": "Argentina",
+    "decimales": 2
+  },
+  {
+    "codigo": "AUD",
+    "nombre": "Dólar australiano",
+    "pais": "Australia",
+    "decimales": 2
+  },
+  {
+    "codigo": "AWG",
+    "nombre": "Aruban Florin",
+    "pais": "Aruba",
+    "decimales": 2
+  },
+  {
+    "codigo": "AZN",
+    "nombre": "Azerbaijan Manat",
+    "pais": "Azerbaiyán",
+    "decimales": 2
+  },
+  {
+    "codigo": "BAM",
+    "nombre": "Convertible Mark",
+    "pais": "Bosnia y Herzegovina",
+    "decimales": 2
+  },
+  {
+    "codigo": "BBD",
+    "nombre": "Barbados Dollar",
+    "pais": "Barbados",
+    "decimales": 2
+  },
+  {
+    "codigo": "BDT",
+    "nombre": "Taka",
+    "pais": "Bangladesh",
+    "decimales": 2
+  },
+  {
+    "codigo": "BGN",
+    "nombre": "Bulgarian Lev",
+    "pais": "Bulgaria",
+    "decimales": 2
+  },
+  {
+    "codigo": "BHD",
+    "nombre": "Bahraini Dinar",
+    "pais": "Baréin",
+    "decimales": 3
+  },
+  {
+    "codigo": "BIF",
+    "nombre": "Burundi Franc",
+    "pais": "Burundi",
+    "decimales": 0
+  },
+  {
+    "codigo": "BMD",
+    "nombre": "Bermudian Dollar",
+    "pais": "Bermudas",
+    "decimales": 2
+  },
+  {
+    "codigo": "BND",
+    "nombre": "Brunei Dollar",
+    "pais": "Brunéi",
+    "decimales": 2
+  },
+  {
+    "codigo": "BOB",
+    "nombre": "Boliviano",
+    "pais": "Bolivia",
+    "decimales": 2
+  },
+  {
+    "codigo": "BRL",
+    "nombre": "Real brasileño",
+    "pais": "Brasil",
+    "decimales": 2
+  },
+  {
+    "codigo": "BSD",
+    "nombre": "Bahamian Dollar",
+    "pais": "Bahamas",
+    "decimales": 2
+  },
+  {
+    "codigo": "BTN",
+    "nombre": "Ngultrum",
+    "pais": "Bután",
+    "decimales": 2
+  },
+  {
+    "codigo": "BWP",
+    "nombre": "Pula",
+    "pais": "Botsuana",
+    "decimales": 2
+  },
+  {
+    "codigo": "BYN",
+    "nombre": "Belarusian Ruble",
+    "pais": "Bielorrusia",
+    "decimales": 2
+  },
+  {
+    "codigo": "BZD",
+    "nombre": "Belize Dollar",
+    "pais": "Belice",
+    "decimales": 2
+  },
+  {
+    "codigo": "CAD",
+    "nombre": "Dólar canadiense",
+    "pais": "Canadá",
+    "decimales": 2
+  },
+  {
+    "codigo": "CDF",
+    "nombre": "Congolese Franc",
+    "pais": "República Democrática del Congo",
+    "decimales": 2
+  },
+  {
+    "codigo": "CHF",
+    "nombre": "Franco suizo",
+    "pais": "Suiza",
+    "decimales": 2
+  },
+  {
+    "codigo": "CLP",
+    "nombre": "Peso chileno",
+    "pais": "Chile",
+    "decimales": 0
+  },
+  {
+    "codigo": "CNY",
+    "nombre": "Yuan renminbi",
+    "pais": "China",
+    "decimales": 2
+  },
+  {
+    "codigo": "COP",
+    "nombre": "Peso colombiano",
+    "pais": "Colombia",
+    "decimales": 2
+  },
+  {
+    "codigo": "CRC",
+    "nombre": "Colón costarricense",
+    "pais": "Costa Rica",
+    "decimales": 2
+  },
+  {
+    "codigo": "CUP",
+    "nombre": "Peso cubano",
+    "pais": "Cuba",
+    "decimales": 2
+  },
+  {
+    "codigo": "CVE",
+    "nombre": "Cabo Verde Escudo",
+    "pais": "Cabo Verde",
+    "decimales": 2
+  },
+  {
+    "codigo": "CZK",
+    "nombre": "Czech Koruna",
+    "pais": "República Checa",
+    "decimales": 2
+  },
+  {
+    "codigo": "DJF",
+    "nombre": "Djibouti Franc",
+    "pais": "Yibuti",
+    "decimales": 0
+  },
+  {
+    "codigo": "DKK",
+    "nombre": "Corona danesa",
+    "pais": "Dinamarca",
+    "decimales": 2
+  },
+  {
+    "codigo": "DOP",
+    "nombre": "Peso dominicano",
+    "pais": "República Dominicana",
+    "decimales": 2
+  },
+  {
+    "codigo": "DZD",
+    "nombre": "Algerian Dinar",
+    "pais": "Argelia",
+    "decimales": 2
+  },
+  {
+    "codigo": "EGP",
+    "nombre": "Egyptian Pound",
+    "pais": "Egipto",
+    "decimales": 2
+  },
+  {
+    "codigo": "ERN",
+    "nombre": "Nakfa",
+    "pais": "Eritrea",
+    "decimales": 2
+  },
+  {
+    "codigo": "ETB",
+    "nombre": "Ethiopian Birr",
+    "pais": "Etiopía",
+    "decimales": 2
+  },
+  {
+    "codigo": "EUR",
+    "nombre": "Euro",
+    "pais": "Unión Europea",
+    "decimales": 2
+  },
+  {
+    "codigo": "FJD",
+    "nombre": "Fiji Dollar",
+    "pais": "Fiyi",
+    "decimales": 2
+  },
+  {
+    "codigo": "FKP",
+    "nombre": "Falkland Islands Pound",
+    "pais": "Islas Malvinas",
+    "decimales": 2
+  },
+  {
+    "codigo": "GBP",
+    "nombre": "Libra esterlina",
+    "pais": "Reino Unido",
+    "decimales": 2
+  },
+  {
+    "codigo": "GEL",
+    "nombre": "Lari",
+    "pais": "Georgia",
+    "decimales": 2
+  },
+  {
+    "codigo": "GHS",
+    "nombre": "Ghana Cedi",
+    "pais": "Ghana",
+    "decimales": 2
+  },
+  {
+    "codigo": "GIP",
+    "nombre": "Gibraltar Pound",
+    "pais": "Gibraltar",
+    "decimales": 2
+  },
+  {
+    "codigo": "GMD",
+    "nombre": "Dalasi",
+    "pais": "Gambia",
+    "decimales": 2
+  },
+  {
+    "codigo": "GNF",
+    "nombre": "Guinean Franc",
+    "pais": "Guinea",
+    "decimales": 0
+  },
+  {
+    "codigo": "GTQ",
+    "nombre": "Quetzal",
+    "pais": "Guatemala",
+    "decimales": 2
+  },
+  {
+    "codigo": "GYD",
+    "nombre": "Guyana Dollar",
+    "pais": "Guyana",
+    "decimales": 2
+  },
+  {
+    "codigo": "HKD",
+    "nombre": "Dólar de Hong Kong",
+    "pais": "Hong Kong",
+    "decimales": 2
+  },
+  {
+    "codigo": "HNL",
+    "nombre": "Lempira",
+    "pais": "Honduras",
+    "decimales": 2
+  },
+  {
+    "codigo": "HRK",
+    "nombre": "Kuna",
+    "pais": "Croacia",
+    "decimales": 2
+  },
+  {
+    "codigo": "HTG",
+    "nombre": "Gourde",
+    "pais": "Haití",
+    "decimales": 2
+  },
+  {
+    "codigo": "HUF",
+    "nombre": "Forinto húngaro",
+    "pais": "Hungría",
+    "decimales": 2
+  },
+  {
+    "codigo": "IDR",
+    "nombre": "Rupiah",
+    "pais": "Indonesia",
+    "decimales": 2
+  },
+  {
+    "codigo": "ILS",
+    "nombre": "Shekel israelí",
+    "pais": "Israel",
+    "decimales": 2
+  },
+  {
+    "codigo": "INR",
+    "nombre": "Rupia india",
+    "pais": "India",
+    "decimales": 2
+  },
+  {
+    "codigo": "IQD",
+    "nombre": "Iraqi Dinar",
+    "pais": "Irak",
+    "decimales": 3
+  },
+  {
+    "codigo": "IRR",
+    "nombre": "Iranian Rial",
+    "pais": "Irán",
+    "decimales": 2
+  },
+  {
+    "codigo": "ISK",
+    "nombre": "Iceland Krona",
+    "pais": "Islandia",
+    "decimales": 0
+  },
+  {
+    "codigo": "JMD",
+    "nombre": "Jamaican Dollar",
+    "pais": "Jamaica",
+    "decimales": 2
+  },
+  {
+    "codigo": "JOD",
+    "nombre": "Jordanian Dinar",
+    "pais": "Jordania",
+    "decimales": 3
+  },
+  {
+    "codigo": "JPY",
+    "nombre": "Yen japonés",
+    "pais": "Japón",
+    "decimales": 0
+  },
+  {
+    "codigo": "KES",
+    "nombre": "Kenyan Shilling",
+    "pais": "Kenia",
+    "decimales": 2
+  },
+  {
+    "codigo": "KGS",
+    "nombre": "Som",
+    "pais": "Kirguistán",
+    "decimales": 2
+  },
+  {
+    "codigo": "KHR",
+    "nombre": "Riel",
+    "pais": "Camboya",
+    "decimales": 2
+  },
+  {
+    "codigo": "KMF",
+    "nombre": "Comorian Franc",
+    "pais": "Comoras",
+    "decimales": 0
+  },
+  {
+    "codigo": "KPW",
+    "nombre": "North Korean Won",
+    "pais": "Corea del Norte",
+    "decimales": 2
+  },
+  {
+    "codigo": "KRW",
+    "nombre": "Won surcoreano",
+    "pais": "Corea del Sur",
+    "decimales": 0
+  },
+  {
+    "codigo": "KWD",
+    "nombre": "Kuwaiti Dinar",
+    "pais": "Kuwait",
+    "decimales": 3
+  },
+  {
+    "codigo": "KYD",
+    "nombre": "Cayman Islands Dollar",
+    "pais": "Islas Caimán",
+    "decimales": 2
+  },
+  {
+    "codigo": "KZT",
+    "nombre": "Tenge",
+    "pais": "Kazajistán",
+    "decimales": 2
+  },
+  {
+    "codigo": "LAK",
+    "nombre": "Lao Kip",
+    "pais": "Laos",
+    "decimales": 2
+  },
+  {
+    "codigo": "LBP",
+    "nombre": "Lebanese Pound",
+    "pais": "Líbano",
+    "decimales": 2
+  },
+  {
+    "codigo": "LKR",
+    "nombre": "Sri Lanka Rupee",
+    "pais": "Sri Lanka",
+    "decimales": 2
+  },
+  {
+    "codigo": "LRD",
+    "nombre": "Liberian Dollar",
+    "pais": "Liberia",
+    "decimales": 2
+  },
+  {
+    "codigo": "LSL",
+    "nombre": "Loti",
+    "pais": "Lesoto",
+    "decimales": 2
+  },
+  {
+    "codigo": "LYD",
+    "nombre": "Libyan Dinar",
+    "pais": "Libia",
+    "decimales": 3
+  },
+  {
+    "codigo": "MAD",
+    "nombre": "Moroccan Dirham",
+    "pais": "Marruecos",
+    "decimales": 2
+  },
+  {
+    "codigo": "MDL",
+    "nombre": "Moldovan Leu",
+    "pais": "Moldavia",
+    "decimales": 2
+  },
+  {
+    "codigo": "MGA",
+    "nombre": "Malagasy Ariary",
+    "pais": "Madagascar",
+    "decimales": 2
+  },
+  {
+    "codigo": "MKD",
+    "nombre": "Denar",
+    "pais": "Macedonia del Norte",
+    "decimales": 2
+  },
+  {
+    "codigo": "MMK",
+    "nombre": "Kyat",
+    "pais": "Myanmar",
+    "decimales": 2
+  },
+  {
+    "codigo": "MNT",
+    "nombre": "Tugrik",
+    "pais": "Mongolia",
+    "decimales": 2
+  },
+  {
+    "codigo": "MOP",
+    "nombre": "Pataca",
+    "pais": "Macao",
+    "decimales": 2
+  },
+  {
+    "codigo": "MRU",
+    "nombre": "Ouguiya",
+    "pais": "Mauritania",
+    "decimales": 2
+  },
+  {
+    "codigo": "MUR",
+    "nombre": "Mauritius Rupee",
+    "pais": "Mauricio",
+    "decimales": 2
+  },
+  {
+    "codigo": "MVR",
+    "nombre": "Rufiyaa",
+    "pais": "Maldivas",
+    "decimales": 2
+  },
+  {
+    "codigo": "MWK",
+    "nombre": "Malawi Kwacha",
+    "pais": "Malaui",
+    "decimales": 2
+  },
+  {
+    "codigo": "MXN",
+    "nombre": "Peso mexicano",
+    "pais": "México",
+    "decimales": 2
+  },
+  {
+    "codigo": "MYR",
+    "nombre": "Malaysian Ringgit",
+    "pais": "Malasia",
+    "decimales": 2
+  },
+  {
+    "codigo": "MZN",
+    "nombre": "Mozambique Metical",
+    "pais": "Mozambique",
+    "decimales": 2
+  },
+  {
+    "codigo": "NAD",
+    "nombre": "Namibia Dollar",
+    "pais": "Namibia",
+    "decimales": 2
+  },
+  {
+    "codigo": "NGN",
+    "nombre": "Naira",
+    "pais": "Nigeria",
+    "decimales": 2
+  },
+  {
+    "codigo": "NIO",
+    "nombre": "Córdoba Oro",
+    "pais": "Nicaragua",
+    "decimales": 2
+  },
+  {
+    "codigo": "NOK",
+    "nombre": "Corona noruega",
+    "pais": "Noruega",
+    "decimales": 2
+  },
+  {
+    "codigo": "NPR",
+    "nombre": "Nepalese Rupee",
+    "pais": "Nepal",
+    "decimales": 2
+  },
+  {
+    "codigo": "NZD",
+    "nombre": "Dólar neozelandés",
+    "pais": "Nueva Zelanda",
+    "decimales": 2
+  },
+  {
+    "codigo": "OMR",
+    "nombre": "Rial Omani",
+    "pais": "Omán",
+    "decimales": 3
+  },
+  {
+    "codigo": "PAB",
+    "nombre": "Balboa",
+    "pais": "Panamá",
+    "decimales": 2
+  },
+  {
+    "codigo": "PEN",
+    "nombre": "Sol peruano",
+    "pais": "Perú",
+    "decimales": 2
+  },
+  {
+    "codigo": "PGK",
+    "nombre": "Kina",
+    "pais": "Papúa Nueva Guinea",
+    "decimales": 2
+  },
+  {
+    "codigo": "PHP",
+    "nombre": "Philippine Peso",
+    "pais": "Filipinas",
+    "decimales": 2
+  },
+  {
+    "codigo": "PKR",
+    "nombre": "Pakistan Rupee",
+    "pais": "Pakistán",
+    "decimales": 2
+  },
+  {
+    "codigo": "PLN",
+    "nombre": "Zloty",
+    "pais": "Polonia",
+    "decimales": 2
+  },
+  {
+    "codigo": "PYG",
+    "nombre": "Guaraní",
+    "pais": "Paraguay",
+    "decimales": 0
+  },
+  {
+    "codigo": "QAR",
+    "nombre": "Qatari Rial",
+    "pais": "Catar",
+    "decimales": 2
+  },
+  {
+    "codigo": "RON",
+    "nombre": "Romanian Leu",
+    "pais": "Rumania",
+    "decimales": 2
+  },
+  {
+    "codigo": "RSD",
+    "nombre": "Serbian Dinar",
+    "pais": "Serbia",
+    "decimales": 2
+  },
+  {
+    "codigo": "RUB",
+    "nombre": "Rublo ruso",
+    "pais": "Rusia",
+    "decimales": 2
+  },
+  {
+    "codigo": "RWF",
+    "nombre": "Rwanda Franc",
+    "pais": "Ruanda",
+    "decimales": 0
+  },
+  {
+    "codigo": "SAR",
+    "nombre": "Saudi Riyal",
+    "pais": "Arabia Saudita",
+    "decimales": 2
+  },
+  {
+    "codigo": "SBD",
+    "nombre": "Solomon Islands Dollar",
+    "pais": "Islas Salomón",
+    "decimales": 2
+  },
+  {
+    "codigo": "SCR",
+    "nombre": "Seychelles Rupee",
+    "pais": "Seychelles",
+    "decimales": 2
+  },
+  {
+    "codigo": "SDG",
+    "nombre": "Sudanese Pound",
+    "pais": "Sudán",
+    "decimales": 2
+  },
+  {
+    "codigo": "SEK",
+    "nombre": "Corona sueca",
+    "pais": "Suecia",
+    "decimales": 2
+  },
+  {
+    "codigo": "SGD",
+    "nombre": "Dólar de Singapur",
+    "pais": "Singapur",
+    "decimales": 2
+  },
+  {
+    "codigo": "SHP",
+    "nombre": "Saint Helena Pound",
+    "pais": "Santa Elena",
+    "decimales": 2
+  },
+  {
+    "codigo": "SLL",
+    "nombre": "Leone",
+    "pais": "Sierra Leona",
+    "decimales": 2
+  },
+  {
+    "codigo": "SOS",
+    "nombre": "Somali Shilling",
+    "pais": "Somalia",
+    "decimales": 2
+  },
+  {
+    "codigo": "SRD",
+    "nombre": "Suriname Dollar",
+    "pais": "Surinam",
+    "decimales": 2
+  },
+  {
+    "codigo": "SSP",
+    "nombre": "South Sudanese Pound",
+    "pais": "Sudán del Sur",
+    "decimales": 2
+  },
+  {
+    "codigo": "STN",
+    "nombre": "Dobra",
+    "pais": "Santo Tomé y Príncipe",
+    "decimales": 2
+  },
+  {
+    "codigo": "SYP",
+    "nombre": "Syrian Pound",
+    "pais": "Siria",
+    "decimales": 2
+  },
+  {
+    "codigo": "SZL",
+    "nombre": "Lilangeni",
+    "pais": "Suazilandia",
+    "decimales": 2
+  },
+  {
+    "codigo": "THB",
+    "nombre": "Baht",
+    "pais": "Tailandia",
+    "decimales": 2
+  },
+  {
+    "codigo": "TJS",
+    "nombre": "Somoni",
+    "pais": "Tayikistán",
+    "decimales": 2
+  },
+  {
+    "codigo": "TMT",
+    "nombre": "Turkmenistan New Manat",
+    "pais": "Turkmenistán",
+    "decimales": 2
+  },
+  {
+    "codigo": "TND",
+    "nombre": "Tunisian Dinar",
+    "pais": "Túnez",
+    "decimales": 3
+  },
+  {
+    "codigo": "TOP",
+    "nombre": "Pa'anga",
+    "pais": "Tonga",
+    "decimales": 2
+  },
+  {
+    "codigo": "TRY",
+    "nombre": "Lira turca",
+    "pais": "Turquía",
+    "decimales": 2
+  },
+  {
+    "codigo": "TTD",
+    "nombre": "Trinidad and Tobago Dollar",
+    "pais": "Trinidad y Tobago",
+    "decimales": 2
+  },
+  {
+    "codigo": "TWD",
+    "nombre": "New Taiwan Dollar",
+    "pais": "Taiwán",
+    "decimales": 2
+  },
+  {
+    "codigo": "TZS",
+    "nombre": "Tanzanian Shilling",
+    "pais": "Tanzania",
+    "decimales": 2
+  },
+  {
+    "codigo": "UAH",
+    "nombre": "Hryvnia",
+    "pais": "Ucrania",
+    "decimales": 2
+  },
+  {
+    "codigo": "UGX",
+    "nombre": "Uganda Shilling",
+    "pais": "Uganda",
+    "decimales": 0
+  },
+  {
+    "codigo": "USD",
+    "nombre": "Dólar estadounidense",
+    "pais": "Estados Unidos",
+    "decimales": 2
+  },
+  {
+    "codigo": "UYU",
+    "nombre": "Peso uruguayo",
+    "pais": "Uruguay",
+    "decimales": 2
+  },
+  {
+    "codigo": "UZS",
+    "nombre": "Uzbekistan Sum",
+    "pais": "Uzbekistán",
+    "decimales": 2
+  },
+  {
+    "codigo": "VES",
+    "nombre": "Bolívar Soberano",
+    "pais": "Venezuela",
+    "decimales": 2
+  },
+  {
+    "codigo": "VND",
+    "nombre": "Dong",
+    "pais": "Vietnam",
+    "decimales": 0
+  },
+  {
+    "codigo": "VUV",
+    "nombre": "Vatu",
+    "pais": "Vanuatu",
+    "decimales": 0
+  },
+  {
+    "codigo": "WST",
+    "nombre": "Tala",
+    "pais": "Samoa",
+    "decimales": 2
+  },
+  {
+    "codigo": "XAF",
+    "nombre": "CFA Franc BEAC",
+    "pais": "África Central",
+    "decimales": 0
+  },
+  {
+    "codigo": "XCD",
+    "nombre": "Dólar del Caribe Oriental",
+    "pais": "Caribe Oriental",
+    "decimales": 2
+  },
+  {
+    "codigo": "XOF",
+    "nombre": "CFA Franc BCEAO",
+    "pais": "África Occidental",
+    "decimales": 0
+  },
+  {
+    "codigo": "XPF",
+    "nombre": "CFP Franc",
+    "pais": "Polinesia Francesa",
+    "decimales": 0
+  },
+  {
+    "codigo": "YER",
+    "nombre": "Yemeni Rial",
+    "pais": "Yemen",
+    "decimales": 2
+  },
+  {
+    "codigo": "ZAR",
+    "nombre": "Rand",
+    "pais": "Sudáfrica",
+    "decimales": 2
+  },
+  {
+    "codigo": "ZMW",
+    "nombre": "Zambian Kwacha",
+    "pais": "Zambia",
+    "decimales": 2
+  },
+  {
+    "codigo": "ZWL",
+    "nombre": "Zimbabwe Dollar",
+    "pais": "Zimbabue",
+    "decimales": 2
+  }
+]

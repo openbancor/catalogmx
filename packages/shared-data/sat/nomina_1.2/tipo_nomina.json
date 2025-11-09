@@ -1,0 +1,10 @@
+[
+  {
+    "code": "O",
+    "descripcion": "Nómina ordinaria"
+  },
+  {
+    "code": "E",
+    "descripcion": "Nómina extraordinaria"
+  }
+]

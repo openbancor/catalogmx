@@ -1,0 +1,380 @@
+{
+  "metadata": {
+    "catalog": "Banxico_Monedas_Divisas",
+    "description": "Catálogo de monedas y divisas internacionales utilizadas en operaciones cambiarias en México",
+    "source": "Banco de México (Banxico)",
+    "last_updated": "2025-02-01",
+    "notes": "Códigos ISO 4217 de monedas con las que Banxico publica tipos de cambio"
+  },
+  "monedas": [
+    {
+      "codigo_iso": "MXN",
+      "numero_iso": "484",
+      "moneda": "Peso Mexicano",
+      "pais": "México",
+      "simbolo": "$",
+      "decimales": 2,
+      "moneda_nacional": true,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "USD",
+      "numero_iso": "840",
+      "moneda": "Dólar Estadounidense",
+      "pais": "Estados Unidos",
+      "simbolo": "US$",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": true,
+      "tipo_cambio_fix": true,
+      "activa": true,
+      "notas": "Divisa más importante en operaciones cambiarias de México"
+    },
+    {
+      "codigo_iso": "EUR",
+      "numero_iso": "978",
+      "moneda": "Euro",
+      "pais": "Unión Europea",
+      "simbolo": "€",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": true,
+      "activa": true
+    },
+    {
+      "codigo_iso": "CAD",
+      "numero_iso": "124",
+      "moneda": "Dólar Canadiense",
+      "pais": "Canadá",
+      "simbolo": "C$",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": true,
+      "activa": true
+    },
+    {
+      "codigo_iso": "GBP",
+      "numero_iso": "826",
+      "moneda": "Libra Esterlina",
+      "pais": "Reino Unido",
+      "simbolo": "£",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": true,
+      "activa": true
+    },
+    {
+      "codigo_iso": "JPY",
+      "numero_iso": "392",
+      "moneda": "Yen Japonés",
+      "pais": "Japón",
+      "simbolo": "¥",
+      "decimales": 0,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": true,
+      "activa": true
+    },
+    {
+      "codigo_iso": "CHF",
+      "numero_iso": "756",
+      "moneda": "Franco Suizo",
+      "pais": "Suiza",
+      "simbolo": "CHF",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": true,
+      "activa": true
+    },
+    {
+      "codigo_iso": "CNY",
+      "numero_iso": "156",
+      "moneda": "Yuan Renminbi Chino",
+      "pais": "China",
+      "simbolo": "¥",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": true,
+      "activa": true
+    },
+    {
+      "codigo_iso": "ARS",
+      "numero_iso": "032",
+      "moneda": "Peso Argentino",
+      "pais": "Argentina",
+      "simbolo": "$",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": true,
+      "activa": true
+    },
+    {
+      "codigo_iso": "BRL",
+      "numero_iso": "986",
+      "moneda": "Real Brasileño",
+      "pais": "Brasil",
+      "simbolo": "R$",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": true,
+      "activa": true
+    },
+    {
+      "codigo_iso": "CLP",
+      "numero_iso": "152",
+      "moneda": "Peso Chileno",
+      "pais": "Chile",
+      "simbolo": "$",
+      "decimales": 0,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": true,
+      "activa": true
+    },
+    {
+      "codigo_iso": "COP",
+      "numero_iso": "170",
+      "moneda": "Peso Colombiano",
+      "pais": "Colombia",
+      "simbolo": "$",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": true,
+      "activa": true
+    },
+    {
+      "codigo_iso": "PEN",
+      "numero_iso": "604",
+      "moneda": "Sol Peruano",
+      "pais": "Perú",
+      "simbolo": "S/",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": true,
+      "activa": true
+    },
+    {
+      "codigo_iso": "AUD",
+      "numero_iso": "036",
+      "moneda": "Dólar Australiano",
+      "pais": "Australia",
+      "simbolo": "A$",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "NZD",
+      "numero_iso": "554",
+      "moneda": "Dólar Neozelandés",
+      "pais": "Nueva Zelanda",
+      "simbolo": "NZ$",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "SEK",
+      "numero_iso": "752",
+      "moneda": "Corona Sueca",
+      "pais": "Suecia",
+      "simbolo": "kr",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "NOK",
+      "numero_iso": "578",
+      "moneda": "Corona Noruega",
+      "pais": "Noruega",
+      "simbolo": "kr",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "DKK",
+      "numero_iso": "208",
+      "moneda": "Corona Danesa",
+      "pais": "Dinamarca",
+      "simbolo": "kr",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "SGD",
+      "numero_iso": "702",
+      "moneda": "Dólar de Singapur",
+      "pais": "Singapur",
+      "simbolo": "S$",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "HKD",
+      "numero_iso": "344",
+      "moneda": "Dólar de Hong Kong",
+      "pais": "Hong Kong",
+      "simbolo": "HK$",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "INR",
+      "numero_iso": "356",
+      "moneda": "Rupia India",
+      "pais": "India",
+      "simbolo": "₹",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "RUB",
+      "numero_iso": "643",
+      "moneda": "Rublo Ruso",
+      "pais": "Rusia",
+      "simbolo": "₽",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "ZAR",
+      "numero_iso": "710",
+      "moneda": "Rand Sudafricano",
+      "pais": "Sudáfrica",
+      "simbolo": "R",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "KRW",
+      "numero_iso": "410",
+      "moneda": "Won Surcoreano",
+      "pais": "Corea del Sur",
+      "simbolo": "₩",
+      "decimales": 0,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "GTQ",
+      "numero_iso": "320",
+      "moneda": "Quetzal Guatemalteco",
+      "pais": "Guatemala",
+      "simbolo": "Q",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "CRC",
+      "numero_iso": "188",
+      "moneda": "Colón Costarricense",
+      "pais": "Costa Rica",
+      "simbolo": "₡",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "UYU",
+      "numero_iso": "858",
+      "moneda": "Peso Uruguayo",
+      "pais": "Uruguay",
+      "simbolo": "$U",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "VES",
+      "numero_iso": "928",
+      "moneda": "Bolívar Soberano Venezolano",
+      "pais": "Venezuela",
+      "simbolo": "Bs.S",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true
+    },
+    {
+      "codigo_iso": "UDI",
+      "numero_iso": "979",
+      "moneda": "Unidad de Inversión",
+      "pais": "México",
+      "simbolo": "UDI",
+      "decimales": 6,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": true,
+      "activa": true,
+      "notas": "Unidad de cuenta indexada a la inflación en México"
+    },
+    {
+      "codigo_iso": "XDR",
+      "numero_iso": "960",
+      "moneda": "Derechos Especiales de Giro (DEG)",
+      "pais": "Fondo Monetario Internacional",
+      "simbolo": "DEG",
+      "decimales": 2,
+      "moneda_nacional": false,
+      "tipo_cambio_banxico": false,
+      "activa": true,
+      "notas": "Activo de reserva internacional creado por el FMI"
+    }
+  ],
+  "tipo_cambio_fix": {
+    "descripcion": "Tipo de cambio FIX determinado por Banco de México",
+    "formula": "Promedio ponderado de cotizaciones del mercado de cambios al mayoreo",
+    "publicacion": "Diario en el Diario Oficial de la Federación",
+    "horario": "12:00 hrs (mediodía) tiempo de la Ciudad de México",
+    "uso": "Referencia oficial para liquidación de obligaciones denominadas en dólares"
+  },
+  "regiones": [
+    {
+      "region": "América del Norte",
+      "monedas": ["USD", "CAD", "MXN"]
+    },
+    {
+      "region": "América Latina",
+      "monedas": ["ARS", "BRL", "CLP", "COP", "PEN", "GTQ", "CRC", "UYU", "VES"]
+    },
+    {
+      "region": "Europa",
+      "monedas": ["EUR", "GBP", "CHF", "SEK", "NOK", "DKK", "RUB"]
+    },
+    {
+      "region": "Asia-Pacífico",
+      "monedas": ["JPY", "CNY", "AUD", "NZD", "SGD", "HKD", "INR", "KRW"]
+    },
+    {
+      "region": "África",
+      "monedas": ["ZAR"]
+    }
+  ],
+  "estadisticas": {
+    "total_monedas": 30,
+    "monedas_con_tipo_cambio_banxico": 13,
+    "monedas_sin_decimales": 2,
+    "regiones_cubiertas": 5
+  }
+}

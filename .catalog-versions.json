@@ -1,0 +1,309 @@
+{
+  "last_check": "2025-11-08T00:00:00Z",
+  "next_scheduled_check": "2025-12-01T00:00:00Z",
+  "catalogs": {
+    "sat": {
+      "cfdi_4.0": {
+        "status": "pending_implementation",
+        "version": null,
+        "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/catCFDI.xls",
+        "checksum": null,
+        "last_updated": null,
+        "next_check": "2025-12-01",
+        "frequency": "monthly",
+        "priority": "high",
+        "subcatalogs": {
+          "c_RegimenFiscal": {"implemented": false, "records": 0},
+          "c_UsoCFDI": {"implemented": false, "records": 0},
+          "c_FormaPago": {"implemented": false, "records": 0},
+          "c_MetodoPago": {"implemented": false, "records": 0},
+          "c_TipoComprobante": {"implemented": false, "records": 0},
+          "c_Impuesto": {"implemented": false, "records": 0},
+          "c_TasaOCuota": {"implemented": false, "records": 0},
+          "c_TipoRelacion": {"implemented": false, "records": 0},
+          "c_Exportacion": {"implemented": false, "records": 0},
+          "c_ObjetoImp": {"implemented": false, "records": 0}
+        }
+      },
+      "comercio_exterior": {
+        "status": "partially_implemented",
+        "last_updated": "2025-11-08",
+        "next_check": "2026-01-01",
+        "frequency": "annual",
+        "priority": "medium",
+        "subcatalogs": {
+          "c_INCOTERM": {
+            "implemented": true,
+            "version": "INCOTERMS_2020",
+            "records": 11,
+            "file": "packages/shared-data/sat/comercio_exterior/incoterms.json",
+            "last_updated": "2025-11-08",
+            "next_check": "2030-01-01",
+            "checksum": null
+          },
+          "c_ClavePedimento": {
+            "implemented": true,
+            "version": "2025",
+            "records": 42,
+            "file": "packages/shared-data/sat/comercio_exterior/claves_pedimento.json",
+            "last_updated": "2025-11-08",
+            "next_check": "2026-01-01",
+            "checksum": null
+          },
+          "c_UnidadAduana": {
+            "implemented": true,
+            "version": "2025",
+            "records": 32,
+            "file": "packages/shared-data/sat/comercio_exterior/unidades_aduana.json",
+            "last_updated": "2025-11-08",
+            "next_check": "2026-01-01",
+            "checksum": null
+          },
+          "c_MotivoTraslado": {
+            "implemented": true,
+            "version": "2.0",
+            "records": 6,
+            "file": "packages/shared-data/sat/comercio_exterior/motivos_traslado.json",
+            "last_updated": "2025-11-08",
+            "next_check": "2026-01-01",
+            "checksum": null
+          },
+          "c_RegistroIdentTribReceptor": {
+            "implemented": true,
+            "version": "2.0",
+            "records": 15,
+            "file": "packages/shared-data/sat/comercio_exterior/registro_ident_trib.json",
+            "last_updated": "2025-11-08",
+            "next_check": "2026-01-01",
+            "checksum": null
+          },
+          "c_Moneda": {
+            "implemented": true,
+            "version": "ISO_4217:2024",
+            "records": 150,
+            "file": "packages/shared-data/sat/comercio_exterior/monedas.json",
+            "last_updated": "2025-11-08",
+            "next_check": "2026-07-01",
+            "checksum": null
+          },
+          "c_Pais": {
+            "implemented": true,
+            "version": "ISO_3166-1:2024",
+            "records": 249,
+            "file": "packages/shared-data/sat/comercio_exterior/paises.json",
+            "last_updated": "2025-11-08",
+            "next_check": "2026-07-01",
+            "checksum": null
+          },
+          "c_Estado": {
+            "implemented": true,
+            "version": "ISO_3166-2:2024",
+            "records": 63,
+            "file": "packages/shared-data/sat/comercio_exterior/estados_usa_canada.json",
+            "last_updated": "2025-11-08",
+            "next_check": "2028-01-01",
+            "checksum": null
+          },
+          "c_FraccionArancelaria": {
+            "implemented": false,
+            "version": null,
+            "records": 0,
+            "file": null,
+            "url": "https://www.snice.gob.mx",
+            "last_updated": null,
+            "next_check": "2025-12-01",
+            "frequency": "quarterly",
+            "priority": "high",
+            "notes": "Requires TIGIE/NICO download from SNICE - ~20,000 records, SQLite database"
+          }
+        }
+      },
+      "carta_porte_3.0": {
+        "status": "pending_implementation",
+        "version": null,
+        "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/CatalogosCartaPorte30.xls",
+        "last_updated": null,
+        "next_check": "2025-12-01",
+        "frequency": "semiannual",
+        "priority": "medium",
+        "subcatalogs": {
+          "c_CodigoTransporteAereo": {"implemented": false, "records_expected": 76},
+          "c_NumAutorizacionNaviero": {"implemented": false, "records_expected": 100},
+          "c_Estaciones": {"implemented": false, "records_expected": 500},
+          "c_Carreteras": {"implemented": false, "records_expected": 200},
+          "c_TipoPermiso": {"implemented": false, "records_expected": 20},
+          "c_ConfigAutotransporte": {"implemented": false, "records_expected": 15},
+          "c_TipoEmbalaje": {"implemented": false, "records_expected": 30},
+          "c_MaterialPeligroso": {"implemented": false, "records_expected": 3000, "notes": "SQLite required"}
+        }
+      },
+      "nomina_1.2": {
+        "status": "pending_implementation",
+        "version": null,
+        "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/catalogos_emision_cfdi_nomina.htm",
+        "last_updated": null,
+        "next_check": "2026-01-01",
+        "frequency": "annual",
+        "priority": "low"
+      }
+    },
+    "banxico": {
+      "banks": {
+        "status": "implemented",
+        "version": "2025-11",
+        "records": 102,
+        "file": "packages/shared-data/banxico/banks.json",
+        "url": "https://www.banxico.org.mx/sistemas-de-pago/",
+        "checksum": null,
+        "last_updated": "2025-11-08",
+        "next_check": "2025-12-01",
+        "frequency": "monthly",
+        "priority": "medium"
+      },
+      "sie_api": {
+        "status": "pending_implementation",
+        "version": null,
+        "url": "https://www.banxico.org.mx/SieAPIRest/service/v1/",
+        "last_updated": null,
+        "next_check": "2026-01-01",
+        "frequency": "quarterly",
+        "priority": "low",
+        "notes": "Interest rates, exchange rates - API-based, no download needed"
+      }
+    },
+    "inegi": {
+      "estados": {
+        "status": "implemented",
+        "version": "2020",
+        "records": 32,
+        "file": "packages/shared-data/inegi/states.json",
+        "url": "https://www.inegi.org.mx/app/ageeml/",
+        "checksum": null,
+        "last_updated": "2025-11-08",
+        "next_check": "2026-01-01",
+        "frequency": "annual",
+        "priority": "low"
+      },
+      "municipios": {
+        "status": "pending_implementation",
+        "version": null,
+        "records_expected": 2469,
+        "url": "https://www.inegi.org.mx/app/ageeml/",
+        "last_updated": null,
+        "next_check": "2026-01-01",
+        "frequency": "annual",
+        "priority": "medium"
+      },
+      "localidades": {
+        "status": "pending_implementation",
+        "version": null,
+        "records_expected": 90000,
+        "url": "https://www.inegi.org.mx/app/ageeml/",
+        "last_updated": null,
+        "next_check": "2026-01-01",
+        "frequency": "annual",
+        "priority": "low",
+        "notes": "SQLite required"
+      }
+    },
+    "sepomex": {
+      "codigos_postales": {
+        "status": "pending_implementation",
+        "version": null,
+        "records_expected": 150000,
+        "url": "https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/CodigoPostal_Exportar.aspx",
+        "last_updated": null,
+        "next_check": "2025-12-01",
+        "frequency": "monthly",
+        "priority": "medium",
+        "notes": "SQLite required, ~30MB TXT file"
+      }
+    },
+    "ift": {
+      "lada": {
+        "status": "pending_implementation",
+        "version": null,
+        "records_expected": 400,
+        "url": "http://www.ift.org.mx/usuarios-y-audiencias/recursos-usuarios/recursos/numeracion",
+        "last_updated": null,
+        "next_check": "2026-01-01",
+        "frequency": "annual",
+        "priority": "low"
+      }
+    },
+    "renapo": {
+      "cacophonic_words": {
+        "status": "implemented",
+        "version": "2025",
+        "records": 1400,
+        "file": "packages/shared-data/misc/cacophonic_words.json",
+        "last_updated": "2025-11-08",
+        "next_check": "2027-01-01",
+        "frequency": "biennial",
+        "priority": "low"
+      }
+    },
+    "iso": {
+      "iso_4217_currencies": {
+        "status": "implemented",
+        "version": "2024",
+        "records": 180,
+        "file": "packages/shared-data/sat/comercio_exterior/monedas.json",
+        "url": "https://www.iso.org/iso-4217-currency-codes.html",
+        "last_updated": "2025-11-08",
+        "next_check": "2026-07-01",
+        "frequency": "semiannual",
+        "priority": "low"
+      },
+      "iso_3166_1_countries": {
+        "status": "implemented",
+        "version": "2024",
+        "records": 249,
+        "file": "packages/shared-data/sat/comercio_exterior/paises.json",
+        "url": "https://www.iso.org/iso-3166-country-codes.html",
+        "last_updated": "2025-11-08",
+        "next_check": "2026-07-01",
+        "frequency": "semiannual",
+        "priority": "low"
+      },
+      "iso_3166_2_subdivisions": {
+        "status": "implemented",
+        "version": "2024",
+        "records": 63,
+        "file": "packages/shared-data/sat/comercio_exterior/estados_usa_canada.json",
+        "url": "https://www.iso.org/iso-3166-country-codes.html",
+        "last_updated": "2025-11-08",
+        "next_check": "2028-01-01",
+        "frequency": "rare",
+        "priority": "low"
+      }
+    },
+    "icc": {
+      "incoterms": {
+        "status": "implemented",
+        "version": "INCOTERMS_2020",
+        "records": 11,
+        "file": "packages/shared-data/sat/comercio_exterior/incoterms.json",
+        "url": "https://iccwbo.org/business-solutions/incoterms-rules/incoterms-2020/",
+        "last_updated": "2025-11-08",
+        "next_check": "2030-01-01",
+        "frequency": "decennial",
+        "priority": "low",
+        "notes": "Updates every 10 years"
+      }
+    }
+  },
+  "statistics": {
+    "total_catalogs": 35,
+    "implemented": 11,
+    "pending": 24,
+    "coverage_percentage": 31.4,
+    "high_priority_pending": 3,
+    "next_updates_due": [
+      {"catalog": "sat.cfdi_4.0", "date": "2025-12-01", "priority": "high"},
+      {"catalog": "sat.comercio_exterior.c_FraccionArancelaria", "date": "2025-12-01", "priority": "high"},
+      {"catalog": "banxico.banks", "date": "2025-12-01", "priority": "medium"},
+      {"catalog": "sepomex.codigos_postales", "date": "2025-12-01", "priority": "medium"}
+    ]
+  }
+}

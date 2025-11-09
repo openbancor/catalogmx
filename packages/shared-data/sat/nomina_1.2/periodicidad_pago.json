@@ -1,0 +1,57 @@
+[
+  {
+    "code": "01",
+    "descripcion": "Diario",
+    "days": 1
+  },
+  {
+    "code": "02",
+    "descripcion": "Semanal",
+    "days": 7
+  },
+  {
+    "code": "03",
+    "descripcion": "Catorcenal",
+    "days": 14
+  },
+  {
+    "code": "04",
+    "descripcion": "Quincenal",
+    "days": 15
+  },
+  {
+    "code": "05",
+    "descripcion": "Mensual",
+    "days": 30
+  },
+  {
+    "code": "06",
+    "descripcion": "Bimestral",
+    "days": 60
+  },
+  {
+    "code": "07",
+    "descripcion": "Unidad obra",
+    "days": 0
+  },
+  {
+    "code": "08",
+    "descripcion": "Comisión",
+    "days": 0
+  },
+  {
+    "code": "09",
+    "descripcion": "Precio alzado",
+    "days": 0
+  },
+  {
+    "code": "10",
+    "descripcion": "Decenal",
+    "days": 10
+  },
+  {
+    "code": "99",
+    "descripcion": "Otra periodicidad",
+    "days": 0
+  }
+]

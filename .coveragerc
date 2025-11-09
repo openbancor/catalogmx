@@ -1,0 +1,16 @@
+[paths]
+source =
+   src/rfcmx
+   */site-packages/rfcmx
+
+[run]
+branch = true
+source =
+    rfcmx
+    tests
+parallel = true
+
+[report]
+show_missing = true
+precision = 2
+omit = *migrations*

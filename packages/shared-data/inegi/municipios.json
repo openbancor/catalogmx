@@ -1,0 +1,352 @@
+[
+  {
+    "cve_entidad": "01",
+    "nom_entidad": "Aguascalientes",
+    "cve_municipio": "001",
+    "nom_municipio": "Aguascalientes",
+    "cve_completa": "01001"
+  },
+  {
+    "cve_entidad": "01",
+    "nom_entidad": "Aguascalientes",
+    "cve_municipio": "002",
+    "nom_municipio": "Asientos",
+    "cve_completa": "01002"
+  },
+  {
+    "cve_entidad": "01",
+    "nom_entidad": "Aguascalientes",
+    "cve_municipio": "003",
+    "nom_municipio": "Calvillo",
+    "cve_completa": "01003"
+  },
+  {
+    "cve_entidad": "02",
+    "nom_entidad": "Baja California",
+    "cve_municipio": "001",
+    "nom_municipio": "Ensenada",
+    "cve_completa": "02001"
+  },
+  {
+    "cve_entidad": "02",
+    "nom_entidad": "Baja California",
+    "cve_municipio": "002",
+    "nom_municipio": "Mexicali",
+    "cve_completa": "02002"
+  },
+  {
+    "cve_entidad": "02",
+    "nom_entidad": "Baja California",
+    "cve_municipio": "003",
+    "nom_municipio": "Tecate",
+    "cve_completa": "02003"
+  },
+  {
+    "cve_entidad": "02",
+    "nom_entidad": "Baja California",
+    "cve_municipio": "004",
+    "nom_municipio": "Tijuana",
+    "cve_completa": "02004"
+  },
+  {
+    "cve_entidad": "03",
+    "nom_entidad": "Baja California Sur",
+    "cve_municipio": "001",
+    "nom_municipio": "Comondú",
+    "cve_completa": "03001"
+  },
+  {
+    "cve_entidad": "03",
+    "nom_entidad": "Baja California Sur",
+    "cve_municipio": "002",
+    "nom_municipio": "Mulegé",
+    "cve_completa": "03002"
+  },
+  {
+    "cve_entidad": "03",
+    "nom_entidad": "Baja California Sur",
+    "cve_municipio": "003",
+    "nom_municipio": "La Paz",
+    "cve_completa": "03003"
+  },
+  {
+    "cve_entidad": "04",
+    "nom_entidad": "Campeche",
+    "cve_municipio": "001",
+    "nom_municipio": "Calkiní",
+    "cve_completa": "04001"
+  },
+  {
+    "cve_entidad": "04",
+    "nom_entidad": "Campeche",
+    "cve_municipio": "002",
+    "nom_municipio": "Campeche",
+    "cve_completa": "04002"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "002",
+    "nom_municipio": "Azcapotzalco",
+    "cve_completa": "09002"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "003",
+    "nom_municipio": "Coyoacán",
+    "cve_completa": "09003"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "004",
+    "nom_municipio": "Cuajimalpa de Morelos",
+    "cve_completa": "09004"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "005",
+    "nom_municipio": "Gustavo A. Madero",
+    "cve_completa": "09005"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "006",
+    "nom_municipio": "Iztacalco",
+    "cve_completa": "09006"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "007",
+    "nom_municipio": "Iztapalapa",
+    "cve_completa": "09007"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "008",
+    "nom_municipio": "La Magdalena Contreras",
+    "cve_completa": "09008"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "009",
+    "nom_municipio": "Milpa Alta",
+    "cve_completa": "09009"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "010",
+    "nom_municipio": "Álvaro Obregón",
+    "cve_completa": "09010"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "011",
+    "nom_municipio": "Tláhuac",
+    "cve_completa": "09011"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "012",
+    "nom_municipio": "Tlalpan",
+    "cve_completa": "09012"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "013",
+    "nom_municipio": "Xochimilco",
+    "cve_completa": "09013"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "014",
+    "nom_municipio": "Benito Juárez",
+    "cve_completa": "09014"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "015",
+    "nom_municipio": "Cuauhtémoc",
+    "cve_completa": "09015"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "016",
+    "nom_municipio": "Miguel Hidalgo",
+    "cve_completa": "09016"
+  },
+  {
+    "cve_entidad": "09",
+    "nom_entidad": "Ciudad de México",
+    "cve_municipio": "017",
+    "nom_municipio": "Venustiano Carranza",
+    "cve_completa": "09017"
+  },
+  {
+    "cve_entidad": "14",
+    "nom_entidad": "Jalisco",
+    "cve_municipio": "020",
+    "nom_municipio": "Guadalajara",
+    "cve_completa": "14020"
+  },
+  {
+    "cve_entidad": "14",
+    "nom_entidad": "Jalisco",
+    "cve_municipio": "039",
+    "nom_municipio": "Zapopan",
+    "cve_completa": "14039"
+  },
+  {
+    "cve_entidad": "14",
+    "nom_entidad": "Jalisco",
+    "cve_municipio": "070",
+    "nom_municipio": "Puerto Vallarta",
+    "cve_completa": "14070"
+  },
+  {
+    "cve_entidad": "14",
+    "nom_entidad": "Jalisco",
+    "cve_municipio": "097",
+    "nom_municipio": "Tlajomulco de Zúñiga",
+    "cve_completa": "14097"
+  },
+  {
+    "cve_entidad": "15",
+    "nom_entidad": "México",
+    "cve_municipio": "020",
+    "nom_municipio": "Ecatepec de Morelos",
+    "cve_completa": "15020"
+  },
+  {
+    "cve_entidad": "15",
+    "nom_entidad": "México",
+    "cve_municipio": "033",
+    "nom_municipio": "Naucalpan de Juárez",
+    "cve_completa": "15033"
+  },
+  {
+    "cve_entidad": "15",
+    "nom_entidad": "México",
+    "cve_municipio": "104",
+    "nom_municipio": "Tlalnepantla de Baz",
+    "cve_completa": "15104"
+  },
+  {
+    "cve_entidad": "15",
+    "nom_entidad": "México",
+    "cve_municipio": "106",
+    "nom_municipio": "Toluca",
+    "cve_completa": "15106"
+  },
+  {
+    "cve_entidad": "19",
+    "nom_entidad": "Nuevo León",
+    "cve_municipio": "019",
+    "nom_municipio": "García",
+    "cve_completa": "19019"
+  },
+  {
+    "cve_entidad": "19",
+    "nom_entidad": "Nuevo León",
+    "cve_municipio": "026",
+    "nom_municipio": "Guadalupe",
+    "cve_completa": "19026"
+  },
+  {
+    "cve_entidad": "19",
+    "nom_entidad": "Nuevo León",
+    "cve_municipio": "039",
+    "nom_municipio": "Monterrey",
+    "cve_completa": "19039"
+  },
+  {
+    "cve_entidad": "19",
+    "nom_entidad": "Nuevo León",
+    "cve_municipio": "045",
+    "nom_municipio": "San Nicolás de los Garza",
+    "cve_completa": "19045"
+  },
+  {
+    "cve_entidad": "19",
+    "nom_entidad": "Nuevo León",
+    "cve_municipio": "046",
+    "nom_municipio": "San Pedro Garza García",
+    "cve_completa": "19046"
+  },
+  {
+    "cve_entidad": "21",
+    "nom_entidad": "Puebla",
+    "cve_municipio": "114",
+    "nom_municipio": "Puebla",
+    "cve_completa": "21114"
+  },
+  {
+    "cve_entidad": "21",
+    "nom_entidad": "Puebla",
+    "cve_municipio": "119",
+    "nom_municipio": "San Andrés Cholula",
+    "cve_completa": "21119"
+  },
+  {
+    "cve_entidad": "22",
+    "nom_entidad": "Querétaro",
+    "cve_municipio": "006",
+    "nom_municipio": "Corregidora",
+    "cve_completa": "22006"
+  },
+  {
+    "cve_entidad": "22",
+    "nom_entidad": "Querétaro",
+    "cve_municipio": "008",
+    "nom_municipio": "El Marqués",
+    "cve_completa": "22008"
+  },
+  {
+    "cve_entidad": "22",
+    "nom_entidad": "Querétaro",
+    "cve_municipio": "014",
+    "nom_municipio": "Querétaro",
+    "cve_completa": "22014"
+  },
+  {
+    "cve_entidad": "23",
+    "nom_entidad": "Quintana Roo",
+    "cve_municipio": "005",
+    "nom_municipio": "Benito Juárez",
+    "cve_completa": "23005"
+  },
+  {
+    "cve_entidad": "23",
+    "nom_entidad": "Quintana Roo",
+    "cve_municipio": "008",
+    "nom_municipio": "Solidaridad",
+    "cve_completa": "23008"
+  },
+  {
+    "cve_entidad": "25",
+    "nom_entidad": "Sinaloa",
+    "cve_municipio": "006",
+    "nom_municipio": "Culiacán",
+    "cve_completa": "25006"
+  },
+  {
+    "cve_entidad": "25",
+    "nom_entidad": "Sinaloa",
+    "cve_municipio": "012",
+    "nom_municipio": "Mazatlán",
+    "cve_completa": "25012"
+  }
+]

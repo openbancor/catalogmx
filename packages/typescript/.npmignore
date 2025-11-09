@@ -1,0 +1,22 @@
+# Source files
+src/
+tests/
+
+# Config files
+tsconfig.json
+jest.config.js
+.eslintrc.js
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Tests
+coverage/
+.nyc_output/
+
+# Only include dist in npm package

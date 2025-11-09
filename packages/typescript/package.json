@@ -1,0 +1,78 @@
+{
+  "name": "catalogmx",
+  "version": "0.3.0",
+  "description": "Comprehensive Mexican Data Validators and Official Catalogs - 170,505+ records including complete SEPOMEX, INEGI municipalities and localities with GPS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "mexico",
+    "mexican",
+    "rfc",
+    "curp",
+    "clabe",
+    "nss",
+    "sat",
+    "cfdi",
+    "validator",
+    "validation",
+    "catalogs",
+    "banxico",
+    "inegi",
+    "sepomex",
+    "postal-codes",
+    "geographic-data",
+    "tax",
+    "financial"
+  ],
+  "author": {
+    "name": "Luis Fernando Barrera",
+    "email": "luisfernando@informind.com"
+  },
+  "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openbancor/catalogmx.git",
+    "directory": "packages/typescript"
+  },
+  "bugs": {
+    "url": "https://github.com/openbancor/catalogmx/issues"
+  },
+  "homepage": "https://github.com/openbancor/catalogmx#readme",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.5.0",
+    "prettier": "^3.0.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.4.1",
+    "sql.js": "^1.13.0"
+  }
+}

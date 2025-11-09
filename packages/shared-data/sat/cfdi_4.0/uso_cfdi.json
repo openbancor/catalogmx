@@ -1,0 +1,177 @@
+[
+  {
+    "code": "G01",
+    "description": "Adquisición de mercancías",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "G02",
+    "description": "Devoluciones, descuentos o bonificaciones",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "G03",
+    "description": "Gastos en general",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "I01",
+    "description": "Construcciones",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "I02",
+    "description": "Mobilario y equipo de oficina por inversiones",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "I03",
+    "description": "Equipo de transporte",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "I04",
+    "description": "Equipo de computo y accesorios",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "I05",
+    "description": "Dados, troqueles, moldes, matrices y herramental",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "I06",
+    "description": "Comunicaciones telefónicas",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "I07",
+    "description": "Comunicaciones satelitales",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "I08",
+    "description": "Otra maquinaria y equipo",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "D01",
+    "description": "Honorarios médicos, dentales y gastos hospitalarios",
+    "fisica": true,
+    "moral": false,
+    "applies_to": "fisica"
+  },
+  {
+    "code": "D02",
+    "description": "Gastos médicos por incapacidad o discapacidad",
+    "fisica": true,
+    "moral": false,
+    "applies_to": "fisica"
+  },
+  {
+    "code": "D03",
+    "description": "Gastos funerales",
+    "fisica": true,
+    "moral": false,
+    "applies_to": "fisica"
+  },
+  {
+    "code": "D04",
+    "description": "Donativos",
+    "fisica": true,
+    "moral": false,
+    "applies_to": "fisica"
+  },
+  {
+    "code": "D05",
+    "description": "Intereses reales efectivamente pagados por créditos hipotecarios (casa habitación)",
+    "fisica": true,
+    "moral": false,
+    "applies_to": "fisica"
+  },
+  {
+    "code": "D06",
+    "description": "Aportaciones voluntarias al SAR",
+    "fisica": true,
+    "moral": false,
+    "applies_to": "fisica"
+  },
+  {
+    "code": "D07",
+    "description": "Primas por seguros de gastos médicos",
+    "fisica": true,
+    "moral": false,
+    "applies_to": "fisica"
+  },
+  {
+    "code": "D08",
+    "description": "Gastos de transportación escolar obligatoria",
+    "fisica": true,
+    "moral": false,
+    "applies_to": "fisica"
+  },
+  {
+    "code": "D09",
+    "description": "Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones",
+    "fisica": true,
+    "moral": false,
+    "applies_to": "fisica"
+  },
+  {
+    "code": "D10",
+    "description": "Pagos por servicios educativos (colegiaturas)",
+    "fisica": true,
+    "moral": false,
+    "applies_to": "fisica"
+  },
+  {
+    "code": "CP01",
+    "description": "Pagos",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "CN01",
+    "description": "Nómina",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "S01",
+    "description": "Sin efectos fiscales",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  },
+  {
+    "code": "P01",
+    "description": "Por definir",
+    "fisica": true,
+    "moral": true,
+    "applies_to": "both"
+  }
+]

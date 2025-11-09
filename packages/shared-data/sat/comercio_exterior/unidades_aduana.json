@@ -1,0 +1,22 @@
+[
+  {"code": "01", "descripcion": "Kilogramo"},
+  {"code": "02", "descripcion": "Gramo"},
+  {"code": "03", "descripcion": "Tonelada"},
+  {"code": "04", "descripcion": "Litro"},
+  {"code": "05", "descripcion": "Mililitro"},
+  {"code": "06", "descripcion": "Metro cúbico"},
+  {"code": "07", "descripcion": "Metro"},
+  {"code": "08", "descripcion": "Centímetro"},
+  {"code": "09", "descripcion": "Metro cuadrado"},
+  {"code": "10", "descripcion": "Pieza"},
+  {"code": "11", "descripcion": "Caja"},
+  {"code": "12", "descripcion": "Paquete"},
+  {"code": "13", "descripcion": "Tambor"},
+  {"code": "14", "descripcion": "Barril"},
+  {"code": "15", "descripcion": "Tarima"},
+  {"code": "16", "descripcion": "Par"},
+  {"code": "17", "descripcion": "Docena"},
+  {"code": "18", "descripcion": "Ciento"},
+  {"code": "19", "descripcion": "Millar"},
+  {"code": "20", "descripcion": "Juego"}
+]

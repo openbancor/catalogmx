@@ -1,0 +1,54 @@
+[
+  {
+    "code": "02",
+    "description": "Sueldos (Incluye ingresos señalados en la fracción I del artículo 94 de LISR)"
+  },
+  {
+    "code": "03",
+    "description": "Jubilados"
+  },
+  {
+    "code": "04",
+    "description": "Pensionados"
+  },
+  {
+    "code": "05",
+    "description": "Asimilados a salarios"
+  },
+  {
+    "code": "06",
+    "description": "Asimilados a salarios - Miembros Sociedades Cooperativas de Producción"
+  },
+  {
+    "code": "07",
+    "description": "Asimilados a salarios - Integrantes Sociedades y Asociaciones Civiles"
+  },
+  {
+    "code": "08",
+    "description": "Asimilados a salarios - Miembros consejos directivos, administración, vigilancia"
+  },
+  {
+    "code": "09",
+    "description": "Asimilados a salarios - Actividades empresariales y servicios profesionales"
+  },
+  {
+    "code": "10",
+    "description": "Asimilados a salarios - Honorarios a miembros consejos de administración"
+  },
+  {
+    "code": "11",
+    "description": "Asimilados a salarios - Honorarios a personas físicas"
+  },
+  {
+    "code": "12",
+    "description": "Asimilados a salarios - Comisionistas"
+  },
+  {
+    "code": "13",
+    "description": "Asimilados a salarios - Otros"
+  },
+  {
+    "code": "99",
+    "description": "Otro régimen"
+  }
+]

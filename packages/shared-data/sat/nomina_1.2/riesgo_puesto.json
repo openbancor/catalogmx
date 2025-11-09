@@ -1,0 +1,37 @@
+[
+  {
+    "code": "1",
+    "descripcion": "Clase I",
+    "prima_minima": 0.50000,
+    "prima_media": 0.54355,
+    "prima_maxima": 0.62500
+  },
+  {
+    "code": "2",
+    "descripcion": "Clase II",
+    "prima_minima": 0.62500,
+    "prima_media": 1.13065,
+    "prima_maxima": 1.63000
+  },
+  {
+    "code": "3",
+    "descripcion": "Clase III",
+    "prima_minima": 1.63000,
+    "prima_media": 2.59645,
+    "prima_maxima": 3.06000
+  },
+  {
+    "code": "4",
+    "descripcion": "Clase IV",
+    "prima_minima": 3.06000,
+    "prima_media": 4.65325,
+    "prima_maxima": 5.77000
+  },
+  {
+    "code": "5",
+    "descripcion": "Clase V",
+    "prima_minima": 5.77000,
+    "prima_media": 6.71000,
+    "prima_maxima": 8.70000
+  }
+]
