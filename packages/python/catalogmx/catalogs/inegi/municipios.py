@@ -11,7 +11,9 @@ class MunicipiosCatalog:
     @classmethod
     def _load_data(cls) -> None:
         if cls._data is None:
-            path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'inegi' / 'municipios_completo.json'
+            # Path: catalogmx/packages/python/catalogmx/catalogs/inegi/municipios.py
+            # Target: catalogmx/packages/shared-data/inegi/municipios_completo.json
+            path = Path(__file__).parent.parent.parent.parent.parent / 'shared-data' / 'inegi' / 'municipios_completo.json'
             with open(path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 cls._data = data['municipios']

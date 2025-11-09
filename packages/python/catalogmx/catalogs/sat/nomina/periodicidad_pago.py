@@ -33,7 +33,7 @@ class PeriodicidadPagoCatalog:
         return cls._data.copy()
 
     @classmethod
-    def get_days(cls, code: str) -> Optional[int]:
+    def get_days(cls, code: str) -> int | None:
         """Obtiene el número de días de la periodicidad"""
         periodicidad = cls.get_periodicidad(code)
         return periodicidad.get('days') if periodicidad else None

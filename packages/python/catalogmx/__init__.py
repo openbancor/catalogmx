@@ -1,7 +1,7 @@
 __version__ = "0.3.0"
 
 # RFC imports
-from .rfc import (
+from .validators.rfc import (
     RFCValidator,
     RFCGenerator,
     RFCGeneratorFisicas,
@@ -9,7 +9,7 @@ from .rfc import (
 )
 
 # CURP imports
-from .curp import (
+from .validators.curp import (
     CURPValidator,
     CURPGenerator,
     CURPException,

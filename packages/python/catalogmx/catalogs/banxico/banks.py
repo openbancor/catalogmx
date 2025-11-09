@@ -22,9 +22,10 @@ class BankCatalog:
     def _load_data(cls) -> None:
         """Load bank data from JSON file"""
         if cls._data is None:
-            # Get path to shared data
+            # Path: catalogmx/packages/python/catalogmx/catalogs/banxico/banks.py
+            # Target: catalogmx/packages/shared-data/banxico/banks.json
             current_file = Path(__file__)
-            shared_data_path = current_file.parent.parent.parent.parent.parent.parent / 'shared-data' / 'banxico' / 'banks.json'
+            shared_data_path = current_file.parent.parent.parent.parent.parent / 'shared-data' / 'banxico' / 'banks.json'
 
             with open(shared_data_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)

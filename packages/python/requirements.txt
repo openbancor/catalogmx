@@ -1,3 +1,6 @@
-unidecode
-click
-six
+# Core dependencies for catalogmx
+unidecode>=1.4.0  # Required for RFC generation (accent removal)
+click>=8.0.0      # Required for CLI interface
+
+# Optional dependencies
+# six>=1.16.0     # Python 2/3 compatibility (deprecated, removing)

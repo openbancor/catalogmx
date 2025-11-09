@@ -1,471 +1,509 @@
-# 🇲🇽 catalogmx
+# catalogmx
 
-**Comprehensive Mexican Data Validators and Official Catalogs**
+**Comprehensive Mexican Data Validators and Official Catalogs Library**
 
-A complete Python library for validating Mexican identifiers and accessing official catalogs from SAT, Banxico, INEGI, SEPOMEX, and other government agencies.
+A complete multi-language library (Python 3.10+ | TypeScript 5.0+) for validating Mexican identifiers and accessing official catalogs from SAT, Banxico, INEGI, SEPOMEX, and other government agencies.
 
-[![Python](https://img.shields.io/badge/python-3.10+-blue)]()
-[![License](https://img.shields.io/badge/license-BSD-blue)]()
-[![Catalogs](https://img.shields.io/badge/catalogs-40+-green)]()
-[![Type Hints](https://img.shields.io/badge/type__hints-PEP%20604-blue)]()
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
+[![TypeScript](https://img.shields.io/badge/typescript-5.0+-blue.svg)](https://www.typescriptlang.org)
+[![License](https://img.shields.io/badge/license-BSD--2--Clause-blue.svg)](LICENSE)
+[![PyPI](https://img.shields.io/badge/pypi-catalogmx-blue.svg)](https://pypi.org/project/catalogmx/)
+[![NPM](https://img.shields.io/badge/npm-catalogmx-red.svg)](https://www.npmjs.com/package/catalogmx)
 
----
-
-## ✨ Features
-
-### 🔐 Validators
-
-**RFC** - Registro Federal de Contribuyentes
-- ✅ Persona Física (13 characters) with homoclave
-- ✅ Persona Moral (12 characters) with homoclave
-- ✅ Check digit validation (Módulo 11)
-- ✅ Cacophonic word replacement (170+ words)
-- ✅ Extract birthdate, initials, and homoclave
-- ✅ Support for foreign residents (prefixes)
-
-**CURP** - Clave Única de Registro de Población
-- ✅ 18-character validation with check digit
-- ✅ Complete RENAPO algorithm (position 18)
-- ✅ Homonymy differentiator support (position 17)
-- ✅ 70+ inconvenient words (Anexo 2)
-- ✅ State code validation (32 states)
-- ✅ Extract birthdate, gender, state
-
-**CLABE** - Clave Bancaria Estandarizada
-- ✅ 18-digit bank account validator
-- ✅ Modulo 10 check digit (Luhn-like)
-- ✅ Bank code validation (3 digits)
-- ✅ Branch code validation (3 digits)
-- ✅ Account number extraction (11 digits)
-- ✅ Integration with Banxico bank catalog
-
-**NSS** - Número de Seguridad Social (IMSS)
-- ✅ 11-digit validation
-- ✅ Modified Luhn algorithm check digit
-- ✅ Subdelegation code extraction (5 digits)
-- ✅ Registration year extraction (2 digits)
-- ✅ Serial number extraction (4 digits)
+**Languages**: [English](#) | [Español](README.es.md)
 
 ---
 
-## 📚 Official Catalogs
+## Overview
 
-### SAT (Servicio de Administración Tributaria)
+**catalogmx** provides production-ready tools for Mexican data validation and official catalog access:
 
-**CFDI 4.0 Core** - 9 catalogs
-- ✅ c_RegimenFiscal - 26 tax regimes (persona física/moral)
-- ✅ c_UsoCFDI - 25 CFDI usage codes
-- ✅ c_FormaPago - 18 payment methods
-- ✅ c_MetodoPago - 2 payment types (PUE, PPD)
-- ✅ c_TipoComprobante - 5 receipt types
-- ✅ c_Impuesto - 4 tax types with retention/transfer
-- ✅ c_Exportacion - 4 export keys
-- ✅ c_TipoRelacion - 9 CFDI relationship types
-- ✅ c_ObjetoImp - 8 tax object codes (Dec 2024)
-
-**Comercio Exterior 2.0** - 8 catalogs
-- ✅ c_INCOTERM - 11 Incoterms 2020 with transport validation
-- ✅ c_ClavePedimento - 42 customs document keys
-- ✅ c_Moneda - 150 ISO 4217 currencies with decimals
-- ✅ c_Pais - 249 ISO 3166-1 countries (Alpha-3)
-- ✅ c_UnidadAduana - 32 customs measurement units
-- ✅ c_RegistroIdentTribReceptor - 15 foreign tax ID types
-- ✅ c_MotivoTraslado - 6 transfer motives
-- ✅ c_Estado (USA/CAN) - 63 US states + 13 Canadian provinces
-
-**Carta Porte 3.0** - 7 catalogs
-- ✅ c_CodigoTransporteAereo - 76 airports (IATA/ICAO)
-- ✅ c_NumAutorizacionNaviero - 100 seaports (4 coasts)
-- ✅ c_Carreteras - 200 SCT federal highways
-- ✅ c_TipoPermiso - 12 transport permit types
-- ✅ c_ConfigAutotransporte - 15 vehicle configurations
-- ✅ c_TipoEmbalaje - 30 UN packaging types
-- ✅ c_MaterialPeligroso - 3,000 UN hazardous materials
-
-**Nómina 1.2** - 7 catalogs
-- ✅ c_TipoNomina - 2 types (ordinaria, extraordinaria)
-- ✅ c_TipoContrato - 10 labor contract types
-- ✅ c_TipoJornada - 8 work shifts
-- ✅ c_TipoRegimen - 13 regime types
-- ✅ c_PeriodicidadPago - 10 payment frequencies
-- ✅ c_RiesgoPuesto - 5 IMSS risk levels with premium ranges
-- ✅ c_Banco - 50 banks for payroll
-
-### Geographic Catalogs
-
-**INEGI** - Instituto Nacional de Estadística y Geografía
-- ✅ Municipios - 209 key municipalities (all 32 states)
-- ✅ All state capitals and major cities (100k+)
-- 📥 Complete: 2,478 municipalities (scripts provided)
-
-**SEPOMEX** - Servicio Postal Mexicano
-- ✅ Códigos Postales - 273 postal codes (all 32 states)
-- ✅ CDMX: 25+ codes, Guadalajara: 15+, Monterrey: 10+
-- 📥 Complete: ~150,000 postal codes (scripts provided)
-
-**Banxico** - Banco de México
-- ✅ Banks - 100+ Mexican banks with SPEI status
-- ✅ Bank codes, official names, participation flags
+- **4 Validators**: RFC, CURP, CLABE, NSS with complete algorithms
+- **40+ Official Catalogs**: SAT (CFDI 4.0, Comercio Exterior, Carta Porte, Nómina), INEGI, SEPOMEX, Banxico
+- **170,505+ Records**: Complete databases including 157K postal codes, 2.4K municipalities, 10K+ localities with GPS
+- **Multi-language Support**: Python and TypeScript with identical APIs
+- **Type-Safe**: Full type hints (PEP 604) and TypeScript declarations
+- **Production Ready**: Tested, documented, and actively maintained
 
 ---
 
-## 🚀 Installation
+## Quick Start
+
+### Python
 
 ```bash
 pip install catalogmx
 ```
 
+```python
+from catalogmx.validators import rfc, curp
+from catalogmx.catalogs.sepomex import CodigosPostales
+from catalogmx.catalogs.inegi import LocalidadesCatalog
+
+# Validate and generate RFC
+is_valid = rfc.validate_rfc("XAXX010101000")
+rfc_code = rfc.generate_rfc_persona_fisica(
+    nombre="Juan",
+    apellido_paterno="Pérez", 
+    apellido_materno="López",
+    fecha_nacimiento="1990-01-15"
+)  # Returns: "PELJ900115XXX"
+
+# Generate and validate CURP
+curp_code = curp.generate_curp(
+    nombre="Juan",
+    apellido_paterno="Pérez",
+    apellido_materno="García", 
+    fecha_nacimiento="1990-05-15",
+    sexo="H",
+    estado="Jalisco"
+)  # Returns: "PEGJ900515HJCRRN09"
+
+# Search postal codes
+postal_codes = CodigosPostales.get_by_cp("06700")
+print(postal_codes[0]['asentamiento'])  # "Roma Norte"
+
+# Geographic search with GPS coordinates
+localities = LocalidadesCatalog.get_by_coordinates(
+    lat=19.4326, lon=-99.1332, radio_km=10
+)
+```
+
+### TypeScript
+
+```bash
+npm install catalogmx
+```
+
+```typescript
+import { validateRFC, validateCURP } from 'catalogmx';
+import { RegimenFiscalCatalog } from 'catalogmx/catalogs';
+
+const isValid = validateRFC('XAXX010101000');
+const regimen = RegimenFiscalCatalog.getRegimen('605');
+```
+
 ---
 
-## 📖 Usage
+## Features
 
 ### Validators
 
-```python
-from catalogmx import (
-    generate_rfc_persona_fisica,
-    generate_rfc_persona_moral,
-    generate_curp,
-    validate_clabe,
-    validate_nss
-)
+**RFC (Registro Federal de Contribuyentes)**
+- Persona Física (13 characters) and Persona Moral (12 characters)
+- Homoclave calculation using Módulo 11 algorithm
+- Check digit validation
+- 170+ cacophonic word replacement
+- Foreign resident support
 
-# Generate RFC for individual
-rfc = generate_rfc_persona_fisica(
-    nombre='Juan',
-    apellido_paterno='Pérez',
-    apellido_materno='García',
-    fecha_nacimiento='1990-05-15'
-)
-print(rfc)  # PEGJ900515***
+**CURP (Clave Única de Registro de Población)**
+- 18-character validation with complete RENAPO algorithm
+- **CURP generation** from name, birth date, gender, and state
+- Check digit calculation and verification (position 18)
+- State code validation (32 Mexican states)
+- 70+ inconvenient words handling (Anexo 2)
+- Birth date, gender, and state extraction
 
-# Generate CURP
-curp = generate_curp(
-    nombre='Juan',
-    apellido_paterno='Pérez',
-    apellido_materno='García',
-    fecha_nacimiento='1990-05-12',
-    sexo='H',
-    estado='JALISCO'
-)
-print(curp)  # PEGJ900512HJCRRS04
+**CLABE (Clave Bancaria Estandarizada)**
+- 18-digit bank account validation
+- Modulo 10 check digit algorithm
+- Bank, branch, and account number extraction
+- Integration with Banxico bank catalog (110 institutions)
 
-# Validate CLABE
-is_valid = validate_clabe('002010077777777771')
-print(is_valid)  # True
+**NSS (Número de Seguridad Social)**
+- 11-digit IMSS number validation
+- Modified Luhn algorithm check digit
+- Subdelegation, year, and serial extraction
 
-# Validate NSS
-is_valid = validate_nss('12345678903')
-print(is_valid)  # True/False
+### Official Catalogs
+
+**SAT (Tax Administration Service)**
+- CFDI 4.0 Core: 9 catalogs (tax regimes, CFDI uses, payment methods, etc.)
+- Comercio Exterior 2.0: 8 catalogs (Incoterms, countries, currencies, customs)
+- Carta Porte 3.0: 7 catalogs (airports, seaports, highways, dangerous goods)
+- Nómina 1.2: 7 catalogs (payroll types, contracts, work shifts, IMSS risk levels)
+
+**INEGI (Geographic Data)**
+- Complete municipalities: 2,478 records with population data (Census 2020)
+- Localities with GPS: 10,635 localities (1,000+ inhabitants)
+- Geographic search by coordinates
+- Urban/rural classification
+
+**SEPOMEX (Postal Service)**
+- Complete postal codes: 157,252 records
+- All 32 Mexican states (100% coverage)
+- Search by postal code, municipality, or state
+
+**Banxico (Central Bank)**
+- Financial institutions: 110 banks
+- SPEI participation status
+- Bank code validation
+
+---
+
+## Statistics
+
+| Catalog | Records | Coverage | Size |
+|---------|---------|----------|------|
+| SEPOMEX Postal Codes | 157,252 | 100% | 43.53 MB |
+| INEGI Municipalities | 2,478 | 100% | 0.98 MB |
+| INEGI Localities | 10,635 | 86% population | 5.22 MB |
+| SAT CFDI 4.0 | ~30 | Complete | <1 MB |
+| SAT Comercio Exterior | ~500 | Complete | <1 MB |
+| SAT Carta Porte | ~3,400 | Complete | <2 MB |
+| SAT Nómina | ~100 | Complete | <1 MB |
+| Banxico Banks | 110 | Complete | <1 MB |
+| **TOTAL** | **170,505+** | **126M population** | **~50 MB** |
+
+---
+
+## Installation
+
+### Python
+
+#### From PyPI (Recommended)
+
+```bash
+pip install catalogmx
 ```
 
-### SAT Catalogs
+#### From Source
+
+```bash
+git clone https://github.com/openbancor/catalogmx.git
+cd catalogmx/packages/python
+pip install -e .
+```
+
+**Requirements**:
+- Python 3.10 or higher
+- unidecode (for RFC generation)
+- click (for CLI)
+
+### TypeScript/JavaScript
+
+#### NPM
+
+```bash
+npm install catalogmx
+```
+
+#### Yarn
+
+```bash
+yarn add catalogmx
+```
+
+**Requirements**:
+- Node.js 16 or higher
+- TypeScript 5.0+ (optional, type definitions included)
+
+---
+
+## Documentation
+
+### Getting Started
+- [Installation Guide](docs/installation.rst)
+- [Quick Start Guide](docs/quickstart.rst)
+- [API Reference](docs/api/)
+
+### Guides
+- [Architecture Guide](docs/guides/architecture.md)
+- [Developer's Guide](docs/guides/developers-guide.md)
+- [Catalog Updates](docs/guides/catalog-updates.md)
+- [CP-Locality Linking](docs/guides/cp-locality-linking.md)
+
+### Catalogs
+- [Catalog Overview](docs/catalogs/overview.md)
+- [SEPOMEX Documentation](docs/catalogs/sepomex.md)
+- [INEGI Documentation](docs/catalogs/inegi.md)
+- [SAT Documentation](docs/catalogs/sat.md)
+
+### Project
+- [Roadmap](docs/roadmap.md)
+- [Changelog](CHANGELOG.rst)
+- [Catalog Changelog](docs/changelog-catalogs.md)
+- [Contributing](CONTRIBUTING.rst)
+
+---
+
+## Usage Examples
+
+### Address Validation
 
 ```python
+from catalogmx.catalogs.sepomex import CodigosPostales
+from catalogmx.catalogs.inegi import MunicipiosCatalog
+
+def validate_address(postal_code, municipality_name):
+    """Validate Mexican address"""
+    
+    if not CodigosPostales.is_valid(postal_code):
+        return False, "Invalid postal code"
+    
+    cp_info = CodigosPostales.get_by_cp(postal_code)[0]
+    
+    if municipality_name.lower() not in cp_info['municipio'].lower():
+        return False, f"Postal code {postal_code} does not belong to {municipality_name}"
+    
+    return True, cp_info
+```
+
+### Geographic Analysis
+
+```python
+from catalogmx.catalogs.inegi import LocalidadesCatalog
+
+# Find localities near a coordinate
+nearby = LocalidadesCatalog.get_by_coordinates(
+    lat=19.4326,      # Mexico City
+    lon=-99.1332,
+    radio_km=50
+)
+
+for locality in nearby[:5]:
+    print(f"{locality['nom_localidad']}: {locality['distancia_km']} km")
+    print(f"  Population: {locality['poblacion_total']:,}")
+```
+
+### CFDI Validation
+
+```python
+from catalogmx.validators import rfc
 from catalogmx.catalogs.sat.cfdi_4 import (
     RegimenFiscalCatalog,
     UsoCFDICatalog,
     FormaPagoCatalog
 )
 
-# Validate tax regime
-regimen = RegimenFiscalCatalog.get_regimen('601')
-print(regimen['description'])  # General de Ley Personas Morales
-print(RegimenFiscalCatalog.is_valid_for_persona_moral('601'))  # True
-
-# Validate CFDI usage
-uso = UsoCFDICatalog.get_uso('G03')
-print(uso['description'])  # Gastos en general
-
-# Validate payment method
-forma = FormaPagoCatalog.get_forma('03')
-print(forma['description'])  # Transferencia electrónica de fondos
-```
-
-### Comercio Exterior
-
-```python
-from catalogmx.catalogs.sat.comercio_exterior import (
-    IncotermsValidator,
-    ClavePedimentoCatalog,
-    MonedaCatalog,
-    ComercioExteriorValidator
-)
-
-# Validate INCOTERM
-incoterm = IncotermsValidator.get_incoterm('CIF')
-print(incoterm['transport_mode'])  # maritime
-print(IncotermsValidator.seller_pays_insurance('CIF'))  # True
-
-# Validate customs key
-pedimento = ClavePedimentoCatalog.get_clave('A1')
-print(pedimento['descripcion'])  # Exportación definitiva
-
-# Validate currency conversion
-conversion = MonedaCatalog.validate_conversion_usd({
-    'moneda': 'EUR',
-    'total': 10000.00,
-    'tipo_cambio_usd': 1.18,
-    'total_usd': 11800.00
-})
-print(conversion['valid'])  # True
-
-# Complete CFDI validation
-result = ComercioExteriorValidator.validate(cfdi_data)
-```
-
-### Carta Porte
-
-```python
-from catalogmx.catalogs.sat.carta_porte import (
-    AeropuertosCatalog,
-    PuertosMaritimos,
-    TipoPermisoCatalog
-)
-
-# Validate airport
-airport = AeropuertosCatalog.get_by_iata('MEX')
-print(airport['name'])  # Aeropuerto Internacional de la Ciudad de México
-print(airport['icao'])  # MMMX
-
-# Validate seaport
-puerto = PuertosMaritimos.get_puerto('016')
-print(puerto['name'])  # Veracruz
-print(puerto['coast'])  # Golfo de México
-
-# Validate transport permit
-permiso = TipoPermisoCatalog.get_permiso('TPAF01')
-print(TipoPermisoCatalog.is_carga_permit('TPAF01'))  # True
-```
-
-### Nómina
-
-```python
-from catalogmx.catalogs.sat.nomina import (
-    TipoContratoCatalog,
-    PeriodicidadPagoCatalog,
-    RiesgoPuestoCatalog
-)
-
-# Validate contract type
-contrato = TipoContratoCatalog.get_contrato('01')
-print(contrato['description'])  # Contrato por tiempo indeterminado
-
-# Validate payment frequency
-periodicidad = PeriodicidadPagoCatalog.get_periodicidad('04')
-print(periodicidad['description'])  # Quincenal
-print(periodicidad['days'])  # 15
-
-# Validate risk level with IMSS premium
-riesgo = RiesgoPuestoCatalog.get_riesgo('3')
-print(riesgo['prima_media'])  # 2.59645
-print(RiesgoPuestoCatalog.validate_prima('3', 2.5))  # True
-```
-
-### Geographic Catalogs
-
-```python
-from catalogmx.catalogs.sepomex import CodigosPostales
-from catalogmx.catalogs.inegi import MunicipiosCatalog
-
-# Search postal code
-cp = CodigosPostales.get_by_cp('06700')
-print(cp[0]['asentamiento'])  # Roma Norte
-print(cp[0]['municipio'])  # Cuauhtémoc
-print(CodigosPostales.get_estado('06700'))  # Ciudad de México
-
-# Search municipality
-municipio = MunicipiosCatalog.get_municipio('09015')
-print(municipio['nom_municipio'])  # Cuauhtémoc
-print(municipio['nom_entidad'])  # Ciudad de México
-
-# Search by state
-municipios = MunicipiosCatalog.get_by_entidad('14')
-print(f"Municipios en Jalisco: {len(municipios)}")
-```
-
-### Banks
-
-```python
-from catalogmx.catalogs.banxico import BankCatalog
-
-# Get bank by code
-bank = BankCatalog.get_bank_by_code('002')
-print(bank['name'])  # BANAMEX
-print(bank['spei'])  # True
-
-# Search banks
-banks = BankCatalog.search_banks('santander')
+def validate_cfdi_data(rfc_code, tax_regime, cfdi_use, payment_method):
+    """Validate CFDI invoice data"""
+    
+    errors = []
+    
+    if not rfc.validate_rfc(rfc_code):
+        errors.append("Invalid RFC")
+    
+    if not RegimenFiscalCatalog.is_valid(tax_regime):
+        errors.append(f"Invalid tax regime: {tax_regime}")
+    
+    if not UsoCFDICatalog.is_valid(cfdi_use):
+        errors.append(f"Invalid CFDI use: {cfdi_use}")
+    
+    if not FormaPagoCatalog.is_valid(payment_method):
+        errors.append(f"Invalid payment method: {payment_method}")
+    
+    return len(errors) == 0, errors
 ```
 
 ---
 
-## 🏗️ Architecture
+## Roadmap
 
-### Modular Design
-```
-catalogmx/
-├── validators/          # RFC, CURP, CLABE, NSS
-├── catalogs/
-│   ├── sat/            # SAT official catalogs
-│   │   ├── cfdi_4/     # CFDI 4.0 core
-│   │   ├── comercio_exterior/  # Foreign trade
-│   │   ├── carta_porte/        # Transportation
-│   │   └── nomina/             # Payroll
-│   ├── banxico/        # Bank of Mexico catalogs
-│   ├── inegi/          # Geographic data
-│   └── sepomex/        # Postal codes
-└── shared-data/        # JSON catalog files
-```
+### Version 0.3.0 (Current - November 2025)
 
-### Lazy Loading
-- Catalogs load only when first accessed
-- Memory-efficient for large datasets
-- Fast initialization
+**Completed**:
+- Complete SEPOMEX postal codes (157,252 records)
+- Complete INEGI municipalities (2,478 records)
+- INEGI localities with GPS coordinates (10,635 records)
+- Geographic search by coordinates
+- Population and housing data (Census 2020)
+- Urban/rural classification
+- Bilingual documentation
 
-### Type Safety
-- Comprehensive type hints using Python 3.10+ syntax (PEP 604)
-- Modern union types with `|` operator
-- No `typing` module imports needed
-- Full IDE autocomplete and static analysis support
+### Version 0.4.0 (Planned - Q1 2025)
+
+**Planned**:
+- SQLite implementation for large catalogs
+- Geocoding integration (add GPS to postal codes)
+- Pre-computed CP-Locality correspondence table
+- TypeScript catalog synchronization
+- REST API server examples
+- GraphQL API examples
+
+### Version 0.5.0 (Future - Q2-Q3 2025)
+
+**Planned**:
+- Additional validators (ISAN, license plates, MRZ)
+- IFT (telecommunications) catalogs
+- IMSS (social security) catalogs
+- TIGIE (customs tariff) catalog
+- Historical catalog versions
+- ML-based address normalization
+- WebAssembly compilation for validators
+
+**Full Roadmap**: See [docs/roadmap.md](docs/roadmap.md) for detailed roadmap by catalog and implementation strategy.
 
 ---
 
-## 📥 Complete Catalogs
+## SQLite Strategy
 
-Current catalogs are **complete for development** and cover 95%+ of common use cases.
+For catalogs with >10,000 records, SQLite option will be provided in v0.4.0:
 
-For **production with complete datasets**:
+**Benefits**:
+- 30-40% smaller file size
+- 10-100x faster queries
+- Spatial indexes (R-tree for GPS)
+- Complex queries without loading entire dataset
+- Memory efficient
 
-**INEGI**: 2,478 municipalities (2,462 municipios + 16 alcaldías CDMX)
-**SEPOMEX**: ~150,000 postal codes
+**Planned Implementation** (v0.4.0):
 
-### Quick Download
+| Catalog | JSON Size | SQLite Size | Performance Gain |
+|---------|-----------|-------------|------------------|
+| SEPOMEX | 43.53 MB | ~25 MB | 100x faster queries |
+| Localities | 5.22 MB | ~3 MB | Spatial index support |
+
+---
+
+## Catalog Update Strategy
+
+### Update Frequencies
+
+| Catalog | Frequency | Source | Auto-update |
+|---------|-----------|--------|-------------|
+| SEPOMEX | Monthly | correosdemexico.gob.mx | Planned (v0.4.0) |
+| INEGI | Annually | inegi.org.mx | Manual |
+| SAT CFDI | Quarterly | sat.gob.mx | Planned (v0.4.0) |
+| Banxico | Quarterly | banxico.org.mx | Planned (v0.4.0) |
+
+### Current Process
 
 ```bash
-# Download official SEPOMEX
-wget <official-url>
-python scripts/csv_to_catalogmx.py sepomex.csv
-
-# Download official INEGI
-wget <official-url>
-python scripts/process_inegi_data.py municipios.txt
-```
-
-See **[DESCARGA_RAPIDA.md](DESCARGA_RAPIDA.md)** for complete instructions and official sources.
-
----
-
-## 🔄 Catalog Updates
-
-Official catalogs update at different frequencies:
-
-- **CFDI 4.0**: Quarterly (SAT)
-- **Comercio Exterior**: Annually (SAT)
-- **Carta Porte**: Annually (SCT)
-- **Nómina**: Rarely (labor law changes)
-- **SEPOMEX**: Monthly (new postal codes)
-- **INEGI**: Annually (municipal changes rare)
-
-### Update Monitoring
-
-```bash
-# Check for catalog updates
+# Check for updates
 python scripts/check_catalog_updates.py
 
-# Update all catalogs
-python scripts/update_all_catalogs.py
+# Download and process
+python scripts/fetch_sat_catalogs.py
+python scripts/process_sepomex_file.py
+python scripts/process_inegi_municipios.py
 ```
 
-See **[CATALOG_UPDATES.md](CATALOG_UPDATES.md)** for complete update schedule and procedures.
+**Automated updates planned for v0.4.0**
 
 ---
 
-## 🧪 Testing
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.rst](CONTRIBUTING.rst) for guidelines.
+
+### Development Setup
 
 ```bash
-# Run all tests
+git clone https://github.com/openbancor/catalogmx.git
+cd catalogmx
+
+# Python
+cd packages/python
+pip install -e ".[dev]"
 pytest
 
-# Run with coverage
-pytest --cov=catalogmx
-
-# Run specific test suite
-pytest tests/test_validators.py
-pytest tests/test_catalogs.py
+# TypeScript
+cd packages/typescript
+npm install
+npm test
 ```
-
----
-
-## 📊 Statistics
-
-- **40+ Official Catalogs** implemented
-- **4 Validators** (RFC, CURP, CLABE, NSS)
-- **273 Postal Codes** (all 32 states)
-- **209 Municipalities** (all state capitals + major cities)
-- **100+ Banks** (Banxico official)
-- **2,000+ Lines** of well-documented code
-- **Type-safe** with comprehensive hints
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new features
-4. Ensure all tests pass
-5. Submit a pull request
 
 ### Adding New Catalogs
 
-1. Add JSON data to `packages/shared-data/`
-2. Create Python class in `packages/python/catalogmx/catalogs/`
-3. Implement lazy loading and validation methods
-4. Add tests and documentation
-5. Update README
+See [Developer's Guide](docs/guides/developers-guide.md) for detailed instructions on:
+- Creating catalog JSON files
+- Implementing catalog classes
+- Writing tests
+- Updating documentation
 
 ---
 
-## 📝 License
+## Project Structure
 
-BSD 3-Clause License - See [LICENSE](LICENSE) for details.
+```
+catalogmx/
+├── README.md                   # This file
+├── LICENSE                     # BSD 2-Clause
+├── CONTRIBUTING.rst            # Contribution guidelines
+├── CHANGELOG.rst               # Project changelog
+│
+├── docs/                       # Documentation
+│   ├── guides/                 # Technical guides
+│   ├── catalogs/              # Catalog documentation
+│   ├── api/                    # API reference
+│   ├── roadmap.md             # Detailed roadmap
+│   └── releases/              # Release notes
+│
+├── packages/
+│   ├── python/                # Python implementation
+│   │   ├── catalogmx/
+│   │   ├── tests/
+│   │   ├── pyproject.toml     # Modern Python config
+│   │   └── requirements.txt
+│   │
+│   ├── typescript/            # TypeScript implementation
+│   │   ├── src/
+│   │   ├── tests/
+│   │   └── package.json
+│   │
+│   └── shared-data/           # Catalog JSON data
+│       ├── sepomex/          # 157K postal codes
+│       ├── inegi/            # Municipalities & localities
+│       ├── sat/              # Tax catalogs
+│       └── banxico/          # Banking data
+│
+└── scripts/                   # Processing scripts
+    ├── process_sepomex_file.py
+    ├── process_inegi_municipios.py
+    └── process_inegi_localidades.py
+```
 
 ---
 
-## 🙏 Acknowledgments
+## License
 
-- **SAT** - Servicio de Administración Tributaria (official tax catalogs)
-- **INEGI** - Instituto Nacional de Estadística y Geografía (geographic data)
-- **SEPOMEX** - Servicio Postal Mexicano (postal codes)
-- **Banxico** - Banco de México (banking data)
-- **RENAPO** - Registro Nacional de Población (CURP specifications)
-
-All catalogs are based on official government sources and updated regularly.
+BSD 2-Clause License. See [LICENSE](LICENSE) for details.
 
 ---
 
-## 📖 Additional Documentation
+## Acknowledgments
 
-- **[README_CATALOGMX.md](README_CATALOGMX.md)** - Detailed catalog documentation
-- **[DESCARGA_RAPIDA.md](DESCARGA_RAPIDA.md)** - Quick download guide for complete catalogs
-- **[DESCARGA_CATALOGOS_COMPLETOS.md](DESCARGA_CATALOGOS_COMPLETOS.md)** - Comprehensive download instructions
-- **[CATALOG_UPDATES.md](CATALOG_UPDATES.md)** - Update monitoring and schedules
-- **[CATALOGOS_ADICIONALES.md](CATALOGOS_ADICIONALES.md)** - Additional catalog specifications
-- **[AGENTS.md](AGENTS.md)** - Instructions for AI agents
-- **[CLAUDE.md](CLAUDE.md)** - Architecture and technical details
+### Official Data Sources
+
+- **SAT** - Servicio de Administración Tributaria
+- **INEGI** - Instituto Nacional de Estadística y Geografía
+- **SEPOMEX** - Servicio Postal Mexicano
+- **Banxico** - Banco de México
+- **RENAPO** - Registro Nacional de Población
+
+### Technology Stack
+
+- Python 3.10+ with modern type hints (PEP 604)
+- TypeScript 5.0+
+- Zero external dependencies (validators)
+- Lazy loading architecture
+- JSON-based catalog storage
 
 ---
 
-## 🚀 Quick Links
+## Support
 
-- **PyPI**: `pip install catalogmx`
-- **GitHub**: [github.com/yourusername/catalogmx](https://github.com/yourusername/catalogmx)
-- **Documentation**: [docs.catalogmx.com](https://docs.catalogmx.com)
-- **Issues**: [Report bugs or request features](https://github.com/yourusername/catalogmx/issues)
+- **Documentation**: [docs/](docs/)
+- **Issues**: [GitHub Issues](https://github.com/openbancor/catalogmx/issues)
+- **Email**: luisfernando@informind.com
 
 ---
 
-Made with ❤️ for the Mexican developer community
+## Project Statistics
+
+```
+Package Size:     ~50 MB (all catalogs)
+Total Catalogs:   43
+Total Records:    170,505+
+Population:       126,014,024 (100% coverage)
+GPS Localities:   10,635
+Municipalities:   2,478
+Postal Codes:     157,252
+Banks:            110
+```
+
+---
+
+**catalogmx** v0.3.0 | November 2025 | Made for the Mexican developer community
+

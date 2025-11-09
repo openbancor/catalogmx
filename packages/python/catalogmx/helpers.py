@@ -9,8 +9,8 @@ to work with Mexican identification codes without dealing with class constructor
 
 import datetime
 from typing import Optional, Union
-from .rfc import RFCValidator, RFCGeneratorFisicas, RFCGeneratorMorales
-from .curp import CURPValidator, CURPGenerator
+from .validators.rfc import RFCValidator, RFCGeneratorFisicas, RFCGeneratorMorales
+from .validators.curp import CURPValidator, CURPGenerator
 
 
 # ============================================================================

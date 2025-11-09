@@ -2,4 +2,6 @@
 catalogmx.catalogs.banxico - Catálogos de Banxico
 """
 
-__all__ = []
+from .banks import BankCatalog
+
+__all__ = ['BankCatalog']
