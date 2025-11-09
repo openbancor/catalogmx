@@ -312,3 +312,122 @@ export interface ClaveProdServ {
   estimuloFranjaFronteriza: string;
   palabrasSimilares: string;
 }
+
+// Tax System Types
+export interface ISRTramo {
+  limite_inferior: number;
+  limite_superior: number | null;
+  cuota_fija: number;
+  tasa_excedente: number;
+}
+
+export interface ISRTabla {
+  año: number;
+  periodicidad: 'mensual' | 'anual' | 'quincenal' | 'semanal' | 'diario';
+  vigencia_inicio: string;
+  vigencia_fin: string | null;
+  tramos: ISRTramo[];
+}
+
+export interface SubsidioEmpleo {
+  limite_inferior: number;
+  limite_superior: number | null;
+  subsidio: number;
+}
+
+export interface IVATasa {
+  tipo: 'general' | 'frontera' | 'tasa_cero';
+  tasa: number;
+  vigencia_inicio: string;
+  vigencia_fin: string | null;
+  descripcion: string;
+  aplica_en: string;
+  estados_frontera?: string[];
+  categorias?: string[];
+}
+
+export interface IEPSTasa {
+  subcategoria: string;
+  tasa: number;
+  tipo: 'ad_valorem' | 'cuota_fija';
+  cuota_fija_por_cigarro?: number;
+  unidad?: string;
+  vigencia_inicio: string;
+  vigencia_fin: string | null;
+  descripcion: string;
+  criterio?: string;
+}
+
+export interface IEPSCategoria {
+  categoria: string;
+  descripcion: string;
+  tasas: IEPSTasa[];
+}
+
+export interface RetencionISR {
+  concepto: string;
+  tasa: number | string;
+  descripcion: string;
+  base: string;
+  articulo: string;
+  vigencia_inicio?: string;
+  vigencia_fin?: string | null;
+  tasas_especificas?: { tipo: string; tasa: number }[];
+  nota?: string;
+}
+
+export interface RetencionIVA {
+  concepto: string;
+  tasa: number;
+  descripcion: string;
+  base: string;
+  articulo: string;
+  vigencia_inicio: string;
+  vigencia_fin: string | null;
+  calculo?: string;
+}
+
+export interface ImpuestoEstatal {
+  estado: string;
+  cve_estado: string;
+  tasa: number;
+  base: string;
+}
+
+// Tax Calculation Results
+export interface ISRCalculationResult {
+  ingreso_gravable: number;
+  limite_inferior: number;
+  excedente: number;
+  cuota_fija: number;
+  impuesto_marginal: number;
+  isr_causado: number;
+  tasa_efectiva: number;
+  subsidio_empleo?: number;
+  isr_a_retener: number;
+}
+
+export interface IVACalculationResult {
+  base: number;
+  tasa: number;
+  iva: number;
+  total_con_iva: number;
+  tipo_tasa: 'general' | 'frontera' | 'tasa_cero' | 'exento';
+}
+
+export interface IEPSCalculationResult {
+  base: number;
+  tasa: number;
+  ieps: number;
+  tipo_calculo: 'ad_valorem' | 'cuota_fija';
+  unidad?: string;
+  cantidad?: number;
+}
+
+export interface RetencionCalculationResult {
+  concepto: string;
+  base: number;
+  tasa: number;
+  retencion: number;
+  impuesto_base?: number; // Para IVA retenido
+}

@@ -1,0 +1,83 @@
+{
+  "metadata": {
+    "catalog": "SAT_ISR_Tablas",
+    "description": "Tablas de Impuesto Sobre la Renta (ISR) para México - Tarifas mensuales",
+    "source": "Ley del Impuesto Sobre la Renta - Artículo 96",
+    "last_updated": "2025-01-01",
+    "notes": "Tablas actualizadas anualmente. Incluye límite inferior, superior, cuota fija y % sobre excedente"
+  },
+  "tablas": [
+    {
+      "año": 2025,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2025-01-01",
+      "vigencia_fin": null,
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 746.04, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 746.05, "limite_superior": 6332.05, "cuota_fija": 14.32, "tasa_excedente": 6.40},
+        {"limite_inferior": 6332.06, "limite_superior": 11128.01, "cuota_fija": 371.83, "tasa_excedente": 10.88},
+        {"limite_inferior": 11128.02, "limite_superior": 12935.82, "cuota_fija": 893.63, "tasa_excedente": 16.00},
+        {"limite_inferior": 12935.83, "limite_superior": 15487.71, "cuota_fija": 1182.88, "tasa_excedente": 17.92},
+        {"limite_inferior": 15487.72, "limite_superior": 31236.49, "cuota_fija": 1640.18, "tasa_excedente": 21.36},
+        {"limite_inferior": 31236.50, "limite_superior": 49233.00, "cuota_fija": 5004.12, "tasa_excedente": 23.52},
+        {"limite_inferior": 49233.01, "limite_superior": 93993.90, "cuota_fija": 9236.89, "tasa_excedente": 30.00},
+        {"limite_inferior": 93993.91, "limite_superior": 125325.20, "cuota_fija": 22665.17, "tasa_excedente": 32.00},
+        {"limite_inferior": 125325.21, "limite_superior": 375975.61, "cuota_fija": 32691.18, "tasa_excedente": 34.00},
+        {"limite_inferior": 375975.62, "limite_superior": null, "cuota_fija": 117912.32, "tasa_excedente": 35.00}
+      ]
+    },
+    {
+      "año": 2024,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2024-01-01",
+      "vigencia_fin": "2024-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 746.04, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 746.05, "limite_superior": 6332.05, "cuota_fija": 14.32, "tasa_excedente": 6.40},
+        {"limite_inferior": 6332.06, "limite_superior": 11128.01, "cuota_fija": 371.83, "tasa_excedente": 10.88},
+        {"limite_inferior": 11128.02, "limite_superior": 12935.82, "cuota_fija": 893.63, "tasa_excedente": 16.00},
+        {"limite_inferior": 12935.83, "limite_superior": 15487.71, "cuota_fija": 1182.88, "tasa_excedente": 17.92},
+        {"limite_inferior": 15487.72, "limite_superior": 31236.49, "cuota_fija": 1640.18, "tasa_excedente": 21.36},
+        {"limite_inferior": 31236.50, "limite_superior": 49233.00, "cuota_fija": 5004.12, "tasa_excedente": 23.52},
+        {"limite_inferior": 49233.01, "limite_superior": 93993.90, "cuota_fija": 9236.89, "tasa_excedente": 30.00},
+        {"limite_inferior": 93993.91, "limite_superior": 125325.20, "cuota_fija": 22665.17, "tasa_excedente": 32.00},
+        {"limite_inferior": 125325.21, "limite_superior": 375975.61, "cuota_fija": 32691.18, "tasa_excedente": 34.00},
+        {"limite_inferior": 375975.62, "limite_superior": null, "cuota_fija": 117912.32, "tasa_excedente": 35.00}
+      ]
+    },
+    {
+      "año": 2023,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2023-01-01",
+      "vigencia_fin": "2023-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 746.04, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 746.05, "limite_superior": 6332.05, "cuota_fija": 14.32, "tasa_excedente": 6.40},
+        {"limite_inferior": 6332.06, "limite_superior": 11128.01, "cuota_fija": 371.83, "tasa_excedente": 10.88},
+        {"limite_inferior": 11128.02, "limite_superior": 12935.82, "cuota_fija": 893.63, "tasa_excedente": 16.00},
+        {"limite_inferior": 12935.83, "limite_superior": 15487.71, "cuota_fija": 1182.88, "tasa_excedente": 17.92},
+        {"limite_inferior": 15487.72, "limite_superior": 31236.49, "cuota_fija": 1640.18, "tasa_excedente": 21.36},
+        {"limite_inferior": 31236.50, "limite_superior": 49233.00, "cuota_fija": 5004.12, "tasa_excedente": 23.52},
+        {"limite_inferior": 49233.01, "limite_superior": 93993.90, "cuota_fija": 9236.89, "tasa_excedente": 30.00},
+        {"limite_inferior": 93993.91, "limite_superior": 125325.20, "cuota_fija": 22665.17, "tasa_excedente": 32.00},
+        {"limite_inferior": 125325.21, "limite_superior": 375975.61, "cuota_fija": 32691.18, "tasa_excedente": 34.00},
+        {"limite_inferior": 375975.62, "limite_superior": null, "cuota_fija": 117912.32, "tasa_excedente": 35.00}
+      ]
+    }
+  ],
+  "subsidio_empleo": {
+    "2025": [
+      {"limite_inferior": 0.01, "limite_superior": 1768.96, "subsidio": 407.02},
+      {"limite_inferior": 1768.97, "limite_superior": 2653.38, "subsidio": 406.83},
+      {"limite_inferior": 2653.39, "limite_superior": 3472.84, "subsidio": 406.62},
+      {"limite_inferior": 3472.85, "limite_superior": 3537.87, "subsidio": 392.77},
+      {"limite_inferior": 3537.88, "limite_superior": 4446.15, "subsidio": 382.46},
+      {"limite_inferior": 4446.16, "limite_superior": 4717.18, "subsidio": 354.23},
+      {"limite_inferior": 4717.19, "limite_superior": 5335.42, "subsidio": 324.87},
+      {"limite_inferior": 5335.43, "limite_superior": 6224.67, "subsidio": 294.63},
+      {"limite_inferior": 6224.68, "limite_superior": 7113.90, "subsidio": 253.54},
+      {"limite_inferior": 7113.91, "limite_superior": 7382.33, "subsidio": 217.61},
+      {"limite_inferior": 7382.34, "limite_superior": null, "subsidio": 0.00}
+    ]
+  }
+}

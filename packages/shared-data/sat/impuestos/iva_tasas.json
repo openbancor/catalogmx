@@ -1,0 +1,111 @@
+{
+  "metadata": {
+    "catalog": "SAT_IVA_Tasas",
+    "description": "Tasas históricas del Impuesto al Valor Agregado (IVA) en México",
+    "source": "Ley del IVA",
+    "last_updated": "2025-01-01",
+    "notes": "Incluye tasa general, fronteriza, y cambios históricos"
+  },
+  "tasas": [
+    {
+      "tipo": "general",
+      "tasa": 16.0,
+      "vigencia_inicio": "2010-01-01",
+      "vigencia_fin": null,
+      "descripcion": "Tasa general del IVA aplicable en todo el país",
+      "aplica_en": "todo_mexico"
+    },
+    {
+      "tipo": "frontera",
+      "tasa": 8.0,
+      "vigencia_inicio": "2021-01-01",
+      "vigencia_fin": null,
+      "descripcion": "Tasa reducida aplicable en región fronteriza norte",
+      "aplica_en": "region_fronteriza_norte",
+      "estados_frontera": ["BCN", "BCS", "SON", "CHH", "COA", "NLE", "TAM"]
+    },
+    {
+      "tipo": "tasa_cero",
+      "tasa": 0.0,
+      "vigencia_inicio": "1980-01-01",
+      "vigencia_fin": null,
+      "descripcion": "Tasa 0% aplicable a alimentos, medicinas y otros",
+      "aplica_en": "productos_especificos",
+      "categorias": ["alimentos_basicos", "medicinas", "libros", "periodicos"]
+    },
+    {
+      "tipo": "general",
+      "tasa": 15.0,
+      "vigencia_inicio": "1995-04-01",
+      "vigencia_fin": "2009-12-31",
+      "descripcion": "Tasa general vigente de 1995 a 2009",
+      "aplica_en": "todo_mexico"
+    },
+    {
+      "tipo": "frontera",
+      "tasa": 10.0,
+      "vigencia_inicio": "1995-04-01",
+      "vigencia_fin": "2020-12-31",
+      "descripcion": "Tasa fronteriza anterior",
+      "aplica_en": "region_fronteriza_norte"
+    },
+    {
+      "tipo": "general",
+      "tasa": 10.0,
+      "vigencia_inicio": "1983-01-01",
+      "vigencia_fin": "1995-03-31",
+      "descripcion": "Tasa general de 1983 a 1995",
+      "aplica_en": "todo_mexico"
+    },
+    {
+      "tipo": "frontera",
+      "tasa": 6.0,
+      "vigencia_inicio": "1983-01-01",
+      "vigencia_fin": "1995-03-31",
+      "descripcion": "Tasa fronteriza de 1983 a 1995",
+      "aplica_en": "region_fronteriza_norte"
+    }
+  ],
+  "exenciones": [
+    {
+      "concepto": "enajenacion_casa_habitacion",
+      "descripcion": "Enajenación de casa habitación (excepto primera)",
+      "articulo": "Art. 9, fracción I"
+    },
+    {
+      "concepto": "libros_periodicos_revistas",
+      "descripcion": "Libros, periódicos y revistas",
+      "articulo": "Art. 9, fracción III"
+    },
+    {
+      "concepto": "suelo",
+      "descripcion": "Enajenación del suelo",
+      "articulo": "Art. 9, fracción II"
+    },
+    {
+      "concepto": "servicios_educativos",
+      "descripcion": "Servicios de enseñanza",
+      "articulo": "Art. 15, fracción IV"
+    },
+    {
+      "concepto": "transporte_publico",
+      "descripcion": "Transporte público terrestre de personas",
+      "articulo": "Art. 15, fracción VI"
+    },
+    {
+      "concepto": "intereses_hipotecarios",
+      "descripcion": "Intereses derivados de créditos hipotecarios",
+      "articulo": "Art. 15, fracción X"
+    }
+  ],
+  "tasa_cero_productos": [
+    {"categoria": "alimentos", "descripcion": "Animales y vegetales no industrializados"},
+    {"categoria": "alimentos", "descripcion": "Medicinas de patente y productos destinados a la alimentación"},
+    {"categoria": "alimentos", "descripcion": "Hielo y agua no gaseosa ni compuesta"},
+    {"categoria": "agropecuarios", "descripcion": "Tractores para accionar implementos agrícolas"},
+    {"categoria": "agropecuarios", "descripcion": "Fertilizantes, plaguicidas, herbicidas"},
+    {"categoria": "agropecuarios", "descripcion": "Invernaderos hidropónicos"},
+    {"categoria": "medicinas", "descripcion": "Medicamentos de patente y genéricos"},
+    {"categoria": "libros", "descripcion": "Libros, periódicos y revistas"}
+  ]
+}

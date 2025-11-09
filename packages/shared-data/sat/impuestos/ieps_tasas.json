@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "catalog": "SAT_IEPS_Tasas",
+    "description": "Tasas del Impuesto Especial sobre Producción y Servicios (IEPS)",
+    "source": "Ley del IEPS",
+    "last_updated": "2025-01-01",
+    "notes": "Incluye bebidas alcohólicas, tabacos, combustibles, alimentos no básicos, etc."
+  },
+  "categorias": [
+    {
+      "categoria": "bebidas_alcoholicas",
+      "descripcion": "Bebidas con contenido alcohólico",
+      "tasas": [
+        {
+          "subcategoria": "cerveza",
+          "tasa": 26.5,
+          "tipo": "ad_valorem",
+          "vigencia_inicio": "2014-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Cerveza y bebidas refrescantes"
+        },
+        {
+          "subcategoria": "bebidas_hasta_14_grados",
+          "tasa": 26.5,
+          "tipo": "ad_valorem",
+          "vigencia_inicio": "2014-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Bebidas alcohólicas hasta 14° GL"
+        },
+        {
+          "subcategoria": "bebidas_14_20_grados",
+          "tasa": 30.0,
+          "tipo": "ad_valorem",
+          "vigencia_inicio": "2010-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Bebidas alcohólicas de 14° a 20° GL"
+        },
+        {
+          "subcategoria": "bebidas_mas_20_grados",
+          "tasa": 53.0,
+          "tipo": "ad_valorem",
+          "vigencia_inicio": "2010-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Bebidas alcohólicas mayores a 20° GL"
+        }
+      ]
+    },
+    {
+      "categoria": "tabacos",
+      "descripcion": "Tabacos labrados",
+      "tasas": [
+        {
+          "subcategoria": "cigarros",
+          "tasa": 160.0,
+          "tipo": "ad_valorem",
+          "cuota_fija_por_cigarro": 0.5080,
+          "vigencia_inicio": "2020-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Cigarros (tasa + cuota por cigarro)"
+        },
+        {
+          "subcategoria": "puros_y_otros",
+          "tasa": 160.0,
+          "tipo": "ad_valorem",
+          "vigencia_inicio": "2020-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Puros y otros tabacos labrados"
+        }
+      ]
+    },
+    {
+      "categoria": "combustibles",
+      "descripcion": "Combustibles fósiles",
+      "tasas": [
+        {
+          "subcategoria": "gasolina_menor_92",
+          "tasa": 5.117,
+          "tipo": "cuota_fija",
+          "unidad": "pesos_por_litro",
+          "vigencia_inicio": "2025-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Gasolina menor a 92 octanos"
+        },
+        {
+          "subcategoria": "gasolina_mayor_92",
+          "tasa": 4.579,
+          "tipo": "cuota_fija",
+          "unidad": "pesos_por_litro",
+          "vigencia_inicio": "2025-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Gasolina mayor o igual a 92 octanos"
+        },
+        {
+          "subcategoria": "diesel",
+          "tasa": 5.563,
+          "tipo": "cuota_fija",
+          "unidad": "pesos_por_litro",
+          "vigencia_inicio": "2025-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Diesel"
+        }
+      ]
+    },
+    {
+      "categoria": "bebidas_azucaradas",
+      "descripcion": "Bebidas saborizadas con azúcares añadidos",
+      "tasas": [
+        {
+          "subcategoria": "bebidas_con_azucar",
+          "tasa": 1.0,
+          "tipo": "cuota_fija",
+          "unidad": "pesos_por_litro",
+          "vigencia_inicio": "2014-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Bebidas saborizadas con azúcares añadidos"
+        },
+        {
+          "subcategoria": "concentrados_jarabes",
+          "tasa": 1.0,
+          "tipo": "cuota_fija",
+          "unidad": "pesos_por_litro",
+          "vigencia_inicio": "2014-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Concentrados, polvos y jarabes para preparar bebidas"
+        }
+      ]
+    },
+    {
+      "categoria": "alimentos_alta_densidad",
+      "descripcion": "Alimentos no básicos con alta densidad calórica",
+      "tasas": [
+        {
+          "subcategoria": "alimentos_chatarra",
+          "tasa": 8.0,
+          "tipo": "ad_valorem",
+          "vigencia_inicio": "2014-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Botanas, dulces, chocolates >= 275 kcal/100g",
+          "criterio": "mayor_igual_275_kcal_por_100g"
+        }
+      ]
+    },
+    {
+      "categoria": "plaguicidas",
+      "descripcion": "Plaguicidas",
+      "tasas": [
+        {
+          "subcategoria": "plaguicidas",
+          "tasa": 7.0,
+          "tipo": "ad_valorem",
+          "vigencia_inicio": "2014-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Plaguicidas categorizados como peligrosos"
+        }
+      ]
+    },
+    {
+      "categoria": "combustibles_fosiles",
+      "descripcion": "Combustibles fósiles (carbono)",
+      "tasas": [
+        {
+          "subcategoria": "carbon_mineral",
+          "tasa": 43.80,
+          "tipo": "cuota_fija",
+          "unidad": "pesos_por_tonelada",
+          "vigencia_inicio": "2014-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Carbón mineral"
+        },
+        {
+          "subcategoria": "otros_combustibles_fosiles",
+          "tasa": 10.39,
+          "tipo": "cuota_fija",
+          "unidad": "pesos_por_tonelada_co2",
+          "vigencia_inicio": "2014-01-01",
+          "vigencia_fin": null,
+          "descripcion": "Otros combustibles fósiles"
+        }
+      ]
+    }
+  ]
+}
