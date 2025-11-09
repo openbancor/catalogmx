@@ -26,7 +26,9 @@ export {
   ImpuestoCatalog,
   ExportacionCatalog,
   TipoRelacionCatalog,
-  ObjetoImpCatalog
+  ObjetoImpCatalog,
+  ClaveUnidadCatalog,
+  ClaveProdServCatalog
 } from './sat/cfdi_4';
 
 // SAT Comercio Exterior 2.0

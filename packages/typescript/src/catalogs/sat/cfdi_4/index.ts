@@ -11,3 +11,5 @@ export { ImpuestoCatalog } from './impuesto';
 export { ExportacionCatalog } from './exportacion';
 export { TipoRelacionCatalog } from './tipo-relacion';
 export { ObjetoImpCatalog } from './objeto-imp';
+export { ClaveUnidadCatalog } from './clave-unidad';
+export { ClaveProdServCatalog } from './clave-prod-serv';

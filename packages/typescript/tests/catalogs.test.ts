@@ -14,6 +14,8 @@ import {
   UsoCFDICatalog,
   FormaPagoCatalog,
   MetodoPagoCatalog,
+  ClaveUnidadCatalog,
+  ClaveProdServCatalog,
   IncotermsValidator,
   ClavePedimentoCatalog,
   MonedaCatalog,
@@ -318,5 +320,99 @@ describe('SAT Nómina Catalogs', () => {
   test('should get prima media', () => {
     const prima = RiesgoPuestoCatalog.getPrimaMedia('3');
     expect(prima).toBeGreaterThan(0);
+  });
+});
+
+describe('SAT CFDI 4.0 - Large Catalogs', () => {
+  test('should get total count of units', () => {
+    const count = ClaveUnidadCatalog.getTotalCount();
+    expect(count).toBeGreaterThan(2000); // ~2,418 units
+  });
+
+  test('should get unit by ID', () => {
+    const unidad = ClaveUnidadCatalog.getUnidad('H87'); // Pieza
+    expect(unidad).toBeDefined();
+    expect(unidad?.nombre).toContain('Pieza');
+  });
+
+  test('should validate unit code', () => {
+    expect(ClaveUnidadCatalog.isValid('H87')).toBe(true);
+    expect(ClaveUnidadCatalog.isValid('INVALID')).toBe(false);
+  });
+
+  test('should search units by name', () => {
+    const results = ClaveUnidadCatalog.searchByName('kilogramo');
+    expect(results.length).toBeGreaterThan(0);
+  });
+
+  test('should get vigentes units', () => {
+    const vigentes = ClaveUnidadCatalog.getVigentes();
+    expect(vigentes.length).toBeGreaterThan(1000);
+  });
+
+  test('should search units by category', () => {
+    const peso = ClaveUnidadCatalog.searchByCategory('peso');
+    expect(peso.length).toBeGreaterThan(0);
+  });
+
+  test('should get unit statistics', () => {
+    const stats = ClaveUnidadCatalog.getStatistics();
+    expect(stats.total).toBeGreaterThan(2000);
+    expect(stats.vigentes).toBeGreaterThan(0);
+  });
+
+  test('should get total count of products/services', () => {
+    const count = ClaveProdServCatalog.getTotalCount();
+    expect(count).toBeGreaterThan(50000); // ~52,514 products/services
+  });
+
+  test('should get product by ID', () => {
+    const prod = ClaveProdServCatalog.getClave('01010101');
+    expect(prod).toBeDefined();
+  });
+
+  test('should validate product code', () => {
+    expect(ClaveProdServCatalog.isValid('01010101')).toBe(true);
+    expect(ClaveProdServCatalog.isValid('99999999')).toBe(false);
+  });
+
+  test('should search products by keyword', () => {
+    const results = ClaveProdServCatalog.search('computadora', 10);
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.length).toBeLessThanOrEqual(10);
+  });
+
+  test('should get products by prefix', () => {
+    const results = ClaveProdServCatalog.getByPrefix('1010', 50);
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.length).toBeLessThanOrEqual(50);
+    // All should start with the prefix
+    results.forEach(item => {
+      expect(item.id.startsWith('1010')).toBe(true);
+    });
+  });
+
+  test('should get products with frontera estimulo', () => {
+    const results = ClaveProdServCatalog.getConEstimuloFronterizo(100);
+    expect(results.length).toBeGreaterThan(0);
+    results.forEach(item => {
+      expect(item.estimuloFranjaFronteriza).toBe('01');
+    });
+  });
+
+  test('should get product statistics', () => {
+    const stats = ClaveProdServCatalog.getStatistics();
+    expect(stats.total).toBeGreaterThan(50000);
+    expect(stats.vigentes).toBeGreaterThan(0);
+  });
+
+  test('should perform advanced search', () => {
+    const results = ClaveProdServCatalog.searchAdvanced({
+      keyword: 'software',
+      vigente: true,
+      limit: 20
+    });
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.length).toBeLessThanOrEqual(20);
   });
 });

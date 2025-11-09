@@ -289,3 +289,26 @@ export interface BancoNomina {
   name: string;
   razon_social: string;
 }
+
+// SAT CFDI 4.0 - Large Catalogs
+export interface ClaveUnidad {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  nota: string;
+  fechaDeInicioDeVigencia: string;
+  fechaDeFinDeVigencia: string;
+  simbolo: string;
+}
+
+export interface ClaveProdServ {
+  id: string; // 8 digit code
+  descripcion: string;
+  incluirIVATrasladado: string;
+  incluirIEPSTrasladado: string;
+  complementoQueDebeIncluir: string;
+  fechaInicioVigencia: string;
+  fechaFinVigencia: string;
+  estimuloFranjaFronteriza: string;
+  palabrasSimilares: string;
+}
