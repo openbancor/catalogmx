@@ -552,6 +552,10 @@ export interface SalarioMinimo {
   moneda: string;
   periodo: 'diario' | 'mensual' | 'anual';
   notas?: string;
+  uma_equivalente_diario?: number;
+  uma_equivalente_mensual?: number;
+  uma_equivalente_anual?: number;
+  fuente_uma_equivalente?: 'uma_oficial' | 'salario_minimo';
 }
 
 // Mexico - UMA (Unidad de Medida y Actualización)

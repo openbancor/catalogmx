@@ -3,10 +3,14 @@
     "año": 2025,
     "vigencia_inicio": "2025-01-01",
     "zona_frontera_norte": 419.88,
-    "resto_pais": 278.80,
+    "resto_pais": 278.8,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Salario mínimo 2025"
+    "notas": "Salario mínimo 2025",
+    "uma_equivalente_diario": 113.14,
+    "uma_equivalente_mensual": 3441.9,
+    "uma_equivalente_anual": 41302.8,
+    "fuente_uma_equivalente": "uma_oficial"
   },
   {
     "año": 2024,
@@ -15,7 +19,11 @@
     "resto_pais": 248.93,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Incremento del 20% sobre 2023"
+    "notas": "Incremento del 20% sobre 2023",
+    "uma_equivalente_diario": 108.57,
+    "uma_equivalente_mensual": 3300.53,
+    "uma_equivalente_anual": 39606.36,
+    "fuente_uma_equivalente": "uma_oficial"
   },
   {
     "año": 2023,
@@ -24,7 +32,11 @@
     "resto_pais": 207.44,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Incremento del 20% sobre 2022"
+    "notas": "Incremento del 20% sobre 2022",
+    "uma_equivalente_diario": 103.74,
+    "uma_equivalente_mensual": 3153.7,
+    "uma_equivalente_anual": 37844.4,
+    "fuente_uma_equivalente": "uma_oficial"
   },
   {
     "año": 2022,
@@ -33,16 +45,24 @@
     "resto_pais": 172.87,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Incremento del 22% sobre 2021"
+    "notas": "Incremento del 22% sobre 2021",
+    "uma_equivalente_diario": 96.22,
+    "uma_equivalente_mensual": 2925.09,
+    "uma_equivalente_anual": 35101.08,
+    "fuente_uma_equivalente": "uma_oficial"
   },
   {
     "año": 2021,
     "vigencia_inicio": "2021-01-01",
     "zona_frontera_norte": 213.39,
-    "resto_pais": 141.70,
+    "resto_pais": 141.7,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Incremento del 15% sobre 2020"
+    "notas": "Incremento del 15% sobre 2020",
+    "uma_equivalente_diario": 89.62,
+    "uma_equivalente_mensual": 2724.45,
+    "uma_equivalente_anual": 32693.4,
+    "fuente_uma_equivalente": "uma_oficial"
   },
   {
     "año": 2020,
@@ -51,7 +71,11 @@
     "resto_pais": 123.22,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Primer año con zona fronteriza diferenciada"
+    "notas": "Primer año con zona fronteriza diferenciada",
+    "uma_equivalente_diario": 86.88,
+    "uma_equivalente_mensual": 2641.15,
+    "uma_equivalente_anual": 31693.8,
+    "fuente_uma_equivalente": "uma_oficial"
   },
   {
     "año": 2019,
@@ -60,7 +84,11 @@
     "resto_pais": 102.68,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Se establece zona libre frontera norte"
+    "notas": "Se establece zona libre frontera norte",
+    "uma_equivalente_diario": 84.49,
+    "uma_equivalente_mensual": 2568.5,
+    "uma_equivalente_anual": 30822.0,
+    "fuente_uma_equivalente": "uma_oficial"
   },
   {
     "año": 2018,
@@ -68,7 +96,11 @@
     "zona_general": 88.36,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Zona única nacional"
+    "notas": "Zona única nacional",
+    "uma_equivalente_diario": 80.6,
+    "uma_equivalente_mensual": 2450.24,
+    "uma_equivalente_anual": 29402.88,
+    "fuente_uma_equivalente": "uma_oficial"
   },
   {
     "año": 2017,
@@ -76,7 +108,11 @@
     "zona_general": 80.04,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Zona única nacional"
+    "notas": "Zona única nacional",
+    "uma_equivalente_diario": 75.49,
+    "uma_equivalente_mensual": 2294.9,
+    "uma_equivalente_anual": 27538.8,
+    "fuente_uma_equivalente": "uma_oficial"
   },
   {
     "año": 2016,
@@ -84,15 +120,23 @@
     "zona_general": 73.04,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Última vigencia de zonas A, B, C unificadas"
+    "notas": "Última vigencia de zonas A, B, C unificadas",
+    "uma_equivalente_diario": 73.04,
+    "uma_equivalente_mensual": 2220.42,
+    "uma_equivalente_anual": 26659.6,
+    "fuente_uma_equivalente": "salario_minimo"
   },
   {
     "año": 2015,
     "vigencia_inicio": "2015-04-01",
-    "zona_general": 70.10,
+    "zona_general": 70.1,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Zona única nacional"
+    "notas": "Zona única nacional",
+    "uma_equivalente_diario": 70.1,
+    "uma_equivalente_mensual": 2131.04,
+    "uma_equivalente_anual": 25586.5,
+    "fuente_uma_equivalente": "salario_minimo"
   },
   {
     "año": 2014,
@@ -101,7 +145,11 @@
     "zona_b": 63.77,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Dos zonas geográficas"
+    "notas": "Dos zonas geográficas",
+    "uma_equivalente_diario": 63.77,
+    "uma_equivalente_mensual": 1938.61,
+    "uma_equivalente_anual": 23276.05,
+    "fuente_uma_equivalente": "salario_minimo"
   },
   {
     "año": 2013,
@@ -110,7 +158,11 @@
     "zona_b": 61.38,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Dos zonas geográficas"
+    "notas": "Dos zonas geográficas",
+    "uma_equivalente_diario": 61.38,
+    "uma_equivalente_mensual": 1865.95,
+    "uma_equivalente_anual": 22403.7,
+    "fuente_uma_equivalente": "salario_minimo"
   },
   {
     "año": 2012,
@@ -119,16 +171,24 @@
     "zona_b": 59.08,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Dos zonas geográficas"
+    "notas": "Dos zonas geográficas",
+    "uma_equivalente_diario": 59.08,
+    "uma_equivalente_mensual": 1796.03,
+    "uma_equivalente_anual": 21564.2,
+    "fuente_uma_equivalente": "salario_minimo"
   },
   {
     "año": 2011,
     "vigencia_inicio": "2011-01-01",
     "zona_a": 59.82,
-    "zona_b": 56.70,
+    "zona_b": 56.7,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Dos zonas geográficas"
+    "notas": "Dos zonas geográficas",
+    "uma_equivalente_diario": 56.7,
+    "uma_equivalente_mensual": 1723.68,
+    "uma_equivalente_anual": 20695.5,
+    "fuente_uma_equivalente": "salario_minimo"
   },
   {
     "año": 2010,
@@ -137,6 +197,10 @@
     "zona_b": 54.47,
     "moneda": "MXN",
     "periodo": "diario",
-    "notas": "Dos zonas geográficas"
+    "notas": "Dos zonas geográficas",
+    "uma_equivalente_diario": 54.47,
+    "uma_equivalente_mensual": 1655.89,
+    "uma_equivalente_anual": 19881.55,
+    "fuente_uma_equivalente": "salario_minimo"
   }
 ]

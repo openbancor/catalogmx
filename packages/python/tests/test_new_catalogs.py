@@ -135,10 +135,22 @@ class TestUMACatalog(unittest.TestCase):
         self.assertIn('valor_anual', actual)
 
     def test_get_por_anio(self):
-        """Test getting UMA by year"""
+        """Test getting UMA values for a specific year"""
         uma_2024 = UMACatalog.get_por_anio(2024)
         self.assertIsNotNone(uma_2024)
-        self.assertEqual(uma_2024['año'], 2024)
+        self.assertIn('valor_diario', uma_2024)
+
+    def test_get_por_anio_pre_2017(self):
+        """UMA fallback should produce equivalence for years without official UMA"""
+        uma_2015 = UMACatalog.get_por_anio(2015)
+        self.assertIsNotNone(uma_2015)
+        self.assertIn('Equivalencia', uma_2015.get('notas', ''))
+
+    def test_get_actual(self):
+        """Test getting current UMA values"""
+        actual = UMACatalog.get_actual()
+        self.assertIsNotNone(actual)
+        self.assertIn('valor_diario', actual)
 
     def test_get_por_anio_not_found(self):
         """Test getting UMA for non-existent year"""
@@ -190,12 +202,11 @@ class TestUDICatalog(unittest.TestCase):
         self.assertIn('fecha', actual)
 
     def test_get_por_anio(self):
-        """Test getting annual UDI average"""
-        udi_2024 = UDICatalog.get_por_anio(2024)
-        # May not exist if only monthly data available
-        # Just check it doesn't crash
-        if udi_2024:
-            self.assertEqual(udi_2024.get('tipo'), 'promedio_anual')
+        """Test getting daily series for a year"""
+        serie_2024 = UDICatalog.get_por_anio(2024)
+        self.assertIsInstance(serie_2024, list)
+        self.assertGreater(len(serie_2024), 300)
+        self.assertTrue(all(rec.get('tipo') == 'diario' for rec in serie_2024))
 
     def test_get_por_mes(self):
         """Test getting monthly UDI average"""
@@ -203,6 +214,12 @@ class TestUDICatalog(unittest.TestCase):
         # Check it doesn't crash
         if udi_202401:
             self.assertIn('valor', udi_202401)
+
+    def test_get_promedio_anual(self):
+        """Test getting annual average"""
+        promedio = UDICatalog.get_promedio_anual(2023)
+        self.assertIsNotNone(promedio)
+        self.assertEqual(promedio.get('tipo'), 'promedio_anual')
 
     def test_pesos_a_udis(self):
         """Test converting pesos to UDIs"""
@@ -228,14 +245,10 @@ class TestUDICatalog(unittest.TestCase):
 
     def test_calcular_variacion(self):
         """Test calculating UDI variation"""
-        # Get two dates
-        data = UDICatalog.get_data()
-        if len(data) >= 2:
-            fecha1 = data[-1]['fecha']  # Older
-            fecha2 = data[0]['fecha']   # Newer
-            variacion = UDICatalog.calcular_variacion(fecha1, fecha2)
-            if variacion is not None:
-                self.assertIsInstance(variacion, float)
+        # Use specific dates that exist in the synthetic daily series
+        variacion = UDICatalog.calcular_variacion('2024-01-01', '2024-12-31')
+        self.assertIsNotNone(variacion)
+        self.assertIsInstance(variacion, float)
 
 
 class TestHoyNoCirculaCatalog(unittest.TestCase):

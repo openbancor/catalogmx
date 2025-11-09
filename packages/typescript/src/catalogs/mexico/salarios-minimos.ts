@@ -68,6 +68,30 @@ export class SalariosMinimos {
     }
   }
 
+  static getUmaEquivalente(
+    año: number,
+    tipo: 'diario' | 'mensual' | 'anual' = 'diario'
+  ): number | undefined {
+    const salario = this.getPorAño(año);
+    if (!salario) return undefined;
+
+    switch (tipo) {
+      case 'diario':
+        return salario.uma_equivalente_diario;
+      case 'mensual':
+        return salario.uma_equivalente_mensual;
+      case 'anual':
+        return salario.uma_equivalente_anual;
+      default:
+        return salario.uma_equivalente_diario;
+    }
+  }
+
+  static getFuenteUmaEquivalente(año: number): SalarioMinimo['fuente_uma_equivalente'] {
+    const salario = this.getPorAño(año);
+    return salario?.fuente_uma_equivalente;
+  }
+
   /**
    * Calculate monthly minimum wage (assuming 30.4 days)
    */

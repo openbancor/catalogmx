@@ -146,6 +146,15 @@ describe('UMA Catalog', () => {
     expect(incremento).toBeGreaterThan(0);
   });
 
+  test('should provide UMA equivalent for years before 2017', () => {
+    const uma2015 = UMACatalog.getPorAño(2015);
+    expect(uma2015).toBeDefined();
+    expect(uma2015?.notas).toContain('Equivalencia');
+    const equivalente = SalariosMinimos.getUmaEquivalente(2015, 'diario');
+    expect(equivalente).toBeDefined();
+    expect(uma2015?.valor_diario).toBeCloseTo(equivalente ?? 0, 2);
+  });
+
   test('should get annual increment percentage', () => {
     const incremento = UMACatalog.getIncrementoAnual(2024);
     expect(incremento).toBeDefined();
@@ -156,6 +165,7 @@ describe('UDI Catalog', () => {
   test('should get UDI for specific date', () => {
     const udi = UDICatalog.getPorFecha('2024-01-01');
     expect(udi).toBeDefined();
+    expect(udi?.tipo).toBe('diario');
   });
 
   test('should get UDI for specific month', () => {
@@ -191,12 +201,15 @@ describe('UDI Catalog', () => {
 
   test('should get historical UDI values', () => {
     const historico = UDICatalog.getHistorico('2024-01-01', '2024-12-31');
-    expect(historico.length).toBeGreaterThan(0);
+    expect(historico.length).toBeGreaterThan(300);
+    const fechasOrdenadas = [...historico].sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+    expect(historico).toEqual(fechasOrdenadas);
   });
 
   test('should get UDI values for a year', () => {
     const año = UDICatalog.getPorAño(2024);
-    expect(año.length).toBeGreaterThan(0);
+    expect(año.length).toBeGreaterThan(300);
+    expect(año.every(udi => udi.tipo === 'diario')).toBe(true);
   });
 
   test('should calculate variation between dates', () => {

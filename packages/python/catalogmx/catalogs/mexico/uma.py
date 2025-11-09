@@ -8,6 +8,8 @@ import json
 from pathlib import Path
 from typing import List, Dict, Optional
 
+from .salarios_minimos import SalariosMinimos
+
 
 class UMACatalog:
     """
@@ -56,7 +58,35 @@ class UMACatalog:
             if record['año'] == anio:
                 return record.copy()
 
-        return None
+        # Fallback to salary minimum equivalence for pre-2017 years
+        salario = SalariosMinimos.get_por_anio(anio)
+        if not salario:
+            return None
+
+        diario = salario.get('uma_equivalente_diario') or salario.get('resto_pais')
+        if diario is None:
+            return None
+
+        mensual = salario.get('uma_equivalente_mensual')
+        if mensual is None:
+            mensual = round(diario * 30.4, 2)
+
+        anual = salario.get('uma_equivalente_anual')
+        if anual is None:
+            anual = round(diario * 365, 2)
+
+        return {
+            'año': anio,
+            'vigencia_inicio': salario.get('vigencia_inicio', f"{anio}-01-01"),
+            'vigencia_fin': f"{anio}-12-31",
+            'valor_diario': round(diario, 2),
+            'valor_mensual': mensual,
+            'valor_anual': anual,
+            'moneda': salario.get('moneda', 'MXN'),
+            'publicacion_dof': salario.get('vigencia_inicio', f"{anio}-01-01"),
+            'incremento_porcentual': None,
+            'notas': 'Equivalencia de UMA derivada del salario mínimo vigente antes de 2017',
+        }
 
     @classmethod
     def get_actual(cls) -> Optional[Dict]:
