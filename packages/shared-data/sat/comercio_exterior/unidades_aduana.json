@@ -1,205 +1,22 @@
-{
-  "metadata": {
-    "catalog": "c_UnidadAduana",
-    "version": "1.0",
-    "source": "SAT - Catálogos Comercio Exterior",
-    "description": "Unidades de medida reconocidas por aduanas para declarar cantidad de mercancía",
-    "last_updated": "2025-11-08",
-    "total_records": 32,
-    "notes": "Diferente de c_ClaveUnidad usado en CFDI general"
-  },
-  "unidades": [
-    {
-      "code": "01",
-      "description": "Kilogramo",
-      "type": "weight",
-      "abbreviation": "kg"
-    },
-    {
-      "code": "02",
-      "description": "Gramo",
-      "type": "weight",
-      "abbreviation": "g"
-    },
-    {
-      "code": "03",
-      "description": "Tonelada métrica",
-      "type": "weight",
-      "abbreviation": "t"
-    },
-    {
-      "code": "04",
-      "description": "Tonelada corta (2,000 libras)",
-      "type": "weight",
-      "abbreviation": "ton"
-    },
-    {
-      "code": "05",
-      "description": "Tonelada larga (2,240 libras)",
-      "type": "weight",
-      "abbreviation": "long ton"
-    },
-    {
-      "code": "06",
-      "description": "Litro",
-      "type": "volume",
-      "abbreviation": "L"
-    },
-    {
-      "code": "07",
-      "description": "Mililitro",
-      "type": "volume",
-      "abbreviation": "mL"
-    },
-    {
-      "code": "08",
-      "description": "Galón",
-      "type": "volume",
-      "abbreviation": "gal"
-    },
-    {
-      "code": "09",
-      "description": "Barril",
-      "type": "volume",
-      "abbreviation": "bbl"
-    },
-    {
-      "code": "10",
-      "description": "Metro",
-      "type": "length",
-      "abbreviation": "m"
-    },
-    {
-      "code": "11",
-      "description": "Metro cuadrado",
-      "type": "area",
-      "abbreviation": "m²"
-    },
-    {
-      "code": "12",
-      "description": "Metro cúbico",
-      "type": "volume",
-      "abbreviation": "m³"
-    },
-    {
-      "code": "13",
-      "description": "Metro lineal",
-      "type": "length",
-      "abbreviation": "m"
-    },
-    {
-      "code": "14",
-      "description": "Pieza",
-      "type": "unit",
-      "abbreviation": "pz"
-    },
-    {
-      "code": "15",
-      "description": "Par",
-      "type": "unit",
-      "abbreviation": "par"
-    },
-    {
-      "code": "16",
-      "description": "Docena",
-      "type": "unit",
-      "abbreviation": "doc"
-    },
-    {
-      "code": "17",
-      "description": "Millar",
-      "type": "unit",
-      "abbreviation": "mil"
-    },
-    {
-      "code": "18",
-      "description": "Caja",
-      "type": "container",
-      "abbreviation": "caja"
-    },
-    {
-      "code": "19",
-      "description": "Paquete",
-      "type": "container",
-      "abbreviation": "paq"
-    },
-    {
-      "code": "20",
-      "description": "Bulto",
-      "type": "container",
-      "abbreviation": "bto"
-    },
-    {
-      "code": "21",
-      "description": "Contenedor de 20 pies",
-      "type": "container",
-      "abbreviation": "C20"
-    },
-    {
-      "code": "22",
-      "description": "Contenedor de 40 pies",
-      "type": "container",
-      "abbreviation": "C40"
-    },
-    {
-      "code": "23",
-      "description": "Libra",
-      "type": "weight",
-      "abbreviation": "lb"
-    },
-    {
-      "code": "24",
-      "description": "Onza",
-      "type": "weight",
-      "abbreviation": "oz"
-    },
-    {
-      "code": "25",
-      "description": "Pie",
-      "type": "length",
-      "abbreviation": "ft"
-    },
-    {
-      "code": "26",
-      "description": "Pie cuadrado",
-      "type": "area",
-      "abbreviation": "ft²"
-    },
-    {
-      "code": "27",
-      "description": "Pie cúbico",
-      "type": "volume",
-      "abbreviation": "ft³"
-    },
-    {
-      "code": "28",
-      "description": "Yarda",
-      "type": "length",
-      "abbreviation": "yd"
-    },
-    {
-      "code": "29",
-      "description": "Yarda cuadrada",
-      "type": "area",
-      "abbreviation": "yd²"
-    },
-    {
-      "code": "30",
-      "description": "Yarda cúbica",
-      "type": "volume",
-      "abbreviation": "yd³"
-    },
-    {
-      "code": "98",
-      "description": "Sin unidad",
-      "type": "other",
-      "abbreviation": "N/A"
-    },
-    {
-      "code": "99",
-      "description": "Otras unidades",
-      "type": "other",
-      "abbreviation": "otras"
-    }
-  ]
-}
+[
+  {"code": "01", "descripcion": "Kilogramo"},
+  {"code": "02", "descripcion": "Gramo"},
+  {"code": "03", "descripcion": "Tonelada"},
+  {"code": "04", "descripcion": "Litro"},
+  {"code": "05", "descripcion": "Mililitro"},
+  {"code": "06", "descripcion": "Metro cúbico"},
+  {"code": "07", "descripcion": "Metro"},
+  {"code": "08", "descripcion": "Centímetro"},
+  {"code": "09", "descripcion": "Metro cuadrado"},
+  {"code": "10", "descripcion": "Pieza"},
+  {"code": "11", "descripcion": "Caja"},
+  {"code": "12", "descripcion": "Paquete"},
+  {"code": "13", "descripcion": "Tambor"},
+  {"code": "14", "descripcion": "Barril"},
+  {"code": "15", "descripcion": "Tarima"},
+  {"code": "16", "descripcion": "Par"},
+  {"code": "17", "descripcion": "Docena"},
+  {"code": "18", "descripcion": "Ciento"},
+  {"code": "19", "descripcion": "Millar"},
+  {"code": "20", "descripcion": "Juego"}
+]

@@ -1,156 +1,188 @@
-{
-  "metadata": {
-    "catalog": "c_INCOTERM",
-    "version": "INCOTERMS 2020",
-    "source": "ICC - International Chamber of Commerce",
-    "sat_source": "Catálogos Comercio Exterior SAT",
-    "description": "International Commercial Terms - Definen responsabilidades entre comprador y vendedor",
-    "last_updated": "2025-11-08",
-    "total_records": 11
+[
+  {
+    "code": "EXW",
+    "name": "Ex Works",
+    "name_es": "En fábrica",
+    "description": "El vendedor pone la mercancía a disposición del comprador en sus propias instalaciones",
+    "transport_mode": "any",
+    "seller_responsibility": "minimal",
+    "seller_pays_freight": false,
+    "seller_pays_insurance": false,
+    "risk_transfer_point": "seller_premises",
+    "suitable_for": [
+      "land",
+      "sea",
+      "air",
+      "multimodal"
+    ]
   },
-  "incoterms": [
-    {
-      "code": "EXW",
-      "name": "Ex Works",
-      "name_es": "En fábrica",
-      "description": "El vendedor pone la mercancía a disposición del comprador en sus propias instalaciones",
-      "transport_mode": "any",
-      "seller_responsibility": "minimal",
-      "seller_pays_freight": false,
-      "seller_pays_insurance": false,
-      "risk_transfer_point": "seller_premises",
-      "suitable_for": ["land", "sea", "air", "multimodal"]
-    },
-    {
-      "code": "FCA",
-      "name": "Free Carrier",
-      "name_es": "Franco transportista",
-      "description": "El vendedor entrega la mercancía al transportista designado por el comprador",
-      "transport_mode": "any",
-      "seller_responsibility": "medium",
-      "seller_pays_freight": false,
-      "seller_pays_insurance": false,
-      "risk_transfer_point": "carrier_custody",
-      "suitable_for": ["land", "sea", "air", "multimodal"]
-    },
-    {
-      "code": "CPT",
-      "name": "Carriage Paid To",
-      "name_es": "Transporte pagado hasta",
-      "description": "El vendedor paga el flete hasta el destino pero el riesgo se transfiere al entregar al transportista",
-      "transport_mode": "any",
-      "seller_responsibility": "medium",
-      "seller_pays_freight": true,
-      "seller_pays_insurance": false,
-      "risk_transfer_point": "carrier_custody",
-      "suitable_for": ["land", "sea", "air", "multimodal"]
-    },
-    {
-      "code": "CIP",
-      "name": "Carriage and Insurance Paid To",
-      "name_es": "Transporte y seguro pagados hasta",
-      "description": "Como CPT pero el vendedor también contrata seguro mínimo",
-      "transport_mode": "any",
-      "seller_responsibility": "medium",
-      "seller_pays_freight": true,
-      "seller_pays_insurance": true,
-      "insurance_coverage": "110% of contract value (Institute Cargo Clauses A)",
-      "risk_transfer_point": "carrier_custody",
-      "suitable_for": ["land", "sea", "air", "multimodal"]
-    },
-    {
-      "code": "DAP",
-      "name": "Delivered at Place",
-      "name_es": "Entregado en lugar",
-      "description": "El vendedor entrega cuando la mercancía está lista para descarga en el lugar de destino",
-      "transport_mode": "any",
-      "seller_responsibility": "high",
-      "seller_pays_freight": true,
-      "seller_pays_insurance": false,
-      "seller_unloads": false,
-      "risk_transfer_point": "destination_ready_unload",
-      "suitable_for": ["land", "sea", "air", "multimodal"]
-    },
-    {
-      "code": "DPU",
-      "name": "Delivered at Place Unloaded",
-      "name_es": "Entregado en lugar descargado",
-      "description": "El vendedor entrega cuando la mercancía está descargada en el lugar de destino",
-      "transport_mode": "any",
-      "seller_responsibility": "high",
-      "seller_pays_freight": true,
-      "seller_pays_insurance": false,
-      "seller_unloads": true,
-      "risk_transfer_point": "destination_unloaded",
-      "suitable_for": ["land", "sea", "air", "multimodal"],
-      "notes": "Reemplazó a DAT (Delivered at Terminal) en Incoterms 2020"
-    },
-    {
-      "code": "DDP",
-      "name": "Delivered Duty Paid",
-      "name_es": "Entregado con derechos pagados",
-      "description": "El vendedor asume todos los costos y riesgos incluyendo derechos de importación",
-      "transport_mode": "any",
-      "seller_responsibility": "maximum",
-      "seller_pays_freight": true,
-      "seller_pays_insurance": false,
-      "seller_pays_import_duties": true,
-      "seller_clears_import": true,
-      "risk_transfer_point": "destination_ready_unload",
-      "suitable_for": ["land", "sea", "air", "multimodal"]
-    },
-    {
-      "code": "FAS",
-      "name": "Free Alongside Ship",
-      "name_es": "Franco al costado del buque",
-      "description": "El vendedor entrega cuando la mercancía está al costado del buque en el puerto de embarque",
-      "transport_mode": "maritime",
-      "seller_responsibility": "medium",
-      "seller_pays_freight": false,
-      "seller_pays_insurance": false,
-      "risk_transfer_point": "alongside_ship",
-      "suitable_for": ["sea"],
-      "notes": "Solo para transporte marítimo y vías navegables interiores"
-    },
-    {
-      "code": "FOB",
-      "name": "Free On Board",
-      "name_es": "Franco a bordo",
-      "description": "El vendedor entrega cuando la mercancía está a bordo del buque en el puerto de embarque",
-      "transport_mode": "maritime",
-      "seller_responsibility": "medium",
-      "seller_pays_freight": false,
-      "seller_pays_insurance": false,
-      "risk_transfer_point": "on_board_ship",
-      "suitable_for": ["sea"],
-      "notes": "Solo para transporte marítimo y vías navegables interiores"
-    },
-    {
-      "code": "CFR",
-      "name": "Cost and Freight",
-      "name_es": "Costo y flete",
-      "description": "El vendedor paga el flete hasta el puerto de destino pero el riesgo se transfiere al embarcar",
-      "transport_mode": "maritime",
-      "seller_responsibility": "medium",
-      "seller_pays_freight": true,
-      "seller_pays_insurance": false,
-      "risk_transfer_point": "on_board_ship",
-      "suitable_for": ["sea"],
-      "notes": "Solo para transporte marítimo y vías navegables interiores"
-    },
-    {
-      "code": "CIF",
-      "name": "Cost, Insurance and Freight",
-      "name_es": "Costo, seguro y flete",
-      "description": "Como CFR pero el vendedor también contrata seguro mínimo",
-      "transport_mode": "maritime",
-      "seller_responsibility": "medium",
-      "seller_pays_freight": true,
-      "seller_pays_insurance": true,
-      "insurance_coverage": "110% of contract value (Institute Cargo Clauses C - minimum)",
-      "risk_transfer_point": "on_board_ship",
-      "suitable_for": ["sea"],
-      "notes": "Solo para transporte marítimo y vías navegables interiores"
-    }
-  ]
-}
+  {
+    "code": "FCA",
+    "name": "Free Carrier",
+    "name_es": "Franco transportista",
+    "description": "El vendedor entrega la mercancía al transportista designado por el comprador",
+    "transport_mode": "any",
+    "seller_responsibility": "medium",
+    "seller_pays_freight": false,
+    "seller_pays_insurance": false,
+    "risk_transfer_point": "carrier_custody",
+    "suitable_for": [
+      "land",
+      "sea",
+      "air",
+      "multimodal"
+    ]
+  },
+  {
+    "code": "CPT",
+    "name": "Carriage Paid To",
+    "name_es": "Transporte pagado hasta",
+    "description": "El vendedor paga el flete hasta el destino pero el riesgo se transfiere al entregar al transportista",
+    "transport_mode": "any",
+    "seller_responsibility": "medium",
+    "seller_pays_freight": true,
+    "seller_pays_insurance": false,
+    "risk_transfer_point": "carrier_custody",
+    "suitable_for": [
+      "land",
+      "sea",
+      "air",
+      "multimodal"
+    ]
+  },
+  {
+    "code": "CIP",
+    "name": "Carriage and Insurance Paid To",
+    "name_es": "Transporte y seguro pagados hasta",
+    "description": "Como CPT pero el vendedor también contrata seguro mínimo",
+    "transport_mode": "any",
+    "seller_responsibility": "medium",
+    "seller_pays_freight": true,
+    "seller_pays_insurance": true,
+    "insurance_coverage": "110% of contract value (Institute Cargo Clauses A)",
+    "risk_transfer_point": "carrier_custody",
+    "suitable_for": [
+      "land",
+      "sea",
+      "air",
+      "multimodal"
+    ]
+  },
+  {
+    "code": "DAP",
+    "name": "Delivered at Place",
+    "name_es": "Entregado en lugar",
+    "description": "El vendedor entrega cuando la mercancía está lista para descarga en el lugar de destino",
+    "transport_mode": "any",
+    "seller_responsibility": "high",
+    "seller_pays_freight": true,
+    "seller_pays_insurance": false,
+    "seller_unloads": false,
+    "risk_transfer_point": "destination_ready_unload",
+    "suitable_for": [
+      "land",
+      "sea",
+      "air",
+      "multimodal"
+    ]
+  },
+  {
+    "code": "DPU",
+    "name": "Delivered at Place Unloaded",
+    "name_es": "Entregado en lugar descargado",
+    "description": "El vendedor entrega cuando la mercancía está descargada en el lugar de destino",
+    "transport_mode": "any",
+    "seller_responsibility": "high",
+    "seller_pays_freight": true,
+    "seller_pays_insurance": false,
+    "seller_unloads": true,
+    "risk_transfer_point": "destination_unloaded",
+    "suitable_for": [
+      "land",
+      "sea",
+      "air",
+      "multimodal"
+    ],
+    "notes": "Reemplazó a DAT (Delivered at Terminal) en Incoterms 2020"
+  },
+  {
+    "code": "DDP",
+    "name": "Delivered Duty Paid",
+    "name_es": "Entregado con derechos pagados",
+    "description": "El vendedor asume todos los costos y riesgos incluyendo derechos de importación",
+    "transport_mode": "any",
+    "seller_responsibility": "maximum",
+    "seller_pays_freight": true,
+    "seller_pays_insurance": false,
+    "seller_pays_import_duties": true,
+    "seller_clears_import": true,
+    "risk_transfer_point": "destination_ready_unload",
+    "suitable_for": [
+      "land",
+      "sea",
+      "air",
+      "multimodal"
+    ]
+  },
+  {
+    "code": "FAS",
+    "name": "Free Alongside Ship",
+    "name_es": "Franco al costado del buque",
+    "description": "El vendedor entrega cuando la mercancía está al costado del buque en el puerto de embarque",
+    "transport_mode": "maritime",
+    "seller_responsibility": "medium",
+    "seller_pays_freight": false,
+    "seller_pays_insurance": false,
+    "risk_transfer_point": "alongside_ship",
+    "suitable_for": [
+      "sea"
+    ],
+    "notes": "Solo para transporte marítimo y vías navegables interiores"
+  },
+  {
+    "code": "FOB",
+    "name": "Free On Board",
+    "name_es": "Franco a bordo",
+    "description": "El vendedor entrega cuando la mercancía está a bordo del buque en el puerto de embarque",
+    "transport_mode": "maritime",
+    "seller_responsibility": "medium",
+    "seller_pays_freight": false,
+    "seller_pays_insurance": false,
+    "risk_transfer_point": "on_board_ship",
+    "suitable_for": [
+      "sea"
+    ],
+    "notes": "Solo para transporte marítimo y vías navegables interiores"
+  },
+  {
+    "code": "CFR",
+    "name": "Cost and Freight",
+    "name_es": "Costo y flete",
+    "description": "El vendedor paga el flete hasta el puerto de destino pero el riesgo se transfiere al embarcar",
+    "transport_mode": "maritime",
+    "seller_responsibility": "medium",
+    "seller_pays_freight": true,
+    "seller_pays_insurance": false,
+    "risk_transfer_point": "on_board_ship",
+    "suitable_for": [
+      "sea"
+    ],
+    "notes": "Solo para transporte marítimo y vías navegables interiores"
+  },
+  {
+    "code": "CIF",
+    "name": "Cost, Insurance and Freight",
+    "name_es": "Costo, seguro y flete",
+    "description": "Como CFR pero el vendedor también contrata seguro mínimo",
+    "transport_mode": "maritime",
+    "seller_responsibility": "medium",
+    "seller_pays_freight": true,
+    "seller_pays_insurance": true,
+    "insurance_coverage": "110% of contract value (Institute Cargo Clauses C - minimum)",
+    "risk_transfer_point": "on_board_ship",
+    "suitable_for": [
+      "sea"
+    ],
+    "notes": "Solo para transporte marítimo y vías navegables interiores"
+  }
+]

@@ -1,262 +1,1496 @@
-{
-  "metadata": {
-    "catalog": "c_Pais",
-    "version": "ISO 3166-1:2024",
-    "source": "ISO 3166-1 - Country codes",
-    "description": "Códigos de países para identificar origen/destino en comercio exterior",
-    "last_updated": "2025-11-08",
-    "total_records": 249,
-    "notes": "Incluye todos los países y territorios con código ISO 3166-1 oficial"
+[
+  {
+    "codigo": "AFG",
+    "iso2": "AF",
+    "nombre": "Afganistán",
+    "requiere_subdivision": false
   },
-  "paises": [
-    {"codigo": "AFG", "iso2": "AF", "nombre": "Afganistán", "requiere_subdivision": false},
-    {"codigo": "ALB", "iso2": "AL", "nombre": "Albania", "requiere_subdivision": false},
-    {"codigo": "DZA", "iso2": "DZ", "nombre": "Argelia", "requiere_subdivision": false},
-    {"codigo": "ASM", "iso2": "AS", "nombre": "Samoa Americana", "requiere_subdivision": false},
-    {"codigo": "AND", "iso2": "AD", "nombre": "Andorra", "requiere_subdivision": false},
-    {"codigo": "AGO", "iso2": "AO", "nombre": "Angola", "requiere_subdivision": false},
-    {"codigo": "AIA", "iso2": "AI", "nombre": "Anguila", "requiere_subdivision": false},
-    {"codigo": "ATA", "iso2": "AQ", "nombre": "Antártida", "requiere_subdivision": false},
-    {"codigo": "ATG", "iso2": "AG", "nombre": "Antigua y Barbuda", "requiere_subdivision": false},
-    {"codigo": "ARG", "iso2": "AR", "nombre": "Argentina", "requiere_subdivision": false},
-    {"codigo": "ARM", "iso2": "AM", "nombre": "Armenia", "requiere_subdivision": false},
-    {"codigo": "ABW", "iso2": "AW", "nombre": "Aruba", "requiere_subdivision": false},
-    {"codigo": "AUS", "iso2": "AU", "nombre": "Australia", "requiere_subdivision": false},
-    {"codigo": "AUT", "iso2": "AT", "nombre": "Austria", "requiere_subdivision": false},
-    {"codigo": "AZE", "iso2": "AZ", "nombre": "Azerbaiyán", "requiere_subdivision": false},
-    {"codigo": "BHS", "iso2": "BS", "nombre": "Bahamas", "requiere_subdivision": false},
-    {"codigo": "BHR", "iso2": "BH", "nombre": "Baréin", "requiere_subdivision": false},
-    {"codigo": "BGD", "iso2": "BD", "nombre": "Bangladesh", "requiere_subdivision": false},
-    {"codigo": "BRB", "iso2": "BB", "nombre": "Barbados", "requiere_subdivision": false},
-    {"codigo": "BLR", "iso2": "BY", "nombre": "Bielorrusia", "requiere_subdivision": false},
-    {"codigo": "BEL", "iso2": "BE", "nombre": "Bélgica", "requiere_subdivision": false},
-    {"codigo": "BLZ", "iso2": "BZ", "nombre": "Belice", "requiere_subdivision": false},
-    {"codigo": "BEN", "iso2": "BJ", "nombre": "Benín", "requiere_subdivision": false},
-    {"codigo": "BMU", "iso2": "BM", "nombre": "Bermudas", "requiere_subdivision": false},
-    {"codigo": "BTN", "iso2": "BT", "nombre": "Bután", "requiere_subdivision": false},
-    {"codigo": "BOL", "iso2": "BO", "nombre": "Bolivia", "requiere_subdivision": false},
-    {"codigo": "BES", "iso2": "BQ", "nombre": "Bonaire, San Eustaquio y Saba", "requiere_subdivision": false},
-    {"codigo": "BIH", "iso2": "BA", "nombre": "Bosnia y Herzegovina", "requiere_subdivision": false},
-    {"codigo": "BWA", "iso2": "BW", "nombre": "Botsuana", "requiere_subdivision": false},
-    {"codigo": "BVT", "iso2": "BV", "nombre": "Isla Bouvet", "requiere_subdivision": false},
-    {"codigo": "BRA", "iso2": "BR", "nombre": "Brasil", "requiere_subdivision": false},
-    {"codigo": "IOT", "iso2": "IO", "nombre": "Territorio Británico del Océano Índico", "requiere_subdivision": false},
-    {"codigo": "BRN", "iso2": "BN", "nombre": "Brunéi", "requiere_subdivision": false},
-    {"codigo": "BGR", "iso2": "BG", "nombre": "Bulgaria", "requiere_subdivision": false},
-    {"codigo": "BFA", "iso2": "BF", "nombre": "Burkina Faso", "requiere_subdivision": false},
-    {"codigo": "BDI", "iso2": "BI", "nombre": "Burundi", "requiere_subdivision": false},
-    {"codigo": "CPV", "iso2": "CV", "nombre": "Cabo Verde", "requiere_subdivision": false},
-    {"codigo": "KHM", "iso2": "KH", "nombre": "Camboya", "requiere_subdivision": false},
-    {"codigo": "CMR", "iso2": "CM", "nombre": "Camerún", "requiere_subdivision": false},
-    {"codigo": "CAN", "iso2": "CA", "nombre": "Canadá", "requiere_subdivision": true},
-    {"codigo": "CYM", "iso2": "KY", "nombre": "Islas Caimán", "requiere_subdivision": false},
-    {"codigo": "CAF", "iso2": "CF", "nombre": "República Centroafricana", "requiere_subdivision": false},
-    {"codigo": "TCD", "iso2": "TD", "nombre": "Chad", "requiere_subdivision": false},
-    {"codigo": "CHL", "iso2": "CL", "nombre": "Chile", "requiere_subdivision": false},
-    {"codigo": "CHN", "iso2": "CN", "nombre": "China", "requiere_subdivision": false},
-    {"codigo": "CXR", "iso2": "CX", "nombre": "Isla de Navidad", "requiere_subdivision": false},
-    {"codigo": "CCK", "iso2": "CC", "nombre": "Islas Cocos", "requiere_subdivision": false},
-    {"codigo": "COL", "iso2": "CO", "nombre": "Colombia", "requiere_subdivision": false},
-    {"codigo": "COM", "iso2": "KM", "nombre": "Comoras", "requiere_subdivision": false},
-    {"codigo": "COD", "iso2": "CD", "nombre": "República Democrática del Congo", "requiere_subdivision": false},
-    {"codigo": "COG", "iso2": "CG", "nombre": "República del Congo", "requiere_subdivision": false},
-    {"codigo": "COK", "iso2": "CK", "nombre": "Islas Cook", "requiere_subdivision": false},
-    {"codigo": "CRI", "iso2": "CR", "nombre": "Costa Rica", "requiere_subdivision": false},
-    {"codigo": "HRV", "iso2": "HR", "nombre": "Croacia", "requiere_subdivision": false},
-    {"codigo": "CUB", "iso2": "CU", "nombre": "Cuba", "requiere_subdivision": false},
-    {"codigo": "CUW", "iso2": "CW", "nombre": "Curazao", "requiere_subdivision": false},
-    {"codigo": "CYP", "iso2": "CY", "nombre": "Chipre", "requiere_subdivision": false},
-    {"codigo": "CZE", "iso2": "CZ", "nombre": "República Checa", "requiere_subdivision": false},
-    {"codigo": "CIV", "iso2": "CI", "nombre": "Costa de Marfil", "requiere_subdivision": false},
-    {"codigo": "DNK", "iso2": "DK", "nombre": "Dinamarca", "requiere_subdivision": false},
-    {"codigo": "DJI", "iso2": "DJ", "nombre": "Yibuti", "requiere_subdivision": false},
-    {"codigo": "DMA", "iso2": "DM", "nombre": "Dominica", "requiere_subdivision": false},
-    {"codigo": "DOM", "iso2": "DO", "nombre": "República Dominicana", "requiere_subdivision": false},
-    {"codigo": "ECU", "iso2": "EC", "nombre": "Ecuador", "requiere_subdivision": false},
-    {"codigo": "EGY", "iso2": "EG", "nombre": "Egipto", "requiere_subdivision": false},
-    {"codigo": "SLV", "iso2": "SV", "nombre": "El Salvador", "requiere_subdivision": false},
-    {"codigo": "GNQ", "iso2": "GQ", "nombre": "Guinea Ecuatorial", "requiere_subdivision": false},
-    {"codigo": "ERI", "iso2": "ER", "nombre": "Eritrea", "requiere_subdivision": false},
-    {"codigo": "EST", "iso2": "EE", "nombre": "Estonia", "requiere_subdivision": false},
-    {"codigo": "SWZ", "iso2": "SZ", "nombre": "Esuatini", "requiere_subdivision": false},
-    {"codigo": "ETH", "iso2": "ET", "nombre": "Etiopía", "requiere_subdivision": false},
-    {"codigo": "FLK", "iso2": "FK", "nombre": "Islas Malvinas", "requiere_subdivision": false},
-    {"codigo": "FRO", "iso2": "FO", "nombre": "Islas Feroe", "requiere_subdivision": false},
-    {"codigo": "FJI", "iso2": "FJ", "nombre": "Fiyi", "requiere_subdivision": false},
-    {"codigo": "FIN", "iso2": "FI", "nombre": "Finlandia", "requiere_subdivision": false},
-    {"codigo": "FRA", "iso2": "FR", "nombre": "Francia", "requiere_subdivision": false},
-    {"codigo": "GUF", "iso2": "GF", "nombre": "Guayana Francesa", "requiere_subdivision": false},
-    {"codigo": "PYF", "iso2": "PF", "nombre": "Polinesia Francesa", "requiere_subdivision": false},
-    {"codigo": "ATF", "iso2": "TF", "nombre": "Territorios Australes Franceses", "requiere_subdivision": false},
-    {"codigo": "GAB", "iso2": "GA", "nombre": "Gabón", "requiere_subdivision": false},
-    {"codigo": "GMB", "iso2": "GM", "nombre": "Gambia", "requiere_subdivision": false},
-    {"codigo": "GEO", "iso2": "GE", "nombre": "Georgia", "requiere_subdivision": false},
-    {"codigo": "DEU", "iso2": "DE", "nombre": "Alemania", "requiere_subdivision": false},
-    {"codigo": "GHA", "iso2": "GH", "nombre": "Ghana", "requiere_subdivision": false},
-    {"codigo": "GIB", "iso2": "GI", "nombre": "Gibraltar", "requiere_subdivision": false},
-    {"codigo": "GRC", "iso2": "GR", "nombre": "Grecia", "requiere_subdivision": false},
-    {"codigo": "GRL", "iso2": "GL", "nombre": "Groenlandia", "requiere_subdivision": false},
-    {"codigo": "GRD", "iso2": "GD", "nombre": "Granada", "requiere_subdivision": false},
-    {"codigo": "GLP", "iso2": "GP", "nombre": "Guadalupe", "requiere_subdivision": false},
-    {"codigo": "GUM", "iso2": "GU", "nombre": "Guam", "requiere_subdivision": false},
-    {"codigo": "GTM", "iso2": "GT", "nombre": "Guatemala", "requiere_subdivision": false},
-    {"codigo": "GGY", "iso2": "GG", "nombre": "Guernsey", "requiere_subdivision": false},
-    {"codigo": "GIN", "iso2": "GN", "nombre": "Guinea", "requiere_subdivision": false},
-    {"codigo": "GNB", "iso2": "GW", "nombre": "Guinea-Bisáu", "requiere_subdivision": false},
-    {"codigo": "GUY", "iso2": "GY", "nombre": "Guyana", "requiere_subdivision": false},
-    {"codigo": "HTI", "iso2": "HT", "nombre": "Haití", "requiere_subdivision": false},
-    {"codigo": "HMD", "iso2": "HM", "nombre": "Islas Heard y McDonald", "requiere_subdivision": false},
-    {"codigo": "VAT", "iso2": "VA", "nombre": "Ciudad del Vaticano", "requiere_subdivision": false},
-    {"codigo": "HND", "iso2": "HN", "nombre": "Honduras", "requiere_subdivision": false},
-    {"codigo": "HKG", "iso2": "HK", "nombre": "Hong Kong", "requiere_subdivision": false},
-    {"codigo": "HUN", "iso2": "HU", "nombre": "Hungría", "requiere_subdivision": false},
-    {"codigo": "ISL", "iso2": "IS", "nombre": "Islandia", "requiere_subdivision": false},
-    {"codigo": "IND", "iso2": "IN", "nombre": "India", "requiere_subdivision": false},
-    {"codigo": "IDN", "iso2": "ID", "nombre": "Indonesia", "requiere_subdivision": false},
-    {"codigo": "IRN", "iso2": "IR", "nombre": "Irán", "requiere_subdivision": false},
-    {"codigo": "IRQ", "iso2": "IQ", "nombre": "Irak", "requiere_subdivision": false},
-    {"codigo": "IRL", "iso2": "IE", "nombre": "Irlanda", "requiere_subdivision": false},
-    {"codigo": "IMN", "iso2": "IM", "nombre": "Isla de Man", "requiere_subdivision": false},
-    {"codigo": "ISR", "iso2": "IL", "nombre": "Israel", "requiere_subdivision": false},
-    {"codigo": "ITA", "iso2": "IT", "nombre": "Italia", "requiere_subdivision": false},
-    {"codigo": "JAM", "iso2": "JM", "nombre": "Jamaica", "requiere_subdivision": false},
-    {"codigo": "JPN", "iso2": "JP", "nombre": "Japón", "requiere_subdivision": false},
-    {"codigo": "JEY", "iso2": "JE", "nombre": "Jersey", "requiere_subdivision": false},
-    {"codigo": "JOR", "iso2": "JO", "nombre": "Jordania", "requiere_subdivision": false},
-    {"codigo": "KAZ", "iso2": "KZ", "nombre": "Kazajistán", "requiere_subdivision": false},
-    {"codigo": "KEN", "iso2": "KE", "nombre": "Kenia", "requiere_subdivision": false},
-    {"codigo": "KIR", "iso2": "KI", "nombre": "Kiribati", "requiere_subdivision": false},
-    {"codigo": "PRK", "iso2": "KP", "nombre": "Corea del Norte", "requiere_subdivision": false},
-    {"codigo": "KOR", "iso2": "KR", "nombre": "Corea del Sur", "requiere_subdivision": false},
-    {"codigo": "KWT", "iso2": "KW", "nombre": "Kuwait", "requiere_subdivision": false},
-    {"codigo": "KGZ", "iso2": "KG", "nombre": "Kirguistán", "requiere_subdivision": false},
-    {"codigo": "LAO", "iso2": "LA", "nombre": "Laos", "requiere_subdivision": false},
-    {"codigo": "LVA", "iso2": "LV", "nombre": "Letonia", "requiere_subdivision": false},
-    {"codigo": "LBN", "iso2": "LB", "nombre": "Líbano", "requiere_subdivision": false},
-    {"codigo": "LSO", "iso2": "LS", "nombre": "Lesoto", "requiere_subdivision": false},
-    {"codigo": "LBR", "iso2": "LR", "nombre": "Liberia", "requiere_subdivision": false},
-    {"codigo": "LBY", "iso2": "LY", "nombre": "Libia", "requiere_subdivision": false},
-    {"codigo": "LIE", "iso2": "LI", "nombre": "Liechtenstein", "requiere_subdivision": false},
-    {"codigo": "LTU", "iso2": "LT", "nombre": "Lituania", "requiere_subdivision": false},
-    {"codigo": "LUX", "iso2": "LU", "nombre": "Luxemburgo", "requiere_subdivision": false},
-    {"codigo": "MAC", "iso2": "MO", "nombre": "Macao", "requiere_subdivision": false},
-    {"codigo": "MDG", "iso2": "MG", "nombre": "Madagascar", "requiere_subdivision": false},
-    {"codigo": "MWI", "iso2": "MW", "nombre": "Malaui", "requiere_subdivision": false},
-    {"codigo": "MYS", "iso2": "MY", "nombre": "Malasia", "requiere_subdivision": false},
-    {"codigo": "MDV", "iso2": "MV", "nombre": "Maldivas", "requiere_subdivision": false},
-    {"codigo": "MLI", "iso2": "ML", "nombre": "Malí", "requiere_subdivision": false},
-    {"codigo": "MLT", "iso2": "MT", "nombre": "Malta", "requiere_subdivision": false},
-    {"codigo": "MHL", "iso2": "MH", "nombre": "Islas Marshall", "requiere_subdivision": false},
-    {"codigo": "MTQ", "iso2": "MQ", "nombre": "Martinica", "requiere_subdivision": false},
-    {"codigo": "MRT", "iso2": "MR", "nombre": "Mauritania", "requiere_subdivision": false},
-    {"codigo": "MUS", "iso2": "MU", "nombre": "Mauricio", "requiere_subdivision": false},
-    {"codigo": "MYT", "iso2": "YT", "nombre": "Mayotte", "requiere_subdivision": false},
-    {"codigo": "MEX", "iso2": "MX", "nombre": "México", "requiere_subdivision": false},
-    {"codigo": "FSM", "iso2": "FM", "nombre": "Micronesia", "requiere_subdivision": false},
-    {"codigo": "MDA", "iso2": "MD", "nombre": "Moldavia", "requiere_subdivision": false},
-    {"codigo": "MCO", "iso2": "MC", "nombre": "Mónaco", "requiere_subdivision": false},
-    {"codigo": "MNG", "iso2": "MN", "nombre": "Mongolia", "requiere_subdivision": false},
-    {"codigo": "MNE", "iso2": "ME", "nombre": "Montenegro", "requiere_subdivision": false},
-    {"codigo": "MSR", "iso2": "MS", "nombre": "Montserrat", "requiere_subdivision": false},
-    {"codigo": "MAR", "iso2": "MA", "nombre": "Marruecos", "requiere_subdivision": false},
-    {"codigo": "MOZ", "iso2": "MZ", "nombre": "Mozambique", "requiere_subdivision": false},
-    {"codigo": "MMR", "iso2": "MM", "nombre": "Myanmar", "requiere_subdivision": false},
-    {"codigo": "NAM", "iso2": "NA", "nombre": "Namibia", "requiere_subdivision": false},
-    {"codigo": "NRU", "iso2": "NR", "nombre": "Nauru", "requiere_subdivision": false},
-    {"codigo": "NPL", "iso2": "NP", "nombre": "Nepal", "requiere_subdivision": false},
-    {"codigo": "NLD", "iso2": "NL", "nombre": "Países Bajos", "requiere_subdivision": false},
-    {"codigo": "NCL", "iso2": "NC", "nombre": "Nueva Caledonia", "requiere_subdivision": false},
-    {"codigo": "NZL", "iso2": "NZ", "nombre": "Nueva Zelanda", "requiere_subdivision": false},
-    {"codigo": "NIC", "iso2": "NI", "nombre": "Nicaragua", "requiere_subdivision": false},
-    {"codigo": "NER", "iso2": "NE", "nombre": "Níger", "requiere_subdivision": false},
-    {"codigo": "NGA", "iso2": "NG", "nombre": "Nigeria", "requiere_subdivision": false},
-    {"codigo": "NIU", "iso2": "NU", "nombre": "Niue", "requiere_subdivision": false},
-    {"codigo": "NFK", "iso2": "NF", "nombre": "Isla Norfolk", "requiere_subdivision": false},
-    {"codigo": "MKD", "iso2": "MK", "nombre": "Macedonia del Norte", "requiere_subdivision": false},
-    {"codigo": "MNP", "iso2": "MP", "nombre": "Islas Marianas del Norte", "requiere_subdivision": false},
-    {"codigo": "NOR", "iso2": "NO", "nombre": "Noruega", "requiere_subdivision": false},
-    {"codigo": "OMN", "iso2": "OM", "nombre": "Omán", "requiere_subdivision": false},
-    {"codigo": "PAK", "iso2": "PK", "nombre": "Pakistán", "requiere_subdivision": false},
-    {"codigo": "PLW", "iso2": "PW", "nombre": "Palaos", "requiere_subdivision": false},
-    {"codigo": "PSE", "iso2": "PS", "nombre": "Palestina", "requiere_subdivision": false},
-    {"codigo": "PAN", "iso2": "PA", "nombre": "Panamá", "requiere_subdivision": false},
-    {"codigo": "PNG", "iso2": "PG", "nombre": "Papúa Nueva Guinea", "requiere_subdivision": false},
-    {"codigo": "PRY", "iso2": "PY", "nombre": "Paraguay", "requiere_subdivision": false},
-    {"codigo": "PER", "iso2": "PE", "nombre": "Perú", "requiere_subdivision": false},
-    {"codigo": "PHL", "iso2": "PH", "nombre": "Filipinas", "requiere_subdivision": false},
-    {"codigo": "PCN", "iso2": "PN", "nombre": "Islas Pitcairn", "requiere_subdivision": false},
-    {"codigo": "POL", "iso2": "PL", "nombre": "Polonia", "requiere_subdivision": false},
-    {"codigo": "PRT", "iso2": "PT", "nombre": "Portugal", "requiere_subdivision": false},
-    {"codigo": "PRI", "iso2": "PR", "nombre": "Puerto Rico", "requiere_subdivision": false},
-    {"codigo": "QAT", "iso2": "QA", "nombre": "Catar", "requiere_subdivision": false},
-    {"codigo": "ROU", "iso2": "RO", "nombre": "Rumania", "requiere_subdivision": false},
-    {"codigo": "RUS", "iso2": "RU", "nombre": "Rusia", "requiere_subdivision": false},
-    {"codigo": "RWA", "iso2": "RW", "nombre": "Ruanda", "requiere_subdivision": false},
-    {"codigo": "REU", "iso2": "RE", "nombre": "Reunión", "requiere_subdivision": false},
-    {"codigo": "BLM", "iso2": "BL", "nombre": "San Bartolomé", "requiere_subdivision": false},
-    {"codigo": "SHN", "iso2": "SH", "nombre": "Santa Elena", "requiere_subdivision": false},
-    {"codigo": "KNA", "iso2": "KN", "nombre": "San Cristóbal y Nieves", "requiere_subdivision": false},
-    {"codigo": "LCA", "iso2": "LC", "nombre": "Santa Lucía", "requiere_subdivision": false},
-    {"codigo": "MAF", "iso2": "MF", "nombre": "San Martín", "requiere_subdivision": false},
-    {"codigo": "SPM", "iso2": "PM", "nombre": "San Pedro y Miquelón", "requiere_subdivision": false},
-    {"codigo": "VCT", "iso2": "VC", "nombre": "San Vicente y las Granadinas", "requiere_subdivision": false},
-    {"codigo": "WSM", "iso2": "WS", "nombre": "Samoa", "requiere_subdivision": false},
-    {"codigo": "SMR", "iso2": "SM", "nombre": "San Marino", "requiere_subdivision": false},
-    {"codigo": "STP", "iso2": "ST", "nombre": "Santo Tomé y Príncipe", "requiere_subdivision": false},
-    {"codigo": "SAU", "iso2": "SA", "nombre": "Arabia Saudita", "requiere_subdivision": false},
-    {"codigo": "SEN", "iso2": "SN", "nombre": "Senegal", "requiere_subdivision": false},
-    {"codigo": "SRB", "iso2": "RS", "nombre": "Serbia", "requiere_subdivision": false},
-    {"codigo": "SYC", "iso2": "SC", "nombre": "Seychelles", "requiere_subdivision": false},
-    {"codigo": "SLE", "iso2": "SL", "nombre": "Sierra Leona", "requiere_subdivision": false},
-    {"codigo": "SGP", "iso2": "SG", "nombre": "Singapur", "requiere_subdivision": false},
-    {"codigo": "SXM", "iso2": "SX", "nombre": "Sint Maarten", "requiere_subdivision": false},
-    {"codigo": "SVK", "iso2": "SK", "nombre": "Eslovaquia", "requiere_subdivision": false},
-    {"codigo": "SVN", "iso2": "SI", "nombre": "Eslovenia", "requiere_subdivision": false},
-    {"codigo": "SLB", "iso2": "SB", "nombre": "Islas Salomón", "requiere_subdivision": false},
-    {"codigo": "SOM", "iso2": "SO", "nombre": "Somalia", "requiere_subdivision": false},
-    {"codigo": "ZAF", "iso2": "ZA", "nombre": "Sudáfrica", "requiere_subdivision": false},
-    {"codigo": "SGS", "iso2": "GS", "nombre": "Georgia del Sur e Islas Sandwich del Sur", "requiere_subdivision": false},
-    {"codigo": "SSD", "iso2": "SS", "nombre": "Sudán del Sur", "requiere_subdivision": false},
-    {"codigo": "ESP", "iso2": "ES", "nombre": "España", "requiere_subdivision": false},
-    {"codigo": "LKA", "iso2": "LK", "nombre": "Sri Lanka", "requiere_subdivision": false},
-    {"codigo": "SDN", "iso2": "SD", "nombre": "Sudán", "requiere_subdivision": false},
-    {"codigo": "SUR", "iso2": "SR", "nombre": "Surinam", "requiere_subdivision": false},
-    {"codigo": "SJM", "iso2": "SJ", "nombre": "Svalbard y Jan Mayen", "requiere_subdivision": false},
-    {"codigo": "SWE", "iso2": "SE", "nombre": "Suecia", "requiere_subdivision": false},
-    {"codigo": "CHE", "iso2": "CH", "nombre": "Suiza", "requiere_subdivision": false},
-    {"codigo": "SYR", "iso2": "SY", "nombre": "Siria", "requiere_subdivision": false},
-    {"codigo": "TWN", "iso2": "TW", "nombre": "Taiwán", "requiere_subdivision": false},
-    {"codigo": "TJK", "iso2": "TJ", "nombre": "Tayikistán", "requiere_subdivision": false},
-    {"codigo": "TZA", "iso2": "TZ", "nombre": "Tanzania", "requiere_subdivision": false},
-    {"codigo": "THA", "iso2": "TH", "nombre": "Tailandia", "requiere_subdivision": false},
-    {"codigo": "TLS", "iso2": "TL", "nombre": "Timor-Leste", "requiere_subdivision": false},
-    {"codigo": "TGO", "iso2": "TG", "nombre": "Togo", "requiere_subdivision": false},
-    {"codigo": "TKL", "iso2": "TK", "nombre": "Tokelau", "requiere_subdivision": false},
-    {"codigo": "TON", "iso2": "TO", "nombre": "Tonga", "requiere_subdivision": false},
-    {"codigo": "TTO", "iso2": "TT", "nombre": "Trinidad y Tobago", "requiere_subdivision": false},
-    {"codigo": "TUN", "iso2": "TN", "nombre": "Túnez", "requiere_subdivision": false},
-    {"codigo": "TUR", "iso2": "TR", "nombre": "Turquía", "requiere_subdivision": false},
-    {"codigo": "TKM", "iso2": "TM", "nombre": "Turkmenistán", "requiere_subdivision": false},
-    {"codigo": "TCA", "iso2": "TC", "nombre": "Islas Turcas y Caicos", "requiere_subdivision": false},
-    {"codigo": "TUV", "iso2": "TV", "nombre": "Tuvalu", "requiere_subdivision": false},
-    {"codigo": "UGA", "iso2": "UG", "nombre": "Uganda", "requiere_subdivision": false},
-    {"codigo": "UKR", "iso2": "UA", "nombre": "Ucrania", "requiere_subdivision": false},
-    {"codigo": "ARE", "iso2": "AE", "nombre": "Emiratos Árabes Unidos", "requiere_subdivision": false},
-    {"codigo": "GBR", "iso2": "GB", "nombre": "Reino Unido", "requiere_subdivision": false},
-    {"codigo": "UMI", "iso2": "UM", "nombre": "Islas Ultramarinas Menores de Estados Unidos", "requiere_subdivision": false},
-    {"codigo": "USA", "iso2": "US", "nombre": "Estados Unidos de América", "requiere_subdivision": true},
-    {"codigo": "URY", "iso2": "UY", "nombre": "Uruguay", "requiere_subdivision": false},
-    {"codigo": "UZB", "iso2": "UZ", "nombre": "Uzbekistán", "requiere_subdivision": false},
-    {"codigo": "VUT", "iso2": "VU", "nombre": "Vanuatu", "requiere_subdivision": false},
-    {"codigo": "VEN", "iso2": "VE", "nombre": "Venezuela", "requiere_subdivision": false},
-    {"codigo": "VNM", "iso2": "VN", "nombre": "Vietnam", "requiere_subdivision": false},
-    {"codigo": "VGB", "iso2": "VG", "nombre": "Islas Vírgenes Británicas", "requiere_subdivision": false},
-    {"codigo": "VIR", "iso2": "VI", "nombre": "Islas Vírgenes de los Estados Unidos", "requiere_subdivision": false},
-    {"codigo": "WLF", "iso2": "WF", "nombre": "Wallis y Futuna", "requiere_subdivision": false},
-    {"codigo": "ESH", "iso2": "EH", "nombre": "Sahara Occidental", "requiere_subdivision": false},
-    {"codigo": "YEM", "iso2": "YE", "nombre": "Yemen", "requiere_subdivision": false},
-    {"codigo": "ZMB", "iso2": "ZM", "nombre": "Zambia", "requiere_subdivision": false},
-    {"codigo": "ZWE", "iso2": "ZW", "nombre": "Zimbabue", "requiere_subdivision": false},
-    {"codigo": "ALA", "iso2": "AX", "nombre": "Islas Åland", "requiere_subdivision": false}
-  ]
-}
+  {
+    "codigo": "ALB",
+    "iso2": "AL",
+    "nombre": "Albania",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "DZA",
+    "iso2": "DZ",
+    "nombre": "Argelia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ASM",
+    "iso2": "AS",
+    "nombre": "Samoa Americana",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "AND",
+    "iso2": "AD",
+    "nombre": "Andorra",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "AGO",
+    "iso2": "AO",
+    "nombre": "Angola",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "AIA",
+    "iso2": "AI",
+    "nombre": "Anguila",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ATA",
+    "iso2": "AQ",
+    "nombre": "Antártida",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ATG",
+    "iso2": "AG",
+    "nombre": "Antigua y Barbuda",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ARG",
+    "iso2": "AR",
+    "nombre": "Argentina",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ARM",
+    "iso2": "AM",
+    "nombre": "Armenia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ABW",
+    "iso2": "AW",
+    "nombre": "Aruba",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "AUS",
+    "iso2": "AU",
+    "nombre": "Australia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "AUT",
+    "iso2": "AT",
+    "nombre": "Austria",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "AZE",
+    "iso2": "AZ",
+    "nombre": "Azerbaiyán",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BHS",
+    "iso2": "BS",
+    "nombre": "Bahamas",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BHR",
+    "iso2": "BH",
+    "nombre": "Baréin",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BGD",
+    "iso2": "BD",
+    "nombre": "Bangladesh",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BRB",
+    "iso2": "BB",
+    "nombre": "Barbados",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BLR",
+    "iso2": "BY",
+    "nombre": "Bielorrusia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BEL",
+    "iso2": "BE",
+    "nombre": "Bélgica",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BLZ",
+    "iso2": "BZ",
+    "nombre": "Belice",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BEN",
+    "iso2": "BJ",
+    "nombre": "Benín",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BMU",
+    "iso2": "BM",
+    "nombre": "Bermudas",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BTN",
+    "iso2": "BT",
+    "nombre": "Bután",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BOL",
+    "iso2": "BO",
+    "nombre": "Bolivia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BES",
+    "iso2": "BQ",
+    "nombre": "Bonaire, San Eustaquio y Saba",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BIH",
+    "iso2": "BA",
+    "nombre": "Bosnia y Herzegovina",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BWA",
+    "iso2": "BW",
+    "nombre": "Botsuana",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BVT",
+    "iso2": "BV",
+    "nombre": "Isla Bouvet",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BRA",
+    "iso2": "BR",
+    "nombre": "Brasil",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "IOT",
+    "iso2": "IO",
+    "nombre": "Territorio Británico del Océano Índico",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BRN",
+    "iso2": "BN",
+    "nombre": "Brunéi",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BGR",
+    "iso2": "BG",
+    "nombre": "Bulgaria",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BFA",
+    "iso2": "BF",
+    "nombre": "Burkina Faso",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BDI",
+    "iso2": "BI",
+    "nombre": "Burundi",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CPV",
+    "iso2": "CV",
+    "nombre": "Cabo Verde",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "KHM",
+    "iso2": "KH",
+    "nombre": "Camboya",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CMR",
+    "iso2": "CM",
+    "nombre": "Camerún",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CAN",
+    "iso2": "CA",
+    "nombre": "Canadá",
+    "requiere_subdivision": true
+  },
+  {
+    "codigo": "CYM",
+    "iso2": "KY",
+    "nombre": "Islas Caimán",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CAF",
+    "iso2": "CF",
+    "nombre": "República Centroafricana",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TCD",
+    "iso2": "TD",
+    "nombre": "Chad",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CHL",
+    "iso2": "CL",
+    "nombre": "Chile",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CHN",
+    "iso2": "CN",
+    "nombre": "China",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CXR",
+    "iso2": "CX",
+    "nombre": "Isla de Navidad",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CCK",
+    "iso2": "CC",
+    "nombre": "Islas Cocos",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "COL",
+    "iso2": "CO",
+    "nombre": "Colombia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "COM",
+    "iso2": "KM",
+    "nombre": "Comoras",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "COD",
+    "iso2": "CD",
+    "nombre": "República Democrática del Congo",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "COG",
+    "iso2": "CG",
+    "nombre": "República del Congo",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "COK",
+    "iso2": "CK",
+    "nombre": "Islas Cook",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CRI",
+    "iso2": "CR",
+    "nombre": "Costa Rica",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "HRV",
+    "iso2": "HR",
+    "nombre": "Croacia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CUB",
+    "iso2": "CU",
+    "nombre": "Cuba",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CUW",
+    "iso2": "CW",
+    "nombre": "Curazao",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CYP",
+    "iso2": "CY",
+    "nombre": "Chipre",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CZE",
+    "iso2": "CZ",
+    "nombre": "República Checa",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CIV",
+    "iso2": "CI",
+    "nombre": "Costa de Marfil",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "DNK",
+    "iso2": "DK",
+    "nombre": "Dinamarca",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "DJI",
+    "iso2": "DJ",
+    "nombre": "Yibuti",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "DMA",
+    "iso2": "DM",
+    "nombre": "Dominica",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "DOM",
+    "iso2": "DO",
+    "nombre": "República Dominicana",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ECU",
+    "iso2": "EC",
+    "nombre": "Ecuador",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "EGY",
+    "iso2": "EG",
+    "nombre": "Egipto",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SLV",
+    "iso2": "SV",
+    "nombre": "El Salvador",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GNQ",
+    "iso2": "GQ",
+    "nombre": "Guinea Ecuatorial",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ERI",
+    "iso2": "ER",
+    "nombre": "Eritrea",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "EST",
+    "iso2": "EE",
+    "nombre": "Estonia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SWZ",
+    "iso2": "SZ",
+    "nombre": "Esuatini",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ETH",
+    "iso2": "ET",
+    "nombre": "Etiopía",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "FLK",
+    "iso2": "FK",
+    "nombre": "Islas Malvinas",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "FRO",
+    "iso2": "FO",
+    "nombre": "Islas Feroe",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "FJI",
+    "iso2": "FJ",
+    "nombre": "Fiyi",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "FIN",
+    "iso2": "FI",
+    "nombre": "Finlandia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "FRA",
+    "iso2": "FR",
+    "nombre": "Francia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GUF",
+    "iso2": "GF",
+    "nombre": "Guayana Francesa",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "PYF",
+    "iso2": "PF",
+    "nombre": "Polinesia Francesa",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ATF",
+    "iso2": "TF",
+    "nombre": "Territorios Australes Franceses",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GAB",
+    "iso2": "GA",
+    "nombre": "Gabón",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GMB",
+    "iso2": "GM",
+    "nombre": "Gambia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GEO",
+    "iso2": "GE",
+    "nombre": "Georgia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "DEU",
+    "iso2": "DE",
+    "nombre": "Alemania",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GHA",
+    "iso2": "GH",
+    "nombre": "Ghana",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GIB",
+    "iso2": "GI",
+    "nombre": "Gibraltar",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GRC",
+    "iso2": "GR",
+    "nombre": "Grecia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GRL",
+    "iso2": "GL",
+    "nombre": "Groenlandia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GRD",
+    "iso2": "GD",
+    "nombre": "Granada",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GLP",
+    "iso2": "GP",
+    "nombre": "Guadalupe",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GUM",
+    "iso2": "GU",
+    "nombre": "Guam",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GTM",
+    "iso2": "GT",
+    "nombre": "Guatemala",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GGY",
+    "iso2": "GG",
+    "nombre": "Guernsey",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GIN",
+    "iso2": "GN",
+    "nombre": "Guinea",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GNB",
+    "iso2": "GW",
+    "nombre": "Guinea-Bisáu",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GUY",
+    "iso2": "GY",
+    "nombre": "Guyana",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "HTI",
+    "iso2": "HT",
+    "nombre": "Haití",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "HMD",
+    "iso2": "HM",
+    "nombre": "Islas Heard y McDonald",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "VAT",
+    "iso2": "VA",
+    "nombre": "Ciudad del Vaticano",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "HND",
+    "iso2": "HN",
+    "nombre": "Honduras",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "HKG",
+    "iso2": "HK",
+    "nombre": "Hong Kong",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "HUN",
+    "iso2": "HU",
+    "nombre": "Hungría",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ISL",
+    "iso2": "IS",
+    "nombre": "Islandia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "IND",
+    "iso2": "IN",
+    "nombre": "India",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "IDN",
+    "iso2": "ID",
+    "nombre": "Indonesia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "IRN",
+    "iso2": "IR",
+    "nombre": "Irán",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "IRQ",
+    "iso2": "IQ",
+    "nombre": "Irak",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "IRL",
+    "iso2": "IE",
+    "nombre": "Irlanda",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "IMN",
+    "iso2": "IM",
+    "nombre": "Isla de Man",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ISR",
+    "iso2": "IL",
+    "nombre": "Israel",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ITA",
+    "iso2": "IT",
+    "nombre": "Italia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "JAM",
+    "iso2": "JM",
+    "nombre": "Jamaica",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "JPN",
+    "iso2": "JP",
+    "nombre": "Japón",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "JEY",
+    "iso2": "JE",
+    "nombre": "Jersey",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "JOR",
+    "iso2": "JO",
+    "nombre": "Jordania",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "KAZ",
+    "iso2": "KZ",
+    "nombre": "Kazajistán",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "KEN",
+    "iso2": "KE",
+    "nombre": "Kenia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "KIR",
+    "iso2": "KI",
+    "nombre": "Kiribati",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "PRK",
+    "iso2": "KP",
+    "nombre": "Corea del Norte",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "KOR",
+    "iso2": "KR",
+    "nombre": "Corea del Sur",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "KWT",
+    "iso2": "KW",
+    "nombre": "Kuwait",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "KGZ",
+    "iso2": "KG",
+    "nombre": "Kirguistán",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "LAO",
+    "iso2": "LA",
+    "nombre": "Laos",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "LVA",
+    "iso2": "LV",
+    "nombre": "Letonia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "LBN",
+    "iso2": "LB",
+    "nombre": "Líbano",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "LSO",
+    "iso2": "LS",
+    "nombre": "Lesoto",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "LBR",
+    "iso2": "LR",
+    "nombre": "Liberia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "LBY",
+    "iso2": "LY",
+    "nombre": "Libia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "LIE",
+    "iso2": "LI",
+    "nombre": "Liechtenstein",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "LTU",
+    "iso2": "LT",
+    "nombre": "Lituania",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "LUX",
+    "iso2": "LU",
+    "nombre": "Luxemburgo",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MAC",
+    "iso2": "MO",
+    "nombre": "Macao",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MDG",
+    "iso2": "MG",
+    "nombre": "Madagascar",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MWI",
+    "iso2": "MW",
+    "nombre": "Malaui",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MYS",
+    "iso2": "MY",
+    "nombre": "Malasia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MDV",
+    "iso2": "MV",
+    "nombre": "Maldivas",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MLI",
+    "iso2": "ML",
+    "nombre": "Malí",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MLT",
+    "iso2": "MT",
+    "nombre": "Malta",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MHL",
+    "iso2": "MH",
+    "nombre": "Islas Marshall",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MTQ",
+    "iso2": "MQ",
+    "nombre": "Martinica",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MRT",
+    "iso2": "MR",
+    "nombre": "Mauritania",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MUS",
+    "iso2": "MU",
+    "nombre": "Mauricio",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MYT",
+    "iso2": "YT",
+    "nombre": "Mayotte",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MEX",
+    "iso2": "MX",
+    "nombre": "México",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "FSM",
+    "iso2": "FM",
+    "nombre": "Micronesia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MDA",
+    "iso2": "MD",
+    "nombre": "Moldavia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MCO",
+    "iso2": "MC",
+    "nombre": "Mónaco",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MNG",
+    "iso2": "MN",
+    "nombre": "Mongolia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MNE",
+    "iso2": "ME",
+    "nombre": "Montenegro",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MSR",
+    "iso2": "MS",
+    "nombre": "Montserrat",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MAR",
+    "iso2": "MA",
+    "nombre": "Marruecos",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MOZ",
+    "iso2": "MZ",
+    "nombre": "Mozambique",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MMR",
+    "iso2": "MM",
+    "nombre": "Myanmar",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "NAM",
+    "iso2": "NA",
+    "nombre": "Namibia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "NRU",
+    "iso2": "NR",
+    "nombre": "Nauru",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "NPL",
+    "iso2": "NP",
+    "nombre": "Nepal",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "NLD",
+    "iso2": "NL",
+    "nombre": "Países Bajos",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "NCL",
+    "iso2": "NC",
+    "nombre": "Nueva Caledonia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "NZL",
+    "iso2": "NZ",
+    "nombre": "Nueva Zelanda",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "NIC",
+    "iso2": "NI",
+    "nombre": "Nicaragua",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "NER",
+    "iso2": "NE",
+    "nombre": "Níger",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "NGA",
+    "iso2": "NG",
+    "nombre": "Nigeria",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "NIU",
+    "iso2": "NU",
+    "nombre": "Niue",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "NFK",
+    "iso2": "NF",
+    "nombre": "Isla Norfolk",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MKD",
+    "iso2": "MK",
+    "nombre": "Macedonia del Norte",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MNP",
+    "iso2": "MP",
+    "nombre": "Islas Marianas del Norte",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "NOR",
+    "iso2": "NO",
+    "nombre": "Noruega",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "OMN",
+    "iso2": "OM",
+    "nombre": "Omán",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "PAK",
+    "iso2": "PK",
+    "nombre": "Pakistán",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "PLW",
+    "iso2": "PW",
+    "nombre": "Palaos",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "PSE",
+    "iso2": "PS",
+    "nombre": "Palestina",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "PAN",
+    "iso2": "PA",
+    "nombre": "Panamá",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "PNG",
+    "iso2": "PG",
+    "nombre": "Papúa Nueva Guinea",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "PRY",
+    "iso2": "PY",
+    "nombre": "Paraguay",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "PER",
+    "iso2": "PE",
+    "nombre": "Perú",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "PHL",
+    "iso2": "PH",
+    "nombre": "Filipinas",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "PCN",
+    "iso2": "PN",
+    "nombre": "Islas Pitcairn",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "POL",
+    "iso2": "PL",
+    "nombre": "Polonia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "PRT",
+    "iso2": "PT",
+    "nombre": "Portugal",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "PRI",
+    "iso2": "PR",
+    "nombre": "Puerto Rico",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "QAT",
+    "iso2": "QA",
+    "nombre": "Catar",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ROU",
+    "iso2": "RO",
+    "nombre": "Rumania",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "RUS",
+    "iso2": "RU",
+    "nombre": "Rusia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "RWA",
+    "iso2": "RW",
+    "nombre": "Ruanda",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "REU",
+    "iso2": "RE",
+    "nombre": "Reunión",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "BLM",
+    "iso2": "BL",
+    "nombre": "San Bartolomé",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SHN",
+    "iso2": "SH",
+    "nombre": "Santa Elena",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "KNA",
+    "iso2": "KN",
+    "nombre": "San Cristóbal y Nieves",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "LCA",
+    "iso2": "LC",
+    "nombre": "Santa Lucía",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "MAF",
+    "iso2": "MF",
+    "nombre": "San Martín",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SPM",
+    "iso2": "PM",
+    "nombre": "San Pedro y Miquelón",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "VCT",
+    "iso2": "VC",
+    "nombre": "San Vicente y las Granadinas",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "WSM",
+    "iso2": "WS",
+    "nombre": "Samoa",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SMR",
+    "iso2": "SM",
+    "nombre": "San Marino",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "STP",
+    "iso2": "ST",
+    "nombre": "Santo Tomé y Príncipe",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SAU",
+    "iso2": "SA",
+    "nombre": "Arabia Saudita",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SEN",
+    "iso2": "SN",
+    "nombre": "Senegal",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SRB",
+    "iso2": "RS",
+    "nombre": "Serbia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SYC",
+    "iso2": "SC",
+    "nombre": "Seychelles",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SLE",
+    "iso2": "SL",
+    "nombre": "Sierra Leona",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SGP",
+    "iso2": "SG",
+    "nombre": "Singapur",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SXM",
+    "iso2": "SX",
+    "nombre": "Sint Maarten",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SVK",
+    "iso2": "SK",
+    "nombre": "Eslovaquia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SVN",
+    "iso2": "SI",
+    "nombre": "Eslovenia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SLB",
+    "iso2": "SB",
+    "nombre": "Islas Salomón",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SOM",
+    "iso2": "SO",
+    "nombre": "Somalia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ZAF",
+    "iso2": "ZA",
+    "nombre": "Sudáfrica",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SGS",
+    "iso2": "GS",
+    "nombre": "Georgia del Sur e Islas Sandwich del Sur",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SSD",
+    "iso2": "SS",
+    "nombre": "Sudán del Sur",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ESP",
+    "iso2": "ES",
+    "nombre": "España",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "LKA",
+    "iso2": "LK",
+    "nombre": "Sri Lanka",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SDN",
+    "iso2": "SD",
+    "nombre": "Sudán",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SUR",
+    "iso2": "SR",
+    "nombre": "Surinam",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SJM",
+    "iso2": "SJ",
+    "nombre": "Svalbard y Jan Mayen",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SWE",
+    "iso2": "SE",
+    "nombre": "Suecia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "CHE",
+    "iso2": "CH",
+    "nombre": "Suiza",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "SYR",
+    "iso2": "SY",
+    "nombre": "Siria",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TWN",
+    "iso2": "TW",
+    "nombre": "Taiwán",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TJK",
+    "iso2": "TJ",
+    "nombre": "Tayikistán",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TZA",
+    "iso2": "TZ",
+    "nombre": "Tanzania",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "THA",
+    "iso2": "TH",
+    "nombre": "Tailandia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TLS",
+    "iso2": "TL",
+    "nombre": "Timor-Leste",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TGO",
+    "iso2": "TG",
+    "nombre": "Togo",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TKL",
+    "iso2": "TK",
+    "nombre": "Tokelau",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TON",
+    "iso2": "TO",
+    "nombre": "Tonga",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TTO",
+    "iso2": "TT",
+    "nombre": "Trinidad y Tobago",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TUN",
+    "iso2": "TN",
+    "nombre": "Túnez",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TUR",
+    "iso2": "TR",
+    "nombre": "Turquía",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TKM",
+    "iso2": "TM",
+    "nombre": "Turkmenistán",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TCA",
+    "iso2": "TC",
+    "nombre": "Islas Turcas y Caicos",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "TUV",
+    "iso2": "TV",
+    "nombre": "Tuvalu",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "UGA",
+    "iso2": "UG",
+    "nombre": "Uganda",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "UKR",
+    "iso2": "UA",
+    "nombre": "Ucrania",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ARE",
+    "iso2": "AE",
+    "nombre": "Emiratos Árabes Unidos",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "GBR",
+    "iso2": "GB",
+    "nombre": "Reino Unido",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "UMI",
+    "iso2": "UM",
+    "nombre": "Islas Ultramarinas Menores de Estados Unidos",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "USA",
+    "iso2": "US",
+    "nombre": "Estados Unidos de América",
+    "requiere_subdivision": true
+  },
+  {
+    "codigo": "URY",
+    "iso2": "UY",
+    "nombre": "Uruguay",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "UZB",
+    "iso2": "UZ",
+    "nombre": "Uzbekistán",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "VUT",
+    "iso2": "VU",
+    "nombre": "Vanuatu",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "VEN",
+    "iso2": "VE",
+    "nombre": "Venezuela",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "VNM",
+    "iso2": "VN",
+    "nombre": "Vietnam",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "VGB",
+    "iso2": "VG",
+    "nombre": "Islas Vírgenes Británicas",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "VIR",
+    "iso2": "VI",
+    "nombre": "Islas Vírgenes de los Estados Unidos",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "WLF",
+    "iso2": "WF",
+    "nombre": "Wallis y Futuna",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ESH",
+    "iso2": "EH",
+    "nombre": "Sahara Occidental",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "YEM",
+    "iso2": "YE",
+    "nombre": "Yemen",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ZMB",
+    "iso2": "ZM",
+    "nombre": "Zambia",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ZWE",
+    "iso2": "ZW",
+    "nombre": "Zimbabue",
+    "requiere_subdivision": false
+  },
+  {
+    "codigo": "ALA",
+    "iso2": "AX",
+    "nombre": "Islas Åland",
+    "requiere_subdivision": false
+  }
+]

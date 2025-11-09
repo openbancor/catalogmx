@@ -1,17 +1,22 @@
-{
-  "metadata": {
-    "catalog": "c_TipoComprobante",
-    "version": "CFDI_4.0",
-    "source": "SAT - Anexo 20",
-    "description": "Tipo de comprobante",
-    "last_updated": "2025-11-08",
-    "total_records": 5
+[
+  {
+    "code": "I",
+    "description": "Ingreso"
   },
-  "tipos": [
-    {"code": "I", "description": "Ingreso"},
-    {"code": "E", "description": "Egreso"},
-    {"code": "T", "description": "Traslado"},
-    {"code": "N", "description": "Nómina"},
-    {"code": "P", "description": "Pago"}
-  ]
-}
+  {
+    "code": "E",
+    "description": "Egreso"
+  },
+  {
+    "code": "T",
+    "description": "Traslado"
+  },
+  {
+    "code": "N",
+    "description": "Nómina"
+  },
+  {
+    "code": "P",
+    "description": "Pago"
+  }
+]

@@ -1,33 +1,22 @@
-{
-  "metadata": {
-    "catalog": "c_CodigoTransporteAereo",
-    "version": "Carta_Porte_3.0",
-    "source": "SAT - Carta Porte 3.0",
-    "description": "Códigos de aeropuertos mexicanos",
-    "last_updated": "2025-11-08",
-    "total_records": 20,
-    "notes": "Catálogo de muestra - Requiere descarga completa del SAT (76 aeropuertos)"
-  },
-  "aeropuertos": [
-    {"code": "MEX", "name": "Aeropuerto Internacional de la Ciudad de México", "iata": "MEX", "icao": "MMMX", "city": "Ciudad de México", "state": "CDMX"},
-    {"code": "GDL", "name": "Aeropuerto Internacional de Guadalajara", "iata": "GDL", "icao": "MMGL", "city": "Guadalajara", "state": "Jalisco"},
-    {"code": "CUN", "name": "Aeropuerto Internacional de Cancún", "iata": "CUN", "icao": "MMUN", "city": "Cancún", "state": "Quintana Roo"},
-    {"code": "MTY", "name": "Aeropuerto Internacional de Monterrey", "iata": "MTY", "icao": "MMMY", "city": "Monterrey", "state": "Nuevo León"},
-    {"code": "TIJ", "name": "Aeropuerto Internacional de Tijuana", "iata": "TIJ", "icao": "MMTJ", "city": "Tijuana", "state": "Baja California"},
-    {"code": "BJX", "name": "Aeropuerto Internacional del Bajío", "iata": "BJX", "icao": "MMLO", "city": "León/Silao", "state": "Guanajuato"},
-    {"code": "PVR", "name": "Aeropuerto Internacional de Puerto Vallarta", "iata": "PVR", "icao": "MMPR", "city": "Puerto Vallarta", "state": "Jalisco"},
-    {"code": "SJD", "name": "Aeropuerto Internacional de Los Cabos", "iata": "SJD", "icao": "MMSD", "city": "San José del Cabo", "state": "Baja California Sur"},
-    {"code": "QRO", "name": "Aeropuerto Internacional de Querétaro", "iata": "QRO", "icao": "MMQT", "city": "Querétaro", "state": "Querétaro"},
-    {"code": "HMO", "name": "Aeropuerto Internacional de Hermosillo", "iata": "HMO", "icao": "MMHO", "city": "Hermosillo", "state": "Sonora"},
-    {"code": "MID", "name": "Aeropuerto Internacional de Mérida", "iata": "MID", "icao": "MMMD", "city": "Mérida", "state": "Yucatán"},
-    {"code": "CUU", "name": "Aeropuerto Internacional de Chihuahua", "iata": "CUU", "icao": "MMCU", "city": "Chihuahua", "state": "Chihuahua"},
-    {"code": "AGU", "name": "Aeropuerto Internacional de Aguascalientes", "iata": "AGU", "icao": "MMAS", "city": "Aguascalientes", "state": "Aguascalientes"},
-    {"code": "ZCL", "name": "Aeropuerto Internacional de Zacatecas", "iata": "ZCL", "icao": "MMZC", "city": "Zacatecas", "state": "Zacatecas"},
-    {"code": "TAM", "name": "Aeropuerto Internacional de Tampico", "iata": "TAM", "icao": "MMTM", "city": "Tampico", "state": "Tamaulipas"},
-    {"code": "VER", "name": "Aeropuerto Internacional de Veracruz", "iata": "VER", "icao": "MMVR", "city": "Veracruz", "state": "Veracruz"},
-    {"code": "OAX", "name": "Aeropuerto Internacional de Oaxaca", "iata": "OAX", "icao": "MMOX", "city": "Oaxaca", "state": "Oaxaca"},
-    {"code": "TGZ", "name": "Aeropuerto Internacional de Tuxtla Gutiérrez", "iata": "TGZ", "icao": "MMTG", "city": "Tuxtla Gutiérrez", "state": "Chiapas"},
-    {"code": "NLD", "name": "Nuevo Laredo International Airport", "iata": "NLD", "icao": "MMNL", "city": "Nuevo Laredo", "state": "Tamaulipas"},
-    {"code": "TLC", "name": "Aeropuerto Internacional de Toluca", "iata": "TLC", "icao": "MMTO", "city": "Toluca", "state": "Estado de México"}
-  ]
-}
+[
+  {"code": "MEX", "name": "Aeropuerto Internacional de la Ciudad de México", "iata": "MEX", "icao": "MMMX", "ciudad": "Ciudad de México", "estado": "CDMX"},
+  {"code": "GDL", "name": "Aeropuerto Internacional de Guadalajara", "iata": "GDL", "icao": "MMGL", "ciudad": "Guadalajara", "estado": "Jalisco"},
+  {"code": "CUN", "name": "Aeropuerto Internacional de Cancún", "iata": "CUN", "icao": "MMUN", "ciudad": "Cancún", "estado": "Quintana Roo"},
+  {"code": "MTY", "name": "Aeropuerto Internacional de Monterrey", "iata": "MTY", "icao": "MMMY", "ciudad": "Monterrey", "estado": "Nuevo León"},
+  {"code": "TIJ", "name": "Aeropuerto Internacional de Tijuana", "iata": "TIJ", "icao": "MMTJ", "ciudad": "Tijuana", "estado": "Baja California"},
+  {"code": "BJX", "name": "Aeropuerto Internacional del Bajío", "iata": "BJX", "icao": "MMLO", "ciudad": "León/Silao", "estado": "Guanajuato"},
+  {"code": "PVR", "name": "Aeropuerto Internacional de Puerto Vallarta", "iata": "PVR", "icao": "MMPR", "ciudad": "Puerto Vallarta", "estado": "Jalisco"},
+  {"code": "SJD", "name": "Aeropuerto Internacional de Los Cabos", "iata": "SJD", "icao": "MMSD", "ciudad": "San José del Cabo", "estado": "Baja California Sur"},
+  {"code": "QRO", "name": "Aeropuerto Internacional de Querétaro", "iata": "QRO", "icao": "MMQT", "ciudad": "Querétaro", "estado": "Querétaro"},
+  {"code": "MID", "name": "Aeropuerto Internacional de Mérida", "iata": "MID", "icao": "MMMD", "ciudad": "Mérida", "estado": "Yucatán"},
+  {"code": "HMO", "name": "Aeropuerto Internacional de Hermosillo", "iata": "HMO", "icao": "MMHO", "ciudad": "Hermosillo", "estado": "Sonora"},
+  {"code": "VER", "name": "Aeropuerto Internacional de Veracruz", "iata": "VER", "icao": "MMVR", "ciudad": "Veracruz", "estado": "Veracruz"},
+  {"code": "AGU", "name": "Aeropuerto Internacional de Aguascalientes", "iata": "AGU", "icao": "MMAS", "ciudad": "Aguascalientes", "estado": "Aguascalientes"},
+  {"code": "CJS", "name": "Aeropuerto Internacional de Ciudad Juárez", "iata": "CJS", "icao": "MMCS", "ciudad": "Ciudad Juárez", "estado": "Chihuahua"},
+  {"code": "TAM", "name": "Aeropuerto Internacional de Tampico", "iata": "TAM", "icao": "MMTM", "ciudad": "Tampico", "estado": "Tamaulipas"},
+  {"code": "CUU", "name": "Aeropuerto Internacional de Chihuahua", "iata": "CUU", "icao": "MMCU", "ciudad": "Chihuahua", "estado": "Chihuahua"},
+  {"code": "ZCL", "name": "Aeropuerto Internacional de Zacatecas", "iata": "ZCL", "icao": "MMZC", "ciudad": "Zacatecas", "estado": "Zacatecas"},
+  {"code": "TPQ", "name": "Aeropuerto Internacional de Tepic", "iata": "TPQ", "icao": "MMEP", "ciudad": "Tepic", "estado": "Nayarit"},
+  {"code": "CLQ", "name": "Aeropuerto Internacional de Colima", "iata": "CLQ", "icao": "MMIA", "ciudad": "Colima", "estado": "Colima"},
+  {"code": "ZIH", "name": "Aeropuerto Internacional de Ixtapa-Zihuatanejo", "iata": "ZIH", "icao": "MMZH", "ciudad": "Zihuatanejo", "estado": "Guerrero"}
+]

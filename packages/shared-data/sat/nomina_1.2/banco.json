@@ -1,63 +1,252 @@
-{
-  "metadata": {
-    "catalog": "c_Banco",
-    "version": "Nómina_1.2",
-    "source": "SAT - Complemento de Nómina 1.2 / Banxico",
-    "description": "Catálogo de instituciones bancarias",
-    "last_updated": "2025-11-08",
-    "total_records": 50,
-    "notes": "Bancos activos en México para depósito de nómina"
+[
+  {
+    "code": "002",
+    "name": "Banamex",
+    "full_name": "Banco Nacional de México, S.A."
   },
-  "bancos": [
-    {"code": "002", "name": "Banamex", "full_name": "Banco Nacional de México, S.A."},
-    {"code": "006", "name": "Bancomext", "full_name": "Banco Nacional de Comercio Exterior, S.N.C."},
-    {"code": "009", "name": "Banobras", "full_name": "Banco Nacional de Obras y Servicios Públicos, S.N.C."},
-    {"code": "012", "name": "BBVA México", "full_name": "BBVA México, S.A."},
-    {"code": "014", "name": "Santander", "full_name": "Banco Santander (México), S.A."},
-    {"code": "019", "name": "Banjercito", "full_name": "Banco Nacional del Ejército, Fuerza Aérea y Armada, S.N.C."},
-    {"code": "021", "name": "HSBC", "full_name": "HSBC México, S.A."},
-    {"code": "030", "name": "Bajío", "full_name": "Banco del Bajío, S.A."},
-    {"code": "032", "name": "IXE", "full_name": "IXE Banco, S.A."},
-    {"code": "036", "name": "Inbursa", "full_name": "Banco Inbursa, S.A."},
-    {"code": "037", "name": "Interacciones", "full_name": "Banco Interacciones, S.A."},
-    {"code": "042", "name": "Mifel", "full_name": "Banco Mifel, S.A."},
-    {"code": "044", "name": "Scotiabank", "full_name": "Scotiabank Inverlat, S.A."},
-    {"code": "058", "name": "BanRegio", "full_name": "Banco Regional de Monterrey, S.A."},
-    {"code": "059", "name": "Invex", "full_name": "Banco Invex, S.A."},
-    {"code": "060", "name": "Bansi", "full_name": "Bansi, S.A."},
-    {"code": "062", "name": "Afirme", "full_name": "Banca Afirme, S.A."},
-    {"code": "072", "name": "Banorte", "full_name": "Banco Mercantil del Norte, S.A."},
-    {"code": "102", "name": "ABC Capital", "full_name": "Banco ABC Capital, S.A."},
-    {"code": "103", "name": "American Express", "full_name": "American Express Bank (México), S.A."},
-    {"code": "106", "name": "Bank of America", "full_name": "Bank of America México, S.A."},
-    {"code": "108", "name": "Bank of Tokyo", "full_name": "Bank of Tokyo-Mitsubishi UFJ (México), S.A."},
-    {"code": "110", "name": "JP Morgan", "full_name": "Banco J.P. Morgan, S.A."},
-    {"code": "112", "name": "Monex", "full_name": "Banco Monex, S.A."},
-    {"code": "113", "name": "Ve Por Más", "full_name": "Banco Ve Por Más, S.A."},
-    {"code": "116", "name": "ING", "full_name": "ING Bank (México), S.A."},
-    {"code": "124", "name": "Deutsche", "full_name": "Deutsche Bank México, S.A."},
-    {"code": "126", "name": "Credit Suisse", "full_name": "Banco Credit Suisse (México), S.A."},
-    {"code": "127", "name": "Azteca", "full_name": "Banco Azteca, S.A."},
-    {"code": "128", "name": "Autofin", "full_name": "Banco Autofin México, S.A."},
-    {"code": "129", "name": "Barclays", "full_name": "Barclays Bank México, S.A."},
-    {"code": "130", "name": "Compartamos", "full_name": "Banco Compartamos, S.A."},
-    {"code": "131", "name": "Banco Famsa", "full_name": "Banco Ahorro Famsa, S.A."},
-    {"code": "132", "name": "BMULTIVA", "full_name": "Banco Multiva, S.A."},
-    {"code": "133", "name": "Actinver", "full_name": "Banco Actinver, S.A."},
-    {"code": "134", "name": "Wal-Mart", "full_name": "Banco Wal-Mart de México Adelante, S.A."},
-    {"code": "135", "name": "Nafin", "full_name": "Nacional Financiera, S.N.C."},
-    {"code": "136", "name": "Interbanco", "full_name": "Inter Banco, S.A."},
-    {"code": "137", "name": "Bancoppel", "full_name": "BanCoppel, S.A."},
-    {"code": "138", "name": "ABC Banco", "full_name": "ABC Banco, S.A."},
-    {"code": "139", "name": "UBS Bank", "full_name": "UBS Bank México, S.A."},
-    {"code": "140", "name": "Consubanco", "full_name": "Consubanco, S.A."},
-    {"code": "141", "name": "Volkswagen", "full_name": "Volkswagen Bank, S.A."},
-    {"code": "143", "name": "CIBanco", "full_name": "CIBanco, S.A."},
-    {"code": "145", "name": "Bbase", "full_name": "Banco Base, S.A."},
-    {"code": "147", "name": "Bankaool", "full_name": "Bankaool, S.A."},
-    {"code": "148", "name": "PagaTodo", "full_name": "Banco PagaTodo, S.A."},
-    {"code": "150", "name": "Inmobiliario", "full_name": "Banco Inmobiliario Mexicano, S.A."},
-    {"code": "152", "name": "Bancrea", "full_name": "Bancrea, S.A."},
-    {"code": "166", "name": "BanBajío", "full_name": "Banco del Bajío, S.A."}
-  ]
-}
+  {
+    "code": "006",
+    "name": "Bancomext",
+    "full_name": "Banco Nacional de Comercio Exterior, S.N.C."
+  },
+  {
+    "code": "009",
+    "name": "Banobras",
+    "full_name": "Banco Nacional de Obras y Servicios Públicos, S.N.C."
+  },
+  {
+    "code": "012",
+    "name": "BBVA México",
+    "full_name": "BBVA México, S.A."
+  },
+  {
+    "code": "014",
+    "name": "Santander",
+    "full_name": "Banco Santander (México), S.A."
+  },
+  {
+    "code": "019",
+    "name": "Banjercito",
+    "full_name": "Banco Nacional del Ejército, Fuerza Aérea y Armada, S.N.C."
+  },
+  {
+    "code": "021",
+    "name": "HSBC",
+    "full_name": "HSBC México, S.A."
+  },
+  {
+    "code": "030",
+    "name": "Bajío",
+    "full_name": "Banco del Bajío, S.A."
+  },
+  {
+    "code": "032",
+    "name": "IXE",
+    "full_name": "IXE Banco, S.A."
+  },
+  {
+    "code": "036",
+    "name": "Inbursa",
+    "full_name": "Banco Inbursa, S.A."
+  },
+  {
+    "code": "037",
+    "name": "Interacciones",
+    "full_name": "Banco Interacciones, S.A."
+  },
+  {
+    "code": "042",
+    "name": "Mifel",
+    "full_name": "Banco Mifel, S.A."
+  },
+  {
+    "code": "044",
+    "name": "Scotiabank",
+    "full_name": "Scotiabank Inverlat, S.A."
+  },
+  {
+    "code": "058",
+    "name": "BanRegio",
+    "full_name": "Banco Regional de Monterrey, S.A."
+  },
+  {
+    "code": "059",
+    "name": "Invex",
+    "full_name": "Banco Invex, S.A."
+  },
+  {
+    "code": "060",
+    "name": "Bansi",
+    "full_name": "Bansi, S.A."
+  },
+  {
+    "code": "062",
+    "name": "Afirme",
+    "full_name": "Banca Afirme, S.A."
+  },
+  {
+    "code": "072",
+    "name": "Banorte",
+    "full_name": "Banco Mercantil del Norte, S.A."
+  },
+  {
+    "code": "102",
+    "name": "ABC Capital",
+    "full_name": "Banco ABC Capital, S.A."
+  },
+  {
+    "code": "103",
+    "name": "American Express",
+    "full_name": "American Express Bank (México), S.A."
+  },
+  {
+    "code": "106",
+    "name": "Bank of America",
+    "full_name": "Bank of America México, S.A."
+  },
+  {
+    "code": "108",
+    "name": "Bank of Tokyo",
+    "full_name": "Bank of Tokyo-Mitsubishi UFJ (México), S.A."
+  },
+  {
+    "code": "110",
+    "name": "JP Morgan",
+    "full_name": "Banco J.P. Morgan, S.A."
+  },
+  {
+    "code": "112",
+    "name": "Monex",
+    "full_name": "Banco Monex, S.A."
+  },
+  {
+    "code": "113",
+    "name": "Ve Por Más",
+    "full_name": "Banco Ve Por Más, S.A."
+  },
+  {
+    "code": "116",
+    "name": "ING",
+    "full_name": "ING Bank (México), S.A."
+  },
+  {
+    "code": "124",
+    "name": "Deutsche",
+    "full_name": "Deutsche Bank México, S.A."
+  },
+  {
+    "code": "126",
+    "name": "Credit Suisse",
+    "full_name": "Banco Credit Suisse (México), S.A."
+  },
+  {
+    "code": "127",
+    "name": "Azteca",
+    "full_name": "Banco Azteca, S.A."
+  },
+  {
+    "code": "128",
+    "name": "Autofin",
+    "full_name": "Banco Autofin México, S.A."
+  },
+  {
+    "code": "129",
+    "name": "Barclays",
+    "full_name": "Barclays Bank México, S.A."
+  },
+  {
+    "code": "130",
+    "name": "Compartamos",
+    "full_name": "Banco Compartamos, S.A."
+  },
+  {
+    "code": "131",
+    "name": "Banco Famsa",
+    "full_name": "Banco Ahorro Famsa, S.A."
+  },
+  {
+    "code": "132",
+    "name": "BMULTIVA",
+    "full_name": "Banco Multiva, S.A."
+  },
+  {
+    "code": "133",
+    "name": "Actinver",
+    "full_name": "Banco Actinver, S.A."
+  },
+  {
+    "code": "134",
+    "name": "Wal-Mart",
+    "full_name": "Banco Wal-Mart de México Adelante, S.A."
+  },
+  {
+    "code": "135",
+    "name": "Nafin",
+    "full_name": "Nacional Financiera, S.N.C."
+  },
+  {
+    "code": "136",
+    "name": "Interbanco",
+    "full_name": "Inter Banco, S.A."
+  },
+  {
+    "code": "137",
+    "name": "Bancoppel",
+    "full_name": "BanCoppel, S.A."
+  },
+  {
+    "code": "138",
+    "name": "ABC Banco",
+    "full_name": "ABC Banco, S.A."
+  },
+  {
+    "code": "139",
+    "name": "UBS Bank",
+    "full_name": "UBS Bank México, S.A."
+  },
+  {
+    "code": "140",
+    "name": "Consubanco",
+    "full_name": "Consubanco, S.A."
+  },
+  {
+    "code": "141",
+    "name": "Volkswagen",
+    "full_name": "Volkswagen Bank, S.A."
+  },
+  {
+    "code": "143",
+    "name": "CIBanco",
+    "full_name": "CIBanco, S.A."
+  },
+  {
+    "code": "145",
+    "name": "Bbase",
+    "full_name": "Banco Base, S.A."
+  },
+  {
+    "code": "147",
+    "name": "Bankaool",
+    "full_name": "Bankaool, S.A."
+  },
+  {
+    "code": "148",
+    "name": "PagaTodo",
+    "full_name": "Banco PagaTodo, S.A."
+  },
+  {
+    "code": "150",
+    "name": "Inmobiliario",
+    "full_name": "Banco Inmobiliario Mexicano, S.A."
+  },
+  {
+    "code": "152",
+    "name": "Bancrea",
+    "full_name": "Bancrea, S.A."
+  },
+  {
+    "code": "166",
+    "name": "BanBajío",
+    "full_name": "Banco del Bajío, S.A."
+  }
+]

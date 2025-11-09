@@ -1,21 +1,34 @@
-{
-  "metadata": {
-    "catalog": "c_ObjetoImp",
-    "version": "CFDI_4.0",
-    "source": "SAT - Anexo 20",
-    "description": "Objeto de impuesto",
-    "last_updated": "2024-12-13",
-    "total_records": 8,
-    "notes": "Actualizado diciembre 2024 con claves 06, 07, 08"
+[
+  {
+    "code": "01",
+    "description": "No objeto de impuesto"
   },
-  "objetos": [
-    {"code": "01", "description": "No objeto de impuesto"},
-    {"code": "02", "description": "Sí objeto de impuesto"},
-    {"code": "03", "description": "Sí objeto del impuesto y no obligado al desglose"},
-    {"code": "04", "description": "Sí objeto del impuesto y no causa impuesto"},
-    {"code": "05", "description": "Sí objeto de IVA, No traslado de IVA (ventas en frontera)"},
-    {"code": "06", "description": "Sí objeto del IVA, No traslado IVA"},
-    {"code": "07", "description": "No objeto del IVA, Sí desglose IEPS"},
-    {"code": "08", "description": "No objeto del IVA, No desglose IEPS"}
-  ]
-}
+  {
+    "code": "02",
+    "description": "Sí objeto de impuesto"
+  },
+  {
+    "code": "03",
+    "description": "Sí objeto del impuesto y no obligado al desglose"
+  },
+  {
+    "code": "04",
+    "description": "Sí objeto del impuesto y no causa impuesto"
+  },
+  {
+    "code": "05",
+    "description": "Sí objeto de IVA, No traslado de IVA (ventas en frontera)"
+  },
+  {
+    "code": "06",
+    "description": "Sí objeto del IVA, No traslado IVA"
+  },
+  {
+    "code": "07",
+    "description": "No objeto del IVA, Sí desglose IEPS"
+  },
+  {
+    "code": "08",
+    "description": "No objeto del IVA, No desglose IEPS"
+  }
+]

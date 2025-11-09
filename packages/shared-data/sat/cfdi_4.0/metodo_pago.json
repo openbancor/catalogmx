@@ -1,14 +1,10 @@
-{
-  "metadata": {
-    "catalog": "c_MetodoPago",
-    "version": "CFDI_4.0",
-    "source": "SAT - Anexo 20",
-    "description": "Método de pago",
-    "last_updated": "2025-11-08",
-    "total_records": 2
+[
+  {
+    "code": "PUE",
+    "description": "Pago en una sola exhibición"
   },
-  "metodos": [
-    {"code": "PUE", "description": "Pago en una sola exhibición"},
-    {"code": "PPD", "description": "Pago en parcialidades o diferido"}
-  ]
-}
+  {
+    "code": "PPD",
+    "description": "Pago en parcialidades o diferido"
+  }
+]

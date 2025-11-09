@@ -1,22 +1,42 @@
-{
-  "metadata": {
-    "catalog": "c_TipoContrato",
-    "version": "Nómina_1.2",
-    "source": "SAT - Complemento de Nómina 1.2",
-    "description": "Tipos de contrato laboral",
-    "last_updated": "2025-11-08",
-    "total_records": 10
+[
+  {
+    "code": "01",
+    "description": "Contrato de trabajo por tiempo indeterminado"
   },
-  "contratos": [
-    {"code": "01", "description": "Contrato de trabajo por tiempo indeterminado"},
-    {"code": "02", "description": "Contrato de trabajo para obra determinada"},
-    {"code": "03", "description": "Contrato de trabajo por tiempo determinado"},
-    {"code": "04", "description": "Contrato de trabajo por temporada"},
-    {"code": "05", "description": "Contrato de trabajo sujeto a prueba"},
-    {"code": "06", "description": "Contrato de trabajo con capacitación inicial"},
-    {"code": "07", "description": "Modalidad de contratación por pago de hora laborada"},
-    {"code": "08", "description": "Modalidad de trabajo por comisión laboral"},
-    {"code": "09", "description": "Modalidades de contratación donde no existe relación de trabajo"},
-    {"code": "99", "description": "Otro contrato"}
-  ]
-}
+  {
+    "code": "02",
+    "description": "Contrato de trabajo para obra determinada"
+  },
+  {
+    "code": "03",
+    "description": "Contrato de trabajo por tiempo determinado"
+  },
+  {
+    "code": "04",
+    "description": "Contrato de trabajo por temporada"
+  },
+  {
+    "code": "05",
+    "description": "Contrato de trabajo sujeto a prueba"
+  },
+  {
+    "code": "06",
+    "description": "Contrato de trabajo con capacitación inicial"
+  },
+  {
+    "code": "07",
+    "description": "Modalidad de contratación por pago de hora laborada"
+  },
+  {
+    "code": "08",
+    "description": "Modalidad de trabajo por comisión laboral"
+  },
+  {
+    "code": "09",
+    "description": "Modalidades de contratación donde no existe relación de trabajo"
+  },
+  {
+    "code": "99",
+    "description": "Otro contrato"
+  }
+]

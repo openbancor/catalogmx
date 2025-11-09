@@ -1,33 +1,22 @@
-{
-  "metadata": {
-    "catalog": "c_Carreteras",
-    "version": "Carta_Porte_3.0",
-    "source": "SAT - Carta Porte 3.0",
-    "description": "Carreteras federales mexicanas",
-    "last_updated": "2025-11-08",
-    "total_records": 20,
-    "notes": "Catálogo de muestra - Requiere descarga completa del SAT (~200 carreteras)"
-  },
-  "carreteras": [
-    {"code": "MEX015", "name": "México - Toluca", "type": "Cuota", "km_total": 65},
-    {"code": "MEX057", "name": "México - Querétaro", "type": "Cuota", "km_total": 211},
-    {"code": "MEX095", "name": "México - Cuernavaca", "type": "Cuota", "km_total": 85},
-    {"code": "MEX150", "name": "México - Puebla", "type": "Cuota", "km_total": 127},
-    {"code": "MEX085", "name": "México - Pachuca", "type": "Cuota", "km_total": 93},
-    {"code": "GDL015", "name": "Guadalajara - Tepic", "type": "Cuota", "km_total": 167},
-    {"code": "GDL054", "name": "Guadalajara - Colima", "type": "Cuota", "km_total": 183},
-    {"code": "MTY040", "name": "Monterrey - Reynosa", "type": "Cuota", "km_total": 220},
-    {"code": "MTY085", "name": "Monterrey - Nuevo Laredo", "type": "Cuota", "km_total": 223},
-    {"code": "QRO045", "name": "Querétaro - Irapuato", "type": "Cuota", "km_total": 127},
-    {"code": "QRO057", "name": "Querétaro - San Luis Potosí", "type": "Cuota", "km_total": 194},
-    {"code": "VER150", "name": "Veracruz - Xalapa", "type": "Cuota", "km_total": 89},
-    {"code": "VER180", "name": "Veracruz - Córdoba", "type": "Cuota", "km_total": 110},
-    {"code": "TIJ001", "name": "Tijuana - Ensenada", "type": "Cuota", "km_total": 109},
-    {"code": "CUU045", "name": "Chihuahua - Cuauhtémoc", "type": "Libre", "km_total": 103},
-    {"code": "HMO015", "name": "Hermosillo - Nogales", "type": "Cuota", "km_total": 277},
-    {"code": "CUN307", "name": "Cancún - Playa del Carmen", "type": "Cuota", "km_total": 68},
-    {"code": "MID180", "name": "Mérida - Cancún", "type": "Cuota", "km_total": 320},
-    {"code": "OAX190", "name": "Oaxaca - Puerto Escondido", "type": "Libre", "km_total": 240},
-    {"code": "TGZ190", "name": "Tuxtla Gutiérrez - San Cristóbal", "type": "Libre", "km_total": 80}
-  ]
-}
+[
+  {"code": "MEX015", "nombre": "México - Toluca", "origen": "Ciudad de México", "destino": "Toluca", "tipo": "Cuota"},
+  {"code": "MEX057", "nombre": "México - Querétaro", "origen": "Ciudad de México", "destino": "Querétaro", "tipo": "Cuota"},
+  {"code": "MEX095", "nombre": "México - Cuernavaca", "origen": "Ciudad de México", "destino": "Cuernavaca", "tipo": "Cuota"},
+  {"code": "MEX150", "nombre": "México - Puebla", "origen": "Ciudad de México", "destino": "Puebla", "tipo": "Cuota"},
+  {"code": "MEX085", "nombre": "México - Pachuca", "origen": "Ciudad de México", "destino": "Pachuca", "tipo": "Cuota"},
+  {"code": "GDL015", "nombre": "Guadalajara - Tepic", "origen": "Guadalajara", "destino": "Tepic", "tipo": "Cuota"},
+  {"code": "GDL054", "nombre": "Guadalajara - Colima", "origen": "Guadalajara", "destino": "Colima", "tipo": "Cuota"},
+  {"code": "MTY040", "nombre": "Monterrey - Reynosa", "origen": "Monterrey", "destino": "Reynosa", "tipo": "Cuota"},
+  {"code": "MTY085", "nombre": "Monterrey - Nuevo Laredo", "origen": "Monterrey", "destino": "Nuevo Laredo", "tipo": "Cuota"},
+  {"code": "MTY040A", "nombre": "Monterrey - Saltillo", "origen": "Monterrey", "destino": "Saltillo", "tipo": "Cuota"},
+  {"code": "TIJ001", "nombre": "Tijuana - Ensenada", "origen": "Tijuana", "destino": "Ensenada", "tipo": "Cuota"},
+  {"code": "CJS045", "nombre": "Ciudad Juárez - Chihuahua", "origen": "Ciudad Juárez", "destino": "Chihuahua", "tipo": "Cuota"},
+  {"code": "VER150", "nombre": "Veracruz - Xalapa", "origen": "Veracruz", "destino": "Xalapa", "tipo": "Libre"},
+  {"code": "CUN180", "nombre": "Cancún - Tulum", "origen": "Cancún", "destino": "Tulum", "tipo": "Cuota"},
+  {"code": "PUE140", "nombre": "Puebla - Oaxaca", "origen": "Puebla", "destino": "Oaxaca", "tipo": "Cuota"},
+  {"code": "AGS045", "nombre": "Aguascalientes - León", "origen": "Aguascalientes", "destino": "León", "tipo": "Cuota"},
+  {"code": "QRO045", "nombre": "Querétaro - San Luis Potosí", "origen": "Querétaro", "destino": "San Luis Potosí", "tipo": "Cuota"},
+  {"code": "TAM180", "nombre": "Tampico - Ciudad Victoria", "origen": "Tampico", "destino": "Ciudad Victoria", "tipo": "Libre"},
+  {"code": "HMO015", "nombre": "Hermosillo - Guaymas", "origen": "Hermosillo", "destino": "Guaymas", "tipo": "Cuota"},
+  {"code": "MID180", "nombre": "Mérida - Cancún", "origen": "Mérida", "destino": "Cancún", "tipo": "Cuota"}
+]

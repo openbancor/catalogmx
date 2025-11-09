@@ -1,20 +1,42 @@
-{
-  "metadata": {
-    "catalog": "c_TipoJornada",
-    "version": "Nómina_1.2",
-    "source": "SAT - Complemento de Nómina 1.2",
-    "description": "Tipos de jornada laboral",
-    "last_updated": "2025-11-08",
-    "total_records": 8
+[
+  {
+    "code": "01",
+    "description": "Diurna",
+    "hours": "6:00 a 20:00"
   },
-  "jornadas": [
-    {"code": "01", "description": "Diurna", "hours": "6:00 a 20:00"},
-    {"code": "02", "description": "Nocturna", "hours": "20:00 a 6:00"},
-    {"code": "03", "description": "Mixta", "hours": "Combinación diurna y nocturna"},
-    {"code": "04", "description": "Por hora", "hours": "Variable"},
-    {"code": "05", "description": "Reducida", "hours": "Menor a 8 horas"},
-    {"code": "06", "description": "Continuada", "hours": "Sin interrupción"},
-    {"code": "07", "description": "Partida", "hours": "Con período de descanso"},
-    {"code": "99", "description": "Otra jornada", "hours": "No especificada"}
-  ]
-}
+  {
+    "code": "02",
+    "description": "Nocturna",
+    "hours": "20:00 a 6:00"
+  },
+  {
+    "code": "03",
+    "description": "Mixta",
+    "hours": "Combinación diurna y nocturna"
+  },
+  {
+    "code": "04",
+    "description": "Por hora",
+    "hours": "Variable"
+  },
+  {
+    "code": "05",
+    "description": "Reducida",
+    "hours": "Menor a 8 horas"
+  },
+  {
+    "code": "06",
+    "description": "Continuada",
+    "hours": "Sin interrupción"
+  },
+  {
+    "code": "07",
+    "description": "Partida",
+    "hours": "Con período de descanso"
+  },
+  {
+    "code": "99",
+    "description": "Otra jornada",
+    "hours": "No especificada"
+  }
+]
