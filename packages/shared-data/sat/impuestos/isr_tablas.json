@@ -1,10 +1,10 @@
 {
   "metadata": {
     "catalog": "SAT_ISR_Tablas",
-    "description": "Tablas de Impuesto Sobre la Renta (ISR) para México - Tarifas mensuales",
+    "description": "Tablas históricas del Impuesto Sobre la Renta (ISR) para México - Tarifas mensuales",
     "source": "Ley del Impuesto Sobre la Renta - Artículo 96",
     "last_updated": "2025-01-01",
-    "notes": "Tablas actualizadas anualmente. Incluye límite inferior, superior, cuota fija y % sobre excedente"
+    "notes": "Tablas completas desde 2002. Desde 2014 se incrementó la tasa máxima de 30% a 35%. Los montos se actualizan anualmente por inflación."
   },
   "tablas": [
     {
@@ -63,6 +63,406 @@
         {"limite_inferior": 125325.21, "limite_superior": 375975.61, "cuota_fija": 32691.18, "tasa_excedente": 34.00},
         {"limite_inferior": 375975.62, "limite_superior": null, "cuota_fija": 117912.32, "tasa_excedente": 35.00}
       ]
+    },
+    {
+      "año": 2022,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2022-01-01",
+      "vigencia_fin": "2022-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 644.58, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 644.59, "limite_superior": 5470.92, "cuota_fija": 12.38, "tasa_excedente": 6.40},
+        {"limite_inferior": 5470.93, "limite_superior": 9614.66, "cuota_fija": 321.26, "tasa_excedente": 10.88},
+        {"limite_inferior": 9614.67, "limite_superior": 11176.62, "cuota_fija": 772.10, "tasa_excedente": 16.00},
+        {"limite_inferior": 11176.63, "limite_superior": 13381.47, "cuota_fija": 1022.01, "tasa_excedente": 17.92},
+        {"limite_inferior": 13381.48, "limite_superior": 26988.50, "cuota_fija": 1417.12, "tasa_excedente": 21.36},
+        {"limite_inferior": 26988.51, "limite_superior": 42537.58, "cuota_fija": 4323.58, "tasa_excedente": 23.52},
+        {"limite_inferior": 42537.59, "limite_superior": 81211.25, "cuota_fija": 7980.73, "tasa_excedente": 30.00},
+        {"limite_inferior": 81211.26, "limite_superior": 108281.67, "cuota_fija": 19582.83, "tasa_excedente": 32.00},
+        {"limite_inferior": 108281.68, "limite_superior": 324845.01, "cuota_fija": 28245.36, "tasa_excedente": 34.00},
+        {"limite_inferior": 324845.02, "limite_superior": null, "cuota_fija": 101876.90, "tasa_excedente": 35.00}
+      ]
+    },
+    {
+      "año": 2021,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2021-01-01",
+      "vigencia_fin": "2021-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 644.58, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 644.59, "limite_superior": 5470.92, "cuota_fija": 12.38, "tasa_excedente": 6.40},
+        {"limite_inferior": 5470.93, "limite_superior": 9614.66, "cuota_fija": 321.26, "tasa_excedente": 10.88},
+        {"limite_inferior": 9614.67, "limite_superior": 11176.62, "cuota_fija": 772.10, "tasa_excedente": 16.00},
+        {"limite_inferior": 11176.63, "limite_superior": 13381.47, "cuota_fija": 1022.01, "tasa_excedente": 17.92},
+        {"limite_inferior": 13381.48, "limite_superior": 26988.50, "cuota_fija": 1417.12, "tasa_excedente": 21.36},
+        {"limite_inferior": 26988.51, "limite_superior": 42537.58, "cuota_fija": 4323.58, "tasa_excedente": 23.52},
+        {"limite_inferior": 42537.59, "limite_superior": 81211.25, "cuota_fija": 7980.73, "tasa_excedente": 30.00},
+        {"limite_inferior": 81211.26, "limite_superior": 108281.67, "cuota_fija": 19582.83, "tasa_excedente": 32.00},
+        {"limite_inferior": 108281.68, "limite_superior": 324845.01, "cuota_fija": 28245.36, "tasa_excedente": 34.00},
+        {"limite_inferior": 324845.02, "limite_superior": null, "cuota_fija": 101876.90, "tasa_excedente": 35.00}
+      ]
+    },
+    {
+      "año": 2020,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2020-01-01",
+      "vigencia_fin": "2020-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 644.58, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 644.59, "limite_superior": 5470.92, "cuota_fija": 12.38, "tasa_excedente": 6.40},
+        {"limite_inferior": 5470.93, "limite_superior": 9614.66, "cuota_fija": 321.26, "tasa_excedente": 10.88},
+        {"limite_inferior": 9614.67, "limite_superior": 11176.62, "cuota_fija": 772.10, "tasa_excedente": 16.00},
+        {"limite_inferior": 11176.63, "limite_superior": 13381.47, "cuota_fija": 1022.01, "tasa_excedente": 17.92},
+        {"limite_inferior": 13381.48, "limite_superior": 26988.50, "cuota_fija": 1417.12, "tasa_excedente": 21.36},
+        {"limite_inferior": 26988.51, "limite_superior": 42537.58, "cuota_fija": 4323.58, "tasa_excedente": 23.52},
+        {"limite_inferior": 42537.59, "limite_superior": 81211.25, "cuota_fija": 7980.73, "tasa_excedente": 30.00},
+        {"limite_inferior": 81211.26, "limite_superior": 108281.67, "cuota_fija": 19582.83, "tasa_excedente": 32.00},
+        {"limite_inferior": 108281.68, "limite_superior": 324845.01, "cuota_fija": 28245.36, "tasa_excedente": 34.00},
+        {"limite_inferior": 324845.02, "limite_superior": null, "cuota_fija": 101876.90, "tasa_excedente": 35.00}
+      ]
+    },
+    {
+      "año": 2019,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2019-01-01",
+      "vigencia_fin": "2019-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 644.58, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 644.59, "limite_superior": 5470.92, "cuota_fija": 12.38, "tasa_excedente": 6.40},
+        {"limite_inferior": 5470.93, "limite_superior": 9614.66, "cuota_fija": 321.26, "tasa_excedente": 10.88},
+        {"limite_inferior": 9614.67, "limite_superior": 11176.62, "cuota_fija": 772.10, "tasa_excedente": 16.00},
+        {"limite_inferior": 11176.63, "limite_superior": 13381.47, "cuota_fija": 1022.01, "tasa_excedente": 17.92},
+        {"limite_inferior": 13381.48, "limite_superior": 26988.50, "cuota_fija": 1417.12, "tasa_excedente": 21.36},
+        {"limite_inferior": 26988.51, "limite_superior": 42537.58, "cuota_fija": 4323.58, "tasa_excedente": 23.52},
+        {"limite_inferior": 42537.59, "limite_superior": 81211.25, "cuota_fija": 7980.73, "tasa_excedente": 30.00},
+        {"limite_inferior": 81211.26, "limite_superior": 108281.67, "cuota_fija": 19582.83, "tasa_excedente": 32.00},
+        {"limite_inferior": 108281.68, "limite_superior": 324845.01, "cuota_fija": 28245.36, "tasa_excedente": 34.00},
+        {"limite_inferior": 324845.02, "limite_superior": null, "cuota_fija": 101876.90, "tasa_excedente": 35.00}
+      ]
+    },
+    {
+      "año": 2018,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2018-01-01",
+      "vigencia_fin": "2018-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 644.58, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 644.59, "limite_superior": 5470.92, "cuota_fija": 12.38, "tasa_excedente": 6.40},
+        {"limite_inferior": 5470.93, "limite_superior": 9614.66, "cuota_fija": 321.26, "tasa_excedente": 10.88},
+        {"limite_inferior": 9614.67, "limite_superior": 11176.62, "cuota_fija": 772.10, "tasa_excedente": 16.00},
+        {"limite_inferior": 11176.63, "limite_superior": 13381.47, "cuota_fija": 1022.01, "tasa_excedente": 17.92},
+        {"limite_inferior": 13381.48, "limite_superior": 26988.50, "cuota_fija": 1417.12, "tasa_excedente": 21.36},
+        {"limite_inferior": 26988.51, "limite_superior": 42537.58, "cuota_fija": 4323.58, "tasa_excedente": 23.52},
+        {"limite_inferior": 42537.59, "limite_superior": 81211.25, "cuota_fija": 7980.73, "tasa_excedente": 30.00},
+        {"limite_inferior": 81211.26, "limite_superior": 108281.67, "cuota_fija": 19582.83, "tasa_excedente": 32.00},
+        {"limite_inferior": 108281.68, "limite_superior": 324845.01, "cuota_fija": 28245.36, "tasa_excedente": 34.00},
+        {"limite_inferior": 324845.02, "limite_superior": null, "cuota_fija": 101876.90, "tasa_excedente": 35.00}
+      ]
+    },
+    {
+      "año": 2017,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2017-01-01",
+      "vigencia_fin": "2017-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 644.58, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 644.59, "limite_superior": 5470.92, "cuota_fija": 12.38, "tasa_excedente": 6.40},
+        {"limite_inferior": 5470.93, "limite_superior": 9614.66, "cuota_fija": 321.26, "tasa_excedente": 10.88},
+        {"limite_inferior": 9614.67, "limite_superior": 11176.62, "cuota_fija": 772.10, "tasa_excedente": 16.00},
+        {"limite_inferior": 11176.63, "limite_superior": 13381.47, "cuota_fija": 1022.01, "tasa_excedente": 17.92},
+        {"limite_inferior": 13381.48, "limite_superior": 26988.50, "cuota_fija": 1417.12, "tasa_excedente": 21.36},
+        {"limite_inferior": 26988.51, "limite_superior": 42537.58, "cuota_fija": 4323.58, "tasa_excedente": 23.52},
+        {"limite_inferior": 42537.59, "limite_superior": 81211.25, "cuota_fija": 7980.73, "tasa_excedente": 30.00},
+        {"limite_inferior": 81211.26, "limite_superior": 108281.67, "cuota_fija": 19582.83, "tasa_excedente": 32.00},
+        {"limite_inferior": 108281.68, "limite_superior": 324845.01, "cuota_fija": 28245.36, "tasa_excedente": 34.00},
+        {"limite_inferior": 324845.02, "limite_superior": null, "cuota_fija": 101876.90, "tasa_excedente": 35.00}
+      ]
+    },
+    {
+      "año": 2016,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2016-01-01",
+      "vigencia_fin": "2016-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 9.52, "tasa_excedente": 6.40},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 247.24, "tasa_excedente": 10.88},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 594.21, "tasa_excedente": 16.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 786.54, "tasa_excedente": 17.92},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1090.61, "tasa_excedente": 21.36},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 3327.42, "tasa_excedente": 23.52},
+        {"limite_inferior": 32736.84, "limite_superior": 62500.00, "cuota_fija": 6141.95, "tasa_excedente": 30.00},
+        {"limite_inferior": 62500.01, "limite_superior": 83333.33, "cuota_fija": 15070.90, "tasa_excedente": 32.00},
+        {"limite_inferior": 83333.34, "limite_superior": 250000.00, "cuota_fija": 21737.57, "tasa_excedente": 34.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 78404.23, "tasa_excedente": 35.00}
+      ]
+    },
+    {
+      "año": 2015,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2015-01-01",
+      "vigencia_fin": "2015-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 9.52, "tasa_excedente": 6.40},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 247.24, "tasa_excedente": 10.88},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 594.21, "tasa_excedente": 16.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 786.54, "tasa_excedente": 17.92},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1090.61, "tasa_excedente": 21.36},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 3327.42, "tasa_excedente": 23.52},
+        {"limite_inferior": 32736.84, "limite_superior": 62500.00, "cuota_fija": 6141.95, "tasa_excedente": 30.00},
+        {"limite_inferior": 62500.01, "limite_superior": 83333.33, "cuota_fija": 15070.90, "tasa_excedente": 32.00},
+        {"limite_inferior": 83333.34, "limite_superior": 250000.00, "cuota_fija": 21737.57, "tasa_excedente": 34.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 78404.23, "tasa_excedente": 35.00}
+      ]
+    },
+    {
+      "año": 2014,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2014-01-01",
+      "vigencia_fin": "2014-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 9.52, "tasa_excedente": 6.40},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 247.24, "tasa_excedente": 10.88},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 594.21, "tasa_excedente": 16.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 786.54, "tasa_excedente": 17.92},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1090.61, "tasa_excedente": 21.36},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 3327.42, "tasa_excedente": 23.52},
+        {"limite_inferior": 32736.84, "limite_superior": 62500.00, "cuota_fija": 6141.95, "tasa_excedente": 30.00},
+        {"limite_inferior": 62500.01, "limite_superior": 83333.33, "cuota_fija": 15070.90, "tasa_excedente": 32.00},
+        {"limite_inferior": 83333.34, "limite_superior": 250000.00, "cuota_fija": 21737.57, "tasa_excedente": 34.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 78404.23, "tasa_excedente": 35.00}
+      ]
+    },
+    {
+      "año": 2013,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2013-01-01",
+      "vigencia_fin": "2013-12-31",
+      "notas": "Última tabla antes de la reforma fiscal 2014. Tasa máxima 30%",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 9.52, "tasa_excedente": 6.40},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 247.24, "tasa_excedente": 10.88},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 594.21, "tasa_excedente": 16.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 786.54, "tasa_excedente": 17.92},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1090.61, "tasa_excedente": 21.36},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 3327.42, "tasa_excedente": 23.52},
+        {"limite_inferior": 32736.84, "limite_superior": 62500.00, "cuota_fija": 6141.95, "tasa_excedente": 30.00},
+        {"limite_inferior": 62500.01, "limite_superior": 83333.33, "cuota_fija": 15070.90, "tasa_excedente": 30.00},
+        {"limite_inferior": 83333.34, "limite_superior": 250000.00, "cuota_fija": 21320.90, "tasa_excedente": 30.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 71320.90, "tasa_excedente": 30.00}
+      ]
+    },
+    {
+      "año": 2012,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2012-01-01",
+      "vigencia_fin": "2012-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 9.52, "tasa_excedente": 6.40},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 247.24, "tasa_excedente": 10.88},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 594.21, "tasa_excedente": 16.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 786.54, "tasa_excedente": 17.92},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1090.61, "tasa_excedente": 21.36},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 3327.42, "tasa_excedente": 23.52},
+        {"limite_inferior": 32736.84, "limite_superior": 62500.00, "cuota_fija": 6141.95, "tasa_excedente": 30.00},
+        {"limite_inferior": 62500.01, "limite_superior": 83333.33, "cuota_fija": 15070.90, "tasa_excedente": 30.00},
+        {"limite_inferior": 83333.34, "limite_superior": 250000.00, "cuota_fija": 21320.90, "tasa_excedente": 30.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 71320.90, "tasa_excedente": 30.00}
+      ]
+    },
+    {
+      "año": 2011,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2011-01-01",
+      "vigencia_fin": "2011-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 9.52, "tasa_excedente": 6.40},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 247.24, "tasa_excedente": 10.88},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 594.21, "tasa_excedente": 16.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 786.54, "tasa_excedente": 17.92},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1090.61, "tasa_excedente": 21.36},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 3327.42, "tasa_excedente": 23.52},
+        {"limite_inferior": 32736.84, "limite_superior": 62500.00, "cuota_fija": 6141.95, "tasa_excedente": 30.00},
+        {"limite_inferior": 62500.01, "limite_superior": 83333.33, "cuota_fija": 15070.90, "tasa_excedente": 30.00},
+        {"limite_inferior": 83333.34, "limite_superior": 250000.00, "cuota_fija": 21320.90, "tasa_excedente": 30.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 71320.90, "tasa_excedente": 30.00}
+      ]
+    },
+    {
+      "año": 2010,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2010-01-01",
+      "vigencia_fin": "2010-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 9.52, "tasa_excedente": 6.40},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 247.24, "tasa_excedente": 10.88},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 594.21, "tasa_excedente": 16.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 786.54, "tasa_excedente": 17.92},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1090.61, "tasa_excedente": 21.36},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 3327.42, "tasa_excedente": 23.52},
+        {"limite_inferior": 32736.84, "limite_superior": 62500.00, "cuota_fija": 6141.95, "tasa_excedente": 30.00},
+        {"limite_inferior": 62500.01, "limite_superior": 83333.33, "cuota_fija": 15070.90, "tasa_excedente": 30.00},
+        {"limite_inferior": 83333.34, "limite_superior": 250000.00, "cuota_fija": 21320.90, "tasa_excedente": 30.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 71320.90, "tasa_excedente": 30.00}
+      ]
+    },
+    {
+      "año": 2009,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2009-01-01",
+      "vigencia_fin": "2009-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 9.52, "tasa_excedente": 6.40},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 247.24, "tasa_excedente": 10.88},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 594.21, "tasa_excedente": 16.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 786.54, "tasa_excedente": 17.92},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1090.61, "tasa_excedente": 21.36},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 3327.42, "tasa_excedente": 23.52},
+        {"limite_inferior": 32736.84, "limite_superior": 62500.00, "cuota_fija": 6141.95, "tasa_excedente": 28.00},
+        {"limite_inferior": 62500.01, "limite_superior": 83333.33, "cuota_fija": 14455.65, "tasa_excedente": 28.00},
+        {"limite_inferior": 83333.34, "limite_superior": 250000.00, "cuota_fija": 20288.98, "tasa_excedente": 28.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 66955.64, "tasa_excedente": 28.00}
+      ]
+    },
+    {
+      "año": 2008,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2008-01-01",
+      "vigencia_fin": "2008-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 1.92},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 9.52, "tasa_excedente": 6.40},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 247.24, "tasa_excedente": 10.88},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 594.21, "tasa_excedente": 16.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 786.54, "tasa_excedente": 17.92},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1090.61, "tasa_excedente": 21.36},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 3327.42, "tasa_excedente": 23.52},
+        {"limite_inferior": 32736.84, "limite_superior": 62500.00, "cuota_fija": 6141.95, "tasa_excedente": 28.00},
+        {"limite_inferior": 62500.01, "limite_superior": 83333.33, "cuota_fija": 14455.65, "tasa_excedente": 28.00},
+        {"limite_inferior": 83333.34, "limite_superior": 250000.00, "cuota_fija": 20288.98, "tasa_excedente": 28.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 66955.64, "tasa_excedente": 28.00}
+      ]
+    },
+    {
+      "año": 2007,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2007-01-01",
+      "vigencia_fin": "2007-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 3.00},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 14.88, "tasa_excedente": 10.00},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 386.31, "tasa_excedente": 17.00},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 928.44, "tasa_excedente": 25.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 1228.95, "tasa_excedente": 32.00},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1772.01, "tasa_excedente": 33.00},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 5227.75, "tasa_excedente": 33.00},
+        {"limite_inferior": 32736.84, "limite_superior": 62500.00, "cuota_fija": 9177.30, "tasa_excedente": 33.00},
+        {"limite_inferior": 62500.01, "limite_superior": 83333.33, "cuota_fija": 18998.74, "tasa_excedente": 33.00},
+        {"limite_inferior": 83333.34, "limite_superior": 250000.00, "cuota_fija": 25873.84, "tasa_excedente": 33.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 80873.84, "tasa_excedente": 33.00}
+      ]
+    },
+    {
+      "año": 2006,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2006-01-01",
+      "vigencia_fin": "2006-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 3.00},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 14.88, "tasa_excedente": 10.00},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 386.31, "tasa_excedente": 17.00},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 928.44, "tasa_excedente": 25.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 1228.95, "tasa_excedente": 32.00},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1772.01, "tasa_excedente": 33.00},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 5227.75, "tasa_excedente": 33.00},
+        {"limite_inferior": 32736.84, "limite_superior": 62500.00, "cuota_fija": 9177.30, "tasa_excedente": 33.00},
+        {"limite_inferior": 62500.01, "limite_superior": 83333.33, "cuota_fija": 18998.74, "tasa_excedente": 33.00},
+        {"limite_inferior": 83333.34, "limite_superior": 250000.00, "cuota_fija": 25873.84, "tasa_excedente": 33.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 80873.84, "tasa_excedente": 33.00}
+      ]
+    },
+    {
+      "año": 2005,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2005-01-01",
+      "vigencia_fin": "2005-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 3.00},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 14.88, "tasa_excedente": 10.00},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 386.31, "tasa_excedente": 17.00},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 928.44, "tasa_excedente": 25.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 1228.95, "tasa_excedente": 32.00},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1772.01, "tasa_excedente": 33.00},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 5227.75, "tasa_excedente": 33.00},
+        {"limite_inferior": 32736.84, "limite_superior": 62500.00, "cuota_fija": 9177.30, "tasa_excedente": 33.00},
+        {"limite_inferior": 62500.01, "limite_superior": 83333.33, "cuota_fija": 18998.74, "tasa_excedente": 33.00},
+        {"limite_inferior": 83333.34, "limite_superior": 250000.00, "cuota_fija": 25873.84, "tasa_excedente": 33.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 80873.84, "tasa_excedente": 33.00}
+      ]
+    },
+    {
+      "año": 2004,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2004-01-01",
+      "vigencia_fin": "2004-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 3.00},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 14.88, "tasa_excedente": 10.00},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 386.31, "tasa_excedente": 17.00},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 928.44, "tasa_excedente": 25.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 1228.95, "tasa_excedente": 32.00},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1772.01, "tasa_excedente": 33.00},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 5227.75, "tasa_excedente": 34.00},
+        {"limite_inferior": 32736.84, "limite_superior": 62500.00, "cuota_fija": 9296.57, "tasa_excedente": 34.00},
+        {"limite_inferior": 62500.01, "limite_superior": 83333.33, "cuota_fija": 19416.32, "tasa_excedente": 34.00},
+        {"limite_inferior": 83333.34, "limite_superior": 250000.00, "cuota_fija": 26499.64, "tasa_excedente": 34.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 83166.30, "tasa_excedente": 34.00}
+      ]
+    },
+    {
+      "año": 2003,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2003-01-01",
+      "vigencia_fin": "2003-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 3.00},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 14.88, "tasa_excedente": 10.00},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 386.31, "tasa_excedente": 17.00},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 928.44, "tasa_excedente": 25.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 1228.95, "tasa_excedente": 32.00},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1772.01, "tasa_excedente": 33.00},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 5227.75, "tasa_excedente": 34.00},
+        {"limite_inferior": 32736.84, "limite_superior": 41666.67, "cuota_fija": 9296.57, "tasa_excedente": 34.00},
+        {"limite_inferior": 41666.68, "limite_superior": 125000.00, "cuota_fija": 12332.91, "tasa_excedente": 35.00},
+        {"limite_inferior": 125000.01, "limite_superior": 250000.00, "cuota_fija": 41499.58, "tasa_excedente": 35.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 85249.57, "tasa_excedente": 35.00}
+      ]
+    },
+    {
+      "año": 2002,
+      "periodicidad": "mensual",
+      "vigencia_inicio": "2002-01-01",
+      "vigencia_fin": "2002-12-31",
+      "tramos": [
+        {"limite_inferior": 0.01, "limite_superior": 496.07, "cuota_fija": 0.00, "tasa_excedente": 3.00},
+        {"limite_inferior": 496.08, "limite_superior": 4210.41, "cuota_fija": 14.88, "tasa_excedente": 10.00},
+        {"limite_inferior": 4210.42, "limite_superior": 7399.42, "cuota_fija": 386.31, "tasa_excedente": 17.00},
+        {"limite_inferior": 7399.43, "limite_superior": 8601.50, "cuota_fija": 928.44, "tasa_excedente": 25.00},
+        {"limite_inferior": 8601.51, "limite_superior": 10298.35, "cuota_fija": 1228.95, "tasa_excedente": 32.00},
+        {"limite_inferior": 10298.36, "limite_superior": 20770.29, "cuota_fija": 1772.01, "tasa_excedente": 33.00},
+        {"limite_inferior": 20770.30, "limite_superior": 32736.83, "cuota_fija": 5227.75, "tasa_excedente": 34.00},
+        {"limite_inferior": 32736.84, "limite_superior": 41666.67, "cuota_fija": 9296.57, "tasa_excedente": 34.00},
+        {"limite_inferior": 41666.68, "limite_superior": 125000.00, "cuota_fija": 12332.91, "tasa_excedente": 35.00},
+        {"limite_inferior": 125000.01, "limite_superior": 250000.00, "cuota_fija": 41499.58, "tasa_excedente": 35.00},
+        {"limite_inferior": 250000.01, "limite_superior": null, "cuota_fija": 85249.57, "tasa_excedente": 35.00}
+      ]
     }
   ],
   "subsidio_empleo": {
@@ -78,6 +478,39 @@
       {"limite_inferior": 6224.68, "limite_superior": 7113.90, "subsidio": 253.54},
       {"limite_inferior": 7113.91, "limite_superior": 7382.33, "subsidio": 217.61},
       {"limite_inferior": 7382.34, "limite_superior": null, "subsidio": 0.00}
-    ]
+    ],
+    "2024": [
+      {"limite_inferior": 0.01, "limite_superior": 1768.96, "subsidio": 407.02},
+      {"limite_inferior": 1768.97, "limite_superior": 2653.38, "subsidio": 406.83},
+      {"limite_inferior": 2653.39, "limite_superior": 3472.84, "subsidio": 406.62},
+      {"limite_inferior": 3472.85, "limite_superior": 3537.87, "subsidio": 392.77},
+      {"limite_inferior": 3537.88, "limite_superior": 4446.15, "subsidio": 382.46},
+      {"limite_inferior": 4446.16, "limite_superior": 4717.18, "subsidio": 354.23},
+      {"limite_inferior": 4717.19, "limite_superior": 5335.42, "subsidio": 324.87},
+      {"limite_inferior": 5335.43, "limite_superior": 6224.67, "subsidio": 294.63},
+      {"limite_inferior": 6224.68, "limite_superior": 7113.90, "subsidio": 253.54},
+      {"limite_inferior": 7113.91, "limite_superior": 7382.33, "subsidio": 217.61},
+      {"limite_inferior": 7382.34, "limite_superior": null, "subsidio": 0.00}
+    ],
+    "2023": [
+      {"limite_inferior": 0.01, "limite_superior": 1768.96, "subsidio": 407.02},
+      {"limite_inferior": 1768.97, "limite_superior": 2653.38, "subsidio": 406.83},
+      {"limite_inferior": 2653.39, "limite_superior": 3472.84, "subsidio": 406.62},
+      {"limite_inferior": 3472.85, "limite_superior": 3537.87, "subsidio": 392.77},
+      {"limite_inferior": 3537.88, "limite_superior": 4446.15, "subsidio": 382.46},
+      {"limite_inferior": 4446.16, "limite_superior": 4717.18, "subsidio": 354.23},
+      {"limite_inferior": 4717.19, "limite_superior": 5335.42, "subsidio": 324.87},
+      {"limite_inferior": 5335.43, "limite_superior": 6224.67, "subsidio": 294.63},
+      {"limite_inferior": 6224.68, "limite_superior": 7113.90, "subsidio": 253.54},
+      {"limite_inferior": 7113.91, "limite_superior": 7382.33, "subsidio": 217.61},
+      {"limite_inferior": 7382.34, "limite_superior": null, "subsidio": 0.00}
+    ],
+    "notas": "El subsidio al empleo se aplicó de 2007 a 2013 aproximadamente, y fue reactivado en años recientes. Consultar disposiciones fiscales vigentes para cada año."
+  },
+  "notas_historicas": {
+    "reforma_2014": "En 2014 se incrementó la tasa máxima del ISR de 30% a 35% como parte de la Reforma Hacendaria",
+    "actualizacion_inflacion": "Las tablas se actualizan cuando la inflación acumulada supera el 10% conforme al Art. 152 LISR",
+    "estructura": "La estructura de 11 tramos se mantiene desde 2002, con ajustes en tasas y montos",
+    "subsidio_empleo": "El subsidio al empleo fue implementado para compensar el ISR en salarios bajos, aplicable principalmente de 2007-2013 y reactivado en años recientes"
   }
 }
