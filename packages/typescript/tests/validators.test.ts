@@ -13,7 +13,7 @@ import {
 
 describe('RFC Validator', () => {
   test('should validate valid RFC for persona física', () => {
-    expect(validateRfc('PEGJ900515XXX', false)).toBe(true);
+    expect(validateRfc('PEGJ900515XXA', false)).toBe(true);
   });
 
   test('should reject invalid RFC', () => {

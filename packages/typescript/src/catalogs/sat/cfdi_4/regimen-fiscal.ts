@@ -26,20 +26,20 @@ export class RegimenFiscalCatalog {
 
   static isValidForPersonaFisica(code: string): boolean {
     const regimen = this.getRegimen(code);
-    return regimen?.persona_fisica === true;
+    return regimen?.fisica === true || regimen?.persona_fisica === true;
   }
 
   static isValidForPersonaMoral(code: string): boolean {
     const regimen = this.getRegimen(code);
-    return regimen?.persona_moral === true;
+    return regimen?.moral === true || regimen?.persona_moral === true;
   }
 
   static getForPersonaFisica(): RegimenFiscal[] {
-    return this.getData().filter(reg => reg.persona_fisica);
+    return this.getData().filter(reg => reg.fisica || reg.persona_fisica);
   }
 
   static getForPersonaMoral(): RegimenFiscal[] {
-    return this.getData().filter(reg => reg.persona_moral);
+    return this.getData().filter(reg => reg.moral || reg.persona_moral);
   }
 
   static isValid(code: string): boolean {

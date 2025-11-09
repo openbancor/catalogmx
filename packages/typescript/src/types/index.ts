@@ -96,8 +96,10 @@ export interface PostalCode {
 export interface RegimenFiscal {
   code: string;
   description: string;
-  persona_fisica: boolean;
-  persona_moral: boolean;
+  fisica: boolean;
+  moral: boolean;
+  persona_fisica?: boolean; // Alias
+  persona_moral?: boolean; // Alias
 }
 
 export interface UsoCfdi {
@@ -151,12 +153,18 @@ export interface ObjetoImp {
 export interface Incoterm {
   code: string;
   name: string;
+  name_es?: string;
   description: string;
   transport_mode: 'any' | 'maritime' | 'multimodal';
   seller_responsibility: string;
-  buyer_responsibility: string;
-  insurance_paid_by: 'seller' | 'buyer';
+  buyer_responsibility?: string;
+  seller_pays_freight: boolean;
+  seller_pays_insurance: boolean;
+  insurance_paid_by?: 'seller' | 'buyer'; // Computed field
+  insurance_coverage?: string;
   risk_transfer_point: string;
+  suitable_for?: string[];
+  notes?: string;
 }
 
 export interface ClavePedimento {

@@ -33,7 +33,7 @@ export class IncotermsValidator {
    */
   static sellerPaysInsurance(code: string): boolean {
     const incoterm = this.getIncoterm(code);
-    return incoterm?.insurance_paid_by === 'seller';
+    return incoterm?.seller_pays_insurance === true || incoterm?.insurance_paid_by === 'seller';
   }
 
   /**
@@ -41,7 +41,7 @@ export class IncotermsValidator {
    */
   static buyerPaysInsurance(code: string): boolean {
     const incoterm = this.getIncoterm(code);
-    return incoterm?.insurance_paid_by === 'buyer';
+    return incoterm?.seller_pays_insurance === false || incoterm?.insurance_paid_by === 'buyer';
   }
 
   /**

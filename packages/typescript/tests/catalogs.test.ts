@@ -63,7 +63,7 @@ describe('Banxico Catalogs', () => {
   });
 
   test('should get institution by code', () => {
-    const inst = InstitucionesFinancieras.getPorCodigo('BM');
+    const inst = InstitucionesFinancieras.getPorCodigo('01');
     expect(inst).toBeDefined();
     expect(inst?.tipo).toContain('Banco');
   });
@@ -95,7 +95,7 @@ describe('Banxico Catalogs', () => {
   });
 
   test('should validate institution code', () => {
-    expect(InstitucionesFinancieras.validarCodigo('BM')).toBe(true);
+    expect(InstitucionesFinancieras.validarCodigo('01')).toBe(true);
     expect(InstitucionesFinancieras.validarCodigo('INVALID')).toBe(false);
   });
 
@@ -513,7 +513,7 @@ describe('SAT Comercio Exterior Catalogs', () => {
   test('should validate currency', () => {
     const moneda = MonedaCatalog.getMoneda('USD');
     expect(moneda).toBeDefined();
-    expect(moneda?.decimals).toBe(2);
+    expect(moneda?.decimales || moneda?.decimals).toBe(2);
   });
 
   test('should validate USD conversion', () => {
