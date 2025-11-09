@@ -1,14 +1,10 @@
-{
-  "metadata": {
-    "catalog": "c_TipoNomina",
-    "version": "Nómina_1.2",
-    "source": "SAT - Complemento de Nómina 1.2",
-    "description": "Tipos de nómina",
-    "last_updated": "2025-11-08",
-    "total_records": 2
+[
+  {
+    "code": "O",
+    "descripcion": "Nómina ordinaria"
   },
-  "tipos": [
-    {"code": "O", "description": "Nómina ordinaria"},
-    {"code": "E", "description": "Nómina extraordinaria"}
-  ]
-}
+  {
+    "code": "E",
+    "descripcion": "Nómina extraordinaria"
+  }
+]

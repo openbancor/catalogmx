@@ -25,7 +25,7 @@ export abstract class CatalogLoader<T> {
     }
 
     // Load from file
-    const fullPath = path.resolve(__dirname, '../../../../shared-data', dataPath);
+    const fullPath = path.resolve(__dirname, '../../../shared-data', dataPath);
 
     if (!fs.existsSync(fullPath)) {
       throw new Error(`Catalog file not found: ${fullPath}`);
@@ -51,7 +51,7 @@ export abstract class CatalogLoader<T> {
  * Helper function to load JSON catalog
  */
 export function loadCatalog<T>(relativePath: string): T[] {
-  const fullPath = path.resolve(__dirname, '../../../../shared-data', relativePath);
+  const fullPath = path.resolve(__dirname, '../../../shared-data', relativePath);
 
   if (!fs.existsSync(fullPath)) {
     throw new Error(`Catalog file not found: ${fullPath}`);
