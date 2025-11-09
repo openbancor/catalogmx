@@ -34,7 +34,7 @@ const CHECKSUM_TABLE: Record<string, string> = {
 
 const HOMOCLAVE_CHARS = 'ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789';
 const VOCALES = 'AEIOUÁÉÍÓÚ';
-const CONSONANTES = 'BCDFGHJKLMNÑPQRSTVWXYZ';
+// const CONSONANTES = 'BCDFGHJKLMNÑPQRSTVWXYZ'; // Reserved for future use
 
 /**
  * Remove accents from a string
@@ -97,7 +97,7 @@ export class RFCValidator {
     if (!this.validateGeneralRegex()) return false;
     const dateStr = this.rfc.slice(this.rfc.length === 13 ? 4 : 3, this.rfc.length === 13 ? 10 : 9);
     try {
-      const year = parseInt(dateStr.slice(0, 2));
+      // const year = parseInt(dateStr.slice(0, 2)); // Not currently validated
       const month = parseInt(dateStr.slice(2, 4));
       const day = parseInt(dateStr.slice(4, 6));
       if (month < 1 || month > 12) return false;

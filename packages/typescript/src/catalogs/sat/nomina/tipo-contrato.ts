@@ -34,7 +34,7 @@ export class TipoContratoCatalog {
   static searchByDescription(keyword: string): TipoContrato[] {
     const search = keyword.toUpperCase();
     return this.getData().filter(c =>
-      c.description.toUpperCase().includes(search)
+      c.descripcion.toUpperCase().includes(search)
     );
   }
 
@@ -43,7 +43,7 @@ export class TipoContratoCatalog {
    */
   static isIndefinido(code: string): boolean {
     const contrato = this.getContrato(code);
-    return contrato?.description.toUpperCase().includes('INDETERMINADO') ?? false;
+    return contrato?.descripcion.toUpperCase().includes('INDETERMINADO') ?? false;
   }
 
   /**
@@ -51,6 +51,6 @@ export class TipoContratoCatalog {
    */
   static isDeterminado(code: string): boolean {
     const contrato = this.getContrato(code);
-    return contrato?.description.toUpperCase().includes('DETERMINADO') ?? false;
+    return contrato?.descripcion.toUpperCase().includes('DETERMINADO') ?? false;
   }
 }

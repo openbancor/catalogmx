@@ -56,6 +56,26 @@ export interface Municipality {
   cve_completa: string;
 }
 
+export interface Localidad {
+  cvegeo: string;
+  cve_entidad: string;
+  nom_entidad: string;
+  nom_abr_entidad: string;
+  cve_municipio: string;
+  nom_municipio: string;
+  cve_localidad: string;
+  nom_localidad: string;
+  ambito: 'U' | 'R'; // Urbano o Rural
+  latitud: number | null;
+  longitud: number | null;
+  altitud: number | null;
+  poblacion_total: number;
+  poblacion_masculina: number;
+  poblacion_femenina: number;
+  viviendas_habitadas: number;
+  distancia_km?: number; // Agregado por búsqueda de coordenadas
+}
+
 export interface PostalCode {
   codigo_postal: string;
   asentamiento: string;

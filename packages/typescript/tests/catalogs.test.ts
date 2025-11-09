@@ -7,6 +7,7 @@ import {
   StateCatalog,
   MunicipiosCatalog,
   MunicipiosCompletoCatalog,
+  LocalidadesCatalog,
   CodigosPostales,
   CodigosPostalesCompleto,
   RegimenFiscalCatalog,
@@ -72,6 +73,75 @@ describe('INEGI Catalogs', () => {
   test('should get municipalities by state', () => {
     const municipios = MunicipiosCatalog.getByEntidad('14');
     expect(municipios.length).toBeGreaterThan(0);
+  });
+
+  test('should get localidad by cvegeo', () => {
+    const localidad = LocalidadesCatalog.getLocalidad('010010001');
+    expect(localidad).toBeDefined();
+    expect(localidad?.nom_localidad).toBe('Aguascalientes');
+  });
+
+  test('should validate localidad cvegeo', () => {
+    expect(LocalidadesCatalog.isValid('010010001')).toBe(true);
+    expect(LocalidadesCatalog.isValid('999999999')).toBe(false);
+  });
+
+  test('should get localidades by municipio', () => {
+    const localidades = LocalidadesCatalog.getByMunicipio('001');
+    expect(localidades.length).toBeGreaterThan(0);
+  });
+
+  test('should get localidades by entidad', () => {
+    const localidades = LocalidadesCatalog.getByEntidad('01');
+    expect(localidades.length).toBeGreaterThan(0);
+  });
+
+  test('should filter urbanas and rurales', () => {
+    const urbanas = LocalidadesCatalog.getUrbanas();
+    const rurales = LocalidadesCatalog.getRurales();
+    expect(urbanas.length).toBeGreaterThan(0);
+    expect(rurales.length).toBeGreaterThan(0);
+  });
+
+  test('should search localidades by name', () => {
+    const results = LocalidadesCatalog.searchByName('Aguascalientes');
+    expect(results.length).toBeGreaterThan(0);
+  });
+
+  test('should get localidades by coordinates', () => {
+    // Coordenadas cerca de CDMX
+    const results = LocalidadesCatalog.getByCoordinates(19.4326, -99.1332, 50);
+    expect(results.length).toBeGreaterThan(0);
+    // Debe estar ordenado por distancia
+    if (results.length > 1) {
+      expect(results[0].distancia_km).toBeLessThanOrEqual(results[1].distancia_km!);
+    }
+  });
+
+  test('should get localidades by population range', () => {
+    const results = LocalidadesCatalog.getByPopulationRange(100000, 200000);
+    expect(results.length).toBeGreaterThan(0);
+    results.forEach(loc => {
+      expect(loc.poblacion_total).toBeGreaterThanOrEqual(100000);
+      expect(loc.poblacion_total).toBeLessThanOrEqual(200000);
+    });
+  });
+
+  test('should get top localidades by population', () => {
+    const top10 = LocalidadesCatalog.getTopByPopulation(10);
+    expect(top10.length).toBe(10);
+    // Debe estar ordenado de mayor a menor
+    for (let i = 0; i < top10.length - 1; i++) {
+      expect(top10[i].poblacion_total).toBeGreaterThanOrEqual(top10[i + 1].poblacion_total);
+    }
+  });
+
+  test('should get localidades statistics', () => {
+    const stats = LocalidadesCatalog.getStatistics();
+    expect(stats.totalLocalidades).toBeGreaterThan(10000);
+    expect(stats.urbanas).toBeGreaterThan(0);
+    expect(stats.rurales).toBeGreaterThan(0);
+    expect(stats.estados).toBe(32);
   });
 });
 

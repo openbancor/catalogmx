@@ -10,6 +10,7 @@ export { BankCatalog } from './banxico/banks';
 export { StateCatalog } from './inegi/states';
 export { MunicipiosCatalog } from './inegi/municipios';
 export { MunicipiosCompletoCatalog } from './inegi/municipios-completo';
+export { LocalidadesCatalog } from './inegi/localidades';
 
 // SEPOMEX
 export { CodigosPostales } from './sepomex/codigos-postales';
