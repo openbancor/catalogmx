@@ -37,6 +37,9 @@ export {
   ClaveProdServCatalog
 } from './sat/cfdi_4';
 
+// SAT CFDI 4.0 - Hybrid SQLite/JSON (for large catalogs)
+export { ClaveProdServCatalogHybrid } from './sat/cfdi_4/clave-prod-serv-hybrid';
+
 // SAT Comercio Exterior 2.0
 export {
   IncotermsValidator,

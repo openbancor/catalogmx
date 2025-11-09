@@ -4,6 +4,10 @@
 
 import {
   BankCatalog,
+  InstitucionesFinancieras,
+  MonedasDivisas,
+  OperadoresMoviles,
+  CodigosLADA,
   StateCatalog,
   MunicipiosCatalog,
   MunicipiosCompletoCatalog,
@@ -51,6 +55,271 @@ describe('Banxico Catalogs', () => {
   test('should search banks', () => {
     const banks = BankCatalog.searchBanks('BANAMEX');
     expect(banks.length).toBeGreaterThan(0);
+  });
+
+  test('should get all financial institution types', () => {
+    const all = InstitucionesFinancieras.getAll();
+    expect(all.length).toBeGreaterThan(30); // ~33 types
+  });
+
+  test('should get institution by code', () => {
+    const inst = InstitucionesFinancieras.getPorCodigo('BM');
+    expect(inst).toBeDefined();
+    expect(inst?.tipo).toContain('Banco');
+  });
+
+  test('should get banks (múltiples y desarrollo)', () => {
+    const bancos = InstitucionesFinancieras.getBancos();
+    expect(bancos.length).toBeGreaterThan(0);
+    bancos.forEach(b => {
+      expect(b.tipo.toLowerCase()).toContain('banco');
+    });
+  });
+
+  test('should get SOFOMes', () => {
+    const sofomes = InstitucionesFinancieras.getSOFOMes();
+    expect(sofomes.length).toBeGreaterThan(0);
+    sofomes.forEach(s => {
+      expect(s.tipo).toContain('SOFOM');
+    });
+  });
+
+  test('should get fintech institutions', () => {
+    const fintech = InstitucionesFinancieras.getFintech();
+    expect(fintech.length).toBeGreaterThan(0);
+  });
+
+  test('should get institutions by regulator', () => {
+    const cnbv = InstitucionesFinancieras.getPorRegulador('CNBV');
+    expect(cnbv.length).toBeGreaterThan(0);
+  });
+
+  test('should validate institution code', () => {
+    expect(InstitucionesFinancieras.validarCodigo('BM')).toBe(true);
+    expect(InstitucionesFinancieras.validarCodigo('INVALID')).toBe(false);
+  });
+
+  test('should get regulator description', () => {
+    const desc = InstitucionesFinancieras.getDescripcionRegulador('CNBV');
+    expect(desc).toContain('Comisión');
+  });
+
+  test('should get all currencies', () => {
+    const all = MonedasDivisas.getAll();
+    expect(all.length).toBeGreaterThan(25); // ~30 currencies
+  });
+
+  test('should get currency by ISO code', () => {
+    const usd = MonedasDivisas.getPorCodigo('USD');
+    expect(usd).toBeDefined();
+    expect(usd?.moneda).toContain('dólar');
+  });
+
+  test('should get MXN, USD, EUR', () => {
+    const mxn = MonedasDivisas.getMXN();
+    const usd = MonedasDivisas.getUSD();
+    const eur = MonedasDivisas.getEUR();
+    expect(mxn?.codigo_iso).toBe('MXN');
+    expect(usd?.codigo_iso).toBe('USD');
+    expect(eur?.codigo_iso).toBe('EUR');
+  });
+
+  test('should get currencies with Banxico exchange rate', () => {
+    const conTipoCambio = MonedasDivisas.getConTipoCambioBanxico();
+    expect(conTipoCambio.length).toBeGreaterThan(10); // ~13 currencies
+  });
+
+  test('should get currencies with FIX rate', () => {
+    const conFIX = MonedasDivisas.getConTipoCambioFIX();
+    expect(conFIX.length).toBeGreaterThan(0);
+  });
+
+  test('should get principal currencies', () => {
+    const principales = MonedasDivisas.getPrincipales();
+    expect(principales.length).toBeGreaterThanOrEqual(7);
+    const codigos = principales.map(m => m.codigo_iso);
+    expect(codigos).toContain('MXN');
+    expect(codigos).toContain('USD');
+    expect(codigos).toContain('EUR');
+  });
+
+  test('should get Latin American currencies', () => {
+    const latam = MonedasDivisas.getLatam();
+    expect(latam.length).toBeGreaterThan(5);
+    const codigos = latam.map(m => m.codigo_iso);
+    expect(codigos).toContain('MXN');
+    expect(codigos).toContain('BRL');
+    expect(codigos).toContain('ARS');
+  });
+
+  test('should validate ISO code', () => {
+    expect(MonedasDivisas.validarCodigoISO('USD')).toBe(true);
+    expect(MonedasDivisas.validarCodigoISO('INVALID')).toBe(false);
+  });
+
+  test('should format currency amount', () => {
+    const formatted = MonedasDivisas.formatearMonto(1234.56, 'USD');
+    expect(formatted).toContain('$');
+    expect(formatted).toContain('1,234.56');
+  });
+
+  test('should get currency format info', () => {
+    const format = MonedasDivisas.getFormatoMoneda('USD');
+    expect(format).toBeDefined();
+    expect(format?.decimales).toBe(2);
+    expect(format?.simbolo).toContain('$');
+  });
+
+  test('should search currencies by name', () => {
+    const results = MonedasDivisas.buscarPorNombre('dólar');
+    expect(results.length).toBeGreaterThan(0);
+  });
+
+  test('should get active currencies', () => {
+    const activas = MonedasDivisas.getActivas();
+    expect(activas.length).toBeGreaterThan(25);
+  });
+
+  test('should get FIX rate info', () => {
+    const info = MonedasDivisas.getInfoTipoCambioFIX();
+    expect(info.horario).toContain('12:00');
+    expect(info.descripcion).toContain('Banco de México');
+  });
+});
+
+describe('IFT Catalogs', () => {
+  test('should get all mobile operators', () => {
+    const all = OperadoresMoviles.getAll();
+    expect(all.length).toBeGreaterThan(15); // ~17 operators
+  });
+
+  test('should get active operators', () => {
+    const activos = OperadoresMoviles.getActivos();
+    expect(activos.length).toBeGreaterThan(15); // ~16 active
+  });
+
+  test('should get OMR (network operators)', () => {
+    const omr = OperadoresMoviles.getPorTipo('OMR');
+    expect(omr.length).toBeGreaterThanOrEqual(4); // At least Telcel, AT&T, Movistar, Weex
+  });
+
+  test('should get OMV (virtual operators)', () => {
+    const omv = OperadoresMoviles.getPorTipo('OMV');
+    expect(omv.length).toBeGreaterThan(10); // ~12 MVNOs
+  });
+
+  test('should get operators with 5G', () => {
+    const con5G = OperadoresMoviles.getCon5G();
+    expect(con5G.length).toBeGreaterThan(0);
+    con5G.forEach(op => {
+      expect(op.tecnologias).toContain('5G');
+    });
+  });
+
+  test('should search operator by name', () => {
+    const telcel = OperadoresMoviles.buscarPorNombre('Telcel');
+    expect(telcel).toBeDefined();
+    expect(telcel?.market_share_aprox).toBeGreaterThan(50);
+  });
+
+  test('should get operators by business group', () => {
+    const americaMovil = OperadoresMoviles.getPorGrupo('América Móvil');
+    expect(americaMovil.length).toBeGreaterThan(0);
+  });
+
+  test('should get MVNOs by host network', () => {
+    const attMVNO = OperadoresMoviles.getOMVsPorRed('AT&T');
+    expect(attMVNO.length).toBeGreaterThan(0);
+    attMVNO.forEach(op => {
+      expect(op.red_anfitriona).toBe('AT&T');
+    });
+  });
+
+  test('should validate operator', () => {
+    expect(OperadoresMoviles.validar('Telcel')).toBe(true);
+    expect(OperadoresMoviles.validar('OperadorInexistente')).toBe(false);
+  });
+
+  test('should get market share by type', () => {
+    const share = OperadoresMoviles.getMarketSharePorTipo();
+    expect(share.OMR).toBeGreaterThan(90); // OMR dominan el mercado
+    expect(share.OMV).toBeLessThan(10);
+  });
+
+  test('should get all LADA codes', () => {
+    const all = CodigosLADA.getAll();
+    expect(all.length).toBeGreaterThan(200); // ~231 codes
+  });
+
+  test('should find LADA code', () => {
+    const cdmx = CodigosLADA.buscarPorLADA('55');
+    expect(cdmx).toBeDefined();
+    expect(cdmx?.ciudad).toContain('México');
+  });
+
+  test('should search by city', () => {
+    const guadalajara = CodigosLADA.buscarPorCiudad('Guadalajara');
+    expect(guadalajara.length).toBeGreaterThan(0);
+  });
+
+  test('should get codes by state', () => {
+    const jalisco = CodigosLADA.getPorEstado('Jalisco');
+    expect(jalisco.length).toBeGreaterThan(5);
+  });
+
+  test('should get metropolitan codes', () => {
+    const metro = CodigosLADA.getMetropolitanas();
+    expect(metro.length).toBeGreaterThan(10);
+    metro.forEach(c => {
+      expect(c.tipo).toBe('metropolitana');
+    });
+  });
+
+  test('should get border codes', () => {
+    const fronterizas = CodigosLADA.getFronterizas();
+    expect(fronterizas.length).toBeGreaterThan(10);
+    fronterizas.forEach(c => {
+      expect(c.tipo).toBe('fronteriza');
+    });
+  });
+
+  test('should get tourist codes', () => {
+    const turisticas = CodigosLADA.getTuristicas();
+    expect(turisticas.length).toBeGreaterThan(10);
+    turisticas.forEach(c => {
+      expect(c.tipo).toBe('turistica');
+    });
+  });
+
+  test('should validate phone number (10 digits)', () => {
+    const result = CodigosLADA.validarNumero('5512345678');
+    expect(result.valid).toBe(true);
+    expect(result.lada).toBe('55');
+    expect(result.ciudad).toContain('México');
+  });
+
+  test('should reject invalid phone number', () => {
+    const result = CodigosLADA.validarNumero('123'); // Too short
+    expect(result.valid).toBe(false);
+    expect(result.error).toBeDefined();
+  });
+
+  test('should format phone number', () => {
+    const formatted = CodigosLADA.formatearNumero('5512345678');
+    expect(formatted).toContain('55');
+    expect(formatted.replace(/\s/g, '')).toBe('5512345678');
+  });
+
+  test('should get phone number info', () => {
+    const info = CodigosLADA.getInfoNumero('5512345678');
+    expect(info).toBeDefined();
+    expect(info?.lada).toBe('55');
+    expect(info?.tipo).toBe('metropolitana');
+  });
+
+  test('should get codes by region', () => {
+    const noroeste = CodigosLADA.getPorRegion('Noroeste');
+    expect(noroeste.length).toBeGreaterThan(0);
   });
 });
 
