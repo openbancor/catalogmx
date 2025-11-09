@@ -9,9 +9,11 @@ export { BankCatalog } from './banxico/banks';
 // INEGI
 export { StateCatalog } from './inegi/states';
 export { MunicipiosCatalog } from './inegi/municipios';
+export { MunicipiosCompletoCatalog } from './inegi/municipios-completo';
 
 // SEPOMEX
 export { CodigosPostales } from './sepomex/codigos-postales';
+export { CodigosPostalesCompleto } from './sepomex/codigos-postales-completo';
 
 // SAT CFDI 4.0
 export {
@@ -32,7 +34,10 @@ export {
   ClavePedimentoCatalog,
   MonedaCatalog,
   PaisCatalog,
-  EstadoCatalog
+  EstadoCatalog,
+  MotivoTrasladoCatalog,
+  RegistroIdentTribCatalog,
+  UnidadAduanaCatalog
 } from './sat/comercio_exterior';
 
 // SAT Carta Porte 3.0
@@ -40,7 +45,10 @@ export {
   AeropuertosCatalog,
   PuertosMaritimos,
   TipoPermisoCatalog,
-  ConfigAutotransporteCatalog
+  ConfigAutotransporteCatalog,
+  CarreterasCatalog,
+  MaterialPeligrosoCatalog,
+  TipoEmbalajeCatalog
 } from './sat/carta_porte';
 
 // SAT Nómina 1.2

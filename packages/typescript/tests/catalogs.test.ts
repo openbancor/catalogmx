@@ -6,7 +6,9 @@ import {
   BankCatalog,
   StateCatalog,
   MunicipiosCatalog,
+  MunicipiosCompletoCatalog,
   CodigosPostales,
+  CodigosPostalesCompleto,
   RegimenFiscalCatalog,
   UsoCFDICatalog,
   FormaPagoCatalog,
@@ -15,7 +17,13 @@ import {
   ClavePedimentoCatalog,
   MonedaCatalog,
   PaisCatalog,
+  MotivoTrasladoCatalog,
+  RegistroIdentTribCatalog,
+  UnidadAduanaCatalog,
   AeropuertosCatalog,
+  CarreterasCatalog,
+  MaterialPeligrosoCatalog,
+  TipoEmbalajeCatalog,
   TipoNominaCatalog,
   PeriodicidadPagoCatalog,
   RiesgoPuestoCatalog
@@ -80,6 +88,38 @@ describe('SEPOMEX Catalogs', () => {
   test('should get state from postal code', () => {
     const estado = CodigosPostales.getEstado('06700');
     expect(estado).toBeDefined();
+  });
+});
+
+describe('Complete Catalogs', () => {
+  test('should get total count of municipalities', () => {
+    const count = MunicipiosCompletoCatalog.getTotalCount();
+    expect(count).toBeGreaterThan(2400); // Should have ~2,469 municipalities
+  });
+
+  test('should get municipality by code', () => {
+    const mun = MunicipiosCompletoCatalog.getMunicipio('14039');
+    expect(mun).toBeDefined();
+  });
+
+  test('should get unique states from municipalities', () => {
+    const states = MunicipiosCompletoCatalog.getUniqueStates();
+    expect(states.length).toBeGreaterThan(30); // 32 states
+  });
+
+  test('should get total count of postal codes', () => {
+    const count = CodigosPostalesCompleto.getTotalCount();
+    expect(count).toBeGreaterThan(100000); // Should have ~150,000 postal codes
+  });
+
+  test('should get statistics from complete postal codes', () => {
+    const stats = CodigosPostalesCompleto.getStatistics();
+    expect(stats.totalPostalCodes).toBeGreaterThan(100000);
+    expect(stats.states).toBeGreaterThan(30);
+  });
+
+  test('should validate postal code in complete catalog', () => {
+    expect(CodigosPostalesCompleto.isValid('06700')).toBe(true);
   });
 });
 
@@ -149,6 +189,21 @@ describe('SAT Comercio Exterior Catalogs', () => {
     expect(PaisCatalog.isValid('MEX')).toBe(true);
     expect(PaisCatalog.isMexico('MEX')).toBe(true);
   });
+
+  test('should validate motivo traslado', () => {
+    const allMotivos = MotivoTrasladoCatalog.getAll();
+    expect(allMotivos.length).toBeGreaterThan(0);
+  });
+
+  test('should validate registro ident trib', () => {
+    const allRegistros = RegistroIdentTribCatalog.getAll();
+    expect(allRegistros.length).toBeGreaterThan(0);
+  });
+
+  test('should validate unidad aduana', () => {
+    const allUnidades = UnidadAduanaCatalog.getAll();
+    expect(allUnidades.length).toBeGreaterThan(0);
+  });
 });
 
 describe('SAT Carta Porte Catalogs', () => {
@@ -157,6 +212,21 @@ describe('SAT Carta Porte Catalogs', () => {
     if (airport) {
       expect(airport.iata).toBe('MEX');
     }
+  });
+
+  test('should validate carreteras', () => {
+    const allCarreteras = CarreterasCatalog.getAll();
+    expect(allCarreteras.length).toBeGreaterThan(0);
+  });
+
+  test('should validate material peligroso', () => {
+    const allMateriales = MaterialPeligrosoCatalog.getAll();
+    expect(allMateriales.length).toBeGreaterThan(0);
+  });
+
+  test('should validate tipo embalaje', () => {
+    const allTipos = TipoEmbalajeCatalog.getAll();
+    expect(allTipos.length).toBeGreaterThan(0);
   });
 });
 
