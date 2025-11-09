@@ -2,7 +2,7 @@
 
 **Roadmap detallado por catálogo, versiones y estrategia**
 
-**Última actualización**: 2025-11-08  
+**Última actualización**: 2025-11-09 (Actualizado para reflejar el estado actual)  
 **Versión actual**: v0.3.0  
 **Siguiente release**: v0.4.0 (Q1 2025)
 
@@ -11,7 +11,7 @@
 ## 📊 Estado General del Proyecto
 
 ### Métricas Actuales (v0.3.0)
-- ✅ **Catálogos totales**: 43 catálogos
+- ✅ **Catálogos totales**: 45+ catálogos
 - ✅ **Registros totales**: 170,505+ registros
 - ✅ **Población cubierta**: 126,014,024 habitantes (100%)
 - ✅ **Validadores**: 4 (RFC, CURP, CLABE, NSS)
@@ -22,89 +22,74 @@
 
 ## 🎯 Por Versión
 
-### ✅ v0.3.0 (ACTUAL - Nov 2025) - COMPLETADO
+### ✅ v0.3.x (Actual - Funcionalidades Completadas)
 
-#### Catálogos Completos Agregados
-- [x] SEPOMEX: 157,252 códigos postales (43.53 MB)
-- [x] INEGI: 2,478 municipios completos (0.98 MB)
-- [x] INEGI: 10,635 localidades con GPS (5.22 MB)
+#### Catálogos
+- [x] **SEPOMEX**: 157,252 códigos postales (43.53 MB)
+- [x] **INEGI**: 2,478 municipios completos (0.98 MB)
+- [x] **INEGI**: 10,635 localidades con GPS (5.22 MB)
+- [x] **IFT**: Catálogos de telecomunicaciones (Operadores móviles, Códigos LADA)
 
-#### Funcionalidades Nuevas
-- [x] Búsqueda geográfica por coordenadas GPS
-- [x] Filtros de población (min/max)
-- [x] Clasificación urbano/rural
-- [x] Búsqueda por proximidad (radio en km)
+#### Funcionalidades
+- [x] Búsqueda geográfica por coordenadas GPS (para localidades)
+- [x] Filtros de población y clasificación urbano/rural
+- [x] Paridad entre Python y TypeScript para la mayoría de los catálogos y validadores
+- [x] Implementación de `LocalidadesCatalog` en TypeScript
 
 #### Infraestructura
+- [x] **SQLite (Parcial)**:
+  - [x] Conversión de INEGI Localidades a SQLite (~5 MB → ~3 MB)
+  - [x] Conversión de SAT ClaveProdServ a SQLite
+  - [x] Script de migración `migrate-to-sqlite.js` funcional
 - [x] Scripts de procesamiento para SEPOMEX e INEGI
 - [x] Documentación bilingüe (README.md + README.es.md)
-- [x] Type hints Python 3.10+ (PEP 604)
-- [x] .gitignore actualizado
+- [x] Type hints modernos en Python (PEP 604)
 
 ---
 
-### 🚧 v0.4.0 (Q1 2025) - PLANEADO
+### 🚧 v0.4.0 (Q1 2025) - En Progreso y Planeado
 
-#### TypeScript Sync
-- [ ] Implementar `LocalidadesCatalog` en TypeScript
-- [ ] Actualizar tipos TypeScript con nuevos campos
-- [ ] Tests TypeScript para localidades
-- [ ] Build y publish TypeScript actualizado
-
-#### SQLite Implementation
+#### SQLite Implementation (Finalización)
 - [ ] Convertir SEPOMEX a SQLite (~43 MB → ~25 MB)
-- [ ] Convertir Localidades a SQLite (~5 MB → ~3 MB)
-- [ ] API Python para SQLite catalogs
-- [ ] Lazy loading desde SQLite
-- [ ] Índices optimizados (B-tree)
+- [ ] API Python para acceder a catálogos SQLite de forma transparente
+- [ ] Lazy loading desde SQLite para minimizar uso de memoria
+- [ ] Índices espaciales optimizados (R-tree) en todos los catálogos geográficos
 
 #### Geocoding Integration
 - [ ] Geocodificar códigos postales (añadir lat/lon)
-- [ ] API de geocodificación (Google/OSM)
-- [ ] Tabla CP con coordenadas GPS
-- [ ] Vinculación precisa CP ↔ Localidad
+- [ ] Desarrollar script para consultar API de geocodificación (Google/OSM)
+- [ ] Generar tabla de correspondencia CP ↔ Localidad con alta precisión
 
-#### Tabla de Correspondencia
-- [ ] Pre-calcular vinculación CP ↔ Localidad
-- [ ] Fuzzy matching de nombres
-- [ ] Score de confianza (0-100)
-- [ ] API: `get_cp_for_locality(cvegeo)`
-- [ ] API: `get_localities_for_cp(cp)`
+#### Catálogos SAT Faltantes
+- [ ] **CFDI 4.0**: c_TipoFactor, c_TasaOCuota, c_Meses, etc.
+- [ ] **Comercio Exterior**: c_TipoOperacion, conexión con TIGIE.
+- [ ] **Carta Porte**: c_Estacion, c_ContenedorMaritimo, etc.
 
 #### Examples & Documentation
-- [ ] Directorio `examples/` con casos de uso
-- [ ] FastAPI REST API example
-- [ ] Next.js frontend example
-- [ ] Flask simple server
-- [ ] GraphQL API example
+- [ ] Directorio `examples/` con casos de uso prácticos
+- [ ] Ejemplo de API REST con FastAPI
+- [ ] Ejemplo de frontend con Next.js
+- [ ] Ejemplo de servidor simple con Flask
+- [ ] Ejemplo de API GraphQL
 
 ---
 
-### 🔮 v0.5.0 (Q2-Q3 2025) - FUTURO
+### 🔮 v0.5.0 (Q2-Q3 2025) - Futuro
 
 #### Nuevos Validadores
-- [ ] ISAN - Identificador de Seguridad en Alimentos Nacionales
 - [ ] Placas vehiculares (formato por estado)
 - [ ] MRZ - Machine Readable Zone (pasaportes)
 - [ ] Licencias de conducir
 
 #### Nuevos Catálogos
-- [ ] IFT - Catálogos de telecomunicaciones
-- [ ] IMSS - Catálogos de seguridad social
-- [ ] TIGIE - Arancel de aduanas (~10k partidas)
-- [ ] PROFECO - Proveedores certificados
+- [ ] **IMSS**: Subdelegaciones, clínicas, catálogo de enfermedades.
+- [ ] **TIGIE (Completo)**: Arancel de aduanas (~10k partidas), tasas de impuesto, etc. (Script de descarga inicial ya existe).
+- [ ] **PROFECO**: Proveedores certificados, contratos de adhesión.
 
-#### Machine Learning
+#### Machine Learning & Performance
 - [ ] Normalización de direcciones con ML
-- [ ] Corrección automática de errores
-- [ ] Sugerencias de direcciones
-- [ ] Detección de duplicados
-
-#### Performance
-- [ ] WebAssembly para validadores
-- [ ] Cache layer (Redis opcional)
-- [ ] CDN para catálogos JSON
-- [ ] Compresión gzip/brotli
+- [ ] Compilación de validadores a WebAssembly para máxima performance en frontend
+- [ ] Capa de caché opcional (Redis) para despliegues de alta demanda
 
 ---
 
@@ -451,6 +436,26 @@
 - [ ] Búsqueda por descripción
 
 **Desafío**: Catálogo muy grande, requiere SQLite
+
+---
+
+### 💡 Sugerencias de Futuros Catálogos
+
+Esta sección contiene ideas para nuevos catálogos que son semánticamente relevantes para la librería y podrían añadir un gran valor.
+
+#### Económicos y de Negocios
+- **SCIAN (Sistema de Clasificación Industrial de América del Norte)**: Publicado por INEGI, es el equivalente a los códigos NAICS y es fundamental para clasificar actividades económicas. Se relaciona directamente con los datos del SAT.
+- **DENUE (Directorio Estadístico Nacional de Unidades Económicas)**: Una base de datos masiva de INEGI con todas las unidades económicas (negocios) en México, incluyendo su ubicación, código SCIAN y tamaño. Sería un complemento perfecto para los catálogos geográficos y económicos.
+- **CompraNet (Contrataciones Públicas)**: Datos sobre contratos gubernamentales, proveedores y licitaciones. Muy útil para aplicaciones de inteligencia de negocios y transparencia.
+- **SIGER (Sistema Integral de Gestión Registral)**: Datos públicos sobre empresas registradas, sus representantes legales y actas constitutivas. Complementaría la validación de `RFC Persona Moral`.
+
+#### Transporte y Logística
+- **REPUVE (Registro Público Vehicular)**: Datos públicos para validar el NIV (Número de Identificación Vehicular) y consultar el estado de un vehículo. Encaja perfectamente con el validador de placas planeado.
+- **SCT (Secretaría de Comunicaciones y Transportes)**: Catálogos adicionales de carreteras federales, concesiones de transporte y normativas que expandirían la funcionalidad de Carta Porte.
+
+#### Salud
+- **COFEPRIS (Comisión Federal para la Protección contra Riesgos Sanitarios)**: Catálogos de medicamentos registrados, dispositivos médicos, y permisos sanitarios para establecimientos. Se alinea con los futuros catálogos del IMSS.
+- **DGIS (Dirección General de Información en Salud)**: Estadísticas públicas sobre enfermedades, mortalidad, infraestructura hospitalaria y recursos de salud.
 
 ---
 
@@ -890,52 +895,53 @@ Ver [CONTRIBUTING.rst](CONTRIBUTING.rst) para guía completa.
 ```
 catalogmx Roadmap
 
-v0.3.0 (ACTUAL) ████████████████████ 100% ✅
-├─ SEPOMEX completo
-├─ INEGI municipios completo
-├─ INEGI localidades con GPS
+v0.3.x (ACTUAL) ████████████████████ 100% ✅
+├─ SEPOMEX, INEGI, IFT completos
 ├─ Búsqueda geográfica
+├─ SQLite (parcial para Localidades)
+├─ Paridad Python/TS
 └─ Documentación bilingüe
 
-v0.4.0 (Q1 2025) ░░░░░░░░░░░░░░░░░░░░   0% 📋
-├─ SQLite para SEPOMEX
+v0.4.0 (Q1 2025) █████░░░░░░░░░░░░░░░  25% 🚧
+├─ Finalizar migración a SQLite (SEPOMEX)
 ├─ Geocodificación de CPs
 ├─ Vinculación CP ↔ Localidad
-├─ TypeScript sync
+├─ Catálogos SAT faltantes
 └─ REST/GraphQL examples
 
 v0.5.0 (Q2-Q3 2025) ░░░░░░░░░░░░░░░░░░░░   0% 🔮
-├─ Nuevos validadores (ISAN, Placas)
-├─ Catálogos IFT, IMSS, TIGIE
-├─ ML normalization
-├─ WebAssembly
+├─ Nuevos validadores (Placas, MRZ)
+├─ Catálogos IMSS, TIGIE, PROFECO
+├─ ML para normalización de direcciones
+├─ WebAssembly para validadores
 └─ Versiones históricas
+
 ```
 
 ---
 
 ## 🎯 Conclusión
 
-**catalogmx v0.3.0** está completo y listo para producción con:
+**catalogmx v0.3.x** está completo y listo para producción con:
+- ✅ 45+ catálogos
 - ✅ 170,505+ registros
-- ✅ 126M habitantes cubiertos
-- ✅ Búsqueda geográfica con GPS
-- ✅ Documentación bilingüe profesional
+- ✅ Búsqueda geográfica y paridad entre lenguajes
+- ✅ Migración parcial a SQLite ya implementada
 
 **v0.4.0** se enfocará en:
-- 🔥 SQLite para performance
-- 🔥 Geocodificación completa
-- 🔥 Vinculación precisa CP ↔ Localidad
-- 🔥 Paridad TypeScript
+- 🔥 Finalizar la migración a SQLite para máxima performance
+- 🔥 Geocodificación completa de códigos postales
+- 🔥 Vincular de forma precisa CP ↔ Localidad
+- 🔥 Completar los catálogos restantes del SAT
 
 **v0.5.0** expandirá con:
-- 🚀 Nuevos catálogos y validadores
-- 🚀 ML y WebAssembly
-- 🚀 Herramientas avanzadas
+- 🚀 Nuevos catálogos (IMSS, TIGIE) y validadores (Placas)
+- 🚀 ML y WebAssembly para casos de uso avanzados
+- 🚀 Herramientas de análisis y compliance
 
 ---
 
-**Última actualización**: 2025-11-08  
+**Última actualización**: 2025-11-09  
 **Versión**: v0.3.0  
 **Próximo release**: v0.4.0 (Q1 2025)
 

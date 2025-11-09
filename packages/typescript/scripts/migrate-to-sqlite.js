@@ -121,7 +121,7 @@ function migrateLocalidades() {
 
   // Read JSON data
   const jsonData = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
-  const localidades = jsonData.localidades;
+  const localidades = jsonData;
 
   // Create database
   const db = new Database(dbPath);
@@ -215,15 +215,93 @@ function migrateLocalidades() {
   db.close();
 }
 
+/**
+ * Migrate SEPOMEX Postal Codes (~157k records)
+ */
+function migrateSepomex() {
+  console.log('📬 Migrating SEPOMEX Codigos Postales (~157k records)...');
+
+  const jsonPath = path.join(SHARED_DATA, 'sepomex/codigos_postales_completo.json');
+  const dbPath = path.join(SQLITE_DIR, 'sepomex.db');
+
+  // Delete existing DB if it exists
+  if (fs.existsSync(dbPath)) {
+    fs.unlinkSync(dbPath);
+  }
+
+  // Read JSON data
+  const jsonData = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+
+  // Create database
+  const db = new Database(dbPath);
+
+  // Create table with optimized schema
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS codigos_postales (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      cp TEXT NOT NULL,
+      asentamiento TEXT NOT NULL,
+      tipo_asentamiento TEXT,
+      municipio TEXT,
+      estado TEXT,
+      ciudad TEXT,
+      codigo_estado TEXT,
+      codigo_municipio TEXT,
+      zona TEXT
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_cp ON codigos_postales(cp);
+    CREATE INDEX IF NOT EXISTS idx_municipio ON codigos_postales(municipio);
+    CREATE INDEX IF NOT EXISTS idx_estado ON codigos_postales(estado);
+  `);
+
+  // Prepare insert statement
+  const insert = db.prepare(`
+    INSERT INTO codigos_postales (cp, asentamiento, tipo_asentamiento, municipio, estado, ciudad, codigo_estado, codigo_municipio, zona)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  // Batch insert for better performance
+  const insertMany = db.transaction((records) => {
+    for (const record of records) {
+      insert.run(
+        record.cp,
+        record.asentamiento,
+        record.tipo_asentamiento,
+        record.municipio,
+        record.estado,
+        record.ciudad,
+        record.codigo_estado,
+        record.codigo_municipio,
+        record.zona
+      );
+    }
+  });
+
+  // Insert all records
+  insertMany(jsonData);
+
+  const count = db.prepare('SELECT COUNT(*) as count FROM codigos_postales').get();
+  console.log(`   ✓ Inserted ${count.count} records`);
+
+  // Get database size
+  const stats = fs.statSync(dbPath);
+  console.log(`   ✓ Database size: ${(stats.size / 1024 / 1024).toFixed(2)} MB\n`);
+
+  db.close();
+}
+
 // Run migrations
 try {
   migrateClaveProdServ();
   migrateLocalidades();
+  migrateSepomex();
 
   console.log('✅ All migrations completed successfully!');
   console.log('\n📊 Summary:');
   console.log('   - c_ClaveProdServ: 52,514 products/services');
   console.log('   - Localidades: ~200,000 localities');
+  console.log('   - SEPOMEX: ~157,000 postal codes');
   console.log(`\n💾 Databases created in: ${SQLITE_DIR}`);
 
 } catch (error) {

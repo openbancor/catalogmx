@@ -3,7 +3,7 @@
  * Receipt types (I, E, T, N, P)
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { TipoComprobante } from '../../../types';
 
 export class TipoComprobanteCatalog {
@@ -11,7 +11,7 @@ export class TipoComprobanteCatalog {
 
   private static getData(): TipoComprobante[] {
     if (!this._data) {
-      this._data = loadCatalog<TipoComprobante>('sat/cfdi_4.0/tipo_comprobante.json');
+      this._data = loadCatalogObject<TipoComprobante>('sat/cfdi_4.0/tipo_comprobante.json');
     }
     return this._data;
   }

@@ -3,7 +3,7 @@
  * Catalog of Mexican municipalities with INEGI codes
  */
 
-import { loadCatalog } from '../../utils/catalog-loader';
+import { loadCatalogArray } from '../../utils/catalog-loader';
 import type { Municipality } from '../../types';
 
 export class MunicipiosCatalog {
@@ -14,7 +14,7 @@ export class MunicipiosCatalog {
    */
   private static getData(): Municipality[] {
     if (!this._data) {
-      this._data = loadCatalog<Municipality>('inegi/municipios.json');
+      this._data = loadCatalogArray<Municipality>('inegi/municipios.json');
     }
     return this._data;
   }

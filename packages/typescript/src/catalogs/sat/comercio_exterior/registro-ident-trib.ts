@@ -3,7 +3,7 @@
  * Foreign tax ID types with regex validation patterns
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { RegistroIdentTrib } from '../../../types';
 
 export class RegistroIdentTribCatalog {
@@ -11,7 +11,7 @@ export class RegistroIdentTribCatalog {
 
   private static getData(): RegistroIdentTrib[] {
     if (!this._data) {
-      this._data = loadCatalog<RegistroIdentTrib>('sat/comercio_exterior/registro_ident_trib.json');
+      this._data = loadCatalogObject<RegistroIdentTrib>('sat/comercio_exterior/registro_ident_trib.json');
     }
     return this._data;
   }

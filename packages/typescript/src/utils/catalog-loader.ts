@@ -47,15 +47,27 @@ export abstract class CatalogLoader<T> {
   }
 }
 
-/**
- * Helper function to load JSON catalog
- */
-export function loadCatalog<T>(relativePath: string): T[] {
+// For JSON files that are an array at the root: `[...]`
+export function loadCatalogArray<T>(relativePath: string): T[] {
   const fullPath = path.resolve(__dirname, '../../../shared-data', relativePath);
-
   if (!fs.existsSync(fullPath)) {
     throw new Error(`Catalog file not found: ${fullPath}`);
   }
+  return JSON.parse(fs.readFileSync(fullPath, 'utf-8')) as T[];
+}
 
-  return JSON.parse(fs.readFileSync(fullPath, 'utf-8'));
+// For JSON files that are an object with a 'data' property: `{ "data": [...] }`
+export function loadCatalogObject<T>(relativePath: string): T[] {
+  const fullPath = path.resolve(__dirname, '../../../shared-data', relativePath);
+  if (!fs.existsSync(fullPath)) {
+    throw new Error(`Catalog file not found: ${fullPath}`);
+  }
+  const jsonData = JSON.parse(fs.readFileSync(fullPath, 'utf-8'));
+  if (Array.isArray(jsonData)) {
+    return jsonData as T[];
+  }
+  if (jsonData && Array.isArray(jsonData.data)) {
+    return jsonData.data as T[];
+  }
+  throw new Error(`Invalid catalog format: ${fullPath}. Expected an array or { data: [...] } structure.`);
 }

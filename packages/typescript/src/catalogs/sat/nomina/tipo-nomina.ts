@@ -3,7 +3,7 @@
  * Payroll types (ordinary and extraordinary)
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { TipoNomina } from '../../../types';
 
 export class TipoNominaCatalog {
@@ -11,7 +11,7 @@ export class TipoNominaCatalog {
 
   private static getData(): TipoNomina[] {
     if (!this._data) {
-      this._data = loadCatalog<TipoNomina>('sat/nomina_1.2/tipo_nomina.json');
+      this._data = loadCatalogObject<TipoNomina>('sat/nomina_1.2/tipo_nomina.json');
     }
     return this._data;
   }

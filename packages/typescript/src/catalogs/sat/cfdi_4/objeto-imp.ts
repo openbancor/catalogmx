@@ -3,7 +3,7 @@
  * Tax object codes (updated Dec 2024)
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { ObjetoImp } from '../../../types';
 
 export class ObjetoImpCatalog {
@@ -11,7 +11,7 @@ export class ObjetoImpCatalog {
 
   private static getData(): ObjetoImp[] {
     if (!this._data) {
-      this._data = loadCatalog<ObjetoImp>('sat/cfdi_4.0/objeto_imp.json');
+      this._data = loadCatalogObject<ObjetoImp>('sat/cfdi_4.0/objeto_imp.json');
     }
     return this._data;
   }

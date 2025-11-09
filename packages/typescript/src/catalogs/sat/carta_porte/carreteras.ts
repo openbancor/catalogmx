@@ -3,7 +3,7 @@
  * SCT federal highways
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { Carretera } from '../../../types';
 
 export class CarreterasCatalog {
@@ -11,7 +11,7 @@ export class CarreterasCatalog {
 
   private static getData(): Carretera[] {
     if (!this._data) {
-      this._data = loadCatalog<Carretera>('sat/carta_porte_3/carreteras.json');
+      this._data = loadCatalogObject<Carretera>('sat/carta_porte_3/carreteras.json');
     }
     return this._data;
   }

@@ -1,4 +1,4 @@
-import { loadCatalog } from '../../utils/catalog-loader';
+import { loadCatalogArray } from '../../utils/catalog-loader';
 import { UMA } from '../../types';
 
 /**
@@ -11,7 +11,7 @@ export class UMACatalog {
 
   private static loadData(): void {
     if (this._data !== null) return;
-    this._data = loadCatalog<UMA>('mexico/uma.json');
+    this._data = loadCatalogArray<UMA>('mexico/uma.json');
   }
 
   static getData(): UMA[] {

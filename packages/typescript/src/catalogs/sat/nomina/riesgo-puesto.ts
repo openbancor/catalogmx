@@ -3,7 +3,7 @@
  * IMSS risk levels with premium ranges
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { RiesgoPuesto } from '../../../types';
 
 export class RiesgoPuestoCatalog {
@@ -11,7 +11,7 @@ export class RiesgoPuestoCatalog {
 
   private static getData(): RiesgoPuesto[] {
     if (!this._data) {
-      this._data = loadCatalog<RiesgoPuesto>('sat/nomina_1.2/riesgo_puesto.json');
+      this._data = loadCatalogObject<RiesgoPuesto>('sat/nomina_1.2/riesgo_puesto.json');
     }
     return this._data;
   }

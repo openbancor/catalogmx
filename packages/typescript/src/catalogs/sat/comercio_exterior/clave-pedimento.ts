@@ -3,7 +3,7 @@
  * Customs document classification keys
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { ClavePedimento } from '../../../types';
 
 export class ClavePedimentoCatalog {
@@ -11,7 +11,7 @@ export class ClavePedimentoCatalog {
 
   private static getData(): ClavePedimento[] {
     if (!this._data) {
-      this._data = loadCatalog<ClavePedimento>('sat/comercio_exterior/claves_pedimento.json');
+      this._data = loadCatalogObject<ClavePedimento>('sat/comercio_exterior/claves_pedimento.json');
     }
     return this._data;
   }

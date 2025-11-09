@@ -5,6 +5,9 @@
 import unittest
 from catalogmx.catalogs.mexico import PlacasFormatosCatalog, SalariosMinimos, UMACatalog, HoyNoCirculaCatalog
 from catalogmx.catalogs.banxico import UDICatalog
+from catalogmx.catalogs.sat.cfdi_4.tipo_factor import TipoFactor
+from catalogmx.catalogs.sat.cfdi_4.meses import Meses
+from catalogmx.catalogs.sat.cfdi_4.periodicidad import Periodicidad
 
 
 class TestPlacasFormatosCatalog(unittest.TestCase):
@@ -306,6 +309,24 @@ class TestHoyNoCirculaCatalog(unittest.TestCase):
         exenciones = HoyNoCirculaCatalog.get_exenciones()
         self.assertIsInstance(exenciones, list)
         self.assertGreater(len(exenciones), 0)
+
+
+class TestNewCFDICatalogs:
+    def test_tipo_factor(self):
+        assert TipoFactor.is_valid('Tasa') is True
+        assert TipoFactor.is_valid('Cuota') is True
+        assert TipoFactor.is_valid('Invalido') is False
+        assert TipoFactor.get_by_id('Tasa')['valor'] == 'Tasa'
+
+    def test_meses(self):
+        assert Meses.is_valid('01') is True
+        assert Meses.is_valid('13') is True # '13' and others are valid for adjustments
+        assert Meses.get_by_id('01')['valor'] == '01'
+
+    def test_periodicidad(self):
+        assert Periodicidad.is_valid('01') is True
+        assert Periodicidad.is_valid('06') is False
+        assert Periodicidad.get_by_id('01')['valor'] == '01'
 
 
 if __name__ == '__main__':

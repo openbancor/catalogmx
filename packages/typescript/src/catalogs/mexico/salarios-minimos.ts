@@ -1,4 +1,4 @@
-import { loadCatalog } from '../../utils/catalog-loader';
+import { loadCatalogArray } from '../../utils/catalog-loader';
 import { SalarioMinimo } from '../../types';
 
 /**
@@ -10,7 +10,7 @@ export class SalariosMinimos {
 
   private static loadData(): void {
     if (this._data !== null) return;
-    this._data = loadCatalog<SalarioMinimo>('mexico/salarios_minimos.json');
+    this._data = loadCatalogArray<SalarioMinimo>('mexico/salarios_minimos.json');
   }
 
   static getData(): SalarioMinimo[] {

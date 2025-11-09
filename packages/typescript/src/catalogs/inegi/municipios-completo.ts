@@ -3,7 +3,7 @@
  * All 2,469 municipalities (2,462 municipios + 7 alcaldías CDMX)
  */
 
-import { loadCatalog } from '../../utils/catalog-loader';
+import { loadCatalogArray } from '../../utils/catalog-loader';
 import type { Municipality } from '../../types';
 
 export class MunicipiosCompletoCatalog {
@@ -15,7 +15,7 @@ export class MunicipiosCompletoCatalog {
    */
   private static getData(): Municipality[] {
     if (!this._data) {
-      this._data = loadCatalog<Municipality>('inegi/municipios_completo.json');
+      this._data = loadCatalogArray<Municipality>('inegi/municipios_completo.json');
     }
     return this._data;
   }

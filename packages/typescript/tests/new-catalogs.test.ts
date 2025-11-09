@@ -1,3 +1,4 @@
+import { describe, expect, test } from '@jest/globals';
 import {
   PlacasFormatosCatalog,
   SalariosMinimos,
@@ -5,6 +6,9 @@ import {
   UDICatalog,
   HoyNoCirculaCDMX
 } from '../src/catalogs';
+import { TipoFactor } from '../src/catalogs/sat/cfdi_4/tipo-factor';
+import { Meses } from '../src/catalogs/sat/cfdi_4/meses';
+import { Periodicidad } from '../src/catalogs/sat/cfdi_4/periodicidad';
 
 describe('Placas Formatos Catalog', () => {
   test('should validate valid license plate - current format', () => {
@@ -291,5 +295,26 @@ describe('Hoy No Circula CDMX', () => {
   test('should allow circulation with hologram 00', () => {
     const puede = HoyNoCirculaCDMX.puedeCircular('5', 'lunes', '00');
     expect(puede).toBe(true);
+  });
+});
+
+describe('New SAT CFDI 4.0 Catalogs', () => {
+  test('should validate TipoFactor correctly', () => {
+    expect(TipoFactor.isValid('Tasa')).toBe(true);
+    expect(TipoFactor.isValid('Cuota')).toBe(true);
+    expect(TipoFactor.isValid('Invalido')).toBe(false);
+    expect(TipoFactor.getById('Tasa')?.id).toBe('Tasa');
+  });
+
+  test('should validate Meses correctly', () => {
+    expect(Meses.isValid('01')).toBe(true);
+    expect(Meses.isValid('13')).toBe(true); // '13' and others are valid for adjustments
+    expect(Meses.getById('01')?.id).toBe('01');
+  });
+
+  test('should validate Periodicidad correctly', () => {
+    expect(Periodicidad.isValid('01')).toBe(true);
+    expect(Periodicidad.isValid('06')).toBe(false);
+    expect(Periodicidad.getById('01')?.id).toBe('01');
   });
 });

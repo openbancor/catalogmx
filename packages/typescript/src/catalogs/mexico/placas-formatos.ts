@@ -1,4 +1,4 @@
-import { loadCatalog } from '../../utils/catalog-loader';
+import { loadCatalogArray } from '../../utils/catalog-loader';
 import { PlacaFormato } from '../../types';
 
 /**
@@ -10,7 +10,7 @@ export class PlacasFormatosCatalog {
 
   private static loadData(): void {
     if (this._data !== null) return;
-    this._data = loadCatalog<PlacaFormato>('mexico/placas_formatos.json');
+    this._data = loadCatalogArray<PlacaFormato>('mexico/placas_formatos.json');
   }
 
   static getData(): PlacaFormato[] {

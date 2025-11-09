@@ -3,7 +3,7 @@
  * US States and Canadian Provinces (ISO 3166-2)
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { EstadoUSACanada } from '../../../types';
 
 export class EstadoCatalog {
@@ -11,7 +11,7 @@ export class EstadoCatalog {
 
   private static getData(): EstadoUSACanada[] {
     if (!this._data) {
-      this._data = loadCatalog<EstadoUSACanada>('sat/comercio_exterior/estados_usa_canada.json');
+      this._data = loadCatalogObject<EstadoUSACanada>('sat/comercio_exterior/estados_usa_canada.json');
     }
     return this._data;
   }

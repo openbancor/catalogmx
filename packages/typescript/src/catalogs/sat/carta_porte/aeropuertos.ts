@@ -3,7 +3,7 @@
  * Mexican airports with IATA and ICAO codes
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { Aeropuerto } from '../../../types';
 
 export class AeropuertosCatalog {
@@ -11,7 +11,7 @@ export class AeropuertosCatalog {
 
   private static getData(): Aeropuerto[] {
     if (!this._data) {
-      this._data = loadCatalog<Aeropuerto>('sat/carta_porte_3/aeropuertos.json');
+      this._data = loadCatalogObject<Aeropuerto>('sat/carta_porte_3/aeropuertos.json');
     }
     return this._data;
   }

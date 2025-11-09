@@ -3,7 +3,7 @@
  * CFDI relationship types
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { TipoRelacion } from '../../../types';
 
 export class TipoRelacionCatalog {
@@ -11,7 +11,7 @@ export class TipoRelacionCatalog {
 
   private static getData(): TipoRelacion[] {
     if (!this._data) {
-      this._data = loadCatalog<TipoRelacion>('sat/cfdi_4.0/tipo_relacion.json');
+      this._data = loadCatalogObject<TipoRelacion>('sat/cfdi_4.0/tipo_relacion.json');
     }
     return this._data;
   }

@@ -3,7 +3,7 @@
  * Tax types (ISR, IVA, IEPS)
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { Impuesto } from '../../../types';
 
 export class ImpuestoCatalog {
@@ -11,7 +11,7 @@ export class ImpuestoCatalog {
 
   private static getData(): Impuesto[] {
     if (!this._data) {
-      this._data = loadCatalog<Impuesto>('sat/cfdi_4.0/impuesto.json');
+      this._data = loadCatalogObject<Impuesto>('sat/cfdi_4.0/impuesto.json');
     }
     return this._data;
   }

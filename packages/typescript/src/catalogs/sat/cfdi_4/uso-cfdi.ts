@@ -3,47 +3,31 @@
  * CFDI usage codes
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogArray } from '../../../utils/catalog-loader';
 import type { UsoCfdi } from '../../../types';
 
 export class UsoCFDICatalog {
   private static _data: UsoCfdi[] | null = null;
 
   private static getData(): UsoCfdi[] {
-    if (!this._data) {
-      this._data = loadCatalog<UsoCfdi>('sat/cfdi_4.0/uso_cfdi.json');
+    if (this._data === null) {
+      const rawData = loadCatalogArray<UsoCfdi>('sat/cfdi_4.0/uso_cfdi.json');
+      this._data = rawData.map(uso => ({
+        ...uso,
+        persona_fisica: uso.persona_fisica ?? uso.fisica,
+        persona_moral: uso.persona_moral ?? uso.moral
+      }));
     }
     return this._data;
   }
 
-  static getAll(): UsoCfdi[] {
-    return this.getData();
-  }
-
   static getUso(code: string): UsoCfdi | undefined {
-    return this.getData().find(uso => uso.code === code);
-  }
-
-  static isValidForPersonaFisica(code: string): boolean {
-    const uso = this.getUso(code);
-    return uso?.persona_fisica === true;
-  }
-
-  static isValidForPersonaMoral(code: string): boolean {
-    const uso = this.getUso(code);
-    return uso?.persona_moral === true;
-  }
-
-  static getForPersonaFisica(): UsoCfdi[] {
-    return this.getData().filter(uso => uso.persona_fisica);
-  }
-
-  static getForPersonaMoral(): UsoCfdi[] {
-    return this.getData().filter(uso => uso.persona_moral);
+    const normalized = code.toUpperCase();
+    return this.getData().find(uso => uso.code === normalized);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(uso => uso.code === code);
+    return this.getUso(code) !== undefined;
   }
 
   static searchByDescription(keyword: string): UsoCfdi[] {

@@ -1,4 +1,4 @@
-import { loadCatalog } from '../../utils/catalog-loader';
+import { loadCatalogArray } from '../../utils/catalog-loader';
 import { UDI } from '../../types';
 
 /**
@@ -11,8 +11,9 @@ export class UDICatalog {
   private static _data: UDI[] | null = null;
 
   private static loadData(): void {
-    if (this._data !== null) return;
-    this._data = loadCatalog<UDI>('banxico/udis.json');
+    if (this._data === null) {
+      this._data = loadCatalogArray<UDI>('banxico/udis.json');
+    }
   }
 
   static getData(): UDI[] {

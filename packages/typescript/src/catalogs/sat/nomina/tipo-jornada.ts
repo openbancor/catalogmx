@@ -3,7 +3,7 @@
  * Work shift types
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { TipoJornada } from '../../../types';
 
 export class TipoJornadaCatalog {
@@ -11,7 +11,7 @@ export class TipoJornadaCatalog {
 
   private static getData(): TipoJornada[] {
     if (!this._data) {
-      this._data = loadCatalog<TipoJornada>('sat/nomina_1.2/tipo_jornada.json');
+      this._data = loadCatalogObject<TipoJornada>('sat/nomina_1.2/tipo_jornada.json');
     }
     return this._data;
   }

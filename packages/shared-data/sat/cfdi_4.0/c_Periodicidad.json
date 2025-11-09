@@ -1,0 +1,25 @@
+{
+  "_meta": {
+    "catalog": "c_Periodicidad",
+    "source": "http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd",
+    "xsd_name": "c_Periodicidad",
+    "downloaded": "2025-11-09T05:36:54.059271"
+  },
+  "data": [
+    {
+      "valor": "01"
+    },
+    {
+      "valor": "02"
+    },
+    {
+      "valor": "03"
+    },
+    {
+      "valor": "04"
+    },
+    {
+      "valor": "05"
+    }
+  ]
+}
