@@ -12,6 +12,7 @@ Catálogos incluidos:
 - c_TipoRelacion: Tipos de relación entre CFDI
 - c_ObjetoImp: Objeto de impuesto
 - c_ClaveUnidad: Claves de unidad de medida (~2,400 unidades)
+- c_ClaveProdServ: Claves de productos y servicios (~52,000 códigos - SQLite)
 """
 
 from .regimen_fiscal import RegimenFiscalCatalog
@@ -24,6 +25,7 @@ from .exportacion import ExportacionCatalog
 from .tipo_relacion import TipoRelacionCatalog
 from .objeto_imp import ObjetoImpCatalog
 from .clave_unidad import ClaveUnidadCatalog
+from .clave_prod_serv import ClaveProdServCatalog
 
 __all__ = [
     'RegimenFiscalCatalog',
@@ -36,4 +38,5 @@ __all__ = [
     'TipoRelacionCatalog',
     'ObjetoImpCatalog',
     'ClaveUnidadCatalog',
+    'ClaveProdServCatalog',
 ]
