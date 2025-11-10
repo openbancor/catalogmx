@@ -4,7 +4,6 @@ Tests for accent-insensitive search across all catalogs.
 Tests the normalize_text utility and accent-insensitive search functionality
 in all catalogs that support it.
 """
-import pytest
 from catalogmx.utils.text import normalize_text
 from catalogmx.catalogs.sepomex import CodigosPostales
 from catalogmx.catalogs.inegi import StateCatalog, LocalidadesCatalog, MunicipiosCatalog
