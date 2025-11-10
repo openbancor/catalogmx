@@ -170,3 +170,4 @@ omit = [
 precision = 2
 show_missing = true
 skip_covered = false
+fail_under = 100
