@@ -2,6 +2,7 @@
 
 import json
 from pathlib import Path
+from catalogmx.utils.text import normalize_text
 
 class PaisCatalog:
     """Catálogo de países para identificar origen/destino en comercio exterior"""
@@ -19,8 +20,7 @@ class PaisCatalog:
                               / 'shared-data' / 'sat' / 'comercio_exterior' / 'paises.json')
 
             with open(shared_data_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                cls._data = data['paises']
+                cls._data = json.load(f)
 
             cls._pais_by_code = {item['codigo']: item for item in cls._data}
             cls._pais_by_iso2 = {item['iso2']: item for item in cls._data}
@@ -66,13 +66,13 @@ class PaisCatalog:
 
     @classmethod
     def search(cls, query: str) -> list[dict]:
-        """Busca países por código o nombre"""
+        """Busca países por código o nombre (insensible a acentos)"""
         cls._load_data()
-        query_lower = query.lower()
+        query_normalized = normalize_text(query)
 
         return [
             item for item in cls._data
-            if (query_lower in item['codigo'].lower() or
-                query_lower in item['nombre'].lower() or
-                query_lower in item.get('iso2', '').lower())
+            if (query_normalized in normalize_text(item['codigo']) or
+                query_normalized in normalize_text(item['nombre']) or
+                query_normalized in normalize_text(item.get('iso2', '')))
         ]

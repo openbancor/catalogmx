@@ -9,6 +9,7 @@ CONSAR y otras entidades reguladoras.
 import json
 from pathlib import Path
 from typing import TypedDict
+from catalogmx.utils.text import normalize_text
 
 
 class TipoInstitucionFinanciera(TypedDict):
@@ -110,7 +111,7 @@ class InstitucionesFinancieras:
     @classmethod
     def buscar_por_tipo(cls, tipo: str) -> list[TipoInstitucionFinanciera]:
         """
-        Busca por tipo de institución (case-insensitive).
+        Busca por tipo de institución (insensible a acentos y mayúsculas).
 
         Args:
             tipo: Texto a buscar en el tipo de institución
@@ -124,16 +125,16 @@ class InstitucionesFinancieras:
             ...     print(b['tipo'])
         """
         cls._load_data()
-        tipo_lower = tipo.lower()
+        tipo_normalized = normalize_text(tipo)
         return [
             inst for inst in cls._data  # type: ignore
-            if tipo_lower in inst['tipo'].lower()
+            if tipo_normalized in normalize_text(inst['tipo'])
         ]
 
     @classmethod
     def get_por_regulador(cls, regulador: str) -> list[TipoInstitucionFinanciera]:
         """
-        Obtiene instituciones por regulador.
+        Obtiene instituciones por regulador (insensible a acentos).
 
         Args:
             regulador: Nombre o siglas del regulador (CNBV, CNSF, CONSAR, etc.)
@@ -146,10 +147,10 @@ class InstitucionesFinancieras:
             >>> print(f"Instituciones reguladas por CNBV: {len(cnbv)}")
         """
         cls._load_data()
-        regulador_lower = regulador.lower()
+        regulador_normalized = normalize_text(regulador)
         return [
             inst for inst in cls._data  # type: ignore
-            if regulador_lower in inst['regulador'].lower()
+            if regulador_normalized in normalize_text(inst['regulador'])
         ]
 
     @classmethod

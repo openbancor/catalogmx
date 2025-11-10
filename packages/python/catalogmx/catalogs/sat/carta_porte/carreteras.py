@@ -1,6 +1,7 @@
 """Catálogo c_Carreteras - Carreteras Federales"""
 import json
 from pathlib import Path
+from catalogmx.utils.text import normalize_text
 
 class CarreterasCatalog:
     _data: list[dict] | None = None
@@ -11,8 +12,7 @@ class CarreterasCatalog:
         if cls._data is None:
             path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'carta_porte_3' / 'carreteras.json'
             with open(path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                cls._data = data['carreteras']
+                cls._data = json.load(f)
             cls._by_code = {item['code']: item for item in cls._data}
 
     @classmethod
@@ -37,3 +37,13 @@ class CarreterasCatalog:
         """Obtiene carreteras por tipo (Cuota, Libre)"""
         cls._load_data()
         return [c for c in cls._data if c['type'] == tipo]
+
+    @classmethod
+    def search_by_name(cls, name: str) -> list[dict]:
+        """Busca carreteras por nombre (insensible a acentos)"""
+        cls._load_data()
+        name_normalized = normalize_text(name)
+        return [
+            c for c in cls._data
+            if name_normalized in normalize_text(c.get('nombre', c.get('name', '')))
+        ]
