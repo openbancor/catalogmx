@@ -5,7 +5,7 @@ export class TasaOCuota {
 
   private static getData(): any[] {
     if (this._data === null) {
-        this._data = loadCatalogObject<any>('sat/cfdi_4.0/c_TasaOCuota.json');
+      this._data = loadCatalogObject<any>('sat/cfdi_4.0/c_TasaOCuota.json');
     }
     return this._data;
   }

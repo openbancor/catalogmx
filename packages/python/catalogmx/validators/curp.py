@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-import re
 import datetime
+import re
+
 import unidecode
 
 
@@ -30,6 +31,7 @@ class CURPGeneral:
         BBB: Internal consonants from paterno, materno, nombre
         CC: Homoclave (2 digits/letters)
     """
+
     general_regex = re.compile(
         r"[A-Z][AEIOUX][A-Z]{2}[0-9]{2}[0-1][0-9][0-3][0-9][MH][A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}[0-9A-Z]{2}"
     )
@@ -37,76 +39,168 @@ class CURPGeneral:
 
     # Mexican state codes
     state_codes = {
-        'AGUASCALIENTES': 'AS',
-        'BAJA CALIFORNIA': 'BC',
-        'BAJA CALIFORNIA SUR': 'BS',
-        'CAMPECHE': 'CC',
-        'COAHUILA': 'CL',
-        'COLIMA': 'CM',
-        'CHIAPAS': 'CS',
-        'CHIHUAHUA': 'CH',
-        'CIUDAD DE MEXICO': 'DF',  # Also accepts CDMX
-        'DISTRITO FEDERAL': 'DF',
-        'CDMX': 'DF',
-        'DURANGO': 'DG',
-        'GUANAJUATO': 'GT',
-        'GUERRERO': 'GR',
-        'HIDALGO': 'HG',
-        'JALISCO': 'JC',
-        'ESTADO DE MEXICO': 'MC',
-        'MEXICO': 'MC',
-        'MICHOACAN': 'MN',
-        'MORELOS': 'MS',
-        'NAYARIT': 'NT',
-        'NUEVO LEON': 'NL',
-        'OAXACA': 'OC',
-        'PUEBLA': 'PL',
-        'QUERETARO': 'QT',
-        'QUINTANA ROO': 'QR',
-        'SAN LUIS POTOSI': 'SP',
-        'SINALOA': 'SL',
-        'SONORA': 'SR',
-        'TABASCO': 'TC',
-        'TAMAULIPAS': 'TS',
-        'TLAXCALA': 'TL',
-        'VERACRUZ': 'VZ',
-        'YUCATAN': 'YN',
-        'ZACATECAS': 'ZS',
-        'NACIDO EN EL EXTRANJERO': 'NE',  # Born abroad
-        'EXTRANJERO': 'NE',
+        "AGUASCALIENTES": "AS",
+        "BAJA CALIFORNIA": "BC",
+        "BAJA CALIFORNIA SUR": "BS",
+        "CAMPECHE": "CC",
+        "COAHUILA": "CL",
+        "COLIMA": "CM",
+        "CHIAPAS": "CS",
+        "CHIHUAHUA": "CH",
+        "CIUDAD DE MEXICO": "DF",  # Also accepts CDMX
+        "DISTRITO FEDERAL": "DF",
+        "CDMX": "DF",
+        "DURANGO": "DG",
+        "GUANAJUATO": "GT",
+        "GUERRERO": "GR",
+        "HIDALGO": "HG",
+        "JALISCO": "JC",
+        "ESTADO DE MEXICO": "MC",
+        "MEXICO": "MC",
+        "MICHOACAN": "MN",
+        "MORELOS": "MS",
+        "NAYARIT": "NT",
+        "NUEVO LEON": "NL",
+        "OAXACA": "OC",
+        "PUEBLA": "PL",
+        "QUERETARO": "QT",
+        "QUINTANA ROO": "QR",
+        "SAN LUIS POTOSI": "SP",
+        "SINALOA": "SL",
+        "SONORA": "SR",
+        "TABASCO": "TC",
+        "TAMAULIPAS": "TS",
+        "TLAXCALA": "TL",
+        "VERACRUZ": "VZ",
+        "YUCATAN": "YN",
+        "ZACATECAS": "ZS",
+        "NACIDO EN EL EXTRANJERO": "NE",  # Born abroad
+        "EXTRANJERO": "NE",
     }
 
-    vocales = 'AEIOU'
-    consonantes = 'BCDFGHJKLMNPQRSTVWXYZ'
+    vocales = "AEIOU"
+    consonantes = "BCDFGHJKLMNPQRSTVWXYZ"
 
     # Lista oficial completa de palabras inconvenientes según Anexo 2 del Instructivo Normativo CURP
     # Cuando se detectan estas palabras en las primeras 4 letras, la segunda letra se sustituye con 'X'
     cacophonic_words = [
-        'BACA', 'BAKA', 'BUEI', 'BUEY',
-        'CACA', 'CACO', 'CAGA', 'CAGO', 'CAKA', 'KAKO', 'COGE', 'COGI', 'COJA', 'COJE', 'COJI', 'COJO', 'COLA', 'CULO',
-        'FALO', 'FETO',
-        'GETA', 'GUEI', 'GUEY',
-        'JETA', 'JOTO',
-        'KACA', 'KACO', 'KAGA', 'KAGO', 'KAKA', 'KAKO', 'KOGE', 'KOGI', 'KOJA', 'KOJE', 'KOJI', 'KOJO', 'KOLA', 'KULO',
-        'LILO', 'LOCA', 'LOCO', 'LOKA', 'LOKO',
-        'MAME', 'MAMO', 'MEAR', 'MEAS', 'MEON', 'MIAR', 'MION', 'MOCO', 'MOKO', 'MULA', 'MULO',
-        'NACA', 'NACO',
-        'PEDA', 'PEDO', 'PENE', 'PIPI', 'PITO', 'POPO', 'PUTA', 'PUTO',
-        'QULO',
-        'RATA', 'ROBA', 'ROBE', 'ROBO', 'RUIN',
-        'SENO',
-        'TETA',
-        'VACA', 'VAGA', 'VAGO', 'VAKA', 'VUEI', 'VUEY',
-        'WUEI', 'WUEY',
+        "BACA",
+        "BAKA",
+        "BUEI",
+        "BUEY",
+        "CACA",
+        "CACO",
+        "CAGA",
+        "CAGO",
+        "CAKA",
+        "KAKO",
+        "COGE",
+        "COGI",
+        "COJA",
+        "COJE",
+        "COJI",
+        "COJO",
+        "COLA",
+        "CULO",
+        "FALO",
+        "FETO",
+        "GETA",
+        "GUEI",
+        "GUEY",
+        "JETA",
+        "JOTO",
+        "KACA",
+        "KACO",
+        "KAGA",
+        "KAGO",
+        "KAKA",
+        "KAKO",
+        "KOGE",
+        "KOGI",
+        "KOJA",
+        "KOJE",
+        "KOJI",
+        "KOJO",
+        "KOLA",
+        "KULO",
+        "LILO",
+        "LOCA",
+        "LOCO",
+        "LOKA",
+        "LOKO",
+        "MAME",
+        "MAMO",
+        "MEAR",
+        "MEAS",
+        "MEON",
+        "MIAR",
+        "MION",
+        "MOCO",
+        "MOKO",
+        "MULA",
+        "MULO",
+        "NACA",
+        "NACO",
+        "PEDA",
+        "PEDO",
+        "PENE",
+        "PIPI",
+        "PITO",
+        "POPO",
+        "PUTA",
+        "PUTO",
+        "QULO",
+        "RATA",
+        "ROBA",
+        "ROBE",
+        "ROBO",
+        "RUIN",
+        "SENO",
+        "TETA",
+        "VACA",
+        "VAGA",
+        "VAGO",
+        "VAKA",
+        "VUEI",
+        "VUEY",
+        "WUEI",
+        "WUEY",
     ]
 
     excluded_words = [
-        'DE', 'LA', 'LAS', 'MC', 'VON', 'DEL', 'LOS', 'Y', 'MAC', 'VAN', 'MI',
-        'DA', 'DAS', 'DE', 'DEL', 'DER', 'DI', 'DIE', 'DD', 'EL', 'LA',
-        'LOS', 'LAS', 'LE', 'LES', 'MAC', 'MC', 'VAN', 'VON', 'Y'
+        "DE",
+        "LA",
+        "LAS",
+        "MC",
+        "VON",
+        "DEL",
+        "LOS",
+        "Y",
+        "MAC",
+        "VAN",
+        "MI",
+        "DA",
+        "DAS",
+        "DE",
+        "DEL",
+        "DER",
+        "DI",
+        "DIE",
+        "DD",
+        "EL",
+        "LA",
+        "LOS",
+        "LAS",
+        "LE",
+        "LES",
+        "MAC",
+        "MC",
+        "VAN",
+        "VON",
+        "Y",
     ]
 
-    allowed_chars = list('ABCDEFGHIJKLMNÑOPQRSTUVWXYZ')
+    allowed_chars = list("ABCDEFGHIJKLMNÑOPQRSTUVWXYZ")
 
 
 class CURPValidator(CURPGeneral):
@@ -118,7 +212,7 @@ class CURPValidator(CURPGeneral):
         """
         :param curp: The CURP code to be validated
         """
-        self.curp = ''
+        self.curp = ""
         if bool(curp) and isinstance(curp, str):
             self.curp = curp.upper().strip()
 
@@ -175,14 +269,19 @@ class CURPGeneratorUtils(CURPGeneral):
     def clean_name(cls, nombre: str | None) -> str:
         """Clean name by removing excluded words and special characters"""
         if not nombre:
-            return ''
-        result = "".join(
-            char if char in cls.allowed_chars else unidecode.unidecode(char)
-            for char in " ".join(
-                elem for elem in nombre.split(" ")
-                if elem.upper() not in cls.excluded_words
-            ).strip().upper()
-        ).strip().upper()
+            return ""
+        result = (
+            "".join(
+                char if char in cls.allowed_chars else unidecode.unidecode(char)
+                for char in " ".join(
+                    elem for elem in nombre.split(" ") if elem.upper() not in cls.excluded_words
+                )
+                .strip()
+                .upper()
+            )
+            .strip()
+            .upper()
+        )
         return result
 
     @staticmethod
@@ -192,9 +291,9 @@ class CURPGeneratorUtils(CURPGeneral):
             return name.upper().strip()
         elif non_strict:
             if name is None or not name:
-                return ''
+                return ""
         else:
-            raise ValueError('Name must be a string')
+            raise ValueError("Name must be a string")
 
     @classmethod
     def get_first_consonant(cls, word: str) -> str:
@@ -203,12 +302,12 @@ class CURPGeneratorUtils(CURPGeneral):
         (the first consonant that is not the first letter)
         """
         if not word or len(word) <= 1:
-            return 'X'
+            return "X"
 
         for char in word[1:]:
             if char in cls.consonantes:
                 return char
-        return 'X'
+        return "X"
 
     @classmethod
     def get_state_code(cls, state: str | None) -> str:
@@ -216,7 +315,7 @@ class CURPGeneratorUtils(CURPGeneral):
         Get the two-letter state code from state name
         """
         if not state:
-            return 'NE'  # Born abroad default
+            return "NE"  # Born abroad default
 
         state_upper = state.upper().strip()
 
@@ -235,10 +334,14 @@ class CURPGeneratorUtils(CURPGeneral):
                 return code
 
         # If it's already a 2-letter code, validate and return
-        if len(state_upper) == 2 and state_upper[0] in cls.allowed_chars and state_upper[1] in cls.allowed_chars:
+        if (
+            len(state_upper) == 2
+            and state_upper[0] in cls.allowed_chars
+            and state_upper[1] in cls.allowed_chars
+        ):
             return state_upper
 
-        return 'NE'  # Default to born abroad
+        return "NE"  # Default to born abroad
 
 
 class CURPGenerator(CURPGeneratorUtils):
@@ -252,7 +355,15 @@ class CURPGenerator(CURPGeneratorUtils):
     - Birth state
     """
 
-    def __init__(self, nombre: str, paterno: str, materno: str | None, fecha_nacimiento: datetime.date, sexo: str, estado: str | None) -> None:
+    def __init__(
+        self,
+        nombre: str,
+        paterno: str,
+        materno: str | None,
+        fecha_nacimiento: datetime.date,
+        sexo: str,
+        estado: str | None,
+    ) -> None:
         """
         Initialize CURP Generator
 
@@ -264,21 +375,21 @@ class CURPGenerator(CURPGeneratorUtils):
         :param estado: Birth state (Mexican state name or code)
         """
         if not paterno or not paterno.strip():
-            raise ValueError('Apellido paterno is required')
+            raise ValueError("Apellido paterno is required")
         if not nombre or not nombre.strip():
-            raise ValueError('Nombre is required')
+            raise ValueError("Nombre is required")
         if not isinstance(fecha_nacimiento, datetime.date):
-            raise ValueError('fecha_nacimiento must be a datetime.date object')
-        if sexo.upper() not in ('H', 'M'):
+            raise ValueError("fecha_nacimiento must be a datetime.date object")
+        if sexo.upper() not in ("H", "M"):
             raise ValueError('sexo must be "H" (Hombre) or "M" (Mujer)')
 
         self.nombre = nombre
         self.paterno = paterno
-        self.materno = materno if materno else ''
+        self.materno = materno if materno else ""
         self.fecha_nacimiento = fecha_nacimiento
         self.sexo = sexo.upper()
         self.estado = estado
-        self._curp = ''
+        self._curp = ""
 
     @property
     def nombre(self) -> str:
@@ -317,7 +428,7 @@ class CURPGenerator(CURPGeneratorUtils):
     @property
     def materno_calculo(self) -> str:
         """Get cleaned second surname"""
-        return self.clean_name(self.materno) if self.materno else ''
+        return self.clean_name(self.materno) if self.materno else ""
 
     @property
     def nombre_iniciales(self) -> str:
@@ -330,7 +441,7 @@ class CURPGenerator(CURPGeneratorUtils):
 
         words = self.nombre_calculo.split()
         if len(words) > 1:
-            if words[0] in ('MARIA', 'JOSE', 'MA', 'MA.', 'J', 'J.'):
+            if words[0] in ("MARIA", "JOSE", "MA", "MA.", "J", "J."):
                 return " ".join(words[1:])
         return self.nombre_calculo
 
@@ -348,7 +459,7 @@ class CURPGenerator(CURPGeneratorUtils):
         # First letter of paterno
         paterno = self.paterno_calculo
         if not paterno:
-            raise ValueError('Apellido paterno cannot be empty')
+            raise ValueError("Apellido paterno cannot be empty")
 
         clave.append(paterno[0])
 
@@ -361,19 +472,19 @@ class CURPGenerator(CURPGeneratorUtils):
                 break
 
         if not vowel_found:
-            clave.append('X')
+            clave.append("X")
 
         # First letter of materno (or X if none)
         materno = self.materno_calculo
         if materno:
             clave.append(materno[0])
         else:
-            clave.append('X')
+            clave.append("X")
 
         # First letter of nombre
         nombre = self.nombre_iniciales
         if not nombre:
-            raise ValueError('Nombre cannot be empty')
+            raise ValueError("Nombre cannot be empty")
 
         clave.append(nombre[0])
 
@@ -382,13 +493,13 @@ class CURPGenerator(CURPGeneratorUtils):
         # Check for cacophonic words and replace second character (first vowel) with 'X'
         # Según el Instructivo Normativo CURP, Anexo 2
         if result in self.cacophonic_words:
-            result = result[0] + 'X' + result[2:]
+            result = result[0] + "X" + result[2:]
 
         return result
 
     def generate_date(self) -> str:
         """Generate date portion in YYMMDD format"""
-        return self.fecha_nacimiento.strftime('%y%m%d')
+        return self.fecha_nacimiento.strftime("%y%m%d")
 
     def generate_consonants(self) -> str:
         """
@@ -409,7 +520,7 @@ class CURPGenerator(CURPGeneratorUtils):
         if materno:
             consonants.append(self.get_first_consonant(materno))
         else:
-            consonants.append('X')
+            consonants.append("X")
 
         # First internal consonant of nombre
         nombre = self.nombre_iniciales
@@ -433,17 +544,19 @@ class CURPGenerator(CURPGeneratorUtils):
         """
         # Posición 17: Diferenciador (asignado por RENAPO, usamos '0' por defecto)
         if self.fecha_nacimiento.year < 2000:
-            differentiator = '0'  # Para antes del 2000: 0-9
+            differentiator = "0"  # Para antes del 2000: 0-9
         else:
-            differentiator = 'A'  # Para después del 2000: A-Z o 0-9
+            differentiator = "A"  # Para después del 2000: A-Z o 0-9
 
         # Posición 18: Dígito verificador (calculable)
-        temp_curp = (self.generate_letters() +
-                     self.generate_date() +
-                     self.sexo +
-                     self.get_state_code(self.estado) +
-                     self.generate_consonants() +
-                     differentiator)
+        temp_curp = (
+            self.generate_letters()
+            + self.generate_date()
+            + self.sexo
+            + self.get_state_code(self.estado)
+            + self.generate_consonants()
+            + differentiator
+        )
 
         check_digit = self.calculate_check_digit(temp_curp)
 
@@ -466,7 +579,9 @@ class CURPGenerator(CURPGeneratorUtils):
         :return: Dígito verificador (0-9)
         """
         if len(curp_17) != 17:
-            raise ValueError("CURP debe tener exactamente 17 caracteres para calcular dígito verificador")
+            raise ValueError(
+                "CURP debe tener exactamente 17 caracteres para calcular dígito verificador"
+            )
 
         # Diccionario oficial de valores
         dictionary = "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"

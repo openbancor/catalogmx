@@ -1,6 +1,8 @@
 """Catálogo c_ConfigAutotransporte - Configuraciones Vehiculares"""
+
 import json
 from pathlib import Path
+
 
 class ConfigAutotransporteCatalog:
     _data: list[dict] | None = None
@@ -9,11 +11,18 @@ class ConfigAutotransporteCatalog:
     @classmethod
     def _load_data(cls) -> None:
         if cls._data is None:
-            path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'carta_porte_3' / 'config_autotransporte.json'
-            with open(path, 'r', encoding='utf-8') as f:
+            path = (
+                Path(__file__).parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "carta_porte_3"
+                / "config_autotransporte.json"
+            )
+            with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data['configuraciones']
-            cls._by_code = {item['code']: item for item in cls._data}
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("configuraciones", data)
+            cls._by_code = {item["code"]: item for item in cls._data}
 
     @classmethod
     def get_config(cls, code: str) -> dict | None:
@@ -36,10 +45,10 @@ class ConfigAutotransporteCatalog:
     def get_by_type(cls, tipo: str) -> list[dict]:
         """Obtiene configuraciones por tipo (Unitario, Articulado)"""
         cls._load_data()
-        return [c for c in cls._data if c['type'] == tipo]
+        return [c for c in cls._data if c["type"] == tipo]
 
     @classmethod
     def get_axes_count(cls, code: str) -> int | None:
         """Obtiene el número de ejes de una configuración"""
         config = cls.get_config(code)
-        return config.get('axes') if config else None
+        return config.get("axes") if config else None

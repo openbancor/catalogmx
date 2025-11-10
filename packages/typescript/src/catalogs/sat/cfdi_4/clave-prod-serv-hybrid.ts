@@ -50,7 +50,7 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
       palabrasSimilares: row.palabras_similares || '',
       fechaInicioVigencia: row.fecha_inicio_vigencia || '',
       fechaFinVigencia: row.fecha_fin_vigencia || '',
-      estimuloFranjaFronteriza: ''
+      estimuloFranjaFronteriza: '',
     };
   }
 
@@ -84,7 +84,7 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
          LIMIT ?`,
         [query, limit]
       );
-      return rows.map(row => this.rowToClaveProdServ(row));
+      return rows.map((row) => this.rowToClaveProdServ(row));
     } else {
       // JSON fallback: manual search
       const queryLower = query.toLowerCase();
@@ -113,15 +113,13 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const rows = this.query(
-        'SELECT * FROM clave_prod_serv WHERE clave LIKE ? LIMIT ?',
-        [`${prefix}%`, limit]
-      );
-      return rows.map(row => this.rowToClaveProdServ(row));
+      const rows = this.query('SELECT * FROM clave_prod_serv WHERE clave LIKE ? LIMIT ?', [
+        `${prefix}%`,
+        limit,
+      ]);
+      return rows.map((row) => this.rowToClaveProdServ(row));
     } else {
-      return this._data!
-        .filter(item => item.id.startsWith(prefix))
-        .slice(0, limit);
+      return this._data!.filter((item) => item.id.startsWith(prefix)).slice(0, limit);
     }
   }
 
@@ -132,15 +130,15 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const rows = this.query(
-        'SELECT * FROM clave_prod_serv WHERE incluye_iva = ? LIMIT ?',
-        [includesIVA ? 1 : 0, limit]
-      );
-      return rows.map(row => this.rowToClaveProdServ(row));
+      const rows = this.query('SELECT * FROM clave_prod_serv WHERE incluye_iva = ? LIMIT ?', [
+        includesIVA ? 1 : 0,
+        limit,
+      ]);
+      return rows.map((row) => this.rowToClaveProdServ(row));
     } else {
-      return this._data!
-        .filter(item => item.incluirIVATrasladado === (includesIVA ? 'Sí' : 'No'))
-        .slice(0, limit);
+      return this._data!.filter(
+        (item) => item.incluirIVATrasladado === (includesIVA ? 'Sí' : 'No')
+      ).slice(0, limit);
     }
   }
 
@@ -151,15 +149,15 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const rows = this.query(
-        'SELECT * FROM clave_prod_serv WHERE incluye_ieps = ? LIMIT ?',
-        [includesIEPS ? 1 : 0, limit]
-      );
-      return rows.map(row => this.rowToClaveProdServ(row));
+      const rows = this.query('SELECT * FROM clave_prod_serv WHERE incluye_ieps = ? LIMIT ?', [
+        includesIEPS ? 1 : 0,
+        limit,
+      ]);
+      return rows.map((row) => this.rowToClaveProdServ(row));
     } else {
-      return this._data!
-        .filter(item => item.incluirIEPSTrasladado === (includesIEPS ? 'Sí' : 'No'))
-        .slice(0, limit);
+      return this._data!.filter(
+        (item) => item.incluirIEPSTrasladado === (includesIEPS ? 'Sí' : 'No')
+      ).slice(0, limit);
     }
   }
 
@@ -170,11 +168,8 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const rows = this.query(
-        'SELECT * FROM clave_prod_serv LIMIT ? OFFSET ?',
-        [limit, offset]
-      );
-      return rows.map(row => this.rowToClaveProdServ(row));
+      const rows = this.query('SELECT * FROM clave_prod_serv LIMIT ? OFFSET ?', [limit, offset]);
+      return rows.map((row) => this.rowToClaveProdServ(row));
     } else {
       return this._data!.slice(offset, offset + limit);
     }
@@ -187,7 +182,9 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const result = this.queryOne<{ count: number }>('SELECT COUNT(*) as count FROM clave_prod_serv');
+      const result = this.queryOne<{ count: number }>(
+        'SELECT COUNT(*) as count FROM clave_prod_serv'
+      );
       return result?.count || 0;
     } else {
       return this._data!.length;
@@ -207,7 +204,7 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
          LIMIT ?`,
         [limit]
       );
-      return rows.map(row => this.rowToClaveProdServ(row));
+      return rows.map((row) => this.rowToClaveProdServ(row));
     } else {
       const results: ClaveProdServ[] = [];
       for (const item of this._data!) {
@@ -339,13 +336,17 @@ export class ClaveProdServCatalogHybrid {
         conEstimulo++;
       }
 
-      if (item.incluirIVATrasladado.toUpperCase() === 'SÍ' ||
-          item.incluirIVATrasladado.toUpperCase() === 'SI') {
+      if (
+        item.incluirIVATrasladado.toUpperCase() === 'SÍ' ||
+        item.incluirIVATrasladado.toUpperCase() === 'SI'
+      ) {
         requierenIVA++;
       }
 
-      if (item.incluirIEPSTrasladado.toUpperCase() === 'SÍ' ||
-          item.incluirIEPSTrasladado.toUpperCase() === 'SI') {
+      if (
+        item.incluirIEPSTrasladado.toUpperCase() === 'SÍ' ||
+        item.incluirIEPSTrasladado.toUpperCase() === 'SI'
+      ) {
         requierenIEPS++;
       }
     }
@@ -404,15 +405,17 @@ export class ClaveProdServCatalogHybrid {
 
       // Filter by IVA
       if (criteria.requiereIVA !== undefined) {
-        const requiereIVA = item.incluirIVATrasladado.toUpperCase() === 'SÍ' ||
-                           item.incluirIVATrasladado.toUpperCase() === 'SI';
+        const requiereIVA =
+          item.incluirIVATrasladado.toUpperCase() === 'SÍ' ||
+          item.incluirIVATrasladado.toUpperCase() === 'SI';
         if (criteria.requiereIVA !== requiereIVA) continue;
       }
 
       // Filter by IEPS
       if (criteria.requiereIEPS !== undefined) {
-        const requiereIEPS = item.incluirIEPSTrasladado.toUpperCase() === 'SÍ' ||
-                            item.incluirIEPSTrasladado.toUpperCase() === 'SI';
+        const requiereIEPS =
+          item.incluirIEPSTrasladado.toUpperCase() === 'SÍ' ||
+          item.incluirIEPSTrasladado.toUpperCase() === 'SI';
         if (criteria.requiereIEPS !== requiereIEPS) continue;
       }
 

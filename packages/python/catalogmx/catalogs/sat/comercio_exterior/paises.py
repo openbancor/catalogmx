@@ -3,6 +3,9 @@
 import json
 from pathlib import Path
 
+from catalogmx.utils.text import normalize_text
+
+
 class PaisCatalog:
     """Catálogo de países para identificar origen/destino en comercio exterior"""
 
@@ -15,15 +18,19 @@ class PaisCatalog:
         """Carga los datos del catálogo desde el archivo JSON compartido"""
         if cls._data is None:
             current_file = Path(__file__)
-            shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
-                              / 'shared-data' / 'sat' / 'comercio_exterior' / 'paises.json')
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "comercio_exterior"
+                / "paises.json"
+            )
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                cls._data = data['paises']
+            with open(shared_data_path, encoding="utf-8") as f:
+                cls._data = json.load(f)
 
-            cls._pais_by_code = {item['codigo']: item for item in cls._data}
-            cls._pais_by_iso2 = {item['iso2']: item for item in cls._data}
+            cls._pais_by_code = {item["codigo"]: item for item in cls._data}
+            cls._pais_by_iso2 = {item["iso2"]: item for item in cls._data}
 
     @classmethod
     def get_pais(cls, code: str) -> dict | None:
@@ -56,7 +63,7 @@ class PaisCatalog:
             True si requiere estado/provincia
         """
         pais = cls.get_pais(code)
-        return pais.get('requiere_subdivision', False) if pais else False
+        return pais.get("requiere_subdivision", False) if pais else False
 
     @classmethod
     def get_all(cls) -> list[dict]:
@@ -66,13 +73,16 @@ class PaisCatalog:
 
     @classmethod
     def search(cls, query: str) -> list[dict]:
-        """Busca países por código o nombre"""
+        """Busca países por código o nombre (insensible a acentos)"""
         cls._load_data()
-        query_lower = query.lower()
+        query_normalized = normalize_text(query)
 
         return [
-            item for item in cls._data
-            if (query_lower in item['codigo'].lower() or
-                query_lower in item['nombre'].lower() or
-                query_lower in item.get('iso2', '').lower())
+            item
+            for item in cls._data
+            if (
+                query_normalized in normalize_text(item["codigo"])
+                or query_normalized in normalize_text(item["nombre"])
+                or query_normalized in normalize_text(item.get("iso2", ""))
+            )
         ]

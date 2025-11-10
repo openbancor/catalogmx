@@ -39,10 +39,7 @@ export class CodigosLADA {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(
-      __dirname,
-      '../../../../shared-data/ift/codigos_lada.json'
-    );
+    const dataPath = path.resolve(__dirname, '../../../../shared-data/ift/codigos_lada.json');
     const rawData = fs.readFileSync(dataPath, 'utf-8');
     const jsonData: CodigosLADAData = JSON.parse(rawData);
     this._data = jsonData.codigos;
@@ -69,9 +66,7 @@ export class CodigosLADA {
    */
   static buscarPorCiudad(ciudad: string): CodigoLADA[] {
     this.loadData();
-    return this._data!.filter((c) =>
-      c.ciudad.toLowerCase().includes(ciudad.toLowerCase())
-    );
+    return this._data!.filter((c) => c.ciudad.toLowerCase().includes(ciudad.toLowerCase()));
   }
 
   /**
@@ -79,9 +74,7 @@ export class CodigosLADA {
    */
   static getPorEstado(estado: string): CodigoLADA[] {
     this.loadData();
-    return this._data!.filter(
-      (c) => c.estado.toLowerCase() === estado.toLowerCase()
-    );
+    return this._data!.filter((c) => c.estado.toLowerCase() === estado.toLowerCase());
   }
 
   /**
@@ -97,9 +90,7 @@ export class CodigosLADA {
    */
   static getPorRegion(region: string): CodigoLADA[] {
     this.loadData();
-    return this._data!.filter(
-      (c) => c.region.toLowerCase() === region.toLowerCase()
-    );
+    return this._data!.filter((c) => c.region.toLowerCase() === region.toLowerCase());
   }
 
   /**

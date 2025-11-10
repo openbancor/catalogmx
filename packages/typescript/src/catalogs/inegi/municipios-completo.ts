@@ -31,14 +31,14 @@ export class MunicipiosCompletoCatalog {
    * Get municipality by complete code (cve_completa)
    */
   static getMunicipio(cveCompleta: string): Municipality | undefined {
-    return this.getData().find(mun => mun.cve_completa === cveCompleta);
+    return this.getData().find((mun) => mun.cve_completa === cveCompleta);
   }
 
   /**
    * Get municipalities by state (cve_entidad)
    */
   static getByEntidad(cveEntidad: string): Municipality[] {
-    return this.getData().filter(mun => mun.cve_entidad === cveEntidad);
+    return this.getData().filter((mun) => mun.cve_entidad === cveEntidad);
   }
 
   /**
@@ -46,9 +46,7 @@ export class MunicipiosCompletoCatalog {
    */
   static searchByName(name: string): Municipality[] {
     const searchTerm = name.toUpperCase();
-    return this.getData().filter(mun =>
-      mun.nom_municipio.toUpperCase().includes(searchTerm)
-    );
+    return this.getData().filter((mun) => mun.nom_municipio.toUpperCase().includes(searchTerm));
   }
 
   /**
@@ -56,9 +54,7 @@ export class MunicipiosCompletoCatalog {
    */
   static getByStateName(stateName: string): Municipality[] {
     const searchTerm = stateName.toUpperCase();
-    return this.getData().filter(mun =>
-      mun.nom_entidad.toUpperCase() === searchTerm
-    );
+    return this.getData().filter((mun) => mun.nom_entidad.toUpperCase() === searchTerm);
   }
 
   /**
@@ -72,7 +68,7 @@ export class MunicipiosCompletoCatalog {
    * Validate municipality code
    */
   static isValid(cveCompleta: string): boolean {
-    return this.getData().some(mun => mun.cve_completa === cveCompleta);
+    return this.getData().some((mun) => mun.cve_completa === cveCompleta);
   }
 
   /**
@@ -87,7 +83,7 @@ export class MunicipiosCompletoCatalog {
    */
   static getUniqueStates(): Array<{ cve_entidad: string; nom_entidad: string }> {
     const statesMap = new Map<string, string>();
-    this.getData().forEach(mun => {
+    this.getData().forEach((mun) => {
       if (!statesMap.has(mun.cve_entidad)) {
         statesMap.set(mun.cve_entidad, mun.nom_entidad);
       }
@@ -95,7 +91,7 @@ export class MunicipiosCompletoCatalog {
 
     return Array.from(statesMap.entries()).map(([cve_entidad, nom_entidad]) => ({
       cve_entidad,
-      nom_entidad
+      nom_entidad,
     }));
   }
 
@@ -104,11 +100,12 @@ export class MunicipiosCompletoCatalog {
    */
   static searchAll(keyword: string): Municipality[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(mun =>
-      mun.nom_municipio.toUpperCase().includes(search) ||
-      mun.nom_entidad.toUpperCase().includes(search) ||
-      mun.cve_completa.includes(search) ||
-      mun.cve_municipio.includes(search)
+    return this.getData().filter(
+      (mun) =>
+        mun.nom_municipio.toUpperCase().includes(search) ||
+        mun.nom_entidad.toUpperCase().includes(search) ||
+        mun.cve_completa.includes(search) ||
+        mun.cve_municipio.includes(search)
     );
   }
 }

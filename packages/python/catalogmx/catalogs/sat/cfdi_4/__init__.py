@@ -11,26 +11,32 @@ Catálogos incluidos:
 - c_Exportacion: Claves de exportación
 - c_TipoRelacion: Tipos de relación entre CFDI
 - c_ObjetoImp: Objeto de impuesto
+- c_ClaveUnidad: Claves de unidad de medida (~2,400 unidades)
+- c_ClaveProdServ: Claves de productos y servicios (~52,000 códigos - SQLite)
 """
 
-from .regimen_fiscal import RegimenFiscalCatalog
-from .uso_cfdi import UsoCFDICatalog
-from .forma_pago import FormaPagoCatalog
-from .metodo_pago import MetodoPagoCatalog
-from .tipo_comprobante import TipoComprobanteCatalog
-from .impuesto import ImpuestoCatalog
+from .clave_prod_serv import ClaveProdServCatalog
+from .clave_unidad import ClaveUnidadCatalog
 from .exportacion import ExportacionCatalog
-from .tipo_relacion import TipoRelacionCatalog
+from .forma_pago import FormaPagoCatalog
+from .impuesto import ImpuestoCatalog
+from .metodo_pago import MetodoPagoCatalog
 from .objeto_imp import ObjetoImpCatalog
+from .regimen_fiscal import RegimenFiscalCatalog
+from .tipo_comprobante import TipoComprobanteCatalog
+from .tipo_relacion import TipoRelacionCatalog
+from .uso_cfdi import UsoCFDICatalog
 
 __all__ = [
-    'RegimenFiscalCatalog',
-    'UsoCFDICatalog',
-    'FormaPagoCatalog',
-    'MetodoPagoCatalog',
-    'TipoComprobanteCatalog',
-    'ImpuestoCatalog',
-    'ExportacionCatalog',
-    'TipoRelacionCatalog',
-    'ObjetoImpCatalog',
+    "RegimenFiscalCatalog",
+    "UsoCFDICatalog",
+    "FormaPagoCatalog",
+    "MetodoPagoCatalog",
+    "TipoComprobanteCatalog",
+    "ImpuestoCatalog",
+    "ExportacionCatalog",
+    "TipoRelacionCatalog",
+    "ObjetoImpCatalog",
+    "ClaveUnidadCatalog",
+    "ClaveProdServCatalog",
 ]

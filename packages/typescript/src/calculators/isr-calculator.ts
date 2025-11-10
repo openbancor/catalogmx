@@ -27,10 +27,7 @@ export class ISRCalculator {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(
-      __dirname,
-      '../../../shared-data/sat/impuestos/isr_tablas.json'
-    );
+    const dataPath = path.resolve(__dirname, '../../../shared-data/sat/impuestos/isr_tablas.json');
     const rawData = fs.readFileSync(dataPath, 'utf-8');
     this._data = JSON.parse(rawData) as ISRData;
   }
@@ -46,9 +43,7 @@ export class ISRCalculator {
     periodicidad: 'mensual' | 'anual' | 'quincenal' | 'semanal' | 'diario' = 'mensual'
   ): ISRTabla | undefined {
     this.loadData();
-    return this._data!.tablas.find(
-      t => t.año === año && t.periodicidad === periodicidad
-    );
+    return this._data!.tablas.find((t) => t.año === año && t.periodicidad === periodicidad);
   }
 
   /**
@@ -133,7 +128,7 @@ export class ISRCalculator {
    * @returns Tramo correspondiente o undefined
    */
   private static findTramo(ingreso: number, tramos: ISRTramo[]): ISRTramo | undefined {
-    return tramos.find(t => {
+    return tramos.find((t) => {
       const dentroDeLimiteInferior = ingreso >= t.limite_inferior;
       const dentroDeLimiteSuperior = t.limite_superior === null || ingreso <= t.limite_superior;
       return dentroDeLimiteInferior && dentroDeLimiteSuperior;
@@ -150,7 +145,7 @@ export class ISRCalculator {
     ingreso: number,
     tramos: SubsidioEmpleo[]
   ): SubsidioEmpleo | undefined {
-    return tramos.find(t => {
+    return tramos.find((t) => {
       const dentroDeLimiteInferior = ingreso >= t.limite_inferior;
       const dentroDeLimiteSuperior = t.limite_superior === null || ingreso <= t.limite_superior;
       return dentroDeLimiteInferior && dentroDeLimiteSuperior;
@@ -181,7 +176,10 @@ export class ISRCalculator {
    * @param año - Año fiscal
    * @returns ISR anual total
    */
-  static calcularISRAnual(ingresosMensuales: number[], año: number = new Date().getFullYear()): number {
+  static calcularISRAnual(
+    ingresosMensuales: number[],
+    año: number = new Date().getFullYear()
+  ): number {
     if (ingresosMensuales.length !== 12) {
       throw new Error('Se requieren exactamente 12 ingresos mensuales');
     }
@@ -235,7 +233,7 @@ export class ISRCalculator {
    */
   static getAñosDisponibles(): number[] {
     this.loadData();
-    const años = new Set(this._data!.tablas.map(t => t.año));
+    const años = new Set(this._data!.tablas.map((t) => t.año));
     return Array.from(años).sort((a, b) => b - a);
   }
 }

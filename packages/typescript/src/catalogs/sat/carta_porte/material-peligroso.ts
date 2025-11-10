@@ -11,7 +11,9 @@ export class MaterialPeligrosoCatalog {
 
   private static getData(): MaterialPeligroso[] {
     if (!this._data) {
-      this._data = loadCatalogObject<MaterialPeligroso>('sat/carta_porte_3/material_peligroso.json');
+      this._data = loadCatalogObject<MaterialPeligroso>(
+        'sat/carta_porte_3/material_peligroso.json'
+      );
     }
     return this._data;
   }
@@ -21,11 +23,11 @@ export class MaterialPeligrosoCatalog {
   }
 
   static getMaterial(code: string): MaterialPeligroso | undefined {
-    return this.getData().find(m => m.code === code.toUpperCase());
+    return this.getData().find((m) => m.code === code.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(m => m.code === code.toUpperCase());
+    return this.getData().some((m) => m.code === code.toUpperCase());
   }
 
   /**
@@ -61,16 +63,14 @@ export class MaterialPeligrosoCatalog {
    */
   static searchByDescription(keyword: string): MaterialPeligroso[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(m =>
-      m.descripcion.toUpperCase().includes(search)
-    );
+    return this.getData().filter((m) => m.descripcion.toUpperCase().includes(search));
   }
 
   /**
    * Get materials by risk class
    */
   static getByClaseRiesgo(clase: string): MaterialPeligroso[] {
-    return this.getData().filter(m => m.clase_riesgo === clase);
+    return this.getData().filter((m) => m.clase_riesgo === clase);
   }
 
   /**
@@ -109,7 +109,7 @@ export class MaterialPeligrosoCatalog {
    * Get materials by packing group
    */
   static getByGrupoEmbalaje(grupo: string): MaterialPeligroso[] {
-    return this.getData().filter(m => m.grupo_embalaje === grupo);
+    return this.getData().filter((m) => m.grupo_embalaje === grupo);
   }
 
   /**

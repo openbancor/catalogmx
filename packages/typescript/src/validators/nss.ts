@@ -129,13 +129,18 @@ export class NSSValidator {
   /**
    * Get NSS components
    */
-  getComponents(): { subdelegation: string; year: string; serial: string; checkDigit: string } | null {
+  getComponents(): {
+    subdelegation: string;
+    year: string;
+    serial: string;
+    checkDigit: string;
+  } | null {
     if (!this.isValid()) return null;
     return {
       subdelegation: this.nss.slice(0, 5),
       year: this.nss.slice(5, 7),
       serial: this.nss.slice(7, 10),
-      checkDigit: this.nss[10]
+      checkDigit: this.nss[10],
     };
   }
 }

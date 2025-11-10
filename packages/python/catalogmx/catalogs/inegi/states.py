@@ -4,8 +4,11 @@ Mexican States Catalog from INEGI
 This module provides access to the official catalog of Mexican states
 (entidades federativas) with their CURP codes, INEGI codes, and abbreviations.
 """
+
 import json
 from pathlib import Path
+
+from catalogmx.utils.text import normalize_text
 
 
 class StateCatalog:
@@ -16,6 +19,7 @@ class StateCatalog:
     _data: list[dict] | None = None
     _state_by_code: dict[str, dict] | None = None
     _state_by_name: dict[str, dict] | None = None
+    _state_by_name_normalized: dict[str, dict] | None = None
     _state_by_inegi: dict[str, dict] | None = None
 
     @classmethod
@@ -24,22 +28,30 @@ class StateCatalog:
         if cls._data is None:
             # Get path to shared data
             current_file = Path(__file__)
-            shared_data_path = current_file.parent.parent.parent.parent.parent.parent / 'shared-data' / 'inegi' / 'states.json'
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "inegi"
+                / "states.json"
+            )
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                cls._data = data['states']
+            with open(shared_data_path, encoding="utf-8") as f:
+                cls._data = json.load(f)
 
             # Create lookup dictionaries
-            cls._state_by_code = {state['code']: state for state in cls._data}
-            cls._state_by_name = {state['name'].upper(): state for state in cls._data}
-            cls._state_by_inegi = {state['clave_inegi']: state for state in cls._data}
+            cls._state_by_code = {state["code"]: state for state in cls._data}
+            cls._state_by_name = {state["name"].upper(): state for state in cls._data}
+            cls._state_by_name_normalized = {
+                normalize_text(state["name"]): state for state in cls._data
+            }
+            cls._state_by_inegi = {state["clave_inegi"]: state for state in cls._data}
 
             # Add aliases to name lookup
             for state in cls._data:
-                if 'aliases' in state:
-                    for alias in state['aliases']:
+                if "aliases" in state:
+                    for alias in state["aliases"]:
                         cls._state_by_name[alias.upper()] = state
+                        cls._state_by_name_normalized[normalize_text(alias)] = state
 
     @classmethod
     def get_all_states(cls) -> list[dict]:
@@ -65,13 +77,13 @@ class StateCatalog:
     @classmethod
     def get_state_by_name(cls, name: str) -> dict | None:
         """
-        Get state information by name
+        Get state information by name (case and accent insensitive)
 
-        :param name: State name (case insensitive)
+        :param name: State name (case and accent insensitive)
         :return: State dictionary or None if not found
         """
         cls._load_data()
-        return cls._state_by_name.get(name.upper())
+        return cls._state_by_name_normalized.get(normalize_text(name))
 
     @classmethod
     def get_state_by_inegi_code(cls, code: str) -> dict | None:
@@ -103,7 +115,7 @@ class StateCatalog:
         :return: Dictionary mapping state names to codes
         """
         cls._load_data()
-        return {state['name']: state['code'] for state in cls._data}
+        return {state["name"]: state["code"] for state in cls._data}
 
     @classmethod
     def get_inegi_codes(cls) -> dict[str, str]:
@@ -113,7 +125,7 @@ class StateCatalog:
         :return: Dictionary mapping state names to INEGI codes
         """
         cls._load_data()
-        return {state['name']: state['clave_inegi'] for state in cls._data}
+        return {state["name"]: state["clave_inegi"] for state in cls._data}
 
 
 # Convenience functions
@@ -125,12 +137,12 @@ def get_states_dict() -> dict[str, dict]:
 
 def get_state_names() -> list[str]:
     """Get list of all state names"""
-    return [state['name'] for state in StateCatalog.get_all_states()]
+    return [state["name"] for state in StateCatalog.get_all_states()]
 
 
 # Export commonly used functions
 __all__ = [
-    'StateCatalog',
-    'get_states_dict',
-    'get_state_names',
+    "StateCatalog",
+    "get_states_dict",
+    "get_state_names",
 ]

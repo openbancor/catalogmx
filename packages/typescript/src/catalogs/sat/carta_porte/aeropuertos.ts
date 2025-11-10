@@ -21,27 +21,27 @@ export class AeropuertosCatalog {
   }
 
   static getByCode(code: string): Aeropuerto | undefined {
-    return this.getData().find(a => a.code === code.toUpperCase());
+    return this.getData().find((a) => a.code === code.toUpperCase());
   }
 
   static getByIATA(iata: string): Aeropuerto | undefined {
-    return this.getData().find(a => a.iata === iata.toUpperCase());
+    return this.getData().find((a) => a.iata === iata.toUpperCase());
   }
 
   static getByICAO(icao: string): Aeropuerto | undefined {
-    return this.getData().find(a => a.icao === icao.toUpperCase());
+    return this.getData().find((a) => a.icao === icao.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(a => a.code === code.toUpperCase());
+    return this.getData().some((a) => a.code === code.toUpperCase());
   }
 
   static isValidIATA(iata: string): boolean {
-    return this.getData().some(a => a.iata === iata.toUpperCase());
+    return this.getData().some((a) => a.iata === iata.toUpperCase());
   }
 
   static isValidICAO(icao: string): boolean {
-    return this.getData().some(a => a.icao === icao.toUpperCase());
+    return this.getData().some((a) => a.icao === icao.toUpperCase());
   }
 
   /**
@@ -49,7 +49,7 @@ export class AeropuertosCatalog {
    */
   static getByEstado(estado: string): Aeropuerto[] {
     const search = estado.toUpperCase();
-    return this.getData().filter(a => a.estado.toUpperCase().includes(search));
+    return this.getData().filter((a) => a.estado.toUpperCase().includes(search));
   }
 
   /**
@@ -57,7 +57,7 @@ export class AeropuertosCatalog {
    */
   static getByCiudad(ciudad: string): Aeropuerto[] {
     const search = ciudad.toUpperCase();
-    return this.getData().filter(a => a.ciudad.toUpperCase().includes(search));
+    return this.getData().filter((a) => a.ciudad.toUpperCase().includes(search));
   }
 
   /**
@@ -65,9 +65,8 @@ export class AeropuertosCatalog {
    */
   static searchByName(keyword: string): Aeropuerto[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(a =>
-      a.name.toUpperCase().includes(search) ||
-      a.ciudad.toUpperCase().includes(search)
+    return this.getData().filter(
+      (a) => a.name.toUpperCase().includes(search) || a.ciudad.toUpperCase().includes(search)
     );
   }
 }

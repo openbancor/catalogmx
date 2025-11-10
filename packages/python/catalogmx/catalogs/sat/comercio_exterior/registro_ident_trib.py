@@ -4,6 +4,7 @@ import json
 import re
 from pathlib import Path
 
+
 class RegistroIdentTribCatalog:
     """Catálogo de tipos de registro tributario del receptor extranjero"""
 
@@ -15,14 +16,20 @@ class RegistroIdentTribCatalog:
         """Carga los datos del catálogo desde el archivo JSON compartido"""
         if cls._data is None:
             current_file = Path(__file__)
-            shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
-                              / 'shared-data' / 'sat' / 'comercio_exterior' / 'registro_ident_trib.json')
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "comercio_exterior"
+                / "registro_ident_trib.json"
+            )
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data['tipos_registro']
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("tipos_registro", data)
 
-            cls._tipo_by_code = {item['code']: item for item in cls._data}
+            cls._tipo_by_code = {item["code"]: item for item in cls._data}
 
     @classmethod
     def get_tipo(cls, code: str) -> dict | None:
@@ -49,21 +56,18 @@ class RegistroIdentTribCatalog:
         """
         tipo = cls.get_tipo(tipo_registro)
         if not tipo:
-            return {'valid': False, 'errors': ['Tipo de registro no válido']}
+            return {"valid": False, "errors": ["Tipo de registro no válido"]}
 
         errors = []
 
         # Validar formato si está definido
-        format_pattern = tipo.get('format_pattern')
+        format_pattern = tipo.get("format_pattern")
         if format_pattern:
             if not re.match(format_pattern, num_reg_id_trib):
-                format_desc = tipo.get('format_description', 'formato no válido')
-                errors.append(f'Formato incorrecto. Esperado: {format_desc}')
+                format_desc = tipo.get("format_description", "formato no válido")
+                errors.append(f"Formato incorrecto. Esperado: {format_desc}")
 
-        return {
-            'valid': len(errors) == 0,
-            'errors': errors
-        }
+        return {"valid": len(errors) == 0, "errors": errors}
 
     @classmethod
     def get_all(cls) -> list[dict]:

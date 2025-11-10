@@ -522,15 +522,39 @@ export interface PlacaFormato {
   formato: string;
   pattern: string;
   descripcion: string;
-  tipo: 'particular' | 'motocicleta' | 'diplomatico' | 'consular' | 'organismo_internacional' |
-        'servicio_publico_federal' | 'servicio_publico_estatal' | 'carga_federal' | 'carga_estatal' |
-        'militar_ejercito' | 'militar_marina' | 'guardia_nacional' |
-        'policia_federal' | 'policia_estatal' | 'policia_municipal' |
-        'bomberos' | 'ambulancia' | 'proteccion_civil' |
-        'remolque_federal' | 'remolque_estatal' | 'grua' | 'convertidor' |
-        'antiguo' | 'ecologico' | 'demostracion' | 'capacidades_diferentes' |
-        'transporte_escolar' | 'taxi' | 'exportacion' | 'importacion' | 'arrendamiento' |
-        'gobierno_federal';
+  tipo:
+    | 'particular'
+    | 'motocicleta'
+    | 'diplomatico'
+    | 'consular'
+    | 'organismo_internacional'
+    | 'servicio_publico_federal'
+    | 'servicio_publico_estatal'
+    | 'carga_federal'
+    | 'carga_estatal'
+    | 'militar_ejercito'
+    | 'militar_marina'
+    | 'guardia_nacional'
+    | 'policia_federal'
+    | 'policia_estatal'
+    | 'policia_municipal'
+    | 'bomberos'
+    | 'ambulancia'
+    | 'proteccion_civil'
+    | 'remolque_federal'
+    | 'remolque_estatal'
+    | 'grua'
+    | 'convertidor'
+    | 'antiguo'
+    | 'ecologico'
+    | 'demostracion'
+    | 'capacidades_diferentes'
+    | 'transporte_escolar'
+    | 'taxi'
+    | 'exportacion'
+    | 'importacion'
+    | 'arrendamiento'
+    | 'gobierno_federal';
   activo: boolean;
   vigencia_inicio?: string;
   vigencia_fin?: string;

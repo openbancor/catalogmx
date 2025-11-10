@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+
 class MonedaCatalog:
     """Catálogo de monedas para operaciones de comercio exterior"""
 
@@ -14,14 +15,20 @@ class MonedaCatalog:
         """Carga los datos del catálogo desde el archivo JSON compartido"""
         if cls._data is None:
             current_file = Path(__file__)
-            shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
-                              / 'shared-data' / 'sat' / 'comercio_exterior' / 'monedas.json')
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "comercio_exterior"
+                / "monedas.json"
+            )
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data['monedas']
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("monedas", data)
 
-            cls._moneda_by_code = {item['codigo']: item for item in cls._data}
+            cls._moneda_by_code = {item["codigo"]: item for item in cls._data}
 
     @classmethod
     def get_moneda(cls, code: str) -> dict | None:
@@ -46,39 +53,36 @@ class MonedaCatalog:
             dict con 'valid' (bool) y 'errors' (list)
         """
         errors = []
-        moneda = cfdi_data.get('moneda', '').upper()
-        tipo_cambio = cfdi_data.get('tipo_cambio_usd')
-        total = cfdi_data.get('total')
-        total_usd = cfdi_data.get('total_usd')
+        moneda = cfdi_data.get("moneda", "").upper()
+        tipo_cambio = cfdi_data.get("tipo_cambio_usd")
+        total = cfdi_data.get("total")
+        total_usd = cfdi_data.get("total_usd")
 
         # Validar que la moneda existe
         if not cls.is_valid(moneda):
-            errors.append(f'Moneda {moneda} no válida')
-            return {'valid': False, 'errors': errors}
+            errors.append(f"Moneda {moneda} no válida")
+            return {"valid": False, "errors": errors}
 
         # Si es USD, tipo_cambio debe ser 1
-        if moneda == 'USD':
+        if moneda == "USD":
             if tipo_cambio and tipo_cambio != 1:
-                errors.append('Para USD, TipoCambioUSD debe ser 1')
+                errors.append("Para USD, TipoCambioUSD debe ser 1")
 
             if total != total_usd:
-                errors.append('Para USD, Total debe ser igual a TotalUSD')
+                errors.append("Para USD, Total debe ser igual a TotalUSD")
 
         # Si NO es USD, tipo_cambio es obligatorio
         else:
             if not tipo_cambio:
-                errors.append('TipoCambioUSD es obligatorio cuando Moneda != USD')
+                errors.append("TipoCambioUSD es obligatorio cuando Moneda != USD")
 
             # Validar cálculo de TotalUSD
             if tipo_cambio and total and total_usd:
                 expected_total_usd = round(total * tipo_cambio, 2)
                 if abs(total_usd - expected_total_usd) > 0.01:
-                    errors.append(f'TotalUSD incorrecto. Esperado: {expected_total_usd}')
+                    errors.append(f"TotalUSD incorrecto. Esperado: {expected_total_usd}")
 
-        return {
-            'valid': len(errors) == 0,
-            'errors': errors
-        }
+        return {"valid": len(errors) == 0, "errors": errors}
 
     @classmethod
     def get_all(cls) -> list[dict]:
@@ -93,8 +97,11 @@ class MonedaCatalog:
         query_lower = query.lower()
 
         return [
-            item for item in cls._data
-            if (query_lower in item['codigo'].lower() or
-                query_lower in item['nombre'].lower() or
-                query_lower in item.get('pais', '').lower())
+            item
+            for item in cls._data
+            if (
+                query_lower in item["codigo"].lower()
+                or query_lower in item["nombre"].lower()
+                or query_lower in item.get("pais", "").lower()
+            )
         ]

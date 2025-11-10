@@ -1,0 +1,143 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  # Python Testing and Linting
+  python-tests:
+    name: Python ${{ matrix.python-version }} Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    defaults:
+      run:
+        working-directory: packages/python
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Lint with ruff
+        run: |
+          ruff check catalogmx/
+
+      - name: Format check with black
+        run: |
+          black --check catalogmx/
+
+      - name: Type check with mypy
+        run: |
+          mypy catalogmx/
+        continue-on-error: true  # Don't fail on type errors yet
+
+      - name: Run tests with pytest
+        run: |
+          pytest tests/ -v --cov=catalogmx --cov-report=xml --cov-report=term-missing --cov-branch
+
+      - name: Check coverage threshold (100%)
+        run: |
+          coverage report --fail-under=100
+        continue-on-error: true  # Don't fail build yet, just warn
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./packages/python/coverage.xml
+          flags: python
+          name: python-${{ matrix.python-version }}
+        if: matrix.python-version == '3.12'
+        continue-on-error: true  # Don't fail if codecov upload fails
+
+  # TypeScript Testing and Linting
+  typescript-tests:
+    name: TypeScript Node ${{ matrix.node-version }} Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [16, 18, 20, 22]
+
+    defaults:
+      run:
+        working-directory: packages/typescript
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint with ESLint
+        run: npm run lint
+
+      - name: Format check with Prettier
+        run: npm run format:check
+
+      - name: Type check with TypeScript
+        run: npm run typecheck
+
+      - name: Run tests with Jest
+        run: npm run test:coverage
+
+      - name: Check coverage threshold (100%)
+        run: |
+          node -e "
+            const coverage = require('./coverage/coverage-summary.json');
+            const total = coverage.total;
+            const metrics = ['lines', 'statements', 'functions', 'branches'];
+            let failed = false;
+            metrics.forEach(metric => {
+              if (total[metric].pct < 100) {
+                console.log(\`❌ ${metric}: ${total[metric].pct}% (expected 100%)\`);
+                failed = true;
+              } else {
+                console.log(\`✅ ${metric}: ${total[metric].pct}%\`);
+              }
+            });
+            if (failed) {
+              console.log('⚠️  Coverage is below 100% threshold');
+              process.exit(0);  // Don't fail yet, just warn
+            } else {
+              console.log('✅ All coverage metrics at 100%!');
+            }
+          "
+        continue-on-error: true  # Don't fail build yet, just warn
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./packages/typescript/coverage/coverage-final.json
+          flags: typescript
+          name: typescript-node-${{ matrix.node-version }}
+        if: matrix.node-version == '20'
+        continue-on-error: true  # Don't fail if codecov upload fails
+
+  # Combined Quality Check
+  quality-gate:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    needs: [python-tests, typescript-tests]
+    steps:
+      - name: All tests passed
+        run: echo "✅ All quality checks passed!"

@@ -3,10 +3,9 @@ Mexican Minimum Wage Catalog
 
 This module provides access to historical minimum wage data for Mexico.
 """
+
 import json
-from datetime import date
 from pathlib import Path
-from typing import List, Dict, Optional
 
 
 class SalariosMinimos:
@@ -17,7 +16,7 @@ class SalariosMinimos:
     with separate values for border zone and rest of country.
     """
 
-    _data: Optional[List[Dict]] = None
+    _data: list[dict] | None = None
 
     @classmethod
     def _load_data(cls) -> None:
@@ -26,13 +25,18 @@ class SalariosMinimos:
             # Path: catalogmx/packages/python/catalogmx/catalogs/mexico/salarios_minimos.py
             # Target: catalogmx/packages/shared-data/mexico/salarios_minimos.json
             current_file = Path(__file__)
-            shared_data_path = current_file.parent.parent.parent.parent.parent / 'shared-data' / 'mexico' / 'salarios_minimos.json'
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "mexico"
+                / "salarios_minimos.json"
+            )
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding="utf-8") as f:
                 cls._data = json.load(f)
 
     @classmethod
-    def get_data(cls) -> List[Dict]:
+    def get_data(cls) -> list[dict]:
         """
         Get all minimum wage data
 
@@ -42,7 +46,7 @@ class SalariosMinimos:
         return cls._data.copy()
 
     @classmethod
-    def get_por_anio(cls, anio: int) -> Optional[Dict]:
+    def get_por_anio(cls, anio: int) -> dict | None:
         """
         Get minimum wage for a specific year
 
@@ -52,13 +56,13 @@ class SalariosMinimos:
         cls._load_data()
 
         for record in cls._data:
-            if record['año'] == anio:
+            if record["año"] == anio:
                 return record.copy()
 
         return None
 
     @classmethod
-    def get_actual(cls) -> Optional[Dict]:
+    def get_actual(cls) -> dict | None:
         """
         Get current minimum wage (latest year in data)
 
@@ -95,7 +99,7 @@ class SalariosMinimos:
         return diario * dias
 
     @classmethod
-    def get_por_zona(cls, anio: int, zona_frontera: bool = False) -> Optional[float]:
+    def get_por_zona(cls, anio: int, zona_frontera: bool = False) -> float | None:
         """
         Get minimum wage for specific zone and year
 
@@ -108,12 +112,12 @@ class SalariosMinimos:
             return None
 
         if zona_frontera:
-            return record.get('zona_frontera_norte')
+            return record.get("zona_frontera_norte")
         else:
-            return record.get('resto_pais')
+            return record.get("resto_pais")
 
     @classmethod
-    def get_incremento(cls, anio: int) -> Optional[float]:
+    def get_incremento(cls, anio: int) -> float | None:
         """
         Get percentage increment for a specific year
 
@@ -124,16 +128,16 @@ class SalariosMinimos:
         if not record:
             return None
 
-        return record.get('incremento_porcentual')
+        return record.get("incremento_porcentual")
 
 
 # Convenience functions
-def get_salario_actual() -> Optional[Dict]:
+def get_salario_actual() -> dict | None:
     """Get current minimum wage"""
     return SalariosMinimos.get_actual()
 
 
-def get_salario_por_anio(anio: int) -> Optional[Dict]:
+def get_salario_por_anio(anio: int) -> dict | None:
     """Get minimum wage for a specific year"""
     return SalariosMinimos.get_por_anio(anio)
 
@@ -145,8 +149,8 @@ def calcular_mensual(diario: float, dias: int = 30) -> float:
 
 # Export commonly used functions and classes
 __all__ = [
-    'SalariosMinimos',
-    'get_salario_actual',
-    'get_salario_por_anio',
-    'calcular_mensual',
+    "SalariosMinimos",
+    "get_salario_actual",
+    "get_salario_por_anio",
+    "calcular_mensual",
 ]

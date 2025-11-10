@@ -24,7 +24,7 @@ export class UMACatalog {
    * Get UMA for a specific year
    */
   static getPorAño(año: number): UMA | undefined {
-    const existente = this.getData().find(u => u.año === año);
+    const existente = this.getData().find((u) => u.año === año);
     if (existente) {
       return existente;
     }
@@ -38,8 +38,10 @@ export class UMACatalog {
     const vigenciaInicio = salario?.vigencia_inicio ?? `${año}-01-01`;
     const vigenciaFin = salario?.vigencia_inicio ? `${año}-12-31` : `${año}-12-31`;
     const valorDiario = equivalencia;
-    const valorMensual = SalariosMinimos.getUmaEquivalente(año, 'mensual') ?? Number((valorDiario * 30.4).toFixed(2));
-    const valorAnual = SalariosMinimos.getUmaEquivalente(año, 'anual') ?? Number((valorDiario * 365).toFixed(2));
+    const valorMensual =
+      SalariosMinimos.getUmaEquivalente(año, 'mensual') ?? Number((valorDiario * 30.4).toFixed(2));
+    const valorAnual =
+      SalariosMinimos.getUmaEquivalente(año, 'anual') ?? Number((valorDiario * 365).toFixed(2));
 
     return {
       año,
@@ -68,15 +70,17 @@ export class UMACatalog {
    */
   static getPorFecha(fecha: string | Date): UMA | undefined {
     const date = typeof fecha === 'string' ? new Date(fecha) : fecha;
-    const sorted = [...this.getData()].sort((a, b) =>
-      new Date(b.vigencia_inicio).getTime() - new Date(a.vigencia_inicio).getTime()
+    const sorted = [...this.getData()].sort(
+      (a, b) => new Date(b.vigencia_inicio).getTime() - new Date(a.vigencia_inicio).getTime()
     );
 
-    return sorted.find(u => {
-      const inicio = new Date(u.vigencia_inicio);
-      const fin = new Date(u.vigencia_fin);
-      return date >= inicio && date <= fin;
-    }) ?? this.getPorAño(date.getFullYear());
+    return (
+      sorted.find((u) => {
+        const inicio = new Date(u.vigencia_inicio);
+        const fin = new Date(u.vigencia_fin);
+        return date >= inicio && date <= fin;
+      }) ?? this.getPorAño(date.getFullYear())
+    );
   }
 
   /**
@@ -128,7 +132,7 @@ export class UMACatalog {
    */
   static getHistorico(añoInicio: number, añoFin: number): UMA[] {
     return this.getData()
-      .filter(u => u.año >= añoInicio && u.año <= añoFin)
+      .filter((u) => u.año >= añoInicio && u.año <= añoFin)
       .sort((a, b) => a.año - b.año);
   }
 

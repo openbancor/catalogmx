@@ -21,11 +21,11 @@ export class TipoJornadaCatalog {
   }
 
   static getJornada(code: string): TipoJornada | undefined {
-    return this.getData().find(j => j.code === code);
+    return this.getData().find((j) => j.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(j => j.code === code);
+    return this.getData().some((j) => j.code === code);
   }
 
   /**
@@ -33,9 +33,7 @@ export class TipoJornadaCatalog {
    */
   static searchByDescription(keyword: string): TipoJornada[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(j =>
-      j.descripcion.toUpperCase().includes(search)
-    );
+    return this.getData().filter((j) => j.descripcion.toUpperCase().includes(search));
   }
 
   /**

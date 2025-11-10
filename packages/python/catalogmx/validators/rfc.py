@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-import re
 import datetime
+import re
+
 import unidecode
 
 
@@ -22,129 +23,130 @@ class RFCGeneral:
         checksum_table:
             Replace characters in RFC to calculate the checksum
     """
+
     general_regex = re.compile(r"[A-Z&Ñ]{3,4}[0-9]{6}[A-Z0-9]{2}[0-9A]")
     date_regex = r"[A-Z&Ñ]{3,4}([0-9]{6})[A-Z0-9]{2}[0-9A]"
     homoclave_regex = r"[A-Z&Ñ]{3,4}[0-9]{6}([A-Z0-9]{2})[0-9A]"
-    homoclave_characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789'
+    homoclave_characters = "ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789"
 
     checksum_table = {
-        '0': '00',
-        '1': '01',
-        '2': '02',
-        '3': '03',
-        '4': '04',
-        '5': '05',
-        '6': '06',
-        '7': '07',
-        '8': '08',
-        '9': '09',
-        'A': '10',
-        'B': '11',
-        'C': '12',
-        'D': '13',
-        'E': '14',
-        'F': '15',
-        'G': '16',
-        'H': '17',
-        'I': '18',
-        'J': '19',
-        'K': '20',
-        'L': '21',
-        'M': '22',
-        'N': '23',
-        '&': '24',
-        'O': '25',
-        'P': '26',
-        'Q': '27',
-        'R': '28',
-        'S': '29',
-        'T': '30',
-        'U': '31',
-        'V': '32',
-        'W': '33',
-        'X': '34',
-        'Y': '35',
-        'Z': '36',
-        ' ': '37',
-        'Ñ': '38',
+        "0": "00",
+        "1": "01",
+        "2": "02",
+        "3": "03",
+        "4": "04",
+        "5": "05",
+        "6": "06",
+        "7": "07",
+        "8": "08",
+        "9": "09",
+        "A": "10",
+        "B": "11",
+        "C": "12",
+        "D": "13",
+        "E": "14",
+        "F": "15",
+        "G": "16",
+        "H": "17",
+        "I": "18",
+        "J": "19",
+        "K": "20",
+        "L": "21",
+        "M": "22",
+        "N": "23",
+        "&": "24",
+        "O": "25",
+        "P": "26",
+        "Q": "27",
+        "R": "28",
+        "S": "29",
+        "T": "30",
+        "U": "31",
+        "V": "32",
+        "W": "33",
+        "X": "34",
+        "Y": "35",
+        "Z": "36",
+        " ": "37",
+        "Ñ": "38",
     }
     quotient_remaining_table = {
-        ' ': '00',
-        '0': '00',
-        '1': '01',
-        '2': '02',
-        '3': '03',
-        '4': '04',
-        '5': '05',
-        '6': '06',
-        '7': '07',
-        '8': '08',
-        '9': '09',
-        '&': '10',
-        'A': '11',
-        'B': '12',
-        'C': '13',
-        'D': '14',
-        'E': '15',
-        'F': '16',
-        'G': '17',
-        'H': '18',
-        'I': '19',
-        'J': '21',
-        'K': '22',
-        'L': '23',
-        'M': '24',
-        'N': '25',
-        'O': '26',
-        'P': '27',
-        'Q': '28',
-        'R': '29',
-        'S': '32',
-        'T': '33',
-        'U': '34',
-        'V': '35',
-        'W': '36',
-        'X': '37',
-        'Y': '38',
-        'Z': '39',
-        'Ñ': '40',
+        " ": "00",
+        "0": "00",
+        "1": "01",
+        "2": "02",
+        "3": "03",
+        "4": "04",
+        "5": "05",
+        "6": "06",
+        "7": "07",
+        "8": "08",
+        "9": "09",
+        "&": "10",
+        "A": "11",
+        "B": "12",
+        "C": "13",
+        "D": "14",
+        "E": "15",
+        "F": "16",
+        "G": "17",
+        "H": "18",
+        "I": "19",
+        "J": "21",
+        "K": "22",
+        "L": "23",
+        "M": "24",
+        "N": "25",
+        "O": "26",
+        "P": "27",
+        "Q": "28",
+        "R": "29",
+        "S": "32",
+        "T": "33",
+        "U": "34",
+        "V": "35",
+        "W": "36",
+        "X": "37",
+        "Y": "38",
+        "Z": "39",
+        "Ñ": "40",
     }
 
     homoclave_assign_table = [
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'M',
-        'N',
-        'P',
-        'Q',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'X',
-        'Y',
-        'Z'
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
     ]
 
 
@@ -161,7 +163,7 @@ class RFCValidator(RFCGeneral):
         :param rfc: The RFC code to be validated, if str then converted to unicode and then to uppercase and stripped.
         :return: RFCValidator instance
         """
-        self.rfc = ''
+        self.rfc = ""
         if bool(rfc) and isinstance(rfc, str):
             # if type(rfc) == str:
             #    rfc = rfc.decode('utf-8')
@@ -177,17 +179,17 @@ class RFCValidator(RFCGeneral):
         :return: A dictionary with the result of the validations.
         """
         validations = {
-            'general_regex': self.validate_general_regex,
-            'date_format': self.validate_date,
-            'homoclave': self.validate_homoclave,
-            'checksum': self.validate_checksum,
+            "general_regex": self.validate_general_regex,
+            "date_format": self.validate_date,
+            "homoclave": self.validate_homoclave,
+            "checksum": self.validate_checksum,
         }
 
         if not strict:
             validations = {
-                'general_regex': self.validate_general_regex,
-                'date_format': self.validate_date,
-                'homoclave': self.validate_homoclave,
+                "general_regex": self.validate_general_regex,
+                "date_format": self.validate_date,
+                "homoclave": self.validate_homoclave,
                 # 'checksum': self.validate_checksum,
             }
         return {name: function() for name, function in validations.items()}
@@ -198,7 +200,7 @@ class RFCValidator(RFCGeneral):
         :param strict: If True checksum won't be checked:
         :return: True if the RFC is valid, False if the RFC is invalid.
         """
-        return not (False in [result for name, result in self.validators(strict=strict).items()])
+        return False not in [result for name, result in self.validators(strict=strict).items()]
 
     is_valid = validate
 
@@ -211,7 +213,7 @@ class RFCValidator(RFCGeneral):
             try:
                 if not date:
                     raise ValueError()
-                datetime.datetime.strptime(date[0], '%y%m%d')
+                datetime.datetime.strptime(date[0], "%y%m%d")
                 return True
             except ValueError:
                 return False
@@ -257,13 +259,13 @@ class RFCValidator(RFCGeneral):
         """
         if self.validate_general_regex():
             if self.is_generic():
-                return 'Genérico'
+                return "Genérico"
             if self.is_fisica():
-                return 'Persona Física'
+                return "Persona Física"
             if self.is_moral():
-                return 'Persona Moral'
+                return "Persona Moral"
         else:
-            return 'RFC Inválido'
+            return "RFC Inválido"
 
     def is_generic(self) -> bool:
         """
@@ -276,7 +278,7 @@ class RFCValidator(RFCGeneral):
         >>> RFCValidator('XAXX010101000').is_generic()
         True
         """
-        if self.rfc in ('XAXX010101000', 'XEXX010101000'):
+        if self.rfc in ("XAXX010101000", "XEXX010101000"):
             return True
         return False
 
@@ -290,7 +292,7 @@ class RFCValidator(RFCGeneral):
                 return True
             else:
                 return False
-        raise ValueError('Invalid RFC')
+        raise ValueError("Invalid RFC")
 
     def is_moral(self) -> bool:
         """
@@ -302,7 +304,7 @@ class RFCValidator(RFCGeneral):
                 return True
             else:
                 return False
-        raise ValueError('Invalid RFC')
+        raise ValueError("Invalid RFC")
 
     def validate_checksum(self) -> bool:
         """
@@ -313,7 +315,10 @@ class RFCValidator(RFCGeneral):
         valid if a "Cédula de Identificación Fiscal" is given.
         """
         if self.validate_general_regex():
-            return (self.rfc[-1] == self.calculate_last_digit(self.rfc, with_checksum=True) or self.is_generic())
+            return (
+                self.rfc[-1] == self.calculate_last_digit(self.rfc, with_checksum=True)
+                or self.is_generic()
+            )
         return False
 
     @classmethod
@@ -333,86 +338,203 @@ class RFCValidator(RFCGeneral):
         assert len(str_rfc) in (11, 12)
         if len(str_rfc) == 11:
             str_rfc = str_rfc.rjust(12)
-        checksum = ((int(cls.checksum_table[n]), index) for index, n in zip(range(13, 1, -1), str_rfc))
+        checksum = (
+            (int(cls.checksum_table[n]), index)
+            for index, n in zip(range(13, 1, -1), str_rfc, strict=False)
+        )
         suma = sum(int(x * y) for x, y in checksum)
 
         residual = suma % 11
 
         if residual == 0:
-            return '0'
+            return "0"
         else:
             residual = 11 - residual
             if residual == 10:
-                return 'A'
+                return "A"
             else:
                 return str(residual)
 
 
 class RFCGeneratorUtils(RFCGeneral):
-    vocales = 'AEIOU'
-    excluded_words_fisicas = [
-        'DE',
-        'LA',
-        'LAS',
-        'MC',
-        'VON',
-        'DEL',
-        'LOS',
-        'Y',
-        'MAC',
-        'VAN',
-        'MI'
+    vocales = "AEIOU"
+    excluded_words_fisicas = ["DE", "LA", "LAS", "MC", "VON", "DEL", "LOS", "Y", "MAC", "VAN", "MI"]
+    cacophonic_words = [
+        "BUEI",
+        "BUEY",
+        "CACA",
+        "CACO",
+        "CAGA",
+        "CAGO",
+        "CAKA",
+        "COGE",
+        "COJA",
+        "COJE",
+        "COJI",
+        "COJO",
+        "CULO",
+        "FETO",
+        "GUEY",
+        "JOTO",
+        "KACA",
+        "KACO",
+        "KAGA",
+        "KAGO",
+        "KOGE",
+        "KOJO",
+        "KAKA",
+        "KULO",
+        "MAME",
+        "MAMO",
+        "MEAR",
+        "MEON",
+        "MION",
+        "MOCO",
+        "MULA",
+        "PEDA",
+        "PEDO",
+        "PENE",
+        "PUTA",
+        "PUTO",
+        "QULO",
+        "RATA",
+        "RUIN",
     ]
-    cacophonic_words = ['BUEI', 'BUEY', 'CACA', 'CACO', 'CAGA', 'CAGO',
-                        'CAKA', 'COGE', 'COJA', 'COJE', 'COJI', 'COJO',
-                        'CULO', 'FETO', 'GUEY', 'JOTO', 'KACA', 'KACO',
-                        'KAGA', 'KAGO', 'KOGE', 'KOJO', 'KAKA', 'KULO',
-                        'MAME', 'MAMO', 'MEAR', 'MEON', 'MION', 'MOCO',
-                        'MULA', 'PEDA', 'PEDO', 'PENE', 'PUTA', 'PUTO',
-                        'QULO', 'RATA', 'RUIN',
-                        ]
     # Lista completa de palabras excluidas según documento SAT
     excluded_words_morales = [
-        'EL', 'LA', 'DE', 'LOS', 'LAS', 'Y', 'DEL', 'MI',
-        'COMPAÑIA', 'COMPAÑÍA', 'CIA', 'CIA.',
-        'SOCIEDAD', 'SOC', 'SOC.',
-        'COOPERATIVA', 'COOP', 'COOP.',
-        'S.A.', 'SA', 'S.A', 'S. A.', 'S. A',
-        'S.A.B.', 'SAB', 'S.A.B', 'S. A. B.', 'S. A. B',
-        'S. DE R.L.', 'S DE RL', 'SRL', 'S.R.L.', 'S. R. L.',
-        'S. EN C.', 'S EN C', 'S.C.', 'SC',
-        'S. EN C. POR A.', 'S EN C POR A',
-        'S. EN N.C.', 'S EN NC',
-        'A.C.', 'AC', 'A. C.',
-        'A. EN P.', 'A EN P',
-        'S.C.L.', 'SCL',
-        'S.N.C.', 'SNC',
-        'C.V.', 'CV', 'C. V.',
-        'SA DE CV', 'S.A. DE C.V.', 'SA DE CV MI', 'S.A. DE C.V. MI',
-        'S.A.B. DE C.V.', 'SAB DE CV', 'S.A.B DE C.V',
-        'SRL DE CV', 'S.R.L. DE C.V.', 'SRL DE CV MI', 'SRL MI',
-        'THE', 'OF', 'COMPANY', 'AND', 'CO', 'CO.',
-        'MC', 'VON', 'MAC', 'VAN',
-        'PARA', 'POR', 'AL', 'E', 'EN', 'CON', 'SUS', 'A',
+        "EL",
+        "LA",
+        "DE",
+        "LOS",
+        "LAS",
+        "Y",
+        "DEL",
+        "MI",
+        "COMPAÑIA",
+        "COMPAÑÍA",
+        "CIA",
+        "CIA.",
+        "SOCIEDAD",
+        "SOC",
+        "SOC.",
+        "COOPERATIVA",
+        "COOP",
+        "COOP.",
+        "S.A.",
+        "SA",
+        "S.A",
+        "S. A.",
+        "S. A",
+        "S.A.B.",
+        "SAB",
+        "S.A.B",
+        "S. A. B.",
+        "S. A. B",
+        "S. DE R.L.",
+        "S DE RL",
+        "SRL",
+        "S.R.L.",
+        "S. R. L.",
+        "S. EN C.",
+        "S EN C",
+        "S.C.",
+        "SC",
+        "S. EN C. POR A.",
+        "S EN C POR A",
+        "S. EN N.C.",
+        "S EN NC",
+        "A.C.",
+        "AC",
+        "A. C.",
+        "A. EN P.",
+        "A EN P",
+        "S.C.L.",
+        "SCL",
+        "S.N.C.",
+        "SNC",
+        "C.V.",
+        "CV",
+        "C. V.",
+        "SA DE CV",
+        "S.A. DE C.V.",
+        "SA DE CV MI",
+        "S.A. DE C.V. MI",
+        "S.A.B. DE C.V.",
+        "SAB DE CV",
+        "S.A.B DE C.V",
+        "SRL DE CV",
+        "S.R.L. DE C.V.",
+        "SRL DE CV MI",
+        "SRL MI",
+        "THE",
+        "OF",
+        "COMPANY",
+        "AND",
+        "CO",
+        "CO.",
+        "MC",
+        "VON",
+        "MAC",
+        "VAN",
+        "PARA",
+        "POR",
+        "AL",
+        "E",
+        "EN",
+        "CON",
+        "SUS",
+        "A",
     ]
 
-    allowed_chars = list('ABCDEFGHIJKLMNÑOPQRSTUVWXYZ&')
+    allowed_chars = list("ABCDEFGHIJKLMNÑOPQRSTUVWXYZ&")
 
     # Tabla de conversión de números a texto
     numeros_texto = {
-        '0': 'CERO', '1': 'UNO', '2': 'DOS', '3': 'TRES', '4': 'CUATRO',
-        '5': 'CINCO', '6': 'SEIS', '7': 'SIETE', '8': 'OCHO', '9': 'NUEVE',
-        '10': 'DIEZ', '11': 'ONCE', '12': 'DOCE', '13': 'TRECE', '14': 'CATORCE',
-        '15': 'QUINCE', '16': 'DIECISEIS', '17': 'DIECISIETE', '18': 'DIECIOCHO',
-        '19': 'DIECINUEVE', '20': 'VEINTE',
+        "0": "CERO",
+        "1": "UNO",
+        "2": "DOS",
+        "3": "TRES",
+        "4": "CUATRO",
+        "5": "CINCO",
+        "6": "SEIS",
+        "7": "SIETE",
+        "8": "OCHO",
+        "9": "NUEVE",
+        "10": "DIEZ",
+        "11": "ONCE",
+        "12": "DOCE",
+        "13": "TRECE",
+        "14": "CATORCE",
+        "15": "QUINCE",
+        "16": "DIECISEIS",
+        "17": "DIECISIETE",
+        "18": "DIECIOCHO",
+        "19": "DIECINUEVE",
+        "20": "VEINTE",
     }
 
     # Tabla de números romanos a arábigos
     numeros_romanos = {
-        'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5,
-        'VI': 6, 'VII': 7, 'VIII': 8, 'IX': 9, 'X': 10,
-        'XI': 11, 'XII': 12, 'XIII': 13, 'XIV': 14, 'XV': 15,
-        'XVI': 16, 'XVII': 17, 'XVIII': 18, 'XIX': 19, 'XX': 20,
+        "I": 1,
+        "II": 2,
+        "III": 3,
+        "IV": 4,
+        "V": 5,
+        "VI": 6,
+        "VII": 7,
+        "VIII": 8,
+        "IX": 9,
+        "X": 10,
+        "XI": 11,
+        "XII": 12,
+        "XIII": 13,
+        "XIV": 14,
+        "XV": 15,
+        "XVI": 16,
+        "XVII": 17,
+        "XVIII": 18,
+        "XIX": 19,
+        "XX": 20,
     }
 
     @classmethod
@@ -442,11 +564,18 @@ class RFCGeneratorUtils(RFCGeneral):
 
     @classmethod
     def clean_name(cls, nombre: str) -> str:
-        return "".join(char if char in cls.allowed_chars else unidecode.unidecode(char)
-                       for char in " ".join(
-            elem for elem in nombre.split(" ")
-            if elem not in cls.excluded_words_fisicas).strip().upper()
-                       ).strip().upper()
+        return (
+            "".join(
+                char if char in cls.allowed_chars else unidecode.unidecode(char)
+                for char in " ".join(
+                    elem for elem in nombre.split(" ") if elem not in cls.excluded_words_fisicas
+                )
+                .strip()
+                .upper()
+            )
+            .strip()
+            .upper()
+        )
 
     @staticmethod
     def name_adapter(name: str, non_strict: bool = False) -> str:
@@ -456,7 +585,7 @@ class RFCGeneratorUtils(RFCGeneral):
             return name.upper().strip()
         elif non_strict:
             if name is None or not name:
-                return ''
+                return ""
         else:
             raise ValueError
 
@@ -464,17 +593,14 @@ class RFCGeneratorUtils(RFCGeneral):
 class RFCGeneratorFisicas(RFCGeneratorUtils):
     def __init__(self, paterno: str, materno: str, nombre: str, fecha: datetime.date):
         _dob = datetime.datetime(2000, 1, 1)
-        if (paterno.strip()
-            and nombre.strip()
-            and isinstance(fecha, datetime.date)
-            ):
+        if paterno.strip() and nombre.strip() and isinstance(fecha, datetime.date):
             self.paterno = paterno
             self.materno = materno
             self.nombre = nombre
             self.dob = fecha
-            self._rfc = ''
+            self._rfc = ""
         else:
-            raise ValueError('Invalid Values')
+            raise ValueError("Invalid Values")
 
     @property
     def paterno(self) -> str:
@@ -513,17 +639,21 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
     def rfc(self) -> str:
         if not self._rfc:
             partial_rfc = self.generate_letters() + self.generate_date() + self.homoclave
-            self._rfc = partial_rfc + RFCValidator.calculate_last_digit(partial_rfc, with_checksum=False)
+            self._rfc = partial_rfc + RFCValidator.calculate_last_digit(
+                partial_rfc, with_checksum=False
+            )
         return self._rfc
 
     def generate_date(self) -> str:
-        return self.dob.strftime('%y%m%d')
+        return self.dob.strftime("%y%m%d")
 
     def generate_letters(self) -> str:
         extra_letter = False
         clave = []
         clave.append(self.paterno_calculo[0])
-        second_value = list(filter(lambda x: x >= 0, map(self.paterno_calculo[1:].find, self.vocales)))
+        second_value = list(
+            filter(lambda x: x >= 0, map(self.paterno_calculo[1:].find, self.vocales))
+        )
         if len(second_value) > 0:
             clave.append(self.paterno_calculo[min(second_value) + 1])
         else:
@@ -540,7 +670,7 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
             clave.append(self.nombre_iniciales[1])
         clave = "".join(clave)
         if clave in self.cacophonic_words:
-            clave = clave[:-1] + 'X'
+            clave = clave[:-1] + "X"
         return clave
 
     @property
@@ -561,7 +691,7 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
     @property
     def nombre_iniciales(self) -> str:
         if self.nombre_iscompound():
-            if self.nombre_calculo.split(" ")[0] in ('MARIA', 'JOSE'):
+            if self.nombre_calculo.split(" ")[0] in ("MARIA", "JOSE"):
                 return " ".join(self.nombre_calculo.split(" ")[1:])
             else:
                 return self.nombre_calculo
@@ -570,11 +700,17 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
 
     @property
     def nombre_completo(self) -> str:
-        return " ".join(comp for comp in (self.paterno_calculo, self.materno_calculo, self.nombre_calculo) if comp)
+        return " ".join(
+            comp
+            for comp in (self.paterno_calculo, self.materno_calculo, self.nombre_calculo)
+            if comp
+        )
 
     @property
     def cadena_homoclave(self) -> str:
-        calc_str = ['0', ]
+        calc_str = [
+            "0",
+        ]
         for character in self.nombre_completo:
             calc_str.append(self.quotient_remaining_table[character])
         return "".join(calc_str)
@@ -582,7 +718,9 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
     @property
     def homoclave(self) -> str:
         cadena = self.cadena_homoclave
-        suma = sum(int(cadena[n:n + 2]) * int(cadena[n + 1]) for n in range(len(cadena) - 1)) % 1000
+        suma = (
+            sum(int(cadena[n : n + 2]) * int(cadena[n + 1]) for n in range(len(cadena) - 1)) % 1000
+        )
         resultado = (suma // 34, suma % 34)
         return self.homoclave_assign_table[resultado[0]] + self.homoclave_assign_table[resultado[1]]
 
@@ -606,12 +744,14 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         :param razon_social: Company name (razón social)
         :param fecha: Incorporation/foundation date
         """
-        if (razon_social.strip() and isinstance(fecha, datetime.date)):
+        if razon_social.strip() and isinstance(fecha, datetime.date):
             self.razon_social = razon_social
             self.fecha = fecha
-            self._rfc = ''
+            self._rfc = ""
         else:
-            raise ValueError('Invalid Values: razon_social must be non-empty and fecha must be a date')
+            raise ValueError(
+                "Invalid Values: razon_social must be non-empty and fecha must be a date"
+            )
 
     @property
     def razon_social(self) -> str:
@@ -622,7 +762,7 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         if isinstance(name, str):
             self._razon_social = name.upper().strip()
         else:
-            raise ValueError('razon_social must be a string')
+            raise ValueError("razon_social must be a string")
 
     @property
     def fecha(self) -> datetime.date:
@@ -633,19 +773,21 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         if isinstance(date, datetime.date):
             self._fecha = date
         else:
-            raise ValueError('fecha must be a datetime.date')
+            raise ValueError("fecha must be a datetime.date")
 
     @property
     def rfc(self) -> str:
         """Generate and return the complete RFC"""
         if not self._rfc:
             partial_rfc = self.generate_letters() + self.generate_date() + self.homoclave
-            self._rfc = partial_rfc + RFCValidator.calculate_last_digit(partial_rfc, with_checksum=False)
+            self._rfc = partial_rfc + RFCValidator.calculate_last_digit(
+                partial_rfc, with_checksum=False
+            )
         return self._rfc
 
     def generate_date(self) -> str:
         """Generate date portion in YYMMDD format"""
-        return self.fecha.strftime('%y%m%d')
+        return self.fecha.strftime("%y%m%d")
 
     @property
     def razon_social_calculo(self) -> str:
@@ -665,26 +807,27 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         # Process longer words first to avoid partial matches (e.g., S.A.B. before S.A.)
         for excluded in sorted(self.excluded_words_morales, key=len, reverse=True):
             # Try exact match
-            razon = razon.replace(' ' + excluded + ' ', ' ')
-            razon = razon.replace(' ' + excluded + ',', ' ')
-            razon = razon.replace(' ' + excluded + '.', ' ')
+            razon = razon.replace(" " + excluded + " ", " ")
+            razon = razon.replace(" " + excluded + ",", " ")
+            razon = razon.replace(" " + excluded + ".", " ")
             # Try at beginning
-            if razon.startswith(excluded + ' '):
-                razon = razon[len(excluded)+1:]
+            if razon.startswith(excluded + " "):
+                razon = razon[len(excluded) + 1 :]
             # Try at end
-            if razon.endswith(' ' + excluded):
-                razon = razon[:-len(excluded)-1]
-            if razon.endswith(',' + excluded):
-                razon = razon[:-len(excluded)-1]
+            if razon.endswith(" " + excluded):
+                razon = razon[: -len(excluded) - 1]
+            if razon.endswith("," + excluded):
+                razon = razon[: -len(excluded) - 1]
 
         # Step 2: Remove special characters except spaces, letters, numbers, and dots
         # Caracteres especiales a eliminar según SAT: &, @, %, #, !, $, ", -, /, +, (, ), etc.
         import string
-        allowed_for_processing = string.ascii_uppercase + string.digits + ' .ÑÁÉÍÓÚÜñáéíóúü'
-        razon_limpia = ''.join(c if c in allowed_for_processing else ' ' for c in razon)
+
+        allowed_for_processing = string.ascii_uppercase + string.digits + " .ÑÁÉÍÓÚÜñáéíóúü"
+        razon_limpia = "".join(c if c in allowed_for_processing else " " for c in razon)
 
         # Step 3: Substitute Ñ with X
-        razon_limpia = razon_limpia.replace('Ñ', 'X').replace('ñ', 'X')
+        razon_limpia = razon_limpia.replace("Ñ", "X").replace("ñ", "X")
 
         # Step 4: Handle initials (F.A.Z. → F A Z)
         # Si hay letras separadas por puntos, expandirlas como palabras individuales
@@ -696,16 +839,16 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
             if not word:
                 continue
             # Detectar patrón de iniciales: letra.letra.letra o similar
-            if '.' in word and len(word) <= 15:  # Máximo razonable para iniciales
+            if "." in word and len(word) <= 15:  # Máximo razonable para iniciales
                 # Separar por puntos y filtrar vacíos
-                parts = [c.strip() for c in word.split('.') if c.strip()]
+                parts = [c.strip() for c in word.split(".") if c.strip()]
                 # Si todas las partes son de 1-2 caracteres, son iniciales
                 if parts and all(len(p) <= 2 and p.isalpha() for p in parts):
                     words_temp.extend(parts)
                     is_initial.extend([True] * len(parts))  # Mark all as initials
                     continue
             # Quitar puntos finales de palabras normales
-            word = word.rstrip('.')
+            word = word.rstrip(".")
             if word:
                 words_temp.append(word)
                 is_initial.append(False)
@@ -713,7 +856,7 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         # Step 5: Convert numbers to text
         words_converted = []
         is_initial_converted = []
-        for word, is_init in zip(words_temp, is_initial):
+        for word, is_init in zip(words_temp, is_initial, strict=False):
             # Verificar si es un número (arábigo o romano)
             if word.isdigit() or word in self.numeros_romanos:
                 converted = self.convertir_numero_a_texto(word)
@@ -725,7 +868,7 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
 
         # Step 6: Second pass - Remove excluded words (but keep initials)
         filtered_words = []
-        for word, is_init in zip(words_converted, is_initial_converted):
+        for word, is_init in zip(words_converted, is_initial_converted, strict=False):
             word_clean = word.strip().upper()
             if not word_clean:
                 continue
@@ -741,8 +884,8 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         for char in cleaned:
             if char in self.allowed_chars:
                 result += char
-            elif char == ' ':
-                result += ' '
+            elif char == " ":
+                result += " "
             else:
                 # Use unidecode for accented characters
                 decoded = unidecode.unidecode(char)
@@ -754,10 +897,10 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         # Step 8: Handle consonant compounds (CH → C, LL → L) at the beginning of words
         words_final = []
         for word in result.split():
-            if word.startswith('CH'):
-                word = 'C' + word[2:]
-            elif word.startswith('LL'):
-                word = 'L' + word[2:]
+            if word.startswith("CH"):
+                word = "C" + word[2:]
+            elif word.startswith("LL"):
+                word = "L" + word[2:]
             words_final.append(word)
 
         return " ".join(words_final)
@@ -783,27 +926,27 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         cleaned_name = self.razon_social_calculo
 
         if not cleaned_name:
-            raise ValueError('Company name is empty after cleaning')
+            raise ValueError("Company name is empty after cleaning")
 
         words = cleaned_name.split()
 
         if not words:
-            raise ValueError('No valid words in company name')
+            raise ValueError("No valid words in company name")
 
         clave = []
 
         if len(words) == 1:
             # Single word: First 3 letters
             word = words[0]
-            clave.append(word[0] if len(word) > 0 else 'X')
-            clave.append(word[1] if len(word) > 1 else 'X')
-            clave.append(word[2] if len(word) > 2 else 'X')
+            clave.append(word[0] if len(word) > 0 else "X")
+            clave.append(word[1] if len(word) > 1 else "X")
+            clave.append(word[2] if len(word) > 2 else "X")
         elif len(words) == 2:
             # Two words: Initial of first word, first two letters of second word
             # According to SAT specification: "se toma la inicial de la primera y las dos primeras letras de la segunda"
             clave.append(words[0][0])  # First letter of first word
             clave.append(words[1][0])  # First letter of second word
-            clave.append(words[1][1] if len(words[1]) > 1 else 'X')  # Second letter of second word
+            clave.append(words[1][1] if len(words[1]) > 1 else "X")  # Second letter of second word
         else:
             # Three or more words: First letter of each of the first three words
             clave.append(words[0][0])
@@ -814,7 +957,7 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
 
         # Check for cacophonic words and replace last character with 'X'
         if result in self.cacophonic_words:
-            result = result[:-1] + 'X'
+            result = result[:-1] + "X"
 
         return result
 
@@ -826,19 +969,21 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
     @property
     def cadena_homoclave(self) -> str:
         """Generate the string used for homoclave calculation"""
-        calc_str = ['0']
+        calc_str = ["0"]
         for character in self.nombre_completo:
             if character in self.quotient_remaining_table:
                 calc_str.append(self.quotient_remaining_table[character])
-            elif character == ' ':
-                calc_str.append(self.quotient_remaining_table[' '])
+            elif character == " ":
+                calc_str.append(self.quotient_remaining_table[" "])
         return "".join(calc_str)
 
     @property
     def homoclave(self) -> str:
         """Calculate the 2-character homoclave"""
         cadena = self.cadena_homoclave
-        suma = sum(int(cadena[n:n + 2]) * int(cadena[n + 1]) for n in range(len(cadena) - 1)) % 1000
+        suma = (
+            sum(int(cadena[n : n + 2]) * int(cadena[n + 1]) for n in range(len(cadena) - 1)) % 1000
+        )
         resultado = (suma // 34, suma % 34)
         return self.homoclave_assign_table[resultado[0]] + self.homoclave_assign_table[resultado[1]]
 
@@ -851,17 +996,9 @@ class RFCGenerator:
     @staticmethod
     def generate_fisica(nombre: str, paterno: str, materno: str, fecha: datetime.date) -> str:
         """Generate RFC for Persona Física (Individual)"""
-        return RFCGeneratorFisicas(
-            nombre=nombre,
-            paterno=paterno,
-            materno=materno,
-            fecha=fecha
-        ).rfc
+        return RFCGeneratorFisicas(nombre=nombre, paterno=paterno, materno=materno, fecha=fecha).rfc
 
     @staticmethod
     def generate_moral(razon_social: str, fecha: datetime.date) -> str:
         """Generate RFC for Persona Moral (Legal Entity/Company)"""
-        return RFCGeneratorMorales(
-            razon_social=razon_social,
-            fecha=fecha
-        ).rfc
+        return RFCGeneratorMorales(razon_social=razon_social, fecha=fecha).rfc

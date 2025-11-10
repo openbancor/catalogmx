@@ -21,18 +21,18 @@ export class PuertosMaritimos {
   }
 
   static getPuerto(code: string): PuertoMaritimo | undefined {
-    return this.getData().find(p => p.code === code);
+    return this.getData().find((p) => p.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(p => p.code === code);
+    return this.getData().some((p) => p.code === code);
   }
 
   /**
    * Get ports by coast
    */
   static getByCoast(coast: string): PuertoMaritimo[] {
-    return this.getData().filter(p => p.coast.toUpperCase().includes(coast.toUpperCase()));
+    return this.getData().filter((p) => p.coast.toUpperCase().includes(coast.toUpperCase()));
   }
 
   /**
@@ -40,7 +40,7 @@ export class PuertosMaritimos {
    */
   static getByEstado(estado: string): PuertoMaritimo[] {
     const search = estado.toUpperCase();
-    return this.getData().filter(p => p.estado.toUpperCase().includes(search));
+    return this.getData().filter((p) => p.estado.toUpperCase().includes(search));
   }
 
   /**
@@ -48,26 +48,20 @@ export class PuertosMaritimos {
    */
   static searchByName(keyword: string): PuertoMaritimo[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(p =>
-      p.name.toUpperCase().includes(search)
-    );
+    return this.getData().filter((p) => p.name.toUpperCase().includes(search));
   }
 
   /**
    * Get Pacific coast ports
    */
   static getPacificPorts(): PuertoMaritimo[] {
-    return this.getData().filter(p =>
-      p.coast.toUpperCase().includes('PACIF')
-    );
+    return this.getData().filter((p) => p.coast.toUpperCase().includes('PACIF'));
   }
 
   /**
    * Get Gulf of Mexico ports
    */
   static getGulfPorts(): PuertoMaritimo[] {
-    return this.getData().filter(p =>
-      p.coast.toUpperCase().includes('GOLFO')
-    );
+    return this.getData().filter((p) => p.coast.toUpperCase().includes('GOLFO'));
   }
 }

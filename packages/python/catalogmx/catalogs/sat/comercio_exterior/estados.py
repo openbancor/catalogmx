@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+
 class EstadoCatalog:
     """Catálogo de estados/provincias de USA y Canadá para comercio exterior"""
 
@@ -15,20 +16,31 @@ class EstadoCatalog:
         """Carga los datos del catálogo desde el archivo JSON compartido"""
         if cls._estados_usa is None:
             current_file = Path(__file__)
-            shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
-                              / 'shared-data' / 'sat' / 'comercio_exterior' / 'estados_usa_canada.json')
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "comercio_exterior"
+                / "estados_usa_canada.json"
+            )
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._estados_usa = data['estados_usa']
-                cls._provincias_canada = data['provincias_canada']
+                # Handle both dict with keys or direct list
+                if isinstance(data, dict):
+                    cls._estados_usa = data.get("estados_usa", [])
+                    cls._provincias_canada = data.get("provincias_canada", [])
+                else:
+                    # Direct list - separate by country field
+                    cls._estados_usa = [item for item in data if item.get("country") == "USA"]
+                    cls._provincias_canada = [item for item in data if item.get("country") == "CAN"]
 
             # Crear índice unificado por código
             cls._estado_by_code = {}
             for estado in cls._estados_usa:
-                cls._estado_by_code[estado['code']] = estado
+                cls._estado_by_code[estado["code"]] = estado
             for provincia in cls._provincias_canada:
-                cls._estado_by_code[provincia['code']] = provincia
+                cls._estado_by_code[provincia["code"]] = provincia
 
     @classmethod
     def get_estado(cls, code: str, country: str | None = None) -> dict | None:
@@ -47,7 +59,7 @@ class EstadoCatalog:
         estado = cls._estado_by_code.get(code_upper)
 
         if estado and country:
-            if estado['country'] != country.upper():
+            if estado["country"] != country.upper():
                 return None
 
         return estado
@@ -55,12 +67,12 @@ class EstadoCatalog:
     @classmethod
     def get_estado_usa(cls, code: str) -> dict | None:
         """Obtiene un estado de USA por su código"""
-        return cls.get_estado(code, 'USA')
+        return cls.get_estado(code, "USA")
 
     @classmethod
     def get_provincia_canada(cls, code: str) -> dict | None:
         """Obtiene una provincia de Canadá por su código"""
-        return cls.get_estado(code, 'CAN')
+        return cls.get_estado(code, "CAN")
 
     @classmethod
     def is_valid(cls, code: str, country: str | None = None) -> bool:
@@ -97,17 +109,14 @@ class EstadoCatalog:
             dict con 'valid' (bool) y 'errors' (list)
         """
         errors = []
-        pais = address_data.get('pais', '').upper()
-        estado = address_data.get('estado', '').upper()
+        pais = address_data.get("pais", "").upper()
+        estado = address_data.get("estado", "").upper()
 
         # Validar que USA/CAN tengan estado
-        if pais in ['USA', 'CAN']:
+        if pais in ["USA", "CAN"]:
             if not estado:
-                errors.append(f'Campo Estado es obligatorio para país {pais}')
+                errors.append(f"Campo Estado es obligatorio para país {pais}")
             elif not cls.is_valid(estado, pais):
-                errors.append(f'Estado {estado} no válido para país {pais}')
+                errors.append(f"Estado {estado} no válido para país {pais}")
 
-        return {
-            'valid': len(errors) == 0,
-            'errors': errors
-        }
+        return {"valid": len(errors) == 0, "errors": errors}

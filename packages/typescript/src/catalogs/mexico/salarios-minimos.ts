@@ -22,7 +22,7 @@ export class SalariosMinimos {
    * Get minimum wage for a specific year
    */
   static getPorAño(año: number): SalarioMinimo | undefined {
-    return this.getData().find(s => s.año === año);
+    return this.getData().find((s) => s.año === año);
   }
 
   /**
@@ -38,17 +38,20 @@ export class SalariosMinimos {
    */
   static getPorFecha(fecha: string | Date): SalarioMinimo | undefined {
     const date = typeof fecha === 'string' ? new Date(fecha) : fecha;
-    const sorted = [...this.getData()].sort((a, b) =>
-      new Date(b.vigencia_inicio).getTime() - new Date(a.vigencia_inicio).getTime()
+    const sorted = [...this.getData()].sort(
+      (a, b) => new Date(b.vigencia_inicio).getTime() - new Date(a.vigencia_inicio).getTime()
     );
 
-    return sorted.find(s => new Date(s.vigencia_inicio) <= date);
+    return sorted.find((s) => new Date(s.vigencia_inicio) <= date);
   }
 
   /**
    * Get minimum wage value for a zone and year
    */
-  static getValor(año: number, zona: 'frontera' | 'pais' | 'general' | 'a' | 'b' = 'pais'): number | undefined {
+  static getValor(
+    año: number,
+    zona: 'frontera' | 'pais' | 'general' | 'a' | 'b' = 'pais'
+  ): number | undefined {
     const salario = this.getPorAño(año);
     if (!salario) return undefined;
 
@@ -113,14 +116,18 @@ export class SalariosMinimos {
    */
   static getHistorico(añoInicio: number, añoFin: number): SalarioMinimo[] {
     return this.getData()
-      .filter(s => s.año >= añoInicio && s.año <= añoFin)
+      .filter((s) => s.año >= añoInicio && s.año <= añoFin)
       .sort((a, b) => a.año - b.año);
   }
 
   /**
    * Calculate percentage increase between two years
    */
-  static calcularIncremento(añoInicial: number, añoFinal: number, zona: 'frontera' | 'pais' = 'pais'): number | undefined {
+  static calcularIncremento(
+    añoInicial: number,
+    añoFinal: number,
+    zona: 'frontera' | 'pais' = 'pais'
+  ): number | undefined {
     const inicial = this.getValor(añoInicial, zona);
     const final = this.getValor(añoFinal, zona);
 

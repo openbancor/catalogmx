@@ -30,14 +30,14 @@ export class CodigosPostales {
    * Get postal code information
    */
   static getByCp(cp: string): PostalCode[] {
-    return this.getData().filter(postal => postal.cp === cp || postal.codigo_postal === cp);
+    return this.getData().filter((postal) => postal.cp === cp || postal.codigo_postal === cp);
   }
 
   /**
    * Get state name from postal code
    */
   static getEstado(cp: string): string | undefined {
-    const postal = this.getData().find(p => p.cp === cp || p.codigo_postal === cp);
+    const postal = this.getData().find((p) => p.cp === cp || p.codigo_postal === cp);
     return postal?.estado;
   }
 
@@ -45,7 +45,7 @@ export class CodigosPostales {
    * Get municipality from postal code
    */
   static getMunicipio(cp: string): string | undefined {
-    const postal = this.getData().find(p => p.cp === cp || p.codigo_postal === cp);
+    const postal = this.getData().find((p) => p.cp === cp || p.codigo_postal === cp);
     return postal?.municipio;
   }
 
@@ -54,9 +54,7 @@ export class CodigosPostales {
    */
   static getByMunicipio(municipio: string): PostalCode[] {
     const searchTerm = municipio.toUpperCase();
-    return this.getData().filter(postal =>
-      postal.municipio.toUpperCase().includes(searchTerm)
-    );
+    return this.getData().filter((postal) => postal.municipio.toUpperCase().includes(searchTerm));
   }
 
   /**
@@ -64,9 +62,7 @@ export class CodigosPostales {
    */
   static getByEstado(estado: string): PostalCode[] {
     const searchTerm = estado.toUpperCase();
-    return this.getData().filter(postal =>
-      postal.estado.toUpperCase() === searchTerm
-    );
+    return this.getData().filter((postal) => postal.estado.toUpperCase() === searchTerm);
   }
 
   /**
@@ -74,7 +70,7 @@ export class CodigosPostales {
    */
   static searchByAsentamiento(asentamiento: string): PostalCode[] {
     const searchTerm = asentamiento.toUpperCase();
-    return this.getData().filter(postal =>
+    return this.getData().filter((postal) =>
       postal.asentamiento.toUpperCase().includes(searchTerm)
     );
   }
@@ -83,6 +79,6 @@ export class CodigosPostales {
    * Validate postal code exists
    */
   static isValid(cp: string): boolean {
-    return this.getData().some(postal => postal.cp === cp || postal.codigo_postal === cp);
+    return this.getData().some((postal) => postal.cp === cp || postal.codigo_postal === cp);
   }
 }

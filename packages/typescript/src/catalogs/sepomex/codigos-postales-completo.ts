@@ -68,14 +68,14 @@ export class CodigosPostalesCompleto {
    * Get postal code information
    */
   static getByCp(cp: string): PostalCode[] {
-    return this.getData().filter(postal => postal.cp === cp || postal.codigo_postal === cp);
+    return this.getData().filter((postal) => postal.cp === cp || postal.codigo_postal === cp);
   }
 
   /**
    * Get state name from postal code
    */
   static getEstado(cp: string): string | undefined {
-    const postal = this.getData().find(p => p.cp === cp || p.codigo_postal === cp);
+    const postal = this.getData().find((p) => p.cp === cp || p.codigo_postal === cp);
     return postal?.estado;
   }
 
@@ -83,7 +83,7 @@ export class CodigosPostalesCompleto {
    * Get municipality from postal code
    */
   static getMunicipio(cp: string): string | undefined {
-    const postal = this.getData().find(p => p.cp === cp || p.codigo_postal === cp);
+    const postal = this.getData().find((p) => p.cp === cp || p.codigo_postal === cp);
     return postal?.municipio;
   }
 
@@ -92,7 +92,7 @@ export class CodigosPostalesCompleto {
    */
   static getByMunicipio(municipio: string, limit: number = 100): PostalCode[] {
     const searchTerm = municipio.toUpperCase();
-    const results = this.getData().filter(postal =>
+    const results = this.getData().filter((postal) =>
       postal.municipio.toUpperCase().includes(searchTerm)
     );
     return results.slice(0, limit);
@@ -103,9 +103,7 @@ export class CodigosPostalesCompleto {
    */
   static getByEstado(estado: string, limit: number = 1000): PostalCode[] {
     const searchTerm = estado.toUpperCase();
-    const results = this.getData().filter(postal =>
-      postal.estado.toUpperCase() === searchTerm
-    );
+    const results = this.getData().filter((postal) => postal.estado.toUpperCase() === searchTerm);
     return results.slice(0, limit);
   }
 
@@ -114,7 +112,7 @@ export class CodigosPostalesCompleto {
    */
   static searchByAsentamiento(asentamiento: string, limit: number = 100): PostalCode[] {
     const searchTerm = asentamiento.toUpperCase();
-    const results = this.getData().filter(postal =>
+    const results = this.getData().filter((postal) =>
       postal.asentamiento.toUpperCase().includes(searchTerm)
     );
     return results.slice(0, limit);
@@ -124,7 +122,7 @@ export class CodigosPostalesCompleto {
    * Validate postal code exists
    */
   static isValid(cp: string): boolean {
-    return this.getData().some(postal => postal.cp === cp || postal.codigo_postal === cp);
+    return this.getData().some((postal) => postal.cp === cp || postal.codigo_postal === cp);
   }
 
   /**
@@ -138,7 +136,7 @@ export class CodigosPostalesCompleto {
    * Get all unique postal codes
    */
   static getUniqueCPs(): string[] {
-    const cpsSet = new Set(this.getData().map(p => p.cp || p.codigo_postal!));
+    const cpsSet = new Set(this.getData().map((p) => p.cp || p.codigo_postal!));
     return Array.from(cpsSet).sort();
   }
 
@@ -147,9 +145,7 @@ export class CodigosPostalesCompleto {
    */
   static getCountByEstado(estado: string): number {
     const searchTerm = estado.toUpperCase();
-    return this.getData().filter(postal =>
-      postal.estado.toUpperCase() === searchTerm
-    ).length;
+    return this.getData().filter((postal) => postal.estado.toUpperCase() === searchTerm).length;
   }
 
   /**
@@ -157,8 +153,8 @@ export class CodigosPostalesCompleto {
    */
   static getAsentamientos(cp: string): string[] {
     return this.getData()
-      .filter(postal => postal.codigo_postal === cp)
-      .map(postal => postal.asentamiento);
+      .filter((postal) => postal.codigo_postal === cp)
+      .map((postal) => postal.asentamiento);
   }
 
   /**
@@ -175,19 +171,19 @@ export class CodigosPostalesCompleto {
     let results = this.getData();
 
     if (criteria.cp) {
-      results = results.filter(p => p.codigo_postal === criteria.cp);
+      results = results.filter((p) => p.codigo_postal === criteria.cp);
     }
     if (criteria.estado) {
       const estado = criteria.estado.toUpperCase();
-      results = results.filter(p => p.estado.toUpperCase() === estado);
+      results = results.filter((p) => p.estado.toUpperCase() === estado);
     }
     if (criteria.municipio) {
       const municipio = criteria.municipio.toUpperCase();
-      results = results.filter(p => p.municipio.toUpperCase().includes(municipio));
+      results = results.filter((p) => p.municipio.toUpperCase().includes(municipio));
     }
     if (criteria.asentamiento) {
       const asentamiento = criteria.asentamiento.toUpperCase();
-      results = results.filter(p => p.asentamiento.toUpperCase().includes(asentamiento));
+      results = results.filter((p) => p.asentamiento.toUpperCase().includes(asentamiento));
     }
 
     return results.slice(0, limit);
@@ -203,15 +199,15 @@ export class CodigosPostalesCompleto {
     municipalities: number;
   } {
     const data = this.getData();
-    const uniqueCPs = new Set(data.map(p => p.codigo_postal));
-    const uniqueStates = new Set(data.map(p => p.estado));
-    const uniqueMunicipalities = new Set(data.map(p => `${p.estado}:${p.municipio}`));
+    const uniqueCPs = new Set(data.map((p) => p.codigo_postal));
+    const uniqueStates = new Set(data.map((p) => p.estado));
+    const uniqueMunicipalities = new Set(data.map((p) => `${p.estado}:${p.municipio}`));
 
     return {
       totalPostalCodes: data.length,
       uniquePostalCodes: uniqueCPs.size,
       states: uniqueStates.size,
-      municipalities: uniqueMunicipalities.size
+      municipalities: uniqueMunicipalities.size,
     };
   }
 }

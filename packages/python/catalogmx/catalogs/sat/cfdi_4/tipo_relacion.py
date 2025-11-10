@@ -1,6 +1,8 @@
 """Catálogo c_TipoRelacion"""
+
 import json
 from pathlib import Path
+
 
 class TipoRelacionCatalog:
     """Catálogo de Tipos de Relación del SAT (c_TipoRelacion)"""
@@ -12,11 +14,18 @@ class TipoRelacionCatalog:
     def _load_data(cls) -> None:
         """Carga los datos del catálogo si aún no han sido cargados"""
         if cls._data is None:
-            path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'cfdi_4.0' / 'tipo_relacion.json'
-            with open(path, 'r', encoding='utf-8') as f:
+            path = (
+                Path(__file__).parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "cfdi_4.0"
+                / "tipo_relacion.json"
+            )
+            with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data['tipos']
-            cls._by_code = {item['code']: item for item in cls._data}
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("tipos", data)
+            cls._by_code = {item["code"]: item for item in cls._data}
 
     @classmethod
     def get_tipo(cls, code: str) -> dict | None:

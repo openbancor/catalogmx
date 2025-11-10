@@ -11,7 +11,9 @@ export class RegistroIdentTribCatalog {
 
   private static getData(): RegistroIdentTrib[] {
     if (!this._data) {
-      this._data = loadCatalogObject<RegistroIdentTrib>('sat/comercio_exterior/registro_ident_trib.json');
+      this._data = loadCatalogObject<RegistroIdentTrib>(
+        'sat/comercio_exterior/registro_ident_trib.json'
+      );
     }
     return this._data;
   }
@@ -21,18 +23,18 @@ export class RegistroIdentTribCatalog {
   }
 
   static getRegistro(code: string): RegistroIdentTrib | undefined {
-    return this.getData().find(r => r.code === code);
+    return this.getData().find((r) => r.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(r => r.code === code);
+    return this.getData().some((r) => r.code === code);
   }
 
   /**
    * Get registro by country code
    */
   static getByPais(paisCode: string): RegistroIdentTrib[] {
-    return this.getData().filter(r => r.pais === paisCode.toUpperCase());
+    return this.getData().filter((r) => r.pais === paisCode.toUpperCase());
   }
 
   /**
@@ -69,9 +71,8 @@ export class RegistroIdentTribCatalog {
    */
   static searchByDescription(keyword: string): RegistroIdentTrib[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(r =>
-      r.descripcion.toUpperCase().includes(search) ||
-      r.pais.includes(search)
+    return this.getData().filter(
+      (r) => r.descripcion.toUpperCase().includes(search) || r.pais.includes(search)
     );
   }
 

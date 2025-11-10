@@ -30,14 +30,14 @@ export class StateCatalog {
    * Get state by CURP code
    */
   static getStateByCode(code: string): State | undefined {
-    return this.getData().find(state => state.code === code.toUpperCase());
+    return this.getData().find((state) => state.code === code.toUpperCase());
   }
 
   /**
    * Get state by INEGI code
    */
   static getStateByInegi(claveInegi: string): State | undefined {
-    return this.getData().find(state => state.clave_inegi === claveInegi);
+    return this.getData().find((state) => state.clave_inegi === claveInegi);
   }
 
   /**
@@ -45,9 +45,7 @@ export class StateCatalog {
    */
   static getStateByName(name: string): State | undefined {
     const searchName = name.toUpperCase();
-    return this.getData().find(state =>
-      state.name.toUpperCase() === searchName
-    );
+    return this.getData().find((state) => state.name.toUpperCase() === searchName);
   }
 
   /**
@@ -55,9 +53,10 @@ export class StateCatalog {
    */
   static searchStates(keyword: string): State[] {
     const searchTerm = keyword.toUpperCase();
-    return this.getData().filter(state =>
-      state.name.toUpperCase().includes(searchTerm) ||
-      state.abreviatura.toUpperCase().includes(searchTerm)
+    return this.getData().filter(
+      (state) =>
+        state.name.toUpperCase().includes(searchTerm) ||
+        state.abreviatura.toUpperCase().includes(searchTerm)
     );
   }
 
@@ -79,6 +78,6 @@ export class StateCatalog {
    * Validate state code
    */
   static isValidCode(code: string): boolean {
-    return this.getData().some(state => state.code === code.toUpperCase());
+    return this.getData().some((state) => state.code === code.toUpperCase());
   }
 }

@@ -69,5 +69,19 @@ export function loadCatalogObject<T>(relativePath: string): T[] {
   if (jsonData && Array.isArray(jsonData.data)) {
     return jsonData.data as T[];
   }
-  throw new Error(`Invalid catalog format: ${fullPath}. Expected an array or { data: [...] } structure.`);
+  throw new Error(
+    `Invalid catalog format: ${fullPath}. Expected an array or { data: [...] } structure.`
+  );
+}
+
+/**
+ * Load catalog data regardless of its JSON shape.
+ * Useful when the file exports additional metadata along with the catalog payload.
+ */
+export function loadCatalogData<T>(relativePath: string): T {
+  const fullPath = path.resolve(__dirname, '../../../shared-data', relativePath);
+  if (!fs.existsSync(fullPath)) {
+    throw new Error(`Catalog file not found: ${fullPath}`);
+  }
+  return JSON.parse(fs.readFileSync(fullPath, 'utf-8')) as T;
 }

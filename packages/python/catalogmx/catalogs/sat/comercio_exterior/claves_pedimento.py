@@ -9,6 +9,7 @@ Fuente: SAT - Anexo 22 de las RGCE
 import json
 from pathlib import Path
 
+
 class ClavePedimentoCatalog:
     """Catálogo de claves de pedimento aduanero"""
 
@@ -20,14 +21,20 @@ class ClavePedimentoCatalog:
         """Carga los datos del catálogo desde el archivo JSON compartido"""
         if cls._data is None:
             current_file = Path(__file__)
-            shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
-                              / 'shared-data' / 'sat' / 'comercio_exterior' / 'claves_pedimento.json')
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "comercio_exterior"
+                / "claves_pedimento.json"
+            )
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data['claves']
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("claves", data)
 
-            cls._clave_by_code = {item['clave']: item for item in cls._data}
+            cls._clave_by_code = {item["clave"]: item for item in cls._data}
 
     @classmethod
     def get_clave(cls, code: str) -> dict | None:
@@ -44,13 +51,13 @@ class ClavePedimentoCatalog:
     def is_export(cls, code: str) -> bool:
         """Verifica si la clave corresponde a exportación"""
         clave = cls.get_clave(code)
-        return clave.get('regimen') == 'exportacion' if clave else False
+        return clave.get("regimen") == "exportacion" if clave else False
 
     @classmethod
     def is_import(cls, code: str) -> bool:
         """Verifica si la clave corresponde a importación"""
         clave = cls.get_clave(code)
-        return clave.get('regimen') == 'importacion' if clave else False
+        return clave.get("regimen") == "importacion" if clave else False
 
     @classmethod
     def get_by_regime(cls, regime: str) -> list[dict]:
@@ -61,7 +68,7 @@ class ClavePedimentoCatalog:
             regime: exportacion, importacion, retorno, transito, etc.
         """
         cls._load_data()
-        return [item for item in cls._data if item.get('regimen') == regime]
+        return [item for item in cls._data if item.get("regimen") == regime]
 
     @classmethod
     def get_all(cls) -> list[dict]:

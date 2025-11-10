@@ -1,0 +1,4 @@
+# This file is a placeholder for uv lock file
+# Run: uv pip compile pyproject.toml -o requirements-lock.txt
+# to generate a lockfile for reproducible installs
+

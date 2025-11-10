@@ -111,12 +111,8 @@ export abstract class HybridCatalogLoader<T> {
    * Get full path to SQLite database
    */
   protected getSqlitePath(): string {
-    const sqliteDir = path.resolve(
-      __dirname,
-      '../../../shared-data/sqlite'
-    );
-    const dbName =
-      this.options.sqlitePath || `${this.options.catalogName}.db`;
+    const sqliteDir = path.resolve(__dirname, '../../../shared-data/sqlite');
+    const dbName = this.options.sqlitePath || `${this.options.catalogName}.db`;
     return path.join(sqliteDir, dbName);
   }
 

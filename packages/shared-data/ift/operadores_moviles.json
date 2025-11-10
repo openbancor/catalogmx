@@ -3,8 +3,8 @@
     "catalog": "IFT_Operadores_Moviles",
     "description": "Catálogo de operadores de telefonía móvil en México",
     "source": "Instituto Federal de Telecomunicaciones (IFT)",
-    "last_updated": "2025-02-01",
-    "notes": "Incluye operadores móviles tradicionales (OMR) y operadores móviles virtuales (OMV)"
+    "last_updated": "2025-11-10",
+    "notes": "Incluye operadores móviles tradicionales (OMR) y operadores móviles virtuales (OMV). México tiene aproximadamente 60 OMVs activos según el IFT."
   },
   "operadores": [
     {
@@ -214,6 +214,145 @@
       "activo": false,
       "fecha_fin_operaciones": "2015-01-30",
       "notas": "Absorbida por AT&T"
+    },
+    {
+      "nombre_comercial": "Nextor Móvil",
+      "razon_social": "Nextor Telecom, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "Altán Redes",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago", "postpago", "empresarial"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2019-01-01",
+      "activo": true,
+      "notas": "Enfocado en soluciones empresariales"
+    },
+    {
+      "nombre_comercial": "BAit",
+      "razon_social": "Walmart de México, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "Altán Redes",
+      "grupo_empresarial": "Walmart",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago"],
+      "market_share_aprox": 4.3,
+      "fecha_inicio_operaciones": "2019-01-01",
+      "activo": true,
+      "notas": "Líder del mercado OMV con 36.2% de participación en el subsegmento"
+    },
+    {
+      "nombre_comercial": "Chedraui Móvil",
+      "razon_social": "Grupo Comercial Chedraui, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "Altán Redes",
+      "grupo_empresarial": "Grupo Chedraui",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2020-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Cierto",
+      "razon_social": "Corporación Iberoamericana de Telecomunicaciones, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "Altán Redes",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago", "postpago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2019-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Flash Mobile",
+      "razon_social": "Flash Mobile México, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "AT&T",
+      "tecnologias": ["4G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago"],
+      "market_share_aprox": 1.7,
+      "fecha_inicio_operaciones": "2016-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "OXXO Cel",
+      "razon_social": "FEMSA Comercio, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "AT&T",
+      "grupo_empresarial": "FEMSA",
+      "tecnologias": ["4G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago"],
+      "market_share_aprox": 0.2,
+      "fecha_inicio_operaciones": "2019-01-01",
+      "activo": true,
+      "notas": "Distribuido en tiendas OXXO"
+    },
+    {
+      "nombre_comercial": "Soriana Móvil",
+      "razon_social": "Organización Soriana, S.A.B. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "Altán Redes",
+      "grupo_empresarial": "Grupo Soriana",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2020-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Qbocel",
+      "razon_social": "Comercializadora de Servicios QBO, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "Altán Redes",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2019-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Simpati",
+      "razon_social": "Simpati Mobile México, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "Altán Redes",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago", "postpago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2019-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Simplii",
+      "razon_social": "Simplii Telecomunicaciones, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "Altán Redes",
+      "tecnologias": ["4G", "5G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago", "postpago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2020-01-01",
+      "activo": true
+    },
+    {
+      "nombre_comercial": "Wimo",
+      "razon_social": "Wireless Mobile Services, S.A. de C.V.",
+      "tipo": "OMV",
+      "red_anfitriona": "AT&T",
+      "tecnologias": ["4G"],
+      "cobertura": "nacional",
+      "servicios": ["prepago"],
+      "market_share_aprox": 0.1,
+      "fecha_inicio_operaciones": "2019-01-01",
+      "activo": true
     }
   ],
   "tipos_operador": {
@@ -221,11 +360,11 @@
     "OMV": "Operador Móvil Virtual - Utiliza infraestructura de terceros"
   },
   "estadisticas": {
-    "total_operadores": 17,
-    "operadores_activos": 16,
-    "omr_activos": 4,
-    "omv_activos": 12,
+    "total_operadores": 28,
+    "operadores_activos": 27,
+    "omr_activos": 5,
+    "omv_activos": 22,
     "lineas_totales_mercado": 144800000,
-    "fecha_estadisticas": "2024-03-31"
+    "fecha_estadisticas": "2024-12-31"
   }
 }

@@ -1,6 +1,8 @@
 """Catálogo c_MaterialPeligroso - Materiales Peligrosos ONU"""
+
 import json
 from pathlib import Path
+
 
 class MaterialPeligrosoCatalog:
     _data: list[dict] | None = None
@@ -9,11 +11,19 @@ class MaterialPeligrosoCatalog:
     @classmethod
     def _load_data(cls) -> None:
         if cls._data is None:
-            path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'carta_porte_3' / 'material_peligroso.json'
-            with open(path, 'r', encoding='utf-8') as f:
+            path = (
+                Path(__file__).parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "carta_porte_3"
+                / "material_peligroso.json"
+            )
+            with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data['materiales']
-            cls._by_un_number = {item['un_number']: item for item in cls._data}
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("materiales", data)
+            # JSON has "code" field, map it as un_number
+            cls._by_un_number = {item["code"]: item for item in cls._data}
 
     @classmethod
     def get_material(cls, un_number: str) -> dict | None:
@@ -36,18 +46,25 @@ class MaterialPeligrosoCatalog:
     def get_by_class(cls, hazard_class: str) -> list[dict]:
         """Obtiene materiales por clase de peligro (1-9)"""
         cls._load_data()
-        return [m for m in cls._data if m['class'].startswith(hazard_class)]
+        # Handle both "class" and "clase_riesgo" field names
+        return [
+            m
+            for m in cls._data
+            if m.get("class", m.get("clase_riesgo", "")).startswith(hazard_class)
+        ]
 
     @classmethod
     def get_by_packing_group(cls, packing_group: str) -> list[dict]:
         """Obtiene materiales por grupo de embalaje (I, II, III)"""
         cls._load_data()
-        return [m for m in cls._data if m.get('packing_group') and packing_group in m['packing_group']]
+        return [
+            m for m in cls._data if m.get("packing_group") and packing_group in m["packing_group"]
+        ]
 
     @classmethod
     def requires_special_handling(cls, un_number: str) -> bool:
         """Verifica si requiere manejo especial (grupos I y II)"""
         material = cls.get_material(un_number)
-        if not material or not material.get('packing_group'):
+        if not material or not material.get("packing_group"):
             return False
-        return 'I' in material['packing_group'] or 'II' in material['packing_group']
+        return "I" in material["packing_group"] or "II" in material["packing_group"]

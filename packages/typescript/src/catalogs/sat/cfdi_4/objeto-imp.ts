@@ -21,11 +21,11 @@ export class ObjetoImpCatalog {
   }
 
   static getObjeto(code: string): ObjetoImp | undefined {
-    return this.getData().find(o => o.code === code);
+    return this.getData().find((o) => o.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(o => o.code === code);
+    return this.getData().some((o) => o.code === code);
   }
 
   /**
@@ -61,8 +61,6 @@ export class ObjetoImpCatalog {
    */
   static searchByDescription(keyword: string): ObjetoImp[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(o =>
-      o.description.toUpperCase().includes(search)
-    );
+    return this.getData().filter((o) => o.description.toUpperCase().includes(search));
   }
 }

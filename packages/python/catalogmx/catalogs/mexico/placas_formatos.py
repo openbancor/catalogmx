@@ -4,10 +4,10 @@ Mexican License Plates Formats Catalog
 This module provides validation patterns and formats for Mexican vehicle license plates
 according to NOM-001-SCT-2-2016.
 """
+
 import json
 import re
 from pathlib import Path
-from typing import List, Dict, Optional
 
 
 class PlacasFormatosCatalog:
@@ -18,7 +18,7 @@ class PlacasFormatosCatalog:
     defined by NOM-001-SCT-2-2016.
     """
 
-    _data: Optional[List[Dict]] = None
+    _data: list[dict] | None = None
 
     @classmethod
     def _load_data(cls) -> None:
@@ -27,13 +27,18 @@ class PlacasFormatosCatalog:
             # Path: catalogmx/packages/python/catalogmx/catalogs/mexico/placas_formatos.py
             # Target: catalogmx/packages/shared-data/mexico/placas_formatos.json
             current_file = Path(__file__)
-            shared_data_path = current_file.parent.parent.parent.parent.parent / 'shared-data' / 'mexico' / 'placas_formatos.json'
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "mexico"
+                / "placas_formatos.json"
+            )
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding="utf-8") as f:
                 cls._data = json.load(f)
 
     @classmethod
-    def get_data(cls) -> List[Dict]:
+    def get_data(cls) -> list[dict]:
         """
         Get all license plate formats
 
@@ -54,15 +59,15 @@ class PlacasFormatosCatalog:
         normalized_placa = placa.upper().strip()
 
         for formato in cls._data:
-            if formato.get('activo', True):
-                pattern = formato['pattern']
+            if formato.get("activo", True):
+                pattern = formato["pattern"]
                 if re.match(pattern, normalized_placa):
                     return True
 
         return False
 
     @classmethod
-    def get_formatos_por_estado(cls, estado: str) -> List[Dict]:
+    def get_formatos_por_estado(cls, estado: str) -> list[dict]:
         """
         Get all formats for a specific state
 
@@ -73,12 +78,13 @@ class PlacasFormatosCatalog:
         estado_lower = estado.lower()
 
         return [
-            f for f in cls._data
-            if estado_lower in f['estado'].lower() or estado_lower == 'nacional'
+            f
+            for f in cls._data
+            if estado_lower in f["estado"].lower() or estado_lower == "nacional"
         ]
 
     @classmethod
-    def get_formatos_por_tipo(cls, tipo: str) -> List[Dict]:
+    def get_formatos_por_tipo(cls, tipo: str) -> list[dict]:
         """
         Get all active formats by type
 
@@ -87,13 +93,10 @@ class PlacasFormatosCatalog:
         """
         cls._load_data()
 
-        return [
-            f for f in cls._data
-            if f.get('tipo') == tipo and f.get('activo', True)
-        ]
+        return [f for f in cls._data if f.get("tipo") == tipo and f.get("activo", True)]
 
     @classmethod
-    def detect_formato(cls, placa: str) -> Optional[Dict]:
+    def detect_formato(cls, placa: str) -> dict | None:
         """
         Detect the format of a given license plate
 
@@ -104,14 +107,14 @@ class PlacasFormatosCatalog:
         normalized_placa = placa.upper().strip()
 
         for formato in cls._data:
-            pattern = formato['pattern']
+            pattern = formato["pattern"]
             if re.match(pattern, normalized_placa):
                 return formato.copy()
 
         return None
 
     @classmethod
-    def get_formatos_activos(cls) -> List[Dict]:
+    def get_formatos_activos(cls) -> list[dict]:
         """
         Get all active formats
 
@@ -119,7 +122,7 @@ class PlacasFormatosCatalog:
         """
         cls._load_data()
 
-        return [f for f in cls._data if f.get('activo', True)]
+        return [f for f in cls._data if f.get("activo", True)]
 
     @classmethod
     def is_diplomatica(cls, placa: str) -> bool:
@@ -130,7 +133,7 @@ class PlacasFormatosCatalog:
         :return: True if diplomatic, False otherwise
         """
         formato = cls.detect_formato(placa)
-        return formato.get('tipo') == 'diplomatico' if formato else False
+        return formato.get("tipo") == "diplomatico" if formato else False
 
     @classmethod
     def is_federal(cls, placa: str) -> bool:
@@ -144,13 +147,13 @@ class PlacasFormatosCatalog:
         if not formato:
             return False
 
-        tipo = formato.get('tipo')
+        tipo = formato.get("tipo")
         federal_types = [
-            'gobierno_federal',
-            'servicio_publico_federal',
-            'carga_federal',
-            'policia_federal',
-            'remolque_federal'
+            "gobierno_federal",
+            "servicio_publico_federal",
+            "carga_federal",
+            "policia_federal",
+            "remolque_federal",
         ]
 
         return tipo in federal_types
@@ -162,20 +165,20 @@ def validate_placa(placa: str) -> bool:
     return PlacasFormatosCatalog.validate_placa(placa)
 
 
-def detect_formato(placa: str) -> Optional[Dict]:
+def detect_formato(placa: str) -> dict | None:
     """Detect the format of a license plate"""
     return PlacasFormatosCatalog.detect_formato(placa)
 
 
-def get_formatos_activos() -> List[Dict]:
+def get_formatos_activos() -> list[dict]:
     """Get all active plate formats"""
     return PlacasFormatosCatalog.get_formatos_activos()
 
 
 # Export commonly used functions and classes
 __all__ = [
-    'PlacasFormatosCatalog',
-    'validate_placa',
-    'detect_formato',
-    'get_formatos_activos',
+    "PlacasFormatosCatalog",
+    "validate_placa",
+    "detect_formato",
+    "get_formatos_activos",
 ]

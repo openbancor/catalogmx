@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 """
 Modern, user-friendly API for RFC and CURP generation and validation.
 
@@ -8,21 +7,21 @@ to work with Mexican identification codes without dealing with class constructor
 """
 
 import datetime
-from typing import Optional, Union
-from .validators.rfc import RFCValidator, RFCGeneratorFisicas, RFCGeneratorMorales
-from .validators.curp import CURPValidator, CURPGenerator
 
+from .validators.curp import CURPGenerator, CURPValidator
+from .validators.rfc import RFCGeneratorFisicas, RFCGeneratorMorales, RFCValidator
 
 # ============================================================================
 # RFC Helper Functions
 # ============================================================================
 
+
 def generate_rfc_persona_fisica(
     nombre: str,
     apellido_paterno: str,
     apellido_materno: str,
-    fecha_nacimiento: Union[datetime.date, str],
-    **kwargs
+    fecha_nacimiento: datetime.date | str,
+    **kwargs,
 ) -> str:
     """
     Generate RFC for a natural person (Persona Física).
@@ -48,22 +47,20 @@ def generate_rfc_persona_fisica(
     """
     # Convert string date to datetime.date if needed
     if isinstance(fecha_nacimiento, str):
-        fecha_nacimiento = datetime.datetime.strptime(fecha_nacimiento, '%Y-%m-%d').date()
+        fecha_nacimiento = datetime.datetime.strptime(fecha_nacimiento, "%Y-%m-%d").date()
 
     generator = RFCGeneratorFisicas(
         paterno=apellido_paterno,
         materno=apellido_materno,
         nombre=nombre,
         fecha=fecha_nacimiento,
-        **kwargs
+        **kwargs,
     )
     return generator.rfc
 
 
 def generate_rfc_persona_moral(
-    razon_social: str,
-    fecha_constitucion: Union[datetime.date, str],
-    **kwargs
+    razon_social: str, fecha_constitucion: datetime.date | str, **kwargs
 ) -> str:
     """
     Generate RFC for a legal entity (Persona Moral/company).
@@ -85,13 +82,9 @@ def generate_rfc_persona_moral(
     """
     # Convert string date to datetime.date if needed
     if isinstance(fecha_constitucion, str):
-        fecha_constitucion = datetime.datetime.strptime(fecha_constitucion, '%Y-%m-%d').date()
+        fecha_constitucion = datetime.datetime.strptime(fecha_constitucion, "%Y-%m-%d").date()
 
-    generator = RFCGeneratorMorales(
-        razon_social=razon_social,
-        fecha=fecha_constitucion,
-        **kwargs
-    )
+    generator = RFCGeneratorMorales(razon_social=razon_social, fecha=fecha_constitucion, **kwargs)
     return generator.rfc
 
 
@@ -123,7 +116,7 @@ def validate_rfc(rfc: str, check_checksum: bool = True) -> bool:
         return False
 
 
-def detect_rfc_type(rfc: str) -> Optional[str]:
+def detect_rfc_type(rfc: str) -> str | None:
     """
     Detect the type of RFC (Persona Física, Persona Moral, or Genérico).
 
@@ -142,12 +135,12 @@ def detect_rfc_type(rfc: str) -> Optional[str]:
     try:
         validator = RFCValidator(rfc)
         tipo = validator.detect_fisica_moral()
-        if tipo == 'Persona Física':
-            return 'fisica'
-        elif tipo == 'Persona Moral':
-            return 'moral'
-        elif tipo == 'Genérico':
-            return 'generico'
+        if tipo == "Persona Física":
+            return "fisica"
+        elif tipo == "Persona Moral":
+            return "moral"
+        elif tipo == "Genérico":
+            return "generico"
         return None
     except:
         return None
@@ -157,14 +150,15 @@ def detect_rfc_type(rfc: str) -> Optional[str]:
 # CURP Helper Functions
 # ============================================================================
 
+
 def generate_curp(
     nombre: str,
     apellido_paterno: str,
-    apellido_materno: Optional[str],
-    fecha_nacimiento: Union[datetime.date, str],
+    apellido_materno: str | None,
+    fecha_nacimiento: datetime.date | str,
     sexo: str,
     estado: str,
-    differentiator: Optional[str] = None
+    differentiator: str | None = None,
 ) -> str:
     """
     Generate a CURP code.
@@ -194,11 +188,11 @@ def generate_curp(
     """
     # Convert string date to datetime.date if needed
     if isinstance(fecha_nacimiento, str):
-        fecha_nacimiento = datetime.datetime.strptime(fecha_nacimiento, '%Y-%m-%d').date()
+        fecha_nacimiento = datetime.datetime.strptime(fecha_nacimiento, "%Y-%m-%d").date()
 
     # Handle empty apellido_materno
     if not apellido_materno:
-        apellido_materno = ''
+        apellido_materno = ""
 
     generator = CURPGenerator(
         nombre=nombre,
@@ -206,18 +200,18 @@ def generate_curp(
         materno=apellido_materno,
         fecha_nacimiento=fecha_nacimiento,
         sexo=sexo,
-        estado=estado
+        estado=estado,
     )
 
     # If custom differentiator is provided, regenerate homoclave
     if differentiator is not None:
         # Generate base CURP (first 16 characters)
         base = (
-            generator.generate_letters() +
-            generator.generate_date() +
-            generator.sexo +
-            generator.get_state_code(generator.estado) +
-            generator.generate_consonants()
+            generator.generate_letters()
+            + generator.generate_date()
+            + generator.sexo
+            + generator.get_state_code(generator.estado)
+            + generator.generate_consonants()
         )
         # Add custom differentiator and calculate check digit
         check_digit = CURPGenerator.calculate_check_digit(base + differentiator)
@@ -254,7 +248,7 @@ def validate_curp(curp: str, check_digit: bool = True) -> bool:
         return False
 
 
-def get_curp_info(curp: str) -> Optional[dict]:
+def get_curp_info(curp: str) -> dict | None:
     """
     Extract information from a CURP code.
 
@@ -287,13 +281,13 @@ def get_curp_info(curp: str) -> Optional[dict]:
         estado_code = curp[11:13]
 
         return {
-            'fecha_nacimiento': f'{year:04d}-{month:02d}-{day:02d}',
-            'sexo': 'Hombre' if sexo_code == 'H' else 'Mujer',
-            'sexo_code': sexo_code,
-            'estado_code': estado_code,
-            'differentiator': curp[16],
-            'check_digit': curp[17],
-            'check_digit_valid': validator.validate_check_digit()
+            "fecha_nacimiento": f"{year:04d}-{month:02d}-{day:02d}",
+            "sexo": "Hombre" if sexo_code == "H" else "Mujer",
+            "sexo_code": sexo_code,
+            "estado_code": estado_code,
+            "differentiator": curp[16],
+            "check_digit": curp[17],
+            "check_digit_valid": validator.validate_check_digit(),
         }
     except:
         return None
@@ -302,6 +296,7 @@ def get_curp_info(curp: str) -> Optional[dict]:
 # ============================================================================
 # Quick validation functions
 # ============================================================================
+
 
 def is_valid_rfc(rfc: str) -> bool:
     """Quick RFC validation. Alias for validate_rfc()."""
@@ -312,16 +307,18 @@ def is_valid_curp(curp: str) -> bool:
     """Quick CURP validation. Alias for validate_curp()."""
     return validate_curp(curp)
 
+
 # ============================================================================
 # Path Helper Functions
 # ============================================================================
 from pathlib import Path
 
+
 def get_project_root() -> Path:
     """Returns the project root folder by searching for a .git directory."""
     current_path = Path(__file__).parent
     while current_path.parent != current_path:
-        if (current_path / '.git').exists():
+        if (current_path / ".git").exists():
             return current_path
         current_path = current_path.parent
     raise FileNotFoundError("Project root not found. Could not find .git directory.")

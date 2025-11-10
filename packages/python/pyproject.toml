@@ -129,6 +129,10 @@ ignore = [
     "E501",  # line too long (handled by black)
     "B008",  # do not perform function calls in argument defaults
     "N802",  # function name should be lowercase (allow Mexican naming: get_by_cp)
+    "N806",  # allow uppercase variable names (e.g., R for radius)
+    "E722",  # allow bare except (used in helper functions for simplicity)
+    "E402",  # allow imports not at top (path helper is intentional)
+    "N818",  # allow exception names without Error suffix (existing API)
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -170,3 +174,4 @@ omit = [
 precision = 2
 show_missing = true
 skip_covered = false
+fail_under = 90

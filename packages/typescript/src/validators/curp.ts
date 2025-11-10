@@ -4,32 +4,150 @@
  */
 
 const STATE_CODES: Record<string, string> = {
-  'AGUASCALIENTES': 'AS', 'BAJA CALIFORNIA': 'BC', 'BAJA CALIFORNIA SUR': 'BS',
-  'CAMPECHE': 'CC', 'COAHUILA': 'CL', 'COLIMA': 'CM', 'CHIAPAS': 'CS',
-  'CHIHUAHUA': 'CH', 'CIUDAD DE MEXICO': 'DF', 'DISTRITO FEDERAL': 'DF',
-  'CDMX': 'DF', 'DURANGO': 'DG', 'GUANAJUATO': 'GT', 'GUERRERO': 'GR',
-  'HIDALGO': 'HG', 'JALISCO': 'JC', 'ESTADO DE MEXICO': 'MC', 'MEXICO': 'MC',
-  'MICHOACAN': 'MN', 'MORELOS': 'MS', 'NAYARIT': 'NT', 'NUEVO LEON': 'NL',
-  'OAXACA': 'OC', 'PUEBLA': 'PL', 'QUERETARO': 'QT', 'QUINTANA ROO': 'QR',
-  'SAN LUIS POTOSI': 'SP', 'SINALOA': 'SL', 'SONORA': 'SR', 'TABASCO': 'TC',
-  'TAMAULIPAS': 'TS', 'TLAXCALA': 'TL', 'VERACRUZ': 'VZ', 'YUCATAN': 'YN',
-  'ZACATECAS': 'ZS', 'NACIDO EN EL EXTRANJERO': 'NE', 'EXTRANJERO': 'NE'
+  AGUASCALIENTES: 'AS',
+  'BAJA CALIFORNIA': 'BC',
+  'BAJA CALIFORNIA SUR': 'BS',
+  CAMPECHE: 'CC',
+  COAHUILA: 'CL',
+  COLIMA: 'CM',
+  CHIAPAS: 'CS',
+  CHIHUAHUA: 'CH',
+  'CIUDAD DE MEXICO': 'DF',
+  'DISTRITO FEDERAL': 'DF',
+  CDMX: 'DF',
+  DURANGO: 'DG',
+  GUANAJUATO: 'GT',
+  GUERRERO: 'GR',
+  HIDALGO: 'HG',
+  JALISCO: 'JC',
+  'ESTADO DE MEXICO': 'MC',
+  MEXICO: 'MC',
+  MICHOACAN: 'MN',
+  MORELOS: 'MS',
+  NAYARIT: 'NT',
+  'NUEVO LEON': 'NL',
+  OAXACA: 'OC',
+  PUEBLA: 'PL',
+  QUERETARO: 'QT',
+  'QUINTANA ROO': 'QR',
+  'SAN LUIS POTOSI': 'SP',
+  SINALOA: 'SL',
+  SONORA: 'SR',
+  TABASCO: 'TC',
+  TAMAULIPAS: 'TS',
+  TLAXCALA: 'TL',
+  VERACRUZ: 'VZ',
+  YUCATAN: 'YN',
+  ZACATECAS: 'ZS',
+  'NACIDO EN EL EXTRANJERO': 'NE',
+  EXTRANJERO: 'NE',
 };
 
 const CACOPHONIC_WORDS_CURP = [
-  'BACA', 'BAKA', 'BUEI', 'BUEY', 'CACA', 'CACO', 'CAGA', 'CAGO', 'CAKA', 'KAKO',
-  'COGE', 'COGI', 'COJA', 'COJE', 'COJI', 'COJO', 'COLA', 'CULO', 'FALO', 'FETO',
-  'GETA', 'GUEI', 'GUEY', 'JETA', 'JOTO', 'KACA', 'KACO', 'KAGA', 'KAGO', 'KAKA',
-  'KAKO', 'KOGE', 'KOGI', 'KOJA', 'KOJE', 'KOJI', 'KOJO', 'KOLA', 'KULO', 'LILO',
-  'LOCA', 'LOCO', 'LOKA', 'LOKO', 'MAME', 'MAMO', 'MEAR', 'MEAS', 'MEON', 'MIAR',
-  'MION', 'MOCO', 'MOKO', 'MULA', 'MULO', 'NACA', 'NACO', 'PEDA', 'PEDO', 'PENE',
-  'PIPI', 'PITO', 'POPO', 'PUTA', 'PUTO', 'QULO', 'RATA', 'ROBA', 'ROBE', 'ROBO',
-  'RUIN', 'SENO', 'TETA', 'VACA', 'VAGA', 'VAGO', 'VAKA', 'VUEI', 'VUEY', 'WUEI', 'WUEY'
+  'BACA',
+  'BAKA',
+  'BUEI',
+  'BUEY',
+  'CACA',
+  'CACO',
+  'CAGA',
+  'CAGO',
+  'CAKA',
+  'KAKO',
+  'COGE',
+  'COGI',
+  'COJA',
+  'COJE',
+  'COJI',
+  'COJO',
+  'COLA',
+  'CULO',
+  'FALO',
+  'FETO',
+  'GETA',
+  'GUEI',
+  'GUEY',
+  'JETA',
+  'JOTO',
+  'KACA',
+  'KACO',
+  'KAGA',
+  'KAGO',
+  'KAKA',
+  'KAKO',
+  'KOGE',
+  'KOGI',
+  'KOJA',
+  'KOJE',
+  'KOJI',
+  'KOJO',
+  'KOLA',
+  'KULO',
+  'LILO',
+  'LOCA',
+  'LOCO',
+  'LOKA',
+  'LOKO',
+  'MAME',
+  'MAMO',
+  'MEAR',
+  'MEAS',
+  'MEON',
+  'MIAR',
+  'MION',
+  'MOCO',
+  'MOKO',
+  'MULA',
+  'MULO',
+  'NACA',
+  'NACO',
+  'PEDA',
+  'PEDO',
+  'PENE',
+  'PIPI',
+  'PITO',
+  'POPO',
+  'PUTA',
+  'PUTO',
+  'QULO',
+  'RATA',
+  'ROBA',
+  'ROBE',
+  'ROBO',
+  'RUIN',
+  'SENO',
+  'TETA',
+  'VACA',
+  'VAGA',
+  'VAGO',
+  'VAKA',
+  'VUEI',
+  'VUEY',
+  'WUEI',
+  'WUEY',
 ];
 
 const EXCLUDED_WORDS_CURP = [
-  'DE', 'LA', 'LAS', 'MC', 'VON', 'DEL', 'LOS', 'Y', 'MAC', 'VAN', 'MI',
-  'DA', 'DAS', 'DER', 'DI', 'DIE', 'DD', 'EL', 'LE', 'LES'
+  'DE',
+  'LA',
+  'LAS',
+  'MC',
+  'VON',
+  'DEL',
+  'LOS',
+  'Y',
+  'MAC',
+  'VAN',
+  'MI',
+  'DA',
+  'DAS',
+  'DER',
+  'DI',
+  'DIE',
+  'DD',
+  'EL',
+  'LE',
+  'LES',
 ];
 
 const VOCALES_CURP = 'AEIOU';
@@ -79,11 +197,14 @@ function getFirstConsonant(word: string): string {
 function cleanNameCurp(name: string): string {
   if (!name) return '';
   let cleaned = removeAccentsCurp(name.toUpperCase().trim());
-  EXCLUDED_WORDS_CURP.forEach(word => {
+  EXCLUDED_WORDS_CURP.forEach((word) => {
     const regex = new RegExp(`\\b${word}\\b`, 'g');
     cleaned = cleaned.replace(regex, ' ');
   });
-  return cleaned.split(/\s+/).filter(w => w.length > 0).join(' ');
+  return cleaned
+    .split(/\s+/)
+    .filter((w) => w.length > 0)
+    .join(' ');
 }
 
 /**
@@ -116,7 +237,8 @@ function getStateCode(state: string): string {
  */
 export class CURPValidator {
   private readonly curp: string;
-  private static readonly GENERAL_REGEX = /^[A-Z][AEIOUX][A-Z]{2}[0-9]{2}[0-1][0-9][0-3][0-9][MH][A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}[0-9A-Z]{2}$/;
+  private static readonly GENERAL_REGEX =
+    /^[A-Z][AEIOUX][A-Z]{2}[0-9]{2}[0-1][0-9][0-3][0-9][MH][A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}[0-9A-Z]{2}$/;
   private static readonly LENGTH = 18;
 
   constructor(curp: string) {
@@ -207,9 +329,10 @@ export function generateCurp(input: {
   estado: string;
   differentiator?: string;
 }): string {
-  const fecha = typeof input.fechaNacimiento === 'string'
-    ? new Date(input.fechaNacimiento)
-    : input.fechaNacimiento;
+  const fecha =
+    typeof input.fechaNacimiento === 'string'
+      ? new Date(input.fechaNacimiento)
+      : input.fechaNacimiento;
 
   const nombre = cleanNameCurp(input.nombre);
   const paterno = cleanNameCurp(input.apellidoPaterno);
@@ -217,11 +340,15 @@ export function generateCurp(input: {
 
   // Get first letter and first vowel of paterno
   let iniciales = paterno.charAt(0);
-  const paternoVowel = paterno.slice(1).split('').find(c => VOCALES_CURP.includes(c)) || 'X';
+  const paternoVowel =
+    paterno
+      .slice(1)
+      .split('')
+      .find((c) => VOCALES_CURP.includes(c)) || 'X';
   iniciales += paternoVowel;
 
   // First letter of materno
-  iniciales += (materno.charAt(0) || 'X');
+  iniciales += materno.charAt(0) || 'X';
 
   // First letter of nombre
   iniciales += nombre.charAt(0);
@@ -248,9 +375,17 @@ export function generateCurp(input: {
   const consonant3 = getFirstConsonant(nombre);
 
   // Base CURP (17 characters)
-  const curpBase = iniciales + year + month + day + sexo + estadoCode +
-                   consonant1 + consonant2 + consonant3 +
-                   (input.differentiator || '0');
+  const curpBase =
+    iniciales +
+    year +
+    month +
+    day +
+    sexo +
+    estadoCode +
+    consonant1 +
+    consonant2 +
+    consonant3 +
+    (input.differentiator || '0');
 
   // Calculate check digit
   const checkDigit = calculateCurpCheckDigit(curpBase);

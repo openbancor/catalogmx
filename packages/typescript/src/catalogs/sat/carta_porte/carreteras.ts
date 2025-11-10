@@ -21,11 +21,11 @@ export class CarreterasCatalog {
   }
 
   static getCarretera(code: string): Carretera | undefined {
-    return this.getData().find(c => c.code === code.toUpperCase());
+    return this.getData().find((c) => c.code === code.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(c => c.code === code.toUpperCase());
+    return this.getData().some((c) => c.code === code.toUpperCase());
   }
 
   /**
@@ -61,9 +61,7 @@ export class CarreterasCatalog {
    */
   static searchByName(keyword: string): Carretera[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(c =>
-      c.nombre.toUpperCase().includes(search)
-    );
+    return this.getData().filter((c) => c.nombre.toUpperCase().includes(search));
   }
 
   /**
@@ -71,9 +69,8 @@ export class CarreterasCatalog {
    */
   static searchByRoute(keyword: string): Carretera[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(c =>
-      c.origen.toUpperCase().includes(search) ||
-      c.destino.toUpperCase().includes(search)
+    return this.getData().filter(
+      (c) => c.origen.toUpperCase().includes(search) || c.destino.toUpperCase().includes(search)
     );
   }
 
@@ -82,8 +79,6 @@ export class CarreterasCatalog {
    */
   static getByTipo(tipo: string): Carretera[] {
     const search = tipo.toUpperCase();
-    return this.getData().filter(c =>
-      c.tipo.toUpperCase().includes(search)
-    );
+    return this.getData().filter((c) => c.tipo.toUpperCase().includes(search));
   }
 }

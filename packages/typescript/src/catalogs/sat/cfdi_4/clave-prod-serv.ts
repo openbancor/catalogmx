@@ -167,8 +167,10 @@ export class ClaveProdServCatalog {
     for (const item of this._data!) {
       if (results.length >= limit) break;
 
-      if (item.incluirIVATrasladado.toUpperCase() === 'SÍ' ||
-          item.incluirIVATrasladado.toUpperCase() === 'SI') {
+      if (
+        item.incluirIVATrasladado.toUpperCase() === 'SÍ' ||
+        item.incluirIVATrasladado.toUpperCase() === 'SI'
+      ) {
         results.push(item);
       }
     }
@@ -188,8 +190,10 @@ export class ClaveProdServCatalog {
     for (const item of this._data!) {
       if (results.length >= limit) break;
 
-      if (item.incluirIEPSTrasladado.toUpperCase() === 'SÍ' ||
-          item.incluirIEPSTrasladado.toUpperCase() === 'SI') {
+      if (
+        item.incluirIEPSTrasladado.toUpperCase() === 'SÍ' ||
+        item.incluirIEPSTrasladado.toUpperCase() === 'SI'
+      ) {
         results.push(item);
       }
     }
@@ -237,13 +241,17 @@ export class ClaveProdServCatalog {
         conEstimulo++;
       }
 
-      if (item.incluirIVATrasladado.toUpperCase() === 'SÍ' ||
-          item.incluirIVATrasladado.toUpperCase() === 'SI') {
+      if (
+        item.incluirIVATrasladado.toUpperCase() === 'SÍ' ||
+        item.incluirIVATrasladado.toUpperCase() === 'SI'
+      ) {
         requierenIVA++;
       }
 
-      if (item.incluirIEPSTrasladado.toUpperCase() === 'SÍ' ||
-          item.incluirIEPSTrasladado.toUpperCase() === 'SI') {
+      if (
+        item.incluirIEPSTrasladado.toUpperCase() === 'SÍ' ||
+        item.incluirIEPSTrasladado.toUpperCase() === 'SI'
+      ) {
         requierenIEPS++;
       }
     }
@@ -308,15 +316,17 @@ export class ClaveProdServCatalog {
 
       // Filtrar por IVA
       if (criteria.requiereIVA !== undefined) {
-        const requiereIVA = item.incluirIVATrasladado.toUpperCase() === 'SÍ' ||
-                           item.incluirIVATrasladado.toUpperCase() === 'SI';
+        const requiereIVA =
+          item.incluirIVATrasladado.toUpperCase() === 'SÍ' ||
+          item.incluirIVATrasladado.toUpperCase() === 'SI';
         if (criteria.requiereIVA !== requiereIVA) continue;
       }
 
       // Filtrar por IEPS
       if (criteria.requiereIEPS !== undefined) {
-        const requiereIEPS = item.incluirIEPSTrasladado.toUpperCase() === 'SÍ' ||
-                            item.incluirIEPSTrasladado.toUpperCase() === 'SI';
+        const requiereIEPS =
+          item.incluirIEPSTrasladado.toUpperCase() === 'SÍ' ||
+          item.incluirIEPSTrasladado.toUpperCase() === 'SI';
         if (criteria.requiereIEPS !== requiereIEPS) continue;
       }
 
