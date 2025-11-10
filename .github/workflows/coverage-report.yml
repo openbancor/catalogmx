@@ -1,0 +1,93 @@
+name: Coverage Report
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  python-coverage:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        cd packages/python
+        pip install -e ".[dev]"
+    
+    - name: Run tests with coverage
+      run: |
+        cd packages/python
+        pytest tests/ --cov=catalogmx --cov-report=xml --cov-report=html --cov-report=term-missing --cov-branch
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./packages/python/coverage.xml
+        flags: python
+        name: catalogmx-python
+        token: ${{ secrets.CODECOV_TOKEN }}
+    
+    - name: Comment coverage on PR
+      if: github.event_name == 'pull_request'
+      uses: py-cov-action/python-coverage-comment-action@v3
+      with:
+        GITHUB_TOKEN: ${{ github.token }}
+        MINIMUM_GREEN: 90
+        MINIMUM_ORANGE: 80
+    
+    - name: Deploy coverage to GitHub Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./packages/python/htmlcov
+        destination_dir: coverage/python
+        keep_files: true
+
+  typescript-coverage:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Install dependencies
+      run: |
+        cd packages/typescript
+        npm ci
+    
+    - name: Run tests with coverage
+      run: |
+        cd packages/typescript
+        npm run test:coverage
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./packages/typescript/coverage/coverage-final.json
+        flags: typescript
+        name: catalogmx-typescript
+        token: ${{ secrets.CODECOV_TOKEN }}
+    
+    - name: Deploy coverage to GitHub Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./packages/typescript/coverage/lcov-report
+        destination_dir: coverage/typescript
+        keep_files: true
+
