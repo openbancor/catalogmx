@@ -27,7 +27,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
 
       - name: Install dependencies
         run: |
@@ -63,6 +62,7 @@ jobs:
           flags: python
           name: python-${{ matrix.python-version }}
         if: matrix.python-version == '3.12'
+        continue-on-error: true  # Don't fail if codecov upload fails
 
   # TypeScript Testing and Linting
   typescript-tests:
@@ -84,11 +84,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: packages/typescript/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Lint with ESLint
         run: npm run lint
@@ -133,6 +131,7 @@ jobs:
           flags: typescript
           name: typescript-node-${{ matrix.node-version }}
         if: matrix.node-version == '20'
+        continue-on-error: true  # Don't fail if codecov upload fails
 
   # Combined Quality Check
   quality-gate:
