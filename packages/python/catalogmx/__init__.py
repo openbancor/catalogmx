@@ -1,35 +1,34 @@
 __version__ = "0.3.0"
 
 # RFC imports
-from .validators.rfc import (
-    RFCValidator,
-    RFCGenerator,
-    RFCGeneratorFisicas,
-    RFCGeneratorMorales,
+# Modern helper functions (recommended API)
+from .helpers import (
+    detect_rfc_type,
+    # CURP helpers
+    generate_curp,
+    # RFC helpers
+    generate_rfc_persona_fisica,
+    generate_rfc_persona_moral,
+    get_curp_info,
+    is_valid_curp,
+    is_valid_rfc,
+    validate_curp,
+    validate_rfc,
 )
 
 # CURP imports
 from .validators.curp import (
-    CURPValidator,
-    CURPGenerator,
     CURPException,
+    CURPGenerator,
     CURPLengthError,
     CURPStructureError,
+    CURPValidator,
 )
-
-# Modern helper functions (recommended API)
-from .helpers import (
-    # RFC helpers
-    generate_rfc_persona_fisica,
-    generate_rfc_persona_moral,
-    validate_rfc,
-    detect_rfc_type,
-    is_valid_rfc,
-    # CURP helpers
-    generate_curp,
-    validate_curp,
-    get_curp_info,
-    is_valid_curp,
+from .validators.rfc import (
+    RFCGenerator,
+    RFCGeneratorFisicas,
+    RFCGeneratorMorales,
+    RFCValidator,
 )
 
 __all__ = [

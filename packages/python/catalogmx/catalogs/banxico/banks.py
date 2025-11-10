@@ -5,7 +5,6 @@ This module provides access to the official catalog of Mexican banks
 participating in the SPEI (Sistema de Pagos Electrónicos Interbancarios).
 """
 import json
-import os
 from pathlib import Path
 
 from catalogmx.utils.text import normalize_text
@@ -30,7 +29,7 @@ class BankCatalog:
             current_file = Path(__file__)
             shared_data_path = current_file.parent.parent.parent.parent.parent / 'shared-data' / 'banxico' / 'banks.json'
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding='utf-8') as f:
                 cls._data = json.load(f)
 
             # Create lookup dictionaries

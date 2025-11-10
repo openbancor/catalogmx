@@ -10,6 +10,7 @@ Fuente: ICC - International Chamber of Commerce / SAT México
 import json
 from pathlib import Path
 
+
 class IncotermsValidator:
     """Validador y catálogo de INCOTERMS 2020 para Comercio Exterior"""
 
@@ -25,7 +26,7 @@ class IncotermsValidator:
             shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
                               / 'shared-data' / 'sat' / 'comercio_exterior' / 'incoterms.json')
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding='utf-8') as f:
                 data = json.load(f)
                 cls._data = data['incoterms']
 

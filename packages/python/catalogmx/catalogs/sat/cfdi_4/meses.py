@@ -1,6 +1,8 @@
 """Catálogo de Meses (SAT)"""
 import json
+
 from ....helpers import get_project_root
+
 
 class Meses:
     _data = None
@@ -10,7 +12,7 @@ class Meses:
         if cls._data is None:
             root = get_project_root()
             path = root / 'packages' / 'shared-data' / 'sat' / 'cfdi_4.0' / 'c_Meses.json'
-            with open(path, 'r', encoding='utf-8') as f:
+            with open(path, encoding='utf-8') as f:
                 json_data = json.load(f)
                 cls._data = {item['valor']: item for item in json_data['data']}
         return cls._data

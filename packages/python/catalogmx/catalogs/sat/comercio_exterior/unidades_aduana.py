@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+
 class UnidadAduanaCatalog:
     """Catálogo de unidades de medida reconocidas por aduanas"""
 
@@ -17,7 +18,7 @@ class UnidadAduanaCatalog:
             shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
                               / 'shared-data' / 'sat' / 'comercio_exterior' / 'unidades_aduana.json')
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding='utf-8') as f:
                 data = json.load(f)
                 cls._data = data['unidades']
 

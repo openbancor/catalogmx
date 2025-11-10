@@ -8,9 +8,6 @@ Módulos disponibles:
 - nomina: Catálogos para Complemento de Nómina 1.2
 """
 
-from . import cfdi_4
-from . import comercio_exterior
-from . import carta_porte
-from . import nomina
+from . import carta_porte, cfdi_4, comercio_exterior, nomina
 
 __all__ = ['cfdi_4', 'comercio_exterior', 'carta_porte', 'nomina']

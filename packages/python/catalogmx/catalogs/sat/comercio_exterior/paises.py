@@ -2,7 +2,9 @@
 
 import json
 from pathlib import Path
+
 from catalogmx.utils.text import normalize_text
+
 
 class PaisCatalog:
     """Catálogo de países para identificar origen/destino en comercio exterior"""
@@ -19,7 +21,7 @@ class PaisCatalog:
             shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
                               / 'shared-data' / 'sat' / 'comercio_exterior' / 'paises.json')
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding='utf-8') as f:
                 cls._data = json.load(f)
 
             cls._pais_by_code = {item['codigo']: item for item in cls._data}

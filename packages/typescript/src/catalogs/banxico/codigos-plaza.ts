@@ -178,7 +178,7 @@ export class CodigosPlazaCatalog {
     this.getData(); // Ensure data is loaded
     const duplicadas = new Map<string, CodigoPlaza[]>();
 
-    for (const [nombre, plazas] of this._byPlazaNormalized!) {
+    for (const [_nombre, plazas] of this._byPlazaNormalized!) {
       if (plazas.length > 1) {
         // Get the original names (with accents)
         const originalName = plazas[0].plaza;

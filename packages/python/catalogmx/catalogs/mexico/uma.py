@@ -6,7 +6,6 @@ units for fines, taxes, and other obligations in Mexico.
 """
 import json
 from pathlib import Path
-from typing import List, Dict, Optional
 
 from .salarios_minimos import SalariosMinimos
 
@@ -20,7 +19,7 @@ class UMACatalog:
     It was introduced in 2016 to replace the minimum wage as a reference unit.
     """
 
-    _data: Optional[List[Dict]] = None
+    _data: list[dict] | None = None
 
     @classmethod
     def _load_data(cls) -> None:
@@ -31,11 +30,11 @@ class UMACatalog:
             current_file = Path(__file__)
             shared_data_path = current_file.parent.parent.parent.parent.parent / 'shared-data' / 'mexico' / 'uma.json'
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding='utf-8') as f:
                 cls._data = json.load(f)
 
     @classmethod
-    def get_data(cls) -> List[Dict]:
+    def get_data(cls) -> list[dict]:
         """
         Get all UMA data
 
@@ -45,7 +44,7 @@ class UMACatalog:
         return cls._data.copy()
 
     @classmethod
-    def get_por_anio(cls, anio: int) -> Optional[Dict]:
+    def get_por_anio(cls, anio: int) -> dict | None:
         """
         Get UMA values for a specific year
 
@@ -89,7 +88,7 @@ class UMACatalog:
         }
 
     @classmethod
-    def get_actual(cls) -> Optional[Dict]:
+    def get_actual(cls) -> dict | None:
         """
         Get current UMA values (latest year in data)
 
@@ -104,7 +103,7 @@ class UMACatalog:
         return cls._data[0].copy()
 
     @classmethod
-    def get_valor(cls, anio: int, tipo: str = 'diario') -> Optional[float]:
+    def get_valor(cls, anio: int, tipo: str = 'diario') -> float | None:
         """
         Get UMA value for specific year and type
 
@@ -129,7 +128,7 @@ class UMACatalog:
         return record.get(field)
 
     @classmethod
-    def calcular_umas(cls, monto: float, anio: int, tipo: str = 'diario') -> Optional[float]:
+    def calcular_umas(cls, monto: float, anio: int, tipo: str = 'diario') -> float | None:
         """
         Calculate how many UMAs a given amount represents
 
@@ -145,7 +144,7 @@ class UMACatalog:
         return monto / valor_uma
 
     @classmethod
-    def calcular_monto(cls, umas: float, anio: int, tipo: str = 'diario') -> Optional[float]:
+    def calcular_monto(cls, umas: float, anio: int, tipo: str = 'diario') -> float | None:
         """
         Calculate the peso amount for a given number of UMAs
 
@@ -161,7 +160,7 @@ class UMACatalog:
         return umas * valor_uma
 
     @classmethod
-    def get_incremento(cls, anio: int) -> Optional[float]:
+    def get_incremento(cls, anio: int) -> float | None:
         """
         Get percentage increment for a specific year
 
@@ -176,22 +175,22 @@ class UMACatalog:
 
 
 # Convenience functions
-def get_uma_actual() -> Optional[Dict]:
+def get_uma_actual() -> dict | None:
     """Get current UMA values"""
     return UMACatalog.get_actual()
 
 
-def get_uma_por_anio(anio: int) -> Optional[Dict]:
+def get_uma_por_anio(anio: int) -> dict | None:
     """Get UMA values for a specific year"""
     return UMACatalog.get_por_anio(anio)
 
 
-def calcular_umas(monto: float, anio: int, tipo: str = 'diario') -> Optional[float]:
+def calcular_umas(monto: float, anio: int, tipo: str = 'diario') -> float | None:
     """Calculate how many UMAs a given amount represents"""
     return UMACatalog.calcular_umas(monto, anio, tipo)
 
 
-def calcular_monto(umas: float, anio: int, tipo: str = 'diario') -> Optional[float]:
+def calcular_monto(umas: float, anio: int, tipo: str = 'diario') -> float | None:
     """Calculate peso amount for a given number of UMAs"""
     return UMACatalog.calcular_monto(umas, anio, tipo)
 

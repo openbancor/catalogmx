@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 """
 Modern, user-friendly API for RFC and CURP generation and validation.
 
@@ -8,10 +7,9 @@ to work with Mexican identification codes without dealing with class constructor
 """
 
 import datetime
-from typing import Optional, Union
-from .validators.rfc import RFCValidator, RFCGeneratorFisicas, RFCGeneratorMorales
-from .validators.curp import CURPValidator, CURPGenerator
 
+from .validators.curp import CURPGenerator, CURPValidator
+from .validators.rfc import RFCGeneratorFisicas, RFCGeneratorMorales, RFCValidator
 
 # ============================================================================
 # RFC Helper Functions
@@ -21,7 +19,7 @@ def generate_rfc_persona_fisica(
     nombre: str,
     apellido_paterno: str,
     apellido_materno: str,
-    fecha_nacimiento: Union[datetime.date, str],
+    fecha_nacimiento: datetime.date | str,
     **kwargs
 ) -> str:
     """
@@ -62,7 +60,7 @@ def generate_rfc_persona_fisica(
 
 def generate_rfc_persona_moral(
     razon_social: str,
-    fecha_constitucion: Union[datetime.date, str],
+    fecha_constitucion: datetime.date | str,
     **kwargs
 ) -> str:
     """
@@ -123,7 +121,7 @@ def validate_rfc(rfc: str, check_checksum: bool = True) -> bool:
         return False
 
 
-def detect_rfc_type(rfc: str) -> Optional[str]:
+def detect_rfc_type(rfc: str) -> str | None:
     """
     Detect the type of RFC (Persona Física, Persona Moral, or Genérico).
 
@@ -160,11 +158,11 @@ def detect_rfc_type(rfc: str) -> Optional[str]:
 def generate_curp(
     nombre: str,
     apellido_paterno: str,
-    apellido_materno: Optional[str],
-    fecha_nacimiento: Union[datetime.date, str],
+    apellido_materno: str | None,
+    fecha_nacimiento: datetime.date | str,
     sexo: str,
     estado: str,
-    differentiator: Optional[str] = None
+    differentiator: str | None = None
 ) -> str:
     """
     Generate a CURP code.
@@ -254,7 +252,7 @@ def validate_curp(curp: str, check_digit: bool = True) -> bool:
         return False
 
 
-def get_curp_info(curp: str) -> Optional[dict]:
+def get_curp_info(curp: str) -> dict | None:
     """
     Extract information from a CURP code.
 
@@ -316,6 +314,7 @@ def is_valid_curp(curp: str) -> bool:
 # Path Helper Functions
 # ============================================================================
 from pathlib import Path
+
 
 def get_project_root() -> Path:
     """Returns the project root folder by searching for a .git directory."""

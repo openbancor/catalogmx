@@ -1,6 +1,7 @@
 """Catálogo de Códigos Postales SEPOMEX"""
 import json
 from pathlib import Path
+
 from catalogmx.utils.text import normalize_text
 
 
@@ -17,7 +18,7 @@ class CodigosPostales:
             # Path: catalogmx/packages/python/catalogmx/catalogs/sepomex/codigos_postales.py
             # Target: catalogmx/packages/shared-data/sepomex/codigos_postales_completo.json
             path = Path(__file__).parent.parent.parent.parent.parent / 'shared-data' / 'sepomex' / 'codigos_postales_completo.json'
-            with open(path, 'r', encoding='utf-8') as f:
+            with open(path, encoding='utf-8') as f:
                 cls._data = json.load(f)
 
             # Index by CP (can have multiple settlements)

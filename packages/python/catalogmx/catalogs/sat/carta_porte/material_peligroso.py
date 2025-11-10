@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 
+
 class MaterialPeligrosoCatalog:
     _data: list[dict] | None = None
     _by_un_number: dict[str, dict] | None = None
@@ -10,7 +11,7 @@ class MaterialPeligrosoCatalog:
     def _load_data(cls) -> None:
         if cls._data is None:
             path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'carta_porte_3' / 'material_peligroso.json'
-            with open(path, 'r', encoding='utf-8') as f:
+            with open(path, encoding='utf-8') as f:
                 data = json.load(f)
                 cls._data = data['materiales']
             cls._by_un_number = {item['un_number']: item for item in cls._data}

@@ -16,7 +16,7 @@ class MunicipiosCatalog:
             # Path: catalogmx/packages/python/catalogmx/catalogs/inegi/municipios.py
             # Target: catalogmx/packages/shared-data/inegi/municipios_completo.json
             path = Path(__file__).parent.parent.parent.parent.parent / 'shared-data' / 'inegi' / 'municipios_completo.json'
-            with open(path, 'r', encoding='utf-8') as f:
+            with open(path, encoding='utf-8') as f:
                 cls._data = json.load(f)
 
             cls._by_cve_completa = {item['cve_completa']: item for item in cls._data}

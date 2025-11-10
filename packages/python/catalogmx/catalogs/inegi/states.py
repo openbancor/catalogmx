@@ -6,6 +6,7 @@ This module provides access to the official catalog of Mexican states
 """
 import json
 from pathlib import Path
+
 from catalogmx.utils.text import normalize_text
 
 
@@ -28,7 +29,7 @@ class StateCatalog:
             current_file = Path(__file__)
             shared_data_path = current_file.parent.parent.parent.parent.parent / 'shared-data' / 'inegi' / 'states.json'
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding='utf-8') as f:
                 cls._data = json.load(f)
 
             # Create lookup dictionaries

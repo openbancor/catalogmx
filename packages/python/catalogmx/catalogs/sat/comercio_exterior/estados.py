@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+
 class EstadoCatalog:
     """Catálogo de estados/provincias de USA y Canadá para comercio exterior"""
 
@@ -18,7 +19,7 @@ class EstadoCatalog:
             shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
                               / 'shared-data' / 'sat' / 'comercio_exterior' / 'estados_usa_canada.json')
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding='utf-8') as f:
                 data = json.load(f)
                 cls._estados_usa = data['estados_usa']
                 cls._provincias_canada = data['provincias_canada']

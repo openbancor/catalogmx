@@ -57,7 +57,7 @@ class MunicipiosCompletoCatalog:
             / 'shared-data' / 'inegi' / 'municipios_completo.json'
         )
 
-        with open(data_path, 'r', encoding='utf-8') as f:
+        with open(data_path, encoding='utf-8') as f:
             cls._data = json.load(f)
 
     @classmethod
@@ -229,7 +229,7 @@ class MunicipiosCompletoCatalog:
         """
         cls._load_data()
 
-        estados = set(mun['cve_entidad'] for mun in cls._data)  # type: ignore
+        estados = {mun['cve_entidad'] for mun in cls._data}  # type: ignore
         poblacion_total = sum(
             mun['poblacion_total'] for mun in cls._data  # type: ignore
         )

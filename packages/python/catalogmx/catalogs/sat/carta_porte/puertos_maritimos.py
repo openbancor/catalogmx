@@ -1,7 +1,9 @@
 """Catálogo c_NumAutorizacionNaviero - Puertos Marítimos"""
 import json
 from pathlib import Path
+
 from catalogmx.utils.text import normalize_text
+
 
 class PuertosMaritimos:
     _data: list[dict] | None = None
@@ -11,7 +13,7 @@ class PuertosMaritimos:
     def _load_data(cls) -> None:
         if cls._data is None:
             path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'carta_porte_3' / 'puertos_maritimos.json'
-            with open(path, 'r', encoding='utf-8') as f:
+            with open(path, encoding='utf-8') as f:
                 cls._data = json.load(f)
             cls._by_code = {item['code']: item for item in cls._data}
 

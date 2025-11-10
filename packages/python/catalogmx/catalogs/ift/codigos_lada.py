@@ -85,7 +85,7 @@ class CodigosLADACatalog:
             / 'shared-data' / 'ift' / 'codigos_lada.json'
         )
 
-        with open(data_path, 'r', encoding='utf-8') as f:
+        with open(data_path, encoding='utf-8') as f:
             json_data = json.load(f)
             cls._data = json_data['codigos']
 

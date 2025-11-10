@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 
+
 class TasaOCuota:
     _data = None
 
@@ -9,7 +10,7 @@ class TasaOCuota:
     def _load_data(cls):
         if cls._data is None:
             path = Path(__file__).parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'cfdi_4.0' / 'c_TasaOCuota.json'
-            with open(path, 'r', encoding='utf-8') as f:
+            with open(path, encoding='utf-8') as f:
                 json_data = json.load(f)
                 # This catalog has a more complex structure, let's index by a combination of fields
                 cls._data = json_data['data']

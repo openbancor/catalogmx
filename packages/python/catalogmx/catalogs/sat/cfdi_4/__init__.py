@@ -15,17 +15,17 @@ Catálogos incluidos:
 - c_ClaveProdServ: Claves de productos y servicios (~52,000 códigos - SQLite)
 """
 
-from .regimen_fiscal import RegimenFiscalCatalog
-from .uso_cfdi import UsoCFDICatalog
-from .forma_pago import FormaPagoCatalog
-from .metodo_pago import MetodoPagoCatalog
-from .tipo_comprobante import TipoComprobanteCatalog
-from .impuesto import ImpuestoCatalog
-from .exportacion import ExportacionCatalog
-from .tipo_relacion import TipoRelacionCatalog
-from .objeto_imp import ObjetoImpCatalog
-from .clave_unidad import ClaveUnidadCatalog
 from .clave_prod_serv import ClaveProdServCatalog
+from .clave_unidad import ClaveUnidadCatalog
+from .exportacion import ExportacionCatalog
+from .forma_pago import FormaPagoCatalog
+from .impuesto import ImpuestoCatalog
+from .metodo_pago import MetodoPagoCatalog
+from .objeto_imp import ObjetoImpCatalog
+from .regimen_fiscal import RegimenFiscalCatalog
+from .tipo_comprobante import TipoComprobanteCatalog
+from .tipo_relacion import TipoRelacionCatalog
+from .uso_cfdi import UsoCFDICatalog
 
 __all__ = [
     'RegimenFiscalCatalog',

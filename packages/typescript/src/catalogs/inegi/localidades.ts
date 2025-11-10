@@ -149,7 +149,7 @@ export class LocalidadesCatalog {
     lon2: number
   ): number {
     const R = 6371; // Radio de la Tierra en km
-    const toRad = (deg: number) => (deg * Math.PI) / 180;
+    const toRad = (deg: number): number => (deg * Math.PI) / 180;
 
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);

@@ -7,7 +7,6 @@ according to NOM-001-SCT-2-2016.
 import json
 import re
 from pathlib import Path
-from typing import List, Dict, Optional
 
 
 class PlacasFormatosCatalog:
@@ -18,7 +17,7 @@ class PlacasFormatosCatalog:
     defined by NOM-001-SCT-2-2016.
     """
 
-    _data: Optional[List[Dict]] = None
+    _data: list[dict] | None = None
 
     @classmethod
     def _load_data(cls) -> None:
@@ -29,11 +28,11 @@ class PlacasFormatosCatalog:
             current_file = Path(__file__)
             shared_data_path = current_file.parent.parent.parent.parent.parent / 'shared-data' / 'mexico' / 'placas_formatos.json'
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding='utf-8') as f:
                 cls._data = json.load(f)
 
     @classmethod
-    def get_data(cls) -> List[Dict]:
+    def get_data(cls) -> list[dict]:
         """
         Get all license plate formats
 
@@ -62,7 +61,7 @@ class PlacasFormatosCatalog:
         return False
 
     @classmethod
-    def get_formatos_por_estado(cls, estado: str) -> List[Dict]:
+    def get_formatos_por_estado(cls, estado: str) -> list[dict]:
         """
         Get all formats for a specific state
 
@@ -78,7 +77,7 @@ class PlacasFormatosCatalog:
         ]
 
     @classmethod
-    def get_formatos_por_tipo(cls, tipo: str) -> List[Dict]:
+    def get_formatos_por_tipo(cls, tipo: str) -> list[dict]:
         """
         Get all active formats by type
 
@@ -93,7 +92,7 @@ class PlacasFormatosCatalog:
         ]
 
     @classmethod
-    def detect_formato(cls, placa: str) -> Optional[Dict]:
+    def detect_formato(cls, placa: str) -> dict | None:
         """
         Detect the format of a given license plate
 
@@ -111,7 +110,7 @@ class PlacasFormatosCatalog:
         return None
 
     @classmethod
-    def get_formatos_activos(cls) -> List[Dict]:
+    def get_formatos_activos(cls) -> list[dict]:
         """
         Get all active formats
 
@@ -162,12 +161,12 @@ def validate_placa(placa: str) -> bool:
     return PlacasFormatosCatalog.validate_placa(placa)
 
 
-def detect_formato(placa: str) -> Optional[Dict]:
+def detect_formato(placa: str) -> dict | None:
     """Detect the format of a license plate"""
     return PlacasFormatosCatalog.detect_formato(placa)
 
 
-def get_formatos_activos() -> List[Dict]:
+def get_formatos_activos() -> list[dict]:
     """Get all active plate formats"""
     return PlacasFormatosCatalog.get_formatos_activos()
 

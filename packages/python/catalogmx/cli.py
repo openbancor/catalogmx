@@ -14,10 +14,12 @@ Why does this file exist, and why not put this in __main__?
 
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
-import click
 import datetime
-from catalogmx.validators.rfc import RFCValidator, RFCGenerator
-from catalogmx.validators.curp import CURPValidator, CURPGenerator
+
+import click
+
+from catalogmx.validators.curp import CURPGenerator, CURPValidator
+from catalogmx.validators.rfc import RFCGenerator, RFCValidator
 
 
 @click.group()

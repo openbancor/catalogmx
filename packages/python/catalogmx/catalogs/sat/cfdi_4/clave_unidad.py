@@ -66,7 +66,7 @@ class ClaveUnidadCatalog:
             / 'shared-data' / 'sat' / 'cfdi_4.0' / 'clave_unidad.json'
         )
 
-        with open(data_path, 'r', encoding='utf-8') as f:
+        with open(data_path, encoding='utf-8') as f:
             cls._data = json.load(f)
 
         # Crear índice por ID

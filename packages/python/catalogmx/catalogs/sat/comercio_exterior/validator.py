@@ -5,22 +5,22 @@ Integra todos los catálogos para validación completa de un CFDI con
 el complemento de comercio exterior.
 """
 
-from typing import Dict, List
-from .incoterms import IncotermsValidator
+
 from .claves_pedimento import ClavePedimentoCatalog
-from .unidades_aduana import UnidadAduanaCatalog
-from .motivos_traslado import MotivoTrasladoCatalog
-from .registro_ident_trib import RegistroIdentTribCatalog
-from .monedas import MonedaCatalog
-from .paises import PaisCatalog
 from .estados import EstadoCatalog
+from .incoterms import IncotermsValidator
+from .monedas import MonedaCatalog
+from .motivos_traslado import MotivoTrasladoCatalog
+from .paises import PaisCatalog
+from .registro_ident_trib import RegistroIdentTribCatalog
+from .unidades_aduana import UnidadAduanaCatalog
 
 
 class ComercioExteriorValidator:
     """Validador completo para CFDI con Complemento Comercio Exterior 2.0"""
 
     @classmethod
-    def validate(cls, cfdi_ce: Dict) -> Dict:
+    def validate(cls, cfdi_ce: dict) -> dict:
         """
         Valida un CFDI completo con Complemento de Comercio Exterior
 
@@ -111,7 +111,7 @@ class ComercioExteriorValidator:
         }
 
     @classmethod
-    def _validate_mercancia(cls, mercancia: Dict, index: int) -> List[str]:
+    def _validate_mercancia(cls, mercancia: dict, index: int) -> list[str]:
         """Valida una mercancía individual"""
         errors = []
         prefix = f'Mercancía[{index}]'
@@ -150,7 +150,7 @@ class ComercioExteriorValidator:
         return errors
 
     @classmethod
-    def _validate_receptor(cls, receptor: Dict) -> Dict:
+    def _validate_receptor(cls, receptor: dict) -> dict:
         """Valida los datos del receptor extranjero"""
         errors = []
 

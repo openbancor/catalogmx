@@ -6,7 +6,6 @@ for Mexico City (CDMX) and Estado de México.
 """
 import json
 from pathlib import Path
-from typing import List, Dict, Optional
 
 
 class HoyNoCirculaCatalog:
@@ -18,7 +17,7 @@ class HoyNoCirculaCatalog:
     and the vehicle's verification hologram.
     """
 
-    _data: Optional[Dict] = None
+    _data: dict | None = None
 
     @classmethod
     def _load_data(cls) -> None:
@@ -29,11 +28,11 @@ class HoyNoCirculaCatalog:
             current_file = Path(__file__)
             shared_data_path = current_file.parent.parent.parent.parent.parent / 'shared-data' / 'mexico' / 'hoy_no_circula_cdmx.json'
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding='utf-8') as f:
                 cls._data = json.load(f)
 
     @classmethod
-    def get_data(cls) -> Dict:
+    def get_data(cls) -> dict:
         """
         Get all Hoy No Circula data
 
@@ -43,7 +42,7 @@ class HoyNoCirculaCatalog:
         return cls._data.copy()
 
     @classmethod
-    def get_restricciones(cls) -> List[Dict]:
+    def get_restricciones(cls) -> list[dict]:
         """
         Get all restrictions by day of week
 
@@ -53,7 +52,7 @@ class HoyNoCirculaCatalog:
         return cls._data.get('restricciones_por_dia', []).copy()
 
     @classmethod
-    def get_restriccion_por_dia(cls, dia: str) -> Optional[Dict]:
+    def get_restriccion_por_dia(cls, dia: str) -> dict | None:
         """
         Get restriction for a specific day of week
 
@@ -70,7 +69,7 @@ class HoyNoCirculaCatalog:
         return None
 
     @classmethod
-    def get_exenciones(cls) -> List[Dict]:
+    def get_exenciones(cls) -> list[dict]:
         """
         Get all exemptions by hologram type
 
@@ -80,7 +79,7 @@ class HoyNoCirculaCatalog:
         return cls._data.get('exenciones_por_holograma', []).copy()
 
     @classmethod
-    def get_exencion_por_holograma(cls, holograma: str) -> Optional[Dict]:
+    def get_exencion_por_holograma(cls, holograma: str) -> dict | None:
         """
         Get exemption information for a specific hologram
 
@@ -128,7 +127,7 @@ class HoyNoCirculaCatalog:
         return str(terminacion) not in [str(t) for t in terminaciones_restringidas]
 
     @classmethod
-    def get_dia_restriccion(cls, terminacion: str) -> Optional[str]:
+    def get_dia_restriccion(cls, terminacion: str) -> str | None:
         """
         Get the day of week when a vehicle is restricted (for hologram 2)
 
@@ -146,7 +145,7 @@ class HoyNoCirculaCatalog:
         return None
 
     @classmethod
-    def get_engomado(cls, terminacion: str) -> Optional[str]:
+    def get_engomado(cls, terminacion: str) -> str | None:
         """
         Get the engomado (sticker color) for a license plate termination
 
@@ -165,7 +164,7 @@ class HoyNoCirculaCatalog:
         return None
 
     @classmethod
-    def get_contingencias(cls) -> Dict:
+    def get_contingencias(cls) -> dict:
         """
         Get contingency program information
 
@@ -175,7 +174,7 @@ class HoyNoCirculaCatalog:
         return cls._data.get('contingencias_ambientales', {}).copy()
 
     @classmethod
-    def get_sabatinos(cls) -> Dict:
+    def get_sabatinos(cls) -> dict:
         """
         Get Saturday restriction information
 
@@ -191,12 +190,12 @@ def puede_circular(terminacion: str, dia: str, holograma: str = '2') -> bool:
     return HoyNoCirculaCatalog.puede_circular(terminacion, dia, holograma)
 
 
-def get_dia_restriccion(terminacion: str) -> Optional[str]:
+def get_dia_restriccion(terminacion: str) -> str | None:
     """Get the day when a vehicle is restricted"""
     return HoyNoCirculaCatalog.get_dia_restriccion(terminacion)
 
 
-def get_engomado(terminacion: str) -> Optional[str]:
+def get_engomado(terminacion: str) -> str | None:
     """Get the engomado color for a license plate termination"""
     return HoyNoCirculaCatalog.get_engomado(terminacion)
 

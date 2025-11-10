@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-import re
 import datetime
+import re
+
 import unidecode
 
 
@@ -198,7 +199,7 @@ class RFCValidator(RFCGeneral):
         :param strict: If True checksum won't be checked:
         :return: True if the RFC is valid, False if the RFC is invalid.
         """
-        return not (False in [result for name, result in self.validators(strict=strict).items()])
+        return False not in [result for name, result in self.validators(strict=strict).items()]
 
     is_valid = validate
 
@@ -333,7 +334,7 @@ class RFCValidator(RFCGeneral):
         assert len(str_rfc) in (11, 12)
         if len(str_rfc) == 11:
             str_rfc = str_rfc.rjust(12)
-        checksum = ((int(cls.checksum_table[n]), index) for index, n in zip(range(13, 1, -1), str_rfc))
+        checksum = ((int(cls.checksum_table[n]), index) for index, n in zip(range(13, 1, -1), str_rfc, strict=False))
         suma = sum(int(x * y) for x, y in checksum)
 
         residual = suma % 11
@@ -713,7 +714,7 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         # Step 5: Convert numbers to text
         words_converted = []
         is_initial_converted = []
-        for word, is_init in zip(words_temp, is_initial):
+        for word, is_init in zip(words_temp, is_initial, strict=False):
             # Verificar si es un número (arábigo o romano)
             if word.isdigit() or word in self.numeros_romanos:
                 converted = self.convertir_numero_a_texto(word)
@@ -725,7 +726,7 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
 
         # Step 6: Second pass - Remove excluded words (but keep initials)
         filtered_words = []
-        for word, is_init in zip(words_converted, is_initial_converted):
+        for word, is_init in zip(words_converted, is_initial_converted, strict=False):
             word_clean = word.strip().upper()
             if not word_clean:
                 continue

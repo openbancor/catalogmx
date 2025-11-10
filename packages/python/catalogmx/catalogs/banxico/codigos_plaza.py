@@ -53,7 +53,7 @@ class CodigosPlazaCatalog:
             '../../../../shared-data/banxico/codigos_plaza.json'
         )
 
-        with open(data_path, 'r', encoding='utf-8') as f:
+        with open(data_path, encoding='utf-8') as f:
             catalog = json.load(f)
             cls._data = catalog['plazas']
 
@@ -272,7 +272,7 @@ class CodigosPlazaCatalog:
         """
         cls._load()
 
-        estados = set(p['estado'] for p in cls._data)
+        estados = {p['estado'] for p in cls._data}
         codigos_unicos = len(cls._by_codigo)
 
         return {

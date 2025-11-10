@@ -9,6 +9,7 @@ Fuente: SAT - Anexo 22 de las RGCE
 import json
 from pathlib import Path
 
+
 class ClavePedimentoCatalog:
     """Catálogo de claves de pedimento aduanero"""
 
@@ -23,7 +24,7 @@ class ClavePedimentoCatalog:
             shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
                               / 'shared-data' / 'sat' / 'comercio_exterior' / 'claves_pedimento.json')
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding='utf-8') as f:
                 data = json.load(f)
                 cls._data = data['claves']
 

@@ -5,9 +5,8 @@ This module provides access to UDI values from Banco de México.
 UDIs are inflation-indexed investment units used in Mexico.
 """
 import json
-from datetime import date, datetime
+from datetime import datetime
 from pathlib import Path
-from typing import List, Dict, Optional
 
 
 class UDICatalog:
@@ -18,11 +17,11 @@ class UDICatalog:
     They are commonly used for mortgage loans and other long-term financial obligations.
     """
 
-    _data: Optional[List[Dict]] = None
-    _by_fecha: Optional[Dict[str, Dict]] = None
-    _mensual: Optional[Dict[str, Dict]] = None
-    _anual: Optional[Dict[int, Dict]] = None
-    _daily: Optional[List[Dict]] = None
+    _data: list[dict] | None = None
+    _by_fecha: dict[str, dict] | None = None
+    _mensual: dict[str, dict] | None = None
+    _anual: dict[int, dict] | None = None
+    _daily: list[dict] | None = None
 
     @classmethod
     def _load_data(cls) -> None:
@@ -33,7 +32,7 @@ class UDICatalog:
             current_file = Path(__file__)
             shared_data_path = current_file.parent.parent.parent.parent.parent / 'shared-data' / 'banxico' / 'udis.json'
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding='utf-8') as f:
                 cls._data = json.load(f)
 
         if cls._by_fecha is not None:
@@ -42,7 +41,7 @@ class UDICatalog:
         cls._by_fecha = {}
         cls._mensual = {}
         cls._anual = {}
-        daily: List[Dict] = []
+        daily: list[dict] = []
 
         for record in cls._data:
             fecha = record.get('fecha')
@@ -65,7 +64,7 @@ class UDICatalog:
         cls._daily = daily
 
     @classmethod
-    def get_data(cls) -> List[Dict]:
+    def get_data(cls) -> list[dict]:
         """
         Get all UDI data
 
@@ -75,7 +74,7 @@ class UDICatalog:
         return cls._data.copy()
 
     @classmethod
-    def _get_by_fecha(cls, fecha: str) -> Optional[Dict]:
+    def _get_by_fecha(cls, fecha: str) -> dict | None:
         cls._load_data()
         record = cls._by_fecha.get(fecha)
         if record:
@@ -89,7 +88,7 @@ class UDICatalog:
             return None
 
     @classmethod
-    def get_por_fecha(cls, fecha: str) -> Optional[Dict]:
+    def get_por_fecha(cls, fecha: str) -> dict | None:
         """
         Get UDI value for a specific date
 
@@ -100,7 +99,7 @@ class UDICatalog:
         return record.copy() if record else None
 
     @classmethod
-    def get_por_mes(cls, anio: int, mes: int) -> Optional[Dict]:
+    def get_por_mes(cls, anio: int, mes: int) -> dict | None:
         """
         Get monthly average UDI value
 
@@ -114,7 +113,7 @@ class UDICatalog:
         return record.copy() if record else None
 
     @classmethod
-    def get_promedio_anual(cls, anio: int) -> Optional[Dict]:
+    def get_promedio_anual(cls, anio: int) -> dict | None:
         """
         Get annual average UDI value
 
@@ -127,7 +126,7 @@ class UDICatalog:
         return record.copy() if record else None
 
     @classmethod
-    def get_por_anio(cls, anio: int) -> List[Dict]:
+    def get_por_anio(cls, anio: int) -> list[dict]:
         """Return the daily UDI series for a given year."""
         cls._load_data()
 
@@ -135,7 +134,7 @@ class UDICatalog:
         return [record.copy() for record in source if record.get('año') == anio]
 
     @classmethod
-    def get_actual(cls) -> Optional[Dict]:
+    def get_actual(cls) -> dict | None:
         """
         Get most recent UDI value
 
@@ -153,7 +152,7 @@ class UDICatalog:
         return record.copy() if record else None
 
     @classmethod
-    def _get_valor_cercano(cls, fecha: str) -> Optional[Dict]:
+    def _get_valor_cercano(cls, fecha: str) -> dict | None:
         cls._load_data()
         objetivo = datetime.fromisoformat(fecha)
 
@@ -161,13 +160,13 @@ class UDICatalog:
         if not candidatos:
             return None
 
-        def _diff(record: Dict) -> float:
+        def _diff(record: dict) -> float:
             return abs((datetime.fromisoformat(record['fecha']) - objetivo).total_seconds())
 
         return min(candidatos, key=_diff)
 
     @classmethod
-    def pesos_a_udis(cls, pesos: float, fecha: str) -> Optional[float]:
+    def pesos_a_udis(cls, pesos: float, fecha: str) -> float | None:
         """
         Convert Mexican pesos to UDIs
 
@@ -188,7 +187,7 @@ class UDICatalog:
         return pesos / valor_udi
 
     @classmethod
-    def udis_a_pesos(cls, udis: float, fecha: str) -> Optional[float]:
+    def udis_a_pesos(cls, udis: float, fecha: str) -> float | None:
         """
         Convert UDIs to Mexican pesos
 
@@ -209,7 +208,7 @@ class UDICatalog:
         return udis * valor_udi
 
     @classmethod
-    def calcular_variacion(cls, fecha_inicio: str, fecha_fin: str) -> Optional[float]:
+    def calcular_variacion(cls, fecha_inicio: str, fecha_fin: str) -> float | None:
         """
         Calculate percentage variation between two dates
 
@@ -233,23 +232,23 @@ class UDICatalog:
 
 
 # Convenience functions
-def get_udi_actual() -> Optional[Dict]:
+def get_udi_actual() -> dict | None:
     """Get most recent UDI value"""
     record = UDICatalog.get_actual()
     return record.copy() if record else None
 
 
-def get_udi_por_fecha(fecha: str) -> Optional[Dict]:
+def get_udi_por_fecha(fecha: str) -> dict | None:
     """Get UDI value for a specific date"""
     return UDICatalog.get_por_fecha(fecha)
 
 
-def pesos_a_udis(pesos: float, fecha: str) -> Optional[float]:
+def pesos_a_udis(pesos: float, fecha: str) -> float | None:
     """Convert pesos to UDIs"""
     return UDICatalog.pesos_a_udis(pesos, fecha)
 
 
-def udis_a_pesos(udis: float, fecha: str) -> Optional[float]:
+def udis_a_pesos(udis: float, fecha: str) -> float | None:
     """Convert UDIs to pesos"""
     return UDICatalog.udis_a_pesos(udis, fecha)
 

@@ -8,9 +8,9 @@ Catálogos incluidos:
 - StateCatalog: Estados de México
 """
 
+from .localidades import LocalidadesCatalog
 from .municipios import MunicipiosCatalog
 from .municipios_completo import MunicipiosCompletoCatalog
-from .localidades import LocalidadesCatalog
 from .states import StateCatalog
 
 __all__ = [

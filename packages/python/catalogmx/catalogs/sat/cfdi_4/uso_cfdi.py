@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 
+
 class UsoCFDICatalog:
     """Catálogo de Usos del CFDI del SAT (c_UsoCFDI)"""
 
@@ -13,7 +14,7 @@ class UsoCFDICatalog:
         """Carga los datos del catálogo si aún no han sido cargados"""
         if cls._data is None:
             path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'cfdi_4.0' / 'uso_cfdi.json'
-            with open(path, 'r', encoding='utf-8') as f:
+            with open(path, encoding='utf-8') as f:
                 data = json.load(f)
                 cls._data = data['usos']
             cls._by_code = {item['code']: item for item in cls._data}

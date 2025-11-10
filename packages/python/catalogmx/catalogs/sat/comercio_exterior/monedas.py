@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+
 class MonedaCatalog:
     """Catálogo de monedas para operaciones de comercio exterior"""
 
@@ -17,7 +18,7 @@ class MonedaCatalog:
             shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
                               / 'shared-data' / 'sat' / 'comercio_exterior' / 'monedas.json')
 
-            with open(shared_data_path, 'r', encoding='utf-8') as f:
+            with open(shared_data_path, encoding='utf-8') as f:
                 data = json.load(f)
                 cls._data = data['monedas']
 
