@@ -2,21 +2,24 @@
 
 **Roadmap detallado por catálogo, versiones y estrategia**
 
-**Última actualización**: 2025-11-09 (Actualizado para reflejar el estado actual)  
-**Versión actual**: v0.3.0  
+**Última actualización**: 2025-11-10 (Post-merge sat-and-sqlite + roadmap analysis)
+**Versión actual**: v0.3.0
 **Siguiente release**: v0.4.0 (Q1 2025)
 
 ---
 
 ## 📊 Estado General del Proyecto
 
-### Métricas Actuales (v0.3.0)
-- ✅ **Catálogos totales**: 45+ catálogos
+### Métricas Actuales (v0.3.0) - 🎉 OVERDELIVERED!
+- ✅ **Catálogos totales**: **58+ catálogos** (56 JSON + 3 SQLite) - *Incluyendo nuevo SEPOMEX SQLite!*
 - ✅ **Registros totales**: 170,505+ registros
 - ✅ **Población cubierta**: 126,014,024 habitantes (100%)
 - ✅ **Validadores**: 4 (RFC, CURP, CLABE, NSS)
 - ✅ **Lenguajes**: Python 3.10+, TypeScript 5.0+
 - ✅ **Documentación**: Bilingüe (English + Español)
+- ✅ **Tests**: 337 pruebas pasando (221 TypeScript + 116 Python)
+- ✅ **SQLite Hybrid**: 3 bases de datos (SEPOMEX, Localidades, ClaveProdServ)
+- ✅ **FTS5 Search**: Búsqueda de texto completo con tokenización en español
 
 ---
 
