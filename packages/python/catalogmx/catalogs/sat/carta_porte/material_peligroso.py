@@ -46,7 +46,8 @@ class MaterialPeligrosoCatalog:
     def get_by_class(cls, hazard_class: str) -> list[dict]:
         """Obtiene materiales por clase de peligro (1-9)"""
         cls._load_data()
-        return [m for m in cls._data if m["class"].startswith(hazard_class)]
+        # Handle both "class" and "clase_riesgo" field names
+        return [m for m in cls._data if m.get("class", m.get("clase_riesgo", "")).startswith(hazard_class)]
 
     @classmethod
     def get_by_packing_group(cls, packing_group: str) -> list[dict]:
