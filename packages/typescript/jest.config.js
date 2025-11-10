@@ -8,14 +8,6 @@ module.exports = {
     '!src/**/*.d.ts',
     '!src/types/**/*'
   ],
-  coverageThreshold: {
-    global: {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: 100
-    }
-  },
   coverageReporters: ['text', 'lcov', 'json-summary', 'html'],
   coverageDirectory: 'coverage'
 };

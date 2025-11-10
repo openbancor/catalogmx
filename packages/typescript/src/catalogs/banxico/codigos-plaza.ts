@@ -51,14 +51,15 @@ export class CodigosPlazaCatalog {
   private static getData(): CodigoPlaza[] {
     if (this._data === null) {
       const catalogData = loadCatalogData<PlazaCatalogData>('banxico/codigos_plaza.json');
-      this._data = catalogData.plazas;
+      const plazas = catalogData.plazas ?? [];
+      this._data = plazas;
 
       // Build indices
-      this._byCodigo = new Map();
-      this._byEstado = new Map();
-      this._byPlazaNormalized = new Map();
+      this._byCodigo = new Map<string, CodigoPlaza[]>();
+      this._byEstado = new Map<string, CodigoPlaza[]>();
+      this._byPlazaNormalized = new Map<string, CodigoPlaza[]>();
 
-      for (const plaza of this._data) {
+      for (const plaza of plazas) {
         // Index by codigo
         if (!this._byCodigo.has(plaza.codigo)) {
           this._byCodigo.set(plaza.codigo, []);
@@ -79,7 +80,7 @@ export class CodigosPlazaCatalog {
         this._byPlazaNormalized.get(normalized)!.push(plaza);
       }
     }
-    return this._data;
+    return this._data!;
   }
 
   /**
