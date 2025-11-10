@@ -20,8 +20,10 @@ class MaterialPeligrosoCatalog:
             )
             with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data["materiales"]
-            cls._by_un_number = {item["un_number"]: item for item in cls._data}
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("materiales", data)
+            # JSON has "code" field, map it as un_number
+            cls._by_un_number = {item["code"]: item for item in cls._data}
 
     @classmethod
     def get_material(cls, un_number: str) -> dict | None:

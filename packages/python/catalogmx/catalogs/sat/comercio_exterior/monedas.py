@@ -25,7 +25,8 @@ class MonedaCatalog:
 
             with open(shared_data_path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data["monedas"]
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("monedas", data)
 
             cls._moneda_by_code = {item["codigo"]: item for item in cls._data}
 

@@ -33,7 +33,8 @@ class IncotermsValidator:
 
             with open(shared_data_path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data["incoterms"]
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("incoterms", data)
 
             # Crear índice por código
             cls._incoterm_by_code = {item["code"]: item for item in cls._data}

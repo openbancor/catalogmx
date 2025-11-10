@@ -31,7 +31,8 @@ class ClavePedimentoCatalog:
 
             with open(shared_data_path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data["claves"]
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("claves", data)
 
             cls._clave_by_code = {item["clave"]: item for item in cls._data}
 

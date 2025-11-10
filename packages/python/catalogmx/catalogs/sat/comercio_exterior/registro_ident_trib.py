@@ -26,7 +26,8 @@ class RegistroIdentTribCatalog:
 
             with open(shared_data_path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data["tipos_registro"]
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("tipos_registro", data)
 
             cls._tipo_by_code = {item["code"]: item for item in cls._data}
 

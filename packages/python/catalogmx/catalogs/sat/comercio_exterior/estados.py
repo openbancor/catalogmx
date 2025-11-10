@@ -26,8 +26,14 @@ class EstadoCatalog:
 
             with open(shared_data_path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._estados_usa = data["estados_usa"]
-                cls._provincias_canada = data["provincias_canada"]
+                # Handle both dict with keys or direct list
+                if isinstance(data, dict):
+                    cls._estados_usa = data.get("estados_usa", [])
+                    cls._provincias_canada = data.get("provincias_canada", [])
+                else:
+                    # Direct list - separate by country field
+                    cls._estados_usa = [item for item in data if item.get("country") == "USA"]
+                    cls._provincias_canada = [item for item in data if item.get("country") == "CAN"]
 
             # Crear índice unificado por código
             cls._estado_by_code = {}

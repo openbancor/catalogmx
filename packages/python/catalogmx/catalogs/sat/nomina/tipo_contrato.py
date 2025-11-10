@@ -20,7 +20,8 @@ class TipoContratoCatalog:
             )
             with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data["contratos"]
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("contratos", data)
             cls._by_code = {item["code"]: item for item in cls._data}
 
     @classmethod

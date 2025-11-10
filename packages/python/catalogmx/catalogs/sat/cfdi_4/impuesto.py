@@ -23,7 +23,8 @@ class ImpuestoCatalog:
             )
             with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data["impuestos"]
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("impuestos", data)
             cls._by_code = {item["code"]: item for item in cls._data}
 
     @classmethod

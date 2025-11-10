@@ -23,7 +23,8 @@ class UsoCFDICatalog:
             )
             with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data["usos"]
+                # Handle both list and dict formats
+                cls._data = data if isinstance(data, list) else data.get("usos", data)
             cls._by_code = {item["code"]: item for item in cls._data}
 
     @classmethod
