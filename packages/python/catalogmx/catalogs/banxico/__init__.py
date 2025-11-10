@@ -6,16 +6,19 @@ Catálogos incluidos:
 - UDICatalog: UDIs (Unidades de Inversión)
 - InstitucionesFinancieras: Tipos de instituciones del sistema financiero
 - MonedasDivisas: Monedas y divisas internacionales
+- CodigosPlazaCatalog: Códigos de plaza para CLABE
 """
 
 from .banks import BankCatalog
 from .udis import UDICatalog
 from .instituciones_financieras import InstitucionesFinancieras
 from .monedas_divisas import MonedasDivisas
+from .codigos_plaza import CodigosPlazaCatalog
 
 __all__ = [
     'BankCatalog',
     'UDICatalog',
     'InstitucionesFinancieras',
     'MonedasDivisas',
+    'CodigosPlazaCatalog',
 ]
