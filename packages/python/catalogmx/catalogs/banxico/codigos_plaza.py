@@ -13,6 +13,13 @@ import json
 import os
 from typing import TypedDict
 
+try:
+    from unidecode import unidecode
+except ImportError:
+    # Fallback if unidecode not available
+    def unidecode(text):
+        return text
+
 class CodigoPlaza(TypedDict):
     """Estructura de un código de plaza CLABE."""
     codigo: str          # Código de 3 dígitos
@@ -28,6 +35,12 @@ class CodigosPlazaCatalog:
     _by_codigo: dict[str, list[CodigoPlaza]] | None = None
     _by_estado: dict[str, list[CodigoPlaza]] | None = None
     _by_plaza: dict[str, list[CodigoPlaza]] | None = None
+    _by_plaza_normalized: dict[str, list[CodigoPlaza]] | None = None
+
+    @classmethod
+    def _normalize(cls, text: str) -> str:
+        """Normaliza texto removiendo acentos y convirtiendo a mayúsculas."""
+        return unidecode(text).upper()
 
     @classmethod
     def _load(cls) -> None:
@@ -48,6 +61,7 @@ class CodigosPlazaCatalog:
         cls._by_codigo = {}
         cls._by_estado = {}
         cls._by_plaza = {}
+        cls._by_plaza_normalized = {}
 
         for plaza in cls._data:
             # By codigo (puede haber múltiples plazas con el mismo código)
@@ -60,11 +74,17 @@ class CodigosPlazaCatalog:
                 cls._by_estado[plaza['estado']] = []
             cls._by_estado[plaza['estado']].append(plaza)
 
-            # By plaza name
+            # By plaza name (exact match)
             plaza_key = plaza['plaza'].upper()
             if plaza_key not in cls._by_plaza:
                 cls._by_plaza[plaza_key] = []
             cls._by_plaza[plaza_key].append(plaza)
+
+            # By plaza name (normalized, accent-insensitive)
+            plaza_normalized = cls._normalize(plaza['plaza'])
+            if plaza_normalized not in cls._by_plaza_normalized:
+                cls._by_plaza_normalized[plaza_normalized] = []
+            cls._by_plaza_normalized[plaza_normalized].append(plaza)
 
     @classmethod
     def get_all(cls) -> list[CodigoPlaza]:
@@ -103,7 +123,7 @@ class CodigosPlazaCatalog:
     @classmethod
     def buscar_por_plaza(cls, nombre_plaza: str) -> list[CodigoPlaza]:
         """
-        Busca códigos por nombre de plaza.
+        Busca códigos por nombre de plaza (insensible a acentos).
 
         Args:
             nombre_plaza: Nombre de la plaza/ciudad
@@ -118,10 +138,15 @@ class CodigosPlazaCatalog:
             ...     print(f"Código {p['codigo']}: {p['plaza']}, {p['estado']}")
             Código 135: Tonala, Chiapas
             Código 320: Tonala, Jalisco
+
+            >>> # Búsqueda insensible a acentos
+            >>> tuxpam = CodigosPlazaCatalog.buscar_por_plaza("Tuxpam")  # sin acento
+            >>> print(len(tuxpam))  # Encuentra "Túxpam" con acento
+            2
         """
         cls._load()
-        plaza_key = nombre_plaza.upper()
-        return cls._by_plaza.get(plaza_key, [])
+        plaza_normalized = cls._normalize(nombre_plaza)
+        return cls._by_plaza_normalized.get(plaza_normalized, [])
 
     @classmethod
     def get_por_estado(cls, estado: str) -> list[CodigoPlaza]:
@@ -214,7 +239,7 @@ class CodigosPlazaCatalog:
     @classmethod
     def search(cls, query: str) -> list[CodigoPlaza]:
         """
-        Busca plazas por nombre parcial (insensible a mayúsculas).
+        Busca plazas por nombre parcial (insensible a acentos y mayúsculas).
 
         Args:
             query: Texto a buscar
@@ -227,10 +252,15 @@ class CodigosPlazaCatalog:
             >>> plazas = CodigosPlazaCatalog.search("San")
             >>> for p in plazas[:5]:
             ...     print(f"{p['codigo']}: {p['plaza']}, {p['estado']}")
+
+            >>> # Búsqueda insensible a acentos
+            >>> plazas = CodigosPlazaCatalog.search("Tuxpam")  # sin acento
+            >>> print(len(plazas))  # Encuentra "Túxpam" con acento
+            3
         """
         cls._load()
-        query_upper = query.upper()
-        return [p for p in cls._data if query_upper in p['plaza'].upper()]
+        query_normalized = cls._normalize(query)
+        return [p for p in cls._data if query_normalized in cls._normalize(p['plaza'])]
 
     @classmethod
     def get_estadisticas(cls) -> dict:
