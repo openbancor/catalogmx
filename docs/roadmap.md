@@ -52,23 +52,45 @@
 
 ### 🚧 v0.4.0 (Q1 2025) - En Progreso y Planeado
 
-#### SQLite Implementation (Finalización)
-- [ ] Convertir SEPOMEX a SQLite (~43 MB → ~25 MB)
-- [ ] API Python para acceder a catálogos SQLite de forma transparente
-- [ ] Lazy loading desde SQLite para minimizar uso de memoria
-- [ ] Índices espaciales optimizados (R-tree) en todos los catálogos geográficos
+#### 🔥 IFT Catalogs Completion (CRITICAL - Week 1-3)
+- [ ] **Complete missing 166 LADA codes** (231/397 actual → 397/397 target)
+- [ ] **Add geographical mapping to LADA codes**:
+  - [ ] Add `cve_entidad` field (INEGI state codes)
+  - [ ] Add `cve_municipio` field (INEGI municipality codes)
+  - [ ] Add `cvegeo` field for localities (optional)
+- [ ] **Python implementation**:
+  - [ ] Create `catalogmx.catalogs.ift.codigos_lada.py` (full parity with TS)
+  - [ ] Create `catalogmx.catalogs.ift.operadores_moviles.py`
+  - [ ] Add 15+ catalog methods + geographical linkage
+- [ ] **TypeScript enhancements**:
+  - [ ] Add geographical mapping methods
+  - [ ] Update types with new INEGI fields
+- [ ] **Documentation**:
+  - [ ] `docs/catalogs/ift.md` - Complete IFT guide
+  - [ ] `docs/guides/lada-geographical-mapping.md`
+- [ ] **Tests**: 50+ tests for IFT catalogs (Python + TypeScript)
 
-#### Geocoding Integration
+**See**: [IFT Catalog Action Plan](IFT_CATALOG_ACTION_PLAN.md) for detailed implementation
+
+#### ✅ SQLite Implementation - COMPLETED!
+- [x] Convertir SEPOMEX a SQLite (23 MB, 44% reducción) ✅
+- [x] Convertir Localidades a SQLite (3 MB, 39% reducción) ✅
+- [x] Convertir Clave Prod/Serv a SQLite (35 MB con FTS5) ✅
+- [x] API Python para SQLite catalogs ✅
+- [x] FTS5 full-text search con español ✅
+- [x] Lazy loading desde SQLite ✅
+
+#### Geocoding Integration (Media prioridad - movido de v0.3.0)
 - [ ] Geocodificar códigos postales (añadir lat/lon)
 - [ ] Desarrollar script para consultar API de geocodificación (Google/OSM)
 - [ ] Generar tabla de correspondencia CP ↔ Localidad con alta precisión
 
-#### Catálogos SAT Faltantes
-- [ ] **CFDI 4.0**: c_TipoFactor, c_TasaOCuota, c_Meses, etc.
-- [ ] **Comercio Exterior**: c_TipoOperacion, conexión con TIGIE.
-- [ ] **Carta Porte**: c_Estacion, c_ContenedorMaritimo, etc.
+#### ✅ Catálogos SAT - COMPLETADOS en sat-and-sqlite!
+- [x] **CFDI 4.0**: c_TipoFactor, c_TasaOCuota, c_Meses, c_Periodicidad ✅
+- [x] 14 nuevos catálogos SAT ✅
+- [x] SQLite con FTS5 para ClaveProdServ ✅
 
-#### Examples & Documentation
+#### Examples & Documentation (Alta prioridad)
 - [ ] Directorio `examples/` con casos de uso prácticos
 - [ ] Ejemplo de API REST con FastAPI
 - [ ] Ejemplo de frontend con Next.js
