@@ -2,4 +2,4 @@
 catalogmx.catalogs - Catálogos oficiales mexicanos
 """
 
-__all__ = ['sat', 'banxico', 'inegi', 'sepomex', 'ift']
+__all__ = ["sat", "banxico", "inegi", "sepomex", "ift"]

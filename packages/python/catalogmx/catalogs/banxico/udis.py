@@ -4,6 +4,7 @@ UDI (Unidades de Inversión) Catalog
 This module provides access to UDI values from Banco de México.
 UDIs are inflation-indexed investment units used in Mexico.
 """
+
 import json
 from datetime import datetime
 from pathlib import Path
@@ -30,9 +31,14 @@ class UDICatalog:
             # Path: catalogmx/packages/python/catalogmx/catalogs/banxico/udis.py
             # Target: catalogmx/packages/shared-data/banxico/udis.json
             current_file = Path(__file__)
-            shared_data_path = current_file.parent.parent.parent.parent.parent / 'shared-data' / 'banxico' / 'udis.json'
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "banxico"
+                / "udis.json"
+            )
 
-            with open(shared_data_path, encoding='utf-8') as f:
+            with open(shared_data_path, encoding="utf-8") as f:
                 cls._data = json.load(f)
 
         if cls._by_fecha is not None:
@@ -44,23 +50,25 @@ class UDICatalog:
         daily: list[dict] = []
 
         for record in cls._data:
-            fecha = record.get('fecha')
+            fecha = record.get("fecha")
             if not fecha:
                 continue
 
             existing = cls._by_fecha.get(fecha)
-            if existing is None or (record.get('tipo') == 'diario' and existing.get('tipo') != 'diario'):
+            if existing is None or (
+                record.get("tipo") == "diario" and existing.get("tipo") != "diario"
+            ):
                 cls._by_fecha[fecha] = record
 
-            if record.get('tipo') == 'diario':
+            if record.get("tipo") == "diario":
                 daily.append(record)
-            elif record.get('tipo') == 'promedio_mensual':
+            elif record.get("tipo") == "promedio_mensual":
                 key = f"{record.get('año')}-{int(record.get('mes', 0)):02d}"
                 cls._mensual[key] = record
-            elif record.get('tipo') == 'promedio_anual':
-                cls._anual[int(record.get('año'))] = record
+            elif record.get("tipo") == "promedio_anual":
+                cls._anual[int(record.get("año"))] = record
 
-        daily.sort(key=lambda r: r['fecha'])
+        daily.sort(key=lambda r: r["fecha"])
         cls._daily = daily
 
     @classmethod
@@ -81,7 +89,7 @@ class UDICatalog:
             return record
 
         try:
-            anio, mes, _dia = fecha.split('-')
+            anio, mes, _dia = fecha.split("-")
             mensual = cls._mensual.get(f"{int(anio)}-{int(mes):02d}") if cls._mensual else None
             return mensual
         except ValueError:
@@ -130,8 +138,12 @@ class UDICatalog:
         """Return the daily UDI series for a given year."""
         cls._load_data()
 
-        source = cls._daily if cls._daily else [r for r in cls._data if r.get('tipo') == 'promedio_mensual']
-        return [record.copy() for record in source if record.get('año') == anio]
+        source = (
+            cls._daily
+            if cls._daily
+            else [r for r in cls._data if r.get("tipo") == "promedio_mensual"]
+        )
+        return [record.copy() for record in source if record.get("año") == anio]
 
     @classmethod
     def get_actual(cls) -> dict | None:
@@ -148,7 +160,7 @@ class UDICatalog:
         if not cls._data:
             return None
 
-        record = max(cls._data, key=lambda r: r.get('fecha', ''), default=None)
+        record = max(cls._data, key=lambda r: r.get("fecha", ""), default=None)
         return record.copy() if record else None
 
     @classmethod
@@ -156,12 +168,16 @@ class UDICatalog:
         cls._load_data()
         objetivo = datetime.fromisoformat(fecha)
 
-        candidatos = cls._daily if cls._daily else [r for r in cls._data if r.get('tipo') == 'promedio_mensual']
+        candidatos = (
+            cls._daily
+            if cls._daily
+            else [r for r in cls._data if r.get("tipo") == "promedio_mensual"]
+        )
         if not candidatos:
             return None
 
         def _diff(record: dict) -> float:
-            return abs((datetime.fromisoformat(record['fecha']) - objetivo).total_seconds())
+            return abs((datetime.fromisoformat(record["fecha"]) - objetivo).total_seconds())
 
         return min(candidatos, key=_diff)
 
@@ -180,7 +196,7 @@ class UDICatalog:
         if not record:
             return None
 
-        valor_udi = record.get('valor')
+        valor_udi = record.get("valor")
         if not valor_udi:
             return None
 
@@ -201,7 +217,7 @@ class UDICatalog:
         if not record:
             return None
 
-        valor_udi = record.get('valor')
+        valor_udi = record.get("valor")
         if not valor_udi:
             return None
 
@@ -222,8 +238,8 @@ class UDICatalog:
         if not record_inicio or not record_fin:
             return None
 
-        valor_inicio = record_inicio.get('valor')
-        valor_fin = record_fin.get('valor')
+        valor_inicio = record_inicio.get("valor")
+        valor_fin = record_fin.get("valor")
 
         if not valor_inicio or not valor_fin:
             return None
@@ -255,9 +271,9 @@ def udis_a_pesos(udis: float, fecha: str) -> float | None:
 
 # Export commonly used functions and classes
 __all__ = [
-    'UDICatalog',
-    'get_udi_actual',
-    'get_udi_por_fecha',
-    'pesos_a_udis',
-    'udis_a_pesos',
+    "UDICatalog",
+    "get_udi_actual",
+    "get_udi_por_fecha",
+    "pesos_a_udis",
+    "udis_a_pesos",
 ]

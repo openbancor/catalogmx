@@ -21,11 +21,11 @@ export class ImpuestoCatalog {
   }
 
   static getImpuesto(code: string): Impuesto | undefined {
-    return this.getData().find(i => i.code === code);
+    return this.getData().find((i) => i.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(i => i.code === code);
+    return this.getData().some((i) => i.code === code);
   }
 
   /**
@@ -48,14 +48,14 @@ export class ImpuestoCatalog {
    * Get taxes that support retention
    */
   static getRetencionTaxes(): Impuesto[] {
-    return this.getData().filter(i => i.retencion);
+    return this.getData().filter((i) => i.retencion);
   }
 
   /**
    * Get taxes that support transfer
    */
   static getTrasladoTaxes(): Impuesto[] {
-    return this.getData().filter(i => i.traslado);
+    return this.getData().filter((i) => i.traslado);
   }
 
   /**

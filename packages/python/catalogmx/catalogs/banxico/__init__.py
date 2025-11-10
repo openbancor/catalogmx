@@ -16,9 +16,9 @@ from .monedas_divisas import MonedasDivisas
 from .udis import UDICatalog
 
 __all__ = [
-    'BankCatalog',
-    'UDICatalog',
-    'InstitucionesFinancieras',
-    'MonedasDivisas',
-    'CodigosPlazaCatalog',
+    "BankCatalog",
+    "UDICatalog",
+    "InstitucionesFinancieras",
+    "MonedasDivisas",
+    "CodigosPlazaCatalog",
 ]

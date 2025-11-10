@@ -1,4 +1,5 @@
 """Catálogo c_TipoJornada"""
+
 import json
 from pathlib import Path
 
@@ -10,11 +11,17 @@ class TipoJornadaCatalog:
     @classmethod
     def _load_data(cls) -> None:
         if cls._data is None:
-            path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'nomina_1.2' / 'tipo_jornada.json'
-            with open(path, encoding='utf-8') as f:
+            path = (
+                Path(__file__).parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "nomina_1.2"
+                / "tipo_jornada.json"
+            )
+            with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data['jornadas']
-            cls._by_code = {item['code']: item for item in cls._data}
+                cls._data = data["jornadas"]
+            cls._by_code = {item["code"]: item for item in cls._data}
 
     @classmethod
     def get_jornada(cls, code: str) -> dict | None:

@@ -23,7 +23,7 @@ export class PlacasFormatosCatalog {
    */
   static validatePlaca(placa: string): boolean {
     const normalizedPlaca = placa.toUpperCase().trim();
-    return this.getData().some(formato => {
+    return this.getData().some((formato) => {
       const regex = new RegExp(formato.pattern);
       return regex.test(normalizedPlaca) && formato.activo;
     });
@@ -33,9 +33,9 @@ export class PlacasFormatosCatalog {
    * Get all formats for a specific state
    */
   static getFormatosPorEstado(estado: string): PlacaFormato[] {
-    return this.getData().filter(f =>
-      f.estado.toLowerCase().includes(estado.toLowerCase()) ||
-      estado.toLowerCase() === 'nacional'
+    return this.getData().filter(
+      (f) =>
+        f.estado.toLowerCase().includes(estado.toLowerCase()) || estado.toLowerCase() === 'nacional'
     );
   }
 
@@ -43,7 +43,7 @@ export class PlacasFormatosCatalog {
    * Get all formats by type
    */
   static getFormatosPorTipo(tipo: PlacaFormato['tipo']): PlacaFormato[] {
-    return this.getData().filter(f => f.tipo === tipo && f.activo);
+    return this.getData().filter((f) => f.tipo === tipo && f.activo);
   }
 
   /**
@@ -51,7 +51,7 @@ export class PlacasFormatosCatalog {
    */
   static detectFormato(placa: string): PlacaFormato | undefined {
     const normalizedPlaca = placa.toUpperCase().trim();
-    return this.getData().find(formato => {
+    return this.getData().find((formato) => {
       const regex = new RegExp(formato.pattern);
       return regex.test(normalizedPlaca);
     });
@@ -61,7 +61,7 @@ export class PlacasFormatosCatalog {
    * Get all active formats
    */
   static getFormatosActivos(): PlacaFormato[] {
-    return this.getData().filter(f => f.activo);
+    return this.getData().filter((f) => f.activo);
   }
 
   /**
@@ -77,10 +77,12 @@ export class PlacasFormatosCatalog {
    */
   static isFederal(placa: string): boolean {
     const formato = this.detectFormato(placa);
-    return formato?.tipo === 'gobierno_federal' ||
-           formato?.tipo === 'servicio_publico_federal' ||
-           formato?.tipo === 'carga_federal' ||
-           formato?.tipo === 'policia_federal' ||
-           formato?.tipo === 'remolque_federal';
+    return (
+      formato?.tipo === 'gobierno_federal' ||
+      formato?.tipo === 'servicio_publico_federal' ||
+      formato?.tipo === 'carga_federal' ||
+      formato?.tipo === 'policia_federal' ||
+      formato?.tipo === 'remolque_federal'
+    );
   }
 }

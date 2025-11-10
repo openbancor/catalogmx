@@ -21,11 +21,11 @@ export class TipoComprobanteCatalog {
   }
 
   static getTipo(code: string): TipoComprobante | undefined {
-    return this.getData().find(t => t.code === code.toUpperCase());
+    return this.getData().find((t) => t.code === code.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(t => t.code === code.toUpperCase());
+    return this.getData().some((t) => t.code === code.toUpperCase());
   }
 
   /**

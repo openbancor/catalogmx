@@ -21,11 +21,11 @@ export class ClavePedimentoCatalog {
   }
 
   static getClave(clave: string): ClavePedimento | undefined {
-    return this.getData().find(cp => cp.clave === clave.toUpperCase());
+    return this.getData().find((cp) => cp.clave === clave.toUpperCase());
   }
 
   static isValid(clave: string): boolean {
-    return this.getData().some(cp => cp.clave === clave.toUpperCase());
+    return this.getData().some((cp) => cp.clave === clave.toUpperCase());
   }
 
   /**
@@ -56,14 +56,14 @@ export class ClavePedimentoCatalog {
    * Get all import claves
    */
   static getImportClaves(): ClavePedimento[] {
-    return this.getData().filter(cp => cp.tipo === 'importacion');
+    return this.getData().filter((cp) => cp.tipo === 'importacion');
   }
 
   /**
    * Get all export claves
    */
   static getExportClaves(): ClavePedimento[] {
-    return this.getData().filter(cp => cp.tipo === 'exportacion');
+    return this.getData().filter((cp) => cp.tipo === 'exportacion');
   }
 
   /**
@@ -71,8 +71,6 @@ export class ClavePedimentoCatalog {
    */
   static searchByDescription(keyword: string): ClavePedimento[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(cp =>
-      cp.descripcion.toUpperCase().includes(search)
-    );
+    return this.getData().filter((cp) => cp.descripcion.toUpperCase().includes(search));
   }
 }

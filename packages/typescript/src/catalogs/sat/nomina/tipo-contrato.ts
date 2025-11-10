@@ -21,11 +21,11 @@ export class TipoContratoCatalog {
   }
 
   static getContrato(code: string): TipoContrato | undefined {
-    return this.getData().find(c => c.code === code);
+    return this.getData().find((c) => c.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(c => c.code === code);
+    return this.getData().some((c) => c.code === code);
   }
 
   /**
@@ -33,9 +33,7 @@ export class TipoContratoCatalog {
    */
   static searchByDescription(keyword: string): TipoContrato[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(c =>
-      c.descripcion.toUpperCase().includes(search)
-    );
+    return this.getData().filter((c) => c.descripcion.toUpperCase().includes(search));
   }
 
   /**

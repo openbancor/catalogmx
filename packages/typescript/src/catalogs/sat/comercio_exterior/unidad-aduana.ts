@@ -21,11 +21,11 @@ export class UnidadAduanaCatalog {
   }
 
   static getUnidad(code: string): UnidadAduana | undefined {
-    return this.getData().find(u => u.code === code.toUpperCase());
+    return this.getData().find((u) => u.code === code.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(u => u.code === code.toUpperCase());
+    return this.getData().some((u) => u.code === code.toUpperCase());
   }
 
   /**
@@ -47,9 +47,8 @@ export class UnidadAduanaCatalog {
    */
   static searchByName(keyword: string): UnidadAduana[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(u =>
-      u.name.toUpperCase().includes(search) ||
-      u.descripcion.toUpperCase().includes(search)
+    return this.getData().filter(
+      (u) => u.name.toUpperCase().includes(search) || u.descripcion.toUpperCase().includes(search)
     );
   }
 
@@ -60,7 +59,12 @@ export class UnidadAduanaCatalog {
     const unidad = this.getUnidad(code);
     if (!unidad) return false;
     const desc = unidad.descripcion.toUpperCase();
-    return desc.includes('KILO') || desc.includes('GRAM') || desc.includes('TON') || desc.includes('LIBRA');
+    return (
+      desc.includes('KILO') ||
+      desc.includes('GRAM') ||
+      desc.includes('TON') ||
+      desc.includes('LIBRA')
+    );
   }
 
   /**

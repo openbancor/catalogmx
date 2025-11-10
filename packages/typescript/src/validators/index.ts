@@ -8,23 +8,11 @@ export {
   generateRfcPersonaFisica,
   generateRfcPersonaMoral,
   validateRfc,
-  detectRfcType
+  detectRfcType,
 } from './rfc';
 
-export {
-  CURPValidator,
-  generateCurp,
-  validateCurp
-} from './curp';
+export { CURPValidator, generateCurp, validateCurp } from './curp';
 
-export {
-  CLABEValidator,
-  validateClabe,
-  generateClabe
-} from './clabe';
+export { CLABEValidator, validateClabe, generateClabe } from './clabe';
 
-export {
-  NSSValidator,
-  validateNss,
-  generateNss
-} from './nss';
+export { NSSValidator, validateNss, generateNss } from './nss';

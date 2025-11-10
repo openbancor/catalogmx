@@ -13,6 +13,7 @@ from typing import TypedDict
 
 class ClaveUnidad(TypedDict):
     """Estructura de una unidad de medida"""
+
     id: str
     nombre: str
     descripcion: str
@@ -63,14 +64,17 @@ class ClaveUnidadCatalog:
         # Target: catalogmx/packages/shared-data/sat/cfdi_4.0/clave_unidad.json
         data_path = (
             Path(__file__).parent.parent.parent.parent.parent.parent
-            / 'shared-data' / 'sat' / 'cfdi_4.0' / 'clave_unidad.json'
+            / "shared-data"
+            / "sat"
+            / "cfdi_4.0"
+            / "clave_unidad.json"
         )
 
-        with open(data_path, encoding='utf-8') as f:
+        with open(data_path, encoding="utf-8") as f:
             cls._data = json.load(f)
 
         # Crear índice por ID
-        cls._by_id = {item['id']: item for item in cls._data}
+        cls._by_id = {item["id"]: item for item in cls._data}
 
     @classmethod
     def get_all(cls) -> list[ClaveUnidad]:
@@ -143,10 +147,7 @@ class ClaveUnidadCatalog:
         """
         cls._load_data()
         keyword_lower = keyword.lower()
-        return [
-            u for u in cls._data  # type: ignore
-            if keyword_lower in u['nombre'].lower()
-        ]
+        return [u for u in cls._data if keyword_lower in u["nombre"].lower()]  # type: ignore
 
     @classmethod
     def search_by_symbol(cls, simbolo: str) -> list[ClaveUnidad]:
@@ -166,10 +167,7 @@ class ClaveUnidadCatalog:
         """
         cls._load_data()
         simbolo_lower = simbolo.lower()
-        return [
-            u for u in cls._data  # type: ignore
-            if u['simbolo'].lower() == simbolo_lower
-        ]
+        return [u for u in cls._data if u["simbolo"].lower() == simbolo_lower]  # type: ignore
 
     @classmethod
     def get_vigentes(cls) -> list[ClaveUnidad]:
@@ -185,8 +183,9 @@ class ClaveUnidadCatalog:
         """
         cls._load_data()
         return [
-            u for u in cls._data  # type: ignore
-            if not u['fechaDeFinDeVigencia'] or u['fechaDeFinDeVigencia'] == ''
+            u
+            for u in cls._data  # type: ignore
+            if not u["fechaDeFinDeVigencia"] or u["fechaDeFinDeVigencia"] == ""
         ]
 
     @classmethod
@@ -203,8 +202,9 @@ class ClaveUnidadCatalog:
         """
         cls._load_data()
         return [
-            u for u in cls._data  # type: ignore
-            if u['fechaDeFinDeVigencia'] and u['fechaDeFinDeVigencia'] != ''
+            u
+            for u in cls._data  # type: ignore
+            if u["fechaDeFinDeVigencia"] and u["fechaDeFinDeVigencia"] != ""
         ]
 
     @classmethod
@@ -229,18 +229,26 @@ class ClaveUnidadCatalog:
         cat_lower = categoria.lower()
 
         keywords: dict[str, list[str]] = {
-            'peso': ['kilogramo', 'gramo', 'tonelada', 'libra', 'onza'],
-            'longitud': ['metro', 'centímetro', 'milímetro', 'kilómetro', 'pulgada', 'pie', 'yarda'],
-            'volumen': ['litro', 'mililitro', 'metro cúbico', 'galón', 'barril'],
-            'tiempo': ['hora', 'minuto', 'segundo', 'día', 'semana', 'mes', 'año'],
-            'pieza': ['pieza', 'unidad', 'paquete', 'caja', 'docena']
+            "peso": ["kilogramo", "gramo", "tonelada", "libra", "onza"],
+            "longitud": [
+                "metro",
+                "centímetro",
+                "milímetro",
+                "kilómetro",
+                "pulgada",
+                "pie",
+                "yarda",
+            ],
+            "volumen": ["litro", "mililitro", "metro cúbico", "galón", "barril"],
+            "tiempo": ["hora", "minuto", "segundo", "día", "semana", "mes", "año"],
+            "pieza": ["pieza", "unidad", "paquete", "caja", "docena"],
         }
 
         search_words = keywords.get(cat_lower, [cat_lower])
 
         results = []
         for u in cls._data:  # type: ignore
-            nombre_lower = u['nombre'].lower()
+            nombre_lower = u["nombre"].lower()
             if any(word in nombre_lower for word in search_words):
                 results.append(u)
 
@@ -278,14 +286,13 @@ class ClaveUnidadCatalog:
         cls._load_data()
 
         con_simbolo = sum(
-            1 for u in cls._data  # type: ignore
-            if u['simbolo'] and u['simbolo'] != ''
+            1 for u in cls._data if u["simbolo"] and u["simbolo"] != ""  # type: ignore
         )
 
         return {
-            'total': len(cls._data),  # type: ignore
-            'vigentes': len(cls.get_vigentes()),
-            'obsoletas': len(cls.get_obsoletas()),
-            'con_simbolo': con_simbolo,
-            'sin_simbolo': len(cls._data) - con_simbolo  # type: ignore
+            "total": len(cls._data),  # type: ignore
+            "vigentes": len(cls.get_vigentes()),
+            "obsoletas": len(cls.get_obsoletas()),
+            "con_simbolo": con_simbolo,
+            "sin_simbolo": len(cls._data) - con_simbolo,  # type: ignore
         }

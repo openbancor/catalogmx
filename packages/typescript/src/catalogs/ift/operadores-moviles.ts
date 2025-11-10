@@ -32,10 +32,7 @@ export class OperadoresMoviles {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(
-      __dirname,
-      '../../../../shared-data/ift/operadores_moviles.json'
-    );
+    const dataPath = path.resolve(__dirname, '../../../../shared-data/ift/operadores_moviles.json');
     const rawData = fs.readFileSync(dataPath, 'utf-8');
     const jsonData: OperadoresMovilesData = JSON.parse(rawData);
     this._data = jsonData.operadores;
@@ -82,8 +79,7 @@ export class OperadoresMoviles {
     this.loadData();
     return this._data!.filter(
       (op) =>
-        op.grupo_empresarial &&
-        op.grupo_empresarial.toLowerCase().includes(grupo.toLowerCase())
+        op.grupo_empresarial && op.grupo_empresarial.toLowerCase().includes(grupo.toLowerCase())
     );
   }
 
@@ -105,9 +101,7 @@ export class OperadoresMoviles {
    */
   static getCon5G(): OperadorMovil[] {
     this.loadData();
-    return this._data!.filter(
-      (op) => op.activo && op.tecnologias.includes('5G')
-    );
+    return this._data!.filter((op) => op.activo && op.tecnologias.includes('5G'));
   }
 
   /**
@@ -116,9 +110,7 @@ export class OperadoresMoviles {
   static validar(nombreComercial: string): boolean {
     this.loadData();
     return this._data!.some(
-      (op) =>
-        op.nombre_comercial.toLowerCase() === nombreComercial.toLowerCase() &&
-        op.activo
+      (op) => op.nombre_comercial.toLowerCase() === nombreComercial.toLowerCase() && op.activo
     );
   }
 
@@ -127,12 +119,14 @@ export class OperadoresMoviles {
    */
   static getMarketSharePorTipo(): { OMR: number; OMV: number } {
     this.loadData();
-    const omr = this._data!
-      .filter((op) => op.tipo === 'OMR' && op.activo)
-      .reduce((sum, op) => sum + op.market_share_aprox, 0);
-    const omv = this._data!
-      .filter((op) => op.tipo === 'OMV' && op.activo)
-      .reduce((sum, op) => sum + op.market_share_aprox, 0);
+    const omr = this._data!.filter((op) => op.tipo === 'OMR' && op.activo).reduce(
+      (sum, op) => sum + op.market_share_aprox,
+      0
+    );
+    const omv = this._data!.filter((op) => op.tipo === 'OMV' && op.activo).reduce(
+      (sum, op) => sum + op.market_share_aprox,
+      0
+    );
     return { OMR: omr, OMV: omv };
   }
 }

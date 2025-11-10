@@ -48,7 +48,7 @@ class NSSValidator:
         """
         :param nss: The NSS number to validate
         """
-        self.nss = ''
+        self.nss = ""
         if bool(nss) and isinstance(nss, str):
             self.nss = nss.strip()
 
@@ -191,12 +191,12 @@ class NSSValidator:
             return None
 
         return {
-            'subdelegation': self.get_subdelegation(),
-            'year': self.get_year(),
-            'serial': self.get_serial(),
-            'sequential': self.get_sequential(),
-            'check_digit': self.get_check_digit(),
-            'nss': self.nss
+            "subdelegation": self.get_subdelegation(),
+            "year": self.get_year(),
+            "serial": self.get_serial(),
+            "sequential": self.get_sequential(),
+            "check_digit": self.get_check_digit(),
+            "nss": self.nss,
         }
 
 
@@ -211,7 +211,9 @@ def validate_nss(nss: str | None) -> bool:
     return validator.is_valid()
 
 
-def generate_nss(subdelegation: str | int, year: str | int, serial: str | int, sequential: str | int) -> str:
+def generate_nss(
+    subdelegation: str | int, year: str | int, serial: str | int, sequential: str | int
+) -> str:
     """
     Generates a complete NSS with check digit
 

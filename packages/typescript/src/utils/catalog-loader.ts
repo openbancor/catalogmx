@@ -69,5 +69,7 @@ export function loadCatalogObject<T>(relativePath: string): T[] {
   if (jsonData && Array.isArray(jsonData.data)) {
     return jsonData.data as T[];
   }
-  throw new Error(`Invalid catalog format: ${fullPath}. Expected an array or { data: [...] } structure.`);
+  throw new Error(
+    `Invalid catalog format: ${fullPath}. Expected an array or { data: [...] } structure.`
+  );
 }

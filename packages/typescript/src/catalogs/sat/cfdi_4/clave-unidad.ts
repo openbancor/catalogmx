@@ -68,9 +68,7 @@ export class ClaveUnidadCatalog {
   static searchByName(keyword: string): ClaveUnidad[] {
     this.loadData();
     const keywordLower = keyword.toLowerCase();
-    return this._data!.filter(u =>
-      u.nombre.toLowerCase().includes(keywordLower)
-    );
+    return this._data!.filter((u) => u.nombre.toLowerCase().includes(keywordLower));
   }
 
   /**
@@ -81,9 +79,7 @@ export class ClaveUnidadCatalog {
   static searchBySymbol(simbolo: string): ClaveUnidad[] {
     this.loadData();
     const simboloLower = simbolo.toLowerCase();
-    return this._data!.filter(u =>
-      u.simbolo.toLowerCase() === simboloLower
-    );
+    return this._data!.filter((u) => u.simbolo.toLowerCase() === simboloLower);
   }
 
   /**
@@ -92,7 +88,7 @@ export class ClaveUnidadCatalog {
    */
   static getVigentes(): ClaveUnidad[] {
     this.loadData();
-    return this._data!.filter(u => !u.fechaDeFinDeVigencia || u.fechaDeFinDeVigencia === '');
+    return this._data!.filter((u) => !u.fechaDeFinDeVigencia || u.fechaDeFinDeVigencia === '');
   }
 
   /**
@@ -101,7 +97,7 @@ export class ClaveUnidadCatalog {
    */
   static getObsoletas(): ClaveUnidad[] {
     this.loadData();
-    return this._data!.filter(u => u.fechaDeFinDeVigencia && u.fechaDeFinDeVigencia !== '');
+    return this._data!.filter((u) => u.fechaDeFinDeVigencia && u.fechaDeFinDeVigencia !== '');
   }
 
   /**
@@ -115,18 +111,18 @@ export class ClaveUnidadCatalog {
     const catLower = categoria.toLowerCase();
 
     const keywords: Record<string, string[]> = {
-      'peso': ['kilogramo', 'gramo', 'tonelada', 'libra', 'onza'],
-      'longitud': ['metro', 'centímetro', 'milímetro', 'kilómetro', 'pulgada', 'pie', 'yarda'],
-      'volumen': ['litro', 'mililitro', 'metro cúbico', 'galón', 'barril'],
-      'tiempo': ['hora', 'minuto', 'segundo', 'día', 'semana', 'mes', 'año'],
-      'pieza': ['pieza', 'unidad', 'paquete', 'caja', 'docena']
+      peso: ['kilogramo', 'gramo', 'tonelada', 'libra', 'onza'],
+      longitud: ['metro', 'centímetro', 'milímetro', 'kilómetro', 'pulgada', 'pie', 'yarda'],
+      volumen: ['litro', 'mililitro', 'metro cúbico', 'galón', 'barril'],
+      tiempo: ['hora', 'minuto', 'segundo', 'día', 'semana', 'mes', 'año'],
+      pieza: ['pieza', 'unidad', 'paquete', 'caja', 'docena'],
     };
 
     const searchWords = keywords[catLower] || [catLower];
 
-    return this._data!.filter(u => {
+    return this._data!.filter((u) => {
       const nombreLower = u.nombre.toLowerCase();
-      return searchWords.some(word => nombreLower.includes(word));
+      return searchWords.some((word) => nombreLower.includes(word));
     });
   }
 
@@ -156,8 +152,8 @@ export class ClaveUnidadCatalog {
       total: this._data!.length,
       vigentes: this.getVigentes().length,
       obsoletas: this.getObsoletas().length,
-      conSimbolo: this._data!.filter(u => u.simbolo && u.simbolo !== '').length,
-      sinSimbolo: this._data!.filter(u => !u.simbolo || u.simbolo === '').length,
+      conSimbolo: this._data!.filter((u) => u.simbolo && u.simbolo !== '').length,
+      sinSimbolo: this._data!.filter((u) => !u.simbolo || u.simbolo === '').length,
     };
   }
 }

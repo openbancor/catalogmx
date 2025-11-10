@@ -11,7 +11,9 @@ export class EstadoCatalog {
 
   private static getData(): EstadoUSACanada[] {
     if (!this._data) {
-      this._data = loadCatalogObject<EstadoUSACanada>('sat/comercio_exterior/estados_usa_canada.json');
+      this._data = loadCatalogObject<EstadoUSACanada>(
+        'sat/comercio_exterior/estados_usa_canada.json'
+      );
     }
     return this._data;
   }
@@ -21,25 +23,25 @@ export class EstadoCatalog {
   }
 
   static getEstado(code: string): EstadoUSACanada | undefined {
-    return this.getData().find(e => e.code === code.toUpperCase());
+    return this.getData().find((e) => e.code === code.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(e => e.code === code.toUpperCase());
+    return this.getData().some((e) => e.code === code.toUpperCase());
   }
 
   /**
    * Get US states only
    */
   static getEstadosUSA(): EstadoUSACanada[] {
-    return this.getData().filter(e => e.country === 'USA');
+    return this.getData().filter((e) => e.country === 'USA');
   }
 
   /**
    * Get Canadian provinces only
    */
   static getProvinciasCanada(): EstadoUSACanada[] {
-    return this.getData().filter(e => e.country === 'CAN');
+    return this.getData().filter((e) => e.country === 'CAN');
   }
 
   /**

@@ -49,7 +49,7 @@ class CLABEValidator:
         """
         :param clabe: The CLABE number to validate
         """
-        self.clabe = ''
+        self.clabe = ""
         if bool(clabe) and isinstance(clabe, str):
             self.clabe = clabe.strip()
 
@@ -176,11 +176,11 @@ class CLABEValidator:
             return None
 
         return {
-            'bank_code': self.get_bank_code(),
-            'branch_code': self.get_branch_code(),
-            'account_number': self.get_account_number(),
-            'check_digit': self.get_check_digit(),
-            'clabe': self.clabe
+            "bank_code": self.get_bank_code(),
+            "branch_code": self.get_branch_code(),
+            "account_number": self.get_account_number(),
+            "check_digit": self.get_check_digit(),
+            "clabe": self.clabe,
         }
 
 

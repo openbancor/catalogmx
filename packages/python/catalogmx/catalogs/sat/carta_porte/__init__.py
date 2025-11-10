@@ -9,11 +9,11 @@ from .tipo_embalaje import TipoEmbalajeCatalog
 from .tipo_permiso import TipoPermisoCatalog
 
 __all__ = [
-    'AeropuertosCatalog',
-    'PuertosMaritimos',
-    'TipoPermisoCatalog',
-    'ConfigAutotransporteCatalog',
-    'TipoEmbalajeCatalog',
-    'CarreterasCatalog',
-    'MaterialPeligrosoCatalog',
+    "AeropuertosCatalog",
+    "PuertosMaritimos",
+    "TipoPermisoCatalog",
+    "ConfigAutotransporteCatalog",
+    "TipoEmbalajeCatalog",
+    "CarreterasCatalog",
+    "MaterialPeligrosoCatalog",
 ]

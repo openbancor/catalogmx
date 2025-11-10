@@ -1,4 +1,5 @@
 """Catálogo c_CodigoTransporteAereo - Aeropuertos"""
+
 import json
 from pathlib import Path
 
@@ -14,12 +15,18 @@ class AeropuertosCatalog:
     @classmethod
     def _load_data(cls) -> None:
         if cls._data is None:
-            path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'carta_porte_3' / 'aeropuertos.json'
-            with open(path, encoding='utf-8') as f:
+            path = (
+                Path(__file__).parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "carta_porte_3"
+                / "aeropuertos.json"
+            )
+            with open(path, encoding="utf-8") as f:
                 cls._data = json.load(f)
-            cls._by_code = {item['code']: item for item in cls._data}
-            cls._by_iata = {item['iata']: item for item in cls._data}
-            cls._by_icao = {item['icao']: item for item in cls._data}
+            cls._by_code = {item["code"]: item for item in cls._data}
+            cls._by_iata = {item["iata"]: item for item in cls._data}
+            cls._by_icao = {item["icao"]: item for item in cls._data}
 
     @classmethod
     def get_aeropuerto(cls, code: str) -> dict | None:
@@ -55,14 +62,15 @@ class AeropuertosCatalog:
         """Obtiene aeropuertos por estado (insensible a acentos)"""
         cls._load_data()
         state_normalized = normalize_text(state)
-        return [a for a in cls._data if normalize_text(a.get('estado', a.get('state', ''))) == state_normalized]
+        return [
+            a
+            for a in cls._data
+            if normalize_text(a.get("estado", a.get("state", ""))) == state_normalized
+        ]
 
     @classmethod
     def search_by_name(cls, name: str) -> list[dict]:
         """Busca aeropuertos por nombre (insensible a acentos)"""
         cls._load_data()
         name_normalized = normalize_text(name)
-        return [
-            a for a in cls._data
-            if name_normalized in normalize_text(a['name'])
-        ]
+        return [a for a in cls._data if name_normalized in normalize_text(a["name"])]

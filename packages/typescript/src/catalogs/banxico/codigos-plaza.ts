@@ -9,10 +9,10 @@
 import { loadCatalogData } from '../../utils/catalog-loader';
 
 export interface CodigoPlaza {
-  codigo: string;        // 3-digit code
-  plaza: string;         // City/plaza name
-  estado: string;        // State name
-  cve_entidad: string;   // INEGI state code
+  codigo: string; // 3-digit code
+  plaza: string; // City/plaza name
+  estado: string; // State name
+  cve_entidad: string; // INEGI state code
 }
 
 interface PlazaCatalogData {
@@ -147,7 +147,7 @@ export class CodigosPlazaCatalog {
    * console.log(`Jalisco has ${jalisco.length} plazas`);
    */
   static getPorCveEntidad(cveEntidad: string): CodigoPlaza[] {
-    return this.getData().filter(p => p.cve_entidad === cveEntidad);
+    return this.getData().filter((p) => p.cve_entidad === cveEntidad);
   }
 
   /**
@@ -167,7 +167,7 @@ export class CodigosPlazaCatalog {
       valido: plazas.length > 0,
       codigo: codigoPadded,
       plazas,
-      numPlazas: plazas.length
+      numPlazas: plazas.length,
     };
   }
 
@@ -204,9 +204,7 @@ export class CodigosPlazaCatalog {
    */
   static search(query: string): CodigoPlaza[] {
     const queryNormalized = this.normalizeText(query);
-    return this.getData().filter(p =>
-      this.normalizeText(p.plaza).includes(queryNormalized)
-    );
+    return this.getData().filter((p) => this.normalizeText(p.plaza).includes(queryNormalized));
   }
 
   /**
@@ -220,13 +218,13 @@ export class CodigosPlazaCatalog {
   } {
     this.getData(); // Ensure data is loaded
 
-    const estados = new Set(this._data!.map(p => p.estado));
+    const estados = new Set(this._data!.map((p) => p.estado));
 
     return {
       totalPlazas: this._data!.length,
       codigosUnicos: this._byCodigo!.size,
       estadosCubiertos: estados.size,
-      plazasDuplicadas: this.getPlazasDuplicadas().size
+      plazasDuplicadas: this.getPlazasDuplicadas().size,
     };
   }
 }

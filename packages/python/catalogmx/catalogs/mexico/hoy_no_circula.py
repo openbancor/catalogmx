@@ -4,6 +4,7 @@ Hoy No Circula CDMX Catalog
 This module provides access to the Hoy No Circula traffic restriction program
 for Mexico City (CDMX) and Estado de México.
 """
+
 import json
 from pathlib import Path
 
@@ -26,9 +27,14 @@ class HoyNoCirculaCatalog:
             # Path: catalogmx/packages/python/catalogmx/catalogs/mexico/hoy_no_circula.py
             # Target: catalogmx/packages/shared-data/mexico/hoy_no_circula_cdmx.json
             current_file = Path(__file__)
-            shared_data_path = current_file.parent.parent.parent.parent.parent / 'shared-data' / 'mexico' / 'hoy_no_circula_cdmx.json'
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "mexico"
+                / "hoy_no_circula_cdmx.json"
+            )
 
-            with open(shared_data_path, encoding='utf-8') as f:
+            with open(shared_data_path, encoding="utf-8") as f:
                 cls._data = json.load(f)
 
     @classmethod
@@ -49,7 +55,7 @@ class HoyNoCirculaCatalog:
         :return: List of restriction dictionaries
         """
         cls._load_data()
-        return cls._data.get('restricciones_por_dia', []).copy()
+        return cls._data.get("restricciones_por_dia", []).copy()
 
     @classmethod
     def get_restriccion_por_dia(cls, dia: str) -> dict | None:
@@ -60,10 +66,10 @@ class HoyNoCirculaCatalog:
         :return: Restriction dictionary or None if not found
         """
         cls._load_data()
-        restricciones = cls._data.get('restricciones_por_dia', [])
+        restricciones = cls._data.get("restricciones_por_dia", [])
 
         for restriccion in restricciones:
-            if restriccion.get('dia', '').lower() == dia.lower():
+            if restriccion.get("dia", "").lower() == dia.lower():
                 return restriccion.copy()
 
         return None
@@ -76,7 +82,7 @@ class HoyNoCirculaCatalog:
         :return: List of exemption dictionaries
         """
         cls._load_data()
-        return cls._data.get('exenciones_por_holograma', []).copy()
+        return cls._data.get("exenciones_por_holograma", []).copy()
 
     @classmethod
     def get_exencion_por_holograma(cls, holograma: str) -> dict | None:
@@ -87,16 +93,16 @@ class HoyNoCirculaCatalog:
         :return: Exemption dictionary or None if not found
         """
         cls._load_data()
-        exenciones = cls._data.get('exenciones_por_holograma', [])
+        exenciones = cls._data.get("exenciones_por_holograma", [])
 
         for exencion in exenciones:
-            if exencion.get('holograma') == holograma:
+            if exencion.get("holograma") == holograma:
                 return exencion.copy()
 
         return None
 
     @classmethod
-    def puede_circular(cls, terminacion: str, dia: str, holograma: str = '2') -> bool:
+    def puede_circular(cls, terminacion: str, dia: str, holograma: str = "2") -> bool:
         """
         Check if a vehicle can circulate on a given day
 
@@ -111,10 +117,10 @@ class HoyNoCirculaCatalog:
         exencion = cls.get_exencion_por_holograma(holograma)
         if exencion:
             # Hologram 00 and 0 can circulate all days (except Saturdays for 0)
-            if holograma == '00':
+            if holograma == "00":
                 return True
-            elif holograma == '0':
-                return dia.lower() != 'sábado'
+            elif holograma == "0":
+                return dia.lower() != "sábado"
 
         # Check restriction for the day
         restriccion = cls.get_restriccion_por_dia(dia)
@@ -123,7 +129,7 @@ class HoyNoCirculaCatalog:
             return True
 
         # Check if the termination is restricted
-        terminaciones_restringidas = restriccion.get('terminacion_placa', [])
+        terminaciones_restringidas = restriccion.get("terminacion_placa", [])
         return str(terminacion) not in [str(t) for t in terminaciones_restringidas]
 
     @classmethod
@@ -136,11 +142,11 @@ class HoyNoCirculaCatalog:
         """
         cls._load_data()
 
-        restricciones = cls._data.get('restricciones_por_dia', [])
+        restricciones = cls._data.get("restricciones_por_dia", [])
         for restriccion in restricciones:
-            terminaciones = restriccion.get('terminacion_placa', [])
+            terminaciones = restriccion.get("terminacion_placa", [])
             if str(terminacion) in [str(t) for t in terminaciones]:
-                return restriccion.get('dia')
+                return restriccion.get("dia")
 
         return None
 
@@ -154,11 +160,11 @@ class HoyNoCirculaCatalog:
         """
         cls._load_data()
 
-        restricciones = cls._data.get('restricciones_por_dia', [])
+        restricciones = cls._data.get("restricciones_por_dia", [])
         for restriccion in restricciones:
-            terminaciones = restriccion.get('terminacion_placa', [])
+            terminaciones = restriccion.get("terminacion_placa", [])
             if str(terminacion) in [str(t) for t in terminaciones]:
-                engomados = restriccion.get('engomado', [])
+                engomados = restriccion.get("engomado", [])
                 return engomados[0] if engomados else None
 
         return None
@@ -171,7 +177,7 @@ class HoyNoCirculaCatalog:
         :return: Dictionary with environmental contingency rules
         """
         cls._load_data()
-        return cls._data.get('contingencias_ambientales', {}).copy()
+        return cls._data.get("contingencias_ambientales", {}).copy()
 
     @classmethod
     def get_sabatinos(cls) -> dict:
@@ -181,11 +187,11 @@ class HoyNoCirculaCatalog:
         :return: Dictionary with Saturday restriction rules
         """
         cls._load_data()
-        return cls._data.get('sabatinos', {}).copy()
+        return cls._data.get("sabatinos", {}).copy()
 
 
 # Convenience functions
-def puede_circular(terminacion: str, dia: str, holograma: str = '2') -> bool:
+def puede_circular(terminacion: str, dia: str, holograma: str = "2") -> bool:
     """Check if a vehicle can circulate on a given day"""
     return HoyNoCirculaCatalog.puede_circular(terminacion, dia, holograma)
 
@@ -202,8 +208,8 @@ def get_engomado(terminacion: str) -> str | None:
 
 # Export commonly used functions and classes
 __all__ = [
-    'HoyNoCirculaCatalog',
-    'puede_circular',
-    'get_dia_restriccion',
-    'get_engomado',
+    "HoyNoCirculaCatalog",
+    "puede_circular",
+    "get_dia_restriccion",
+    "get_engomado",
 ]

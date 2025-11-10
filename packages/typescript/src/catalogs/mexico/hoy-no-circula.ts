@@ -13,7 +13,10 @@ export class HoyNoCirculaCDMX {
   private static loadData(): void {
     if (this._data !== null) return;
     // From dist/catalogs/mexico, go up 4 levels to packages dir and then to shared-data
-    const dataPath = path.resolve(__dirname, '../../../../shared-data/mexico/hoy_no_circula_cdmx.json');
+    const dataPath = path.resolve(
+      __dirname,
+      '../../../../shared-data/mexico/hoy_no_circula_cdmx.json'
+    );
     const rawData = fs.readFileSync(dataPath, 'utf-8');
     this._data = JSON.parse(rawData) as HoyNoCirculaPrograma;
   }
@@ -37,11 +40,13 @@ export class HoyNoCirculaCDMX {
     if (holograma === 'sin_verificacion') return false;
 
     // Check hologram exemptions
-    const exencion = this._data!.exenciones_por_holograma.find(h => h.holograma === holograma);
+    const exencion = this._data!.exenciones_por_holograma.find((h) => h.holograma === holograma);
     if (exencion?.exento) return true;
 
     // Check daily restrictions
-    const restriccion = this._data!.restricciones_por_dia.find(r => r.dia.toLowerCase() === dia.toLowerCase());
+    const restriccion = this._data!.restricciones_por_dia.find(
+      (r) => r.dia.toLowerCase() === dia.toLowerCase()
+    );
     if (!restriccion) return true;
 
     const ultimoDigito = terminacionPlaca.slice(-1);
@@ -53,7 +58,7 @@ export class HoyNoCirculaCDMX {
    */
   static getRestriccionPorDia(dia: string) {
     this.loadData();
-    return this._data!.restricciones_por_dia.find(r => r.dia.toLowerCase() === dia.toLowerCase());
+    return this._data!.restricciones_por_dia.find((r) => r.dia.toLowerCase() === dia.toLowerCase());
   }
 
   /**
@@ -61,7 +66,7 @@ export class HoyNoCirculaCDMX {
    */
   static getExencionPorHolograma(holograma: '00' | '0' | '1' | '2') {
     this.loadData();
-    return this._data!.exenciones_por_holograma.find(h => h.holograma === holograma);
+    return this._data!.exenciones_por_holograma.find((h) => h.holograma === holograma);
   }
 
   /**
@@ -71,7 +76,7 @@ export class HoyNoCirculaCDMX {
     this.loadData();
     const ultimoDigito = terminacionPlaca.slice(-1);
 
-    const restriccion = this._data!.calendario_sabados_holograma_2.find(s => s.semana === semana);
+    const restriccion = this._data!.calendario_sabados_holograma_2.find((s) => s.semana === semana);
     if (!restriccion) return true;
 
     return !restriccion.terminaciones.includes(ultimoDigito);
@@ -92,7 +97,7 @@ export class HoyNoCirculaCDMX {
     this.loadData();
     const ultimoDigito = terminacionPlaca.slice(-1);
 
-    const restriccion = this._data!.restricciones_por_dia.find(r =>
+    const restriccion = this._data!.restricciones_por_dia.find((r) =>
       r.terminacion_placa.includes(ultimoDigito)
     );
 
@@ -106,7 +111,7 @@ export class HoyNoCirculaCDMX {
     this.loadData();
     const ultimoDigito = terminacionPlaca.slice(-1);
 
-    const restriccion = this._data!.restricciones_por_dia.find(r =>
+    const restriccion = this._data!.restricciones_por_dia.find((r) =>
       r.terminacion_placa.includes(ultimoDigito)
     );
 
@@ -160,7 +165,7 @@ export class HoyNoCirculaCDMX {
     this.loadData();
     const ultimoDigito = terminacionPlaca.slice(-1);
 
-    const periodo = this._data!.verificacion_vehicular.periodos.find(p =>
+    const periodo = this._data!.verificacion_vehicular.periodos.find((p) =>
       p.terminacion_placa.includes(ultimoDigito)
     );
 

@@ -62,9 +62,7 @@ export class MonedasDivisas {
    */
   static getPorCodigo(codigoISO: string): MonedaDivisa | undefined {
     this.loadData();
-    return this._data!.find(
-      (m) => m.codigo_iso.toUpperCase() === codigoISO.toUpperCase()
-    );
+    return this._data!.find((m) => m.codigo_iso.toUpperCase() === codigoISO.toUpperCase());
   }
 
   /**
@@ -72,9 +70,7 @@ export class MonedasDivisas {
    */
   static getPorPais(pais: string): MonedaDivisa[] {
     this.loadData();
-    return this._data!.filter((m) =>
-      m.pais.toLowerCase().includes(pais.toLowerCase())
-    );
+    return this._data!.filter((m) => m.pais.toLowerCase().includes(pais.toLowerCase()));
   }
 
   /**
@@ -100,28 +96,9 @@ export class MonedasDivisas {
     this.loadData();
     const regiones: Record<string, string[]> = {
       'America del Norte': ['USD', 'CAD', 'MXN'],
-      'America Latina': [
-        'ARS',
-        'BRL',
-        'CLP',
-        'COP',
-        'PEN',
-        'GTQ',
-        'CRC',
-        'UYU',
-        'VES',
-      ],
+      'America Latina': ['ARS', 'BRL', 'CLP', 'COP', 'PEN', 'GTQ', 'CRC', 'UYU', 'VES'],
       Europa: ['EUR', 'GBP', 'CHF', 'SEK', 'NOK', 'DKK', 'RUB'],
-      'Asia-Pacifico': [
-        'JPY',
-        'CNY',
-        'AUD',
-        'NZD',
-        'SGD',
-        'HKD',
-        'INR',
-        'KRW',
-      ],
+      'Asia-Pacifico': ['JPY', 'CNY', 'AUD', 'NZD', 'SGD', 'HKD', 'INR', 'KRW'],
       Africa: ['ZAR'],
     };
 
@@ -143,18 +120,7 @@ export class MonedasDivisas {
    */
   static getLatam(): MonedaDivisa[] {
     this.loadData();
-    const latam = [
-      'MXN',
-      'ARS',
-      'BRL',
-      'CLP',
-      'COP',
-      'PEN',
-      'GTQ',
-      'CRC',
-      'UYU',
-      'VES',
-    ];
+    const latam = ['MXN', 'ARS', 'BRL', 'CLP', 'COP', 'PEN', 'GTQ', 'CRC', 'UYU', 'VES'];
     return this._data!.filter((m) => latam.includes(m.codigo_iso));
   }
 
@@ -163,9 +129,7 @@ export class MonedasDivisas {
    */
   static validarCodigoISO(codigo: string): boolean {
     this.loadData();
-    return this._data!.some(
-      (m) => m.codigo_iso.toUpperCase() === codigo.toUpperCase()
-    );
+    return this._data!.some((m) => m.codigo_iso.toUpperCase() === codigo.toUpperCase());
   }
 
   /**
@@ -236,9 +200,7 @@ export class MonedasDivisas {
    */
   static buscarPorNombre(nombre: string): MonedaDivisa[] {
     this.loadData();
-    return this._data!.filter((m) =>
-      m.moneda.toLowerCase().includes(nombre.toLowerCase())
-    );
+    return this._data!.filter((m) => m.moneda.toLowerCase().includes(nombre.toLowerCase()));
   }
 
   /**

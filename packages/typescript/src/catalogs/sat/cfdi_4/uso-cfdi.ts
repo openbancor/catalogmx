@@ -12,10 +12,10 @@ export class UsoCFDICatalog {
   private static getData(): UsoCfdi[] {
     if (this._data === null) {
       const rawData = loadCatalogArray<UsoCfdi>('sat/cfdi_4.0/uso_cfdi.json');
-      this._data = rawData.map(uso => ({
+      this._data = rawData.map((uso) => ({
         ...uso,
         persona_fisica: uso.persona_fisica ?? uso.fisica,
-        persona_moral: uso.persona_moral ?? uso.moral
+        persona_moral: uso.persona_moral ?? uso.moral,
       }));
     }
     return this._data;
@@ -23,7 +23,7 @@ export class UsoCFDICatalog {
 
   static getUso(code: string): UsoCfdi | undefined {
     const normalized = code.toUpperCase();
-    return this.getData().find(uso => uso.code === normalized);
+    return this.getData().find((uso) => uso.code === normalized);
   }
 
   static isValid(code: string): boolean {
@@ -32,8 +32,6 @@ export class UsoCFDICatalog {
 
   static searchByDescription(keyword: string): UsoCfdi[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(uso =>
-      uso.description.toUpperCase().includes(search)
-    );
+    return this.getData().filter((uso) => uso.description.toUpperCase().includes(search));
   }
 }

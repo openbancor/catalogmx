@@ -21,11 +21,11 @@ export class IncotermsValidator {
   }
 
   static getIncoterm(code: string): Incoterm | undefined {
-    return this.getData().find(inc => inc.code === code.toUpperCase());
+    return this.getData().find((inc) => inc.code === code.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(inc => inc.code === code.toUpperCase());
+    return this.getData().some((inc) => inc.code === code.toUpperCase());
   }
 
   /**
@@ -48,7 +48,7 @@ export class IncotermsValidator {
    * Get INCOTERMs for specific transport mode
    */
   static getByTransportMode(mode: 'any' | 'maritime' | 'multimodal'): Incoterm[] {
-    return this.getData().filter(inc => inc.transport_mode === mode);
+    return this.getData().filter((inc) => inc.transport_mode === mode);
   }
 
   /**

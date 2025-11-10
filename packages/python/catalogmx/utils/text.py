@@ -12,8 +12,9 @@ except ImportError:
     def unidecode(text: str) -> str:
         """Fallback implementation using unicodedata."""
         import unicodedata
-        nfd = unicodedata.normalize('NFD', text)
-        return ''.join(char for char in nfd if unicodedata.category(char) != 'Mn')
+
+        nfd = unicodedata.normalize("NFD", text)
+        return "".join(char for char in nfd if unicodedata.category(char) != "Mn")
 
 
 def normalize_text(text: str) -> str:
@@ -51,4 +52,4 @@ def normalize_for_search(text: str) -> str:
     return normalize_text(text)
 
 
-__all__ = ['normalize_text', 'normalize_for_search', 'unidecode']
+__all__ = ["normalize_text", "normalize_for_search", "unidecode"]

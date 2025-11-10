@@ -21,11 +21,11 @@ export class TipoNominaCatalog {
   }
 
   static getTipo(code: string): TipoNomina | undefined {
-    return this.getData().find(t => t.code === code);
+    return this.getData().find((t) => t.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(t => t.code === code);
+    return this.getData().some((t) => t.code === code);
   }
 
   /**

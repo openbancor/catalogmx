@@ -21,11 +21,11 @@ export class MotivoTrasladoCatalog {
   }
 
   static getMotivo(code: string): MotivoTraslado | undefined {
-    return this.getData().find(m => m.code === code);
+    return this.getData().find((m) => m.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(m => m.code === code);
+    return this.getData().some((m) => m.code === code);
   }
 
   /**
@@ -40,9 +40,7 @@ export class MotivoTrasladoCatalog {
    */
   static searchByDescription(keyword: string): MotivoTraslado[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(m =>
-      m.descripcion.toUpperCase().includes(search)
-    );
+    return this.getData().filter((m) => m.descripcion.toUpperCase().includes(search));
   }
 
   /**

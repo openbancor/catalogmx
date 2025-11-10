@@ -1,4 +1,5 @@
 """Catálogo c_ObjetoImp"""
+
 import json
 from pathlib import Path
 
@@ -13,11 +14,17 @@ class ObjetoImpCatalog:
     def _load_data(cls) -> None:
         """Carga los datos del catálogo si aún no han sido cargados"""
         if cls._data is None:
-            path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'cfdi_4.0' / 'objeto_imp.json'
-            with open(path, encoding='utf-8') as f:
+            path = (
+                Path(__file__).parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "cfdi_4.0"
+                / "objeto_imp.json"
+            )
+            with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data['objetos']
-            cls._by_code = {item['code']: item for item in cls._data}
+                cls._data = data["objetos"]
+            cls._by_code = {item["code"]: item for item in cls._data}
 
     @classmethod
     def get_objeto(cls, code: str) -> dict | None:

@@ -18,14 +18,19 @@ class PaisCatalog:
         """Carga los datos del catálogo desde el archivo JSON compartido"""
         if cls._data is None:
             current_file = Path(__file__)
-            shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
-                              / 'shared-data' / 'sat' / 'comercio_exterior' / 'paises.json')
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "comercio_exterior"
+                / "paises.json"
+            )
 
-            with open(shared_data_path, encoding='utf-8') as f:
+            with open(shared_data_path, encoding="utf-8") as f:
                 cls._data = json.load(f)
 
-            cls._pais_by_code = {item['codigo']: item for item in cls._data}
-            cls._pais_by_iso2 = {item['iso2']: item for item in cls._data}
+            cls._pais_by_code = {item["codigo"]: item for item in cls._data}
+            cls._pais_by_iso2 = {item["iso2"]: item for item in cls._data}
 
     @classmethod
     def get_pais(cls, code: str) -> dict | None:
@@ -58,7 +63,7 @@ class PaisCatalog:
             True si requiere estado/provincia
         """
         pais = cls.get_pais(code)
-        return pais.get('requiere_subdivision', False) if pais else False
+        return pais.get("requiere_subdivision", False) if pais else False
 
     @classmethod
     def get_all(cls) -> list[dict]:
@@ -73,8 +78,11 @@ class PaisCatalog:
         query_normalized = normalize_text(query)
 
         return [
-            item for item in cls._data
-            if (query_normalized in normalize_text(item['codigo']) or
-                query_normalized in normalize_text(item['nombre']) or
-                query_normalized in normalize_text(item.get('iso2', '')))
+            item
+            for item in cls._data
+            if (
+                query_normalized in normalize_text(item["codigo"])
+                or query_normalized in normalize_text(item["nombre"])
+                or query_normalized in normalize_text(item.get("iso2", ""))
+            )
         ]

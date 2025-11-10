@@ -54,10 +54,12 @@ class MunicipiosCompletoCatalog:
         # Target: catalogmx/packages/shared-data/inegi/municipios_completo.json
         data_path = (
             Path(__file__).parent.parent.parent.parent.parent
-            / 'shared-data' / 'inegi' / 'municipios_completo.json'
+            / "shared-data"
+            / "inegi"
+            / "municipios_completo.json"
         )
 
-        with open(data_path, encoding='utf-8') as f:
+        with open(data_path, encoding="utf-8") as f:
             cls._data = json.load(f)
 
     @classmethod
@@ -94,7 +96,7 @@ class MunicipiosCompletoCatalog:
         """
         cls._load_data()
         for mun in cls._data:  # type: ignore
-            if mun['cve_completa'] == cve_completa:
+            if mun["cve_completa"] == cve_completa:
                 return mun
         return None
 
@@ -114,10 +116,7 @@ class MunicipiosCompletoCatalog:
             >>> print(f"Jalisco: {len(jalisco)} municipios")
         """
         cls._load_data()
-        return [
-            mun for mun in cls._data  # type: ignore
-            if mun['cve_entidad'] == cve_entidad
-        ]
+        return [mun for mun in cls._data if mun["cve_entidad"] == cve_entidad]  # type: ignore
 
     @classmethod
     def search_by_name(cls, name: str) -> list[dict]:
@@ -138,8 +137,7 @@ class MunicipiosCompletoCatalog:
         cls._load_data()
         search_term = name.upper()
         return [
-            mun for mun in cls._data  # type: ignore
-            if search_term in mun['nom_municipio'].upper()
+            mun for mun in cls._data if search_term in mun["nom_municipio"].upper()  # type: ignore
         ]
 
     @classmethod
@@ -161,8 +159,7 @@ class MunicipiosCompletoCatalog:
         cls._load_data()
         search_term = state_name.upper()
         return [
-            mun for mun in cls._data  # type: ignore
-            if mun['nom_entidad'].upper() == search_term
+            mun for mun in cls._data if mun["nom_entidad"].upper() == search_term  # type: ignore
         ]
 
     @classmethod
@@ -229,13 +226,11 @@ class MunicipiosCompletoCatalog:
         """
         cls._load_data()
 
-        estados = {mun['cve_entidad'] for mun in cls._data}  # type: ignore
-        poblacion_total = sum(
-            mun['poblacion_total'] for mun in cls._data  # type: ignore
-        )
+        estados = {mun["cve_entidad"] for mun in cls._data}  # type: ignore
+        poblacion_total = sum(mun["poblacion_total"] for mun in cls._data)  # type: ignore
 
         return {
-            'total_municipios': len(cls._data),  # type: ignore
-            'total_estados': len(estados),
-            'poblacion_total': poblacion_total
+            "total_municipios": len(cls._data),  # type: ignore
+            "total_estados": len(estados),
+            "poblacion_total": poblacion_total,
         }

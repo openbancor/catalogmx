@@ -21,10 +21,7 @@ export class LocalidadesCatalog {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(
-      __dirname,
-      '../../../../shared-data/inegi/localidades.json'
-    );
+    const dataPath = path.resolve(__dirname, '../../../../shared-data/inegi/localidades.json');
     const rawData = fs.readFileSync(dataPath, 'utf-8');
     this._data = JSON.parse(rawData) as Localidad[];
 
@@ -109,7 +106,7 @@ export class LocalidadesCatalog {
    */
   static getUrbanas(): Localidad[] {
     this.loadData();
-    return this._data!.filter(loc => loc.ambito === 'U');
+    return this._data!.filter((loc) => loc.ambito === 'U');
   }
 
   /**
@@ -118,7 +115,7 @@ export class LocalidadesCatalog {
    */
   static getRurales(): Localidad[] {
     this.loadData();
-    return this._data!.filter(loc => loc.ambito === 'R');
+    return this._data!.filter((loc) => loc.ambito === 'R');
   }
 
   /**
@@ -129,9 +126,7 @@ export class LocalidadesCatalog {
   static searchByName(nombre: string): Localidad[] {
     this.loadData();
     const nombreLower = nombre.toLowerCase();
-    return this._data!.filter(loc =>
-      loc.nom_localidad.toLowerCase().includes(nombreLower)
-    );
+    return this._data!.filter((loc) => loc.nom_localidad.toLowerCase().includes(nombreLower));
   }
 
   /**
@@ -142,12 +137,7 @@ export class LocalidadesCatalog {
    * @param lon2 - Longitud del punto 2
    * @returns Distancia en kilómetros
    */
-  private static haversineDistance(
-    lat1: number,
-    lon1: number,
-    lat2: number,
-    lon2: number
-  ): number {
+  private static haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371; // Radio de la Tierra en km
     const toRad = (deg: number): number => (deg * Math.PI) / 180;
 
@@ -156,10 +146,7 @@ export class LocalidadesCatalog {
 
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(toRad(lat1)) *
-        Math.cos(toRad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
@@ -172,11 +159,7 @@ export class LocalidadesCatalog {
    * @param radioKm - Radio de búsqueda en kilómetros (default: 10)
    * @returns Lista de localidades dentro del radio, ordenadas por distancia
    */
-  static getByCoordinates(
-    lat: number,
-    lon: number,
-    radioKm: number = 10
-  ): Localidad[] {
+  static getByCoordinates(lat: number, lon: number, radioKm: number = 10): Localidad[] {
     this.loadData();
 
     const resultados: Localidad[] = [];
@@ -204,17 +187,14 @@ export class LocalidadesCatalog {
    * @param maxPob - Población máxima (undefined para sin límite)
    * @returns Lista de localidades en el rango
    */
-  static getByPopulationRange(
-    minPob: number,
-    maxPob?: number
-  ): Localidad[] {
+  static getByPopulationRange(minPob: number, maxPob?: number): Localidad[] {
     this.loadData();
 
     if (maxPob === undefined) {
-      return this._data!.filter(loc => loc.poblacion_total >= minPob);
+      return this._data!.filter((loc) => loc.poblacion_total >= minPob);
     } else {
       return this._data!.filter(
-        loc => minPob <= loc.poblacion_total && loc.poblacion_total <= maxPob
+        (loc) => minPob <= loc.poblacion_total && loc.poblacion_total <= maxPob
       );
     }
   }
@@ -243,8 +223,8 @@ export class LocalidadesCatalog {
 
     return {
       totalLocalidades: this._data!.length,
-      urbanas: this._data!.filter(loc => loc.ambito === 'U').length,
-      rurales: this._data!.filter(loc => loc.ambito === 'R').length,
+      urbanas: this._data!.filter((loc) => loc.ambito === 'U').length,
+      rurales: this._data!.filter((loc) => loc.ambito === 'R').length,
       estados: this._byEntidad!.size,
       municipios: this._byMunicipio!.size,
     };
@@ -257,8 +237,6 @@ export class LocalidadesCatalog {
    */
   static getTopByPopulation(n: number = 10): Localidad[] {
     this.loadData();
-    return [...this._data!]
-      .sort((a, b) => b.poblacion_total - a.poblacion_total)
-      .slice(0, n);
+    return [...this._data!].sort((a, b) => b.poblacion_total - a.poblacion_total).slice(0, n);
   }
 }

@@ -11,7 +11,9 @@ export class ConfigAutotransporteCatalog {
 
   private static getData(): ConfigAutotransporte[] {
     if (!this._data) {
-      this._data = loadCatalogObject<ConfigAutotransporte>('sat/carta_porte_3/config_autotransporte.json');
+      this._data = loadCatalogObject<ConfigAutotransporte>(
+        'sat/carta_porte_3/config_autotransporte.json'
+      );
     }
     return this._data;
   }
@@ -21,11 +23,11 @@ export class ConfigAutotransporteCatalog {
   }
 
   static getConfig(code: string): ConfigAutotransporte | undefined {
-    return this.getData().find(c => c.code === code.toUpperCase());
+    return this.getData().find((c) => c.code === code.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(c => c.code === code.toUpperCase());
+    return this.getData().some((c) => c.code === code.toUpperCase());
   }
 
   /**
@@ -40,14 +42,14 @@ export class ConfigAutotransporteCatalog {
    * Get configurations with trailer
    */
   static getWithRemolque(): ConfigAutotransporte[] {
-    return this.getData().filter(c => c.remolque);
+    return this.getData().filter((c) => c.remolque);
   }
 
   /**
    * Get configurations without trailer
    */
   static getWithoutRemolque(): ConfigAutotransporte[] {
-    return this.getData().filter(c => !c.remolque);
+    return this.getData().filter((c) => !c.remolque);
   }
 
   /**
@@ -62,8 +64,6 @@ export class ConfigAutotransporteCatalog {
    */
   static searchByDescription(keyword: string): ConfigAutotransporte[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(c =>
-      c.descripcion.toUpperCase().includes(search)
-    );
+    return this.getData().filter((c) => c.descripcion.toUpperCase().includes(search));
   }
 }

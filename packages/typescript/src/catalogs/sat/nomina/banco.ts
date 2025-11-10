@@ -21,11 +21,11 @@ export class BancoNominaCatalog {
   }
 
   static getBanco(code: string): BancoNomina | undefined {
-    return this.getData().find(b => b.code === code);
+    return this.getData().find((b) => b.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(b => b.code === code);
+    return this.getData().some((b) => b.code === code);
   }
 
   /**
@@ -47,9 +47,8 @@ export class BancoNominaCatalog {
    */
   static searchByName(keyword: string): BancoNomina[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(b =>
-      b.name.toUpperCase().includes(search) ||
-      b.razon_social.toUpperCase().includes(search)
+    return this.getData().filter(
+      (b) => b.name.toUpperCase().includes(search) || b.razon_social.toUpperCase().includes(search)
     );
   }
 }

@@ -21,11 +21,11 @@ export class TipoRelacionCatalog {
   }
 
   static getRelacion(code: string): TipoRelacion | undefined {
-    return this.getData().find(r => r.code === code);
+    return this.getData().find((r) => r.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(r => r.code === code);
+    return this.getData().some((r) => r.code === code);
   }
 
   /**
@@ -54,8 +54,6 @@ export class TipoRelacionCatalog {
    */
   static searchByDescription(keyword: string): TipoRelacion[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(r =>
-      r.description.toUpperCase().includes(search)
-    );
+    return this.getData().filter((r) => r.description.toUpperCase().includes(search));
   }
 }

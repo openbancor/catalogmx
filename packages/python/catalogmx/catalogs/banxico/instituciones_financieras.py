@@ -15,6 +15,7 @@ from catalogmx.utils.text import normalize_text
 
 class TipoInstitucionFinanciera(TypedDict):
     """Estructura de un tipo de institución financiera"""
+
     codigo: str
     tipo: str
     descripcion: str
@@ -66,12 +67,14 @@ class InstitucionesFinancieras:
         # Target: catalogmx/packages/shared-data/banxico/instituciones_financieras.json
         data_path = (
             Path(__file__).parent.parent.parent.parent.parent
-            / 'shared-data' / 'banxico' / 'instituciones_financieras.json'
+            / "shared-data"
+            / "banxico"
+            / "instituciones_financieras.json"
         )
 
-        with open(data_path, encoding='utf-8') as f:
+        with open(data_path, encoding="utf-8") as f:
             json_data = json.load(f)
-            cls._data = json_data['tipos_institucion']
+            cls._data = json_data["tipos_institucion"]
 
     @classmethod
     def get_all(cls) -> list[TipoInstitucionFinanciera]:
@@ -105,7 +108,7 @@ class InstitucionesFinancieras:
         """
         cls._load_data()
         for inst in cls._data:  # type: ignore
-            if inst['codigo'] == codigo:
+            if inst["codigo"] == codigo:
                 return inst
         return None
 
@@ -128,8 +131,9 @@ class InstitucionesFinancieras:
         cls._load_data()
         tipo_normalized = normalize_text(tipo)
         return [
-            inst for inst in cls._data  # type: ignore
-            if tipo_normalized in normalize_text(inst['tipo'])
+            inst
+            for inst in cls._data  # type: ignore
+            if tipo_normalized in normalize_text(inst["tipo"])
         ]
 
     @classmethod
@@ -150,8 +154,9 @@ class InstitucionesFinancieras:
         cls._load_data()
         regulador_normalized = normalize_text(regulador)
         return [
-            inst for inst in cls._data  # type: ignore
-            if regulador_normalized in normalize_text(inst['regulador'])
+            inst
+            for inst in cls._data  # type: ignore
+            if regulador_normalized in normalize_text(inst["regulador"])
         ]
 
     @classmethod
@@ -168,10 +173,7 @@ class InstitucionesFinancieras:
             ...     print(f"{banco['tipo']}: {', '.join(banco['ejemplos'][:3])}")
         """
         cls._load_data()
-        return [
-            inst for inst in cls._data  # type: ignore
-            if 'banco' in inst['tipo'].lower()
-        ]
+        return [inst for inst in cls._data if "banco" in inst["tipo"].lower()]  # type: ignore
 
     @classmethod
     def get_sofomes(cls) -> list[TipoInstitucionFinanciera]:
@@ -187,10 +189,7 @@ class InstitucionesFinancieras:
             ...     print(f"{sofom['tipo']} - {sofom['regulador']}")
         """
         cls._load_data()
-        return [
-            inst for inst in cls._data  # type: ignore
-            if 'SOFOM' in inst['tipo']
-        ]
+        return [inst for inst in cls._data if "SOFOM" in inst["tipo"]]  # type: ignore
 
     @classmethod
     def get_sector_popular(cls) -> list[TipoInstitucionFinanciera]:
@@ -207,10 +206,12 @@ class InstitucionesFinancieras:
         """
         cls._load_data()
         return [
-            inst for inst in cls._data  # type: ignore
-            if any(keyword in inst['tipo'] for keyword in [
-                'Cooperativa', 'Financiera Popular', 'Ahorro y Crédito'
-            ])
+            inst
+            for inst in cls._data  # type: ignore
+            if any(
+                keyword in inst["tipo"]
+                for keyword in ["Cooperativa", "Financiera Popular", "Ahorro y Crédito"]
+            )
         ]
 
     @classmethod
@@ -228,8 +229,9 @@ class InstitucionesFinancieras:
         """
         cls._load_data()
         return [
-            inst for inst in cls._data  # type: ignore
-            if 'Seguros' in inst['tipo'] or 'Fianzas' in inst['tipo']
+            inst
+            for inst in cls._data  # type: ignore
+            if "Seguros" in inst["tipo"] or "Fianzas" in inst["tipo"]
         ]
 
     @classmethod
@@ -247,10 +249,12 @@ class InstitucionesFinancieras:
         """
         cls._load_data()
         return [
-            inst for inst in cls._data  # type: ignore
-            if any(keyword in inst['tipo'] for keyword in [
-                'Bolsa', 'Casa de Bolsa', 'Valores', 'Inversión'
-            ])
+            inst
+            for inst in cls._data  # type: ignore
+            if any(
+                keyword in inst["tipo"]
+                for keyword in ["Bolsa", "Casa de Bolsa", "Valores", "Inversión"]
+            )
         ]
 
     @classmethod
@@ -268,8 +272,7 @@ class InstitucionesFinancieras:
         """
         cls._load_data()
         return [
-            inst for inst in cls._data  # type: ignore
-            if 'Tecnología Financiera' in inst['tipo']
+            inst for inst in cls._data if "Tecnología Financiera" in inst["tipo"]  # type: ignore
         ]
 
     @classmethod
@@ -287,8 +290,9 @@ class InstitucionesFinancieras:
         """
         cls._load_data()
         return [
-            inst for inst in cls._data  # type: ignore
-            if 'AFORE' in inst['tipo'] or 'SIEFORE' in inst['tipo']
+            inst
+            for inst in cls._data  # type: ignore
+            if "AFORE" in inst["tipo"] or "SIEFORE" in inst["tipo"]
         ]
 
     @classmethod
@@ -307,7 +311,7 @@ class InstitucionesFinancieras:
             >>> InstitucionesFinancieras.validar_codigo("99")  # False
         """
         cls._load_data()
-        return any(inst['codigo'] == codigo for inst in cls._data)  # type: ignore
+        return any(inst["codigo"] == codigo for inst in cls._data)  # type: ignore
 
     @classmethod
     def get_descripcion_regulador(cls, siglas: str) -> str | None:
@@ -325,10 +329,10 @@ class InstitucionesFinancieras:
             >>> print(desc)  # "Comisión Nacional Bancaria y de Valores"
         """
         reguladores = {
-            'CNBV': 'Comisión Nacional Bancaria y de Valores',
-            'CNSF': 'Comisión Nacional de Seguros y Fianzas',
-            'CONSAR': 'Comisión Nacional del Sistema de Ahorro para el Retiro',
-            'CONDUSEF': 'Comisión Nacional para la Protección y Defensa de los Usuarios de Servicios Financieros',
-            'SHCP': 'Secretaría de Hacienda y Crédito Público',
+            "CNBV": "Comisión Nacional Bancaria y de Valores",
+            "CNSF": "Comisión Nacional de Seguros y Fianzas",
+            "CONSAR": "Comisión Nacional del Sistema de Ahorro para el Retiro",
+            "CONDUSEF": "Comisión Nacional para la Protección y Defensa de los Usuarios de Servicios Financieros",
+            "SHCP": "Secretaría de Hacienda y Crédito Público",
         }
         return reguladores.get(siglas.upper())

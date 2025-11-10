@@ -21,11 +21,11 @@ export class PeriodicidadPagoCatalog {
   }
 
   static getPeriodicidad(code: string): PeriodicidadPago | undefined {
-    return this.getData().find(p => p.code === code);
+    return this.getData().find((p) => p.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(p => p.code === code);
+    return this.getData().some((p) => p.code === code);
   }
 
   /**
@@ -68,8 +68,6 @@ export class PeriodicidadPagoCatalog {
    */
   static searchByDescription(keyword: string): PeriodicidadPago[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(p =>
-      p.descripcion.toUpperCase().includes(search)
-    );
+    return this.getData().filter((p) => p.descripcion.toUpperCase().includes(search));
   }
 }

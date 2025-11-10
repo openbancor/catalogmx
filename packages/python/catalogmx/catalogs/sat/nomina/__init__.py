@@ -9,11 +9,11 @@ from .tipo_nomina import TipoNominaCatalog
 from .tipo_regimen import TipoRegimenCatalog
 
 __all__ = [
-    'TipoNominaCatalog',
-    'TipoContratoCatalog',
-    'TipoJornadaCatalog',
-    'TipoRegimenCatalog',
-    'PeriodicidadPagoCatalog',
-    'RiesgoPuestoCatalog',
-    'BancoCatalog',
+    "TipoNominaCatalog",
+    "TipoContratoCatalog",
+    "TipoJornadaCatalog",
+    "TipoRegimenCatalog",
+    "PeriodicidadPagoCatalog",
+    "RiesgoPuestoCatalog",
+    "BancoCatalog",
 ]

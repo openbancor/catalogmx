@@ -4,6 +4,7 @@ Bank Catalog from Banxico
 This module provides access to the official catalog of Mexican banks
 participating in the SPEI (Sistema de Pagos Electrónicos Interbancarios).
 """
+
 import json
 from pathlib import Path
 
@@ -27,16 +28,23 @@ class BankCatalog:
             # Path: catalogmx/packages/python/catalogmx/catalogs/banxico/banks.py
             # Target: catalogmx/packages/shared-data/banxico/banks.json
             current_file = Path(__file__)
-            shared_data_path = current_file.parent.parent.parent.parent.parent / 'shared-data' / 'banxico' / 'banks.json'
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "banxico"
+                / "banks.json"
+            )
 
-            with open(shared_data_path, encoding='utf-8') as f:
+            with open(shared_data_path, encoding="utf-8") as f:
                 cls._data = json.load(f)
 
             # Create lookup dictionaries
-            cls._bank_by_code = {bank['code']: bank for bank in cls._data}
-            cls._bank_by_name = {bank['name'].upper(): bank for bank in cls._data}
+            cls._bank_by_code = {bank["code"]: bank for bank in cls._data}
+            cls._bank_by_name = {bank["name"].upper(): bank for bank in cls._data}
             # Accent-insensitive lookup
-            cls._bank_by_name_normalized = {normalize_text(bank['name']): bank for bank in cls._data}
+            cls._bank_by_name_normalized = {
+                normalize_text(bank["name"]): bank for bank in cls._data
+            }
 
     @classmethod
     def get_all_banks(cls) -> list[dict]:
@@ -85,7 +93,7 @@ class BankCatalog:
         :return: True if bank participates in SPEI, False otherwise
         """
         bank = cls.get_bank_by_code(code)
-        return bank.get('spei', False) if bank else False
+        return bank.get("spei", False) if bank else False
 
     @classmethod
     def get_spei_banks(cls) -> list[dict]:
@@ -95,7 +103,7 @@ class BankCatalog:
         :return: List of SPEI participant banks
         """
         cls._load_data()
-        return [bank for bank in cls._data if bank.get('spei', False)]
+        return [bank for bank in cls._data if bank.get("spei", False)]
 
     @classmethod
     def validate_bank_code(cls, code: str) -> bool:
@@ -122,7 +130,7 @@ def get_spei_banks() -> list[dict]:
 
 # Export commonly used functions
 __all__ = [
-    'BankCatalog',
-    'get_banks_dict',
-    'get_spei_banks',
+    "BankCatalog",
+    "get_banks_dict",
+    "get_spei_banks",
 ]

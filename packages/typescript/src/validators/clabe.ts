@@ -30,7 +30,9 @@ export class CLABEValidator {
   validate(): boolean {
     // Check length
     if (this.clabe.length !== CLABEValidator.LENGTH) {
-      throw new Error(`CLABE length must be ${CLABEValidator.LENGTH} digits, got ${this.clabe.length}`);
+      throw new Error(
+        `CLABE length must be ${CLABEValidator.LENGTH} digits, got ${this.clabe.length}`
+      );
     }
 
     // Check if all characters are digits
@@ -121,13 +123,18 @@ export class CLABEValidator {
   /**
    * Get CLABE components
    */
-  getComponents(): { bankCode: string; branchCode: string; accountNumber: string; checkDigit: string } | null {
+  getComponents(): {
+    bankCode: string;
+    branchCode: string;
+    accountNumber: string;
+    checkDigit: string;
+  } | null {
     if (!this.isValid()) return null;
     return {
       bankCode: this.clabe.slice(0, 3),
       branchCode: this.clabe.slice(3, 6),
       accountNumber: this.clabe.slice(6, 17),
-      checkDigit: this.clabe[17]
+      checkDigit: this.clabe[17],
     };
   }
 }

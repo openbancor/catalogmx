@@ -21,7 +21,7 @@ export class FormaPagoCatalog {
   }
 
   static getForma(code: string): FormaPago | undefined {
-    return this.getData().find(forma => forma.code === code);
+    return this.getData().find((forma) => forma.code === code);
   }
 
   static isBancarizado(code: string): boolean {
@@ -30,13 +30,11 @@ export class FormaPagoCatalog {
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(forma => forma.code === code);
+    return this.getData().some((forma) => forma.code === code);
   }
 
   static searchByDescription(keyword: string): FormaPago[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(forma =>
-      forma.description.toUpperCase().includes(search)
-    );
+    return this.getData().filter((forma) => forma.description.toUpperCase().includes(search));
   }
 }

@@ -21,11 +21,11 @@ export class ExportacionCatalog {
   }
 
   static getExportacion(code: string): Exportacion | undefined {
-    return this.getData().find(e => e.code === code);
+    return this.getData().find((e) => e.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(e => e.code === code);
+    return this.getData().some((e) => e.code === code);
   }
 
   /**

@@ -28,15 +28,15 @@ from .tipo_relacion import TipoRelacionCatalog
 from .uso_cfdi import UsoCFDICatalog
 
 __all__ = [
-    'RegimenFiscalCatalog',
-    'UsoCFDICatalog',
-    'FormaPagoCatalog',
-    'MetodoPagoCatalog',
-    'TipoComprobanteCatalog',
-    'ImpuestoCatalog',
-    'ExportacionCatalog',
-    'TipoRelacionCatalog',
-    'ObjetoImpCatalog',
-    'ClaveUnidadCatalog',
-    'ClaveProdServCatalog',
+    "RegimenFiscalCatalog",
+    "UsoCFDICatalog",
+    "FormaPagoCatalog",
+    "MetodoPagoCatalog",
+    "TipoComprobanteCatalog",
+    "ImpuestoCatalog",
+    "ExportacionCatalog",
+    "TipoRelacionCatalog",
+    "ObjetoImpCatalog",
+    "ClaveUnidadCatalog",
+    "ClaveProdServCatalog",
 ]

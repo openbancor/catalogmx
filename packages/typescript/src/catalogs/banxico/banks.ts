@@ -30,7 +30,7 @@ export class BankCatalog {
    * Get bank by code
    */
   static getBankByCode(code: string): Bank | undefined {
-    return this.getData().find(bank => bank.code === code);
+    return this.getData().find((bank) => bank.code === code);
   }
 
   /**
@@ -38,10 +38,11 @@ export class BankCatalog {
    */
   static getBankByName(name: string): Bank | undefined {
     const searchName = name.toUpperCase();
-    return this.getData().find(bank =>
-      bank.name.toUpperCase().includes(searchName) ||
-      bank.short_name?.toUpperCase().includes(searchName) ||
-      bank.full_name?.toUpperCase().includes(searchName)
+    return this.getData().find(
+      (bank) =>
+        bank.name.toUpperCase().includes(searchName) ||
+        bank.short_name?.toUpperCase().includes(searchName) ||
+        bank.full_name?.toUpperCase().includes(searchName)
     );
   }
 
@@ -50,11 +51,12 @@ export class BankCatalog {
    */
   static searchBanks(keyword: string): Bank[] {
     const searchTerm = keyword.toUpperCase();
-    return this.getData().filter(bank =>
-      bank.name.toUpperCase().includes(searchTerm) ||
-      bank.short_name?.toUpperCase().includes(searchTerm) ||
-      bank.full_name?.toUpperCase().includes(searchTerm) ||
-      bank.code.includes(searchTerm)
+    return this.getData().filter(
+      (bank) =>
+        bank.name.toUpperCase().includes(searchTerm) ||
+        bank.short_name?.toUpperCase().includes(searchTerm) ||
+        bank.full_name?.toUpperCase().includes(searchTerm) ||
+        bank.code.includes(searchTerm)
     );
   }
 
@@ -62,14 +64,14 @@ export class BankCatalog {
    * Get all banks with SPEI support
    */
   static getSPEIBanks(): Bank[] {
-    return this.getData().filter(bank => bank.spei === true);
+    return this.getData().filter((bank) => bank.spei === true);
   }
 
   /**
    * Check if a bank code is valid
    */
   static isValidCode(code: string): boolean {
-    return this.getData().some(bank => bank.code === code);
+    return this.getData().some((bank) => bank.code === code);
   }
 
   /**

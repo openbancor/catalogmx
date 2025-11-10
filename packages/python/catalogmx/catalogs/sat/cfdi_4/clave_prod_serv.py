@@ -15,6 +15,7 @@ from typing import TypedDict
 
 class ClaveProdServ(TypedDict):
     """Estructura de una clave de producto/servicio"""
+
     id: str
     descripcion: str
     incluirIVATrasladado: str
@@ -70,7 +71,9 @@ class ClaveProdServCatalog:
             # Target: catalogmx/packages/shared-data/sqlite/clave_prod_serv.db
             cls._db_path = (
                 Path(__file__).parent.parent.parent.parent.parent.parent
-                / 'shared-data' / 'sqlite' / 'clave_prod_serv.db'
+                / "shared-data"
+                / "sqlite"
+                / "clave_prod_serv.db"
             )
         return cls._db_path
 
@@ -92,15 +95,15 @@ class ClaveProdServCatalog:
     def _row_to_clave(cls, row: sqlite3.Row) -> ClaveProdServ:
         """Convierte una fila de SQLite a ClaveProdServ"""
         return {
-            'id': row['clave'],
-            'descripcion': row['descripcion'],
-            'incluirIVATrasladado': 'Sí' if row['incluye_iva'] == 1 else 'No',
-            'incluirIEPSTrasladado': 'Sí' if row['incluye_ieps'] == 1 else 'No',
-            'complementoQueDebeIncluir': row['complemento'] or '',
-            'palabrasSimilares': row['palabras_similares'] or '',
-            'fechaInicioVigencia': row['fecha_inicio_vigencia'] or '',
-            'fechaFinVigencia': row['fecha_fin_vigencia'] or '',
-            'estimuloFranjaFronteriza': ''
+            "id": row["clave"],
+            "descripcion": row["descripcion"],
+            "incluirIVATrasladado": "Sí" if row["incluye_iva"] == 1 else "No",
+            "incluirIEPSTrasladado": "Sí" if row["incluye_ieps"] == 1 else "No",
+            "complementoQueDebeIncluir": row["complemento"] or "",
+            "palabrasSimilares": row["palabras_similares"] or "",
+            "fechaInicioVigencia": row["fecha_inicio_vigencia"] or "",
+            "fechaFinVigencia": row["fecha_fin_vigencia"] or "",
+            "estimuloFranjaFronteriza": "",
         }
 
     @classmethod
@@ -120,7 +123,7 @@ class ClaveProdServCatalog:
         """
         conn = cls._get_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM clave_prod_serv')
+        cursor.execute("SELECT * FROM clave_prod_serv")
         return [cls._row_to_clave(row) for row in cursor.fetchall()]
 
     @classmethod
@@ -141,7 +144,7 @@ class ClaveProdServCatalog:
         """
         conn = cls._get_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM clave_prod_serv WHERE clave = ?', (id,))
+        cursor.execute("SELECT * FROM clave_prod_serv WHERE clave = ?", (id,))
         row = cursor.fetchone()
         return cls._row_to_clave(row) if row else None
 
@@ -214,7 +217,7 @@ class ClaveProdServCatalog:
         conn = cls._get_connection()
         cursor = conn.cursor()
 
-        keyword_pattern = f'%{keyword}%'
+        keyword_pattern = f"%{keyword}%"
         query = """
             SELECT * FROM clave_prod_serv
             WHERE descripcion LIKE ? OR palabras_similares LIKE ?
@@ -258,7 +261,7 @@ class ClaveProdServCatalog:
             LIMIT ?
         """
 
-        cursor.execute(query, (f'{prefix}%', limit))
+        cursor.execute(query, (f"{prefix}%", limit))
         return [cls._row_to_clave(row) for row in cursor.fetchall()]
 
     @classmethod
@@ -278,10 +281,7 @@ class ClaveProdServCatalog:
         """
         conn = cls._get_connection()
         cursor = conn.cursor()
-        cursor.execute(
-            'SELECT * FROM clave_prod_serv WHERE incluye_iva = 1 LIMIT ?',
-            (limit,)
-        )
+        cursor.execute("SELECT * FROM clave_prod_serv WHERE incluye_iva = 1 LIMIT ?", (limit,))
         return [cls._row_to_clave(row) for row in cursor.fetchall()]
 
     @classmethod
@@ -301,10 +301,7 @@ class ClaveProdServCatalog:
         """
         conn = cls._get_connection()
         cursor = conn.cursor()
-        cursor.execute(
-            'SELECT * FROM clave_prod_serv WHERE incluye_ieps = 1 LIMIT ?',
-            (limit,)
-        )
+        cursor.execute("SELECT * FROM clave_prod_serv WHERE incluye_ieps = 1 LIMIT ?", (limit,))
         return [cls._row_to_clave(row) for row in cursor.fetchall()]
 
     @classmethod
@@ -325,7 +322,7 @@ class ClaveProdServCatalog:
         cursor = conn.cursor()
         cursor.execute(
             "SELECT * FROM clave_prod_serv WHERE fecha_fin_vigencia IS NULL OR fecha_fin_vigencia = '' LIMIT ?",
-            (limit,)
+            (limit,),
         )
         return [cls._row_to_clave(row) for row in cursor.fetchall()]
 
@@ -343,7 +340,7 @@ class ClaveProdServCatalog:
         """
         conn = cls._get_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT COUNT(*) FROM clave_prod_serv')
+        cursor.execute("SELECT COUNT(*) FROM clave_prod_serv")
         return cursor.fetchone()[0]
 
     @classmethod
@@ -363,13 +360,13 @@ class ClaveProdServCatalog:
         conn = cls._get_connection()
         cursor = conn.cursor()
 
-        cursor.execute('SELECT COUNT(*) FROM clave_prod_serv')
+        cursor.execute("SELECT COUNT(*) FROM clave_prod_serv")
         total = cursor.fetchone()[0]
 
-        cursor.execute('SELECT COUNT(*) FROM clave_prod_serv WHERE incluye_iva = 1')
+        cursor.execute("SELECT COUNT(*) FROM clave_prod_serv WHERE incluye_iva = 1")
         con_iva = cursor.fetchone()[0]
 
-        cursor.execute('SELECT COUNT(*) FROM clave_prod_serv WHERE incluye_ieps = 1')
+        cursor.execute("SELECT COUNT(*) FROM clave_prod_serv WHERE incluye_ieps = 1")
         con_ieps = cursor.fetchone()[0]
 
         cursor.execute(
@@ -378,9 +375,9 @@ class ClaveProdServCatalog:
         vigentes = cursor.fetchone()[0]
 
         return {
-            'total': total,
-            'con_iva': con_iva,
-            'con_ieps': con_ieps,
-            'vigentes': vigentes,
-            'obsoletos': total - vigentes
+            "total": total,
+            "con_iva": con_iva,
+            "con_ieps": con_ieps,
+            "vigentes": vigentes,
+            "obsoletos": total - vigentes,
         }

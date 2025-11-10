@@ -1,4 +1,5 @@
 """Catálogo c_RegimenFiscal"""
+
 import json
 from pathlib import Path
 
@@ -13,11 +14,17 @@ class RegimenFiscalCatalog:
     def _load_data(cls) -> None:
         """Carga los datos del catálogo si aún no han sido cargados"""
         if cls._data is None:
-            path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'cfdi_4.0' / 'regimen_fiscal.json'
-            with open(path, encoding='utf-8') as f:
+            path = (
+                Path(__file__).parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "cfdi_4.0"
+                / "regimen_fiscal.json"
+            )
+            with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data['regimenes']
-            cls._by_code = {item['code']: item for item in cls._data}
+                cls._data = data["regimenes"]
+            cls._by_code = {item["code"]: item for item in cls._data}
 
     @classmethod
     def get_regimen(cls, code: str) -> dict | None:
@@ -34,13 +41,13 @@ class RegimenFiscalCatalog:
     def is_valid_for_persona_fisica(cls, code: str) -> bool:
         """Valida si un régimen es válido para persona física"""
         regimen = cls.get_regimen(code)
-        return regimen.get('fisica', False) if regimen else False
+        return regimen.get("fisica", False) if regimen else False
 
     @classmethod
     def is_valid_for_persona_moral(cls, code: str) -> bool:
         """Valida si un régimen es válido para persona moral"""
         regimen = cls.get_regimen(code)
-        return regimen.get('moral', False) if regimen else False
+        return regimen.get("moral", False) if regimen else False
 
     @classmethod
     def get_all(cls) -> list[dict]:

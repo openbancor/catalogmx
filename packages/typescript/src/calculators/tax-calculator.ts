@@ -48,10 +48,7 @@ export class IVACalculator {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(
-      __dirname,
-      '../../../shared-data/sat/impuestos/iva_tasas.json'
-    );
+    const dataPath = path.resolve(__dirname, '../../../shared-data/sat/impuestos/iva_tasas.json');
     const rawData = fs.readFileSync(dataPath, 'utf-8');
     this._data = JSON.parse(rawData) as IVAData;
   }
@@ -70,9 +67,9 @@ export class IVACalculator {
 
     const fechaDate = typeof fecha === 'string' ? new Date(fecha) : fecha;
 
-    const tasasDelTipo = this._data!.tasas.filter(t => t.tipo === tipoTasa);
+    const tasasDelTipo = this._data!.tasas.filter((t) => t.tipo === tipoTasa);
 
-    return tasasDelTipo.find(tasa => {
+    return tasasDelTipo.find((tasa) => {
       const inicioDate = new Date(tasa.vigencia_inicio);
       const finDate = tasa.vigencia_fin ? new Date(tasa.vigencia_fin) : null;
 
@@ -165,10 +162,7 @@ export class IEPSCalculator {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(
-      __dirname,
-      '../../../shared-data/sat/impuestos/ieps_tasas.json'
-    );
+    const dataPath = path.resolve(__dirname, '../../../shared-data/sat/impuestos/ieps_tasas.json');
     const rawData = fs.readFileSync(dataPath, 'utf-8');
     this._data = JSON.parse(rawData) as IEPSCategoria[];
   }
@@ -180,7 +174,7 @@ export class IEPSCalculator {
    */
   static getCategoria(categoria: string): IEPSCategoria | undefined {
     this.loadData();
-    return this._data!.find(c => c.categoria === categoria);
+    return this._data!.find((c) => c.categoria === categoria);
   }
 
   /**
@@ -253,7 +247,7 @@ export class IEPSCalculator {
   static calcularCigarros(valor: number, numeroCigarros: number): IEPSCalculationResult {
     // IEPS = 160% del valor + $0.5080 por cigarro
     const iepsAdValorem = valor * (160 / 100);
-    const iepsCuotaFija = numeroCigarros * 0.5080;
+    const iepsCuotaFija = numeroCigarros * 0.508;
     const iepsTotal = iepsAdValorem + iepsCuotaFija;
 
     return {
@@ -284,10 +278,7 @@ export class RetencionCalculator {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(
-      __dirname,
-      '../../../shared-data/sat/impuestos/retenciones.json'
-    );
+    const dataPath = path.resolve(__dirname, '../../../shared-data/sat/impuestos/retenciones.json');
     const rawData = fs.readFileSync(dataPath, 'utf-8');
     this._data = JSON.parse(rawData) as RetencionesData;
   }
@@ -299,7 +290,7 @@ export class RetencionCalculator {
    */
   static getRetencionISR(concepto: string): RetencionISR | undefined {
     this.loadData();
-    return this._data!.isr_retenciones.find(r => r.concepto === concepto);
+    return this._data!.isr_retenciones.find((r) => r.concepto === concepto);
   }
 
   /**
@@ -309,7 +300,7 @@ export class RetencionCalculator {
    */
   static getRetencionIVA(concepto: string): RetencionIVA | undefined {
     this.loadData();
-    return this._data!.iva_retenciones.find(r => r.concepto === concepto);
+    return this._data!.iva_retenciones.find((r) => r.concepto === concepto);
   }
 
   /**
@@ -433,7 +424,7 @@ export class ImpuestosLocalesCalculator {
    */
   static getImpuestoNomina(cveEstado: string): ImpuestoEstatal | undefined {
     this.loadData();
-    return this._data!.impuesto_nomina.find(i => i.cve_estado === cveEstado.padStart(2, '0'));
+    return this._data!.impuesto_nomina.find((i) => i.cve_estado === cveEstado.padStart(2, '0'));
   }
 
   /**
@@ -459,7 +450,7 @@ export class ImpuestosLocalesCalculator {
    */
   static getImpuestoHospedaje(cveEstado: string): ImpuestoEstatal | undefined {
     this.loadData();
-    return this._data!.impuesto_hospedaje.find(i => i.cve_estado === cveEstado.padStart(2, '0'));
+    return this._data!.impuesto_hospedaje.find((i) => i.cve_estado === cveEstado.padStart(2, '0'));
   }
 
   /**

@@ -21,11 +21,11 @@ export class MetodoPagoCatalog {
   }
 
   static getMetodo(code: string): MetodoPago | undefined {
-    return this.getData().find(m => m.code === code.toUpperCase());
+    return this.getData().find((m) => m.code === code.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(m => m.code === code.toUpperCase());
+    return this.getData().some((m) => m.code === code.toUpperCase());
   }
 
   /**

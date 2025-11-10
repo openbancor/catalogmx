@@ -15,14 +15,19 @@ class MotivoTrasladoCatalog:
         """Carga los datos del catálogo desde el archivo JSON compartido"""
         if cls._data is None:
             current_file = Path(__file__)
-            shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
-                              / 'shared-data' / 'sat' / 'comercio_exterior' / 'motivos_traslado.json')
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "comercio_exterior"
+                / "motivos_traslado.json"
+            )
 
-            with open(shared_data_path, encoding='utf-8') as f:
+            with open(shared_data_path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data['motivos']
+                cls._data = data["motivos"]
 
-            cls._motivo_by_code = {item['code']: item for item in cls._data}
+            cls._motivo_by_code = {item["code"]: item for item in cls._data}
 
     @classmethod
     def get_motivo(cls, code: str) -> dict | None:
@@ -39,7 +44,7 @@ class MotivoTrasladoCatalog:
     def requires_propietario(cls, code: str) -> bool:
         """Verifica si el motivo requiere nodo <Propietario>"""
         motivo = cls.get_motivo(code)
-        return motivo.get('requires_propietario', False) if motivo else False
+        return motivo.get("requires_propietario", False) if motivo else False
 
     @classmethod
     def get_all(cls) -> list[dict]:

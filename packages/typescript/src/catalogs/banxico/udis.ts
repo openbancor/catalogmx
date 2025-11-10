@@ -104,8 +104,8 @@ export class UDICatalog {
       return this._daily[this._daily.length - 1];
     }
 
-    const sorted = [...this.getData()].sort((a, b) =>
-      new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+    const sorted = [...this.getData()].sort(
+      (a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
     );
     return sorted[0];
   }
@@ -117,9 +117,10 @@ export class UDICatalog {
     const date = typeof fecha === 'string' ? new Date(fecha) : fecha;
     this.loadData();
 
-    const candidates = this._daily && this._daily.length > 0
-      ? this._daily
-      : this.getData().filter(u => u.tipo === 'promedio_mensual');
+    const candidates =
+      this._daily && this._daily.length > 0
+        ? this._daily
+        : this.getData().filter((u) => u.tipo === 'promedio_mensual');
 
     let closest: UDI | undefined;
     let smallestDiff = Number.POSITIVE_INFINITY;
@@ -159,14 +160,17 @@ export class UDICatalog {
     const fin = new Date(fechaFin);
     this.loadData();
 
-    const source = this._daily && this._daily.length > 0
-      ? this._daily
-      : this.getData().filter(u => u.tipo === 'promedio_mensual');
+    const source =
+      this._daily && this._daily.length > 0
+        ? this._daily
+        : this.getData().filter((u) => u.tipo === 'promedio_mensual');
 
-    return source.filter(u => {
-      const fecha = new Date(u.fecha);
-      return fecha >= inicio && fecha <= fin;
-    }).sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+    return source
+      .filter((u) => {
+        const fecha = new Date(u.fecha);
+        return fecha >= inicio && fecha <= fin;
+      })
+      .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
   }
 
   /**
@@ -174,12 +178,13 @@ export class UDICatalog {
    */
   static getPorAño(año: number): UDI[] {
     this.loadData();
-    const source = this._daily && this._daily.length > 0
-      ? this._daily
-      : this.getData().filter(u => u.tipo === 'promedio_mensual');
+    const source =
+      this._daily && this._daily.length > 0
+        ? this._daily
+        : this.getData().filter((u) => u.tipo === 'promedio_mensual');
 
     return source
-      .filter(u => u.año === año)
+      .filter((u) => u.año === año)
       .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
   }
 
@@ -198,6 +203,6 @@ export class UDICatalog {
    * Get initial UDI value (April 4, 1995)
    */
   static getValorInicial(): UDI | undefined {
-    return this.getData().find(u => u.tipo === 'valor_inicial');
+    return this.getData().find((u) => u.tipo === 'valor_inicial');
   }
 }

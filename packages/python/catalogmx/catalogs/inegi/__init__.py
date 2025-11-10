@@ -14,8 +14,8 @@ from .municipios_completo import MunicipiosCompletoCatalog
 from .states import StateCatalog
 
 __all__ = [
-    'MunicipiosCatalog',
-    'MunicipiosCompletoCatalog',
-    'LocalidadesCatalog',
-    'StateCatalog',
+    "MunicipiosCatalog",
+    "MunicipiosCompletoCatalog",
+    "LocalidadesCatalog",
+    "StateCatalog",
 ]

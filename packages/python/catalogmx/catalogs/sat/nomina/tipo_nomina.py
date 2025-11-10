@@ -1,4 +1,5 @@
 """Catálogo c_TipoNomina"""
+
 import json
 from pathlib import Path
 
@@ -10,11 +11,17 @@ class TipoNominaCatalog:
     @classmethod
     def _load_data(cls) -> None:
         if cls._data is None:
-            path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'nomina_1.2' / 'tipo_nomina.json'
-            with open(path, encoding='utf-8') as f:
+            path = (
+                Path(__file__).parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "nomina_1.2"
+                / "tipo_nomina.json"
+            )
+            with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data['tipos']
-            cls._by_code = {item['code']: item for item in cls._data}
+                cls._data = data["tipos"]
+            cls._by_code = {item["code"]: item for item in cls._data}
 
     @classmethod
     def get_tipo(cls, code: str) -> dict | None:
@@ -36,9 +43,9 @@ class TipoNominaCatalog:
     @classmethod
     def is_ordinaria(cls, code: str) -> bool:
         """Verifica si es nómina ordinaria"""
-        return code == 'O'
+        return code == "O"
 
     @classmethod
     def is_extraordinaria(cls, code: str) -> bool:
         """Verifica si es nómina extraordinaria"""
-        return code == 'E'
+        return code == "E"

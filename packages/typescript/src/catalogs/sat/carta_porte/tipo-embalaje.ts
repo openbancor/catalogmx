@@ -21,11 +21,11 @@ export class TipoEmbalajeCatalog {
   }
 
   static getEmbalaje(code: string): TipoEmbalaje | undefined {
-    return this.getData().find(e => e.code === code.toUpperCase());
+    return this.getData().find((e) => e.code === code.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(e => e.code === code.toUpperCase());
+    return this.getData().some((e) => e.code === code.toUpperCase());
   }
 
   /**
@@ -47,16 +47,14 @@ export class TipoEmbalajeCatalog {
    */
   static searchByDescription(keyword: string): TipoEmbalaje[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(e =>
-      e.descripcion.toUpperCase().includes(search)
-    );
+    return this.getData().filter((e) => e.descripcion.toUpperCase().includes(search));
   }
 
   /**
    * Get packaging types by UN category
    */
   static getByCategoriaONU(categoria: string): TipoEmbalaje[] {
-    return this.getData().filter(e =>
+    return this.getData().filter((e) =>
       e.categoria_onu.toUpperCase().includes(categoria.toUpperCase())
     );
   }

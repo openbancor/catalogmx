@@ -1,4 +1,5 @@
 """Catálogo c_TipoPermiso - Tipos de Permiso"""
+
 import json
 from pathlib import Path
 
@@ -10,11 +11,17 @@ class TipoPermisoCatalog:
     @classmethod
     def _load_data(cls) -> None:
         if cls._data is None:
-            path = Path(__file__).parent.parent.parent.parent.parent.parent / 'shared-data' / 'sat' / 'carta_porte_3' / 'tipo_permiso.json'
-            with open(path, encoding='utf-8') as f:
+            path = (
+                Path(__file__).parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "carta_porte_3"
+                / "tipo_permiso.json"
+            )
+            with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data['permisos']
-            cls._by_code = {item['code']: item for item in cls._data}
+                cls._data = data["permisos"]
+            cls._by_code = {item["code"]: item for item in cls._data}
 
     @classmethod
     def get_permiso(cls, code: str) -> dict | None:
@@ -37,10 +44,10 @@ class TipoPermisoCatalog:
     def get_by_type(cls, tipo: str) -> list[dict]:
         """Obtiene permisos por tipo (Carga, Pasajeros)"""
         cls._load_data()
-        return [p for p in cls._data if p['type'] == tipo]
+        return [p for p in cls._data if p["type"] == tipo]
 
     @classmethod
     def is_carga_permit(cls, code: str) -> bool:
         """Verifica si es un permiso de carga"""
         permiso = cls.get_permiso(code)
-        return permiso.get('type') == 'Carga' if permiso else False
+        return permiso.get("type") == "Carga" if permiso else False

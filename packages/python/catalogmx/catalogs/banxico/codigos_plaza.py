@@ -20,12 +20,14 @@ except ImportError:
     def unidecode(text):
         return text
 
+
 class CodigoPlaza(TypedDict):
     """Estructura de un código de plaza CLABE."""
-    codigo: str          # Código de 3 dígitos
-    plaza: str           # Nombre de la plaza/ciudad
-    estado: str          # Estado
-    cve_entidad: str     # Código INEGI del estado
+
+    codigo: str  # Código de 3 dígitos
+    plaza: str  # Nombre de la plaza/ciudad
+    estado: str  # Estado
+    cve_entidad: str  # Código INEGI del estado
 
 
 class CodigosPlazaCatalog:
@@ -49,13 +51,12 @@ class CodigosPlazaCatalog:
             return
 
         data_path = os.path.join(
-            os.path.dirname(__file__),
-            '../../../../shared-data/banxico/codigos_plaza.json'
+            os.path.dirname(__file__), "../../../../shared-data/banxico/codigos_plaza.json"
         )
 
-        with open(data_path, encoding='utf-8') as f:
+        with open(data_path, encoding="utf-8") as f:
             catalog = json.load(f)
-            cls._data = catalog['plazas']
+            cls._data = catalog["plazas"]
 
         # Build indices
         cls._by_codigo = {}
@@ -65,23 +66,23 @@ class CodigosPlazaCatalog:
 
         for plaza in cls._data:
             # By codigo (puede haber múltiples plazas con el mismo código)
-            if plaza['codigo'] not in cls._by_codigo:
-                cls._by_codigo[plaza['codigo']] = []
-            cls._by_codigo[plaza['codigo']].append(plaza)
+            if plaza["codigo"] not in cls._by_codigo:
+                cls._by_codigo[plaza["codigo"]] = []
+            cls._by_codigo[plaza["codigo"]].append(plaza)
 
             # By estado
-            if plaza['estado'] not in cls._by_estado:
-                cls._by_estado[plaza['estado']] = []
-            cls._by_estado[plaza['estado']].append(plaza)
+            if plaza["estado"] not in cls._by_estado:
+                cls._by_estado[plaza["estado"]] = []
+            cls._by_estado[plaza["estado"]].append(plaza)
 
             # By plaza name (exact match)
-            plaza_key = plaza['plaza'].upper()
+            plaza_key = plaza["plaza"].upper()
             if plaza_key not in cls._by_plaza:
                 cls._by_plaza[plaza_key] = []
             cls._by_plaza[plaza_key].append(plaza)
 
             # By plaza name (normalized, accent-insensitive)
-            plaza_normalized = cls._normalize(plaza['plaza'])
+            plaza_normalized = cls._normalize(plaza["plaza"])
             if plaza_normalized not in cls._by_plaza_normalized:
                 cls._by_plaza_normalized[plaza_normalized] = []
             cls._by_plaza_normalized[plaza_normalized].append(plaza)
@@ -183,7 +184,7 @@ class CodigosPlazaCatalog:
             >>> print(f"Entidad 14 tiene {len(plazas)} plazas")
         """
         cls._load()
-        return [p for p in cls._data if p['cve_entidad'] == cve_entidad]
+        return [p for p in cls._data if p["cve_entidad"] == cve_entidad]
 
     @classmethod
     def validar_codigo_clabe(cls, codigo_plaza: str) -> dict:
@@ -208,10 +209,10 @@ class CodigosPlazaCatalog:
         plazas = cls.buscar_por_codigo(codigo_padded)
 
         return {
-            'valido': len(plazas) > 0,
-            'codigo': codigo_padded,
-            'plazas': plazas,
-            'num_plazas': len(plazas)
+            "valido": len(plazas) > 0,
+            "codigo": codigo_padded,
+            "plazas": plazas,
+            "num_plazas": len(plazas),
         }
 
     @classmethod
@@ -260,7 +261,7 @@ class CodigosPlazaCatalog:
         """
         cls._load()
         query_normalized = cls._normalize(query)
-        return [p for p in cls._data if query_normalized in cls._normalize(p['plaza'])]
+        return [p for p in cls._data if query_normalized in cls._normalize(p["plaza"])]
 
     @classmethod
     def get_estadisticas(cls) -> dict:
@@ -272,15 +273,15 @@ class CodigosPlazaCatalog:
         """
         cls._load()
 
-        estados = {p['estado'] for p in cls._data}
+        estados = {p["estado"] for p in cls._data}
         codigos_unicos = len(cls._by_codigo)
 
         return {
-            'total_plazas': len(cls._data),
-            'codigos_unicos': codigos_unicos,
-            'estados_cubiertos': len(estados),
-            'plazas_duplicadas': len(cls.get_plazas_duplicadas())
+            "total_plazas": len(cls._data),
+            "codigos_unicos": codigos_unicos,
+            "estados_cubiertos": len(estados),
+            "plazas_duplicadas": len(cls.get_plazas_duplicadas()),
         }
 
 
-__all__ = ['CodigosPlazaCatalog', 'CodigoPlaza']
+__all__ = ["CodigosPlazaCatalog", "CodigoPlaza"]

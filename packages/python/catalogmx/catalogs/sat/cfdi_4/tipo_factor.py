@@ -1,4 +1,5 @@
 """Catálogo de Tipos de Factor (SAT)"""
+
 import json
 
 from ....helpers import get_project_root
@@ -11,10 +12,10 @@ class TipoFactor:
     def _load_data(cls):
         if cls._data is None:
             root = get_project_root()
-            path = root / 'packages' / 'shared-data' / 'sat' / 'cfdi_4.0' / 'c_TipoFactor.json'
-            with open(path, encoding='utf-8') as f:
+            path = root / "packages" / "shared-data" / "sat" / "cfdi_4.0" / "c_TipoFactor.json"
+            with open(path, encoding="utf-8") as f:
                 json_data = json.load(f)
-                cls._data = {item['valor']: item for item in json_data['data']}
+                cls._data = {item["valor"]: item for item in json_data["data"]}
         return cls._data
 
     @classmethod

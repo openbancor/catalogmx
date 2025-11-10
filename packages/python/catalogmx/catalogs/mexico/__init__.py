@@ -10,8 +10,8 @@ from .salarios_minimos import SalariosMinimos
 from .uma import UMACatalog
 
 __all__ = [
-    'PlacasFormatosCatalog',
-    'SalariosMinimos',
-    'UMACatalog',
-    'HoyNoCirculaCatalog',
+    "PlacasFormatosCatalog",
+    "SalariosMinimos",
+    "UMACatalog",
+    "HoyNoCirculaCatalog",
 ]

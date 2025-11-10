@@ -21,23 +21,25 @@ export class RiesgoPuestoCatalog {
   }
 
   static getRiesgo(code: string): RiesgoPuesto | undefined {
-    return this.getData().find(r => r.code === code);
+    return this.getData().find((r) => r.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(r => r.code === code);
+    return this.getData().some((r) => r.code === code);
   }
 
   /**
    * Get premium range for risk level
    */
-  static getPrimaRange(code: string): { minima: number; media: number; maxima: number } | undefined {
+  static getPrimaRange(
+    code: string
+  ): { minima: number; media: number; maxima: number } | undefined {
     const riesgo = this.getRiesgo(code);
     if (!riesgo) return undefined;
     return {
       minima: riesgo.prima_minima,
       media: riesgo.prima_media,
-      maxima: riesgo.prima_maxima
+      maxima: riesgo.prima_maxima,
     };
   }
 

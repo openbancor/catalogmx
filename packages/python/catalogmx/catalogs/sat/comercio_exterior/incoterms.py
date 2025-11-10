@@ -23,15 +23,20 @@ class IncotermsValidator:
         if cls._data is None:
             current_file = Path(__file__)
             # Navegar a shared-data desde packages/python/catalogmx/catalogs/sat/comercio_exterior
-            shared_data_path = (current_file.parent.parent.parent.parent.parent.parent
-                              / 'shared-data' / 'sat' / 'comercio_exterior' / 'incoterms.json')
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "sat"
+                / "comercio_exterior"
+                / "incoterms.json"
+            )
 
-            with open(shared_data_path, encoding='utf-8') as f:
+            with open(shared_data_path, encoding="utf-8") as f:
                 data = json.load(f)
-                cls._data = data['incoterms']
+                cls._data = data["incoterms"]
 
             # Crear índice por código
-            cls._incoterm_by_code = {item['code']: item for item in cls._data}
+            cls._incoterm_by_code = {item["code"]: item for item in cls._data}
 
     @classmethod
     def get_incoterm(cls, code: str) -> dict | None:
@@ -95,9 +100,9 @@ class IncotermsValidator:
         if not incoterm:
             return False
 
-        suitable_for = incoterm.get('suitable_for', [])
+        suitable_for = incoterm.get("suitable_for", [])
 
-        if transport_type == 'any' or incoterm['transport_mode'] == 'any':
+        if transport_type == "any" or incoterm["transport_mode"] == "any":
             return True
 
         return transport_type in suitable_for
@@ -116,11 +121,7 @@ class IncotermsValidator:
             ['EXW', 'FCA', 'CPT', 'CIP', 'DAP', 'DPU', 'DDP']
         """
         cls._load_data()
-        return [
-            item['code']
-            for item in cls._data
-            if item['transport_mode'] == 'any'
-        ]
+        return [item["code"] for item in cls._data if item["transport_mode"] == "any"]
 
     @classmethod
     def get_maritime_incoterms(cls) -> list[str]:
@@ -136,11 +137,7 @@ class IncotermsValidator:
             ['FAS', 'FOB', 'CFR', 'CIF']
         """
         cls._load_data()
-        return [
-            item['code']
-            for item in cls._data
-            if item['transport_mode'] == 'maritime'
-        ]
+        return [item["code"] for item in cls._data if item["transport_mode"] == "maritime"]
 
     @classmethod
     def seller_pays_freight(cls, code: str) -> bool:
@@ -160,7 +157,7 @@ class IncotermsValidator:
             False
         """
         incoterm = cls.get_incoterm(code)
-        return incoterm.get('seller_pays_freight', False) if incoterm else False
+        return incoterm.get("seller_pays_freight", False) if incoterm else False
 
     @classmethod
     def seller_pays_insurance(cls, code: str) -> bool:
@@ -180,7 +177,7 @@ class IncotermsValidator:
             False
         """
         incoterm = cls.get_incoterm(code)
-        return incoterm.get('seller_pays_insurance', False) if incoterm else False
+        return incoterm.get("seller_pays_insurance", False) if incoterm else False
 
     @classmethod
     def get_all(cls) -> list[dict]:
@@ -218,8 +215,11 @@ class IncotermsValidator:
         query_lower = query.lower()
 
         return [
-            item for item in cls._data
-            if (query_lower in item['name'].lower() or
-                query_lower in item['name_es'].lower() or
-                query_lower in item['description'].lower())
+            item
+            for item in cls._data
+            if (
+                query_lower in item["name"].lower()
+                or query_lower in item["name_es"].lower()
+                or query_lower in item["description"].lower()
+            )
         ]

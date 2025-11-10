@@ -12,6 +12,7 @@ from typing import TypedDict
 
 class OperadorMovil(TypedDict):
     """Estructura de un operador móvil"""
+
     nombre_comercial: str
     razon_social: str
     tipo: str  # OMR (Operador Móvil con Red) | OMV (Operador Móvil Virtual)
@@ -64,18 +65,17 @@ class OperadoresMovilesCatalog:
         # Target: catalogmx/packages/shared-data/ift/operadores_moviles.json
         data_path = (
             Path(__file__).parent.parent.parent.parent.parent
-            / 'shared-data' / 'ift' / 'operadores_moviles.json'
+            / "shared-data"
+            / "ift"
+            / "operadores_moviles.json"
         )
 
-        with open(data_path, encoding='utf-8') as f:
+        with open(data_path, encoding="utf-8") as f:
             json_data = json.load(f)
-            cls._data = json_data['operadores']
+            cls._data = json_data["operadores"]
 
         # Índice por nombre comercial
-        cls._by_nombre = {
-            item['nombre_comercial'].lower(): item
-            for item in cls._data
-        }
+        cls._by_nombre = {item["nombre_comercial"].lower(): item for item in cls._data}
 
     @classmethod
     def get_all(cls) -> list[OperadorMovil]:
@@ -106,7 +106,7 @@ class OperadoresMovilesCatalog:
             ...     print(f"{op['nombre_comercial']} ({op['tipo']})")
         """
         cls._load_data()
-        return [op for op in cls._data if op['activo']]  # type: ignore
+        return [op for op in cls._data if op["activo"]]  # type: ignore
 
     @classmethod
     def get_inactivos(cls) -> list[OperadorMovil]:
@@ -121,7 +121,7 @@ class OperadoresMovilesCatalog:
             >>> print(f"Operadores históricos: {len(inactivos)}")
         """
         cls._load_data()
-        return [op for op in cls._data if not op['activo']]  # type: ignore
+        return [op for op in cls._data if not op["activo"]]  # type: ignore
 
     @classmethod
     def buscar_por_nombre(cls, nombre: str) -> OperadorMovil | None:
@@ -150,7 +150,7 @@ class OperadoresMovilesCatalog:
 
         # Búsqueda parcial
         for op in cls._data:  # type: ignore
-            if nombre_lower in op['nombre_comercial'].lower():
+            if nombre_lower in op["nombre_comercial"].lower():
                 return op
 
         return None
@@ -175,7 +175,7 @@ class OperadoresMovilesCatalog:
         """
         cls._load_data()
         tipo_upper = tipo.upper()
-        return [op for op in cls._data if op['tipo'] == tipo_upper]  # type: ignore
+        return [op for op in cls._data if op["tipo"] == tipo_upper]  # type: ignore
 
     @classmethod
     def get_con_tecnologia(cls, tecnologia: str) -> list[OperadorMovil]:
@@ -195,10 +195,7 @@ class OperadoresMovilesCatalog:
         """
         cls._load_data()
         tecnologia_upper = tecnologia.upper()
-        return [
-            op for op in cls._data  # type: ignore
-            if tecnologia_upper in op['tecnologias']
-        ]
+        return [op for op in cls._data if tecnologia_upper in op["tecnologias"]]  # type: ignore
 
     @classmethod
     def get_por_cobertura(cls, cobertura: str) -> list[OperadorMovil]:
@@ -217,10 +214,7 @@ class OperadoresMovilesCatalog:
         """
         cls._load_data()
         cobertura_lower = cobertura.lower()
-        return [
-            op for op in cls._data  # type: ignore
-            if op['cobertura'] == cobertura_lower
-        ]
+        return [op for op in cls._data if op["cobertura"] == cobertura_lower]  # type: ignore
 
     @classmethod
     def get_por_grupo(cls, grupo: str) -> list[OperadorMovil]:
@@ -241,8 +235,9 @@ class OperadoresMovilesCatalog:
         cls._load_data()
         grupo_lower = grupo.lower()
         return [
-            op for op in cls._data  # type: ignore
-            if 'grupo_empresarial' in op and grupo_lower in op['grupo_empresarial'].lower()
+            op
+            for op in cls._data  # type: ignore
+            if "grupo_empresarial" in op and grupo_lower in op["grupo_empresarial"].lower()
         ]
 
     @classmethod
@@ -262,10 +257,7 @@ class OperadoresMovilesCatalog:
         """
         cls._load_data()
         servicio_lower = servicio.lower()
-        return [
-            op for op in cls._data  # type: ignore
-            if servicio_lower in op['servicios']
-        ]
+        return [op for op in cls._data if servicio_lower in op["servicios"]]  # type: ignore
 
     @classmethod
     def get_top_por_market_share(cls, limit: int = 5) -> list[OperadorMovil]:
@@ -285,9 +277,9 @@ class OperadoresMovilesCatalog:
         """
         cls._load_data()
         sorted_ops = sorted(
-            [op for op in cls._data if op['activo']],  # type: ignore
-            key=lambda x: x['market_share_aprox'],
-            reverse=True
+            [op for op in cls._data if op["activo"]],  # type: ignore
+            key=lambda x: x["market_share_aprox"],
+            reverse=True,
         )
         return sorted_ops[:limit]
 
@@ -308,18 +300,16 @@ class OperadoresMovilesCatalog:
         cls._load_data()
 
         activos = cls.get_activos()
-        con_5g = cls.get_con_tecnologia('5G')
+        con_5g = cls.get_con_tecnologia("5G")
 
         return {
-            'total_operadores': len(cls._data),  # type: ignore
-            'operadores_activos': len(activos),
-            'operadores_inactivos': len(cls.get_inactivos()),
-            'omr_count': len(cls.get_por_tipo('OMR')),
-            'omv_count': len(cls.get_por_tipo('OMV')),
-            'operadores_con_5g': len(con_5g),
-            'cobertura_nacional': len(cls.get_por_cobertura('nacional')),
-            'market_share_total': sum(
-                op['market_share_aprox'] for op in activos
-            ),
-            'tecnologias_disponibles': ['2G', '3G', '4G', '5G']
+            "total_operadores": len(cls._data),  # type: ignore
+            "operadores_activos": len(activos),
+            "operadores_inactivos": len(cls.get_inactivos()),
+            "omr_count": len(cls.get_por_tipo("OMR")),
+            "omv_count": len(cls.get_por_tipo("OMV")),
+            "operadores_con_5g": len(con_5g),
+            "cobertura_nacional": len(cls.get_por_cobertura("nacional")),
+            "market_share_total": sum(op["market_share_aprox"] for op in activos),
+            "tecnologias_disponibles": ["2G", "3G", "4G", "5G"],
         }

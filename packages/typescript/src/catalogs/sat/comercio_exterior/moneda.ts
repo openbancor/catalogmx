@@ -21,11 +21,11 @@ export class MonedaCatalog {
   }
 
   static getMoneda(code: string): Moneda | undefined {
-    return this.getData().find(m => (m.codigo || m.code) === code.toUpperCase());
+    return this.getData().find((m) => (m.codigo || m.code) === code.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(m => (m.codigo || m.code) === code.toUpperCase());
+    return this.getData().some((m) => (m.codigo || m.code) === code.toUpperCase());
   }
 
   /**
@@ -79,7 +79,7 @@ export class MonedaCatalog {
       return {
         valid: false,
         error: `Conversion mismatch: expected ${calculatedTotalUsd.toFixed(decimals)}, got ${data.total_usd}`,
-        calculated_total: calculatedTotalUsd
+        calculated_total: calculatedTotalUsd,
       };
     }
 
@@ -91,9 +91,10 @@ export class MonedaCatalog {
    */
   static searchByName(keyword: string): Moneda[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(m =>
-      (m.nombre || m.name || '').toUpperCase().includes(search) ||
-      (m.codigo || m.code || '').includes(search)
+    return this.getData().filter(
+      (m) =>
+        (m.nombre || m.name || '').toUpperCase().includes(search) ||
+        (m.codigo || m.code || '').includes(search)
     );
   }
 }

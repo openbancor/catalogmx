@@ -10,6 +10,6 @@ from .codigos_lada import CodigosLADACatalog
 from .operadores_moviles import OperadoresMovilesCatalog
 
 __all__ = [
-    'CodigosLADACatalog',
-    'OperadoresMovilesCatalog',
+    "CodigosLADACatalog",
+    "OperadoresMovilesCatalog",
 ]

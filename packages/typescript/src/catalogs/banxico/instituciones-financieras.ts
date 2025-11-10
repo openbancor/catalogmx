@@ -61,9 +61,7 @@ export class InstitucionesFinancieras {
    */
   static buscarPorTipo(tipo: string): TipoInstitucionFinanciera[] {
     this.loadData();
-    return this._data!.filter((inst) =>
-      inst.tipo.toLowerCase().includes(tipo.toLowerCase())
-    );
+    return this._data!.filter((inst) => inst.tipo.toLowerCase().includes(tipo.toLowerCase()));
   }
 
   /**
@@ -81,9 +79,7 @@ export class InstitucionesFinancieras {
    */
   static getBancos(): TipoInstitucionFinanciera[] {
     this.loadData();
-    return this._data!.filter((inst) =>
-      inst.tipo.toLowerCase().includes('banco')
-    );
+    return this._data!.filter((inst) => inst.tipo.toLowerCase().includes('banco'));
   }
 
   /**
@@ -136,9 +132,7 @@ export class InstitucionesFinancieras {
    */
   static getFintech(): TipoInstitucionFinanciera[] {
     this.loadData();
-    return this._data!.filter((inst) =>
-      inst.tipo.includes('Tecnología Financiera')
-    );
+    return this._data!.filter((inst) => inst.tipo.includes('Tecnología Financiera'));
   }
 
   /**

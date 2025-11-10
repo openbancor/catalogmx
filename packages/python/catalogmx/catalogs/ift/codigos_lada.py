@@ -14,6 +14,7 @@ from catalogmx.utils.text import normalize_text
 
 class CodigoLADA(TypedDict):
     """Estructura de un código LADA"""
+
     lada: str
     ciudad: str
     estado: str
@@ -23,6 +24,7 @@ class CodigoLADA(TypedDict):
 
 class ValidacionNumero(TypedDict):
     """Resultado de validación de número telefónico"""
+
     valid: bool
     lada: str | None
     numero_local: str | None
@@ -33,6 +35,7 @@ class ValidacionNumero(TypedDict):
 
 class InfoNumero(TypedDict):
     """Información detallada de un número telefónico"""
+
     lada: str
     ciudad: str
     estado: str
@@ -82,20 +85,22 @@ class CodigosLADACatalog:
         # Target: catalogmx/packages/shared-data/ift/codigos_lada.json
         data_path = (
             Path(__file__).parent.parent.parent.parent.parent
-            / 'shared-data' / 'ift' / 'codigos_lada.json'
+            / "shared-data"
+            / "ift"
+            / "codigos_lada.json"
         )
 
-        with open(data_path, encoding='utf-8') as f:
+        with open(data_path, encoding="utf-8") as f:
             json_data = json.load(f)
-            cls._data = json_data['codigos']
+            cls._data = json_data["codigos"]
 
         # Crear índices para búsquedas rápidas
-        cls._by_lada = {item['lada']: item for item in cls._data}
+        cls._by_lada = {item["lada"]: item for item in cls._data}
 
         # Índice por estado
         cls._by_estado = {}
         for item in cls._data:
-            estado = item['estado'].lower()
+            estado = item["estado"].lower()
             if estado not in cls._by_estado:
                 cls._by_estado[estado] = []
             cls._by_estado[estado].append(item)
@@ -103,7 +108,7 @@ class CodigosLADACatalog:
         # Índice por tipo
         cls._by_tipo = {}
         for item in cls._data:
-            tipo = item['tipo']
+            tipo = item["tipo"]
             if tipo not in cls._by_tipo:
                 cls._by_tipo[tipo] = []
             cls._by_tipo[tipo].append(item)
@@ -111,7 +116,7 @@ class CodigosLADACatalog:
         # Índice por región
         cls._by_region = {}
         for item in cls._data:
-            region = item['region'].lower()
+            region = item["region"].lower()
             if region not in cls._by_region:
                 cls._by_region[region] = []
             cls._by_region[region].append(item)
@@ -167,8 +172,9 @@ class CodigosLADACatalog:
         cls._load_data()
         ciudad_normalized = normalize_text(ciudad)
         return [
-            item for item in cls._data  # type: ignore
-            if ciudad_normalized in normalize_text(item['ciudad'])
+            item
+            for item in cls._data  # type: ignore
+            if ciudad_normalized in normalize_text(item["ciudad"])
         ]
 
     @classmethod
@@ -237,7 +243,7 @@ class CodigosLADACatalog:
         Returns:
             Lista de códigos metropolitanos
         """
-        return cls.get_por_tipo('metropolitana')
+        return cls.get_por_tipo("metropolitana")
 
     @classmethod
     def get_fronterizas(cls) -> list[CodigoLADA]:
@@ -247,7 +253,7 @@ class CodigosLADACatalog:
         Returns:
             Lista de códigos fronterizos
         """
-        return cls.get_por_tipo('fronteriza')
+        return cls.get_por_tipo("fronteriza")
 
     @classmethod
     def get_turisticas(cls) -> list[CodigoLADA]:
@@ -257,7 +263,7 @@ class CodigosLADACatalog:
         Returns:
             Lista de códigos turísticos
         """
-        return cls.get_por_tipo('turistica')
+        return cls.get_por_tipo("turistica")
 
     @classmethod
     def validar_numero(cls, numero: str) -> ValidacionNumero:
@@ -283,17 +289,17 @@ class CodigosLADACatalog:
         cls._load_data()
 
         # Limpiar número (eliminar espacios y guiones)
-        numero_limpio = numero.replace(' ', '').replace('-', '')
+        numero_limpio = numero.replace(" ", "").replace("-", "")
 
         # Validar que sean 10 dígitos
         if not numero_limpio.isdigit() or len(numero_limpio) != 10:
             return {
-                'valid': False,
-                'lada': None,
-                'numero_local': None,
-                'ciudad': None,
-                'estado': None,
-                'error': 'El número debe tener exactamente 10 dígitos'
+                "valid": False,
+                "lada": None,
+                "numero_local": None,
+                "ciudad": None,
+                "estado": None,
+                "error": "El número debe tener exactamente 10 dígitos",
             }
 
         # Intentar extraer LADA (primeros 2 o 3 dígitos)
@@ -307,23 +313,23 @@ class CodigosLADACatalog:
             codigo = cls._by_lada.get(lada)  # type: ignore
 
         if codigo:
-            numero_local = numero_limpio[len(lada):]
+            numero_local = numero_limpio[len(lada) :]
             return {
-                'valid': True,
-                'lada': codigo['lada'],
-                'numero_local': numero_local,
-                'ciudad': codigo['ciudad'],
-                'estado': codigo['estado'],
-                'error': None
+                "valid": True,
+                "lada": codigo["lada"],
+                "numero_local": numero_local,
+                "ciudad": codigo["ciudad"],
+                "estado": codigo["estado"],
+                "error": None,
             }
 
         return {
-            'valid': False,
-            'lada': lada,
-            'numero_local': None,
-            'ciudad': None,
-            'estado': None,
-            'error': f'Código LADA {lada} no encontrado en el catálogo'
+            "valid": False,
+            "lada": lada,
+            "numero_local": None,
+            "ciudad": None,
+            "estado": None,
+            "error": f"Código LADA {lada} no encontrado en el catálogo",
         }
 
     @classmethod
@@ -343,11 +349,11 @@ class CodigosLADACatalog:
         """
         validacion = cls.validar_numero(numero)
 
-        if not validacion['valid'] or not validacion['lada'] or not validacion['numero_local']:
+        if not validacion["valid"] or not validacion["lada"] or not validacion["numero_local"]:
             return numero
 
-        lada = validacion['lada']
-        local = validacion['numero_local']
+        lada = validacion["lada"]
+        local = validacion["numero_local"]
 
         # Formato: LADA XXXX XXXX
         if len(local) == 7:
@@ -378,20 +384,20 @@ class CodigosLADACatalog:
         """
         validacion = cls.validar_numero(numero)
 
-        if not validacion['valid'] or not validacion['lada']:
+        if not validacion["valid"] or not validacion["lada"]:
             return None
 
-        codigo = cls.buscar_por_lada(validacion['lada'])
+        codigo = cls.buscar_por_lada(validacion["lada"])
 
         if not codigo:
             return None
 
         return {
-            'lada': codigo['lada'],
-            'ciudad': codigo['ciudad'],
-            'estado': codigo['estado'],
-            'tipo': codigo['tipo'],
-            'region': codigo['region']
+            "lada": codigo["lada"],
+            "ciudad": codigo["ciudad"],
+            "estado": codigo["estado"],
+            "tipo": codigo["tipo"],
+            "region": codigo["region"],
         }
 
     @classmethod
@@ -410,11 +416,11 @@ class CodigosLADACatalog:
         cls._load_data()
 
         return {
-            'total_codigos': len(cls._data),  # type: ignore
-            'codigos_metropolitanos': len(cls.get_metropolitanas()),
-            'codigos_fronterizos': len(cls.get_fronterizas()),
-            'codigos_turisticos': len(cls.get_turisticas()),
-            'estados_cubiertos': len(cls._by_estado),  # type: ignore
-            'regiones': list(cls._by_region.keys()),  # type: ignore
-            'tipos': list(cls._by_tipo.keys())  # type: ignore
+            "total_codigos": len(cls._data),  # type: ignore
+            "codigos_metropolitanos": len(cls.get_metropolitanas()),
+            "codigos_fronterizos": len(cls.get_fronterizas()),
+            "codigos_turisticos": len(cls.get_turisticas()),
+            "estados_cubiertos": len(cls._by_estado),  # type: ignore
+            "regiones": list(cls._by_region.keys()),  # type: ignore
+            "tipos": list(cls._by_tipo.keys()),  # type: ignore
         }

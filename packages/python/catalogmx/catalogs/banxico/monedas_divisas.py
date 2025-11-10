@@ -13,6 +13,7 @@ from typing import TypedDict
 
 class MonedaDivisa(TypedDict, total=False):
     """Estructura de una moneda o divisa"""
+
     codigo_iso: str
     numero_iso: str
     moneda: str
@@ -69,12 +70,14 @@ class MonedasDivisas:
         # Target: catalogmx/packages/shared-data/banxico/monedas_divisas.json
         data_path = (
             Path(__file__).parent.parent.parent.parent.parent
-            / 'shared-data' / 'banxico' / 'monedas_divisas.json'
+            / "shared-data"
+            / "banxico"
+            / "monedas_divisas.json"
         )
 
-        with open(data_path, encoding='utf-8') as f:
+        with open(data_path, encoding="utf-8") as f:
             json_data = json.load(f)
-            cls._data = json_data['monedas']
+            cls._data = json_data["monedas"]
 
     @classmethod
     def get_all(cls) -> list[MonedaDivisa]:
@@ -109,7 +112,7 @@ class MonedasDivisas:
         cls._load_data()
         codigo_upper = codigo_iso.upper()
         for moneda in cls._data:  # type: ignore
-            if moneda['codigo_iso'].upper() == codigo_upper:
+            if moneda["codigo_iso"].upper() == codigo_upper:
                 return moneda
         return None
 
@@ -131,10 +134,7 @@ class MonedasDivisas:
         """
         cls._load_data()
         pais_lower = pais.lower()
-        return [
-            m for m in cls._data  # type: ignore
-            if pais_lower in m['pais'].lower()
-        ]
+        return [m for m in cls._data if pais_lower in m["pais"].lower()]  # type: ignore
 
     @classmethod
     def get_con_tipo_cambio_banxico(cls) -> list[MonedaDivisa]:
@@ -150,10 +150,7 @@ class MonedasDivisas:
             ...     print(f"{m['codigo_iso']}: {m['moneda']}")
         """
         cls._load_data()
-        return [
-            m for m in cls._data  # type: ignore
-            if m['tipo_cambio_banxico']
-        ]
+        return [m for m in cls._data if m["tipo_cambio_banxico"]]  # type: ignore
 
     @classmethod
     def get_con_tipo_cambio_fix(cls) -> list[MonedaDivisa]:
@@ -169,10 +166,7 @@ class MonedasDivisas:
             ...     print(f"{m['codigo_iso']}: {m['moneda']}")
         """
         cls._load_data()
-        return [
-            m for m in cls._data  # type: ignore
-            if m.get('tipo_cambio_fix', False)
-        ]
+        return [m for m in cls._data if m.get("tipo_cambio_fix", False)]  # type: ignore
 
     @classmethod
     def get_por_region(cls, region: str) -> list[MonedaDivisa]:
@@ -200,18 +194,15 @@ class MonedasDivisas:
         cls._load_data()
 
         regiones: dict[str, list[str]] = {
-            'America del Norte': ['USD', 'CAD', 'MXN'],
-            'America Latina': ['ARS', 'BRL', 'CLP', 'COP', 'PEN', 'GTQ', 'CRC', 'UYU', 'VES'],
-            'Europa': ['EUR', 'GBP', 'CHF', 'SEK', 'NOK', 'DKK', 'RUB'],
-            'Asia-Pacifico': ['JPY', 'CNY', 'AUD', 'NZD', 'SGD', 'HKD', 'INR', 'KRW'],
-            'Africa': ['ZAR'],
+            "America del Norte": ["USD", "CAD", "MXN"],
+            "America Latina": ["ARS", "BRL", "CLP", "COP", "PEN", "GTQ", "CRC", "UYU", "VES"],
+            "Europa": ["EUR", "GBP", "CHF", "SEK", "NOK", "DKK", "RUB"],
+            "Asia-Pacifico": ["JPY", "CNY", "AUD", "NZD", "SGD", "HKD", "INR", "KRW"],
+            "Africa": ["ZAR"],
         }
 
         codigos = regiones.get(region, [])
-        return [
-            m for m in cls._data  # type: ignore
-            if m['codigo_iso'] in codigos
-        ]
+        return [m for m in cls._data if m["codigo_iso"] in codigos]  # type: ignore
 
     @classmethod
     def get_principales(cls) -> list[MonedaDivisa]:
@@ -227,11 +218,8 @@ class MonedasDivisas:
             ...     print(f"{m['codigo_iso']}: {m['moneda']}")
         """
         cls._load_data()
-        principales = ['MXN', 'USD', 'EUR', 'CAD', 'GBP', 'JPY', 'CHF']
-        return [
-            m for m in cls._data  # type: ignore
-            if m['codigo_iso'] in principales
-        ]
+        principales = ["MXN", "USD", "EUR", "CAD", "GBP", "JPY", "CHF"]
+        return [m for m in cls._data if m["codigo_iso"] in principales]  # type: ignore
 
     @classmethod
     def get_latam(cls) -> list[MonedaDivisa]:
@@ -247,11 +235,8 @@ class MonedasDivisas:
             ...     print(f"{m['codigo_iso']}: {m['pais']}")
         """
         cls._load_data()
-        latam = ['MXN', 'ARS', 'BRL', 'CLP', 'COP', 'PEN', 'GTQ', 'CRC', 'UYU', 'VES']
-        return [
-            m for m in cls._data  # type: ignore
-            if m['codigo_iso'] in latam
-        ]
+        latam = ["MXN", "ARS", "BRL", "CLP", "COP", "PEN", "GTQ", "CRC", "UYU", "VES"]
+        return [m for m in cls._data if m["codigo_iso"] in latam]  # type: ignore
 
     @classmethod
     def validar_codigo_iso(cls, codigo: str) -> bool:
@@ -270,10 +255,7 @@ class MonedasDivisas:
         """
         cls._load_data()
         codigo_upper = codigo.upper()
-        return any(
-            m['codigo_iso'].upper() == codigo_upper
-            for m in cls._data  # type: ignore
-        )
+        return any(m["codigo_iso"].upper() == codigo_upper for m in cls._data)  # type: ignore
 
     @classmethod
     def get_formato_moneda(cls, codigo_iso: str) -> dict[str, str | int] | None:
@@ -295,15 +277,15 @@ class MonedasDivisas:
             return None
 
         ejemplo_monto = 1234.56
-        if moneda['decimales'] == 0:
+        if moneda["decimales"] == 0:
             monto_formateado = str(round(ejemplo_monto))
         else:
             monto_formateado = f"{ejemplo_monto:.{moneda['decimales']}f}"
 
         return {
-            'simbolo': moneda['simbolo'],
-            'decimales': moneda['decimales'],
-            'formato_ejemplo': f"{moneda['simbolo']} {monto_formateado}"
+            "simbolo": moneda["simbolo"],
+            "decimales": moneda["decimales"],
+            "formato_ejemplo": f"{moneda['simbolo']} {monto_formateado}",
         }
 
     @classmethod
@@ -328,27 +310,27 @@ class MonedasDivisas:
         if not moneda:
             return str(monto)
 
-        if moneda['decimales'] == 0:
-            monto_formateado = f"{round(monto):,.0f}".replace(',', ' ')
+        if moneda["decimales"] == 0:
+            monto_formateado = f"{round(monto):,.0f}".replace(",", " ")
         else:
-            monto_formateado = f"{monto:,.{moneda['decimales']}f}".replace(',', ' ')
+            monto_formateado = f"{monto:,.{moneda['decimales']}f}".replace(",", " ")
 
         return f"{moneda['simbolo']} {monto_formateado}"
 
     @classmethod
     def get_mxn(cls) -> MonedaDivisa | None:
         """Obtiene peso mexicano (MXN)."""
-        return cls.get_por_codigo('MXN')
+        return cls.get_por_codigo("MXN")
 
     @classmethod
     def get_usd(cls) -> MonedaDivisa | None:
         """Obtiene dólar estadounidense (USD)."""
-        return cls.get_por_codigo('USD')
+        return cls.get_por_codigo("USD")
 
     @classmethod
     def get_eur(cls) -> MonedaDivisa | None:
         """Obtiene euro (EUR)."""
-        return cls.get_por_codigo('EUR')
+        return cls.get_por_codigo("EUR")
 
     @classmethod
     def buscar_por_nombre(cls, nombre: str) -> list[MonedaDivisa]:
@@ -368,10 +350,7 @@ class MonedasDivisas:
         """
         cls._load_data()
         nombre_lower = nombre.lower()
-        return [
-            m for m in cls._data  # type: ignore
-            if nombre_lower in m['moneda'].lower()
-        ]
+        return [m for m in cls._data if nombre_lower in m["moneda"].lower()]  # type: ignore
 
     @classmethod
     def get_activas(cls) -> list[MonedaDivisa]:
@@ -386,10 +365,7 @@ class MonedasDivisas:
             >>> print(f"Monedas activas: {len(activas)}")
         """
         cls._load_data()
-        return [
-            m for m in cls._data  # type: ignore
-            if m['activa']
-        ]
+        return [m for m in cls._data if m["activa"]]  # type: ignore
 
     @classmethod
     def get_info_tipo_cambio_fix(cls) -> dict[str, str]:
@@ -404,7 +380,7 @@ class MonedasDivisas:
             >>> print(info['horario'])
         """
         return {
-            'descripcion': 'Tipo de cambio FIX determinado por Banco de México - Promedio ponderado de cotizaciones del mercado de cambios al mayoreo',
-            'horario': '12:00 hrs (mediodía) tiempo de la Ciudad de México',
-            'uso': 'Referencia oficial para liquidación de obligaciones denominadas en dólares'
+            "descripcion": "Tipo de cambio FIX determinado por Banco de México - Promedio ponderado de cotizaciones del mercado de cambios al mayoreo",
+            "horario": "12:00 hrs (mediodía) tiempo de la Ciudad de México",
+            "uso": "Referencia oficial para liquidación de obligaciones denominadas en dólares",
         }

@@ -21,11 +21,11 @@ export class TipoPermisoCatalog {
   }
 
   static getPermiso(code: string): TipoPermiso | undefined {
-    return this.getData().find(p => p.code === code.toUpperCase());
+    return this.getData().find((p) => p.code === code.toUpperCase());
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(p => p.code === code.toUpperCase());
+    return this.getData().some((p) => p.code === code.toUpperCase());
   }
 
   /**
@@ -33,9 +33,7 @@ export class TipoPermisoCatalog {
    */
   static getByTipoTransporte(tipo: string): TipoPermiso[] {
     const search = tipo.toUpperCase();
-    return this.getData().filter(p =>
-      p.tipo_transporte.toUpperCase().includes(search)
-    );
+    return this.getData().filter((p) => p.tipo_transporte.toUpperCase().includes(search));
   }
 
   /**
@@ -59,8 +57,6 @@ export class TipoPermisoCatalog {
    */
   static searchByDescription(keyword: string): TipoPermiso[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(p =>
-      p.descripcion.toUpperCase().includes(search)
-    );
+    return this.getData().filter((p) => p.descripcion.toUpperCase().includes(search));
   }
 }

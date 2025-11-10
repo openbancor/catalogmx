@@ -1,4 +1,5 @@
 """Catálogo de Localidades INEGI (filtrado por población)"""
+
 import json
 from pathlib import Path
 
@@ -26,17 +27,22 @@ class LocalidadesCatalog:
         if cls._data is None:
             # Path: catalogmx/packages/python/catalogmx/catalogs/inegi/localidades.py
             # Target: catalogmx/packages/shared-data/inegi/localidades.json
-            path = Path(__file__).parent.parent.parent.parent.parent / 'shared-data' / 'inegi' / 'localidades.json'
-            with open(path, encoding='utf-8') as f:
+            path = (
+                Path(__file__).parent.parent.parent.parent.parent
+                / "shared-data"
+                / "inegi"
+                / "localidades.json"
+            )
+            with open(path, encoding="utf-8") as f:
                 cls._data = json.load(f)
 
             # Crear índices
-            cls._by_cvegeo = {item['cvegeo']: item for item in cls._data}
+            cls._by_cvegeo = {item["cvegeo"]: item for item in cls._data}
 
             # Índice por municipio
             cls._by_municipio = {}
             for item in cls._data:
-                cve_mun = item['cve_municipio']
+                cve_mun = item["cve_municipio"]
                 if cve_mun not in cls._by_municipio:
                     cls._by_municipio[cve_mun] = []
                 cls._by_municipio[cve_mun].append(item)
@@ -44,7 +50,7 @@ class LocalidadesCatalog:
             # Índice por entidad
             cls._by_entidad = {}
             for item in cls._data:
-                cve_ent = item['cve_entidad']
+                cve_ent = item["cve_entidad"]
                 if cve_ent not in cls._by_entidad:
                     cls._by_entidad[cve_ent] = []
                 cls._by_entidad[cve_ent].append(item)
@@ -107,13 +113,13 @@ class LocalidadesCatalog:
     def get_urbanas(cls) -> list[dict]:
         """Obtiene solo localidades urbanas"""
         cls._load_data()
-        return [loc for loc in cls._data if loc['ambito'] == 'U']
+        return [loc for loc in cls._data if loc["ambito"] == "U"]
 
     @classmethod
     def get_rurales(cls) -> list[dict]:
         """Obtiene solo localidades rurales"""
         cls._load_data()
-        return [loc for loc in cls._data if loc['ambito'] == 'R']
+        return [loc for loc in cls._data if loc["ambito"] == "R"]
 
     @classmethod
     def search_by_name(cls, nombre: str) -> list[dict]:
@@ -133,8 +139,9 @@ class LocalidadesCatalog:
         """
         cls._load_data()
         nombre_normalized = normalize_text(nombre)
-        return [loc for loc in cls._data
-                if nombre_normalized in normalize_text(loc['nom_localidad'])]
+        return [
+            loc for loc in cls._data if nombre_normalized in normalize_text(loc["nom_localidad"])
+        ]
 
     @classmethod
     def get_by_coordinates(cls, lat: float, lon: float, radio_km: float = 10) -> list[dict]:
@@ -160,24 +167,24 @@ class LocalidadesCatalog:
             dlat = radians(lat2 - lat1)
             dlon = radians(lon2 - lon1)
 
-            a = sin(dlat/2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon/2)**2
-            c = 2 * atan2(sqrt(a), sqrt(1-a))
+            a = sin(dlat / 2) ** 2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2) ** 2
+            c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
             return R * c
 
         resultados = []
         for loc in cls._data:
-            if loc['latitud'] is None or loc['longitud'] is None:
+            if loc["latitud"] is None or loc["longitud"] is None:
                 continue
 
-            distancia = distancia_haversine(lat, lon, loc['latitud'], loc['longitud'])
+            distancia = distancia_haversine(lat, lon, loc["latitud"], loc["longitud"])
             if distancia <= radio_km:
                 loc_con_distancia = loc.copy()
-                loc_con_distancia['distancia_km'] = round(distancia, 2)
+                loc_con_distancia["distancia_km"] = round(distancia, 2)
                 resultados.append(loc_con_distancia)
 
         # Ordenar por distancia
-        resultados.sort(key=lambda x: x['distancia_km'])
+        resultados.sort(key=lambda x: x["distancia_km"])
         return resultados
 
     @classmethod
@@ -195,8 +202,6 @@ class LocalidadesCatalog:
         cls._load_data()
 
         if max_pob is None:
-            return [loc for loc in cls._data if loc['poblacion_total'] >= min_pob]
+            return [loc for loc in cls._data if loc["poblacion_total"] >= min_pob]
         else:
-            return [loc for loc in cls._data
-                    if min_pob <= loc['poblacion_total'] <= max_pob]
-
+            return [loc for loc in cls._data if min_pob <= loc["poblacion_total"] <= max_pob]

@@ -35,7 +35,7 @@ export {
   TipoRelacionCatalog,
   ObjetoImpCatalog,
   ClaveUnidadCatalog,
-  ClaveProdServCatalog
+  ClaveProdServCatalog,
 } from './sat/cfdi_4';
 
 // SAT CFDI 4.0 - Hybrid SQLite/JSON (for large catalogs)
@@ -50,7 +50,7 @@ export {
   EstadoCatalog,
   MotivoTrasladoCatalog,
   RegistroIdentTribCatalog,
-  UnidadAduanaCatalog
+  UnidadAduanaCatalog,
 } from './sat/comercio_exterior';
 
 // SAT Carta Porte 3.0
@@ -61,7 +61,7 @@ export {
   ConfigAutotransporteCatalog,
   CarreterasCatalog,
   MaterialPeligrosoCatalog,
-  TipoEmbalajeCatalog
+  TipoEmbalajeCatalog,
 } from './sat/carta_porte';
 
 // SAT Nómina 1.2
@@ -72,7 +72,7 @@ export {
   TipoRegimenCatalog,
   PeriodicidadPagoCatalog,
   RiesgoPuestoCatalog,
-  BancoNominaCatalog
+  BancoNominaCatalog,
 } from './sat/nomina';
 
 // Mexico - National Catalogs

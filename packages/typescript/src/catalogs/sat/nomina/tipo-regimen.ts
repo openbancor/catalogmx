@@ -21,11 +21,11 @@ export class TipoRegimenCatalog {
   }
 
   static getRegimen(code: string): TipoRegimen | undefined {
-    return this.getData().find(r => r.code === code);
+    return this.getData().find((r) => r.code === code);
   }
 
   static isValid(code: string): boolean {
-    return this.getData().some(r => r.code === code);
+    return this.getData().some((r) => r.code === code);
   }
 
   /**
@@ -40,8 +40,6 @@ export class TipoRegimenCatalog {
    */
   static searchByDescription(keyword: string): TipoRegimen[] {
     const search = keyword.toUpperCase();
-    return this.getData().filter(r =>
-      r.descripcion.toUpperCase().includes(search)
-    );
+    return this.getData().filter((r) => r.descripcion.toUpperCase().includes(search));
   }
 }

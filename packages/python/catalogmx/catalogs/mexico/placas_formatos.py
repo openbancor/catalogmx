@@ -4,6 +4,7 @@ Mexican License Plates Formats Catalog
 This module provides validation patterns and formats for Mexican vehicle license plates
 according to NOM-001-SCT-2-2016.
 """
+
 import json
 import re
 from pathlib import Path
@@ -26,9 +27,14 @@ class PlacasFormatosCatalog:
             # Path: catalogmx/packages/python/catalogmx/catalogs/mexico/placas_formatos.py
             # Target: catalogmx/packages/shared-data/mexico/placas_formatos.json
             current_file = Path(__file__)
-            shared_data_path = current_file.parent.parent.parent.parent.parent / 'shared-data' / 'mexico' / 'placas_formatos.json'
+            shared_data_path = (
+                current_file.parent.parent.parent.parent.parent
+                / "shared-data"
+                / "mexico"
+                / "placas_formatos.json"
+            )
 
-            with open(shared_data_path, encoding='utf-8') as f:
+            with open(shared_data_path, encoding="utf-8") as f:
                 cls._data = json.load(f)
 
     @classmethod
@@ -53,8 +59,8 @@ class PlacasFormatosCatalog:
         normalized_placa = placa.upper().strip()
 
         for formato in cls._data:
-            if formato.get('activo', True):
-                pattern = formato['pattern']
+            if formato.get("activo", True):
+                pattern = formato["pattern"]
                 if re.match(pattern, normalized_placa):
                     return True
 
@@ -72,8 +78,9 @@ class PlacasFormatosCatalog:
         estado_lower = estado.lower()
 
         return [
-            f for f in cls._data
-            if estado_lower in f['estado'].lower() or estado_lower == 'nacional'
+            f
+            for f in cls._data
+            if estado_lower in f["estado"].lower() or estado_lower == "nacional"
         ]
 
     @classmethod
@@ -86,10 +93,7 @@ class PlacasFormatosCatalog:
         """
         cls._load_data()
 
-        return [
-            f for f in cls._data
-            if f.get('tipo') == tipo and f.get('activo', True)
-        ]
+        return [f for f in cls._data if f.get("tipo") == tipo and f.get("activo", True)]
 
     @classmethod
     def detect_formato(cls, placa: str) -> dict | None:
@@ -103,7 +107,7 @@ class PlacasFormatosCatalog:
         normalized_placa = placa.upper().strip()
 
         for formato in cls._data:
-            pattern = formato['pattern']
+            pattern = formato["pattern"]
             if re.match(pattern, normalized_placa):
                 return formato.copy()
 
@@ -118,7 +122,7 @@ class PlacasFormatosCatalog:
         """
         cls._load_data()
 
-        return [f for f in cls._data if f.get('activo', True)]
+        return [f for f in cls._data if f.get("activo", True)]
 
     @classmethod
     def is_diplomatica(cls, placa: str) -> bool:
@@ -129,7 +133,7 @@ class PlacasFormatosCatalog:
         :return: True if diplomatic, False otherwise
         """
         formato = cls.detect_formato(placa)
-        return formato.get('tipo') == 'diplomatico' if formato else False
+        return formato.get("tipo") == "diplomatico" if formato else False
 
     @classmethod
     def is_federal(cls, placa: str) -> bool:
@@ -143,13 +147,13 @@ class PlacasFormatosCatalog:
         if not formato:
             return False
 
-        tipo = formato.get('tipo')
+        tipo = formato.get("tipo")
         federal_types = [
-            'gobierno_federal',
-            'servicio_publico_federal',
-            'carga_federal',
-            'policia_federal',
-            'remolque_federal'
+            "gobierno_federal",
+            "servicio_publico_federal",
+            "carga_federal",
+            "policia_federal",
+            "remolque_federal",
         ]
 
         return tipo in federal_types
@@ -173,8 +177,8 @@ def get_formatos_activos() -> list[dict]:
 
 # Export commonly used functions and classes
 __all__ = [
-    'PlacasFormatosCatalog',
-    'validate_placa',
-    'detect_formato',
-    'get_formatos_activos',
+    "PlacasFormatosCatalog",
+    "validate_placa",
+    "detect_formato",
+    "get_formatos_activos",
 ]
