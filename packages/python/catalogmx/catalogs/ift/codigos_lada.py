@@ -9,6 +9,8 @@ import json
 from pathlib import Path
 from typing import TypedDict
 
+from catalogmx.utils.text import normalize_text
+
 
 class CodigoLADA(TypedDict):
     """Estructura de un código LADA"""
@@ -147,7 +149,7 @@ class CodigosLADACatalog:
     @classmethod
     def buscar_por_ciudad(cls, ciudad: str) -> list[CodigoLADA]:
         """
-        Busca códigos LADA por nombre de ciudad (búsqueda parcial).
+        Busca códigos LADA por nombre de ciudad (búsqueda parcial, insensible a acentos).
 
         Args:
             ciudad: Nombre o parte del nombre de la ciudad
@@ -156,15 +158,17 @@ class CodigosLADACatalog:
             Lista de códigos LADA que coinciden
 
         Ejemplo:
-            >>> codigos = CodigosLADACatalog.buscar_por_ciudad("san")
+            >>> # Búsqueda con o sin acentos funciona igual
+            >>> codigos = CodigosLADACatalog.buscar_por_ciudad("san jose")
+            >>> codigos = CodigosLADACatalog.buscar_por_ciudad("san josé")  # mismo resultado
             >>> for codigo in codigos:
             ...     print(f"{codigo['lada']} - {codigo['ciudad']}")
         """
         cls._load_data()
-        ciudad_lower = ciudad.lower()
+        ciudad_normalized = normalize_text(ciudad)
         return [
             item for item in cls._data  # type: ignore
-            if ciudad_lower in item['ciudad'].lower()
+            if ciudad_normalized in normalize_text(item['ciudad'])
         ]
 
     @classmethod

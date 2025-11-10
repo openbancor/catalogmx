@@ -2,6 +2,8 @@
 import json
 from pathlib import Path
 
+from catalogmx.utils.text import normalize_text
+
 
 class LocalidadesCatalog:
     """
@@ -26,8 +28,7 @@ class LocalidadesCatalog:
             # Target: catalogmx/packages/shared-data/inegi/localidades.json
             path = Path(__file__).parent.parent.parent.parent.parent / 'shared-data' / 'inegi' / 'localidades.json'
             with open(path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                cls._data = data['localidades']
+                cls._data = json.load(f)
 
             # Crear índices
             cls._by_cvegeo = {item['cvegeo']: item for item in cls._data}
@@ -117,18 +118,23 @@ class LocalidadesCatalog:
     @classmethod
     def search_by_name(cls, nombre: str) -> list[dict]:
         """
-        Busca localidades por nombre (búsqueda parcial, case-insensitive).
-        
+        Busca localidades por nombre (búsqueda parcial, insensible a acentos).
+
         Args:
             nombre: Nombre o parte del nombre a buscar
-        
+
         Returns:
             Lista de localidades que coinciden
+
+        Ejemplo:
+            >>> # Búsqueda con o sin acentos funciona igual
+            >>> locs = LocalidadesCatalog.search_by_name("san jose")
+            >>> locs = LocalidadesCatalog.search_by_name("san josé")  # mismo resultado
         """
         cls._load_data()
-        nombre_lower = nombre.lower()
-        return [loc for loc in cls._data 
-                if nombre_lower in loc['nom_localidad'].lower()]
+        nombre_normalized = normalize_text(nombre)
+        return [loc for loc in cls._data
+                if nombre_normalized in normalize_text(loc['nom_localidad'])]
 
     @classmethod
     def get_by_coordinates(cls, lat: float, lon: float, radio_km: float = 10) -> list[dict]:

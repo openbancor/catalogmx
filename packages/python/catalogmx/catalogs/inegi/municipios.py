@@ -2,6 +2,8 @@
 import json
 from pathlib import Path
 
+from catalogmx.utils.text import normalize_text
+
 
 class MunicipiosCatalog:
     _data: list[dict] | None = None
@@ -15,8 +17,7 @@ class MunicipiosCatalog:
             # Target: catalogmx/packages/shared-data/inegi/municipios_completo.json
             path = Path(__file__).parent.parent.parent.parent.parent / 'shared-data' / 'inegi' / 'municipios_completo.json'
             with open(path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                cls._data = data['municipios']
+                cls._data = json.load(f)
 
             cls._by_cve_completa = {item['cve_completa']: item for item in cls._data}
 
@@ -53,7 +54,14 @@ class MunicipiosCatalog:
 
     @classmethod
     def search_by_name(cls, nombre: str) -> list[dict]:
-        """Busca municipios por nombre (búsqueda parcial, insensible a mayúsculas)"""
+        """
+        Busca municipios por nombre (búsqueda parcial, insensible a acentos).
+
+        Ejemplo:
+            >>> # Ambas búsquedas funcionan igual
+            >>> munis = MunicipiosCatalog.search_by_name("leon")
+            >>> munis = MunicipiosCatalog.search_by_name("león")  # mismo resultado
+        """
         cls._load_data()
-        nombre_lower = nombre.lower()
-        return [m for m in cls._data if nombre_lower in m['nom_municipio'].lower()]
+        nombre_normalized = normalize_text(nombre)
+        return [m for m in cls._data if nombre_normalized in normalize_text(m['nom_municipio'])]
