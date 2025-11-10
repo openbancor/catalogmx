@@ -1,12 +1,3532 @@
 [
   {
-    "fecha": "2025-01-01",
-    "valor": 8.412365,
+    "fecha": "1995-04-04",
+    "valor": 1.0,
+    "moneda": "MXN",
+    "tipo": "valor_inicial",
+    "año": 1995,
+    "mes": 4,
+    "notas": "Valor inicial de la UDI establecido por Banxico"
+  },
+  {
+    "fecha": "2015-01-01",
+    "valor": 5.284123,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2015,
+    "notas": "Promedio anual 2015"
+  },
+  {
+    "fecha": "2016-01-01",
+    "valor": 5.489567,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2016,
+    "notas": "Promedio anual 2016"
+  },
+  {
+    "fecha": "2017-01-01",
+    "valor": 5.789234,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2017,
+    "notas": "Promedio anual 2017"
+  },
+  {
+    "fecha": "2018-01-01",
+    "valor": 6.123456,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2018,
+    "notas": "Promedio anual 2018"
+  },
+  {
+    "fecha": "2019-01-01",
+    "valor": 6.351234,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2019,
+    "notas": "Promedio anual 2019"
+  },
+  {
+    "fecha": "2020-01-01",
+    "valor": 6.556789,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2020,
+    "notas": "Promedio anual 2020"
+  },
+  {
+    "fecha": "2021-01-01",
+    "valor": 6.893456,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2021,
+    "notas": "Promedio anual 2021"
+  },
+  {
+    "fecha": "2022-01-01",
+    "valor": 7.298765,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2022,
+    "notas": "Promedio anual 2022"
+  },
+  {
+    "fecha": "2023-01-01",
+    "valor": 7.762345,
+    "moneda": "MXN",
+    "tipo": "promedio_anual",
+    "año": 2023,
+    "notas": "Promedio anual 2023"
+  },
+  {
+    "fecha": "2024-01-01",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-01",
+    "valor": 8.144234,
     "moneda": "MXN",
     "tipo": "promedio_mensual",
-    "año": 2025,
+    "año": 2024,
+    "mes": 1
+  },
+  {
+    "fecha": "2024-01-02",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
     "mes": 1,
-    "notas": "Valor estimado UDI enero 2025"
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-03",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-04",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-05",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-06",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-07",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-08",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-09",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-10",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-11",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-12",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-13",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-14",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-15",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-16",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-17",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-18",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-19",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-20",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-21",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-22",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-23",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-24",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-25",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-26",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-27",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-28",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-29",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-30",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-01-31",
+    "valor": 8.144234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-01",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-01",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 2
+  },
+  {
+    "fecha": "2024-02-02",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-03",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-04",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-05",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-06",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-07",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-08",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-09",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-10",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-11",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-12",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-13",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-14",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-15",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-16",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-17",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-18",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-19",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-20",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-21",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-22",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-23",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-24",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-25",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-26",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-27",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-28",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-02-29",
+    "valor": 8.165456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 2,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-01",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-01",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 3
+  },
+  {
+    "fecha": "2024-03-02",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-03",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-04",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-05",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-06",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-07",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-08",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-09",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-10",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-11",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-12",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-13",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-14",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-15",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-16",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-17",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-18",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-19",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-20",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-21",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-22",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-23",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-24",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-25",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-26",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-27",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-28",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-29",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-30",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-03-31",
+    "valor": 8.186789,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 3,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-01",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-01",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 4
+  },
+  {
+    "fecha": "2024-04-02",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-03",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-04",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-05",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-06",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-07",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-08",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-09",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-10",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-11",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-12",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-13",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-14",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-15",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-16",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-17",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-18",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-19",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-20",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-21",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-22",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-23",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-24",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-25",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-26",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-27",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-28",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-29",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-04-30",
+    "valor": 8.208123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 4,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-01",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-01",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 5
+  },
+  {
+    "fecha": "2024-05-02",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-03",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-04",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-05",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-06",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-07",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-08",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-09",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-10",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-11",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-12",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-13",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-14",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-15",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-16",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-17",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-18",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-19",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-20",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-21",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-22",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-23",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-24",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-25",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-26",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-27",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-28",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-29",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-30",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-05-31",
+    "valor": 8.229567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 5,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-01",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-01",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 6
+  },
+  {
+    "fecha": "2024-06-02",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-03",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-04",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-05",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-06",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-07",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-08",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-09",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-10",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-11",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-12",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-13",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-14",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-15",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-16",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-17",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-18",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-19",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-20",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-21",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-22",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-23",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-24",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-25",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-26",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-27",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-28",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-29",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-06-30",
+    "valor": 8.251234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 6,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-01",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-01",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 7
+  },
+  {
+    "fecha": "2024-07-02",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-03",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-04",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-05",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-06",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-07",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-08",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-09",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-10",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-11",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-12",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-13",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-14",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-15",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-16",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-17",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-18",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-19",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-20",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-21",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-22",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-23",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-24",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-25",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-26",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-27",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-28",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-29",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-30",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-07-31",
+    "valor": 8.273456,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 7,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-01",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-01",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 8
+  },
+  {
+    "fecha": "2024-08-02",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-03",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-04",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-05",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-06",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-07",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-08",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-09",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-10",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-11",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-12",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-13",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-14",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-15",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-16",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-17",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-18",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-19",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-20",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-21",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-22",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-23",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-24",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-25",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-26",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-27",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-28",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-29",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-30",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-08-31",
+    "valor": 8.295678,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 8,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-01",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-01",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 9
+  },
+  {
+    "fecha": "2024-09-02",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-03",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-04",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-05",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-06",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-07",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-08",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-09",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-10",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-11",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-12",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-13",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-14",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-15",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-16",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-17",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-18",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-19",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-20",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-21",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-22",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-23",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-24",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-25",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-26",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-27",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-28",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-29",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-09-30",
+    "valor": 8.318234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 9,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-01",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-01",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 10
+  },
+  {
+    "fecha": "2024-10-02",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-03",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-04",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-05",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-06",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-07",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-08",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-09",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-10",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-11",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-12",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-13",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-14",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-15",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-16",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-17",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-18",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-19",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-20",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-21",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-22",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-23",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-24",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-25",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-26",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-27",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-28",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-29",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-30",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-10-31",
+    "valor": 8.341567,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 10,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-01",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-01",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "promedio_mensual",
+    "año": 2024,
+    "mes": 11
+  },
+  {
+    "fecha": "2024-11-02",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-03",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-04",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-05",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-06",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-07",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-08",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-09",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-10",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-11",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-12",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-13",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-14",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-15",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-16",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-17",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-18",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-19",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-20",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-21",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-22",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-23",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-24",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-25",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-26",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-27",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-28",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-29",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-11-30",
+    "valor": 8.365123,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 11,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-01",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
     "fecha": "2024-12-01",
@@ -18,172 +3538,622 @@
     "notas": "Valor UDI diciembre 2024"
   },
   {
-    "fecha": "2024-11-01",
-    "valor": 8.365123,
+    "fecha": "2024-12-02",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-03",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-04",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-05",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-06",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-07",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-08",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-09",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-10",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-11",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-12",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-13",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-14",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-15",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-16",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-17",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-18",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-19",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-20",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-21",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-22",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-23",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-24",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-25",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-26",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-27",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-28",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-29",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-30",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2024-12-31",
+    "valor": 8.389234,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2024,
+    "mes": 12,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2025-01-01",
+    "valor": 8.412365,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2025-01-01",
+    "valor": 8.412365,
     "moneda": "MXN",
     "tipo": "promedio_mensual",
-    "año": 2024,
-    "mes": 11
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor estimado UDI enero 2025"
   },
   {
-    "fecha": "2024-10-01",
-    "valor": 8.341567,
+    "fecha": "2025-01-02",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_mensual",
-    "año": 2024,
-    "mes": 10
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2024-09-01",
-    "valor": 8.318234,
+    "fecha": "2025-01-03",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_mensual",
-    "año": 2024,
-    "mes": 9
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2024-08-01",
-    "valor": 8.295678,
+    "fecha": "2025-01-04",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_mensual",
-    "año": 2024,
-    "mes": 8
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2024-07-01",
-    "valor": 8.273456,
+    "fecha": "2025-01-05",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_mensual",
-    "año": 2024,
-    "mes": 7
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2024-06-01",
-    "valor": 8.251234,
+    "fecha": "2025-01-06",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_mensual",
-    "año": 2024,
-    "mes": 6
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2024-05-01",
-    "valor": 8.229567,
+    "fecha": "2025-01-07",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_mensual",
-    "año": 2024,
-    "mes": 5
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2024-04-01",
-    "valor": 8.208123,
+    "fecha": "2025-01-08",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_mensual",
-    "año": 2024,
-    "mes": 4
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2024-03-01",
-    "valor": 8.186789,
+    "fecha": "2025-01-09",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_mensual",
-    "año": 2024,
-    "mes": 3
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2024-02-01",
-    "valor": 8.165456,
+    "fecha": "2025-01-10",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_mensual",
-    "año": 2024,
-    "mes": 2
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2024-01-01",
-    "valor": 8.144234,
+    "fecha": "2025-01-11",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_mensual",
-    "año": 2024,
-    "mes": 1
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2023-01-01",
-    "valor": 7.762345,
+    "fecha": "2025-01-12",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_anual",
-    "año": 2023,
-    "notas": "Promedio anual 2023"
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2022-01-01",
-    "valor": 7.298765,
+    "fecha": "2025-01-13",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_anual",
-    "año": 2022,
-    "notas": "Promedio anual 2022"
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2021-01-01",
-    "valor": 6.893456,
+    "fecha": "2025-01-14",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_anual",
-    "año": 2021,
-    "notas": "Promedio anual 2021"
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2020-01-01",
-    "valor": 6.556789,
+    "fecha": "2025-01-15",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_anual",
-    "año": 2020,
-    "notas": "Promedio anual 2020"
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2019-01-01",
-    "valor": 6.351234,
+    "fecha": "2025-01-16",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_anual",
-    "año": 2019,
-    "notas": "Promedio anual 2019"
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2018-01-01",
-    "valor": 6.123456,
+    "fecha": "2025-01-17",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_anual",
-    "año": 2018,
-    "notas": "Promedio anual 2018"
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2017-01-01",
-    "valor": 5.789234,
+    "fecha": "2025-01-18",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_anual",
-    "año": 2017,
-    "notas": "Promedio anual 2017"
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2016-01-01",
-    "valor": 5.489567,
+    "fecha": "2025-01-19",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_anual",
-    "año": 2016,
-    "notas": "Promedio anual 2016"
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "2015-01-01",
-    "valor": 5.284123,
+    "fecha": "2025-01-20",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "promedio_anual",
-    "año": 2015,
-    "notas": "Promedio anual 2015"
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   },
   {
-    "fecha": "1995-04-04",
-    "valor": 1.000000,
+    "fecha": "2025-01-21",
+    "valor": 8.412365,
     "moneda": "MXN",
-    "tipo": "valor_inicial",
-    "año": 1995,
-    "mes": 4,
-    "notas": "Valor inicial de la UDI establecido por Banxico"
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2025-01-22",
+    "valor": 8.412365,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2025-01-23",
+    "valor": 8.412365,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2025-01-24",
+    "valor": 8.412365,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2025-01-25",
+    "valor": 8.412365,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2025-01-26",
+    "valor": 8.412365,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2025-01-27",
+    "valor": 8.412365,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2025-01-28",
+    "valor": 8.412365,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2025-01-29",
+    "valor": 8.412365,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2025-01-30",
+    "valor": 8.412365,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
+  },
+  {
+    "fecha": "2025-01-31",
+    "valor": 8.412365,
+    "moneda": "MXN",
+    "tipo": "diario",
+    "año": 2025,
+    "mes": 1,
+    "notas": "Valor diario estimado a partir del promedio mensual",
+    "fuente": "promedio_mensual"
   }
 ]

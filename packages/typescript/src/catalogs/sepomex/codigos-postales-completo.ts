@@ -6,8 +6,41 @@
  * Consider using pagination or filters when displaying results.
  */
 
-import { loadCatalog } from '../../utils/catalog-loader';
+import { loadCatalogArray } from '../../utils/catalog-loader';
 import type { PostalCode } from '../../types';
+import Database from 'better-sqlite3';
+import path from 'path';
+
+const DB_PATH = path.resolve(__dirname, '../../../../shared-data/sqlite/sepomex.db');
+
+export class CodigosPostalesCompletoSQLite {
+  private static _db: Database.Database | null = null;
+
+  private static getDB(): Database.Database {
+    if (!this._db) {
+      this._db = new Database(DB_PATH, { readonly: true });
+    }
+    return this._db;
+  }
+
+  static getByCp(cp: string): PostalCode[] {
+    const db = this.getDB();
+    const stmt = db.prepare('SELECT * FROM codigos_postales WHERE cp = ?');
+    return stmt.all(cp) as PostalCode[];
+  }
+
+  static isValid(cp: string): boolean {
+    const db = this.getDB();
+    const stmt = db.prepare('SELECT 1 FROM codigos_postales WHERE cp = ? LIMIT 1');
+    return !!stmt.get(cp);
+  }
+
+  static getByEstado(estado: string, limit: number = 1000): PostalCode[] {
+    const db = this.getDB();
+    const stmt = db.prepare('SELECT * FROM codigos_postales WHERE estado = ? LIMIT ?');
+    return stmt.all(estado, limit) as PostalCode[];
+  }
+}
 
 export class CodigosPostalesCompleto {
   private static _data: PostalCode[] | null = null;
@@ -17,8 +50,8 @@ export class CodigosPostalesCompleto {
    * WARNING: This loads ~150,000 postal codes into memory (~15-20 MB)
    */
   private static getData(): PostalCode[] {
-    if (!this._data) {
-      this._data = loadCatalog<PostalCode>('sepomex/codigos_postales_completo.json');
+    if (this._data === null) {
+      this._data = loadCatalogArray<PostalCode>('sepomex/codigos_postales_completo.json');
     }
     return this._data;
   }

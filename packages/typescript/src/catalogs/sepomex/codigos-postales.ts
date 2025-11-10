@@ -3,7 +3,7 @@
  * Official catalog of Mexican postal codes
  */
 
-import { loadCatalog } from '../../utils/catalog-loader';
+import { loadCatalogArray } from '../../utils/catalog-loader';
 import type { PostalCode } from '../../types';
 
 export class CodigosPostales {
@@ -14,7 +14,7 @@ export class CodigosPostales {
    */
   private static getData(): PostalCode[] {
     if (!this._data) {
-      this._data = loadCatalog<PostalCode>('sepomex/codigos_postales.json');
+      this._data = loadCatalogArray<PostalCode>('sepomex/codigos_postales.json');
     }
     return this._data;
   }

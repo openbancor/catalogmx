@@ -3,7 +3,7 @@
  * International Commercial Terms for foreign trade
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { Incoterm } from '../../../types';
 
 export class IncotermsValidator {
@@ -11,7 +11,7 @@ export class IncotermsValidator {
 
   private static getData(): Incoterm[] {
     if (!this._data) {
-      this._data = loadCatalog<Incoterm>('sat/comercio_exterior/incoterms.json');
+      this._data = loadCatalogObject<Incoterm>('sat/comercio_exterior/incoterms.json');
     }
     return this._data;
   }

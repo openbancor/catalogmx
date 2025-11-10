@@ -3,7 +3,7 @@
  * Transfer motives for CFDI type T
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { MotivoTraslado } from '../../../types';
 
 export class MotivoTrasladoCatalog {
@@ -11,7 +11,7 @@ export class MotivoTrasladoCatalog {
 
   private static getData(): MotivoTraslado[] {
     if (!this._data) {
-      this._data = loadCatalog<MotivoTraslado>('sat/comercio_exterior/motivos_traslado.json');
+      this._data = loadCatalogObject<MotivoTraslado>('sat/comercio_exterior/motivos_traslado.json');
     }
     return this._data;
   }

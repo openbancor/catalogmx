@@ -1,4 +1,4 @@
-import { loadCatalog } from '../../utils/catalog-loader';
+import { loadCatalogArray } from '../../utils/catalog-loader';
 import { SalarioMinimo } from '../../types';
 
 /**
@@ -10,7 +10,7 @@ export class SalariosMinimos {
 
   private static loadData(): void {
     if (this._data !== null) return;
-    this._data = loadCatalog<SalarioMinimo>('mexico/salarios_minimos.json');
+    this._data = loadCatalogArray<SalarioMinimo>('mexico/salarios_minimos.json');
   }
 
   static getData(): SalarioMinimo[] {
@@ -66,6 +66,30 @@ export class SalariosMinimos {
       default:
         return salario.resto_pais ?? salario.zona_general;
     }
+  }
+
+  static getUmaEquivalente(
+    año: number,
+    tipo: 'diario' | 'mensual' | 'anual' = 'diario'
+  ): number | undefined {
+    const salario = this.getPorAño(año);
+    if (!salario) return undefined;
+
+    switch (tipo) {
+      case 'diario':
+        return salario.uma_equivalente_diario;
+      case 'mensual':
+        return salario.uma_equivalente_mensual;
+      case 'anual':
+        return salario.uma_equivalente_anual;
+      default:
+        return salario.uma_equivalente_diario;
+    }
+  }
+
+  static getFuenteUmaEquivalente(año: number): SalarioMinimo['fuente_uma_equivalente'] {
+    const salario = this.getPorAño(año);
+    return salario?.fuente_uma_equivalente;
   }
 
   /**

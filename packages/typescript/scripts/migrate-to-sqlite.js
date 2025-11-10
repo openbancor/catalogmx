@@ -119,9 +119,28 @@ function migrateLocalidades() {
   const jsonPath = path.join(SHARED_DATA, 'inegi/localidades.json');
   const dbPath = path.join(SQLITE_DIR, 'localidades.db');
 
+  // Delete existing DB if it exists to ensure a clean migration
+  if (fs.existsSync(dbPath)) {
+    fs.unlinkSync(dbPath);
+  }
+
   // Read JSON data
   const jsonData = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
-  const localidades = jsonData.localidades;
+  const localidades = Array.isArray(jsonData) ? jsonData : jsonData.localidades;
+
+  if (!Array.isArray(localidades)) {
+    throw new Error('Invalid localidades JSON format. Expected an array or object with a localidades array.');
+  }
+
+  const getValue = (record, ...keys) => {
+    for (const key of keys) {
+      const value = record[key];
+      if (value !== undefined && value !== null) {
+        return value;
+      }
+    }
+    return null;
+  };
 
   // Create database
   const db = new Database(dbPath);
@@ -175,29 +194,49 @@ function migrateLocalidades() {
   // Batch insert
   const insertMany = db.transaction((records) => {
     for (const record of records) {
+      const cvegeo = getValue(record, 'cvegeo', 'CVEGEO');
+      const cveEnt = getValue(record, 'cve_ent', 'cve_entidad', 'CVE_ENT');
+      const nomEnt = getValue(record, 'nom_ent', 'nom_entidad', 'NOM_ENT');
+      const cveMun = getValue(record, 'cve_mun', 'cve_municipio', 'CVE_MUN');
+      const nomMun = getValue(record, 'nom_mun', 'nom_municipio', 'NOM_MUN');
+      const cveLoc = getValue(record, 'cve_loc', 'cve_localidad', 'CVE_LOC');
+      const nomLoc = getValue(record, 'nom_loc', 'nom_localidad', 'NOM_LOC');
+      const ambito = getValue(record, 'ambito', 'AMBITO');
+      const lat = getValue(record, 'lat', 'latitud', 'LAT_DECIMAL');
+      const lon = getValue(record, 'lon', 'longitud', 'LON_DECIMAL');
+      const altitud = getValue(record, 'altitud', 'ALTITUD');
+      const pobTotal = getValue(record, 'poblacion_total', 'POB_TOTAL');
+      const pobMasc = getValue(record, 'poblacion_masculina', 'POB_MASCULINA');
+      const pobFem = getValue(record, 'poblacion_femenina', 'POB_FEMENINA');
+      const viviendas = getValue(record, 'viviendas_habitadas', 'TOTAL DE VIVIENDAS HABITADAS', 'total_viviendas_habitadas');
+
+      if (!cvegeo) {
+        continue;
+      }
+
       insert.run(
-        record.cvegeo,
-        record.cve_ent,
-        record.nom_ent,
-        record.cve_mun,
-        record.nom_mun,
-        record.cve_loc,
-        record.nom_loc,
-        record.ambito || null,
-        record.lat || null,
-        record.lon || null,
-        record.altitud || null,
-        record.poblacion_total || 0,
-        record.poblacion_masculina || 0,
-        record.poblacion_femenina || 0,
-        record.viviendas_habitadas || 0
+        cvegeo,
+        cveEnt,
+        nomEnt,
+        cveMun,
+        nomMun,
+        cveLoc,
+        nomLoc,
+        ambito || null,
+        lat !== null ? Number(lat) : null,
+        lon !== null ? Number(lon) : null,
+        altitud !== null ? Number(altitud) : null,
+        pobTotal !== null ? Number(pobTotal) : 0,
+        pobMasc !== null ? Number(pobMasc) : 0,
+        pobFem !== null ? Number(pobFem) : 0,
+        viviendas !== null ? Number(viviendas) : 0
       );
 
       insertFts.run(
-        record.cvegeo,
-        record.nom_loc,
-        record.nom_mun,
-        record.nom_ent
+        cvegeo,
+        nomLoc || '',
+        nomMun || '',
+        nomEnt || ''
       );
     }
   });
@@ -215,15 +254,93 @@ function migrateLocalidades() {
   db.close();
 }
 
+/**
+ * Migrate SEPOMEX Postal Codes (~157k records)
+ */
+function migrateSepomex() {
+  console.log('📬 Migrating SEPOMEX Codigos Postales (~157k records)...');
+
+  const jsonPath = path.join(SHARED_DATA, 'sepomex/codigos_postales_completo.json');
+  const dbPath = path.join(SQLITE_DIR, 'sepomex.db');
+
+  // Delete existing DB if it exists
+  if (fs.existsSync(dbPath)) {
+    fs.unlinkSync(dbPath);
+  }
+
+  // Read JSON data
+  const jsonData = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+
+  // Create database
+  const db = new Database(dbPath);
+
+  // Create table with optimized schema
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS codigos_postales (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      cp TEXT NOT NULL,
+      asentamiento TEXT NOT NULL,
+      tipo_asentamiento TEXT,
+      municipio TEXT,
+      estado TEXT,
+      ciudad TEXT,
+      codigo_estado TEXT,
+      codigo_municipio TEXT,
+      zona TEXT
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_cp ON codigos_postales(cp);
+    CREATE INDEX IF NOT EXISTS idx_municipio ON codigos_postales(municipio);
+    CREATE INDEX IF NOT EXISTS idx_estado ON codigos_postales(estado);
+  `);
+
+  // Prepare insert statement
+  const insert = db.prepare(`
+    INSERT INTO codigos_postales (cp, asentamiento, tipo_asentamiento, municipio, estado, ciudad, codigo_estado, codigo_municipio, zona)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  // Batch insert for better performance
+  const insertMany = db.transaction((records) => {
+    for (const record of records) {
+      insert.run(
+        record.cp,
+        record.asentamiento,
+        record.tipo_asentamiento,
+        record.municipio,
+        record.estado,
+        record.ciudad,
+        record.codigo_estado,
+        record.codigo_municipio,
+        record.zona
+      );
+    }
+  });
+
+  // Insert all records
+  insertMany(jsonData);
+
+  const count = db.prepare('SELECT COUNT(*) as count FROM codigos_postales').get();
+  console.log(`   ✓ Inserted ${count.count} records`);
+
+  // Get database size
+  const stats = fs.statSync(dbPath);
+  console.log(`   ✓ Database size: ${(stats.size / 1024 / 1024).toFixed(2)} MB\n`);
+
+  db.close();
+}
+
 // Run migrations
 try {
   migrateClaveProdServ();
   migrateLocalidades();
+  migrateSepomex();
 
   console.log('✅ All migrations completed successfully!');
   console.log('\n📊 Summary:');
   console.log('   - c_ClaveProdServ: 52,514 products/services');
   console.log('   - Localidades: ~200,000 localities');
+  console.log('   - SEPOMEX: ~157,000 postal codes');
   console.log(`\n💾 Databases created in: ${SQLITE_DIR}`);
 
 } catch (error) {

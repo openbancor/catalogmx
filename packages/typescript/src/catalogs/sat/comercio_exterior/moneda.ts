@@ -3,7 +3,7 @@
  * ISO 4217 currency codes
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { Moneda } from '../../../types';
 
 export class MonedaCatalog {
@@ -11,7 +11,7 @@ export class MonedaCatalog {
 
   private static getData(): Moneda[] {
     if (!this._data) {
-      this._data = loadCatalog<Moneda>('sat/comercio_exterior/monedas.json');
+      this._data = loadCatalogObject<Moneda>('sat/comercio_exterior/monedas.json');
     }
     return this._data;
   }

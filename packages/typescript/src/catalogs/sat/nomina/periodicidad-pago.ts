@@ -3,7 +3,7 @@
  * Payment frequency
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { PeriodicidadPago } from '../../../types';
 
 export class PeriodicidadPagoCatalog {
@@ -11,7 +11,7 @@ export class PeriodicidadPagoCatalog {
 
   private static getData(): PeriodicidadPago[] {
     if (!this._data) {
-      this._data = loadCatalog<PeriodicidadPago>('sat/nomina_1.2/periodicidad_pago.json');
+      this._data = loadCatalogObject<PeriodicidadPago>('sat/nomina_1.2/periodicidad_pago.json');
     }
     return this._data;
   }

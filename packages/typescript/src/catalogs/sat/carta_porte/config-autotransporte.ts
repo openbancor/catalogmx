@@ -3,7 +3,7 @@
  * Vehicle configurations for road transport
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { ConfigAutotransporte } from '../../../types';
 
 export class ConfigAutotransporteCatalog {
@@ -11,7 +11,7 @@ export class ConfigAutotransporteCatalog {
 
   private static getData(): ConfigAutotransporte[] {
     if (!this._data) {
-      this._data = loadCatalog<ConfigAutotransporte>('sat/carta_porte_3/config_autotransporte.json');
+      this._data = loadCatalogObject<ConfigAutotransporte>('sat/carta_porte_3/config_autotransporte.json');
     }
     return this._data;
   }

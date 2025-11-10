@@ -2,6 +2,7 @@
  * Tests for catalogs
  */
 
+import { describe, expect, test } from '@jest/globals';
 import {
   BankCatalog,
   InstitucionesFinancieras,

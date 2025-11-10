@@ -107,6 +107,9 @@ export interface UsoCfdi {
   description: string;
   persona_fisica: boolean;
   persona_moral: boolean;
+  fisica?: boolean; // Alias from SAT data sources
+  moral?: boolean; // Alias from SAT data sources
+  applies_to?: string;
   regimen_fiscal?: string[];
 }
 
@@ -147,6 +150,12 @@ export interface TipoRelacion {
 export interface ObjetoImp {
   code: string;
   description: string;
+}
+
+export interface CatalogItem {
+  id: string;
+  name: string;
+  [key: string]: any;
 }
 
 // SAT Comercio Exterior types
@@ -543,6 +552,10 @@ export interface SalarioMinimo {
   moneda: string;
   periodo: 'diario' | 'mensual' | 'anual';
   notas?: string;
+  uma_equivalente_diario?: number;
+  uma_equivalente_mensual?: number;
+  uma_equivalente_anual?: number;
+  fuente_uma_equivalente?: 'uma_oficial' | 'salario_minimo';
 }
 
 // Mexico - UMA (Unidad de Medida y Actualización)

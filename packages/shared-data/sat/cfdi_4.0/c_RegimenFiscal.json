@@ -1,0 +1,79 @@
+{
+  "_meta": {
+    "catalog": "c_RegimenFiscal",
+    "source": "http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd",
+    "xsd_name": "c_RegimenFiscal",
+    "downloaded": "2025-11-09T05:36:54.039274"
+  },
+  "data": [
+    {
+      "valor": "601"
+    },
+    {
+      "valor": "603"
+    },
+    {
+      "valor": "605"
+    },
+    {
+      "valor": "606"
+    },
+    {
+      "valor": "607"
+    },
+    {
+      "valor": "608"
+    },
+    {
+      "valor": "609"
+    },
+    {
+      "valor": "610"
+    },
+    {
+      "valor": "611"
+    },
+    {
+      "valor": "612"
+    },
+    {
+      "valor": "614"
+    },
+    {
+      "valor": "615"
+    },
+    {
+      "valor": "616"
+    },
+    {
+      "valor": "620"
+    },
+    {
+      "valor": "621"
+    },
+    {
+      "valor": "622"
+    },
+    {
+      "valor": "623"
+    },
+    {
+      "valor": "624"
+    },
+    {
+      "valor": "625"
+    },
+    {
+      "valor": "626"
+    },
+    {
+      "valor": "628"
+    },
+    {
+      "valor": "629"
+    },
+    {
+      "valor": "630"
+    }
+  ]
+}

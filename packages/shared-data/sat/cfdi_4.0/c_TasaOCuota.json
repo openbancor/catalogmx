@@ -1,0 +1,274 @@
+{
+  "_meta": {
+    "catalog": "c_TasaOCuota",
+    "source": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/catCFDI_V_4_20251023.xls",
+    "sheet": "c_TasaOCuota",
+    "downloaded": "2025-11-09T05:37:55.770704"
+  },
+  "data": [
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Versión CFDI",
+      "unnamed:_1": "Versión catálogo",
+      "unnamed:_2": "Revisión catálogo",
+      "unnamed:_3": "Fecha publicación de catálogo",
+      "unnamed:_4": "Fecha  inicio de vigencia del catálogo",
+      "unnamed:_5": "Fecha fin de vigencia del catálogo",
+      "unnamed:_6": NaN,
+      "unnamed:_7": NaN,
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": 4,
+      "unnamed:_1": 3,
+      "unnamed:_2": 0,
+      "unnamed:_3": "2024-12-31T00:00:00",
+      "unnamed:_4": "2025-01-01T00:00:00",
+      "unnamed:_5": NaN,
+      "unnamed:_6": NaN,
+      "unnamed:_7": NaN,
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": NaN,
+      "unnamed:_1": NaN,
+      "unnamed:_2": NaN,
+      "unnamed:_3": NaN,
+      "unnamed:_4": NaN,
+      "unnamed:_5": NaN,
+      "unnamed:_6": NaN,
+      "unnamed:_7": NaN,
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Rango o Fijo",
+      "unnamed:_1": "c_TasaOCuota",
+      "unnamed:_2": NaN,
+      "unnamed:_3": "Impuesto",
+      "unnamed:_4": "Factor",
+      "unnamed:_5": "Traslado",
+      "unnamed:_6": "Retención",
+      "unnamed:_7": "Fecha inicio de vigencia",
+      "unnamed:_8": "Fecha fin de vigencia"
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": NaN,
+      "unnamed:_1": "Valor mínimo",
+      "unnamed:_2": "Valor máximo",
+      "unnamed:_3": NaN,
+      "unnamed:_4": NaN,
+      "unnamed:_5": NaN,
+      "unnamed:_6": NaN,
+      "unnamed:_7": NaN,
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0,
+      "unnamed:_3": "IVA",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "No",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0.16,
+      "unnamed:_3": "IVA",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "No",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Rango",
+      "unnamed:_1": 0,
+      "unnamed:_2": 0.16,
+      "unnamed:_3": "IVA",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "No",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0.08,
+      "unnamed:_3": "IVA Crédito aplicado del 50%",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "No",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0.265,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0.3,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0.53,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0.5,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 1.6,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0.304,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0.25,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0.09,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0.08,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0.07,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0.06,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0.03,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "No",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Fijo",
+      "unnamed:_1": NaN,
+      "unnamed:_2": 0,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "No",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Rango",
+      "unnamed:_1": 0,
+      "unnamed:_2": 69.5255,
+      "unnamed:_3": "IEPS",
+      "unnamed:_4": "Cuota",
+      "unnamed:_5": "Sí",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2025-01-01T00:00:00",
+      "unnamed:_8": NaN
+    },
+    {
+      "catálogo_de_tasas_o_cuotas_de_impuestos.": "Rango",
+      "unnamed:_1": 0,
+      "unnamed:_2": 0.35,
+      "unnamed:_3": "ISR",
+      "unnamed:_4": "Tasa",
+      "unnamed:_5": "No",
+      "unnamed:_6": "Sí",
+      "unnamed:_7": "2022-01-01T00:00:00",
+      "unnamed:_8": NaN
+    }
+  ]
+}

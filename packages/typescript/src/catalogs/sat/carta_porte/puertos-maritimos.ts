@@ -3,7 +3,7 @@
  * Mexican seaports and maritime authorization
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { PuertoMaritimo } from '../../../types';
 
 export class PuertosMaritimos {
@@ -11,7 +11,7 @@ export class PuertosMaritimos {
 
   private static getData(): PuertoMaritimo[] {
     if (!this._data) {
-      this._data = loadCatalog<PuertoMaritimo>('sat/carta_porte_3/puertos_maritimos.json');
+      this._data = loadCatalogObject<PuertoMaritimo>('sat/carta_porte_3/puertos_maritimos.json');
     }
     return this._data;
   }

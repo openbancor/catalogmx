@@ -3,7 +3,7 @@
  * SCT transport permit types
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { TipoPermiso } from '../../../types';
 
 export class TipoPermisoCatalog {
@@ -11,7 +11,7 @@ export class TipoPermisoCatalog {
 
   private static getData(): TipoPermiso[] {
     if (!this._data) {
-      this._data = loadCatalog<TipoPermiso>('sat/carta_porte_3/tipo_permiso.json');
+      this._data = loadCatalogObject<TipoPermiso>('sat/carta_porte_3/tipo_permiso.json');
     }
     return this._data;
   }

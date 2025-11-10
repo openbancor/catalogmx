@@ -3,7 +3,7 @@
  * Official catalog of Mexican banks with SPEI participation status
  */
 
-import { loadCatalog } from '../../utils/catalog-loader';
+import { loadCatalogArray } from '../../utils/catalog-loader';
 import type { Bank } from '../../types';
 
 export class BankCatalog {
@@ -13,8 +13,8 @@ export class BankCatalog {
    * Load banks data (lazy loading with caching)
    */
   private static getData(): Bank[] {
-    if (!this._data) {
-      this._data = loadCatalog<Bank>('banxico/banks.json');
+    if (this._data === null) {
+      this._data = loadCatalogArray<Bank>('banxico/banks.json');
     }
     return this._data;
   }

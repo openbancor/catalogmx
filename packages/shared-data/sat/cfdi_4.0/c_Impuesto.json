@@ -1,0 +1,19 @@
+{
+  "_meta": {
+    "catalog": "c_Impuesto",
+    "source": "http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd",
+    "xsd_name": "c_Impuesto",
+    "downloaded": "2025-11-09T05:36:54.028007"
+  },
+  "data": [
+    {
+      "valor": "001"
+    },
+    {
+      "valor": "002"
+    },
+    {
+      "valor": "003"
+    }
+  ]
+}

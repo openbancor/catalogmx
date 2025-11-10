@@ -3,7 +3,7 @@
  * UN hazardous materials (HAZMAT) catalog
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { MaterialPeligroso } from '../../../types';
 
 export class MaterialPeligrosoCatalog {
@@ -11,7 +11,7 @@ export class MaterialPeligrosoCatalog {
 
   private static getData(): MaterialPeligroso[] {
     if (!this._data) {
-      this._data = loadCatalog<MaterialPeligroso>('sat/carta_porte_3/material_peligroso.json');
+      this._data = loadCatalogObject<MaterialPeligroso>('sat/carta_porte_3/material_peligroso.json');
     }
     return this._data;
   }

@@ -3,7 +3,7 @@
  * UN packaging types
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { TipoEmbalaje } from '../../../types';
 
 export class TipoEmbalajeCatalog {
@@ -11,7 +11,7 @@ export class TipoEmbalajeCatalog {
 
   private static getData(): TipoEmbalaje[] {
     if (!this._data) {
-      this._data = loadCatalog<TipoEmbalaje>('sat/carta_porte_3/tipo_embalaje.json');
+      this._data = loadCatalogObject<TipoEmbalaje>('sat/carta_porte_3/tipo_embalaje.json');
     }
     return this._data;
   }

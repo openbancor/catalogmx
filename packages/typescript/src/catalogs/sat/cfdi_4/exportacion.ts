@@ -3,7 +3,7 @@
  * Export keys
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { Exportacion } from '../../../types';
 
 export class ExportacionCatalog {
@@ -11,7 +11,7 @@ export class ExportacionCatalog {
 
   private static getData(): Exportacion[] {
     if (!this._data) {
-      this._data = loadCatalog<Exportacion>('sat/cfdi_4.0/exportacion.json');
+      this._data = loadCatalogObject<Exportacion>('sat/cfdi_4.0/exportacion.json');
     }
     return this._data;
   }

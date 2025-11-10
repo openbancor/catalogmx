@@ -3,7 +3,7 @@
  * Labor contract types
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { TipoContrato } from '../../../types';
 
 export class TipoContratoCatalog {
@@ -11,7 +11,7 @@ export class TipoContratoCatalog {
 
   private static getData(): TipoContrato[] {
     if (!this._data) {
-      this._data = loadCatalog<TipoContrato>('sat/nomina_1.2/tipo_contrato.json');
+      this._data = loadCatalogObject<TipoContrato>('sat/nomina_1.2/tipo_contrato.json');
     }
     return this._data;
   }

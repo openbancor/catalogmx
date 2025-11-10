@@ -15,11 +15,26 @@ const EXCLUDED_WORDS_FISICAS = ['DE', 'LA', 'LAS', 'MC', 'VON', 'DEL', 'LOS', 'Y
 
 const EXCLUDED_WORDS_MORALES = [
   'EL', 'LA', 'DE', 'LOS', 'LAS', 'Y', 'DEL', 'MI',
-  'COMPAÑIA', 'COMPAÑÍA', 'CIA', 'CIA.', 'SOCIEDAD', 'SOC', 'SOC.',
-  'COOPERATIVA', 'COOP', 'COOP.', 'S.A.', 'SA', 'S.A', 'S. A.', 'S. A',
-  'S.A.B.', 'SAB', 'S.A.B', 'S. A. B.', 'S. A. B', 'S. DE R.L.', 'S DE RL',
-  'SRL', 'S.R.L.', 'S. R. L.', 'S. EN C.', 'S EN C', 'S.C.', 'SC',
-  'A.C.', 'AC', 'A. C.', 'C.V.', 'CV', 'C. V.', 'THE', 'OF', 'COMPANY', 'AND', 'CO', 'CO.'
+  'COMPAÑIA', 'COMPAÑÍA', 'CIA', 'CIA.',
+  'SOCIEDAD', 'SOC', 'SOC.',
+  'COOPERATIVA', 'COOP', 'COOP.',
+  'S.A.', 'SA', 'S.A', 'S. A.', 'S. A',
+  'S.A.B.', 'SAB', 'S.A.B', 'S. A. B.', 'S. A. B',
+  'S. DE R.L.', 'S DE RL', 'SRL', 'S.R.L.', 'S. R. L.',
+  'S. EN C.', 'S EN C', 'S.C.', 'SC',
+  'S. EN C. POR A.', 'S EN C POR A',
+  'S. EN N.C.', 'S EN NC',
+  'A.C.', 'AC', 'A. C.',
+  'A. EN P.', 'A EN P',
+  'S.C.L.', 'SCL',
+  'S.N.C.', 'SNC',
+  'C.V.', 'CV', 'C. V.',
+  'SA DE CV', 'S.A. DE C.V.', 'SA DE CV MI', 'S.A. DE C.V. MI',
+  'S.A.B. DE C.V.', 'SAB DE CV', 'S.A.B DE C.V',
+  'SRL DE CV', 'S.R.L. DE C.V.', 'SRL DE CV MI', 'SRL MI',
+  'THE', 'OF', 'COMPANY', 'AND', 'CO', 'CO.',
+  'MC', 'VON', 'MAC', 'VAN',
+  'PARA', 'POR', 'AL', 'E', 'EN', 'CON', 'SUS', 'A'
 ];
 
 const CHECKSUM_TABLE: Record<string, string> = {

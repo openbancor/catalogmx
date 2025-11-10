@@ -1,0 +1,64 @@
+{
+  "_meta": {
+    "catalog": "c_Meses",
+    "source": "http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd",
+    "xsd_name": "c_Meses",
+    "downloaded": "2025-11-09T05:36:54.056523"
+  },
+  "data": [
+    {
+      "valor": "01"
+    },
+    {
+      "valor": "02"
+    },
+    {
+      "valor": "03"
+    },
+    {
+      "valor": "04"
+    },
+    {
+      "valor": "05"
+    },
+    {
+      "valor": "06"
+    },
+    {
+      "valor": "07"
+    },
+    {
+      "valor": "08"
+    },
+    {
+      "valor": "09"
+    },
+    {
+      "valor": "10"
+    },
+    {
+      "valor": "11"
+    },
+    {
+      "valor": "12"
+    },
+    {
+      "valor": "13"
+    },
+    {
+      "valor": "14"
+    },
+    {
+      "valor": "15"
+    },
+    {
+      "valor": "16"
+    },
+    {
+      "valor": "17"
+    },
+    {
+      "valor": "18"
+    }
+  ]
+}

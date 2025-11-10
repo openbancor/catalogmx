@@ -23,20 +23,19 @@ def read(*names, **kwargs):
 
 
 setup(
-    name='rfcmx',
-    version='0.2.0',
+    name='catalogmx',
+    version='0.3.0',
     license='BSD',
-    description='A Python Package to validate and generate Mexican codes (RFC, CURP)',
+    description='Comprehensive Mexican Data Validators and Official Catalogs Library',
     long_description='%s\n%s' % (
         re.compile('^.. start-badges.*^.. end-badges', re.M | re.S).sub('', read('README.rst')),
         re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))
     ),
     author='Luis Fernando Barrera',
     author_email='luisfernando@informind.com',
-    url='https://github.com/joyinsky/python-rfcmx',
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
-    py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
+    url='https://github.com/openbancor/catalogmx',
+    packages=find_packages(),
+    py_modules=[splitext(basename(path))[0] for path in glob('catalogmx/*.py')],
     include_package_data=True,
     zip_safe=False,
     classifiers=[
@@ -76,7 +75,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'rfcmx = rfcmx.cli:main',
+            'catalogmx = catalogmx.cli:main',
         ]
     },
 )

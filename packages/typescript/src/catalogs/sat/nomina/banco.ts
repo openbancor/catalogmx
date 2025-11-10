@@ -3,7 +3,7 @@
  * Banks for payroll deposits
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { BancoNomina } from '../../../types';
 
 export class BancoNominaCatalog {
@@ -11,7 +11,7 @@ export class BancoNominaCatalog {
 
   private static getData(): BancoNomina[] {
     if (!this._data) {
-      this._data = loadCatalog<BancoNomina>('sat/nomina_1.2/banco.json');
+      this._data = loadCatalogObject<BancoNomina>('sat/nomina_1.2/banco.json');
     }
     return this._data;
   }

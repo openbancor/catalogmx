@@ -3,7 +3,7 @@
  * Official catalog of Mexican states with INEGI and CURP codes
  */
 
-import { loadCatalog } from '../../utils/catalog-loader';
+import { loadCatalogArray } from '../../utils/catalog-loader';
 import type { State } from '../../types';
 
 export class StateCatalog {
@@ -14,7 +14,7 @@ export class StateCatalog {
    */
   private static getData(): State[] {
     if (!this._data) {
-      this._data = loadCatalog<State>('inegi/states.json');
+      this._data = loadCatalogArray<State>('inegi/states.json');
     }
     return this._data;
   }

@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "catalog": "c_FormaPago",
+    "source": "http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd",
+    "xsd_name": "c_FormaPago",
+    "downloaded": "2025-11-09T05:36:54.020465"
+  },
+  "data": [
+    {
+      "valor": "01"
+    },
+    {
+      "valor": "02"
+    },
+    {
+      "valor": "03"
+    },
+    {
+      "valor": "04"
+    },
+    {
+      "valor": "05"
+    },
+    {
+      "valor": "06"
+    },
+    {
+      "valor": "08"
+    },
+    {
+      "valor": "12"
+    },
+    {
+      "valor": "13"
+    },
+    {
+      "valor": "14"
+    },
+    {
+      "valor": "15"
+    },
+    {
+      "valor": "17"
+    },
+    {
+      "valor": "23"
+    },
+    {
+      "valor": "24"
+    },
+    {
+      "valor": "25"
+    },
+    {
+      "valor": "26"
+    },
+    {
+      "valor": "27"
+    },
+    {
+      "valor": "28"
+    },
+    {
+      "valor": "29"
+    },
+    {
+      "valor": "30"
+    },
+    {
+      "valor": "31"
+    },
+    {
+      "valor": "99"
+    }
+  ]
+}

@@ -311,3 +311,17 @@ def is_valid_rfc(rfc: str) -> bool:
 def is_valid_curp(curp: str) -> bool:
     """Quick CURP validation. Alias for validate_curp()."""
     return validate_curp(curp)
+
+# ============================================================================
+# Path Helper Functions
+# ============================================================================
+from pathlib import Path
+
+def get_project_root() -> Path:
+    """Returns the project root folder by searching for a .git directory."""
+    current_path = Path(__file__).parent
+    while current_path.parent != current_path:
+        if (current_path / '.git').exists():
+            return current_path
+        current_path = current_path.parent
+    raise FileNotFoundError("Project root not found. Could not find .git directory.")

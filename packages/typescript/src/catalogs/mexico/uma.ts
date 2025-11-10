@@ -1,5 +1,6 @@
-import { loadCatalog } from '../../utils/catalog-loader';
+import { loadCatalogArray } from '../../utils/catalog-loader';
 import { UMA } from '../../types';
+import { SalariosMinimos } from './salarios-minimos';
 
 /**
  * UMA (Unidad de Medida y Actualización) Catalog
@@ -11,7 +12,7 @@ export class UMACatalog {
 
   private static loadData(): void {
     if (this._data !== null) return;
-    this._data = loadCatalog<UMA>('mexico/uma.json');
+    this._data = loadCatalogArray<UMA>('mexico/uma.json');
   }
 
   static getData(): UMA[] {
@@ -23,7 +24,35 @@ export class UMACatalog {
    * Get UMA for a specific year
    */
   static getPorAño(año: number): UMA | undefined {
-    return this.getData().find(u => u.año === año);
+    const existente = this.getData().find(u => u.año === año);
+    if (existente) {
+      return existente;
+    }
+
+    const equivalencia = SalariosMinimos.getUmaEquivalente(año, 'diario');
+    if (equivalencia === undefined) {
+      return undefined;
+    }
+
+    const salario = SalariosMinimos.getPorAño(año);
+    const vigenciaInicio = salario?.vigencia_inicio ?? `${año}-01-01`;
+    const vigenciaFin = salario?.vigencia_inicio ? `${año}-12-31` : `${año}-12-31`;
+    const valorDiario = equivalencia;
+    const valorMensual = SalariosMinimos.getUmaEquivalente(año, 'mensual') ?? Number((valorDiario * 30.4).toFixed(2));
+    const valorAnual = SalariosMinimos.getUmaEquivalente(año, 'anual') ?? Number((valorDiario * 365).toFixed(2));
+
+    return {
+      año,
+      vigencia_inicio: vigenciaInicio,
+      vigencia_fin: vigenciaFin,
+      valor_diario: Number(valorDiario.toFixed(2)),
+      valor_mensual: Number(valorMensual.toFixed(2)),
+      valor_anual: Number(valorAnual.toFixed(2)),
+      moneda: salario?.moneda ?? 'MXN',
+      publicacion_dof: salario?.vigencia_inicio ?? `${año}-01-01`,
+      incremento_porcentual: null,
+      notas: 'Equivalencia de UMA generada a partir del salario mínimo vigente antes de 2017',
+    };
   }
 
   /**
@@ -47,7 +76,7 @@ export class UMACatalog {
       const inicio = new Date(u.vigencia_inicio);
       const fin = new Date(u.vigencia_fin);
       return date >= inicio && date <= fin;
-    });
+    }) ?? this.getPorAño(date.getFullYear());
   }
 
   /**

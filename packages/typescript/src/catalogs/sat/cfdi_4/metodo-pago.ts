@@ -3,7 +3,7 @@
  * Payment methods (PUE, PPD)
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { MetodoPago } from '../../../types';
 
 export class MetodoPagoCatalog {
@@ -11,7 +11,7 @@ export class MetodoPagoCatalog {
 
   private static getData(): MetodoPago[] {
     if (!this._data) {
-      this._data = loadCatalog<MetodoPago>('sat/cfdi_4.0/metodo_pago.json');
+      this._data = loadCatalogObject<MetodoPago>('sat/cfdi_4.0/metodo_pago.json');
     }
     return this._data;
   }

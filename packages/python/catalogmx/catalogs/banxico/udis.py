@@ -19,6 +19,10 @@ class UDICatalog:
     """
 
     _data: Optional[List[Dict]] = None
+    _by_fecha: Optional[Dict[str, Dict]] = None
+    _mensual: Optional[Dict[str, Dict]] = None
+    _anual: Optional[Dict[int, Dict]] = None
+    _daily: Optional[List[Dict]] = None
 
     @classmethod
     def _load_data(cls) -> None:
@@ -32,6 +36,34 @@ class UDICatalog:
             with open(shared_data_path, 'r', encoding='utf-8') as f:
                 cls._data = json.load(f)
 
+        if cls._by_fecha is not None:
+            return
+
+        cls._by_fecha = {}
+        cls._mensual = {}
+        cls._anual = {}
+        daily: List[Dict] = []
+
+        for record in cls._data:
+            fecha = record.get('fecha')
+            if not fecha:
+                continue
+
+            existing = cls._by_fecha.get(fecha)
+            if existing is None or (record.get('tipo') == 'diario' and existing.get('tipo') != 'diario'):
+                cls._by_fecha[fecha] = record
+
+            if record.get('tipo') == 'diario':
+                daily.append(record)
+            elif record.get('tipo') == 'promedio_mensual':
+                key = f"{record.get('año')}-{int(record.get('mes', 0)):02d}"
+                cls._mensual[key] = record
+            elif record.get('tipo') == 'promedio_anual':
+                cls._anual[int(record.get('año'))] = record
+
+        daily.sort(key=lambda r: r['fecha'])
+        cls._daily = daily
+
     @classmethod
     def get_data(cls) -> List[Dict]:
         """
@@ -43,6 +75,20 @@ class UDICatalog:
         return cls._data.copy()
 
     @classmethod
+    def _get_by_fecha(cls, fecha: str) -> Optional[Dict]:
+        cls._load_data()
+        record = cls._by_fecha.get(fecha)
+        if record:
+            return record
+
+        try:
+            anio, mes, _dia = fecha.split('-')
+            mensual = cls._mensual.get(f"{int(anio)}-{int(mes):02d}") if cls._mensual else None
+            return mensual
+        except ValueError:
+            return None
+
+    @classmethod
     def get_por_fecha(cls, fecha: str) -> Optional[Dict]:
         """
         Get UDI value for a specific date
@@ -50,13 +96,8 @@ class UDICatalog:
         :param fecha: Date string in YYYY-MM-DD format
         :return: UDI record or None if not found
         """
-        cls._load_data()
-
-        for record in cls._data:
-            if record.get('fecha') == fecha:
-                return record.copy()
-
-        return None
+        record = cls._get_by_fecha(fecha)
+        return record.copy() if record else None
 
     @classmethod
     def get_por_mes(cls, anio: int, mes: int) -> Optional[Dict]:
@@ -68,18 +109,12 @@ class UDICatalog:
         :return: UDI record with monthly average or None if not found
         """
         cls._load_data()
-
-        # Format as YYYY-MM
-        fecha_str = f"{anio}-{mes:02d}"
-
-        for record in cls._data:
-            if record.get('tipo') == 'promedio_mensual' and record.get('fecha', '').startswith(fecha_str):
-                return record.copy()
-
-        return None
+        key = f"{anio}-{mes:02d}"
+        record = cls._mensual.get(key) if cls._mensual else None
+        return record.copy() if record else None
 
     @classmethod
-    def get_por_anio(cls, anio: int) -> Optional[Dict]:
+    def get_promedio_anual(cls, anio: int) -> Optional[Dict]:
         """
         Get annual average UDI value
 
@@ -88,11 +123,16 @@ class UDICatalog:
         """
         cls._load_data()
 
-        for record in cls._data:
-            if record.get('tipo') == 'promedio_anual' and record.get('fecha', '').startswith(str(anio)):
-                return record.copy()
+        record = cls._anual.get(anio) if cls._anual else None
+        return record.copy() if record else None
 
-        return None
+    @classmethod
+    def get_por_anio(cls, anio: int) -> List[Dict]:
+        """Return the daily UDI series for a given year."""
+        cls._load_data()
+
+        source = cls._daily if cls._daily else [r for r in cls._data if r.get('tipo') == 'promedio_mensual']
+        return [record.copy() for record in source if record.get('año') == anio]
 
     @classmethod
     def get_actual(cls) -> Optional[Dict]:
@@ -103,12 +143,28 @@ class UDICatalog:
         """
         cls._load_data()
 
+        if cls._daily:
+            return cls._daily[-1].copy()
+
         if not cls._data:
             return None
 
-        # Find the most recent value (daily, monthly average, or annual average)
-        # Data should be sorted by date descending, so first element is most recent
-        return cls._data[0].copy()
+        record = max(cls._data, key=lambda r: r.get('fecha', ''), default=None)
+        return record.copy() if record else None
+
+    @classmethod
+    def _get_valor_cercano(cls, fecha: str) -> Optional[Dict]:
+        cls._load_data()
+        objetivo = datetime.fromisoformat(fecha)
+
+        candidatos = cls._daily if cls._daily else [r for r in cls._data if r.get('tipo') == 'promedio_mensual']
+        if not candidatos:
+            return None
+
+        def _diff(record: Dict) -> float:
+            return abs((datetime.fromisoformat(record['fecha']) - objetivo).total_seconds())
+
+        return min(candidatos, key=_diff)
 
     @classmethod
     def pesos_a_udis(cls, pesos: float, fecha: str) -> Optional[float]:
@@ -120,6 +176,8 @@ class UDICatalog:
         :return: Amount in UDIs or None if UDI value not found
         """
         record = cls.get_por_fecha(fecha)
+        if not record:
+            record = cls._get_valor_cercano(fecha)
         if not record:
             return None
 
@@ -140,6 +198,8 @@ class UDICatalog:
         """
         record = cls.get_por_fecha(fecha)
         if not record:
+            record = cls._get_valor_cercano(fecha)
+        if not record:
             return None
 
         valor_udi = record.get('valor')
@@ -157,8 +217,8 @@ class UDICatalog:
         :param fecha_fin: End date (YYYY-MM-DD)
         :return: Percentage variation or None if values not found
         """
-        record_inicio = cls.get_por_fecha(fecha_inicio)
-        record_fin = cls.get_por_fecha(fecha_fin)
+        record_inicio = cls.get_por_fecha(fecha_inicio) or cls._get_valor_cercano(fecha_inicio)
+        record_fin = cls.get_por_fecha(fecha_fin) or cls._get_valor_cercano(fecha_fin)
 
         if not record_inicio or not record_fin:
             return None
@@ -175,7 +235,8 @@ class UDICatalog:
 # Convenience functions
 def get_udi_actual() -> Optional[Dict]:
     """Get most recent UDI value"""
-    return UDICatalog.get_actual()
+    record = UDICatalog.get_actual()
+    return record.copy() if record else None
 
 
 def get_udi_por_fecha(fecha: str) -> Optional[Dict]:

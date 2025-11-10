@@ -3,7 +3,7 @@
  * ISO 3166-1 alpha-3 country codes
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { Pais } from '../../../types';
 
 export class PaisCatalog {
@@ -11,7 +11,7 @@ export class PaisCatalog {
 
   private static getData(): Pais[] {
     if (!this._data) {
-      this._data = loadCatalog<Pais>('sat/comercio_exterior/paises.json');
+      this._data = loadCatalogObject<Pais>('sat/comercio_exterior/paises.json');
     }
     return this._data;
   }

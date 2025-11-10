@@ -3,7 +3,7 @@
  * Regime types for payroll
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { TipoRegimen } from '../../../types';
 
 export class TipoRegimenCatalog {
@@ -11,7 +11,7 @@ export class TipoRegimenCatalog {
 
   private static getData(): TipoRegimen[] {
     if (!this._data) {
-      this._data = loadCatalog<TipoRegimen>('sat/nomina_1.2/tipo_regimen.json');
+      this._data = loadCatalogObject<TipoRegimen>('sat/nomina_1.2/tipo_regimen.json');
     }
     return this._data;
   }

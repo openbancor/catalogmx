@@ -3,7 +3,7 @@
  * Payment methods
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { FormaPago } from '../../../types';
 
 export class FormaPagoCatalog {
@@ -11,7 +11,7 @@ export class FormaPagoCatalog {
 
   private static getData(): FormaPago[] {
     if (!this._data) {
-      this._data = loadCatalog<FormaPago>('sat/cfdi_4.0/forma_pago.json');
+      this._data = loadCatalogObject<FormaPago>('sat/cfdi_4.0/forma_pago.json');
     }
     return this._data;
   }

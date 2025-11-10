@@ -69,3 +69,66 @@ class CodigosPostales:
         """Obtiene el estado de un código postal"""
         settlements = cls.get_by_cp(cp)
         return settlements[0]['estado'] if settlements else None
+
+
+class CodigosPostalesSQLite:
+    _db_path = None
+    _connection = None
+
+    @classmethod
+    def _get_db_path(cls):
+        if cls._db_path is None:
+            cls._db_path = Path(__file__).parent.parent.parent.parent.parent / 'shared-data' / 'sqlite' / 'sepomex.db'
+        return cls._db_path
+
+    @classmethod
+    def _get_connection(cls):
+        import sqlite3
+        if cls._connection is None:
+            path = cls._get_db_path()
+            if not path.exists():
+                raise FileNotFoundError(f"Database not found at {path}. Please run the migration script.")
+            cls._connection = sqlite3.connect(path)
+            cls._connection.row_factory = sqlite3.Row
+        return cls._connection
+
+    @classmethod
+    def _query(cls, query: str, params: tuple = ()):
+        conn = cls._get_connection()
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        rows = cursor.fetchall()
+        return [dict(row) for row in rows]
+
+    @classmethod
+    def get_by_cp(cls, cp: str) -> list[dict]:
+        """Obtiene todos los asentamientos de un código postal desde SQLite"""
+        return cls._query("SELECT * FROM codigos_postales WHERE cp = ?", (cp,))
+
+    @classmethod
+    def is_valid(cls, cp: str) -> bool:
+        """Verifica si un código postal existe en SQLite"""
+        result = cls._query("SELECT 1 FROM codigos_postales WHERE cp = ? LIMIT 1", (cp,))
+        return len(result) > 0
+
+    @classmethod
+    def get_by_estado(cls, estado: str) -> list[dict]:
+        """Obtiene todos los códigos postales de un estado desde SQLite"""
+        return cls._query("SELECT * FROM codigos_postales WHERE estado = ?", (estado,))
+
+    @classmethod
+    def get_all(cls) -> list[dict]:
+        """Obtiene todos los códigos postales desde SQLite"""
+        return cls._query("SELECT * FROM codigos_postales")
+
+    @classmethod
+    def get_municipio(cls, cp: str) -> str | None:
+        """Obtiene el municipio de un código postal desde SQLite"""
+        settlements = cls.get_by_cp(cp)
+        return settlements[0]['municipio'] if settlements else None
+
+    @classmethod
+    def get_estado(cls, cp: str) -> str | None:
+        """Obtiene el estado de un código postal desde SQLite"""
+        settlements = cls.get_by_cp(cp)
+        return settlements[0]['estado'] if settlements else None

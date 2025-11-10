@@ -3,7 +3,7 @@
  * Customs measurement units
  */
 
-import { loadCatalog } from '../../../utils/catalog-loader';
+import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { UnidadAduana } from '../../../types';
 
 export class UnidadAduanaCatalog {
@@ -11,7 +11,7 @@ export class UnidadAduanaCatalog {
 
   private static getData(): UnidadAduana[] {
     if (!this._data) {
-      this._data = loadCatalog<UnidadAduana>('sat/comercio_exterior/unidades_aduana.json');
+      this._data = loadCatalogObject<UnidadAduana>('sat/comercio_exterior/unidades_aduana.json');
     }
     return this._data;
   }

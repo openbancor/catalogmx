@@ -1,0 +1,37 @@
+{
+  "_meta": {
+    "catalog": "c_TipoRelacion",
+    "source": "http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd",
+    "xsd_name": "c_TipoRelacion",
+    "downloaded": "2025-11-09T05:36:54.049658"
+  },
+  "data": [
+    {
+      "valor": "01"
+    },
+    {
+      "valor": "02"
+    },
+    {
+      "valor": "03"
+    },
+    {
+      "valor": "04"
+    },
+    {
+      "valor": "05"
+    },
+    {
+      "valor": "06"
+    },
+    {
+      "valor": "07"
+    },
+    {
+      "valor": "08"
+    },
+    {
+      "valor": "09"
+    }
+  ]
+}
