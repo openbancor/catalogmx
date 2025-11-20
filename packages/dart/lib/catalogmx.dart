@@ -3,7 +3,7 @@
 /// This library provides:
 /// - **Validators**: RFC, CURP, CLABE, NSS with complete official algorithms
 /// - **Generators**: Create valid RFC and CURP codes from personal data
-/// - **58+ Official Catalogs**: SAT, INEGI, SEPOMEX, Banxico with 170K+ records
+/// - **58+ Official Catalogs**: SAT, INEGI, SEPOMEX, Banxico, IFT with 470K+ records
 /// - **Type-safe**: Full null-safety support for Dart 3.0+
 /// - **Offline**: All validators and catalogs work without internet connection
 ///
@@ -28,25 +28,47 @@
 /// // Access catalogs
 /// List<Map<String, dynamic>> states = InegStates.getAll();
 /// Map<String, dynamic>? cdmx = InegStates.getByCode('09');
+/// List<Map<String, dynamic>> banks = BanxicoBanks.getAll();
 /// ```
 library catalogmx;
 
-// Validators
+// ============================================================================
+// VALIDATORS
+// ============================================================================
+
 export 'src/validators/rfc_validator.dart';
 export 'src/validators/curp_validator.dart';
 export 'src/validators/clabe_validator.dart';
 export 'src/validators/nss_validator.dart';
 
-// Catalogs - INEGI
+// ============================================================================
+// CATALOGS - INEGI (Instituto Nacional de Estadística y Geografía)
+// ============================================================================
+
 export 'src/catalogs/inegi/states.dart';
 export 'src/catalogs/inegi/municipios.dart';
+export 'src/catalogs/inegi/localidades.dart';
 
-// Catalogs - SAT
-export 'src/catalogs/sat/aeropuertos.dart';
+// ============================================================================
+// CATALOGS - SEPOMEX (Servicio Postal Mexicano)
+// ============================================================================
 
-// Catalogs - Banxico
-export 'src/catalogs/banxico/banks.dart';
+export 'src/catalogs/sepomex/codigos_postales.dart';
 
-// Utilities
+// ============================================================================
+// CATALOGS - SAT (Servicio de Administración Tributaria)
+// ============================================================================
+
+// SAT CFDI 4.0 Catalogs (15 catalogs)
+export 'src/catalogs/sat/cfdi_catalogs.dart';
+
+// SAT Carta Porte, Banxico, IFT, Mexico (30+ catalogs)
+export 'src/catalogs/all_catalogs.dart';
+
+// ============================================================================
+// UTILITIES
+// ============================================================================
+
 export 'src/utils/text_utils.dart';
 export 'src/utils/date_utils.dart';
+export 'src/catalogs/base_catalog.dart';

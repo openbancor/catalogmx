@@ -1,49 +1,105 @@
 /// INEGI Municipios Catalog
 ///
-/// Provides access to Mexican municipalities (municipios) data from INEGI.
-/// This is a placeholder implementation. In a full implementation, this would
-/// load data from the shared-data JSON files.
+/// Provides access to all 2,469 Mexican municipalities with INEGI official data.
 library;
 
-/// INEGI Municipios Catalog
-class InegMunicipios {
+import '../base_catalog.dart';
+
+/// INEGI Municipios Catalog (2,469 municipalities)
+class InegMunicipios extends BaseCatalog with CodeLookup, NameSearch {
+  static InegMunicipios? _instance;
   static List<Map<String, dynamic>>? _data;
+  static Map<String, Map<String, dynamic>>? _byClave;
+  static Map<String, List<Map<String, dynamic>>>? _byState;
+
+  /// Singleton instance
+  static InegMunicipios get instance {
+    _instance ??= InegMunicipios._();
+    return _instance!;
+  }
+
+  InegMunicipios._();
 
   /// Loads the municipios data
   static void _loadData() {
     if (_data != null) return;
 
-    // This is a placeholder. In a real implementation, this would load from
-    // packages/shared-data/inegi/municipios.json
-    // For Flutter apps, the data would be loaded from assets
-    _data = [];
+    _data = BaseCatalog.loadJsonDataSync('inegi/municipios.json');
+
+    // Build lookup maps
+    _byClave = {};
+    _byState = {};
+
+    for (final muni in _data!) {
+      final clave = muni['cve_completa'] as String;
+      final stateCode = muni['cve_entidad'] as String;
+
+      _byClave![clave] = muni;
+
+      _byState![stateCode] ??= [];
+      _byState![stateCode]!.add(muni);
+    }
   }
 
-  /// Gets all municipios
+  /// Gets all municipalities
   static List<Map<String, dynamic>> getAll() {
     _loadData();
     return List.from(_data!);
   }
 
-  /// Gets municipios by state code
-  static List<Map<String, dynamic>> getByState(String stateCode) {
-    _loadData();
-    return _data!
-        .where((m) => m['estado_code'] == stateCode.toUpperCase())
-        .toList();
-  }
-
-  /// Gets a municipio by clave
+  /// Gets a municipality by complete clave (5 digits: state + municipality)
   static Map<String, dynamic>? getByClave(String clave) {
     _loadData();
-    return _data!.firstWhere(
-      (m) => m['clave'] == clave,
-      orElse: () => <String, dynamic>{},
-    );
+    return _byClave![clave];
+  }
+
+  /// Gets all municipalities for a state
+  static List<Map<String, dynamic>> getByState(String stateCode) {
+    _loadData();
+    return _byState![stateCode.padLeft(2, '0')] ?? [];
+  }
+
+  /// Gets a municipality by name
+  static Map<String, dynamic>? getByName(String name, {String? stateCode}) {
+    _loadData();
+    final normalized = name.toLowerCase().trim();
+
+    List<Map<String, dynamic>> searchList = _data!;
+    if (stateCode != null) {
+      searchList = getByState(stateCode);
+    }
+
+    for (final muni in searchList) {
+      if ((muni['nom_municipio'] as String).toLowerCase().trim() == normalized) {
+        return muni;
+      }
+    }
+    return null;
+  }
+
+  /// Searches municipalities by partial name match
+  static List<Map<String, dynamic>> search(String query, {String? stateCode}) {
+    _loadData();
+    final normalized = query.toLowerCase().trim();
+
+    List<Map<String, dynamic>> searchList = _data!;
+    if (stateCode != null) {
+      searchList = getByState(stateCode);
+    }
+
+    return searchList.where((muni) {
+      return (muni['nom_municipio'] as String).toLowerCase().contains(normalized);
+    }).toList();
   }
 
   /// Validates if a clave exists
   static bool isValid(String clave) {
     return getByClave(clave) != null;
+  }
+
+  /// Gets total count of municipalities
+  static int get count {
+    _loadData();
+    return _data!.length;
   }
 }
