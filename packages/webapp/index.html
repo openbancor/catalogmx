@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>catalogmx - Mexican Data Validation Library Demo</title>
+  <meta name="description" content="Interactive demo for catalogmx - A comprehensive Mexican data validation and catalog library">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇲🇽</text></svg>">
+  <link rel="stylesheet" href="/src/styles.css">
+</head>
+<body>
+  <div id="app">
+    <header class="header">
+      <div class="container">
+        <h1>catalogmx</h1>
+        <p class="tagline">Comprehensive Mexican Data Validation & Official Catalogs Library</p>
+        <div class="badges">
+          <span class="badge">93.78% Coverage</span>
+          <span class="badge">1,250+ Tests</span>
+          <span class="badge">58 Catalogs</span>
+          <span class="badge">470K+ Records</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="nav">
+      <div class="container">
+        <button class="nav-btn active" data-section="validators">Validators</button>
+        <button class="nav-btn" data-section="catalogs">Catalogs</button>
+        <button class="nav-btn" data-section="calculators">Tax Calculators</button>
+        <button class="nav-btn" data-section="examples">Code Examples</button>
+        <button class="nav-btn" data-section="install">Installation</button>
+      </div>
+    </nav>
+
+    <main class="main">
+      <div class="container">
+        <!-- Validators Section -->
+        <section id="validators" class="section active">
+          <h2>Validators</h2>
+          <p class="section-desc">Interactive validators for Mexican identifiers. Try them out!</p>
+
+          <div class="validators-grid">
+            <!-- RFC Validator -->
+            <div class="card">
+              <h3>RFC Validator</h3>
+              <p>Registro Federal de Contribuyentes - Tax ID for individuals and companies</p>
+              <div class="form-group">
+                <label for="rfc-input">Enter RFC:</label>
+                <input type="text" id="rfc-input" placeholder="e.g., GODE561231GR8" maxlength="13">
+                <button id="rfc-validate" class="btn">Validate</button>
+              </div>
+              <div id="rfc-result" class="result"></div>
+
+              <h4>Generate RFC</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="rfc-nombre">First Name:</label>
+                  <input type="text" id="rfc-nombre" placeholder="Juan">
+                </div>
+                <div class="form-group">
+                  <label for="rfc-paterno">Paternal Surname:</label>
+                  <input type="text" id="rfc-paterno" placeholder="Garcia">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="rfc-materno">Maternal Surname:</label>
+                  <input type="text" id="rfc-materno" placeholder="Lopez">
+                </div>
+                <div class="form-group">
+                  <label for="rfc-fecha">Birth Date:</label>
+                  <input type="date" id="rfc-fecha">
+                </div>
+              </div>
+              <button id="rfc-generate" class="btn btn-secondary">Generate RFC</button>
+              <div id="rfc-generated" class="result"></div>
+            </div>
+
+            <!-- CURP Validator -->
+            <div class="card">
+              <h3>CURP Validator</h3>
+              <p>Clave Unica de Registro de Poblacion - Unique ID for Mexican residents</p>
+              <div class="form-group">
+                <label for="curp-input">Enter CURP:</label>
+                <input type="text" id="curp-input" placeholder="e.g., GODE561231HDFRRL09" maxlength="18">
+                <button id="curp-validate" class="btn">Validate</button>
+              </div>
+              <div id="curp-result" class="result"></div>
+
+              <h4>Generate CURP</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="curp-nombre">First Name:</label>
+                  <input type="text" id="curp-nombre" placeholder="Juan">
+                </div>
+                <div class="form-group">
+                  <label for="curp-paterno">Paternal Surname:</label>
+                  <input type="text" id="curp-paterno" placeholder="Garcia">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="curp-materno">Maternal Surname:</label>
+                  <input type="text" id="curp-materno" placeholder="Lopez">
+                </div>
+                <div class="form-group">
+                  <label for="curp-fecha-nac">Birth Date:</label>
+                  <input type="date" id="curp-fecha-nac">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="curp-sexo">Sex:</label>
+                  <select id="curp-sexo">
+                    <option value="H">Male (H)</option>
+                    <option value="M">Female (M)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="curp-estado">State:</label>
+                  <select id="curp-estado">
+                    <option value="DF">Ciudad de Mexico (DF)</option>
+                    <option value="AS">Aguascalientes</option>
+                    <option value="BC">Baja California</option>
+                    <option value="BS">Baja California Sur</option>
+                    <option value="CC">Campeche</option>
+                    <option value="CL">Coahuila</option>
+                    <option value="CM">Colima</option>
+                    <option value="CS">Chiapas</option>
+                    <option value="CH">Chihuahua</option>
+                    <option value="DG">Durango</option>
+                    <option value="GT">Guanajuato</option>
+                    <option value="GR">Guerrero</option>
+                    <option value="HG">Hidalgo</option>
+                    <option value="JC">Jalisco</option>
+                    <option value="MC">Mexico State</option>
+                    <option value="MN">Michoacan</option>
+                    <option value="MS">Morelos</option>
+                    <option value="NT">Nayarit</option>
+                    <option value="NL">Nuevo Leon</option>
+                    <option value="OC">Oaxaca</option>
+                    <option value="PL">Puebla</option>
+                    <option value="QT">Queretaro</option>
+                    <option value="QR">Quintana Roo</option>
+                    <option value="SP">San Luis Potosi</option>
+                    <option value="SL">Sinaloa</option>
+                    <option value="SR">Sonora</option>
+                    <option value="TC">Tabasco</option>
+                    <option value="TS">Tamaulipas</option>
+                    <option value="TL">Tlaxcala</option>
+                    <option value="VZ">Veracruz</option>
+                    <option value="YN">Yucatan</option>
+                    <option value="ZS">Zacatecas</option>
+                    <option value="NE">Foreign Born</option>
+                  </select>
+                </div>
+              </div>
+              <button id="curp-generate" class="btn btn-secondary">Generate CURP</button>
+              <div id="curp-generated" class="result"></div>
+            </div>
+
+            <!-- CLABE Validator -->
+            <div class="card">
+              <h3>CLABE Validator</h3>
+              <p>Clave Bancaria Estandarizada - 18-digit standardized bank account number</p>
+              <div class="form-group">
+                <label for="clabe-input">Enter CLABE:</label>
+                <input type="text" id="clabe-input" placeholder="e.g., 002010077777777771" maxlength="18">
+                <button id="clabe-validate" class="btn">Validate</button>
+              </div>
+              <div id="clabe-result" class="result"></div>
+
+              <h4>CLABE Structure</h4>
+              <div class="clabe-breakdown">
+                <div class="clabe-part">
+                  <span class="part-label">Bank (3)</span>
+                  <span class="part-desc">Bank code</span>
+                </div>
+                <div class="clabe-part">
+                  <span class="part-label">Plaza (3)</span>
+                  <span class="part-desc">Branch code</span>
+                </div>
+                <div class="clabe-part">
+                  <span class="part-label">Account (11)</span>
+                  <span class="part-desc">Account number</span>
+                </div>
+                <div class="clabe-part">
+                  <span class="part-label">Check (1)</span>
+                  <span class="part-desc">Check digit</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- NSS Validator -->
+            <div class="card">
+              <h3>NSS Validator</h3>
+              <p>Numero de Seguridad Social - IMSS Social Security Number</p>
+              <div class="form-group">
+                <label for="nss-input">Enter NSS:</label>
+                <input type="text" id="nss-input" placeholder="e.g., 12345678901" maxlength="11">
+                <button id="nss-validate" class="btn">Validate</button>
+              </div>
+              <div id="nss-result" class="result"></div>
+
+              <h4>NSS Structure</h4>
+              <div class="nss-breakdown">
+                <div class="nss-part">
+                  <span class="part-label">Subdelegation (2)</span>
+                </div>
+                <div class="nss-part">
+                  <span class="part-label">Birth Year (2)</span>
+                </div>
+                <div class="nss-part">
+                  <span class="part-label">Registration Year (2)</span>
+                </div>
+                <div class="nss-part">
+                  <span class="part-label">Sequential (4)</span>
+                </div>
+                <div class="nss-part">
+                  <span class="part-label">Check (1)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Catalogs Section -->
+        <section id="catalogs" class="section">
+          <h2>Official Catalogs</h2>
+          <p class="section-desc">Browse 58 official Mexican government catalogs with 470,000+ records</p>
+
+          <div class="catalog-search">
+            <input type="text" id="catalog-search" placeholder="Search catalogs...">
+          </div>
+
+          <div class="catalog-categories">
+            <!-- Banxico -->
+            <div class="catalog-category">
+              <h3>Banxico (Banco de Mexico)</h3>
+              <div class="catalog-list" id="banxico-catalogs"></div>
+            </div>
+
+            <!-- INEGI -->
+            <div class="catalog-category">
+              <h3>INEGI (Instituto Nacional de Estadistica)</h3>
+              <div class="catalog-list" id="inegi-catalogs"></div>
+            </div>
+
+            <!-- SEPOMEX -->
+            <div class="catalog-category">
+              <h3>SEPOMEX (Servicio Postal Mexicano)</h3>
+              <div class="catalog-list" id="sepomex-catalogs"></div>
+            </div>
+
+            <!-- SAT CFDI -->
+            <div class="catalog-category">
+              <h3>SAT CFDI 4.0 (Electronic Invoicing)</h3>
+              <div class="catalog-list" id="sat-cfdi-catalogs"></div>
+            </div>
+
+            <!-- SAT Comercio Exterior -->
+            <div class="catalog-category">
+              <h3>SAT Comercio Exterior 2.0 (International Trade)</h3>
+              <div class="catalog-list" id="sat-comext-catalogs"></div>
+            </div>
+
+            <!-- SAT Carta Porte -->
+            <div class="catalog-category">
+              <h3>SAT Carta Porte 3.0 (Shipping)</h3>
+              <div class="catalog-list" id="sat-cartaporte-catalogs"></div>
+            </div>
+
+            <!-- SAT Nomina -->
+            <div class="catalog-category">
+              <h3>SAT Nomina 1.2 (Payroll)</h3>
+              <div class="catalog-list" id="sat-nomina-catalogs"></div>
+            </div>
+
+            <!-- IFT -->
+            <div class="catalog-category">
+              <h3>IFT (Telecomunicaciones)</h3>
+              <div class="catalog-list" id="ift-catalogs"></div>
+            </div>
+
+            <!-- Mexico National -->
+            <div class="catalog-category">
+              <h3>Mexico (National Regulations)</h3>
+              <div class="catalog-list" id="mexico-catalogs"></div>
+            </div>
+          </div>
+
+          <!-- Catalog Viewer Modal -->
+          <div id="catalog-modal" class="modal">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 id="modal-title">Catalog</h3>
+                <button class="modal-close">&times;</button>
+              </div>
+              <div class="modal-search">
+                <input type="text" id="modal-search" placeholder="Search within catalog...">
+              </div>
+              <div class="modal-body">
+                <table id="catalog-table">
+                  <thead></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <span id="modal-count">0 records</span>
+                <div class="pagination">
+                  <button id="prev-page" class="btn btn-small">Previous</button>
+                  <span id="page-info">Page 1</span>
+                  <button id="next-page" class="btn btn-small">Next</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tax Calculators Section -->
+        <section id="calculators" class="section">
+          <h2>Tax Calculators</h2>
+          <p class="section-desc">Calculate Mexican taxes: ISR, IVA, IEPS, and withholdings</p>
+
+          <div class="calculators-grid">
+            <!-- ISR Calculator -->
+            <div class="card">
+              <h3>ISR Calculator</h3>
+              <p>Impuesto Sobre la Renta - Income Tax</p>
+              <div class="form-group">
+                <label for="isr-income">Taxable Income (MXN):</label>
+                <input type="number" id="isr-income" placeholder="50000" min="0">
+              </div>
+              <div class="form-group">
+                <label for="isr-period">Period:</label>
+                <select id="isr-period">
+                  <option value="monthly">Monthly</option>
+                  <option value="biweekly">Biweekly</option>
+                  <option value="annual">Annual</option>
+                </select>
+              </div>
+              <button id="isr-calculate" class="btn">Calculate ISR</button>
+              <div id="isr-result" class="result"></div>
+            </div>
+
+            <!-- IVA Calculator -->
+            <div class="card">
+              <h3>IVA Calculator</h3>
+              <p>Impuesto al Valor Agregado - Value Added Tax (16%)</p>
+              <div class="form-group">
+                <label for="iva-base">Base Amount (MXN):</label>
+                <input type="number" id="iva-base" placeholder="1000" min="0">
+              </div>
+              <div class="form-group">
+                <label for="iva-rate">Rate:</label>
+                <select id="iva-rate">
+                  <option value="16">Standard (16%)</option>
+                  <option value="8">Border Zone (8%)</option>
+                  <option value="0">Exempt (0%)</option>
+                </select>
+              </div>
+              <button id="iva-calculate" class="btn">Calculate IVA</button>
+              <div id="iva-result" class="result"></div>
+            </div>
+
+            <!-- IEPS Calculator -->
+            <div class="card">
+              <h3>IEPS Calculator</h3>
+              <p>Impuesto Especial sobre Produccion y Servicios</p>
+              <div class="form-group">
+                <label for="ieps-base">Base Amount (MXN):</label>
+                <input type="number" id="ieps-base" placeholder="1000" min="0">
+              </div>
+              <div class="form-group">
+                <label for="ieps-product">Product Type:</label>
+                <select id="ieps-product">
+                  <option value="alcohol">Alcoholic Beverages</option>
+                  <option value="tobacco">Tobacco</option>
+                  <option value="fuel">Fuel</option>
+                  <option value="sugary">Sugary Drinks</option>
+                </select>
+              </div>
+              <button id="ieps-calculate" class="btn">Calculate IEPS</button>
+              <div id="ieps-result" class="result"></div>
+            </div>
+
+            <!-- Tax Summary -->
+            <div class="card">
+              <h3>Quick Tax Summary</h3>
+              <p>Calculate combined taxes for an amount</p>
+              <div class="form-group">
+                <label for="summary-base">Subtotal (MXN):</label>
+                <input type="number" id="summary-base" placeholder="10000" min="0">
+              </div>
+              <button id="summary-calculate" class="btn">Calculate Total</button>
+              <div id="summary-result" class="result"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Code Examples Section -->
+        <section id="examples" class="section">
+          <h2>Code Examples</h2>
+          <p class="section-desc">Learn how to use catalogmx in your projects</p>
+
+          <div class="examples-grid">
+            <div class="example-card">
+              <h3>Validate RFC</h3>
+              <pre><code class="language-typescript">import { validateRfc, detectRfcType } from 'catalogmx';
+
+// Validate an RFC
+const isValid = validateRfc('GODE561231GR8');
+console.log(isValid); // true
+
+// Detect RFC type
+const type = detectRfcType('GODE561231GR8');
+console.log(type); // 'persona_fisica'</code></pre>
+            </div>
+
+            <div class="example-card">
+              <h3>Generate RFC</h3>
+              <pre><code class="language-typescript">import { generateRfcPersonaFisica } from 'catalogmx';
+
+const rfc = generateRfcPersonaFisica({
+  nombre: 'Juan',
+  apellidoPaterno: 'Garcia',
+  apellidoMaterno: 'Lopez',
+  fechaNacimiento: new Date(1990, 4, 15)
+});
+console.log(rfc); // e.g., GALJ900515XXX</code></pre>
+            </div>
+
+            <div class="example-card">
+              <h3>Validate CURP</h3>
+              <pre><code class="language-typescript">import { validateCurp, CURPValidator } from 'catalogmx';
+
+// Simple validation
+const isValid = validateCurp('GODE561231HDFRRL09');
+
+// Detailed validation with info extraction
+const validator = new CURPValidator('GODE561231HDFRRL09');
+if (validator.isValid()) {
+  console.log(validator.getBirthDate());
+  console.log(validator.getGender());
+  console.log(validator.getState());
+}</code></pre>
+            </div>
+
+            <div class="example-card">
+              <h3>Validate CLABE</h3>
+              <pre><code class="language-typescript">import { validateClabe, CLABEValidator } from 'catalogmx';
+
+// Quick validation
+const isValid = validateClabe('002010077777777771');
+
+// Extract bank info
+const clabe = new CLABEValidator('002010077777777771');
+if (clabe.isValid()) {
+  console.log(clabe.getBankCode());   // '002'
+  console.log(clabe.getBankName());   // 'BANAMEX'
+  console.log(clabe.getPlazaCode()); // '010'
+}</code></pre>
+            </div>
+
+            <div class="example-card">
+              <h3>Access Bank Catalog</h3>
+              <pre><code class="language-typescript">import { BankCatalog } from 'catalogmx';
+
+// Get all banks
+const banks = BankCatalog.getAll();
+
+// Get bank by code
+const banamex = BankCatalog.getBankByCode('002');
+console.log(banamex.name); // 'BANAMEX'
+
+// Get only SPEI-enabled banks
+const speiBanks = BankCatalog.getSPEIBanks();
+
+// Search banks
+const results = BankCatalog.searchBanks('BBVA');
+console.log(results.length); // Banks matching 'BBVA'</code></pre>
+            </div>
+
+            <div class="example-card">
+              <h3>Access State Catalog</h3>
+              <pre><code class="language-typescript">import { StateCatalog } from 'catalogmx';
+
+// Get all states
+const states = StateCatalog.getAll();
+console.log(states.length); // 32
+
+// Get state by CURP code
+const state = StateCatalog.getByCode('DF');
+console.log(state.name); // 'CIUDAD DE MEXICO'
+
+// Get by INEGI code
+const cdmx = StateCatalog.getByINEGICode('09');
+console.log(cdmx.abbreviation); // 'CDMX'</code></pre>
+            </div>
+
+            <div class="example-card">
+              <h3>Postal Code Lookup</h3>
+              <pre><code class="language-typescript">import { CodigosPostales } from 'catalogmx';
+
+// Get localities by postal code
+const localities = CodigosPostales.getByPostalCode('06600');
+console.log(localities);
+// [{ cp: '06600', colonia: 'Roma Norte', ... }]
+
+// Get all postal codes for a state
+const cdmxCodes = CodigosPostales.getByState('Ciudad de Mexico');
+
+// Search by colony name
+const results = CodigosPostales.searchByColony('Condesa');</code></pre>
+            </div>
+
+            <div class="example-card">
+              <h3>SAT CFDI Catalogs</h3>
+              <pre><code class="language-typescript">import {
+  RegimenFiscalCatalog,
+  UsoCFDICatalog,
+  FormaPagoCatalog
+} from 'catalogmx';
+
+// Tax regimes
+const regimes = RegimenFiscalCatalog.getAll();
+const regime = RegimenFiscalCatalog.getByCode('601');
+console.log(regime.description);
+// 'General de Ley Personas Morales'
+
+// Invoice usage
+const uso = UsoCFDICatalog.getByCode('G03');
+console.log(uso.description); // 'Gastos en general'
+
+// Payment methods
+const formas = FormaPagoCatalog.getAll();
+console.log(formas); // Cash, Transfer, Card, etc.</code></pre>
+            </div>
+
+            <div class="example-card">
+              <h3>ISR Calculation</h3>
+              <pre><code class="language-typescript">import { ISRCalculator } from 'catalogmx';
+
+const result = ISRCalculator.calcular({
+  ingresoGravable: 50000,
+  periodo: 'mensual',
+  anio: 2024
+});
+
+console.log(result.isrRetenido);    // Tax amount
+console.log(result.tasaEfectiva);   // Effective rate
+console.log(result.limiteInferior); // Lower bracket
+console.log(result.cuotaFija);      // Fixed fee</code></pre>
+            </div>
+
+            <div class="example-card">
+              <h3>Validate NSS</h3>
+              <pre><code class="language-typescript">import { validateNss, NSSValidator } from 'catalogmx';
+
+// Quick validation
+const isValid = validateNss('12345678901');
+
+// Detailed validation
+const nss = new NSSValidator('12345678901');
+if (nss.isValid()) {
+  console.log(nss.getSubdelegation());
+  console.log(nss.getBirthYear());
+  console.log(nss.getRegistrationYear());
+}</code></pre>
+            </div>
+
+            <div class="example-card">
+              <h3>Currency Catalog</h3>
+              <pre><code class="language-typescript">import { MonedasDivisas } from 'catalogmx';
+
+// Get all currencies
+const currencies = MonedasDivisas.getAll();
+
+// Get currency by ISO code
+const mxn = MonedasDivisas.getByCode('MXN');
+console.log(mxn.name); // 'Peso Mexicano'
+console.log(mxn.decimals); // 2
+
+// Get USD
+const usd = MonedasDivisas.getByCode('USD');
+console.log(usd.name); // 'Dolar Estadounidense'</code></pre>
+            </div>
+
+            <div class="example-card">
+              <h3>Municipalities & Localities</h3>
+              <pre><code class="language-typescript">import {
+  MunicipiosCatalog,
+  LocalidadesCatalog
+} from 'catalogmx';
+
+// Get municipalities by state
+const muns = MunicipiosCatalog.getByState('09');
+console.log(muns.length); // 16 (CDMX)
+
+// Get localities with GPS coordinates
+const localities = LocalidadesCatalog.getByMunicipality(
+  '09', // State
+  '015' // Municipality (Cuauhtemoc)
+);
+
+// Each locality includes:
+// - latitude, longitude, altitude
+// - population data
+// - urban/rural classification</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Installation Section -->
+        <section id="install" class="section">
+          <h2>Installation</h2>
+          <p class="section-desc">Get started with catalogmx in your project</p>
+
+          <div class="install-grid">
+            <div class="install-card">
+              <h3>TypeScript / JavaScript</h3>
+              <pre><code class="language-bash"># Using npm
+npm install catalogmx
+
+# Using yarn
+yarn add catalogmx
+
+# Using pnpm
+pnpm add catalogmx</code></pre>
+              <pre><code class="language-typescript">// ES Modules
+import { validateRfc, BankCatalog } from 'catalogmx';
+
+// CommonJS
+const { validateRfc, BankCatalog } = require('catalogmx');</code></pre>
+            </div>
+
+            <div class="install-card">
+              <h3>Python</h3>
+              <pre><code class="language-bash"># Using pip
+pip install catalogmx
+
+# Using uv (10-100x faster)
+uv pip install catalogmx</code></pre>
+              <pre><code class="language-python">from catalogmx import validate_rfc, BankCatalog
+
+# Validate RFC
+is_valid = validate_rfc("GODE561231GR8")
+
+# Get banks
+banks = BankCatalog.get_all()</code></pre>
+            </div>
+
+            <div class="install-card">
+              <h3>Dart / Flutter</h3>
+              <pre><code class="language-yaml"># pubspec.yaml
+dependencies:
+  catalogmx: ^0.3.0</code></pre>
+              <pre><code class="language-dart">import 'package:catalogmx/catalogmx.dart';
+
+// Validate RFC
+final isValid = validateRfc('GODE561231GR8');
+
+// Get banks
+final banks = BankCatalog.getAll();</code></pre>
+            </div>
+
+            <div class="install-card full-width">
+              <h3>Available Features</h3>
+              <div class="features-grid">
+                <div class="feature">
+                  <h4>Validators</h4>
+                  <ul>
+                    <li>RFC (Tax ID)</li>
+                    <li>CURP (National ID)</li>
+                    <li>CLABE (Bank Account)</li>
+                    <li>NSS (Social Security)</li>
+                  </ul>
+                </div>
+                <div class="feature">
+                  <h4>Banxico Catalogs</h4>
+                  <ul>
+                    <li>Banks (150+)</li>
+                    <li>Currencies</li>
+                    <li>UDI Values</li>
+                    <li>Financial Institutions</li>
+                  </ul>
+                </div>
+                <div class="feature">
+                  <h4>INEGI Catalogs</h4>
+                  <ul>
+                    <li>States (32)</li>
+                    <li>Municipalities (2,458)</li>
+                    <li>Localities (300K+ with GPS)</li>
+                  </ul>
+                </div>
+                <div class="feature">
+                  <h4>SEPOMEX</h4>
+                  <ul>
+                    <li>Postal Codes (157K+)</li>
+                    <li>Colonies</li>
+                    <li>Settlement Types</li>
+                  </ul>
+                </div>
+                <div class="feature">
+                  <h4>SAT CFDI 4.0</h4>
+                  <ul>
+                    <li>Tax Regimes</li>
+                    <li>Invoice Usage</li>
+                    <li>Payment Methods</li>
+                    <li>Products/Services (8K+)</li>
+                  </ul>
+                </div>
+                <div class="feature">
+                  <h4>Tax Calculators</h4>
+                  <ul>
+                    <li>ISR (Income Tax)</li>
+                    <li>IVA (VAT)</li>
+                    <li>IEPS (Excise)</li>
+                    <li>Withholdings</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>catalogmx - BSD-2-Clause License</p>
+        <p>
+          <a href="https://github.com/openbancor/catalogmx" target="_blank">GitHub</a> |
+          <a href="https://www.npmjs.com/package/catalogmx" target="_blank">npm</a> |
+          <a href="https://pypi.org/project/catalogmx/" target="_blank">PyPI</a>
+        </p>
+        <p class="copyright">Maintained by Luis Fernando Barrera</p>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
