@@ -4,7 +4,7 @@
 /// These catalogs are essential for electronic invoicing (CFDI) in Mexico.
 library;
 
-import '../base_catalog.dart';
+import 'package:catalogmx/src/catalogs/base_catalog.dart';
 
 /// Base class for SAT CFDI catalogs
 abstract class SatCFDICatalog extends BaseCatalog with CodeLookup {

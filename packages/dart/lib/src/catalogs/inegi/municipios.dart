@@ -3,7 +3,7 @@
 /// Provides access to all 2,469 Mexican municipalities with INEGI official data.
 library;
 
-import '../base_catalog.dart';
+import 'package:catalogmx/src/catalogs/base_catalog.dart';
 
 /// INEGI Municipios Catalog (2,469 municipalities)
 class InegMunicipios extends BaseCatalog with CodeLookup, NameSearch {

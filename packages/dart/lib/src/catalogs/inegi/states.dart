@@ -4,7 +4,7 @@
 library;
 
 import 'dart:convert';
-import '../../../catalogmx.dart';
+import 'package:catalogmx/src/utils/text_utils.dart';
 
 /// INEGI States Catalog
 class InegStates {

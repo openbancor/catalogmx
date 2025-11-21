@@ -4,7 +4,7 @@
 /// Note: This is a very large dataset and uses lazy loading.
 library;
 
-import '../base_catalog.dart';
+import 'package:catalogmx/src/catalogs/base_catalog.dart';
 
 /// SEPOMEX Postal Codes Catalog (157,000+ records)
 class SepomexCodigosPostales extends BaseCatalog {

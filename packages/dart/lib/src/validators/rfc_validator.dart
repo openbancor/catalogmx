@@ -17,8 +17,8 @@
 library;
 
 import 'package:diacritic/diacritic.dart';
-import '../utils/date_utils.dart';
-import '../utils/text_utils.dart';
+import 'package:catalogmx/src/utils/date_utils.dart';
+import 'package:catalogmx/src/utils/text_utils.dart';
 
 /// Exception for RFC validation errors
 class RFCException implements Exception {

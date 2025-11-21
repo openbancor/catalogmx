@@ -4,7 +4,7 @@
 /// Total: 50+ catalogs for complete parity with Python/TypeScript versions.
 library;
 
-import 'base_catalog.dart';
+import 'package:catalogmx/src/catalogs/base_catalog.dart';
 
 // ============================================================================
 // SAT CARTA PORTE 3.0 CATALOGS

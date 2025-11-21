@@ -4,7 +4,7 @@
 /// Note: This is a large dataset and uses lazy loading.
 library;
 
-import '../base_catalog.dart';
+import 'package:catalogmx/src/catalogs/base_catalog.dart';
 
 /// INEGI Localidades Catalog (300,000+ localities with GPS)
 class InegLocalidades extends BaseCatalog {
