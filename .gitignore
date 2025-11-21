@@ -17,8 +17,13 @@ sdist
 wheelhouse
 develop-eggs
 .installed.cfg
+# Default Python build artifacts
 lib
 lib64
+
+# Allow Dart package sources to be published
+!packages/dart/lib/
+!packages/dart/lib/**
 venv*/
 pyvenv*/
 

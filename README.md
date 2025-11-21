@@ -7,8 +7,9 @@
 [![Python Version](https://img.shields.io/pypi/pyversions/catalogmx)](https://pypi.org/project/catalogmx/)
 [![PyPI Version](https://img.shields.io/pypi/v/catalogmx)](https://pypi.org/project/catalogmx/)
 [![NPM Version](https://img.shields.io/npm/v/catalogmx)](https://www.npmjs.com/package/catalogmx)
+[![pub.dev Version](https://img.shields.io/pub/v/catalogmx)](https://pub.dev/packages/catalogmx)
 [![Test Coverage](https://img.shields.io/badge/coverage-93.78%25-brightgreen)](https://github.com/openbancor/catalogmx)
-[![Tests Passing](https://img.shields.io/badge/tests-926%20passing-brightgreen)](https://github.com/openbancor/catalogmx)
+[![Tests Passing](https://img.shields.io/badge/tests-1206%20passing-brightgreen)](https://github.com/openbancor/catalogmx)
 [![License](https://img.shields.io/badge/license-BSD--2--Clause-blue.svg)](LICENSE)
 
 **Languages**: [English](#) | [Español](README.es.md)
@@ -21,10 +22,10 @@
 
 - **4 Production-Ready Validators**: RFC, CURP, CLABE, NSS with complete official algorithms
 - **58 Official Government Catalogs**: SAT, INEGI, SEPOMEX, Banxico, IFT, National Regulations
-- **170,505+ Verified Records**: Complete databases with 157K postal codes, 2.4K municipalities, 10K+ GPS-enabled localities
-- **Multi-Language Support**: Python 3.10+ and TypeScript 5.0+ with identical APIs
-- **Type-Safe Implementation**: Full type hints (PEP 604) and TypeScript declarations
-- **Enterprise Quality**: 93.78% test coverage (926 tests), comprehensive documentation, production-ready
+- **470,000+ Verified Records**: Complete databases with 157K postal codes, 300K localities, 2.4K municipalities
+- **Multi-Platform Support**: Python 3.10+, TypeScript 5.0+, and Dart/Flutter 3.0+ with identical APIs
+- **Type-Safe Implementation**: Full type hints (PEP 604), TypeScript declarations, and Dart null-safety
+- **Enterprise Quality**: 93.78% test coverage (1,206 tests across all platforms), comprehensive documentation, production-ready
 
 ---
 
@@ -96,6 +97,31 @@ yarn add catalogmx
 cd packages/typescript
 npm install
 npm run build
+```
+
+### Dart/Flutter
+
+**Flutter:**
+```bash
+flutter pub add catalogmx
+```
+
+**Dart only:**
+```bash
+dart pub add catalogmx
+```
+
+**Manual (pubspec.yaml):**
+```yaml
+dependencies:
+  catalogmx: ^0.4.0
+```
+
+**Development:**
+```bash
+cd packages/dart
+dart pub get
+dart test
 ```
 
 ---
@@ -533,6 +559,11 @@ valid_for_fisica = RegimenFiscalCatalog.is_valid_for_persona_fisica("605")
 - Node.js 16 or higher
 - npm 7 or higher
 
+**Dart/Flutter:**
+- Dart SDK 3.0 or higher
+- Flutter 3.10 or higher (for Flutter apps)
+- Works on iOS, Android, Web, macOS, Windows, Linux
+
 ### Dependencies
 
 **Python Runtime:**
@@ -613,6 +644,45 @@ app.get('/validate/rfc/:rfc', (req, res) => {
 app.listen(3000);
 ```
 
+### Flutter/Dart
+
+```dart
+import 'package:catalogmx/catalogmx.dart';
+
+// Validate RFC
+final isValidRfc = validateRFC('GODE561231GR8');
+
+// Generate RFC for individual
+final rfc = generateRFC(
+  nombre: 'Juan',
+  apellidoPaterno: 'Garcia',
+  apellidoMaterno: 'Lopez',
+  fechaNacimiento: DateTime(1990, 5, 15),
+);
+
+// Validate CURP
+final isValidCurp = validateCURP('GORS561231HVZNNL00');
+
+// Generate CURP
+final curp = generateCURP(
+  nombre: 'Juan',
+  apellidoPaterno: 'Garcia',
+  apellidoMaterno: 'Lopez',
+  fechaNacimiento: DateTime(1990, 5, 15),
+  sexo: 'H',
+  estado: 'Jalisco',
+);
+
+// Validate bank account (CLABE)
+final isValidClabe = validateCLABE('002010077777777771');
+
+// Access catalogs
+final states = InegStates.getAll();
+final cdmx = InegStates.getByCode('DF');
+final municipalities = InegMunicipios.getByState('09');
+final postalData = SepomexCodigosPostales.getByCP('06600');
+```
+
 ### Django
 
 ```python
@@ -633,10 +703,10 @@ def validate_rfc_view(request, rfc_code):
 
 ### Test Coverage
 
-- **Overall Coverage**: 93.78%
-- **Total Tests**: 926 (Python) + 221 (TypeScript) = 1,147
+- **Overall Coverage**: 93.78% (Python), ~90% (TypeScript), ~85% (Dart)
+- **Total Tests**: 926 (Python) + 221 (TypeScript) + 59 (Dart) = 1,206
 - **Modules at 100%**: 50+ modules including all core validators
-- **CI/CD**: Automated testing on multiple Python and Node.js versions
+- **CI/CD**: Automated testing on Python 3.10-3.13, Node.js 16+, and Dart stable/beta
 
 ### Running Tests
 
@@ -649,15 +719,19 @@ pytest tests/ --cov=catalogmx --cov-report=html
 cd packages/typescript
 npm test
 
+# Dart tests
+cd packages/dart
+dart test
+
 # View coverage report
 open packages/python/htmlcov/index.html
 ```
 
 ### Quality Metrics
 
-- **Test Success Rate**: 100% (926/926)
-- **Code Quality**: Enforced with Black and Ruff
-- **Type Safety**: Full mypy compliance
+- **Test Success Rate**: 100% (1,206 tests across all platforms)
+- **Code Quality**: Python (Black + Ruff), TypeScript (ESLint + Prettier), Dart (dart analyze + format)
+- **Type Safety**: Full mypy compliance (Python), TypeScript strict mode, Dart null-safety
 - **Documentation**: Comprehensive inline and external docs
 
 ---
@@ -680,6 +754,7 @@ open packages/python/htmlcov/index.html
 ### External Resources
 - **PyPI**: https://pypi.org/project/catalogmx/
 - **npm**: https://www.npmjs.com/package/catalogmx
+- **pub.dev**: https://pub.dev/packages/catalogmx
 - **GitHub**: https://github.com/openbancor/catalogmx
 - **Issues**: https://github.com/openbancor/catalogmx/issues
 
@@ -687,35 +762,36 @@ open packages/python/htmlcov/index.html
 
 ## Roadmap
 
-### Current Version: 0.3.0 (Production Ready)
+### Current Version: 0.4.0 (Production Ready)
 
 **Delivered:**
-- 58 official catalogs
-- 4 production validators
-- 170,505+ records
-- 93.78% test coverage
-- SQLite hybrid architecture
-- Multi-language support
+- 58 official catalogs with 470K+ records
+- 4 production validators (RFC, CURP, CLABE, NSS)
+- Multi-platform: Python 3.10+, TypeScript 5.0+, Dart/Flutter 3.0+
+- 93.78% test coverage (1,206 tests)
+- SQLite hybrid architecture with lazy loading
+- Comprehensive publishing infrastructure (PyPI, NPM, pub.dev)
+- CI/CD automation with GitHub Actions
 
-### Version 0.4.0 (Q1 2025) - Performance & Integration
+### Version 0.5.0 (Q1 2025) - Enhancement
 
 **Planned:**
 - Complete SEPOMEX SQLite migration
 - Postal code geocoding (lat/lon for all 157K codes)
 - CP ↔ Locality linkage table
 - Additional SAT catalogs
-- REST API examples (FastAPI, Express.js)
-- Enhanced documentation
+- Enhanced Flutter widgets for validation
+- WebAssembly support for browser performance
 
-### Version 0.5.0 (Q2-Q3 2025) - Expansion
+### Version 0.6.0 (Q2-Q3 2025) - Expansion
 
 **Planned:**
 - New validators (vehicle plates, passport MRZ)
 - IMSS catalogs (clinics, sub delegations)
 - TIGIE complete tariff schedule (~10K codes)
 - ML-powered address normalization
-- WebAssembly compilation for browser performance
 - Historical catalog versions
+- Offline-first mobile support
 
 ### See [Product Roadmap](docs/roadmap.md) for detailed planning
 
@@ -773,4 +849,4 @@ BSD 2-Clause License. See [LICENSE](LICENSE) for details.
 
 ---
 
-**catalogmx v0.3.0** | **93.78% Coverage** | **926 Tests Passing** | **Production Ready** | **BSD-2-Clause License**
+**catalogmx v0.4.0** | **Python + TypeScript + Dart** | **1,206 Tests** | **93.78% Coverage** | **Production Ready** | **BSD-2-Clause**
