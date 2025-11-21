@@ -57,7 +57,8 @@ class SepomexCodigosPostales {
   }
 
   /// Searches postal codes by colonia name
-  static List<Map<String, dynamic>> searchByColonia(String query, {String? codigoPostal}) {
+  static List<Map<String, dynamic>> searchByColonia(String query,
+      {String? codigoPostal}) {
     _loadData();
     final normalized = query.toLowerCase().trim();
 
@@ -67,7 +68,9 @@ class SepomexCodigosPostales {
     }
 
     return searchList.where((code) {
-      final colonia = (code['colonia'] as String? ?? code['d_asenta'] as String? ?? '').toLowerCase();
+      final colonia =
+          (code['colonia'] as String? ?? code['d_asenta'] as String? ?? '')
+              .toLowerCase();
       return colonia.contains(normalized);
     }).toList();
   }
@@ -78,7 +81,9 @@ class SepomexCodigosPostales {
     final normalized = query.toLowerCase().trim();
 
     return _data!.where((code) {
-      final mun = (code['municipio'] as String? ?? code['d_mnpio'] as String? ?? '').toLowerCase();
+      final mun =
+          (code['municipio'] as String? ?? code['d_mnpio'] as String? ?? '')
+              .toLowerCase();
       return mun.contains(normalized);
     }).toList();
   }

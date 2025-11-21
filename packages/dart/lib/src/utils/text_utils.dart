@@ -19,7 +19,9 @@ String normalizeText(String text) {
 /// Removes excluded words from a name
 String removeExcludedWords(String text, List<String> excludedWords) {
   final words = text.split(' ');
-  final filtered = words.where((word) => !excludedWords.contains(word.toUpperCase())).toList();
+  final filtered = words
+      .where((word) => !excludedWords.contains(word.toUpperCase()))
+      .toList();
   return filtered.join(' ');
 }
 
@@ -56,7 +58,8 @@ String? getFirstConsonant(String text, {int startIndex = 0}) {
 }
 
 /// Cleans a name by removing accents and excluded words
-String cleanName(String name, List<String> excludedWords, List<String> allowedChars) {
+String cleanName(
+    String name, List<String> excludedWords, List<String> allowedChars) {
   // Remove excluded words
   final filtered = removeExcludedWords(name, excludedWords);
 

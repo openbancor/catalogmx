@@ -20,7 +20,8 @@ class InegLocalidades {
     // Build lookup by municipality
     _byMunicipality = {};
     for (final loc in _data!) {
-      final munClave = loc['cve_completa'] as String? ?? loc['cve_mun'] as String?;
+      final munClave =
+          loc['cve_completa'] as String? ?? loc['cve_mun'] as String?;
       if (munClave != null) {
         _byMunicipality![munClave] ??= [];
         _byMunicipality![munClave]!.add(loc);
@@ -41,7 +42,8 @@ class InegLocalidades {
   }
 
   /// Searches localities by name within a municipality
-  static List<Map<String, dynamic>> search(String query, {String? claveMunicipio}) {
+  static List<Map<String, dynamic>> search(String query,
+      {String? claveMunicipio}) {
     _loadData();
     final normalized = query.toLowerCase().trim();
 
@@ -51,7 +53,9 @@ class InegLocalidades {
     }
 
     return searchList.where((loc) {
-      final name = (loc['nom_localidad'] as String? ?? loc['name'] as String? ?? '').toLowerCase();
+      final name =
+          (loc['nom_localidad'] as String? ?? loc['name'] as String? ?? '')
+              .toLowerCase();
       return name.contains(normalized);
     }).toList();
   }

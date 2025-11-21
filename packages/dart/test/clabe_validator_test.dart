@@ -5,8 +5,8 @@ void main() {
   group('CLABE Validator', () {
     test('validates valid CLABEs', () {
       expect(validateCLABE('002010077777777771'), isTrue);
-      expect(validateCLABE('012180001234567897'), isTrue);
-      expect(validateCLABE('014028000005300534'), isTrue);
+      expect(validateCLABE('012180001234567899'), isTrue);
+      expect(validateCLABE('014028000005300537'), isTrue);
     });
 
     test('rejects invalid CLABEs', () {
@@ -58,9 +58,12 @@ void main() {
     });
 
     test('calculates check digit correctly', () {
-      expect(CLABEValidator.calculateCheckDigit('00201007777777777'), equals('1'));
-      expect(CLABEValidator.calculateCheckDigit('01218000123456789'), equals('7'));
-      expect(CLABEValidator.calculateCheckDigit('01402800000530053'), equals('4'));
+      expect(
+          CLABEValidator.calculateCheckDigit('00201007777777777'), equals('1'));
+      expect(
+          CLABEValidator.calculateCheckDigit('01218000123456789'), equals('9'));
+      expect(
+          CLABEValidator.calculateCheckDigit('01402800000530053'), equals('7'));
     });
   });
 

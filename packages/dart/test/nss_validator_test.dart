@@ -5,7 +5,7 @@ void main() {
   group('NSS Validator', () {
     test('validates valid NSS numbers', () {
       expect(validateNSS('12345678903'), isTrue);
-      expect(validateNSS('97031612345'), isTrue);
+      expect(validateNSS('97031612340'), isTrue);
     });
 
     test('rejects invalid NSS numbers', () {
@@ -64,7 +64,7 @@ void main() {
 
     test('calculates check digit correctly', () {
       expect(NSSValidator.calculateCheckDigit('1234567890'), equals('3'));
-      expect(NSSValidator.calculateCheckDigit('9703161234'), equals('5'));
+      expect(NSSValidator.calculateCheckDigit('9703161234'), equals('0'));
     });
   });
 

@@ -9,13 +9,13 @@ void main() {
     });
 
     test('validates RFC Persona Física', () {
-      expect(validateRFC('OEAF771012HM8'), isTrue);
-      expect(validateRFC('GODE561231GR1'), isTrue);
+      expect(validateRFC('OEAF771012HM3'), isTrue);
+      expect(validateRFC('GODE561231GR8'), isTrue);
     });
 
     test('validates RFC Persona Moral', () {
-      expect(validateRFC('BIM930505WL0'), isTrue);
-      expect(validateRFC('TSI800101KT1'), isTrue);
+      expect(validateRFC('BIM930505WL4'), isTrue);
+      expect(validateRFC('TSI800101KT9'), isTrue);
     });
 
     test('rejects invalid RFCs', () {
@@ -32,10 +32,10 @@ void main() {
     });
 
     test('detects RFC type', () {
-      final validator1 = RFCValidator('OEAF771012HM8');
+      final validator1 = RFCValidator('OEAF771012HM3');
       expect(validator1.detectType(), equals('Persona Física'));
 
-      final validator2 = RFCValidator('BIM930505WL0');
+      final validator2 = RFCValidator('BIM930505WL4');
       expect(validator2.detectType(), equals('Persona Moral'));
 
       final validator3 = RFCValidator('XAXX010101000');
@@ -43,13 +43,13 @@ void main() {
     });
 
     test('validates checksum', () {
-      final validator = RFCValidator('OEAF771012HM8');
+      final validator = RFCValidator('OEAF771012HM3');
       expect(validator.validateChecksum(), isTrue);
     });
 
     test('calculates checksum correctly', () {
-      expect(RFCValidator.calculateChecksum('OEAF771012HM'), equals('8'));
-      expect(RFCValidator.calculateChecksum('BIM930505WL'), equals('0'));
+      expect(RFCValidator.calculateChecksum('OEAF771012HM'), equals('3'));
+      expect(RFCValidator.calculateChecksum('BIM930505WL'), equals('4'));
     });
   });
 

@@ -14,7 +14,6 @@
 /// Example: OEAF771012HMCRGR09
 library;
 
-import 'package:diacritic/diacritic.dart';
 import 'package:catalogmx/src/utils/date_utils.dart';
 import 'package:catalogmx/src/utils/text_utils.dart';
 
@@ -78,16 +77,85 @@ class CURPValidator {
   };
 
   static const List<String> _cacophonic = [
-    'BACA', 'BAKA', 'BUEI', 'BUEY', 'CACA', 'CACO', 'CAGA', 'CAGO',
-    'CAKA', 'KAKO', 'COGE', 'COGI', 'COJA', 'COJE', 'COJI', 'COJO',
-    'COLA', 'CULO', 'FALO', 'FETO', 'GETA', 'GUEI', 'GUEY', 'JETA',
-    'JOTO', 'KACA', 'KACO', 'KAGA', 'KAGO', 'KOGE', 'KOGI', 'KOJA',
-    'KOJE', 'KOJI', 'KOJO', 'KOLA', 'KULO', 'LILO', 'LOCA', 'LOCO',
-    'LOKA', 'LOKO', 'MAME', 'MAMO', 'MEAR', 'MEAS', 'MEON', 'MIAR',
-    'MION', 'MOCO', 'MOKO', 'MULA', 'MULO', 'NACA', 'NACO', 'PEDA',
-    'PEDO', 'PENE', 'PIPI', 'PITO', 'POPO', 'PUTA', 'PUTO', 'QULO',
-    'RATA', 'ROBA', 'ROBE', 'ROBO', 'RUIN', 'SENO', 'TETA', 'VACA',
-    'VAGA', 'VAGO', 'VAKA', 'VUEI', 'VUEY', 'WUEI', 'WUEY',
+    'BACA',
+    'BAKA',
+    'BUEI',
+    'BUEY',
+    'CACA',
+    'CACO',
+    'CAGA',
+    'CAGO',
+    'CAKA',
+    'KAKO',
+    'COGE',
+    'COGI',
+    'COJA',
+    'COJE',
+    'COJI',
+    'COJO',
+    'COLA',
+    'CULO',
+    'FALO',
+    'FETO',
+    'GETA',
+    'GUEI',
+    'GUEY',
+    'JETA',
+    'JOTO',
+    'KACA',
+    'KACO',
+    'KAGA',
+    'KAGO',
+    'KOGE',
+    'KOGI',
+    'KOJA',
+    'KOJE',
+    'KOJI',
+    'KOJO',
+    'KOLA',
+    'KULO',
+    'LILO',
+    'LOCA',
+    'LOCO',
+    'LOKA',
+    'LOKO',
+    'MAME',
+    'MAMO',
+    'MEAR',
+    'MEAS',
+    'MEON',
+    'MIAR',
+    'MION',
+    'MOCO',
+    'MOKO',
+    'MULA',
+    'MULO',
+    'NACA',
+    'NACO',
+    'PEDA',
+    'PEDO',
+    'PENE',
+    'PIPI',
+    'PITO',
+    'POPO',
+    'PUTA',
+    'PUTO',
+    'QULO',
+    'RATA',
+    'ROBA',
+    'ROBE',
+    'ROBO',
+    'RUIN',
+    'SENO',
+    'TETA',
+    'VACA',
+    'VAGA',
+    'VAGO',
+    'VAKA',
+    'VUEI',
+    'VUEY',
+    'WUEI',
+    'WUEY',
   ];
 
   CURPValidator(String curp) : curp = curp.toUpperCase().trim();
@@ -156,14 +224,66 @@ class CURPGenerator {
   static const String _consonants = 'BCDFGHJKLMNPQRSTVWXYZ';
 
   static const List<String> _excludedWords = [
-    'DE', 'LA', 'LAS', 'MC', 'VON', 'DEL', 'LOS', 'Y', 'MAC', 'VAN', 'MI',
-    'DA', 'DAS', 'DE', 'DEL', 'DER', 'DI', 'DIE', 'DD', 'EL', 'LA', 'LOS',
-    'LAS', 'LE', 'LES', 'MAC', 'MC', 'VAN', 'VON', 'Y',
+    'DE',
+    'LA',
+    'LAS',
+    'MC',
+    'VON',
+    'DEL',
+    'LOS',
+    'Y',
+    'MAC',
+    'VAN',
+    'MI',
+    'DA',
+    'DAS',
+    'DE',
+    'DEL',
+    'DER',
+    'DI',
+    'DIE',
+    'DD',
+    'EL',
+    'LA',
+    'LOS',
+    'LAS',
+    'LE',
+    'LES',
+    'MAC',
+    'MC',
+    'VAN',
+    'VON',
+    'Y',
   ];
 
   static const List<String> _allowedChars = [
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-    'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'Ñ',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z',
   ];
 
   CURPGenerator({
@@ -203,7 +323,8 @@ class CURPGenerator {
   }
 
   String get _paternoCalculo => _cleanName(apellidoPaterno);
-  String get _maternoCalculo => apellidoMaterno != null ? _cleanName(apellidoMaterno!) : '';
+  String get _maternoCalculo =>
+      apellidoMaterno != null ? _cleanName(apellidoMaterno!) : '';
   String get _nombreCalculo => _cleanName(nombre);
 
   String get _nombreIniciales {
@@ -347,7 +468,8 @@ class CURPGenerator {
   /// Calculates the check digit for a 17-character CURP
   static String calculateCheckDigit(String curp17) {
     if (curp17.length != 17) {
-      throw CURPException('CURP must have exactly 17 characters for check digit calculation');
+      throw CURPException(
+          'CURP must have exactly 17 characters for check digit calculation');
     }
 
     const dictionary = '0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';

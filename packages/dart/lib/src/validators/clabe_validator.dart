@@ -34,7 +34,23 @@ class CLABEValidator {
   /// Weights for check digit calculation (positions 0-16)
   /// Pattern repeats: 3,7,1,3,7,1,...
   static const List<int> weights = [
-    3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7,
+    3,
+    7,
+    1,
+    3,
+    7,
+    1,
+    3,
+    7,
+    1,
+    3,
+    7,
+    1,
+    3,
+    7,
+    1,
+    3,
+    7,
   ];
 
   CLABEValidator(String? clabe) : clabe = clabe?.trim() ?? '';
@@ -45,7 +61,8 @@ class CLABEValidator {
 
     // Check length
     if (value.length != length) {
-      throw CLABEException('CLABE length must be $length digits, got ${value.length}');
+      throw CLABEException(
+          'CLABE length must be $length digits, got ${value.length}');
     }
 
     // Check if all characters are digits

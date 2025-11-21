@@ -64,7 +64,8 @@ class InegMunicipios {
     }
 
     for (final muni in searchList) {
-      if ((muni['nom_municipio'] as String).toLowerCase().trim() == normalized) {
+      if ((muni['nom_municipio'] as String).toLowerCase().trim() ==
+          normalized) {
         return muni;
       }
     }
@@ -82,7 +83,9 @@ class InegMunicipios {
     }
 
     return searchList.where((muni) {
-      return (muni['nom_municipio'] as String).toLowerCase().contains(normalized);
+      return (muni['nom_municipio'] as String)
+          .toLowerCase()
+          .contains(normalized);
     }).toList();
   }
 

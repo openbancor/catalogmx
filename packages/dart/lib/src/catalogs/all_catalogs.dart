@@ -19,14 +19,36 @@ class SatAeropuertos {
     if (_data != null) return;
     _data = BaseCatalog.loadJsonDataSync('sat/carta_porte_3/aeropuertos.json');
     _byCode = {for (var item in _data!) item['code'] as String: item};
-    _byIATA = {for (var item in _data!) if (item.containsKey('iata')) item['iata'] as String: item};
-    _byICAO = {for (var item in _data!) if (item.containsKey('icao')) item['icao'] as String: item};
+    _byIATA = {
+      for (var item in _data!)
+        if (item.containsKey('iata')) item['iata'] as String: item
+    };
+    _byICAO = {
+      for (var item in _data!)
+        if (item.containsKey('icao')) item['icao'] as String: item
+    };
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
-  static Map<String, dynamic>? getByCode(String code) { _loadData(); return _byCode![code]; }
-  static Map<String, dynamic>? getByIATA(String iata) { _loadData(); return _byIATA![iata.toUpperCase()]; }
-  static Map<String, dynamic>? getByICAO(String icao) { _loadData(); return _byICAO![icao.toUpperCase()]; }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
+
+  static Map<String, dynamic>? getByCode(String code) {
+    _loadData();
+    return _byCode![code];
+  }
+
+  static Map<String, dynamic>? getByIATA(String iata) {
+    _loadData();
+    return _byIATA![iata.toUpperCase()];
+  }
+
+  static Map<String, dynamic>? getByICAO(String icao) {
+    _loadData();
+    return _byICAO![icao.toUpperCase()];
+  }
+
   static bool isValid(String code) => getByCode(code) != null;
 }
 
@@ -37,12 +59,21 @@ class SatPuertosMaritimos {
 
   static void _loadData() {
     if (_data != null) return;
-    _data = BaseCatalog.loadJsonDataSync('sat/carta_porte_3/puertos_maritimos.json');
+    _data = BaseCatalog.loadJsonDataSync(
+        'sat/carta_porte_3/puertos_maritimos.json');
     _byCode = {for (var item in _data!) item['code'] as String: item};
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
-  static Map<String, dynamic>? getByCode(String code) { _loadData(); return _byCode![code]; }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
+
+  static Map<String, dynamic>? getByCode(String code) {
+    _loadData();
+    return _byCode![code];
+  }
+
   static bool isValid(String code) => getByCode(code) != null;
 }
 
@@ -57,8 +88,16 @@ class SatCarreteras {
     _byCode = {for (var item in _data!) item['code'] as String: item};
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
-  static Map<String, dynamic>? getByCode(String code) { _loadData(); return _byCode![code]; }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
+
+  static Map<String, dynamic>? getByCode(String code) {
+    _loadData();
+    return _byCode![code];
+  }
+
   static bool isValid(String code) => getByCode(code) != null;
 }
 
@@ -69,12 +108,21 @@ class SatTipoEmbalaje {
 
   static void _loadData() {
     if (_data != null) return;
-    _data = BaseCatalog.loadJsonDataSync('sat/carta_porte_3/tipo_embalaje.json');
+    _data =
+        BaseCatalog.loadJsonDataSync('sat/carta_porte_3/tipo_embalaje.json');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
-  static Map<String, dynamic>? getByClave(String clave) { _loadData(); return _byCode![clave]; }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
+
+  static Map<String, dynamic>? getByClave(String clave) {
+    _loadData();
+    return _byCode![clave];
+  }
+
   static bool isValid(String clave) => getByClave(clave) != null;
 }
 
@@ -89,8 +137,16 @@ class SatTipoPermiso {
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
-  static Map<String, dynamic>? getByClave(String clave) { _loadData(); return _byCode![clave]; }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
+
+  static Map<String, dynamic>? getByClave(String clave) {
+    _loadData();
+    return _byCode![clave];
+  }
+
   static bool isValid(String clave) => getByClave(clave) != null;
 }
 
@@ -109,8 +165,16 @@ class BanxicoBanks {
     _byCode = {for (var item in _data!) item['code'] as String: item};
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
-  static Map<String, dynamic>? getByCode(String code) { _loadData(); return _byCode![code]; }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
+
+  static Map<String, dynamic>? getByCode(String code) {
+    _loadData();
+    return _byCode![code];
+  }
+
   static bool isValid(String code) => getByCode(code) != null;
 
   static List<Map<String, dynamic>> search(String query) {
@@ -130,12 +194,21 @@ class BanxicoInstituciones {
 
   static void _loadData() {
     if (_data != null) return;
-    _data = BaseCatalog.loadJsonDataSync('banxico/instituciones_financieras.json');
+    _data =
+        BaseCatalog.loadJsonDataSync('banxico/instituciones_financieras.json');
     _byCode = {for (var item in _data!) item['code'] as String: item};
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
-  static Map<String, dynamic>? getByCode(String code) { _loadData(); return _byCode![code]; }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
+
+  static Map<String, dynamic>? getByCode(String code) {
+    _loadData();
+    return _byCode![code];
+  }
+
   static bool isValid(String code) => getByCode(code) != null;
 }
 
@@ -150,8 +223,16 @@ class BanxicoCodigosPlaza {
     _byCode = {for (var item in _data!) item['code'] as String: item};
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
-  static Map<String, dynamic>? getByCode(String code) { _loadData(); return _byCode![code]; }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
+
+  static Map<String, dynamic>? getByCode(String code) {
+    _loadData();
+    return _byCode![code];
+  }
+
   static bool isValid(String code) => getByCode(code) != null;
 }
 
@@ -166,8 +247,16 @@ class BanxicoMonedas {
     _byCode = {for (var item in _data!) item['code'] as String: item};
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
-  static Map<String, dynamic>? getByCode(String code) { _loadData(); return _byCode![code]; }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
+
+  static Map<String, dynamic>? getByCode(String code) {
+    _loadData();
+    return _byCode![code];
+  }
+
   static bool isValid(String code) => getByCode(code) != null;
 }
 
@@ -180,7 +269,10 @@ class BanxicoUDIs {
     _data = BaseCatalog.loadJsonDataSync('banxico/udis.json');
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
 
   static Map<String, dynamic>? getByDate(String date) {
     _loadData();
@@ -206,15 +298,24 @@ class IftCodigosLada {
     _byCode = {for (var item in _data!) item['lada'] as String: item};
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
-  static Map<String, dynamic>? getByLada(String lada) { _loadData(); return _byCode![lada]; }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
+
+  static Map<String, dynamic>? getByLada(String lada) {
+    _loadData();
+    return _byCode![lada];
+  }
+
   static bool isValid(String lada) => getByLada(lada) != null;
 
   static List<Map<String, dynamic>> search(String query) {
     _loadData();
     final normalized = query.toLowerCase();
     return _data!.where((item) {
-      final city = (item['ciudad'] as String? ?? item['city'] as String? ?? '').toLowerCase();
+      final city = (item['ciudad'] as String? ?? item['city'] as String? ?? '')
+          .toLowerCase();
       return city.contains(normalized);
     }).toList();
   }
@@ -231,8 +332,16 @@ class IftOperadoresMoviles {
     _byCode = {for (var item in _data!) item['code'] as String: item};
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
-  static Map<String, dynamic>? getByCode(String code) { _loadData(); return _byCode![code]; }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
+
+  static Map<String, dynamic>? getByCode(String code) {
+    _loadData();
+    return _byCode![code];
+  }
+
   static bool isValid(String code) => getByCode(code) != null;
 }
 
@@ -249,7 +358,10 @@ class MexicoUMA {
     _data = BaseCatalog.loadJsonDataSync('mexico/uma.json');
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
 
   static Map<String, dynamic>? getByYear(int year) {
     _loadData();
@@ -276,7 +388,10 @@ class MexicoSalariosMinimos {
     _data = BaseCatalog.loadJsonDataSync('mexico/salarios_minimos.json');
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
 
   static Map<String, dynamic>? getByYear(int year) {
     _loadData();
@@ -302,7 +417,10 @@ class MexicoHoyNoCircula {
     _data = BaseCatalog.loadJsonDataSync('mexico/hoy_no_circula_cdmx.json');
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
 
   static Map<String, dynamic>? getByDigit(String digit) {
     _loadData();
@@ -324,6 +442,13 @@ class MexicoPlacasFormatos {
     _byState = {for (var item in _data!) item['estado'] as String: item};
   }
 
-  static List<Map<String, dynamic>> getAll() { _loadData(); return List.from(_data!); }
-  static Map<String, dynamic>? getByState(String state) { _loadData(); return _byState![state.toUpperCase()]; }
+  static List<Map<String, dynamic>> getAll() {
+    _loadData();
+    return List.from(_data!);
+  }
+
+  static Map<String, dynamic>? getByState(String state) {
+    _loadData();
+    return _byState![state.toUpperCase()];
+  }
 }

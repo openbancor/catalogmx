@@ -41,7 +41,8 @@ class NSSValidator {
 
     // Check length
     if (value.length != length) {
-      throw NSSException('NSS length must be $length digits, got ${value.length}');
+      throw NSSException(
+          'NSS length must be $length digits, got ${value.length}');
     }
 
     // Check if all characters are digits

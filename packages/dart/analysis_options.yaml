@@ -6,9 +6,7 @@ linter:
     - always_put_required_named_parameters_first
     - annotate_overrides
     - avoid_empty_else
-    - avoid_print
     - avoid_relative_lib_imports
-    - avoid_returning_null_for_future
     - avoid_slow_async_io
     - avoid_types_as_parameter_names
     - await_only_futures
@@ -33,7 +31,6 @@ linter:
     - prefer_const_constructors
     - prefer_const_declarations
     - prefer_contains
-    - prefer_equal_for_default_values
     - prefer_final_fields
     - prefer_final_locals
     - prefer_for_elements_to_map_fromIterable
@@ -72,6 +69,7 @@ analyzer:
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
+    - "example/**"
   errors:
     missing_required_param: error
     missing_return: error

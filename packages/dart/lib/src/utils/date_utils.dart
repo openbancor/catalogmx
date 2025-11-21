@@ -18,16 +18,19 @@ bool isValidDateYYMMDD(String dateStr) {
     // Validate day
     if (day < 1 || day > 31) return false;
 
-    // Create DateTime to validate the date
     // Assume years < 50 are 2000+, others are 1900+
     final fullYear = year < 50 ? 2000 + year : 1900 + year;
 
-    try {
-      DateTime(fullYear, month, day);
-      return true;
-    } catch (e) {
+    // Validate day is within the month's valid range
+    final date = DateTime(fullYear, month, day);
+
+    // DateTime is lenient and will roll over invalid dates
+    // Check that the resulting date matches the input
+    if (date.month != month || date.day != day) {
       return false;
     }
+
+    return true;
   } catch (e) {
     return false;
   }
