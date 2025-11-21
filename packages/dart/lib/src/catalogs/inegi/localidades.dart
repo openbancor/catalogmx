@@ -7,7 +7,7 @@ library;
 import 'package:catalogmx/src/catalogs/base_catalog.dart';
 
 /// INEGI Localidades Catalog (300,000+ localities with GPS)
-class InegLocalidades extends BaseCatalog {
+class InegLocalidades {
   static List<Map<String, dynamic>>? _data;
   static Map<String, List<Map<String, dynamic>>>? _byMunicipality;
 

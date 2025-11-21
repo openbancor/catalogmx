@@ -3,10 +3,10 @@
 ## Project Overview
 
 **catalogmx** is a production-ready, enterprise-grade Mexican data validation and catalog library with:
-- **93.78% test coverage** (926 tests passing)
+- **93.78% test coverage** (1,250+ tests passing across all platforms)
 - **50+ modules at 100%** coverage
-- Dual-language support (Python 3.10+ and TypeScript 5.0+)
-- Modern packaging with `pyproject.toml`
+- **Multi-platform support**: Python 3.10+, TypeScript 5.0+, and Dart/Flutter 3.0+
+- Modern packaging with `pyproject.toml`, `package.json`, and `pubspec.yaml`
 
 ---
 
@@ -59,6 +59,11 @@ catalogmx/
 │   │   ├── src/
 │   │   ├── tests/
 │   │   └── package.json
+│   ├── dart/
+│   │   ├── lib/             # Dart source code
+│   │   ├── test/            # Dart test files
+│   │   ├── pubspec.yaml     # Dart package config
+│   │   └── analysis_options.yaml  # Dart linter rules
 │   └── shared-data/         # JSON catalogs & SQLite DBs
 ├── README.md                 # Main documentation
 ├── CLAUDE.md                 # This file (AI agent rules)
@@ -182,6 +187,90 @@ ruff check catalogmx/
 # 4. Type check
 mypy catalogmx/
 ```
+
+---
+
+## Linting and Static Analysis
+
+### IMPORTANT: Always Run Before Committing
+
+All code MUST pass linting and static analysis checks before committing.
+
+### Python
+
+```bash
+cd packages/python
+
+# Format code (required)
+black catalogmx/
+
+# Lint code (required)
+ruff check catalogmx/
+ruff check catalogmx/ --fix  # Auto-fix issues
+
+# Type checking (recommended)
+mypy catalogmx/
+
+# All checks in one command
+black catalogmx/ && ruff check catalogmx/ && mypy catalogmx/
+```
+
+**Configuration**: `pyproject.toml` contains all Black, Ruff, and mypy settings.
+
+### TypeScript
+
+```bash
+cd packages/typescript
+
+# Lint code (required)
+npm run lint
+npm run lint:fix  # Auto-fix issues
+
+# Format code (required)
+npm run format:check
+npm run format  # Auto-format
+
+# Type checking (required)
+npm run typecheck
+
+# All checks in one command
+npm run lint && npm run format:check && npm run typecheck
+```
+
+**Configuration**: `.eslintrc.js`, `tsconfig.json`, `.prettierrc`
+
+### Dart/Flutter
+
+```bash
+cd packages/dart
+
+# Analyze code (required) - catches errors and warnings
+dart analyze
+
+# Format code (required)
+dart format .
+dart format --set-exit-if-changed .  # Check only (CI mode)
+
+# Run tests
+dart test
+
+# Dry-run pub.dev publish (validates package)
+dart pub publish --dry-run
+
+# All checks in one command
+dart analyze && dart format --set-exit-if-changed . && dart test
+```
+
+**Configuration**: `analysis_options.yaml` contains all Dart analyzer and linter rules.
+
+### CI Enforcement
+
+All linting checks are enforced in GitHub Actions CI:
+- **Python**: Black format check, Ruff lint, mypy type check
+- **TypeScript**: ESLint, Prettier format check, TypeScript strict mode
+- **Dart**: dart analyze, dart format check
+
+Code that fails any check will NOT be merged.
 
 ---
 

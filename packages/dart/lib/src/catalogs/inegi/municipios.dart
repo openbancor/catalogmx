@@ -6,18 +6,12 @@ library;
 import 'package:catalogmx/src/catalogs/base_catalog.dart';
 
 /// INEGI Municipios Catalog (2,469 municipalities)
-class InegMunicipios extends BaseCatalog with CodeLookup, NameSearch {
-  static InegMunicipios? _instance;
+class InegMunicipios {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byClave;
   static Map<String, List<Map<String, dynamic>>>? _byState;
 
-  /// Singleton instance
-  static InegMunicipios get instance {
-    _instance ??= InegMunicipios._();
-    return _instance!;
-  }
-
+  // Private constructor - all methods are static
   InegMunicipios._();
 
   /// Loads the municipios data

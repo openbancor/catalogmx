@@ -7,7 +7,7 @@ library;
 import 'package:catalogmx/src/catalogs/base_catalog.dart';
 
 /// SEPOMEX Postal Codes Catalog (157,000+ records)
-class SepomexCodigosPostales extends BaseCatalog {
+class SepomexCodigosPostales {
   static List<Map<String, dynamic>>? _data;
   static Map<String, List<Map<String, dynamic>>>? _byCP;
   static Map<String, List<Map<String, dynamic>>>? _byState;

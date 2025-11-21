@@ -11,7 +11,7 @@ import 'package:catalogmx/src/catalogs/base_catalog.dart';
 // ============================================================================
 
 /// SAT Aeropuertos - Airports
-class SatAeropuertos extends BaseCatalog {
+class SatAeropuertos {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode, _byIATA, _byICAO;
 
@@ -31,7 +31,7 @@ class SatAeropuertos extends BaseCatalog {
 }
 
 /// SAT Puertos Marítimos - Seaports
-class SatPuertosMaritimos extends BaseCatalog {
+class SatPuertosMaritimos {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
@@ -47,7 +47,7 @@ class SatPuertosMaritimos extends BaseCatalog {
 }
 
 /// SAT Carreteras - Highways
-class SatCarreteras extends BaseCatalog {
+class SatCarreteras {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
@@ -63,7 +63,7 @@ class SatCarreteras extends BaseCatalog {
 }
 
 /// SAT Tipo Embalaje - Packaging Types
-class SatTipoEmbalaje extends BaseCatalog {
+class SatTipoEmbalaje {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
@@ -79,7 +79,7 @@ class SatTipoEmbalaje extends BaseCatalog {
 }
 
 /// SAT Tipo Permiso - Permission Types
-class SatTipoPermiso extends BaseCatalog {
+class SatTipoPermiso {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
@@ -99,7 +99,7 @@ class SatTipoPermiso extends BaseCatalog {
 // ============================================================================
 
 /// Banxico Banks - Complete bank catalog
-class BanxicoBanks extends BaseCatalog {
+class BanxicoBanks {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
@@ -124,7 +124,7 @@ class BanxicoBanks extends BaseCatalog {
 }
 
 /// Banxico Financial Institutions
-class BanxicoInstituciones extends BaseCatalog {
+class BanxicoInstituciones {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
@@ -140,7 +140,7 @@ class BanxicoInstituciones extends BaseCatalog {
 }
 
 /// Banxico Plaza Codes
-class BanxicoCodigosPlaza extends BaseCatalog {
+class BanxicoCodigosPlaza {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
@@ -156,7 +156,7 @@ class BanxicoCodigosPlaza extends BaseCatalog {
 }
 
 /// Banxico Currencies
-class BanxicoMonedas extends BaseCatalog {
+class BanxicoMonedas {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
@@ -172,7 +172,7 @@ class BanxicoMonedas extends BaseCatalog {
 }
 
 /// Banxico UDIs (inflation-indexed units)
-class BanxicoUDIs extends BaseCatalog {
+class BanxicoUDIs {
   static List<Map<String, dynamic>>? _data;
 
   static void _loadData() {
@@ -196,7 +196,7 @@ class BanxicoUDIs extends BaseCatalog {
 // ============================================================================
 
 /// IFT Area Codes (LADA codes)
-class IftCodigosLada extends BaseCatalog {
+class IftCodigosLada {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
@@ -221,7 +221,7 @@ class IftCodigosLada extends BaseCatalog {
 }
 
 /// IFT Mobile Operators
-class IftOperadoresMoviles extends BaseCatalog {
+class IftOperadoresMoviles {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
@@ -241,7 +241,7 @@ class IftOperadoresMoviles extends BaseCatalog {
 // ============================================================================
 
 /// UMA - Unidad de Medida y Actualización
-class MexicoUMA extends BaseCatalog {
+class MexicoUMA {
   static List<Map<String, dynamic>>? _data;
 
   static void _loadData() {
@@ -268,7 +268,7 @@ class MexicoUMA extends BaseCatalog {
 }
 
 /// Salarios Mínimos - Minimum Wages
-class MexicoSalariosMinimos extends BaseCatalog {
+class MexicoSalariosMinimos {
   static List<Map<String, dynamic>>? _data;
 
   static void _loadData() {
@@ -294,7 +294,7 @@ class MexicoSalariosMinimos extends BaseCatalog {
 }
 
 /// Hoy No Circula CDMX - Vehicle Verification Schedule
-class MexicoHoyNoCircula extends BaseCatalog {
+class MexicoHoyNoCircula {
   static List<Map<String, dynamic>>? _data;
 
   static void _loadData() {
@@ -314,7 +314,7 @@ class MexicoHoyNoCircula extends BaseCatalog {
 }
 
 /// License Plate Formats
-class MexicoPlacasFormatos extends BaseCatalog {
+class MexicoPlacasFormatos {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byState;
 

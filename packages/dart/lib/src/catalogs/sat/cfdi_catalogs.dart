@@ -6,11 +6,11 @@ library;
 
 import 'package:catalogmx/src/catalogs/base_catalog.dart';
 
-/// Base class for SAT CFDI catalogs
-abstract class SatCFDICatalog extends BaseCatalog with CodeLookup {
+/// Helper class for SAT CFDI catalogs
+class _SatCatalogLoader {
   static final Map<String, List<Map<String, dynamic>>> _catalogCache = {};
 
-  static List<Map<String, dynamic>> _loadCatalog(String filename) {
+  static List<Map<String, dynamic>> loadCatalog(String filename) {
     if (_catalogCache.containsKey(filename)) {
       return _catalogCache[filename]!;
     }
@@ -22,13 +22,13 @@ abstract class SatCFDICatalog extends BaseCatalog with CodeLookup {
 }
 
 /// c_FormaPago - Payment Methods Catalog
-class SatFormaPago extends SatCFDICatalog {
+class SatFormaPago {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('c_FormaPago');
+    _data = _SatCatalogLoader.loadCatalog('c_FormaPago');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -46,13 +46,13 @@ class SatFormaPago extends SatCFDICatalog {
 }
 
 /// c_MetodoPago - Payment Method Catalog (PUE, PPD, etc.)
-class SatMetodoPago extends SatCFDICatalog {
+class SatMetodoPago {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('c_MetodoPago');
+    _data = _SatCatalogLoader.loadCatalog('c_MetodoPago');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -70,13 +70,13 @@ class SatMetodoPago extends SatCFDICatalog {
 }
 
 /// c_UsoCFDI - CFDI Usage Catalog
-class SatUsoCFDI extends SatCFDICatalog {
+class SatUsoCFDI {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('c_UsoCFDI');
+    _data = _SatCatalogLoader.loadCatalog('c_UsoCFDI');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -94,13 +94,13 @@ class SatUsoCFDI extends SatCFDICatalog {
 }
 
 /// c_RegimenFiscal - Tax Regime Catalog
-class SatRegimenFiscal extends SatCFDICatalog {
+class SatRegimenFiscal {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('c_RegimenFiscal');
+    _data = _SatCatalogLoader.loadCatalog('c_RegimenFiscal');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -118,13 +118,13 @@ class SatRegimenFiscal extends SatCFDICatalog {
 }
 
 /// c_Moneda - Currency Catalog
-class SatMoneda extends SatCFDICatalog {
+class SatMoneda {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('c_Moneda');
+    _data = _SatCatalogLoader.loadCatalog('c_Moneda');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -142,13 +142,13 @@ class SatMoneda extends SatCFDICatalog {
 }
 
 /// c_Pais - Country Catalog
-class SatPais extends SatCFDICatalog {
+class SatPais {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('c_Pais');
+    _data = _SatCatalogLoader.loadCatalog('c_Pais');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -166,12 +166,12 @@ class SatPais extends SatCFDICatalog {
 }
 
 /// c_TasaOCuota - Tax Rate Catalog
-class SatTasaOCuota extends SatCFDICatalog {
+class SatTasaOCuota {
   static List<Map<String, dynamic>>? _data;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('c_TasaOCuota');
+    _data = _SatCatalogLoader.loadCatalog('c_TasaOCuota');
   }
 
   static List<Map<String, dynamic>> getAll() {
@@ -181,13 +181,13 @@ class SatTasaOCuota extends SatCFDICatalog {
 }
 
 /// Tipo Comprobante - Receipt Type (I, E, T, N, P)
-class SatTipoComprobante extends SatCFDICatalog {
+class SatTipoComprobante {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('tipo_comprobante');
+    _data = _SatCatalogLoader.loadCatalog('tipo_comprobante');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -205,13 +205,13 @@ class SatTipoComprobante extends SatCFDICatalog {
 }
 
 /// c_Exportacion - Export Catalog
-class SatExportacion extends SatCFDICatalog {
+class SatExportacion {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('c_Exportacion');
+    _data = _SatCatalogLoader.loadCatalog('c_Exportacion');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -229,13 +229,13 @@ class SatExportacion extends SatCFDICatalog {
 }
 
 /// Objeto Impuesto - Tax Object
-class SatObjetoImpuesto extends SatCFDICatalog {
+class SatObjetoImpuesto {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('objeto_imp');
+    _data = _SatCatalogLoader.loadCatalog('objeto_imp');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -253,14 +253,14 @@ class SatObjetoImpuesto extends SatCFDICatalog {
 }
 
 /// Clave Producto/Servicio - Product/Service Key (large catalog)
-class SatClaveProdServ extends SatCFDICatalog {
+class SatClaveProdServ {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
     // Note: This is a large catalog with 50K+ entries
-    _data = SatCFDICatalog._loadCatalog('clave_prod_serv');
+    _data = _SatCatalogLoader.loadCatalog('clave_prod_serv');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -293,13 +293,13 @@ class SatClaveProdServ extends SatCFDICatalog {
 }
 
 /// Clave Unidad - Unit of Measure
-class SatClaveUnidad extends SatCFDICatalog {
+class SatClaveUnidad {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('clave_unidad');
+    _data = _SatCatalogLoader.loadCatalog('clave_unidad');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -317,13 +317,13 @@ class SatClaveUnidad extends SatCFDICatalog {
 }
 
 /// Tipo Relación - Relation Type
-class SatTipoRelacion extends SatCFDICatalog {
+class SatTipoRelacion {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('tipo_relacion');
+    _data = _SatCatalogLoader.loadCatalog('tipo_relacion');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -341,13 +341,13 @@ class SatTipoRelacion extends SatCFDICatalog {
 }
 
 /// Impuestos - Taxes
-class SatImpuesto extends SatCFDICatalog {
+class SatImpuesto {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('impuesto');
+    _data = _SatCatalogLoader.loadCatalog('impuesto');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -365,13 +365,13 @@ class SatImpuesto extends SatCFDICatalog {
 }
 
 /// c_Meses - Months
-class SatMeses extends SatCFDICatalog {
+class SatMeses {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 
   static void _loadData() {
     if (_data != null) return;
-    _data = SatCFDICatalog._loadCatalog('c_Meses');
+    _data = _SatCatalogLoader.loadCatalog('c_Meses');
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
