@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:catalogmx/src/utils/date_utils.dart';
+import 'package:catalogmx/catalogmx.dart';
 
 void main() {
   group('isValidDateYYMMDD', () {

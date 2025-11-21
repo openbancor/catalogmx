@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:catalogmx/src/catalogs/base_catalog.dart';
+import 'package:catalogmx/catalogmx.dart';
 
 void main() {
   group('BaseCatalog', () {

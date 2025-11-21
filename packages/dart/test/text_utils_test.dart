@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:catalogmx/src/utils/text_utils.dart';
+import 'package:catalogmx/catalogmx.dart';
 
 void main() {
   group('cleanText', () {

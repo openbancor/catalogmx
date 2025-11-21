@@ -71,4 +71,5 @@ export 'src/catalogs/all_catalogs.dart';
 
 export 'src/utils/text_utils.dart';
 export 'src/utils/date_utils.dart';
+export 'src/utils/catalog_helper.dart';
 export 'src/catalogs/base_catalog.dart';
