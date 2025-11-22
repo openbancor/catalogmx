@@ -32,3 +32,9 @@ declare module 'sql.js' {
 
   export default function initSqlJs(config?: SqlJsConfig): Promise<SqlJsStatic>;
 }
+
+declare module 'sql.js/dist/sql-wasm.js' {
+  import { SqlJsConfig, SqlJsStatic } from 'sql.js';
+  const initSqlJs: (config?: SqlJsConfig) => Promise<SqlJsStatic>;
+  export default initSqlJs;
+}

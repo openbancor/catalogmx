@@ -22,31 +22,62 @@ interface SqlJsStatic {
 }
 
 let SQL: SqlJsStatic | null = null;
+let sqlInitPromise: Promise<SqlJsStatic> | null = null;
 
 const databases: Map<string, SqlJsDatabase> = new Map();
 
 async function initSQL(): Promise<SqlJsStatic> {
-  if (!SQL) {
-    // Dynamic import for sql.js
-    const sqlPromise = (await import('sql.js')) as unknown as { default: (config?: { locateFile?: (file: string) => string }) => Promise<SqlJsStatic> };
-    const initSqlJs = sqlPromise.default;
-    SQL = await initSqlJs({
-      locateFile: (file: string) => `https://sql.js.org/dist/${file}`
+  if (SQL) {
+    return SQL;
+  }
+
+  if (!sqlInitPromise) {
+    sqlInitPromise = (async () => {
+      const sqlModule = await import('sql.js/dist/sql-wasm.js');
+      const initSqlJs =
+        (sqlModule as { default?: (config?: { locateFile?: (file: string) => string }) => Promise<SqlJsStatic> }).default ??
+        (sqlModule as unknown as (config?: { locateFile?: (file: string) => string }) => Promise<SqlJsStatic>);
+
+      if (typeof initSqlJs !== 'function') {
+        throw new Error('Failed to initialize sql.js. The initSqlJs export was not found.');
+      }
+
+      const instance = await initSqlJs({
+        // Use the official CDN so Vite doesn't need to rewrite the wasm path
+        locateFile: (file: string) => `https://sql.js.org/dist/${file}`
+      });
+      SQL = instance;
+      return instance;
+    })().catch((error) => {
+      sqlInitPromise = null;
+      throw error;
     });
   }
-  return SQL;
+
+  return sqlInitPromise;
 }
 
 export async function loadDatabase(name: string): Promise<SqlJsDatabase> {
-  if (databases.has(name)) {
-    return databases.get(name)!;
+  const dbKey = name.replace(/\.db$/, '');
+  if (databases.has(dbKey)) {
+    return databases.get(dbKey)!;
   }
 
   const sql = await initSQL();
-  const response = await fetch(`/data/${name}.db`);
+  const dbFile = name.endsWith('.db') ? name : `${name}.db`;
+  const response = await fetch(`/data/${dbFile}`);
+
+  if (!response.ok) {
+    throw new Error(`Failed to load ${dbFile} (${response.status} ${response.statusText})`);
+  }
+
   const buffer = await response.arrayBuffer();
+  if (buffer.byteLength === 0) {
+    throw new Error(`${dbFile} is empty or corrupt.`);
+  }
+
   const db = new sql.Database(new Uint8Array(buffer));
-  databases.set(name, db);
+  databases.set(dbKey, db);
   return db;
 }
 
