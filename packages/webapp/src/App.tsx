@@ -1,109 +1,195 @@
 import { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { FileCheck, Database, Calculator, Code, Package } from 'lucide-react';
-import ValidatorsSection from '@/components/ValidatorsSection';
-import CatalogsSection from '@/components/CatalogsSection';
-import CalculatorsSection from '@/components/CalculatorsSection';
-import CodeExamples from '@/components/CodeExamples';
-import InstallSection from '@/components/InstallSection';
+import { cn } from '@/lib/utils';
+import {
+  Database, Code, Menu, X,
+  CreditCard, User, Building2, Shield, MapPin, Package,
+  Receipt, Percent, DollarSign, ChevronRight
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-function App() {
-  const [activeTab, setActiveTab] = useState('validators');
+// Pages
+import RFCPage from '@/pages/RFCPage';
+import CURPPage from '@/pages/CURPPage';
+import CLABEPage from '@/pages/CLABEPage';
+import NSSPage from '@/pages/NSSPage';
+import CatalogsPage from '@/pages/CatalogsPage';
+import PostalCodesPage from '@/pages/PostalCodesPage';
+import LocalidadesPage from '@/pages/LocalidadesPage';
+import ProductosPage from '@/pages/ProductosPage';
+import ISRPage from '@/pages/ISRPage';
+import IVAPage from '@/pages/IVAPage';
+import IEPSPage from '@/pages/IEPSPage';
+import ReferencePage from '@/pages/ReferencePage';
+
+type PageId =
+  | 'rfc' | 'curp' | 'clabe' | 'nss'
+  | 'catalogs' | 'postal-codes' | 'localidades' | 'productos'
+  | 'isr' | 'iva' | 'ieps'
+  | 'reference';
+
+interface NavItem {
+  id: PageId;
+  label: string;
+  icon: React.ElementType;
+}
+
+interface NavSection {
+  title: string;
+  items: NavItem[];
+}
+
+const navigation: NavSection[] = [
+  {
+    title: 'Validators',
+    items: [
+      { id: 'rfc', label: 'RFC', icon: Building2 },
+      { id: 'curp', label: 'CURP', icon: User },
+      { id: 'clabe', label: 'CLABE', icon: CreditCard },
+      { id: 'nss', label: 'NSS', icon: Shield },
+    ]
+  },
+  {
+    title: 'Catalogs',
+    items: [
+      { id: 'catalogs', label: 'Browse All', icon: Database },
+      { id: 'postal-codes', label: 'Postal Codes', icon: MapPin },
+      { id: 'localidades', label: 'Localities', icon: MapPin },
+      { id: 'productos', label: 'Products/Services', icon: Package },
+    ]
+  },
+  {
+    title: 'Calculators',
+    items: [
+      { id: 'isr', label: 'ISR', icon: Receipt },
+      { id: 'iva', label: 'IVA', icon: Percent },
+      { id: 'ieps', label: 'IEPS', icon: DollarSign },
+    ]
+  },
+  {
+    title: 'Reference',
+    items: [
+      { id: 'reference', label: 'Code Examples', icon: Code },
+    ]
+  }
+];
+
+const pageComponents: Record<PageId, React.ComponentType> = {
+  'rfc': RFCPage,
+  'curp': CURPPage,
+  'clabe': CLABEPage,
+  'nss': NSSPage,
+  'catalogs': CatalogsPage,
+  'postal-codes': PostalCodesPage,
+  'localidades': LocalidadesPage,
+  'productos': ProductosPage,
+  'isr': ISRPage,
+  'iva': IVAPage,
+  'ieps': IEPSPage,
+  'reference': ReferencePage,
+};
+
+export default function App() {
+  const [currentPage, setCurrentPage] = useState<PageId>('rfc');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const PageComponent = pageComponents[currentPage];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">catalogmx</h1>
-            <p className="text-xl opacity-90 mb-6">
-              Comprehensive Mexican Data Validation & Official Catalogs Library
-            </p>
-            <div className="flex flex-wrap gap-2 justify-center">
-              <Badge variant="secondary" className="text-sm">93.78% Test Coverage</Badge>
-              <Badge variant="secondary" className="text-sm">1,250+ Tests</Badge>
-              <Badge variant="secondary" className="text-sm">58 Catalogs</Badge>
-              <Badge variant="secondary" className="text-sm">470K+ Records</Badge>
-              <Badge variant="secondary" className="text-sm">Python + TypeScript + Dart</Badge>
+    <div className="min-h-screen bg-background flex">
+      {/* Sidebar */}
+      <aside className={cn(
+        "fixed inset-y-0 left-0 z-50 flex flex-col bg-card border-r transition-all duration-300",
+        sidebarOpen ? "w-64" : "w-0 -translate-x-full md:w-16 md:translate-x-0"
+      )}>
+        {/* Logo */}
+        <div className="h-14 flex items-center px-4 border-b">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
+              MX
             </div>
+            {sidebarOpen && (
+              <span className="font-semibold">catalogmx</span>
+            )}
           </div>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-          <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-5 h-auto p-1">
-            <TabsTrigger value="validators" className="flex flex-col gap-1 py-3">
-              <FileCheck className="h-4 w-4" />
-              <span className="text-xs">Validators</span>
-            </TabsTrigger>
-            <TabsTrigger value="catalogs" className="flex flex-col gap-1 py-3">
-              <Database className="h-4 w-4" />
-              <span className="text-xs">Catalogs</span>
-            </TabsTrigger>
-            <TabsTrigger value="calculators" className="flex flex-col gap-1 py-3">
-              <Calculator className="h-4 w-4" />
-              <span className="text-xs">Calculators</span>
-            </TabsTrigger>
-            <TabsTrigger value="examples" className="flex flex-col gap-1 py-3">
-              <Code className="h-4 w-4" />
-              <span className="text-xs">Examples</span>
-            </TabsTrigger>
-            <TabsTrigger value="install" className="flex flex-col gap-1 py-3">
-              <Package className="h-4 w-4" />
-              <span className="text-xs">Install</span>
-            </TabsTrigger>
-          </TabsList>
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto py-4">
+          {navigation.map((section) => (
+            <div key={section.title} className="mb-6">
+              {sidebarOpen && (
+                <h3 className="px-4 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  {section.title}
+                </h3>
+              )}
+              <div className="space-y-1 px-2">
+                {section.items.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setCurrentPage(item.id)}
+                    className={cn(
+                      "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
+                      currentPage === item.id
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    <item.icon className="h-4 w-4 flex-shrink-0" />
+                    {sidebarOpen && <span>{item.label}</span>}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </nav>
 
-          <TabsContent value="validators" className="animate-fade-in">
-            <ValidatorsSection />
-          </TabsContent>
+        {/* Footer */}
+        {sidebarOpen && (
+          <div className="p-4 border-t text-xs text-muted-foreground">
+            <a href="https://github.com/openbancor/catalogmx" target="_blank" rel="noopener" className="hover:underline">
+              GitHub
+            </a>
+            {' · '}
+            <a href="https://www.npmjs.com/package/catalogmx" target="_blank" rel="noopener" className="hover:underline">
+              npm
+            </a>
+            {' · '}
+            <a href="https://pypi.org/project/catalogmx/" target="_blank" rel="noopener" className="hover:underline">
+              PyPI
+            </a>
+          </div>
+        )}
+      </aside>
 
-          <TabsContent value="catalogs" className="animate-fade-in">
-            <CatalogsSection />
-          </TabsContent>
+      {/* Main content */}
+      <main className={cn(
+        "flex-1 transition-all duration-300",
+        sidebarOpen ? "md:ml-64" : "md:ml-16"
+      )}>
+        {/* Header */}
+        <header className="h-14 border-b bg-card flex items-center px-4 sticky top-0 z-40">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="mr-4"
+          >
+            {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+          <nav className="flex items-center gap-1 text-sm text-muted-foreground">
+            <span>catalogmx</span>
+            <ChevronRight className="h-4 w-4" />
+            <span className="text-foreground font-medium">
+              {navigation.flatMap(s => s.items).find(i => i.id === currentPage)?.label}
+            </span>
+          </nav>
+        </header>
 
-          <TabsContent value="calculators" className="animate-fade-in">
-            <CalculatorsSection />
-          </TabsContent>
-
-          <TabsContent value="examples" className="animate-fade-in">
-            <CodeExamples />
-          </TabsContent>
-
-          <TabsContent value="install" className="animate-fade-in">
-            <InstallSection />
-          </TabsContent>
-        </Tabs>
+        {/* Page content */}
+        <div className="p-6">
+          <PageComponent />
+        </div>
       </main>
-
-      {/* Footer */}
-      <footer className="border-t bg-muted/50 mt-12">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center text-sm text-muted-foreground">
-            <p className="mb-2">
-              <strong>catalogmx</strong> - BSD-2-Clause License
-            </p>
-            <p>
-              <a href="https://github.com/openbancor/catalogmx" className="hover:underline" target="_blank" rel="noopener">GitHub</a>
-              {' · '}
-              <a href="https://www.npmjs.com/package/catalogmx" className="hover:underline" target="_blank" rel="noopener">npm</a>
-              {' · '}
-              <a href="https://pypi.org/project/catalogmx/" className="hover:underline" target="_blank" rel="noopener">PyPI</a>
-              {' · '}
-              <a href="https://pub.dev/packages/catalogmx" className="hover:underline" target="_blank" rel="noopener">pub.dev</a>
-            </p>
-            <p className="mt-2 opacity-75">
-              Maintained by Luis Fernando Barrera
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
-
-export default App;
