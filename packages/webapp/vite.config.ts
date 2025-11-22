@@ -1,26 +1,23 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import react from '@vitejs/plugin-react';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  plugins: [react()],
   base: './',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html'),
-      },
-    },
   },
   resolve: {
     alias: {
-      catalogmx: resolve(__dirname, '../typescript/src'),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   optimizeDeps: {
-    exclude: ['better-sqlite3'],
-  },
-  define: {
-    'process.env': {},
+    exclude: ['sql.js'],
   },
 });

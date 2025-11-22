@@ -2,13 +2,24 @@
 
 Interactive demonstration and documentation for the catalogmx library - a comprehensive Mexican data validation and catalog library.
 
+Built with **React 18**, **TypeScript**, **Tailwind CSS**, and **shadcn/ui** components.
+
 ## Features
 
-- **Validators Demo**: Interactive validation and generation for RFC, CURP, CLABE, and NSS
-- **Catalog Browser**: Browse 58 official Mexican government catalogs with 470,000+ records
-- **Tax Calculators**: ISR, IVA, IEPS calculation tools
-- **Code Examples**: TypeScript, Python, and Dart usage examples
+- **Validators Demo**: Interactive validation and generation for RFC, CURP, CLABE, and NSS with detailed breakdowns
+- **Catalog Browser**: Browse 58 official Mexican government catalogs with search and pagination
+- **Tax Calculators**: ISR with step-by-step debugging, IVA, and IEPS calculators
+- **Code Examples**: TypeScript, Python, and Dart usage examples with tabs
 - **Installation Guide**: Setup instructions for all supported platforms
+
+## Tech Stack
+
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **Radix UI** - Headless components (shadcn/ui)
+- **Lucide React** - Icons
 
 ## Quick Start
 
@@ -36,13 +47,14 @@ npm run preview
 
 ### Deploy to Static Server
 
-The `dist/` folder contains all files needed for deployment. Simply copy to any static hosting:
+The `dist/` folder contains all files needed for deployment:
 
 ```bash
-# Example: Copy to nginx
-cp -r dist/* /var/www/html/
+# GitHub Pages, Netlify, Vercel, etc.
+# Just point to the dist/ folder
 
-# Example: Upload to GitHub Pages, Netlify, Vercel, etc.
+# Manual deployment
+cp -r dist/* /var/www/html/
 ```
 
 ## Directory Structure
@@ -50,62 +62,47 @@ cp -r dist/* /var/www/html/
 ```
 webapp/
 ├── src/
-│   ├── main.ts      # Application logic
-│   └── styles.css   # Styles
-├── index.html       # Entry point
-├── vite.config.ts   # Build configuration
-├── tsconfig.json    # TypeScript config
-└── dist/            # Production build output
+│   ├── components/      # React components
+│   │   ├── ui/         # shadcn/ui components
+│   │   ├── ValidatorsSection.tsx
+│   │   ├── CatalogsSection.tsx
+│   │   ├── CalculatorsSection.tsx
+│   │   └── ...
+│   ├── lib/            # Utilities and validators
+│   │   ├── validators.ts
+│   │   ├── calculators.ts
+│   │   └── utils.ts
+│   ├── data/           # Catalog data
+│   ├── App.tsx         # Main application
+│   └── main.tsx        # Entry point
+├── index.html
+├── vite.config.ts
+├── tailwind.config.js
+└── tsconfig.json
 ```
 
-## Catalog Categories
+## Features Detail
 
-### Banxico (Banco de Mexico)
-- Banks (150+ Mexican banks with SPEI support)
-- Currencies (ISO 4217 codes)
-- UDI Values (Unidades de Inversion)
-- Financial Institutions
+### Validators
+- **RFC**: Validate and generate RFC with type detection (persona física/moral)
+- **CURP**: Validate with birthdate, gender, and state extraction
+- **CLABE**: Validate with bank and branch code parsing
+- **NSS**: Validate with IMSS structure breakdown
 
-### INEGI (Instituto Nacional de Estadistica)
-- States (32 Mexican states with CURP codes)
-- Municipalities (2,458 municipalities)
-- Localities (300K+ with GPS coordinates)
+### Tax Calculators
+- **ISR Calculator**: Step-by-step calculation with 2024 brackets and subsidy
+- **IVA Calculator**: Standard (16%), border zone (8%), and exempt rates
+- **IEPS Calculator**: Rates for alcohol, tobacco, fuel, sugary drinks
 
-### SEPOMEX (Servicio Postal Mexicano)
-- Postal Codes (157K+ codes)
-
-### SAT CFDI 4.0 (Electronic Invoicing)
-- Tax Regimes
-- Invoice Usage
-- Payment Methods
-- Document Types
-- Tax Types
-- Unit Codes
-- Products/Services (8,000+ codes)
-
-### SAT Comercio Exterior 2.0
-- Incoterms
-- Countries
-
-### SAT Carta Porte 3.0
-- Airports
-- Seaports
-- Hazardous Materials
-
-### SAT Nomina 1.2
-- Contract Types
-- Work Shifts
-- Payment Frequency
-- Job Risk Levels
-
-### IFT (Telecomunicaciones)
-- Area Codes (LADA)
-- Mobile Operators
-
-### Mexico (National)
-- Minimum Wages
-- UMA Values
-- Hoy No Circula CDMX
+### Catalog Browser
+Searchable catalogs from:
+- Banxico (Banks, Currencies, UDI)
+- INEGI (States, Municipalities, Localities)
+- SEPOMEX (Postal Codes)
+- SAT CFDI 4.0 (Tax Regimes, Invoice Usage, Payment Methods)
+- SAT Nómina (Contract Types, Job Risk Levels)
+- IFT (Area Codes)
+- Mexico (Minimum Wages, UMA)
 
 ## License
 
