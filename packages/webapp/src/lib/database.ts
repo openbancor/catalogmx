@@ -2,14 +2,34 @@
  * SQLite database loader using sql.js for browser-based queries
  */
 
-import initSqlJs, { Database, SqlJsStatic } from 'sql.js';
+// Type definitions for sql.js
+interface SqlJsDatabase {
+  prepare(sql: string): SqlJsStatement;
+  run(sql: string, params?: unknown[]): void;
+  close(): void;
+}
+
+interface SqlJsStatement {
+  bind(params?: unknown[]): boolean;
+  step(): boolean;
+  get(params?: unknown[]): (string | number | null)[];
+  getColumnNames(): string[];
+  free(): boolean;
+}
+
+interface SqlJsStatic {
+  Database: new (data?: ArrayLike<number> | null) => SqlJsDatabase;
+}
 
 let SQL: SqlJsStatic | null = null;
 
-const databases: Map<string, Database> = new Map();
+const databases: Map<string, SqlJsDatabase> = new Map();
 
 async function initSQL(): Promise<SqlJsStatic> {
   if (!SQL) {
+    // Dynamic import for sql.js
+    const sqlPromise = (await import('sql.js')) as unknown as { default: (config?: { locateFile?: (file: string) => string }) => Promise<SqlJsStatic> };
+    const initSqlJs = sqlPromise.default;
     SQL = await initSqlJs({
       locateFile: (file: string) => `https://sql.js.org/dist/${file}`
     });
@@ -17,7 +37,7 @@ async function initSQL(): Promise<SqlJsStatic> {
   return SQL;
 }
 
-export async function loadDatabase(name: string): Promise<Database> {
+export async function loadDatabase(name: string): Promise<SqlJsDatabase> {
   if (databases.has(name)) {
     return databases.get(name)!;
   }
