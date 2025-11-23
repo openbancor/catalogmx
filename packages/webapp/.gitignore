@@ -5,3 +5,7 @@ dist/
 *.tsbuildinfo
 vite.config.js
 vite.config.d.ts
+public/data/*.sqlite3-wal
+public/data/*.sqlite3-shm
+*.sqlite3-wal
+*.sqlite3-shm

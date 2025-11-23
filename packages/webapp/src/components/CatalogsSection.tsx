@@ -1,11 +1,10 @@
 import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Search, Database, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
-import { CATALOG_CATEGORIES, CATALOGS, searchInCatalog, type CatalogItem } from '@/data/catalogs';
+import { Search, Database } from 'lucide-react';
+import { CATALOG_CATEGORIES, CATALOGS, type CatalogItem } from '@/data/catalogs';
 
 interface CatalogsSectionProps {
   showHeader?: boolean;
@@ -108,121 +107,36 @@ export default function CatalogsSection({ showHeader = true }: CatalogsSectionPr
 }
 
 function CatalogDialog({ catalog, onClose }: { catalog: CatalogItem | null; onClose: () => void }) {
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(0);
-  const pageSize = 10;
-
-  const filteredData = useMemo(() => {
-    if (!catalog) return [];
-    if (!search) return catalog.data;
-    return searchInCatalog(catalog, search);
-  }, [catalog, search]);
-
-  const paginatedData = useMemo(() => {
-    const start = page * pageSize;
-    return filteredData.slice(start, start + pageSize);
-  }, [filteredData, page]);
-
-  const totalPages = Math.ceil(filteredData.length / pageSize);
-
   if (!catalog) return null;
 
-  const columns = Object.keys(catalog.data[0] || {});
+  const info = [
+    { label: 'Registros', value: catalog.recordCount },
+    { label: 'Fuente', value: catalog.source },
+    { label: 'ID', value: catalog.id },
+  ];
 
   return (
     <Dialog open={!!catalog} onOpenChange={() => onClose()}>
-      <DialogContent className="max-w-5xl max-h-[85vh] flex flex-col">
+      <DialogContent className="max-w-3xl space-y-4">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {catalog.name}
             <Badge variant="outline">{catalog.recordCount}</Badge>
           </DialogTitle>
-          <DialogDescription className="flex items-center gap-2">
-            {catalog.description}
-            <span className="text-xs">•</span>
-            <span className="text-xs">Source: {catalog.source}</span>
-          </DialogDescription>
+          <DialogDescription>{catalog.description}</DialogDescription>
         </DialogHeader>
 
-        <div className="flex items-center gap-4 py-3 border-b">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search within catalog..."
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setPage(0); }}
-              className="pl-10"
-            />
-          </div>
-          <div className="text-sm text-muted-foreground">
-            {filteredData.length} records
-          </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {info.map((item) => (
+            <div key={item.label} className="rounded-lg border bg-muted/40 px-3 py-2">
+              <div className="text-xs uppercase tracking-wide text-muted-foreground">{item.label}</div>
+              <div className="text-sm font-medium">{item.value}</div>
+            </div>
+          ))}
         </div>
 
-        <div className="flex-1 overflow-auto">
-          <table className="data-table">
-            <thead>
-              <tr>
-                {columns.map(col => (
-                  <th key={col} className="capitalize">
-                    {col.replace(/_/g, ' ')}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedData.map((row, i) => (
-                <tr key={i}>
-                  {columns.map(col => (
-                    <td key={col}>
-                      {typeof row[col] === 'boolean'
-                        ? (row[col] ? '✓' : '✗')
-                        : String(row[col] ?? '')}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-              {paginatedData.length === 0 && (
-                <tr>
-                  <td colSpan={columns.length} className="text-center py-8 text-muted-foreground">
-                    No results found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="flex items-center justify-between pt-4 border-t">
-          <div className="text-sm text-muted-foreground">
-            Showing {page * pageSize + 1}-{Math.min((page + 1) * pageSize, filteredData.length)} of {filteredData.length}
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPage(p => Math.max(0, p - 1))}
-              disabled={page === 0}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-sm px-2">
-              Page {page + 1} of {totalPages || 1}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
-              disabled={page >= totalPages - 1}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-
-        <div className="pt-3 border-t text-xs text-muted-foreground">
-          <ExternalLink className="h-3 w-3 inline mr-1" />
-          Full catalog available in the library with {catalog.recordCount} records
+        <div className="rounded-lg border bg-muted/40 px-3 py-3 text-sm text-muted-foreground">
+          No mostramos muestras aquí. Usa “Explorar cualquier tabla” o “Explorar catálogos (sqlite)” en la página principal para consultar el catálogo completo con paginación y búsqueda sin acentos.
         </div>
       </DialogContent>
     </Dialog>

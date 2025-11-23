@@ -110,6 +110,16 @@ export interface QueryResult {
   values: (string | number | null)[][];
 }
 
+const normalizeText = (value: string): string =>
+  value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .replace(/ñ/g, 'n');
+
+const normalizeSqlExpr = (col: string) =>
+  `replace(replace(replace(replace(replace(replace(lower(${col}), 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u'), 'ñ', 'n')`;
+
 export async function queryDatabase(
   dbName: string,
   sql: string,
@@ -159,14 +169,15 @@ export async function queryPaginated<T>(
 
   const db = await loadDatabase(dbName);
 
-  // Build WHERE clause for search
+  // Build WHERE clause for search (accent-insensitive)
+  const params: (string | number)[] = [];
+  const normalizedSearch = search ? normalizeText(search) : '';
   let whereClause = '';
-  const params: string[] = [];
 
-  if (search && searchColumns.length > 0) {
-    const conditions = searchColumns.map(col => `${col} LIKE ?`);
+  if (normalizedSearch && searchColumns.length > 0) {
+    const conditions = searchColumns.map((col) => `${normalizeSqlExpr(col)} LIKE ?`);
     whereClause = `WHERE ${conditions.join(' OR ')}`;
-    searchColumns.forEach(() => params.push(`%${search}%`));
+    searchColumns.forEach(() => params.push(`%${normalizedSearch}%`));
   }
 
   // Get total count
@@ -206,6 +217,111 @@ export async function queryPaginated<T>(
     page,
     pageSize,
     totalPages: Math.ceil(total / pageSize)
+  };
+}
+
+export interface TableInfoColumn {
+  cid: number;
+  name: string;
+  type: string;
+  notnull: number;
+  dflt_value: string | null;
+  pk: number;
+}
+
+export async function listTables(dbName: string): Promise<string[]> {
+  const db = await loadDatabase(dbName);
+  const stmt = db.prepare(
+    "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+  );
+  const tables: string[] = [];
+  while (stmt.step()) {
+    const name = stmt.get()[0] as string;
+    if (/(_fts(_data|_idx|_docsize|_config)?)$/i.test(name)) {
+      continue;
+    }
+    tables.push(name);
+  }
+  stmt.free();
+  return tables.sort((a, b) => a.localeCompare(b));
+}
+
+export async function getTableInfo(dbName: string, table: string): Promise<TableInfoColumn[]> {
+  const db = await loadDatabase(dbName);
+  const stmt = db.prepare(`PRAGMA table_info(${table})`);
+  const cols: TableInfoColumn[] = [];
+  while (stmt.step()) {
+    const row = stmt.get();
+    cols.push({
+      cid: row[0] as number,
+      name: row[1] as string,
+      type: (row[2] as string) || '',
+      notnull: row[3] as number,
+      dflt_value: row[4] as string | null,
+      pk: row[5] as number,
+    });
+  }
+  stmt.free();
+  return cols;
+}
+
+export async function queryTable(
+  dbName: string,
+  table: string,
+  options: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+    searchColumns?: string[];
+    orderBy?: string;
+  } = {}
+): Promise<PaginatedResult<Record<string, unknown>>> {
+  const { page = 1, pageSize = 50, search = '', searchColumns = [], orderBy = '' } = options;
+  const db = await loadDatabase(dbName);
+
+  const textColumns = searchColumns;
+  let whereClause = '';
+  const params: (string | number)[] = [];
+  const normalizedSearch = search ? normalizeText(search) : '';
+
+  if (normalizedSearch && textColumns.length > 0) {
+    const conditions = textColumns.map((col) => `${normalizeSqlExpr(col)} LIKE ?`);
+    whereClause = `WHERE ${conditions.join(' OR ')}`;
+    const likeValue = `%${normalizedSearch}%`;
+    textColumns.forEach(() => params.push(likeValue));
+  }
+
+  const countSql = `SELECT COUNT(*) as count FROM ${table} ${whereClause}`;
+  const countStmt = db.prepare(countSql);
+  if (params.length > 0) countStmt.bind(params);
+  countStmt.step();
+  const total = (countStmt.get()[0] as number) ?? 0;
+  countStmt.free();
+
+  const offset = (page - 1) * pageSize;
+  const orderClause = orderBy ? `ORDER BY ${orderBy}` : '';
+  const dataSql = `SELECT * FROM ${table} ${whereClause} ${orderClause} LIMIT ? OFFSET ?`;
+  const dataStmt = db.prepare(dataSql);
+  dataStmt.bind([...params, pageSize, offset]);
+
+  const rows: Record<string, unknown>[] = [];
+  const columns = dataStmt.getColumnNames();
+  while (dataStmt.step()) {
+    const row = dataStmt.get();
+    const obj: Record<string, unknown> = {};
+    columns.forEach((col, i) => {
+      obj[col] = row[i];
+    });
+    rows.push(obj);
+  }
+  dataStmt.free();
+
+  return {
+    data: rows,
+    total,
+    page,
+    pageSize,
+    totalPages: Math.max(1, Math.ceil(total / pageSize)),
   };
 }
 
@@ -254,61 +370,13 @@ export async function searchPostalCodes(
   page = 1,
   pageSize = 50
 ): Promise<PaginatedResult<PostalCode>> {
-  const db = await loadDatabase('mexico');
-
-  const normalizeSql = (col: string) =>
-    `replace(replace(replace(replace(replace(replace(lower(${col}), 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u'), 'ñ', 'n')`;
-
-  const columns = ['cp', 'asentamiento', 'municipio', 'estado', 'ciudad'];
-  const normalizedSearch = search
-    ? search
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/\p{Diacritic}/gu, '')
-        .replace(/ñ/g, 'n')
-    : '';
-
-  let whereClause = '';
-  const params: (string | number)[] = [];
-
-  if (normalizedSearch) {
-    const conditions = columns.map((col) => `${normalizeSql(col)} LIKE ?`);
-    whereClause = `WHERE ${conditions.join(' OR ')}`;
-    const likeValue = `%${normalizedSearch}%`;
-    columns.forEach(() => params.push(likeValue));
-  }
-
-  const countSql = `SELECT COUNT(*) as count FROM codigos_postales_completo ${whereClause}`;
-  const countStmt = db.prepare(countSql);
-  if (params.length > 0) countStmt.bind(params);
-  countStmt.step();
-  const total = (countStmt.get()[0] as number) ?? 0;
-  countStmt.free();
-
-  const offset = (page - 1) * pageSize;
-  const dataSql = `SELECT * FROM codigos_postales_completo ${whereClause} ORDER BY cp LIMIT ? OFFSET ?`;
-  const dataStmt = db.prepare(dataSql);
-  dataStmt.bind([...params, pageSize, offset]);
-
-  const values: PostalCode[] = [];
-  const cols = dataStmt.getColumnNames();
-  while (dataStmt.step()) {
-    const row = dataStmt.get();
-    const obj: Record<string, unknown> = {};
-    cols.forEach((col, i) => {
-      obj[col] = row[i];
-    });
-    values.push(obj as unknown as PostalCode);
-  }
-  dataStmt.free();
-
-  return {
-    data: values,
-    total,
+  return queryPaginated<PostalCode>('mexico', 'codigos_postales_completo', {
     page,
     pageSize,
-    totalPages: Math.max(1, Math.ceil(total / pageSize)),
-  };
+    search,
+    searchColumns: ['cp', 'asentamiento', 'municipio', 'estado', 'ciudad'],
+    orderBy: 'cp',
+  });
 }
 
 export async function searchLocalidades(
@@ -337,4 +405,76 @@ export async function searchProductos(
     searchColumns: ['id', 'descripcion', 'palabrasSimilares'],
     orderBy: 'id'
   });
+}
+
+export async function querySqlTable<T>(
+  dbName: string,
+  table: string,
+  opts: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+    searchColumns?: string[];
+    orderBy?: string;
+  } = {}
+): Promise<PaginatedResult<T>> {
+  return queryPaginated<T>(dbName, table, opts);
+}
+
+export async function queryJsonArrayTable<T extends Record<string, unknown>>(
+  dbName: string,
+  table: string,
+  column: string,
+  {
+    page = 1,
+    pageSize = 50,
+    search = '',
+    searchColumns = [],
+  }: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+    searchColumns?: string[];
+  } = {}
+): Promise<PaginatedResult<T>> {
+  const db = await loadDatabase(dbName);
+  const stmt = db.prepare(`SELECT ${column} FROM ${table} LIMIT 1`);
+  stmt.step();
+  const raw = stmt.get()[0];
+  stmt.free();
+
+  let records: T[] = [];
+  if (typeof raw === 'string') {
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        records = parsed as T[];
+      }
+    } catch (error) {
+      console.error('[database] Failed to parse JSON column', { table, column, error });
+    }
+  }
+
+  const normalizedSearch = search ? normalizeText(search) : '';
+  let filtered = records;
+  if (normalizedSearch && searchColumns.length > 0) {
+    filtered = records.filter((row) =>
+      searchColumns.some((key) => {
+        const value = row[key];
+        return typeof value === 'string' && normalizeText(value).includes(normalizedSearch);
+      })
+    );
+  }
+
+  const total = filtered.length;
+  const start = (page - 1) * pageSize;
+  const slice = filtered.slice(start, start + pageSize);
+
+  return {
+    data: slice,
+    total,
+    page,
+    pageSize,
+    totalPages: Math.max(1, Math.ceil(total / pageSize)),
+  };
 }

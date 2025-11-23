@@ -3,11 +3,13 @@ import { cn } from '@/lib/utils';
 import {
   Database, Code, Menu, X,
   CreditCard, User, Building2, Shield, MapPin, Package,
-  Receipt, Percent, DollarSign
+  Receipt, Percent, DollarSign, Layers
 } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import ThemeToggle from '@/components/ThemeToggle';
 import { NAVIGATION_EVENT } from '@/lib/navigation';
+import DatasetPage from '@/pages/DatasetPage';
+import { datasetConfigs, type DatasetPageId } from '@/data/datasets';
 
 // Pages
 import RFCPage from '@/pages/RFCPage';
@@ -27,7 +29,8 @@ type PageId =
   | 'rfc' | 'curp' | 'clabe' | 'nss'
   | 'catalogs' | 'postal-codes' | 'localidades' | 'productos'
   | 'isr' | 'iva' | 'ieps'
-  | 'reference';
+  | 'reference'
+  | DatasetPageId;
 
 interface NavItem {
   id: PageId;
@@ -60,6 +63,14 @@ const navigation: NavSection[] = [
     ]
   },
   {
+    title: 'Catálogos (individuales)',
+    items: datasetConfigs.map((d) => ({
+      id: `dataset-${d.id}` as PageId,
+      label: d.label,
+      icon: Layers,
+    })),
+  },
+  {
     title: 'Calculators',
     items: [
       { id: 'isr', label: 'ISR', icon: Receipt },
@@ -75,6 +86,10 @@ const navigation: NavSection[] = [
   }
 ];
 
+const datasetPageComponents = Object.fromEntries(
+  datasetConfigs.map((d) => [`dataset-${d.id}`, () => <DatasetPage datasetId={d.id} />] as const)
+) as unknown as Record<DatasetPageId, React.ComponentType>;
+
 const pageComponents: Record<PageId, React.ComponentType> = {
   'rfc': RFCPage,
   'curp': CURPPage,
@@ -88,6 +103,7 @@ const pageComponents: Record<PageId, React.ComponentType> = {
   'iva': IVAPage,
   'ieps': IEPSPage,
   'reference': ReferencePage,
+  ...datasetPageComponents,
 };
 
 export default function App() {

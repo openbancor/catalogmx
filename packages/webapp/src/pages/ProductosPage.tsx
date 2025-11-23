@@ -9,6 +9,7 @@ import { searchProductos, type ProductoServicio, type PaginatedResult } from '@/
 export default function ProductosPage() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(100);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<PaginatedResult<ProductoServicio> | null>(null);
@@ -17,7 +18,7 @@ export default function ProductosPage() {
     setLoading(true);
     setError(null);
     try {
-      const data = await searchProductos(search, newPage, 25);
+      const data = await searchProductos(search, newPage, pageSize);
       setResult(data);
       setPage(newPage);
     } catch (err) {
@@ -54,7 +55,7 @@ export default function ProductosPage() {
       {/* Search */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -64,6 +65,25 @@ export default function ProductosPage() {
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch(1)}
                 className="pl-10"
               />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-muted-foreground">Rows/page</label>
+              <select
+                className="h-10 rounded-md border bg-background px-3 text-sm"
+                value={pageSize}
+                onChange={(e) => {
+                  const next = Number(e.target.value) || 50;
+                  setPageSize(next);
+                  setPage(1);
+                  handleSearch(1);
+                }}
+              >
+                {[25, 50, 100, 250, 500].map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
+              </select>
             </div>
             <Button onClick={() => handleSearch(1)} disabled={loading}>
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Search'}
@@ -96,6 +116,7 @@ export default function ProductosPage() {
           <div className="flex items-center justify-between">
             <div className="text-sm text-muted-foreground">
               Showing {((page - 1) * result.pageSize) + 1}-{Math.min(page * result.pageSize, result.total)} of {result.total.toLocaleString()} results
+              {' · '}No sampling: full SAT catalog with pagination
             </div>
             <div className="flex items-center gap-2">
               <Button
