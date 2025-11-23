@@ -276,9 +276,30 @@ export function generateCURP(data: {
 const CLABE_WEIGHTS = [3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7];
 
 const BANK_NAMES: Record<string, string> = {
-  '002': 'BANAMEX', '012': 'BBVA MEXICO', '014': 'SANTANDER', '021': 'HSBC',
-  '030': 'BAJIO', '036': 'INBURSA', '042': 'MIFEL', '044': 'SCOTIABANK',
-  '058': 'BANREGIO', '072': 'BANORTE', '127': 'AZTECA', '137': 'BANCOPPEL'
+  '002': 'BANAMEX', '006': 'BANCOMEXT', '009': 'BANOBRAS', '012': 'BBVA MEXICO',
+  '014': 'SANTANDER', '019': 'BANJERCITO', '021': 'HSBC', '030': 'BAJIO',
+  '036': 'INBURSA', '042': 'MIFEL', '044': 'SCOTIABANK', '058': 'BANREGIO',
+  '059': 'INVEX', '060': 'BANSI', '062': 'AFIRME', '072': 'BANORTE',
+  '106': 'BANK OF AMERICA', '108': 'MUFG', '110': 'JP MORGAN', '112': 'BMONEX',
+  '113': 'VE POR MAS', '124': 'CITI MEXICO', '127': 'AZTECA', '128': 'KAPITAL',
+  '129': 'BARCLAYS', '130': 'COMPARTAMOS', '132': 'MULTIVA', '133': 'ACTINVER',
+  '135': 'NAFIN', '136': 'INTERCAM', '137': 'BANCOPPEL', '138': 'UALA',
+  '140': 'CONSUBANCO', '141': 'VOLKSWAGEN', '145': 'BBASE', '147': 'BANKAOOL',
+  '148': 'PAGATODO', '150': 'INMOBILIARIO', '151': 'DONDE', '152': 'BANCREA',
+  '154': 'BANCO COVALTO', '155': 'ICBC', '156': 'SABADELL', '157': 'SHINHAN',
+  '158': 'MIZUHO', '159': 'BANK OF CHINA', '160': 'BANCO S3', '166': 'BaBien',
+  '167': 'HEY BANCO', '168': 'HIPOTECARIA FED',
+  '600': 'MONEXCB', '601': 'GBM', '602': 'MASARI', '605': 'VALUE', '608': 'VECTOR',
+  '616': 'FINAMEX', '617': 'VALMEX', '620': 'PROFUTURO', '630': 'CB INTERCAM',
+  '631': 'CI BOLSA', '634': 'FINCOMUN', '638': 'NU MEXICO', '646': 'STP',
+  '652': 'CREDICAPITAL', '653': 'KUSPIT', '656': 'UNAGRA', '659': 'ASP INTEGRA',
+  '661': 'KLAR', '670': 'LIBERTAD', '677': 'CAJA POP MEXICA', '680': 'CRISTOBAL COLON',
+  '683': 'CAJA TELEFONISTAS', '684': 'TRANSFER', '685': 'FIRA', '688': 'CREDICLUB',
+  '699': 'FONDEADORA', '703': 'TESORED', '706': 'ARCUS', '710': 'NVIO',
+  '715': 'CASHI', '720': 'MexPago', '721': 'albo', '722': 'Mercado Pago',
+  '723': 'Cuenca', '725': 'COOPDESARROLLO', '728': 'SPIN BY OXXO',
+  '729': 'Dep y Pag Dig', '732': 'Peibo', '734': 'FINCO PAY',
+  '901': 'CLS', '902': 'INDEVAL', '903': 'CoDi Valida'
 };
 
 export interface CLABEValidationResult {

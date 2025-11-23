@@ -56,24 +56,10 @@
     "spei": true
   },
   {
-    "code": "032",
-    "name": "IXE",
-    "full_name": "IXE Banco, S.A. (Integrado a Banorte)",
-    "rfc": "IBV941125DY3",
-    "spei": false
-  },
-  {
     "code": "036",
     "name": "INBURSA",
     "full_name": "Banco Inbursa, S.A.",
     "rfc": "BIN840308893",
-    "spei": true
-  },
-  {
-    "code": "037",
-    "name": "INTERACCIONES",
-    "full_name": "Banco Interacciones, S.A.",
-    "rfc": "BIN070227FL7",
     "spei": true
   },
   {
@@ -126,20 +112,6 @@
     "spei": true
   },
   {
-    "code": "102",
-    "name": "THE ROYAL BANK",
-    "full_name": "The Royal Bank of Scotland México, S.A.",
-    "rfc": "RBS021128BC9",
-    "spei": false
-  },
-  {
-    "code": "103",
-    "name": "AMERICAN EXPRESS",
-    "full_name": "American Express Bank (México), S.A.",
-    "rfc": "AEB031126FP2",
-    "spei": false
-  },
-  {
     "code": "106",
     "name": "BANK OF AMERICA",
     "full_name": "Bank of America México, S.A.",
@@ -148,10 +120,10 @@
   },
   {
     "code": "108",
-    "name": "BANK OF TOKYO",
-    "full_name": "Bank of Tokyo-Mitsubishi UFJ (México), S.A.",
+    "name": "MUFG",
+    "full_name": "MUFG Bank México, S.A.",
     "rfc": "BMU030107SB0",
-    "spei": false
+    "spei": true
   },
   {
     "code": "110",
@@ -175,25 +147,11 @@
     "spei": true
   },
   {
-    "code": "116",
-    "name": "ING",
-    "full_name": "ING Bank (México), S.A.",
-    "rfc": "IBM030107QH0",
-    "spei": false
-  },
-  {
     "code": "124",
-    "name": "DEUTSCHE",
-    "full_name": "Deutsche Bank México, S.A.",
-    "rfc": "DBM9509185J2",
+    "name": "CITI MEXICO",
+    "full_name": "Citibanamex, S.A.",
+    "rfc": null,
     "spei": true
-  },
-  {
-    "code": "126",
-    "name": "CREDIT SUISSE",
-    "full_name": "Banco Credit Suisse (México), S.A.",
-    "rfc": "BCS011121FZ3",
-    "spei": false
   },
   {
     "code": "127",
@@ -204,7 +162,7 @@
   },
   {
     "code": "128",
-    "name": "AUTOFIN",
+    "name": "KAPITAL",
     "full_name": "Banco Autofin México, S.A.",
     "rfc": "BAU0604299J5",
     "spei": true
@@ -214,7 +172,7 @@
     "name": "BARCLAYS",
     "full_name": "Barclays Bank México, S.A.",
     "rfc": "BBM051212D49",
-    "spei": false
+    "spei": true
   },
   {
     "code": "130",
@@ -224,15 +182,8 @@
     "spei": true
   },
   {
-    "code": "131",
-    "name": "BANCO FAMSA",
-    "full_name": "Banco Ahorro Famsa, S.A.",
-    "rfc": "BAF070131935",
-    "spei": true
-  },
-  {
     "code": "132",
-    "name": "BMULTIVA",
+    "name": "MULTIVA BANCO",
     "full_name": "Banco Multiva, S.A.",
     "rfc": "BMU930607LF0",
     "spei": true
@@ -242,13 +193,6 @@
     "name": "ACTINVER",
     "full_name": "Banco Actinver, S.A.",
     "rfc": "BAC040816QE3",
-    "spei": true
-  },
-  {
-    "code": "134",
-    "name": "WAL-MART",
-    "full_name": "Banco Wal-Mart de México Adelante, S.A.",
-    "rfc": "BWM071114TB5",
     "spei": true
   },
   {
@@ -274,17 +218,10 @@
   },
   {
     "code": "138",
-    "name": "ABC CAPITAL",
-    "full_name": "ABC Capital, S.A.",
-    "rfc": "ABC091222H35",
+    "name": "UALA",
+    "full_name": "Ualá, S.A. de C.V.",
+    "rfc": null,
     "spei": true
-  },
-  {
-    "code": "139",
-    "name": "UBS BANK",
-    "full_name": "UBS Bank México, S.A.",
-    "rfc": "UBK1004203F4",
-    "spei": false
   },
   {
     "code": "140",
@@ -298,13 +235,6 @@
     "name": "VOLKSWAGEN",
     "full_name": "Volkswagen Bank, S.A.",
     "rfc": "VBA100329E98",
-    "spei": true
-  },
-  {
-    "code": "143",
-    "name": "CIBANCO",
-    "full_name": "CIBanco, S.A.",
-    "rfc": "CCB100212PJ0",
     "spei": true
   },
   {
@@ -323,7 +253,7 @@
   },
   {
     "code": "148",
-    "name": "PagaTodo",
+    "name": "PAGATODO",
     "full_name": "Banco PagaTodo, S.A.",
     "rfc": "BPT130813UG9",
     "spei": true
@@ -351,9 +281,9 @@
   },
   {
     "code": "154",
-    "name": "BANCO FINTERRA",
-    "full_name": "Banco Finterra, S.A.",
-    "rfc": "BFI1709258R6",
+    "name": "BANCO COVALTO",
+    "full_name": "Banco Covalto, S.A.",
+    "rfc": null,
     "spei": true
   },
   {
@@ -400,9 +330,23 @@
   },
   {
     "code": "166",
-    "name": "BANSEFI",
-    "full_name": "Banco del Ahorro Nacional y Servicios Financieros, S.N.C.",
+    "name": "BaBien",
+    "full_name": "Banco del Bienestar, S.N.C.",
     "rfc": "BAN021105KP5",
+    "spei": true
+  },
+  {
+    "code": "167",
+    "name": "HEY BANCO",
+    "full_name": "Hey Banco, S.A.",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "168",
+    "name": "HIPOTECARIA FED",
+    "full_name": "Sociedad Hipotecaria Federal, S.N.C.",
+    "rfc": null,
     "spei": true
   },
   {
@@ -410,224 +354,84 @@
     "name": "MONEXCB",
     "full_name": "Monex Casa de Bolsa, S.A. de C.V.",
     "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "601",
     "name": "GBM",
     "full_name": "GBM Grupo Bursátil Mexicano, S.A. de C.V.",
     "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "602",
-    "name": "MASARI CB",
+    "name": "MASARI",
     "full_name": "Masari Casa de Bolsa, S.A.",
     "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "605",
     "name": "VALUE",
     "full_name": "Value, S.A. de C.V. Casa de Bolsa",
     "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "606",
-    "name": "ESTRUCTURADORES",
-    "full_name": "Estructuradores del Mercado de Valores Casa de Bolsa, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "607",
-    "name": "TIBER",
-    "full_name": "Casa de Cambio Tiber, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "608",
     "name": "VECTOR",
     "full_name": "Vector Casa de Bolsa, S.A. de C.V.",
     "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "610",
-    "name": "B&B",
-    "full_name": "B y B, Casa de Cambio, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "614",
-    "name": "ACCIVAL",
-    "full_name": "Acciones y Valores Banamex, S.A. de C.V. Casa de Bolsa",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "615",
-    "name": "MERRILL LYNCH",
-    "full_name": "Merrill Lynch México, S.A. de C.V. Casa de Bolsa",
-    "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "616",
     "name": "FINAMEX",
     "full_name": "Casa de Bolsa Finamex, S.A. de C.V.",
     "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "617",
     "name": "VALMEX",
     "full_name": "Valores Mexicanos Casa de Bolsa, S.A. de C.V.",
     "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "618",
-    "name": "UNICA",
-    "full_name": "Unica Casa de Cambio, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "619",
-    "name": "MAPFRE",
-    "full_name": "MAPFRE Tepeyac, S.A.",
-    "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "620",
     "name": "PROFUTURO",
     "full_name": "Profuturo G.N.P., S.A. de C.V.",
     "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "621",
-    "name": "CB ACTINVER",
-    "full_name": "Actinver Casa de Bolsa, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "622",
-    "name": "OACTIN",
-    "full_name": "Operadora Actinver, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "623",
-    "name": "SKANDIA",
-    "full_name": "Skandia Vida, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "626",
-    "name": "CBDEUTSCHE",
-    "full_name": "Deutsche Securities, S.A. de C.V. Casa de Bolsa",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "627",
-    "name": "ZURICH",
-    "full_name": "Zurich Compañía de Seguros, S.A.",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "628",
-    "name": "ZURICHVI",
-    "full_name": "Zurich Vida, Compañía de Seguros, S.A.",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "629",
-    "name": "SU CASITA",
-    "full_name": "Hipotecaria Su Casita, S.A. de C.V. SOFOM ENR",
-    "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "630",
     "name": "CB INTERCAM",
     "full_name": "Intercam Casa de Bolsa, S.A. de C.V.",
     "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "631",
     "name": "CI BOLSA",
     "full_name": "CI Casa de Bolsa, S.A. de C.V.",
     "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "632",
-    "name": "BULLTICK CB",
-    "full_name": "Bulltick Casa de Bolsa, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "633",
-    "name": "STERLING",
-    "full_name": "Sterling Casa de Cambio, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "634",
     "name": "FINCOMUN",
     "full_name": "Fincomún, Servicios Financieros Comunitarios, S.A. de C.V.",
     "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "636",
-    "name": "HDI SEGUROS",
-    "full_name": "HDI Seguros, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "637",
-    "name": "ORDER",
-    "full_name": "Order Express Casa de Cambio, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "638",
-    "name": "NU MÉXICO",
-    "full_name": "Akala, S.A. de C.V. SOFOM ENR",
+    "name": "NU MEXICO",
+    "full_name": "Nu México Financiera, S.A. de C.V. SOFOM ENR",
     "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "640",
-    "name": "CB JPMORGAN",
-    "full_name": "J.P. Morgan Casa de Bolsa, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "642",
-    "name": "REFORMA",
-    "full_name": "Operadora de Recursos Reforma, S.A. de C.V. SOFOM ENR",
-    "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "646",
@@ -637,128 +441,198 @@
     "spei": true
   },
   {
-    "code": "647",
-    "name": "TELECOMM",
-    "full_name": "Telecomunicaciones de México",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "648",
-    "name": "EVERCORE",
-    "full_name": "Evercore Casa de Bolsa, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "649",
-    "name": "SKANDIA",
-    "full_name": "Operadora de Fondos Skandia, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "651",
-    "name": "SEGMTY",
-    "full_name": "Seguros Monterrey New York Life, S.A de C.V",
-    "rfc": null,
-    "spei": false
-  },
-  {
     "code": "652",
-    "name": "ASEA",
-    "full_name": "Solución Asea, S.A. de C.V. SOFOM ENR",
+    "name": "CREDICAPITAL",
+    "full_name": "Credicapital, S.A. de C.V. SOFOM ENR",
     "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "653",
     "name": "KUSPIT",
     "full_name": "Kuspit Casa de Bolsa, S.A. de C.V.",
     "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "655",
-    "name": "SOFIEXPRESS",
-    "full_name": "J.P. SOFIEXPRESS, S.A. de C.V. SOFOM ENR",
-    "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "656",
     "name": "UNAGRA",
     "full_name": "UNAGRA, S.A. de C.V. SOFOM ENR",
     "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "659",
-    "name": "OPCIONES EMPRESARIALES DEL NORESTE",
-    "full_name": "Opciones Empresariales del Noreste, S.A. de C.V. SOFOM ENR",
+    "name": "ASP INTEGRA OPC",
+    "full_name": "ASP Integra OPC, S.A. de C.V.",
     "rfc": null,
-    "spei": false
+    "spei": true
+  },
+  {
+    "code": "661",
+    "name": "KLAR",
+    "full_name": "Klar, S.A. de C.V. SOFOM ENR",
+    "rfc": null,
+    "spei": true
   },
   {
     "code": "670",
     "name": "LIBERTAD",
     "full_name": "Libertad Servicios Financieros, S.A. de C.V. SOFOM ENR",
     "rfc": null,
-    "spei": false
+    "spei": true
+  },
+  {
+    "code": "677",
+    "name": "CAJA POP MEXICA",
+    "full_name": "Caja Popular Mexicana, S.C. de A.P. de R.L. de C.V.",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "680",
+    "name": "CRISTOBAL COLON",
+    "full_name": "Caja Cristóbal Colón, S.C. de A.P. de R.L. de C.V.",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "683",
+    "name": "CAJA TELEFONIST",
+    "full_name": "Caja de Ahorro de los Telefonistas, S.C. de A.P. de R.L. de C.V.",
+    "rfc": null,
+    "spei": true
   },
   {
     "code": "684",
     "name": "TRANSFER",
     "full_name": "Transfer de Capitales del Mundo, S.A. de C.V.",
     "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "685",
     "name": "FONDO (FIRA)",
-    "full_name": "Fideicomisos Instituidos en Relación con la Agricultura",
+    "full_name": "Fideicomisos Instituidos en Relación con la Agricultura (FIRA)",
     "rfc": "FIR650331UN3",
-    "spei": false
+    "spei": true
   },
   {
-    "code": "686",
-    "name": "INVERCAP",
-    "full_name": "INVERCAP, S.A. de C.V.",
+    "code": "688",
+    "name": "CREDICLUB",
+    "full_name": "Crediclub, S.A. de C.V. SOFOM ENR",
     "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "687",
-    "name": "FINTERRA",
-    "full_name": "Finterra Operadora, S.A. de C.V. SOFIPO",
-    "rfc": null,
-    "spei": false
-  },
-  {
-    "code": "689",
-    "name": "DIMEX",
-    "full_name": "Casa de Cambio DIMEX, S.A. de C.V.",
-    "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "699",
-    "name": "CAJA POP MEXICANA",
-    "full_name": "Caja Popular Mexicana, S.C. de A.P. de R.L. de C.V.",
+    "name": "FONDEADORA",
+    "full_name": "Fondeadora, S.A. de C.V. ITF",
     "rfc": null,
-    "spei": false
+    "spei": true
+  },
+  {
+    "code": "703",
+    "name": "TESORED",
+    "full_name": "Tesored, S.A. de C.V.",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "706",
+    "name": "ARCUS FI",
+    "full_name": "Arcus Financial Intelligence, S.A. de C.V.",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "710",
+    "name": "NVIO",
+    "full_name": "Nvio Pagos México, S.A. de C.V. ITF",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "715",
+    "name": "CASHI CUENTA",
+    "full_name": "Cashi, S.A. de C.V. ITF",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "720",
+    "name": "MexPago",
+    "full_name": "MexPago, S.A. de C.V.",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "721",
+    "name": "albo",
+    "full_name": "Albo, S.A. de C.V. ITF",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "722",
+    "name": "Mercado Pago W",
+    "full_name": "Mercado Pago W, S.A. de C.V. ITF",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "723",
+    "name": "Cuenca",
+    "full_name": "Cuenca Tecnología Financiera, S.A. de C.V. ITF",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "725",
+    "name": "COOPDESARROLLO",
+    "full_name": "Cooperativa de Desarrollo y Soluciones, S.C. de A.P. de R.L. de C.V.",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "728",
+    "name": "SPIN BY OXXO",
+    "full_name": "Spin by OXXO, S.A. de C.V. ITF",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "729",
+    "name": "Dep y Pag Dig",
+    "full_name": "Depósitos y Pagos Digitales, S.A. de C.V. ITF",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "732",
+    "name": "Peibo",
+    "full_name": "Peibo, S.A. de C.V. ITF",
+    "rfc": null,
+    "spei": true
+  },
+  {
+    "code": "734",
+    "name": "FINCO PAY",
+    "full_name": "Finco Pay, S.A. de C.V. ITF",
+    "rfc": null,
+    "spei": true
   },
   {
     "code": "901",
     "name": "CLS",
     "full_name": "CLS Bank International",
     "rfc": null,
-    "spei": false
+    "spei": true
   },
   {
     "code": "902",
     "name": "INDEVAL",
-    "full_name": "SD. Indeval, S.A. de C.V.",
+    "full_name": "S.D. Indeval, S.A. de C.V.",
     "rfc": "IVA950105N74",
     "spei": true
   },
@@ -767,6 +641,6 @@
     "name": "CoDi Valida",
     "full_name": "CoDi Desarrollo de Soluciones, S.A. de C.V.",
     "rfc": null,
-    "spei": false
+    "spei": true
   }
 ]
