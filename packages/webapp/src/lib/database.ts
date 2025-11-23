@@ -21,6 +21,10 @@ interface SqlJsStatic {
   Database: new (data?: ArrayLike<number> | null) => SqlJsDatabase;
 }
 
+import sqlWasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
+
+type InitSqlJsFn = (config?: { locateFile?: (file: string) => string }) => Promise<SqlJsStatic>;
+
 let SQL: SqlJsStatic | null = null;
 let sqlInitPromise: Promise<SqlJsStatic> | null = null;
 
@@ -32,52 +36,72 @@ async function initSQL(): Promise<SqlJsStatic> {
   }
 
   if (!sqlInitPromise) {
-    sqlInitPromise = (async () => {
-      const sqlModule = await import('sql.js/dist/sql-wasm.js');
-      const initSqlJs =
-        (sqlModule as { default?: (config?: { locateFile?: (file: string) => string }) => Promise<SqlJsStatic> }).default ??
-        (sqlModule as unknown as (config?: { locateFile?: (file: string) => string }) => Promise<SqlJsStatic>);
+    sqlInitPromise = import('sql.js/dist/sql-wasm.js')
+      .then((module) => {
+        const initSqlJs =
+          (module as { default?: InitSqlJsFn }).default ??
+          ((module as unknown) as InitSqlJsFn);
 
-      if (typeof initSqlJs !== 'function') {
-        throw new Error('Failed to initialize sql.js. The initSqlJs export was not found.');
-      }
+        if (typeof initSqlJs !== 'function') {
+          console.error('[database] sql.js module exports:', module);
+          throw new Error('Failed to load sql.js initializer.');
+        }
 
-      const instance = await initSqlJs({
-        // Use the official CDN so Vite doesn't need to rewrite the wasm path
-        locateFile: (file: string) => `https://sql.js.org/dist/${file}`
+        return initSqlJs({
+          locateFile: (file: string) => (file === 'sql-wasm.wasm' ? sqlWasmUrl : file)
+        });
+      })
+      .then((instance) => {
+        SQL = instance;
+        return instance;
+      })
+      .catch((error) => {
+        console.error('[database] sql.js init failed', error);
+        sqlInitPromise = null;
+        throw error;
       });
-      SQL = instance;
-      return instance;
-    })().catch((error) => {
-      sqlInitPromise = null;
-      throw error;
-    });
   }
 
   return sqlInitPromise;
 }
 
 export async function loadDatabase(name: string): Promise<SqlJsDatabase> {
-  const dbKey = name.replace(/\.db$/, '');
-  if (databases.has(dbKey)) {
-    return databases.get(dbKey)!;
+  const trimmedName = name.trim();
+  const normalizedKey = trimmedName.replace(/\.(db|sqlite3?|sqlite)$/i, '');
+
+  if (databases.has(normalizedKey)) {
+    return databases.get(normalizedKey)!;
   }
 
   const sql = await initSQL();
-  const dbFile = name.endsWith('.db') ? name : `${name}.db`;
-  const response = await fetch(`/data/${dbFile}`);
 
-  if (!response.ok) {
-    throw new Error(`Failed to load ${dbFile} (${response.status} ${response.statusText})`);
+  const fileCandidates = /\.(db|sqlite3?|sqlite)$/i.test(trimmedName)
+    ? [trimmedName]
+    : [`${trimmedName}.db`, `${trimmedName}.sqlite3`, `${trimmedName}.sqlite`];
+
+  let response: Response | null = null;
+  let resolvedFile = '';
+
+  for (const candidate of fileCandidates) {
+    const res = await fetch(`/data/${candidate}`);
+    if (res.ok) {
+      response = res;
+      resolvedFile = candidate;
+      break;
+    }
+  }
+
+  if (!response) {
+    throw new Error(`Failed to load ${trimmedName}. Place ${fileCandidates.join(', ')} in /public/data.`);
   }
 
   const buffer = await response.arrayBuffer();
   if (buffer.byteLength === 0) {
-    throw new Error(`${dbFile} is empty or corrupt.`);
+    throw new Error(`${resolvedFile} is empty or corrupt.`);
   }
 
   const db = new sql.Database(new Uint8Array(buffer));
-  databases.set(dbKey, db);
+  databases.set(normalizedKey, db);
   return db;
 }
 
@@ -187,46 +211,42 @@ export async function queryPaginated<T>(
 
 // Database-specific query helpers
 export interface PostalCode {
-  d_codigo: string;
-  d_asenta: string;
-  d_tipo_asenta: string;
-  D_mnpio: string;
-  d_estado: string;
-  d_ciudad: string;
-  d_CP: string;
-  c_estado: string;
-  c_oficina: string;
-  c_CP: string;
-  c_tipo_asenta: string;
-  c_mnpio: string;
-  id_asenta_cpcons: string;
-  d_zona: string;
-  c_cve_ciudad: string;
+  cp: string;
+  asentamiento: string;
+  tipo_asentamiento: string;
+  municipio: string;
+  estado: string;
+  ciudad: string;
+  cp_oficina: string;
+  codigo_estado: string;
+  codigo_municipio: string;
+  zona?: string | null;
 }
 
 export interface Localidad {
-  cve_ent: string;
-  cve_mun: string;
-  cve_loc: string;
-  nom_loc: string;
-  nom_mun: string;
-  nom_ent: string;
-  lat_decimal: number;
-  lon_decimal: number;
+  cvegeo: string;
+  cve_entidad: string;
+  cve_municipio: string;
+  cve_localidad: string;
+  nom_localidad: string;
+  nom_municipio: string;
+  nom_entidad: string;
+  latitud: number;
+  longitud: number;
   altitud: number;
-  pob_total: number;
+  poblacion_total: number;
 }
 
 export interface ProductoServicio {
-  c_ClaveProdServ: string;
-  Descripcion: string;
-  Incluir_IVA_trasladado: string;
-  Incluir_IEPS_trasladado: string;
-  Complemento_que_debe_incluir: string;
-  FechaInicioVigencia: string;
-  FechaFinVigencia: string;
-  Estimulo_Franja_Fronteriza: string;
-  Palabras_similares: string;
+  id: string;
+  descripcion: string;
+  incluirIVATrasladado: string;
+  incluirIEPSTrasladado: string;
+  complementoQueDebeIncluir: string;
+  fechaInicioVigencia: string;
+  fechaFinVigencia: string;
+  estimuloFranjaFronteriza: string;
+  palabrasSimilares: string;
 }
 
 export async function searchPostalCodes(
@@ -234,13 +254,61 @@ export async function searchPostalCodes(
   page = 1,
   pageSize = 50
 ): Promise<PaginatedResult<PostalCode>> {
-  return queryPaginated<PostalCode>('sepomex', 'codigos_postales', {
+  const db = await loadDatabase('mexico');
+
+  const normalizeSql = (col: string) =>
+    `replace(replace(replace(replace(replace(replace(lower(${col}), 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u'), 'ñ', 'n')`;
+
+  const columns = ['cp', 'asentamiento', 'municipio', 'estado', 'ciudad'];
+  const normalizedSearch = search
+    ? search
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .replace(/ñ/g, 'n')
+    : '';
+
+  let whereClause = '';
+  const params: (string | number)[] = [];
+
+  if (normalizedSearch) {
+    const conditions = columns.map((col) => `${normalizeSql(col)} LIKE ?`);
+    whereClause = `WHERE ${conditions.join(' OR ')}`;
+    const likeValue = `%${normalizedSearch}%`;
+    columns.forEach(() => params.push(likeValue));
+  }
+
+  const countSql = `SELECT COUNT(*) as count FROM codigos_postales_completo ${whereClause}`;
+  const countStmt = db.prepare(countSql);
+  if (params.length > 0) countStmt.bind(params);
+  countStmt.step();
+  const total = (countStmt.get()[0] as number) ?? 0;
+  countStmt.free();
+
+  const offset = (page - 1) * pageSize;
+  const dataSql = `SELECT * FROM codigos_postales_completo ${whereClause} ORDER BY cp LIMIT ? OFFSET ?`;
+  const dataStmt = db.prepare(dataSql);
+  dataStmt.bind([...params, pageSize, offset]);
+
+  const values: PostalCode[] = [];
+  const cols = dataStmt.getColumnNames();
+  while (dataStmt.step()) {
+    const row = dataStmt.get();
+    const obj: Record<string, unknown> = {};
+    cols.forEach((col, i) => {
+      obj[col] = row[i];
+    });
+    values.push(obj as unknown as PostalCode);
+  }
+  dataStmt.free();
+
+  return {
+    data: values,
+    total,
     page,
     pageSize,
-    search,
-    searchColumns: ['d_codigo', 'd_asenta', 'D_mnpio', 'd_estado', 'd_ciudad'],
-    orderBy: 'd_codigo'
-  });
+    totalPages: Math.max(1, Math.ceil(total / pageSize)),
+  };
 }
 
 export async function searchLocalidades(
@@ -248,12 +316,12 @@ export async function searchLocalidades(
   page = 1,
   pageSize = 50
 ): Promise<PaginatedResult<Localidad>> {
-  return queryPaginated<Localidad>('localidades', 'localidades', {
+  return queryPaginated<Localidad>('mexico', 'localidades', {
     page,
     pageSize,
     search,
-    searchColumns: ['nom_loc', 'nom_mun', 'nom_ent', 'cve_loc'],
-    orderBy: 'nom_loc'
+    searchColumns: ['nom_localidad', 'nom_municipio', 'nom_entidad', 'cve_localidad'],
+    orderBy: 'nom_localidad'
   });
 }
 
@@ -262,11 +330,11 @@ export async function searchProductos(
   page = 1,
   pageSize = 50
 ): Promise<PaginatedResult<ProductoServicio>> {
-  return queryPaginated<ProductoServicio>('clave_prod_serv', 'c_ClaveProdServ', {
+  return queryPaginated<ProductoServicio>('mexico', 'clave_prod_serv', {
     page,
     pageSize,
     search,
-    searchColumns: ['c_ClaveProdServ', 'Descripcion', 'Palabras_similares'],
-    orderBy: 'c_ClaveProdServ'
+    searchColumns: ['id', 'descripcion', 'palabrasSimilares'],
+    orderBy: 'id'
   });
 }

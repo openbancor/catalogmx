@@ -4,8 +4,13 @@
   "description": "Interactive demo for catalogmx - Mexican data validation library",
   "type": "module",
   "scripts": {
+    "sync:data": "node ./scripts/sync-sqlite.mjs",
+    "data:build": "node ./scripts/build-sqlite-pipeline.mjs",
+    "predev": "npm run sync:data",
     "dev": "vite",
+    "prebuild": "npm run sync:data",
     "build": "tsc -b && vite build",
+    "prepreview": "npm run sync:data",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -141,28 +141,28 @@ export default function ProductosPage() {
                       <tr key={i} className="hover:bg-muted/50">
                         <td className="p-3">
                           <Badge variant="secondary" className="font-mono">
-                            {prod.c_ClaveProdServ}
+                            {prod.id}
                           </Badge>
                         </td>
                         <td className="p-3">
-                          <div className="font-medium max-w-md">{prod.Descripcion}</div>
-                          {prod.Complemento_que_debe_incluir && (
+                          <div className="font-medium max-w-md">{prod.descripcion}</div>
+                          {prod.complementoQueDebeIncluir && (
                             <div className="text-xs text-muted-foreground mt-1">
-                              Complement: {prod.Complemento_que_debe_incluir}
+                              Complement: {prod.complementoQueDebeIncluir}
                             </div>
                           )}
                         </td>
                         <td className="p-3 text-center">
-                          {renderTaxIndicator(prod.Incluir_IVA_trasladado)}
+                          {renderTaxIndicator(prod.incluirIVATrasladado)}
                         </td>
                         <td className="p-3 text-center">
-                          {renderTaxIndicator(prod.Incluir_IEPS_trasladado)}
+                          {renderTaxIndicator(prod.incluirIEPSTrasladado)}
                         </td>
                         <td className="p-3 text-center">
-                          {renderTaxIndicator(prod.Estimulo_Franja_Fronteriza)}
+                          {renderTaxIndicator(prod.estimuloFranjaFronteriza)}
                         </td>
                         <td className="p-3 text-muted-foreground text-xs max-w-xs truncate">
-                          {prod.Palabras_similares || '-'}
+                          {prod.palabrasSimilares || '-'}
                         </td>
                       </tr>
                     ))}

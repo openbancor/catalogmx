@@ -137,28 +137,28 @@ export default function LocalidadesPage() {
                       <tr key={i} className="hover:bg-muted/50">
                         <td className="p-3">
                           <Badge variant="secondary" className="font-mono text-xs">
-                            {loc.cve_ent}-{loc.cve_mun}-{loc.cve_loc}
+                            {loc.cve_entidad}-{loc.cve_municipio}-{loc.cve_localidad}
                           </Badge>
                         </td>
-                        <td className="p-3 font-medium">{loc.nom_loc}</td>
-                        <td className="p-3">{loc.nom_mun}</td>
-                        <td className="p-3">{loc.nom_ent}</td>
+                        <td className="p-3 font-medium">{loc.nom_localidad}</td>
+                        <td className="p-3">{loc.nom_municipio}</td>
+                        <td className="p-3">{loc.nom_entidad}</td>
                         <td className="p-3 text-right font-mono">
-                          {loc.pob_total?.toLocaleString() || '-'}
+                          {loc.poblacion_total?.toLocaleString() || '-'}
                         </td>
                         <td className="p-3 text-right font-mono">
                           {loc.altitud ? `${loc.altitud}m` : '-'}
                         </td>
                         <td className="p-3">
-                          {loc.lat_decimal && loc.lon_decimal ? (
+                          {loc.latitud && loc.longitud ? (
                             <a
-                              href={`https://www.google.com/maps?q=${loc.lat_decimal},${loc.lon_decimal}`}
+                              href={`https://www.google.com/maps?q=${loc.latitud},${loc.longitud}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex items-center gap-1 text-primary hover:underline text-xs font-mono"
                             >
                               <Navigation className="h-3 w-3" />
-                              {formatCoordinate(loc.lat_decimal, 'lat')}, {formatCoordinate(loc.lon_decimal, 'lon')}
+                              {formatCoordinate(loc.latitud, 'lat')}, {formatCoordinate(loc.longitud, 'lon')}
                             </a>
                           ) : '-'}
                         </td>

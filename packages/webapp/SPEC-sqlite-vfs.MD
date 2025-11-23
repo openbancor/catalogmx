@@ -101,87 +101,40 @@ Esto ya viene de tus archivos existentes.
 
 🛠️ 4. Script: Generar archivo unificado desde cero
 
-Crea el archivo:
+Ya existe un generador listo para usarse en:
 
-build_unified_sqlite.py
+```
+packages/shared-data/build_unified_sqlite.py
+```
 
-Contenido:
+Características principales:
+* Fusiona automáticamente los catálogos grandes que ya están en `packages/shared-data/sqlite/` (SEPOMEX, INEGI localidades, SAT clave producto/servicio).
+* Recorre todo `packages/shared-data/**.json` (Banxico, SAT, IFT, etc.) y crea una tabla por archivo conservando los campos originales.
+* Añade índices útiles (`codigos_postales`, `localidades`, `clave_prod_serv`) y genera tablas FTS5 listas para búsquedas de texto.
+* Soporta banderas para controlar la salida:
+  - `--output /ruta/al/archivo.sqlite3`
+  - `--skip-json` o `--skip-sqlite` si quieres procesar sólo una fuente.
 
-import sqlite3
-import glob
-import os
+Uso recomendado (desde la raíz del repo):
 
-OUTPUT = "mexico.sqlite3"
+```bash
+cd packages/shared-data
+python build_unified_sqlite.py
+# genera packages/shared-data/mexico.sqlite3
+```
 
-def create_empty_db():
-    if os.path.exists(OUTPUT):
-        os.remove(OUTPUT)
-    conn = sqlite3.connect(OUTPUT)
-    conn.execute("PRAGMA journal_mode=OFF;")
-    conn.execute("PRAGMA synchronous=OFF;")
-    conn.execute("PRAGMA locking_mode=EXCLUSIVE;")
-    conn.execute("VACUUM;")
-    conn.commit()
-    return conn
+Si prefieres dejar todo automatizado desde el webapp, usa (desde la raíz del repo):
 
-def import_table_from_db(conn, src_file, src_table, dst_table=None):
-    if dst_table is None:
-        dst_table = src_table
+```bash
+cd packages/webapp
+npm run data:build
+```
 
-    print(f"Importando {src_table} desde {src_file} → tabla {dst_table}")
+Importante: el comando se ejecuta dentro de `packages/webapp`, no en la raíz del repo (de lo contrario `npm` no encontrará el `package.json`). Ese script:
+1. Ejecuta `build_unified_sqlite.py` (puedes forzar el intérprete con `PYTHON=...`).
+2. Copia todos los `.db/.sqlite/.sqlite3` resultantes (incluyendo `mexico.sqlite3`) hacia `packages/webapp/public/data/`.
 
-    src = sqlite3.connect(src_file)
-
-    # Leer schema
-    cur = src.execute(
-        "SELECT sql FROM sqlite_master WHERE type='table' AND name=?",
-        (src_table,)
-    )
-    row = cur.fetchone()
-    schema = row[0].replace(src_table, dst_table)
-
-    # Crear tabla en destino
-    conn.execute(schema)
-
-    # Copiar datos
-    rows = src.execute(f"SELECT * FROM {src_table}")
-    columns = len(rows.fetchone())
-
-    src = sqlite3.connect(src_file)
-    rows = src.execute(f"SELECT * FROM {src_table}")
-
-    placeholders = ",".join(["?"] * columns)
-    conn.executemany(
-        f"INSERT INTO {dst_table} VALUES ({placeholders})",
-        rows
-    )
-    conn.commit()
-    src.close()
-
-def main():
-    conn = create_empty_db()
-
-    # Lista de archivos de catálogo
-    catalogs = [
-        ("codigos_postales.sqlite3", "cp"),
-        ("asentamientos.sqlite3", "asentamientos"),
-        ("bancos.sqlite3", "bancos"),
-        ("impuestos_sat.sqlite3", "impuestos_sat"),
-        ("productos_sat.sqlite3", "productos_sat"),
-        # Agrega más de tus catálogos aquí
-    ]
-
-    for src_file, table_name in catalogs:
-        if not os.path.exists(src_file):
-            print(f"WARNING: archivo {src_file} no existe")
-            continue
-        import_table_from_db(conn, src_file, table_name)
-
-    conn.close()
-    print("Archivo mexico.sqlite3 generado correctamente.")
-
-if __name__ == "__main__":
-    main()
+Para copiar únicamente los archivos ya existentes (sin regenerar), sigue usando `npm run sync:data`.
 
 
 ⸻

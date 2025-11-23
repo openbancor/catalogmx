@@ -128,22 +128,22 @@ export default function PostalCodesPage() {
                   </thead>
                   <tbody className="divide-y">
                     {result.data.map((cp, i) => (
-                      <tr key={i} className="hover:bg-muted/50">
-                        <td className="p-3">
-                          <Badge variant="secondary" className="font-mono">
-                            {cp.d_codigo}
-                          </Badge>
-                        </td>
-                        <td className="p-3 font-medium">{cp.d_asenta}</td>
-                        <td className="p-3 text-muted-foreground">{cp.d_tipo_asenta}</td>
-                        <td className="p-3">{cp.D_mnpio}</td>
-                        <td className="p-3">{cp.d_estado}</td>
-                        <td className="p-3 text-muted-foreground">{cp.d_ciudad || '-'}</td>
-                        <td className="p-3">
-                          <Badge variant="outline">{cp.d_zona}</Badge>
-                        </td>
-                      </tr>
-                    ))}
+                    <tr key={i} className="hover:bg-muted/50">
+                      <td className="p-3">
+                        <Badge variant="secondary" className="font-mono">
+                          {cp.cp}
+                        </Badge>
+                      </td>
+                      <td className="p-3 font-medium">{cp.asentamiento}</td>
+                      <td className="p-3 text-muted-foreground">{cp.tipo_asentamiento}</td>
+                      <td className="p-3">{cp.municipio}</td>
+                      <td className="p-3">{cp.estado}</td>
+                      <td className="p-3 text-muted-foreground">{cp.ciudad || '-'}</td>
+                      <td className="p-3">
+                        <Badge variant="outline">{cp.zona ?? '-'}</Badge>
+                      </td>
+                    </tr>
+                  ))}
                   </tbody>
                 </table>
               </div>

@@ -18,6 +18,9 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['sql.js'],
+    include: ['sql.js', 'sql.js/dist/sql-wasm.js'],
+  },
+  ssr: {
+    noExternal: ['sql.js'],
   },
 });

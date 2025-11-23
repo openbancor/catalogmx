@@ -7,7 +7,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Search, Database, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { CATALOG_CATEGORIES, CATALOGS, searchInCatalog, type CatalogItem } from '@/data/catalogs';
 
-export default function CatalogsSection() {
+interface CatalogsSectionProps {
+  showHeader?: boolean;
+}
+
+export default function CatalogsSection({ showHeader = true }: CatalogsSectionProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCatalog, setSelectedCatalog] = useState<CatalogItem | null>(null);
 
@@ -32,14 +36,26 @@ export default function CatalogsSection() {
 
   return (
     <div className="space-y-8">
-      <div className="text-center max-w-2xl mx-auto">
-        <h2 className="text-3xl font-bold mb-2">Official Mexican Catalogs</h2>
-        <p className="text-muted-foreground mb-6">
-          Browse 58 official catalogs with 470,000+ records from SAT, Banxico, INEGI, and more
-        </p>
+      {showHeader ? (
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="text-3xl font-bold mb-2">Official Mexican Catalogs</h2>
+          <p className="text-muted-foreground mb-6">
+            Browse 58 official catalogs with 470,000+ records from SAT, Banxico, INEGI, and more
+          </p>
 
-        <div className="relative max-w-md mx-auto">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="relative mx-auto max-w-md">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
+            <Input
+              placeholder="Search catalogs..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="relative max-w-xl">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
           <Input
             placeholder="Search catalogs..."
             value={searchQuery}
@@ -47,7 +63,7 @@ export default function CatalogsSection() {
             className="pl-10"
           />
         </div>
-      </div>
+      )}
 
       <div className="space-y-6">
         {CATALOG_CATEGORIES.map(category => {

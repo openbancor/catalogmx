@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import {
   Database, Code, Menu, X,
   CreditCard, User, Building2, Shield, MapPin, Package,
-  Receipt, Percent, DollarSign, ChevronRight
+  Receipt, Percent, DollarSign
 } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
+import ThemeToggle from '@/components/ThemeToggle';
+import { NAVIGATION_EVENT } from '@/lib/navigation';
 
 // Pages
 import RFCPage from '@/pages/RFCPage';
@@ -88,62 +90,54 @@ const pageComponents: Record<PageId, React.ComponentType> = {
   'reference': ReferencePage,
 };
 
-const heroHighlights = [
-  {
-    value: '58',
-    label: 'Government catalogs',
-    detail: 'SAT · INEGI · Banxico'
-  },
-  {
-    value: '12',
-    label: 'Validators & calculators',
-    detail: 'RFC · CURP · CLABE · ISR'
-  },
-  {
-    value: '93.78%',
-    label: 'Test coverage',
-    detail: '1,250+ automated checks'
-  }
-];
-
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<PageId>('rfc');
+  const [currentPage, setCurrentPage] = useState<PageId>('catalogs');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const flatNavigation = navigation.flatMap(s => s.items);
   const currentNavItem = flatNavigation.find(i => i.id === currentPage);
 
   const PageComponent = pageComponents[currentPage];
 
-  return (
-    <div className="relative min-h-screen bg-background overflow-hidden">
-      <div className="pointer-events-none absolute -top-32 -left-24 h-96 w-96 bg-primary/25 blur-[140px]" />
-      <div className="pointer-events-none absolute top-1/3 right-0 h-[28rem] w-[28rem] bg-emerald-400/20 dark:bg-emerald-900/40 blur-[180px]" />
-      <div className="pointer-events-none absolute bottom-0 left-1/2 h-64 w-64 -translate-x-1/2 bg-sky-400/10 dark:bg-sky-900/30 blur-[160px]" />
+  useEffect(() => {
+    const handleNavigate = (event: Event) => {
+      const detail = (event as CustomEvent<string>).detail;
+      if (typeof detail === 'string' && detail in pageComponents) {
+        setCurrentPage(detail as PageId);
+        if (typeof window !== 'undefined' && window.innerWidth < 768) {
+          setSidebarOpen(false);
+        }
+      }
+    };
 
-      <div className="relative z-10 flex min-h-screen">
-        {/* Sidebar */}
-        <aside className={cn(
-          "fixed inset-y-0 left-0 z-50 flex flex-col border-r border-white/20 bg-white/80 p-0 backdrop-blur-xl shadow-2xl transition-all duration-300 dark:border-white/10 dark:bg-slate-950/70",
-          sidebarOpen ? "w-64" : "w-0 -translate-x-full md:w-16 md:translate-x-0"
-        )}>
-        {/* Logo */}
-        <div className="h-14 flex items-center px-4 border-b">
+    window.addEventListener(NAVIGATION_EVENT, handleNavigate as EventListener);
+    return () => {
+      window.removeEventListener(NAVIGATION_EVENT, handleNavigate as EventListener);
+    };
+  }, []);
+
+  return (
+    <div className="flex min-h-screen bg-background text-foreground">
+      {/* Sidebar */}
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 flex flex-col border-r border-border bg-card/95 p-0 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-card/90 transition-[width,transform] duration-300",
+          sidebarOpen ? "w-64 translate-x-0" : "w-16 -translate-x-full md:translate-x-0"
+        )}
+      >
+        <div className="h-16 flex items-center px-4 border-b border-border/60">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
+            <div className="h-9 w-9 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-semibold tracking-tight">
               MX
             </div>
-            {sidebarOpen && (
-              <span className="font-semibold">catalogmx</span>
-            )}
+            {sidebarOpen && <span className="text-base font-semibold">catalogmx</span>}
           </div>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4">
           {navigation.map((section) => (
-            <div key={section.title} className="mb-6">
+            <div key={section.title} className="mb-5">
               {sidebarOpen && (
-                <h3 className="px-4 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                <h3 className="px-4 mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground/80">
                   {section.title}
                 </h3>
               )}
@@ -153,9 +147,9 @@ export default function App() {
                     key={item.id}
                     onClick={() => setCurrentPage(item.id)}
                     className={cn(
-                      "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
+                      "w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                       currentPage === item.id
-                        ? "bg-primary text-primary-foreground"
+                        ? "bg-primary/15 text-primary"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
                     )}
                   >
@@ -168,128 +162,65 @@ export default function App() {
           ))}
         </nav>
 
-        {/* Footer */}
         {sidebarOpen && (
-          <div className="p-4 border-t text-xs text-muted-foreground">
-            <a href="https://github.com/openbancor/catalogmx" target="_blank" rel="noopener" className="hover:underline">
+          <div className="border-t border-border/60 p-4 text-xs text-muted-foreground">
+            <a href="https://github.com/openbancor/catalogmx" target="_blank" rel="noopener" className="hover:text-foreground">
               GitHub
             </a>
             {' · '}
-            <a href="https://www.npmjs.com/package/catalogmx" target="_blank" rel="noopener" className="hover:underline">
+            <a href="https://www.npmjs.com/package/catalogmx" target="_blank" rel="noopener" className="hover:text-foreground">
               npm
             </a>
             {' · '}
-            <a href="https://pypi.org/project/catalogmx/" target="_blank" rel="noopener" className="hover:underline">
+            <a href="https://pypi.org/project/catalogmx/" target="_blank" rel="noopener" className="hover:text-foreground">
               PyPI
             </a>
           </div>
         )}
       </aside>
 
-      {/* Main content */}
-      <main className={cn(
-        "relative flex-1 transition-all duration-300",
-        sidebarOpen ? "md:ml-64" : "md:ml-16"
-      )}>
-        {/* Header */}
-        <header className="sticky top-0 z-40 h-16 border-b border-white/20 bg-white/75 px-4 backdrop-blur-xl supports-[backdrop-filter]:bg-white/65 dark:border-white/5 dark:bg-slate-950/60">
-          <div className="flex h-full items-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="mr-4 rounded-full border border-transparent hover:border-muted-foreground/30"
+      {/* Main area */}
+      <main className={cn("flex-1 bg-background", sidebarOpen ? "md:ml-64" : "md:ml-16")}>
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSidebarOpen((prev) => !prev)}
+            className="rounded-full border border-transparent hover:border-border"
+          >
+            {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+
+          <div className="flex flex-col">
+            <span className="text-xs uppercase tracking-widest text-muted-foreground">catalogmx</span>
+            <span className="text-base font-semibold">{currentNavItem?.label}</span>
+          </div>
+
+          <div className="ml-auto flex items-center gap-2">
+            <a
+              href="https://github.com/openbancor/catalogmx"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'hidden sm:inline-flex rounded-full')}
             >
-              {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
-            <nav className="flex items-center gap-1 text-sm text-muted-foreground">
-              <span>catalogmx</span>
-              <ChevronRight className="h-4 w-4" />
-              <span className="text-foreground font-medium">
-                {currentNavItem?.label}
-              </span>
-            </nav>
-            <div className="ml-auto hidden gap-2 md:flex">
-              <a
-                href="https://github.com/openbancor/catalogmx"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'rounded-full')}
-              >
-                GitHub
-              </a>
-              <a
-                href="https://openbancor.github.io/catalogmx/mexico.sqlite3"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(buttonVariants({ variant: 'secondary', size: 'sm' }), 'rounded-full')}
-              >
-                Download DB
-              </a>
-            </div>
+              Docs
+            </a>
+            <a
+              href="https://openbancor.github.io/catalogmx/mexico.sqlite3"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'rounded-full')}
+            >
+              Download DB
+            </a>
+            <ThemeToggle />
           </div>
         </header>
 
-        {/* Hero */}
-        <section className="px-6 pt-6">
-          <div className="grid gap-4 xl:grid-cols-[2fr,1fr]">
-            <div className="relative overflow-hidden rounded-3xl border bg-gradient-to-r from-primary via-emerald-500 to-emerald-400 p-6 text-primary-foreground shadow-lg">
-              <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(circle at top, rgba(255,255,255,0.7), transparent 60%)' }} />
-              <div className="relative z-10 space-y-3">
-                <p className="text-xs uppercase tracking-[0.25em] text-white/70">Serverless SQLite</p>
-                <h2 className="text-2xl font-semibold leading-tight">
-                  Mexico&apos;s compliance catalogs in one file
-                </h2>
-                <p className="text-sm text-white/80 max-w-3xl">
-                  We merge every SAT, INEGI, SEPOMEX, and Banxico dataset into <code className="font-mono">mexico.sqlite3</code>.
-                  Query it directly from the browser with sql.js + HTTP Range requests and keep your validators fully offline.
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  <a
-                    className={cn(
-                      buttonVariants({ variant: 'secondary', size: 'sm' }),
-                      'rounded-full font-semibold text-primary'
-                    )}
-                    href="https://openbancor.github.io/catalogmx/mexico.sqlite3"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Download mexico.sqlite3
-                  </a>
-                  <a
-                    className={cn(
-                      buttonVariants({ variant: 'ghost', size: 'sm' }),
-                      'rounded-full border border-white/40 text-white hover:bg-white/10'
-                    )}
-                    href="https://github.com/OpenBancor/catalogmx/blob/main/packages/webapp/SPEC-sqlite-vfs.MD"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Read VFS spec
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
-              {heroHighlights.map((stat) => (
-                <div key={stat.label} className="rounded-2xl border bg-card p-5 shadow-sm backdrop-blur-md">
-                  <div className="text-3xl font-semibold">{stat.value}</div>
-                  <div className="mt-2 text-sm font-medium text-muted-foreground uppercase tracking-wide">
-                    {stat.label}
-                  </div>
-                  <div className="text-sm text-muted-foreground">{stat.detail}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Page content */}
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <PageComponent />
         </div>
       </main>
-      </div>
     </div>
   );
 }
