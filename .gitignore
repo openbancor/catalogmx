@@ -70,6 +70,8 @@ docs/_build
 .bootstrap
 .appveyor.token
 *.bak
+*.sqlite3-wal
+*.sqlite3-shm
 
 # Temporary download files
 tmp/
