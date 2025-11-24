@@ -222,7 +222,7 @@ export default function App() {
               Docs
             </a>
             <a
-              href="https://openbancor.github.io/catalogmx/mexico.sqlite3"
+              href={`${import.meta.env.BASE_URL}data/mexico.sqlite3`}
               target="_blank"
               rel="noopener noreferrer"
               className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'rounded-full')}

@@ -64,7 +64,7 @@ export default function CatalogsPage() {
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch('/data/mexico.sqlite3', { method: 'HEAD', signal: controller.signal })
+    fetch(`${import.meta.env.BASE_URL}data/mexico.sqlite3`, { method: 'HEAD', signal: controller.signal })
       .then((res) => {
         const size = Number(res.headers.get('content-length') || undefined);
         const modified = res.headers.get('last-modified') || undefined;
@@ -93,7 +93,7 @@ export default function CatalogsPage() {
             </p>
             <div className="flex flex-wrap gap-3">
               <a
-                href="https://openbancor.github.io/catalogmx/mexico.sqlite3"
+                href={`${import.meta.env.BASE_URL}data/mexico.sqlite3`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-primary shadow hover:bg-white"

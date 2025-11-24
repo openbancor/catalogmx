@@ -68,6 +68,8 @@ async function initSQL(): Promise<SqlJsStatic> {
 export async function loadDatabase(name: string): Promise<SqlJsDatabase> {
   const trimmedName = name.trim();
   const normalizedKey = trimmedName.replace(/\.(db|sqlite3?|sqlite)$/i, '');
+  const baseUrl = (import.meta as any).env?.BASE_URL || '/';
+  const base = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
 
   if (databases.has(normalizedKey)) {
     return databases.get(normalizedKey)!;
@@ -83,7 +85,7 @@ export async function loadDatabase(name: string): Promise<SqlJsDatabase> {
   let resolvedFile = '';
 
   for (const candidate of fileCandidates) {
-    const res = await fetch(`/data/${candidate}`);
+    const res = await fetch(`${base}/data/${candidate}`);
     if (res.ok) {
       response = res;
       resolvedFile = candidate;
