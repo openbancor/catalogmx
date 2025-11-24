@@ -7,6 +7,7 @@ const projectRoot = path.resolve(__dirname, '..');
 const sharedDataRoot = path.resolve(projectRoot, '../shared-data');
 const publicDataDir = path.resolve(projectRoot, 'public/data');
 const allowedExtensions = new Set(['.db', '.sqlite', '.sqlite3']);
+const SAMPLE_MEXICO_PATH = path.resolve(publicDataDir, 'mexico.sqlite3');
 
 async function ensureDir(dir) {
   await fs.mkdir(dir, { recursive: true });
@@ -48,9 +49,6 @@ export async function syncSqliteData({ silent = false } = {}) {
     let copies = 0;
     for (const filePath of sqliteFiles) {
       const fileName = path.basename(filePath);
-      if (fileName === 'mexico.sqlite3') {
-        continue;
-      }
       const destPath = path.join(publicDataDir, fileName);
       await fs.copyFile(filePath, destPath);
       copies += 1;
@@ -59,11 +57,57 @@ export async function syncSqliteData({ silent = false } = {}) {
     if (!silent) {
       console.log(`[sync-sqlite] Copied ${copies} file(s) into public/data.`);
     }
+
+    await ensureMexicoSampleDb();
   } catch (error) {
     console.error('[sync-sqlite] Failed to copy SQLite assets:', error);
     process.exitCode = 1;
     throw error;
   }
+}
+
+async function ensureMexicoSampleDb() {
+  const exists = await fs.stat(SAMPLE_MEXICO_PATH).then(() => true).catch(() => false);
+  if (exists) return;
+
+  const hasSqliteCli = await new Promise((resolve) => {
+    import('node:child_process').then(({ exec }) => {
+      exec('which sqlite3', (err, stdout) => {
+        resolve(!err && stdout.trim().length > 0);
+      });
+    });
+  });
+
+  if (!hasSqliteCli) {
+    console.warn('[sync-sqlite] sqlite3 CLI not found; cannot create sample mexico.sqlite3');
+    return;
+  }
+
+  const { execSync } = await import('node:child_process');
+  const statements = [
+    // Banxico banks (sample)
+    `CREATE TABLE banxico_banks (code TEXT PRIMARY KEY, name TEXT, full_name TEXT, rfc TEXT, spei INTEGER);`,
+    `INSERT INTO banxico_banks VALUES ('002','BANAMEX','Banco Nacional de México, S.A.','BNM840515VB1',1);`,
+    `INSERT INTO banxico_banks VALUES ('012','BBVA MEXICO','BBVA México, S.A.','BMB930121HT4',1);`,
+    // UDIS (sample)
+    `CREATE TABLE banxico_udis (fecha TEXT, valor REAL, moneda TEXT, tipo TEXT, notas TEXT);`,
+    `INSERT INTO banxico_udis VALUES ('2025-01-01', 8.0, 'MXN', 'valor', 'Sample UDI');`,
+    // Postal codes (sample)
+    `CREATE TABLE codigos_postales_completo (cp TEXT, asentamiento TEXT, tipo_asentamiento TEXT, municipio TEXT, estado TEXT, ciudad TEXT, cp_oficina TEXT, codigo_estado TEXT, codigo_municipio TEXT, zona TEXT);`,
+    `INSERT INTO codigos_postales_completo VALUES ('01000','San Ángel','Colonia','Álvaro Obregón','Ciudad de México','Ciudad de México','01000','09','010','U');`,
+    `INSERT INTO codigos_postales_completo VALUES ('06700','Roma Norte','Colonia','Cuauhtémoc','Ciudad de México','Ciudad de México','06700','09','010','U');`,
+    // Localidades (sample)
+    `CREATE TABLE localidades (cvegeo TEXT, cve_entidad TEXT, cve_municipio TEXT, cve_localidad TEXT, nom_localidad TEXT, nom_municipio TEXT, nom_entidad TEXT, latitud REAL, longitud REAL, altitud REAL, poblacion_total INTEGER);`,
+    `INSERT INTO localidades VALUES ('090010001','09','001','0001','Ciudad de México','Álvaro Obregón','Ciudad de México',19.35,-99.19,2240,100000);`,
+    // ClaveProdServ (sample)
+    `CREATE TABLE clave_prod_serv (id TEXT PRIMARY KEY, descripcion TEXT, incluirIVATrasladado TEXT, incluirIEPSTrasladado TEXT, complementoQueDebeIncluir TEXT, fechaInicioVigencia TEXT, fechaFinVigencia TEXT, estimuloFranjaFronteriza TEXT, palabrasSimilares TEXT);`,
+    `INSERT INTO clave_prod_serv VALUES ('01010101','No aplica','No','No','','','','','servicio no aplica');`,
+    `INSERT INTO clave_prod_serv VALUES ('10101501','Gatos vivos','Sí','No','','','','','gatos mascotas animales vivos');`
+  ];
+
+  const sql = statements.join('\n');
+  execSync(`sqlite3 "${SAMPLE_MEXICO_PATH}" "${sql}"`);
+  console.log('[sync-sqlite] Created sample mexico.sqlite3 in public/data (demo-sized data).');
 }
 
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
