@@ -14,6 +14,34 @@ const CACOPHONIC_WORDS = [
   'QULO', 'RATA', 'RUIN'
 ];
 
+const EXCLUDED_WORDS_FISICAS = [
+  'DE', 'LA', 'LAS', 'MC', 'VON', 'DEL', 'LOS', 'Y', 'MAC', 'VAN', 'MI'
+];
+
+const EXCLUDED_WORDS_MORALES = [
+  'EL', 'LA', 'DE', 'LOS', 'LAS', 'Y', 'DEL', 'MI',
+  'COMPAÑIA', 'COMPAÑÍA', 'CIA', 'CIA.',
+  'SOCIEDAD', 'SOC', 'SOC.',
+  'COOPERATIVA', 'COOP', 'COOP.',
+  'S.A.', 'SA', 'S.A', 'S. A.', 'S. A',
+  'S.A.B.', 'SAB', 'S.A.B', 'S. A. B.', 'S. A. B',
+  'S. DE R.L.', 'S DE RL', 'SRL', 'S.R.L.', 'S. R. L.',
+  'S. EN C.', 'S EN C', 'S.C.', 'SC',
+  'S. EN C. POR A.', 'S EN C POR A',
+  'S. EN N.C.', 'S EN NC',
+  'A.C.', 'AC', 'A. C.',
+  'A. EN P.', 'A EN P',
+  'S.C.L.', 'SCL',
+  'S.N.C.', 'SNC',
+  'C.V.', 'CV', 'C. V.',
+  'SA DE CV', 'S.A. DE C.V.', 'SA DE CV MI', 'S.A. DE C.V. MI',
+  'S.A.B. DE C.V.', 'SAB DE CV', 'S.A.B DE C.V',
+  'SRL DE CV', 'S.R.L. DE C.V.', 'SRL DE CV MI', 'SRL MI',
+  'THE', 'OF', 'COMPANY', 'AND', 'CO', 'CO.',
+  'MC', 'VON', 'MAC', 'VAN',
+  'PARA', 'POR', 'AL', 'E', 'EN', 'CON', 'SUS', 'A'
+];
+
 const CHECKSUM_TABLE: Record<string, string> = {
   '0': '00', '1': '01', '2': '02', '3': '03', '4': '04', '5': '05',
   '6': '06', '7': '07', '8': '08', '9': '09', A: '10', B: '11', C: '12',
@@ -23,6 +51,18 @@ const CHECKSUM_TABLE: Record<string, string> = {
   ' ': '37', 'Ñ': '38'
 };
 
+const HOMOCLAVE_TABLE: Record<string, string> = {
+  ' ': '00', '0': '00', '1': '01', '2': '02', '3': '03', '4': '04', '5': '05',
+  '6': '06', '7': '07', '8': '08', '9': '09', '&': '10', A: '11', B: '12',
+  C: '13', D: '14', E: '15', F: '16', G: '17', H: '18', I: '19', J: '21',
+  K: '22', L: '23', M: '24', N: '25', O: '26', P: '27', Q: '28', R: '29',
+  S: '32', T: '33', U: '34', V: '35', W: '36', X: '37', Y: '38', Z: '39', 'Ñ': '40'
+};
+
+const HOMOCLAVE_ASSIGN_TABLE = [
+  '1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','P','Q','R','S','T','U','V','W','X','Y','Z'
+];
+
 const VOCALES = 'AEIOUÁÉÍÓÚ';
 
 function removeAccents(str: string): string {
@@ -31,6 +71,19 @@ function removeAccents(str: string): string {
     'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u'
   };
   return str.replace(/[ÁÉÍÓÚáéíóú]/g, (char) => accentsMap[char] || char);
+}
+
+function cleanName(value: string, excluded: string[]): string {
+  const upper = removeAccents(value.toUpperCase());
+  const sanitized = upper.replace(/[^A-ZÑ&\s]/g, ' ');
+  const parts = sanitized
+    .split(/\s+/)
+    .filter((p) => p.length > 0 && !excluded.includes(p));
+  return parts.join(' ');
+}
+
+function cleanNameForHomoclave(value: string): string {
+  return removeAccents(value.toUpperCase().replace(/[^A-ZÑ&\s]/g, ' ').trim());
 }
 
 function calculateRfcChecksum(rfc: string): string {
@@ -128,15 +181,34 @@ export function generateRFC(data: {
   materno: string;
   fecha: Date;
 }): string {
-  const nombre = removeAccents(data.nombre.toUpperCase().trim());
-  const paterno = removeAccents(data.paterno.toUpperCase().trim());
-  const materno = removeAccents(data.materno.toUpperCase().trim());
+  const nombre = cleanName(data.nombre, EXCLUDED_WORDS_FISICAS);
+  const paterno = cleanName(data.paterno, EXCLUDED_WORDS_FISICAS);
+  const materno = cleanName(data.materno, EXCLUDED_WORDS_FISICAS);
 
-  let iniciales = paterno.charAt(0);
-  const paternoVowel = paterno.slice(1).split('').find(c => VOCALES.includes(c)) || 'X';
+  const nombreParts = nombre.split(' ').filter(Boolean);
+  let nombreIniciales = nombre;
+  if (nombreParts.length > 1 && (nombreParts[0] === 'MARIA' || nombreParts[0] === 'JOSE')) {
+    nombreIniciales = nombreParts.slice(1).join(' ') || nombreParts[0];
+  }
+
+  const paternoSafe = paterno || 'X';
+  let iniciales = paternoSafe.charAt(0);
+  const paternoVowel = paternoSafe.slice(1).split('').find(c => VOCALES.includes(c)) || 'X';
+  let extraLetter = false;
   iniciales += paternoVowel;
-  iniciales += materno.charAt(0) || 'X';
-  iniciales += nombre.charAt(0);
+
+  const maternoSafe = materno || '';
+  if (maternoSafe) {
+    iniciales += maternoSafe.charAt(0);
+  } else {
+    extraLetter = true;
+  }
+
+  const nombreSafe = nombreIniciales || 'X';
+  iniciales += nombreSafe.charAt(0);
+  if (extraLetter && nombreSafe.length > 1) {
+    iniciales += nombreSafe.charAt(1);
+  }
 
   if (CACOPHONIC_WORDS.includes(iniciales)) {
     iniciales = iniciales.slice(0, 3) + 'X';
@@ -146,8 +218,31 @@ export function generateRFC(data: {
   const month = (data.fecha.getMonth() + 1).toString().padStart(2, '0');
   const day = data.fecha.getDate().toString().padStart(2, '0');
 
-  const rfcBase = iniciales + year + month + day + 'XX';
-  return rfcBase + calculateRfcChecksum(rfcBase + '0');
+  const rfcBase = iniciales + year + month + day;
+  const homoclave = calculateHomoclave(`${paterno} ${materno} ${nombre}`);
+  const rfcWithHomoclave = rfcBase + homoclave;
+  return rfcWithHomoclave + calculateRfcChecksum(rfcWithHomoclave + '0');
+}
+
+function calculateHomoclave(fullName: string): string {
+  const name = cleanNameForHomoclave(fullName);
+  const parts: string[] = ['0'];
+  for (const char of name) {
+    parts.push(HOMOCLAVE_TABLE[char] ?? '00');
+  }
+  const cadena = parts.join('');
+  let suma = 0;
+  for (let i = 0; i < cadena.length - 1; i++) {
+    const current = parseInt(cadena.slice(i, i + 2), 10);
+    const next = parseInt(cadena[i + 1], 10);
+    if (Number.isFinite(current) && Number.isFinite(next)) {
+      suma += current * next;
+    }
+  }
+  const modulo = suma % 1000;
+  const idx1 = Math.floor(modulo / 34);
+  const idx2 = modulo % 34;
+  return (HOMOCLAVE_ASSIGN_TABLE[idx1] ?? '0') + (HOMOCLAVE_ASSIGN_TABLE[idx2] ?? '0');
 }
 
 // ============================================================================

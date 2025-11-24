@@ -6,14 +6,8 @@ import { Input } from '@/components/ui/input';
 import { AlertTriangle, CheckCircle2, Database, Loader2, MapPin, Package, Building2, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import CatalogsSection from '@/components/CatalogsSection';
 import { emitNavigation } from '@/lib/navigation';
-import { queryDatabase, queryJsonArrayTable, querySqlTable, listTables, getTableInfo, queryTable } from '@/lib/database';
+import { queryDatabase, queryJsonArrayTable, querySqlTable, listTables, getTableInfo, queryTable, getTableCount } from '@/lib/database';
 import { datasetConfigs, type DatasetConfig } from '@/data/datasets';
-
-const heroStats = [
-  { label: '58 government catalogs', value: '58', detail: 'Banxico · SAT · INEGI · SEPOMEX' },
-  { label: '470k+ rows', value: '470k+', detail: 'Normalized + indexed' },
-  { label: '93.78% coverage', value: '93.78%', detail: '1,250+ automated tests' },
-];
 
 const formatBytes = (bytes: number): string => {
   if (!bytes) return '-';
@@ -35,25 +29,22 @@ const sqliteCatalogs = [
     id: 'postal-codes',
     title: 'Postal Codes (SEPOMEX)',
     icon: MapPin,
-    description: '145k settlements with type, zone, and municipality metadata.',
-    table: 'codigos_postales_completo',
-    records: '~145k'
+    description: '157k settlements with type, zone, and municipality metadata.',
+    table: 'codigos_postales'
   },
   {
     id: 'localidades',
     title: 'Localities (INEGI)',
     icon: Building2,
     description: '300k+ populated places with geospatial coordinates.',
-    table: 'localidades',
-    records: '~300k'
+    table: 'localidades'
   },
   {
     id: 'productos',
     title: 'Products & Services (SAT)',
     icon: Package,
     description: '52k CFDI 4.0 product/service concepts with synonyms.',
-    table: 'clave_prod_serv',
-    records: '~52k'
+    table: 'clave_prod_serv'
   }
 ];
 
@@ -61,6 +52,12 @@ const datasetOptions: DatasetConfig[] = datasetConfigs;
 
 export default function CatalogsPage() {
   const [fileMeta, setFileMeta] = useState<{ size?: number; modified?: string }>({});
+  const [tableCounts, setTableCounts] = useState<Record<string, number>>({});
+  const [tableNames, setTableNames] = useState<string[]>([]);
+  const [countError, setCountError] = useState<string | null>(null);
+  const [countsLoading, setCountsLoading] = useState(false);
+  const [tableFilter, setTableFilter] = useState('');
+  const [showAllCatalogs, setShowAllCatalogs] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -75,6 +72,79 @@ export default function CatalogsPage() {
       });
     return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    setCountsLoading(true);
+    setCountError(null);
+    (async () => {
+      try {
+        const tables = await listTables('mexico');
+        setTableNames(tables);
+        const entries = await Promise.all(
+          tables.map(async (table) => {
+            const total = await getTableCount('mexico', table);
+            return [table, total] as const;
+          })
+        );
+        if (!cancelled) {
+          setTableCounts(Object.fromEntries(entries));
+        }
+      } catch (error) {
+        console.error('[catalogs] failed to load table counts', error);
+        if (!cancelled) {
+          setCountError('No se pudieron leer los conteos desde mexico.sqlite3.');
+        }
+      } finally {
+        if (!cancelled) {
+          setCountsLoading(false);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const totalRows = useMemo(
+    () => Object.values(tableCounts).reduce((sum, value) => sum + (value ?? 0), 0),
+    [tableCounts]
+  );
+
+  const heroStats = useMemo(
+    () => [
+      {
+        label: 'Tablas en mexico.sqlite3',
+        value: Object.keys(tableCounts).length ? Object.keys(tableCounts).length.toLocaleString('es-MX') : countsLoading ? '…' : '—',
+        detail: 'Incluye Banxico · SAT · INEGI · SEPOMEX'
+      },
+      {
+        label: 'Filas totales',
+        value: totalRows ? totalRows.toLocaleString('es-MX') : countsLoading ? '…' : '—',
+        detail: 'Suma de todas las tablas'
+      },
+      {
+        label: 'Última modificación',
+        value: formatDate(fileMeta.modified),
+        detail: 'Cabecera HTTP Last-Modified'
+      }
+    ],
+    [countsLoading, fileMeta.modified, tableCounts, totalRows]
+  );
+
+  const formatRecordCount = (table: string) => {
+    const value = tableCounts[table];
+    if (countsLoading && value === undefined) return '…';
+    if (typeof value !== 'number') return '—';
+    return value.toLocaleString('es-MX');
+  };
+
+  const filteredTables = useMemo(() => {
+    const q = tableFilter.trim().toLowerCase();
+    return tableNames
+      .filter((name) => (q ? name.toLowerCase().includes(q) : true))
+      .sort((a, b) => a.localeCompare(b));
+  }, [tableFilter, tableNames]);
 
   return (
     <div className="space-y-8">
@@ -134,15 +204,51 @@ export default function CatalogsPage() {
         </div>
       </section>
 
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-xl font-semibold">Search every catalog</h2>
-          <p className="text-sm text-muted-foreground">
-            Banxico banks, currencies, SAT CFDI catalogs, tax regimes, Nómina, UMA, and more—all normalized and searchable.
-          </p>
-        </div>
-        <CatalogsSection showHeader={false} />
-      </section>
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2">
+            <Database className="h-5 w-5 text-primary" />
+            Tablas SQLite
+          </CardTitle>
+          <CardDescription>Busca y navega cualquier tabla de mexico.sqlite3</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
+            <Input
+              value={tableFilter}
+              onChange={(e) => setTableFilter(e.target.value)}
+              placeholder="Buscar tabla (ej. sat_cfdi_4_0_c_formapago)…"
+              className="pl-10"
+            />
+          </div>
+          {countError ? (
+            <div className="flex items-center gap-2 text-sm text-red-600">
+              <AlertTriangle className="h-4 w-4" />
+              {countError}
+            </div>
+          ) : (
+            <div className="max-h-72 overflow-auto rounded-lg border divide-y">
+              {countsLoading && !filteredTables.length ? (
+                <div className="flex items-center gap-2 p-3 text-sm text-muted-foreground">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Cargando tablas…
+                </div>
+              ) : (
+                filteredTables.map((table) => (
+                  <div key={table} className="flex items-center justify-between px-3 py-2 text-sm">
+                    <div className="font-mono">{table}</div>
+                    <Badge variant="secondary">{formatRecordCount(table)}</Badge>
+                  </div>
+                ))
+              )}
+              {!countsLoading && filteredTables.length === 0 ? (
+                <div className="p-3 text-sm text-muted-foreground">Sin resultados</div>
+              ) : null}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <section className="space-y-4">
         <div className="flex items-center gap-2">
@@ -165,8 +271,11 @@ export default function CatalogsPage() {
                     <div className="font-medium text-foreground">Table</div>
                     <div className="font-mono text-xs">{catalog.table}</div>
                   </div>
-                  <Badge variant="secondary">{catalog.records}</Badge>
+                  <Badge variant="secondary">{formatRecordCount(catalog.table)}</Badge>
                 </div>
+                {countError ? (
+                  <p className="text-xs text-red-500">{countError}</p>
+                ) : null}
                 <Button
                   variant="outline"
                   className="w-full"
@@ -183,6 +292,19 @@ export default function CatalogsPage() {
       <ConsolidatedDatabaseCard />
       <AllTablesExplorer />
       <DatasetExplorer />
+
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold">Catálogos completos</h2>
+            <p className="text-sm text-muted-foreground">Búsqueda simple por nombre/descr. de los 58 catálogos.</p>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => setShowAllCatalogs((v) => !v)}>
+            {showAllCatalogs ? 'Ocultar listado' : 'Ver listado'}
+          </Button>
+        </div>
+        {showAllCatalogs ? <CatalogsSection showHeader={false} /> : null}
+      </section>
     </div>
   );
 }

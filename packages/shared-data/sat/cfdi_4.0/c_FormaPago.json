@@ -6,71 +6,27 @@
     "downloaded": "2025-11-09T05:36:54.020465"
   },
   "data": [
-    {
-      "valor": "01"
-    },
-    {
-      "valor": "02"
-    },
-    {
-      "valor": "03"
-    },
-    {
-      "valor": "04"
-    },
-    {
-      "valor": "05"
-    },
-    {
-      "valor": "06"
-    },
-    {
-      "valor": "08"
-    },
-    {
-      "valor": "12"
-    },
-    {
-      "valor": "13"
-    },
-    {
-      "valor": "14"
-    },
-    {
-      "valor": "15"
-    },
-    {
-      "valor": "17"
-    },
-    {
-      "valor": "23"
-    },
-    {
-      "valor": "24"
-    },
-    {
-      "valor": "25"
-    },
-    {
-      "valor": "26"
-    },
-    {
-      "valor": "27"
-    },
-    {
-      "valor": "28"
-    },
-    {
-      "valor": "29"
-    },
-    {
-      "valor": "30"
-    },
-    {
-      "valor": "31"
-    },
-    {
-      "valor": "99"
-    }
+    { "valor": "01", "descripcion": "Efectivo" },
+    { "valor": "02", "descripcion": "Cheque nominativo" },
+    { "valor": "03", "descripcion": "Transferencia electrónica de fondos" },
+    { "valor": "04", "descripcion": "Tarjeta de crédito" },
+    { "valor": "05", "descripcion": "Monedero electrónico" },
+    { "valor": "06", "descripcion": "Dinero electrónico" },
+    { "valor": "08", "descripcion": "Vales de despensa" },
+    { "valor": "12", "descripcion": "Dación en pago" },
+    { "valor": "13", "descripcion": "Pago por subrogación" },
+    { "valor": "14", "descripcion": "Pago por consignación" },
+    { "valor": "15", "descripcion": "Condonación" },
+    { "valor": "17", "descripcion": "Compensación" },
+    { "valor": "23", "descripcion": "Novación" },
+    { "valor": "24", "descripcion": "Confusión" },
+    { "valor": "25", "descripcion": "Remisión de deuda" },
+    { "valor": "26", "descripcion": "Prescripción o caducidad" },
+    { "valor": "27", "descripcion": "A satisfacción del acreedor" },
+    { "valor": "28", "descripcion": "Tarjeta de débito" },
+    { "valor": "29", "descripcion": "Tarjeta de servicios" },
+    { "valor": "30", "descripcion": "Aplicación de anticipos" },
+    { "valor": "31", "descripcion": "Intermediario pagos" },
+    { "valor": "99", "descripcion": "Por definir" }
   ]
 }

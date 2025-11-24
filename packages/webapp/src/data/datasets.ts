@@ -51,9 +51,8 @@ export const datasetConfigs = [
   {
     id: 'banxico-plazas',
     label: 'Banxico - Códigos de plaza',
-    type: 'json-array',
+    type: 'sql',
     table: 'banxico_codigos_plaza',
-    column: 'plazas',
     searchColumns: ['codigo', 'plaza', 'estado', 'cve_entidad'],
     columns: [
       { key: 'codigo', label: 'Código' },
@@ -66,9 +65,8 @@ export const datasetConfigs = [
   {
     id: 'banxico-monedas',
     label: 'Banxico - Monedas y divisas',
-    type: 'json-array',
+    type: 'sql',
     table: 'banxico_monedas_divisas',
-    column: 'monedas',
     searchColumns: ['codigo_iso', 'moneda', 'pais', 'simbolo'],
     columns: [
       { key: 'codigo_iso', label: 'ISO' },
@@ -84,9 +82,8 @@ export const datasetConfigs = [
   {
     id: 'banxico-instituciones',
     label: 'Banxico - Tipos de institución',
-    type: 'json-array',
+    type: 'sql',
     table: 'banxico_instituciones_financieras',
-    column: 'tipos_institucion',
     searchColumns: ['codigo', 'tipo', 'descripcion', 'regulador'],
     columns: [
       { key: 'codigo', label: 'Código' },
@@ -100,9 +97,8 @@ export const datasetConfigs = [
   {
     id: 'ift-operadores',
     label: 'IFT - Operadores móviles',
-    type: 'json-array',
+    type: 'sql',
     table: 'ift_operadores_moviles',
-    column: 'operadores',
     searchColumns: ['nombre_comercial', 'razon_social', 'tipo', 'grupo_empresarial', 'cobertura'],
     columns: [
       { key: 'nombre_comercial', label: 'Nombre comercial' },
@@ -121,9 +117,8 @@ export const datasetConfigs = [
   {
     id: 'sat-regimen',
     label: 'SAT - Régimen Fiscal',
-    type: 'json-array',
+    type: 'sql',
     table: 'sat_cfdi_4_0_c_regimenfiscal',
-    column: 'data',
     searchColumns: ['valor', 'descripcion'],
     columns: [
       { key: 'valor', label: 'Clave' },
@@ -134,9 +129,8 @@ export const datasetConfigs = [
   {
     id: 'sat-forma-pago',
     label: 'SAT - Forma de Pago',
-    type: 'json-array',
+    type: 'sql',
     table: 'sat_cfdi_4_0_c_formapago',
-    column: 'data',
     searchColumns: ['valor', 'descripcion'],
     columns: [
       { key: 'valor', label: 'Clave' },
@@ -147,9 +141,8 @@ export const datasetConfigs = [
   {
     id: 'sat-uso-cfdi',
     label: 'SAT - Uso CFDI',
-    type: 'json-array',
+    type: 'sql',
     table: 'sat_cfdi_4_0_c_usocfdi',
-    column: 'data',
     searchColumns: ['valor', 'descripcion'],
     columns: [
       { key: 'valor', label: 'Clave' },
@@ -160,9 +153,8 @@ export const datasetConfigs = [
   {
     id: 'sat-moneda',
     label: 'SAT - Moneda',
-    type: 'json-array',
+    type: 'sql',
     table: 'sat_cfdi_4_0_c_moneda',
-    column: 'data',
     searchColumns: ['valor', 'descripcion'],
     columns: [
       { key: 'valor', label: 'Clave' },
@@ -173,9 +165,8 @@ export const datasetConfigs = [
   {
     id: 'sat-iva-tasas',
     label: 'SAT - IVA tasas',
-    type: 'json-array',
+    type: 'sql',
     table: 'sat_impuestos_iva_tasas',
-    column: 'tasas',
     searchColumns: ['tipo', 'descripcion', 'aplica_en'],
     columns: [
       { key: 'tipo', label: 'Tipo' },

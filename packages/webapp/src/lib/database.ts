@@ -267,6 +267,15 @@ export async function getTableInfo(dbName: string, table: string): Promise<Table
   return cols;
 }
 
+export async function getTableCount(dbName: string, table: string): Promise<number> {
+  const db = await loadDatabase(dbName);
+  const stmt = db.prepare(`SELECT COUNT(*) as total FROM ${table}`);
+  stmt.step();
+  const total = (stmt.get()[0] as number) ?? 0;
+  stmt.free();
+  return total;
+}
+
 export async function queryTable(
   dbName: string,
   table: string,
@@ -372,7 +381,7 @@ export async function searchPostalCodes(
   page = 1,
   pageSize = 50
 ): Promise<PaginatedResult<PostalCode>> {
-  return queryPaginated<PostalCode>('mexico', 'codigos_postales_completo', {
+  return queryPaginated<PostalCode>('mexico', 'codigos_postales', {
     page,
     pageSize,
     search,
