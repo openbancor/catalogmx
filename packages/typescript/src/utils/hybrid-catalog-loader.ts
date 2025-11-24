@@ -168,7 +168,7 @@ export abstract class HybridCatalogLoader<T> {
   /**
    * Execute a SQL query (only if using SQLite)
    */
-  protected query<R = any>(sql: string, params: any[] = []): R[] {
+  protected query<R = unknown>(sql: string, params: unknown[] = []): R[] {
     if (!this._db) {
       throw new Error('SQLite database not initialized');
     }
@@ -178,7 +178,7 @@ export abstract class HybridCatalogLoader<T> {
   /**
    * Execute a SQL query and get first result (only if using SQLite)
    */
-  protected queryOne<R = any>(sql: string, params: any[] = []): R | undefined {
+  protected queryOne<R = unknown>(sql: string, params: unknown[] = []): R | undefined {
     if (!this._db) {
       throw new Error('SQLite database not initialized');
     }

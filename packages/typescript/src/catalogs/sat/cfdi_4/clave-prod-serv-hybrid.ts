@@ -10,6 +10,7 @@
 import * as fs from 'fs';
 import { ClaveProdServ } from '../../../types';
 import { HybridCatalogLoader } from '../../../utils/hybrid-catalog-loader';
+import Database from 'better-sqlite3';
 
 class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
   private _byId: Map<string, ClaveProdServ> | null = null;
@@ -42,16 +43,16 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
   /**
    * Map SQLite row (snake_case) to TypeScript interface (camelCase)
    */
-  private rowToClaveProdServ(row: any): ClaveProdServ {
+  private rowToClaveProdServ(row: Record<string, unknown>): ClaveProdServ {
     return {
-      id: row.clave,
-      descripcion: row.descripcion,
-      incluirIVATrasladado: row.incluye_iva === 1 ? 'Sí' : 'No',
-      incluirIEPSTrasladado: row.incluye_ieps === 1 ? 'Sí' : 'No',
-      complementoQueDebeIncluir: row.complemento || '',
-      palabrasSimilares: row.palabras_similares || '',
-      fechaInicioVigencia: row.fecha_inicio_vigencia || '',
-      fechaFinVigencia: row.fecha_fin_vigencia || '',
+      id: String(row.clave ?? ''),
+      descripcion: String(row.descripcion ?? ''),
+      incluirIVATrasladado: Number(row.incluye_iva) === 1 ? 'Sí' : 'No',
+      incluirIEPSTrasladado: Number(row.incluye_ieps) === 1 ? 'Sí' : 'No',
+      complementoQueDebeIncluir: String(row.complemento ?? ''),
+      palabrasSimilares: String(row.palabras_similares ?? ''),
+      fechaInicioVigencia: String(row.fecha_inicio_vigencia ?? ''),
+      fechaFinVigencia: String(row.fecha_fin_vigencia ?? ''),
       estimuloFranjaFronteriza: '',
     };
   }
@@ -92,12 +93,10 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
   /**
    * Seed minimal data if SQLite is empty (for CI/dev without full DB).
    */
-  protected ensureMinimalSchema(db: any): void {
+  protected ensureMinimalSchema(db: Database.Database): void {
     const hasTable = db
-      .prepare(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='clave_prod_serv' LIMIT 1"
-      )
-      .get();
+      .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='clave_prod_serv' LIMIT 1")
+      .get() as Record<string, unknown> | undefined;
     if (!hasTable) {
       db.exec(
         `
@@ -124,7 +123,10 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     }
 
     if (this._seeded) return;
-    const count = db.prepare('SELECT COUNT(*) AS c FROM clave_prod_serv').get().c as number;
+    const countRow = db.prepare('SELECT COUNT(*) AS c FROM clave_prod_serv').get() as {
+      c?: unknown;
+    };
+    const count = typeof countRow?.c === 'number' ? countRow.c : Number(countRow?.c ?? 0);
     if (count === 0) {
       const sampleRows = [
         {
@@ -158,13 +160,21 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
       const insertFts = db.prepare(
         `INSERT INTO clave_prod_serv_fts (clave, descripcion, complemento, palabras_similares) VALUES (@clave, @descripcion, @complemento, @palabras_similares)`
       );
-      const tx = db.transaction((rows: any[]) => {
-        rows.forEach((row) => {
+    const maybeTx = (db as { transaction?: (cb: (rows: Record<string, unknown>[]) => void) => (rows: Record<string, unknown>[]) => void }).transaction;
+    if (maybeTx) {
+      const tx = maybeTx((rows: Record<string, unknown>[]) => {
+        rows.forEach((row: Record<string, unknown>) => {
           insert.run(row);
           insertFts.run(row);
         });
       });
       tx(sampleRows);
+    } else {
+      sampleRows.forEach((row) => {
+        insert.run(row);
+        insertFts.run(row);
+      });
+    }
     }
     this._seeded = true;
   }
@@ -176,7 +186,10 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const row = this.queryOne('SELECT * FROM clave_prod_serv WHERE clave = ?', [id]);
+      const row = this.queryOne<Record<string, unknown>>(
+        'SELECT * FROM clave_prod_serv WHERE clave = ?',
+        [id]
+      );
       if (row) return this.rowToClaveProdServ(row);
       return this.getFallbackData().find((item: ClaveProdServ) => item.id === id);
     } else {
@@ -199,7 +212,7 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
          WHERE clave_prod_serv_fts MATCH ?
          LIMIT ?`,
         [query, limit]
-      );
+      ) as Record<string, unknown>[];
       const mapped = rows.map((row) => this.rowToClaveProdServ(row));
       if (mapped.length > 0) return mapped;
       return this.searchFallback(query, limit);
@@ -236,10 +249,10 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const rows = this.query('SELECT * FROM clave_prod_serv WHERE clave LIKE ? LIMIT ?', [
-        `${prefix}%`,
-        limit,
-      ]);
+      const rows = this.query(
+        'SELECT * FROM clave_prod_serv WHERE clave LIKE ? LIMIT ?',
+        [`${prefix}%`, limit]
+      ) as Record<string, unknown>[];
       const mapped = rows.map((row) => this.rowToClaveProdServ(row));
       if (mapped.length > 0) return mapped;
       return this.getFallbackData()
@@ -257,10 +270,10 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const rows = this.query('SELECT * FROM clave_prod_serv WHERE incluye_iva = ? LIMIT ?', [
-        includesIVA ? 1 : 0,
-        limit,
-      ]);
+      const rows = this.query(
+        'SELECT * FROM clave_prod_serv WHERE incluye_iva = ? LIMIT ?',
+        [includesIVA ? 1 : 0, limit]
+      ) as Record<string, unknown>[];
       return rows.map((row) => this.rowToClaveProdServ(row));
     } else {
       return this._data!.filter(
@@ -276,10 +289,10 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const rows = this.query('SELECT * FROM clave_prod_serv WHERE incluye_ieps = ? LIMIT ?', [
-        includesIEPS ? 1 : 0,
-        limit,
-      ]);
+      const rows = this.query(
+        'SELECT * FROM clave_prod_serv WHERE incluye_ieps = ? LIMIT ?',
+        [includesIEPS ? 1 : 0, limit]
+      ) as Record<string, unknown>[];
       return rows.map((row) => this.rowToClaveProdServ(row));
     } else {
       return this._data!.filter(
@@ -295,7 +308,10 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const rows = this.query('SELECT * FROM clave_prod_serv LIMIT ? OFFSET ?', [limit, offset]);
+      const rows = this.query(
+        'SELECT * FROM clave_prod_serv LIMIT ? OFFSET ?',
+        [limit, offset]
+      ) as Record<string, unknown>[];
       const mapped = rows.map((row) => this.rowToClaveProdServ(row));
       if (mapped.length > 0) return mapped;
       return this.getFallbackData().slice(offset, offset + limit);
@@ -333,7 +349,7 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
          WHERE fecha_fin_vigencia IS NULL OR fecha_fin_vigencia = ''
         LIMIT ?`,
         [limit]
-      );
+      ) as Record<string, unknown>[];
       const mapped = rows.map((row) => this.rowToClaveProdServ(row));
       if (mapped.length > 0) return mapped;
       return this.getFallbackData().slice(0, limit);

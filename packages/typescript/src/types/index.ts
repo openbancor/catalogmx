@@ -28,7 +28,7 @@ export interface CurpInput {
 export interface ValidationResult {
   valid: boolean;
   error?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 // Catalog types
@@ -77,6 +77,9 @@ export interface Localidad {
   viviendas_habitadas: number;
   distancia_km?: number; // Agregado por búsqueda de coordenadas
 }
+
+export type CatalogData = Record<string, unknown> | Record<string, unknown>[];
+export type CatalogLookup = Record<string, unknown>;
 
 export interface PostalCode {
   cp: string;
@@ -155,7 +158,7 @@ export interface ObjetoImp {
 export interface CatalogItem {
   id: string;
   name: string;
-  [key: string]: any;
+  [key: string]: string | number | boolean | null | undefined;
 }
 
 // SAT Comercio Exterior types

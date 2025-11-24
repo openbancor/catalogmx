@@ -6,13 +6,14 @@ export class Periodicidad {
 
   private static getData(): CatalogItem[] {
     if (this._data === null) {
-      this._data = loadCatalogObject<any>('sat/cfdi_4.0/c_Periodicidad.json').map((item: any) => ({
-        id: item.valor,
-        name: item.descripcion || item.valor,
+      const raw = loadCatalogObject<Record<string, unknown>>('sat/cfdi_4.0/c_Periodicidad.json');
+      this._data = raw.map((item) => ({
+        id: String(item.valor ?? ''),
+        name: String(item.descripcion ?? item.valor ?? ''),
         ...item,
       }));
     }
-    return this._data;
+    return this._data ?? [];
   }
 
   static getById(id: string): CatalogItem | undefined {

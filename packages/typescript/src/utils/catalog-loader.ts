@@ -10,7 +10,7 @@ import * as fs from 'fs';
  * Base class for lazy-loading catalogs
  */
 export abstract class CatalogLoader<T> {
-  private static _cache: Map<string, any> = new Map();
+  private static _cache: Map<string, unknown> = new Map();
   protected abstract getDataPath(): string;
 
   /**
@@ -21,7 +21,7 @@ export abstract class CatalogLoader<T> {
 
     // Check cache first
     if (CatalogLoader._cache.has(dataPath)) {
-      return CatalogLoader._cache.get(dataPath);
+      return CatalogLoader._cache.get(dataPath) as T[];
     }
 
     // Load from file

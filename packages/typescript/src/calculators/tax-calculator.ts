@@ -20,22 +20,22 @@ import {
 interface IVAData {
   metadata: object;
   tasas: IVATasa[];
-  exenciones: any[];
-  tasa_cero_productos: any[];
+  exenciones: unknown[];
+  tasa_cero_productos: unknown[];
 }
 
 interface RetencionesData {
   metadata: object;
   isr_retenciones: RetencionISR[];
   iva_retenciones: RetencionIVA[];
-  retenciones_definitivas: any[];
+  retenciones_definitivas: unknown[];
 }
 
 interface ImpuestosLocalesData {
   metadata: object;
   impuesto_nomina: ImpuestoEstatal[];
   impuesto_hospedaje: ImpuestoEstatal[];
-  otros_impuestos_estatales: any[];
+  otros_impuestos_estatales: unknown[];
   predial: object;
 }
 
