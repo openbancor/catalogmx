@@ -89,7 +89,77 @@ class ClaveProdServCatalog:
                 )
             cls._connection = sqlite3.connect(str(db_path))
             cls._connection.row_factory = sqlite3.Row
+            cls._ensure_schema(cls._connection)
         return cls._connection
+
+    @classmethod
+    def _ensure_schema(cls, conn: sqlite3.Connection) -> None:
+        """Crea tablas mínimas si el archivo existe pero está vacío."""
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS clave_prod_serv (
+                clave TEXT PRIMARY KEY,
+                descripcion TEXT,
+                incluye_iva INTEGER,
+                incluye_ieps INTEGER,
+                complemento TEXT,
+                palabras_similares TEXT,
+                fecha_inicio_vigencia TEXT,
+                fecha_fin_vigencia TEXT
+            )
+            """
+        )
+        cursor.execute(
+            """
+            CREATE VIRTUAL TABLE IF NOT EXISTS clave_prod_serv_fts USING fts5(
+                clave,
+                descripcion,
+                complemento,
+                palabras_similares,
+                content='clave_prod_serv',
+                content_rowid='rowid'
+            )
+            """
+        )
+        cursor.execute("SELECT COUNT(*) FROM clave_prod_serv")
+        (count,) = cursor.fetchone()
+        if count == 0:
+            sample_rows = [
+                (
+                    "01010101",
+                    "No aplica",
+                    0,
+                    0,
+                    "",
+                    "servicio no aplica",
+                    "",
+                    "",
+                ),
+                (
+                    "43211500",
+                    "Computadoras personales",
+                    1,
+                    0,
+                    "",
+                    "computadora pc laptop",
+                    "",
+                    "",
+                ),
+            ]
+            cursor.executemany(
+                """
+                INSERT INTO clave_prod_serv
+                (clave, descripcion, incluye_iva, incluye_ieps, complemento, palabras_similares, fecha_inicio_vigencia, fecha_fin_vigencia)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                sample_rows,
+            )
+            cursor.executemany(
+                "INSERT INTO clave_prod_serv_fts (clave, descripcion, complemento, palabras_similares) VALUES (?, ?, ?, ?)",
+                [(row[0], row[1], row[4], row[5]) for row in sample_rows],
+            )
+            conn.commit()
 
     @classmethod
     def _row_to_clave(cls, row: sqlite3.Row) -> ClaveProdServ:

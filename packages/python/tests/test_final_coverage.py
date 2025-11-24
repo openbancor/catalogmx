@@ -6,7 +6,6 @@ Covers all remaining uncovered lines
 from datetime import date
 
 from catalogmx.catalogs.banxico import BankCatalog, CodigosPlazaCatalog, MonedasDivisas, UDICatalog
-from catalogmx.catalogs.ift import CodigosLADACatalog
 from catalogmx.catalogs.inegi import StateCatalog
 from catalogmx.catalogs.mexico import HoyNoCirculaCatalog, PlacasFormatosCatalog, SalariosMinimos, UMACatalog
 from catalogmx.catalogs.sat.carta_porte import AeropuertosCatalog, CarreterasCatalog, ConfigAutotransporteCatalog, MaterialPeligrosoCatalog, PuertosMaritimos, TipoEmbalajeCatalog, TipoPermisoCatalog
@@ -90,20 +89,6 @@ class TestUDICatalogFinal:
             result = UDICatalog.calcular_variacion(fecha_inicio, fecha_fin)
             if result is not None:
                 assert isinstance(result, float)
-
-
-class TestCodigosLADAFinal:
-    """Final tests for Codigos LADA"""
-
-    def test_formatear_numero_unknown_lada(self):
-        """Test formatting number with unknown LADA"""
-        result = CodigosLADACatalog.formatear_numero("999-1234-5678")
-        assert isinstance(result, str)
-
-    def test_get_info_numero_invalid(self):
-        """Test get_info_numero with invalid format"""
-        result = CodigosLADACatalog.get_info_numero("invalid")
-        assert result is None
 
 
 class TestStateCatalogFinal:
@@ -339,4 +324,3 @@ class TestHelpersFinal:
             fecha_constitucion=date(2009, 9, 9)
         )
         assert len(result) == 12
-

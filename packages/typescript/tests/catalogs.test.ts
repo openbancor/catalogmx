@@ -8,7 +8,6 @@ import {
   InstitucionesFinancieras,
   MonedasDivisas,
   OperadoresMoviles,
-  CodigosLADA,
   StateCatalog,
   MunicipiosCatalog,
   MunicipiosCompletoCatalog,
@@ -245,82 +244,6 @@ describe('IFT Catalogs', () => {
     const share = OperadoresMoviles.getMarketSharePorTipo();
     expect(share.OMR).toBeGreaterThan(90); // OMR dominan el mercado
     expect(share.OMV).toBeLessThan(10);
-  });
-
-  test('should get all LADA codes', () => {
-    const all = CodigosLADA.getAll();
-    expect(all.length).toBeGreaterThan(200); // ~231 codes
-  });
-
-  test('should find LADA code', () => {
-    const cdmx = CodigosLADA.buscarPorLADA('55');
-    expect(cdmx).toBeDefined();
-    expect(cdmx?.ciudad).toContain('México');
-  });
-
-  test('should search by city', () => {
-    const guadalajara = CodigosLADA.buscarPorCiudad('Guadalajara');
-    expect(guadalajara.length).toBeGreaterThan(0);
-  });
-
-  test('should get codes by state', () => {
-    const jalisco = CodigosLADA.getPorEstado('Jalisco');
-    expect(jalisco.length).toBeGreaterThan(5);
-  });
-
-  test('should get metropolitan codes', () => {
-    const metro = CodigosLADA.getMetropolitanas();
-    expect(metro.length).toBeGreaterThan(10);
-    metro.forEach(c => {
-      expect(c.tipo).toBe('metropolitana');
-    });
-  });
-
-  test('should get border codes', () => {
-    const fronterizas = CodigosLADA.getFronterizas();
-    expect(fronterizas.length).toBeGreaterThan(10);
-    fronterizas.forEach(c => {
-      expect(c.tipo).toBe('fronteriza');
-    });
-  });
-
-  test('should get tourist codes', () => {
-    const turisticas = CodigosLADA.getTuristicas();
-    expect(turisticas.length).toBeGreaterThan(10);
-    turisticas.forEach(c => {
-      expect(c.tipo).toBe('turistica');
-    });
-  });
-
-  test('should validate phone number (10 digits)', () => {
-    const result = CodigosLADA.validarNumero('5512345678');
-    expect(result.valid).toBe(true);
-    expect(result.lada).toBe('55');
-    expect(result.ciudad).toContain('México');
-  });
-
-  test('should reject invalid phone number', () => {
-    const result = CodigosLADA.validarNumero('123'); // Too short
-    expect(result.valid).toBe(false);
-    expect(result.error).toBeDefined();
-  });
-
-  test('should format phone number', () => {
-    const formatted = CodigosLADA.formatearNumero('5512345678');
-    expect(formatted).toContain('55');
-    expect(formatted.replace(/\s/g, '')).toBe('5512345678');
-  });
-
-  test('should get phone number info', () => {
-    const info = CodigosLADA.getInfoNumero('5512345678');
-    expect(info).toBeDefined();
-    expect(info?.lada).toBe('55');
-    expect(info?.tipo).toBe('metropolitana');
-  });
-
-  test('should get codes by region', () => {
-    const noroeste = CodigosLADA.getPorRegion('Noroeste');
-    expect(noroeste.length).toBeGreaterThan(0);
   });
 });
 

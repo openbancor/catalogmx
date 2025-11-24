@@ -120,7 +120,6 @@ Para **producción con datos completos** (2,469 municipios, ~150k códigos posta
   - Settlement types
 
 - **IFT** (Phase 5)
-  - LADA codes
   - Phone number validation
   - Geographic numbering zones
 
@@ -543,7 +542,6 @@ catalogmx/
 ### 📋 Phase 5: Complementos
 - [ ] SEPOMEX postal codes (150k - SQLite)
 - [ ] IFT telephony catalogs
-  - [ ] LADA codes
   - [ ] Phone number validator
   - [ ] Geographic zones
 - [ ] CONDUSEF financial products

@@ -196,7 +196,6 @@ Telecommunications catalogs:
 
 ### IftCodigosLada
 - **Records**: 700+ area codes
-- **File**: `ift/codigos_lada.json`
 - **Usage**: `IftCodigosLada.getByLada('55')`
 - **Features**: Search by city name
 

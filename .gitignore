@@ -24,6 +24,9 @@ lib64
 # Allow Dart package sources to be published
 !packages/dart/lib/
 !packages/dart/lib/**
+# Allow webapp lib folder
+!packages/webapp/src/lib/
+!packages/webapp/src/lib/**
 venv*/
 pyvenv*/
 
@@ -67,6 +70,8 @@ docs/_build
 .bootstrap
 .appveyor.token
 *.bak
+*.sqlite3-wal
+*.sqlite3-shm
 
 # Temporary download files
 tmp/

@@ -123,7 +123,6 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 - [ ] c_RiesgoPuesto (5 niveles)
 
 #### IFT
-- [ ] Códigos LADA (~400 códigos)
 - [ ] Zonas de numeración (~50 zonas)
 
 #### Banxico SIE

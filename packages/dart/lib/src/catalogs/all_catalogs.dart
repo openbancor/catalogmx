@@ -283,45 +283,7 @@ class BanxicoUDIs {
   }
 }
 
-// ============================================================================
-// IFT CATALOGS (Telecom)
-// ============================================================================
-
-/// IFT Area Codes (LADA codes)
-class IftCodigosLada {
-  static List<Map<String, dynamic>>? _data;
-  static Map<String, Map<String, dynamic>>? _byCode;
-
-  static void _loadData() {
-    if (_data != null) return;
-    _data = BaseCatalog.loadJsonDataSync('ift/codigos_lada.json');
-    _byCode = {for (var item in _data!) item['lada'] as String: item};
-  }
-
-  static List<Map<String, dynamic>> getAll() {
-    _loadData();
-    return List.from(_data!);
-  }
-
-  static Map<String, dynamic>? getByLada(String lada) {
-    _loadData();
-    return _byCode![lada];
-  }
-
-  static bool isValid(String lada) => getByLada(lada) != null;
-
-  static List<Map<String, dynamic>> search(String query) {
-    _loadData();
-    final normalized = query.toLowerCase();
-    return _data!.where((item) {
-      final city = (item['ciudad'] as String? ?? item['city'] as String? ?? '')
-          .toLowerCase();
-      return city.contains(normalized);
-    }).toList();
-  }
-}
-
-/// IFT Mobile Operators
+// IFT Mobile Operators
 class IftOperadoresMoviles {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;

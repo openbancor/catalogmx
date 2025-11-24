@@ -31,7 +31,7 @@
 - [x] **SEPOMEX**: 157,252 códigos postales (43.53 MB)
 - [x] **INEGI**: 2,478 municipios completos (0.98 MB)
 - [x] **INEGI**: 10,635 localidades con GPS (5.22 MB)
-- [x] **IFT**: Catálogos de telecomunicaciones (Operadores móviles, Códigos LADA)
+-- [x] **IFT**: Catálogos de telecomunicaciones (Operadores móviles)
 
 #### Funcionalidades
 - [x] Búsqueda geográfica por coordenadas GPS (para localidades)
@@ -53,13 +53,10 @@
 ### 🚧 v0.4.0 (Q1 2025) - En Progreso y Planeado
 
 #### 🔥 IFT Catalogs Completion (CRITICAL - Week 1-3)
-- [ ] **Complete missing 166 LADA codes** (231/397 actual → 397/397 target)
-- [ ] **Add geographical mapping to LADA codes**:
   - [ ] Add `cve_entidad` field (INEGI state codes)
   - [ ] Add `cve_municipio` field (INEGI municipality codes)
   - [ ] Add `cvegeo` field for localities (optional)
 - [ ] **Python implementation**:
-  - [ ] Create `catalogmx.catalogs.ift.codigos_lada.py` (full parity with TS)
   - [ ] Create `catalogmx.catalogs.ift.operadores_moviles.py`
   - [ ] Add 15+ catalog methods + geographical linkage
 - [ ] **TypeScript enhancements**:
@@ -973,4 +970,3 @@ v0.5.0 (Q2-Q3 2025) ░░░░░░░░░░░░░░░░░░░░
 ---
 
 **¿Preguntas o sugerencias?** Abre un issue en GitHub o consulta [CONTRIBUTING.rst](CONTRIBUTING.rst)
-

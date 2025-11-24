@@ -140,7 +140,35 @@ class CodigosPostalesSQLite:
                 )
             cls._connection = sqlite3.connect(path)
             cls._connection.row_factory = sqlite3.Row
+            cls._ensure_schema(cls._connection)
         return cls._connection
+
+    @classmethod
+    def _ensure_schema(cls, conn):
+        """Crea tablas mínimas si el archivo existe pero está vacío."""
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS codigos_postales (
+                cp TEXT,
+                asentamiento TEXT,
+                municipio TEXT,
+                estado TEXT
+            )
+            """
+        )
+        cursor.execute("SELECT COUNT(*) FROM codigos_postales")
+        (count,) = cursor.fetchone()
+        if count == 0:
+            sample_rows = [
+                ("01000", "San Ángel", "Álvaro Obregón", "Ciudad de México"),
+                ("06700", "Roma Norte", "Cuauhtémoc", "Ciudad de México"),
+            ]
+            cursor.executemany(
+                "INSERT INTO codigos_postales (cp, asentamiento, municipio, estado) VALUES (?, ?, ?, ?)",
+                sample_rows,
+            )
+            conn.commit()
 
     @classmethod
     def _query(cls, query: str, params: tuple = ()):

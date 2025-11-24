@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 23% 97%;
+    --foreground: 220 26% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 26% 10%;
+    --primary: 161 94% 30%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 214 31% 93%;
+    --secondary-foreground: 221 39% 15%;
+    --muted: 213 27% 90%;
+    --muted-foreground: 220 10% 36%;
+    --accent: 162 64% 89%;
+    --accent-foreground: 162 94% 19%;
+    --destructive: 0 85% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 88%;
+    --input: 214 32% 88%;
+    --ring: 161 94% 30%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 218 25% 8%;
+    --foreground: 213 31% 91%;
+    --card: 220 19% 12%;
+    --card-foreground: 213 31% 91%;
+    --primary: 159 74% 45%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 220 19% 16%;
+    --secondary-foreground: 213 31% 91%;
+    --muted: 220 15% 18%;
+    --muted-foreground: 217 15% 65%;
+    --accent: 161 88% 24%;
+    --accent-foreground: 158 79% 86%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 16% 22%;
+    --input: 220 16% 22%;
+    --ring: 159 74% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Code blocks */
+pre {
+  @apply bg-slate-900 text-slate-50 p-4 rounded-lg overflow-x-auto text-sm;
+}
+
+code {
+  @apply font-mono;
+}
+
+/* Table styles */
+.data-table {
+  @apply w-full text-sm;
+}
+
+.data-table th {
+  @apply bg-muted px-4 py-3 text-left font-semibold text-muted-foreground sticky top-0;
+}
+
+.data-table td {
+  @apply px-4 py-3 border-b border-border;
+}
+
+.data-table tr:hover td {
+  @apply bg-muted/50;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}

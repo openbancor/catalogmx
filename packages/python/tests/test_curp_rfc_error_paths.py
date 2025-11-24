@@ -549,17 +549,6 @@ class TestAllRemainingSmallGaps:
             result = PlacasFormatosCatalog.detect_formato(placa)
             assert result is None or isinstance(result, dict)
 
-    def test_codigos_lada_lines(self):
-        """Cover codigos_lada.py lines 364, 393"""
-        from catalogmx.catalogs.ift import CodigosLADACatalog
-        
-        # These are likely error returns in formatear_numero and get_info_numero
-        result1 = CodigosLADACatalog.formatear_numero("999-123-4567")
-        assert isinstance(result1, str)
-        
-        result2 = CodigosLADACatalog.get_info_numero("invalid")
-        assert result2 is None or isinstance(result2, dict)
-
     def test_nomina_utility_methods(self):
         """Cover nomina utility method lines"""
         from catalogmx.catalogs.sat.nomina import (
@@ -581,4 +570,3 @@ class TestAllRemainingSmallGaps:
         
         if hasattr(TipoRegimenCatalog, 'get_description'):
             TipoRegimenCatalog.get_description("01")
-

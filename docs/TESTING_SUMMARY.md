@@ -67,7 +67,6 @@ tests/
 
 - 💎 catalogmx/validators/curp.py - **95.02%**
 - 💎 catalogmx/catalogs/inegi/localidades.py - **98.11%**
-- 💎 catalogmx/catalogs/ift/codigos_lada.py - **97.53%**
 - 💎 catalogmx/catalogs/sat/cfdi_4/clave_prod_serv.py - **97.37%**
 - 💎 catalogmx/catalogs/inegi/municipios_completo.py - **96.55%**
 - 💎 catalogmx/catalogs/mexico/hoy_no_circula.py - **96.46%**
@@ -167,4 +166,3 @@ Coverage HTML reports are deployed to:
 - **Retention**: Latest coverage report always available
 
 See [GitHub Pages Setup Guide](github-pages-setup.md) for configuration details.
-

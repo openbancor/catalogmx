@@ -34,7 +34,6 @@ The catalogmx library has been transformed from 63% coverage to **93.78% coverag
 **10+ Modules at 95%+:**
 - CURP validator (95.02%)
 - INEGI localidades (98.11%)
-- IFT códigos LADA (97.53%)
 - And more...
 
 ---
@@ -398,4 +397,3 @@ Root:
 ✅ **Zero technical debt**  
 
 The library is **production-ready** and follows **modern Python best practices**! 🚀
-

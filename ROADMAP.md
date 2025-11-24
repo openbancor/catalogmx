@@ -25,7 +25,7 @@ This roadmap outlines the strategic development plan for catalogmx, an enterpris
 - INEGI: 4 catalogs (States, Municipalities, Localities with GPS)
 - SEPOMEX: 2 catalogs (157,252 postal codes)
 - Banxico: 5 catalogs (Banks, UDI, Financial institutions, Currencies, Plaza codes)
-- IFT: 2 catalogs (LADA codes, Mobile operators)
+- IFT: 1 catalog (Operadores móviles)
 - Mexico National: 4 catalogs (Salaries, UMA, Traffic, License plates)
 
 **Data Volume:**
@@ -435,4 +435,3 @@ See [CONTRIBUTING.rst](CONTRIBUTING.rst) for contribution guidelines.
 ---
 
 This roadmap is subject to change based on community feedback and business requirements.
-

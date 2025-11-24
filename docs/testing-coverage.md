@@ -142,7 +142,6 @@ jobs:
 
 - 💎 `catalogmx/validators/curp.py` - **95.02%**
 - 💎 `catalogmx/catalogs/inegi/localidades.py` - **98.11%**
-- 💎 `catalogmx/catalogs/ift/codigos_lada.py` - **97.53%**
 - 💎 `catalogmx/catalogs/sat/cfdi_4/clave_prod_serv.py` - **97.37%**
 - 💎 `catalogmx/catalogs/mexico/hoy_no_circula.py` - **96.46%**
 - 💎 `catalogmx/helpers.py` - **91.15%**
@@ -205,4 +204,3 @@ The project uses GitHub Actions for:
 - ✅ Building documentation
 
 See `.github/workflows/` for CI configuration.
-
