@@ -25,7 +25,6 @@ ASSETS=(
 echo "[release] Creating GitHub release '${TAG}' with sqlite assets"
 gh release create "${TAG}" \
   "${ASSETS[@]}" \
-  --clobber \
   --repo openbancor/catalogmx \
   --title "SQLite assets (${TAG})" \
   --notes "SQLite DBs for webapp/catalogmx"

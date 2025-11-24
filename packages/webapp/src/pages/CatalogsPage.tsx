@@ -108,10 +108,10 @@ export default function CatalogsPage() {
       <section className="grid gap-4 lg:grid-cols-[2fr,1fr]">
         <Card className="border-none bg-gradient-to-r from-primary to-emerald-500 text-primary-foreground shadow-lg">
           <CardHeader>
-          <CardTitle className="text-2xl">mexico.sqlite3</CardTitle>
-          <CardDescription className="text-primary-foreground/80">
+            <CardTitle className="text-2xl">mexico.sqlite3</CardTitle>
+            <CardDescription className="text-primary-foreground/80">
             Build SQLite unificado listo para consultas HTTP/Range sin servidor.
-          </CardDescription>
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 text-sm">
             <p>

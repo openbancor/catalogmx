@@ -26,6 +26,7 @@ import IEPSPage from '@/pages/IEPSPage';
 import ReferencePage from '@/pages/ReferencePage';
 import TablesPage from '@/pages/TablesPage';
 import CatalogListPage from '@/pages/CatalogListPage';
+import { LocaleProvider, useLocale } from '@/lib/locale';
 
 type PageId =
   | 'rfc' | 'curp' | 'clabe' | 'nss'
@@ -48,37 +49,37 @@ interface NavSection {
 
 const navigation: NavSection[] = [
   {
-    title: 'Validadores',
+    title: 'nav.validators.title',
     items: [
-      { id: 'rfc', label: 'RFC', icon: Building2 },
-      { id: 'curp', label: 'CURP', icon: User },
-      { id: 'clabe', label: 'CLABE', icon: CreditCard },
-      { id: 'nss', label: 'NSS', icon: Shield },
+      { id: 'rfc', label: 'nav.items.rfc', icon: Building2 },
+      { id: 'curp', label: 'nav.items.curp', icon: User },
+      { id: 'clabe', label: 'nav.items.clabe', icon: CreditCard },
+      { id: 'nss', label: 'nav.items.nss', icon: Shield },
     ]
   },
   {
-    title: 'Catálogos',
+    title: 'nav.catalogs.title',
     items: [
-      { id: 'catalogs', label: 'Explorar todo', icon: Database },
-      { id: 'tables', label: 'Tablas SQLite', icon: Database },
-      { id: 'catalog-list', label: 'Catálogos completos', icon: Layers },
-      { id: 'postal-codes', label: 'Códigos postales', icon: MapPin },
-      { id: 'localidades', label: 'Localidades', icon: MapPin },
-      { id: 'productos', label: 'Productos/Servicios', icon: Package },
+      { id: 'catalogs', label: 'nav.items.catalogs', icon: Database },
+      { id: 'tables', label: 'nav.items.tables', icon: Database },
+      { id: 'catalog-list', label: 'nav.items.catalogList', icon: Layers },
+      { id: 'postal-codes', label: 'nav.items.postal', icon: MapPin },
+      { id: 'localidades', label: 'nav.items.localidades', icon: MapPin },
+      { id: 'productos', label: 'nav.items.productos', icon: Package },
     ]
   },
   {
-    title: 'Calculadoras',
+    title: 'nav.calculators.title',
     items: [
-      { id: 'isr', label: 'ISR', icon: Receipt },
-      { id: 'iva', label: 'IVA', icon: Percent },
-      { id: 'ieps', label: 'IEPS', icon: DollarSign },
+      { id: 'isr', label: 'nav.items.isr', icon: Receipt },
+      { id: 'iva', label: 'nav.items.iva', icon: Percent },
+      { id: 'ieps', label: 'nav.items.ieps', icon: DollarSign },
     ]
   },
   {
-    title: 'Referencia',
+    title: 'nav.reference.title',
     items: [
-      { id: 'reference', label: 'Ejemplos de código', icon: Code },
+      { id: 'reference', label: 'nav.items.reference', icon: Code },
     ]
   }
 ];
@@ -106,6 +107,15 @@ const pageComponents: Record<PageId, React.ComponentType> = {
 };
 
 export default function App() {
+  return (
+    <LocaleProvider>
+      <AppInner />
+    </LocaleProvider>
+  );
+}
+
+function AppInner() {
+  const { locale, setLocale, t } = useLocale();
   const [currentPage, setCurrentPage] = useState<PageId>('catalogs');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const flatNavigation = navigation.flatMap(s => s.items);
@@ -153,7 +163,7 @@ export default function App() {
             <div key={section.title} className="mb-5">
               {sidebarOpen && (
                 <h3 className="px-4 mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground/80">
-                  {section.title}
+                  {t(section.title)}
                 </h3>
               )}
               <div className="space-y-1 px-2">
@@ -169,7 +179,7 @@ export default function App() {
                     )}
                   >
                     <item.icon className="h-4 w-4 flex-shrink-0" />
-                    {sidebarOpen && <span>{item.label}</span>}
+                    {sidebarOpen && <span>{t(item.label)}</span>}
                   </button>
                 ))}
               </div>
@@ -228,6 +238,9 @@ export default function App() {
             >
               Download DB
             </a>
+            <Button variant="outline" size="sm" onClick={() => setLocale(locale === 'es' ? 'en' : 'es')}>
+              {locale === 'es' ? 'EN' : 'ES'}
+            </Button>
             <ThemeToggle />
           </div>
         </header>
