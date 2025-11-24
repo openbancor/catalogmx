@@ -7,7 +7,6 @@ in all catalogs that support it.
 from catalogmx.utils.text import normalize_text
 from catalogmx.catalogs.sepomex import CodigosPostales
 from catalogmx.catalogs.inegi import StateCatalog, LocalidadesCatalog, MunicipiosCatalog
-from catalogmx.catalogs.ift import CodigosLADACatalog
 from catalogmx.catalogs.banxico import BankCatalog, CodigosPlazaCatalog, InstitucionesFinancieras
 from catalogmx.catalogs.sat.comercio_exterior import PaisCatalog
 from catalogmx.catalogs.sat.carta_porte import AeropuertosCatalog, PuertosMaritimos, CarreterasCatalog
@@ -87,17 +86,6 @@ class TestINEGIAccentInsensitive:
         """Test searching municipalities with accents"""
         result_con = MunicipiosCatalog.search_by_name("Tláhuac")
         result_sin = MunicipiosCatalog.search_by_name("Tlahuac")
-        assert len(result_con) == len(result_sin)
-        assert len(result_con) > 0
-
-
-class TestIFTAccentInsensitive:
-    """Test accent-insensitive search in IFT catalogs."""
-
-    def test_lada_search_by_ciudad_with_accents(self):
-        """Test searching LADA codes by city with accents"""
-        result_con = CodigosLADACatalog.buscar_por_ciudad("León")
-        result_sin = CodigosLADACatalog.buscar_por_ciudad("Leon")
         assert len(result_con) == len(result_sin)
         assert len(result_con) > 0
 

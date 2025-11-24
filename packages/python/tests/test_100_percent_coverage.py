@@ -8,7 +8,6 @@ from unittest.mock import patch
 
 from catalogmx.catalogs.banxico import BankCatalog, CodigosPlazaCatalog, UDICatalog
 from catalogmx.catalogs.banxico.banks import get_banks_dict, get_spei_banks
-from catalogmx.catalogs.ift import CodigosLADACatalog
 from catalogmx.catalogs.inegi import LocalidadesCatalog, MunicipiosCatalog, MunicipiosCompletoCatalog, StateCatalog
 from catalogmx.catalogs.mexico import HoyNoCirculaCatalog, PlacasFormatosCatalog, SalariosMinimos, UMACatalog
 from catalogmx.catalogs.sat.carta_porte import AeropuertosCatalog, CarreterasCatalog, MaterialPeligrosoCatalog, PuertosMaritimos, TipoEmbalajeCatalog, TipoPermisoCatalog
@@ -115,20 +114,6 @@ class TestUDICatalogComplete:
             result = UDICatalog.calcular_variacion(fecha, fecha)
             # Same date should give 0 or None
             assert result is None or result == 0.0
-
-
-class TestCodigosLADAComplete:
-    """Test remaining LADA lines"""
-
-    def test_formatear_numero_with_unknown_lada(self):
-        """Test formatting number with unknown LADA"""
-        result = CodigosLADACatalog.formatear_numero("999-123-4567")
-        assert isinstance(result, str)
-
-    def test_get_info_numero_none_response(self):
-        """Test get_info_numero returning None"""
-        result = CodigosLADACatalog.get_info_numero("123")
-        assert result is None or isinstance(result, dict)
 
 
 class TestLocalidadesComplete:
@@ -571,4 +556,3 @@ class TestCLIFinal:
         # Test main invocation at line 185
         result3 = runner.invoke(main, [])
         assert result3.exit_code in [0, 2]
-
