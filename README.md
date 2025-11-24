@@ -345,7 +345,6 @@ info = nss.get_nss_info("12345678903")
 
 ### IFT (Telecommunications Institute) - 2 Catalogs
 
-- **LADA Codes** (Códigos LADA): Area codes for Mexican telephony
 - **Mobile Operators** (Operadores Móviles): Licensed telecommunications operators
 
 ### Mexico National - 4 Catalogs

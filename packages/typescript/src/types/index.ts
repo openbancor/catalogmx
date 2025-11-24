@@ -480,15 +480,6 @@ export interface OperadorMovil {
   notas?: string;
 }
 
-// IFT - Códigos LADA
-export interface CodigoLADA {
-  lada: string;
-  ciudad: string;
-  estado: string;
-  tipo: 'metropolitana' | 'fronteriza' | 'turistica' | 'normal';
-  region: string;
-}
-
 // Banxico - Instituciones Financieras
 export interface TipoInstitucionFinanciera {
   codigo: string;

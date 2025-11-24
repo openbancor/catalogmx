@@ -11,7 +11,6 @@ export { UDICatalog } from './banxico/udis';
 
 // IFT (Instituto Federal de Telecomunicaciones)
 export { OperadoresMoviles } from './ift/operadores-moviles';
-export { CodigosLADA } from './ift/codigos-lada';
 
 // INEGI
 export { StateCatalog } from './inegi/states';

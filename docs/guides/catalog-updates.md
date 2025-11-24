@@ -206,18 +206,6 @@ http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/catCFDI.xls
 
 ### 📡 IFT (Instituto Federal de Telecomunicaciones)
 
-#### **Códigos LADA**
-📍 **Fuente**: http://www.ift.org.mx/usuarios-y-audiencias/recursos-usuarios/recursos/numeracion
-🔄 **Frecuencia**: **Raro** (cambios en plan de numeración)
-⚠️ **Criticidad**: BAJA
-
-| Catálogo | Registros | Estado |
-|----------|-----------|--------|
-| LADA | ~400 | ⏳ Pendiente |
-| Zonas numeración | ~50 | ⏳ Pendiente |
-
----
-
 ### 🌍 ISO (International Organization for Standardization)
 
 #### **Standards internacionales**
@@ -346,7 +334,6 @@ python scripts/check_catalog_updates.py --report
 ### Verificación Anual (Enero)
 - ✅ SAT Nómina 1.2
 - ✅ SAT Claves Pedimento (RGCE)
-- ✅ IFT LADA
 - ✅ ISO standards (4217, 3166)
 - ✅ INCOTERMS (cada 10 años)
 

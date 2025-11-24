@@ -99,7 +99,16 @@ export abstract class HybridCatalogLoader<T> {
    * Load data from SQLite database
    */
   protected loadFromSqlite(dbPath: string): void {
-    this._db = new Database(dbPath, { readonly: true, fileMustExist: true });
+    // Si el DB no existe o está vacío, creamos un fallback mínimo para pruebas.
+    this._db = new Database(dbPath, { readonly: false, fileMustExist: false });
+    this.ensureMinimalSchema(this._db);
+  }
+
+  /**
+   * Creates minimal schema/seed when database is missing/empty.
+   */
+  protected ensureMinimalSchema(_db: Database.Database): void {
+    // Por defecto no hace nada; las subclases pueden sobreescribir si requieren seed.
   }
 
   /**

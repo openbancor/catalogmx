@@ -300,28 +300,6 @@ export const CATALOGS: CatalogItem[] = [
       { codigo: 'CIF', nombre: 'Cost, Insurance and Freight', descripcion: 'Costo, seguro y flete (puerto de destino convenido)' }
     ]
   },
-  // IFT
-  {
-    id: 'lada',
-    name: 'Códigos LADA',
-    description: 'Mexican area codes',
-    category: 'ift',
-    source: 'IFT',
-    recordCount: '1,000+',
-    columns: ['LADA', 'Ciudad', 'Estado'],
-    data: [
-      { lada: '55', ciudad: 'Ciudad de México', estado: 'CDMX' },
-      { lada: '33', ciudad: 'Guadalajara', estado: 'Jalisco' },
-      { lada: '81', ciudad: 'Monterrey', estado: 'Nuevo León' },
-      { lada: '222', ciudad: 'Puebla', estado: 'Puebla' },
-      { lada: '664', ciudad: 'Tijuana', estado: 'Baja California' },
-      { lada: '442', ciudad: 'Querétaro', estado: 'Querétaro' },
-      { lada: '449', ciudad: 'Aguascalientes', estado: 'Aguascalientes' },
-      { lada: '614', ciudad: 'Chihuahua', estado: 'Chihuahua' },
-      { lada: '656', ciudad: 'Ciudad Juárez', estado: 'Chihuahua' },
-      { lada: '998', ciudad: 'Cancún', estado: 'Quintana Roo' }
-    ]
-  },
   // MEXICO
   {
     id: 'salarios-minimos',

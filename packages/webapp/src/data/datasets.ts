@@ -98,22 +98,6 @@ export const datasetConfigs = [
     description: 'Tipos de institución financiera',
   },
   {
-    id: 'ift-lada',
-    label: 'IFT - Códigos LADA',
-    type: 'json-array',
-    table: 'ift_codigos_lada',
-    column: 'codigos',
-    searchColumns: ['lada', 'ciudad', 'estado', 'region'],
-    columns: [
-      { key: 'lada', label: 'LADA' },
-      { key: 'ciudad', label: 'Ciudad' },
-      { key: 'estado', label: 'Estado' },
-      { key: 'tipo', label: 'Tipo' },
-      { key: 'region', label: 'Región' },
-    ],
-    description: 'Códigos LADA nacionales',
-  },
-  {
     id: 'ift-operadores',
     label: 'IFT - Operadores móviles',
     type: 'json-array',

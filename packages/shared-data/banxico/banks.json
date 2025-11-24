@@ -1,5 +1,12 @@
 [
   {
+    "code": "001",
+    "name": "BANXICO",
+    "full_name": "Banco de México",
+    "rfc": null,
+    "spei": true
+  },
+  {
     "code": "002",
     "name": "BANAMEX",
     "full_name": "Banco Nacional de México, S.A.",
