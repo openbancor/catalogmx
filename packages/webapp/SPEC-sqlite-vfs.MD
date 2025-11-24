@@ -7,6 +7,8 @@ Este instructivo te permitirá:
 	•	integrarlo con GitHub Actions,
 	•	obtener un archivo mexico.sqlite3 listo para usar con SQLite WASM.
 
+> Nota: `public/data/` ahora incluye el `mexico.sqlite3` completo. Si actualizas los catálogos, vuelve a generarlo desde `packages/shared-data` con `npm run data:build` para sincronizarlo.
+
 ⸻
 
 📘 INSTRUCTIVO COMPLETO

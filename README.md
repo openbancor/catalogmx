@@ -377,7 +377,7 @@ info = nss.get_nss_info("12345678903")
 
 - **Test Coverage**: 93.78% (926 Python tests + 221 TypeScript tests)
 - **50+ Modules**: 100% test coverage
-- **CI/CD**: Automated testing on Python 3.10-3.13 and Node 16+
+- **CI/CD**: Automated testing on Python 3.10-3.13 and Node 18+
 - **Production Validated**: Used in production environments
 
 ---
@@ -555,7 +555,7 @@ valid_for_fisica = RegimenFiscalCatalog.is_valid_for_persona_fisica("605")
 - Minimal memory footprint (lazy loading)
 
 **TypeScript/Node.js:**
-- Node.js 16 or higher
+- Node.js 18 or higher
 - npm 7 or higher
 
 **Dart/Flutter:**
@@ -705,7 +705,7 @@ def validate_rfc_view(request, rfc_code):
 - **Overall Coverage**: 93.78% (Python), ~90% (TypeScript), ~85% (Dart)
 - **Total Tests**: 926 (Python) + 221 (TypeScript) + 59 (Dart) = 1,206
 - **Modules at 100%**: 50+ modules including all core validators
-- **CI/CD**: Automated testing on Python 3.10-3.13, Node.js 16+, and Dart stable/beta
+- **CI/CD**: Automated testing on Python 3.10-3.13, Node.js 18+, and Dart stable/beta
 
 ### Running Tests
 

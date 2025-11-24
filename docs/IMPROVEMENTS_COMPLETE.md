@@ -187,7 +187,7 @@ npm run build
 **Package Metadata:**
 - Name: catalogmx
 - Version: 0.3.0
-- Node: >=16.0.0
+- Node: >=18.0.0
 - Dependencies: better-sqlite3, sql.js
 - License: BSD-2-Clause
 

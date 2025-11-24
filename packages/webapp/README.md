@@ -4,6 +4,8 @@ Interactive demonstration and documentation for the catalogmx library - a compre
 
 Built with **React 18**, **TypeScript**, **Tailwind CSS**, and **shadcn/ui** components.
 
+> The SQLite database in `public/data/` now ships with the full catalog set. Regenerate it anytime from `packages/shared-data` with `npm run data:build` (this also syncs the output to `public/data/`).
+
 ## Features
 
 - **Validators Demo**: Interactive validation and generation for RFC, CURP, CLABE, and NSS with detailed breakdowns

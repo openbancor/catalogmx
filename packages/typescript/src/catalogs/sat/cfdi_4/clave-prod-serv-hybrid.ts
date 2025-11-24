@@ -208,7 +208,11 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     }
   }
 
-  private searchFallback(query: string, limit: number, data?: ClaveProdServ[] | null): ClaveProdServ[] {
+  private searchFallback(
+    query: string,
+    limit: number,
+    data?: ClaveProdServ[] | null
+  ): ClaveProdServ[] {
     const source = data ?? this.getFallbackData();
     const queryLower = query.toLowerCase();
     const results: ClaveProdServ[] = [];
@@ -238,7 +242,9 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
       ]);
       const mapped = rows.map((row) => this.rowToClaveProdServ(row));
       if (mapped.length > 0) return mapped;
-      return this.getFallbackData().filter((item) => item.id.startsWith(prefix)).slice(0, limit);
+      return this.getFallbackData()
+        .filter((item) => item.id.startsWith(prefix))
+        .slice(0, limit);
     } else {
       return this._data!.filter((item) => item.id.startsWith(prefix)).slice(0, limit);
     }

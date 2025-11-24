@@ -13,7 +13,7 @@ Python
 TypeScript/JavaScript
 ~~~~~~~~~~~~~~~~~~~~~
 
-* Node.js 16 or higher
+* Node.js 18 or higher
 * npm, yarn, or pnpm
 
 Installing catalogmx

@@ -14,25 +14,6 @@ DATA_ROOT = Path(__file__).resolve().parent
 DEFAULT_OUTPUT = DATA_ROOT / "mexico.sqlite3"
 
 SQLITE_SOURCES = [
-    {
-        "path": DATA_ROOT / "sqlite" / "sepomex.db",
-        "tables": [
-            {"source": "codigos_postales", "target": "codigos_postales"},
-        ],
-    },
-    {
-        "path": DATA_ROOT / "sqlite" / "localidades.db",
-        "tables": [
-            {"source": "localidades", "target": "localidades"},
-            # Include FTS auxiliary tables only if needed later
-        ],
-    },
-    {
-        "path": DATA_ROOT / "sqlite" / "clave_prod_serv.db",
-        "tables": [
-            {"source": "clave_prod_serv", "target": "clave_prod_serv"},
-        ],
-    },
 ]
 
 INDEX_DEFINITIONS: dict[str, list[Sequence[str]]] = {

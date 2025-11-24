@@ -19,7 +19,7 @@ export default function InstallSection() {
               <FileCode className="h-5 w-5" />
               TypeScript / JavaScript
             </CardTitle>
-            <CardDescription>Node.js 16+ | Browser</CardDescription>
+            <CardDescription>Node.js 18+ | Browser</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>

@@ -86,7 +86,7 @@ Current version across all packages: **0.4.0**
 | Package | Version | Min Runtime |
 |---------|---------|-------------|
 | Python | 0.4.0 | Python 3.10+ |
-| TypeScript | 0.4.0 | Node.js 16+ |
+| TypeScript | 0.4.0 | Node.js 18+ |
 | Dart | 0.4.0 | Dart 3.0+ / Flutter 3.10+ |
 
 ---

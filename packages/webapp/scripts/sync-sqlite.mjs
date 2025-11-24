@@ -21,7 +21,13 @@ async function collectSqliteFiles(dir) {
     if (entry.isDirectory()) {
       files.push(...await collectSqliteFiles(fullPath));
     } else if (allowedExtensions.has(path.extname(entry.name).toLowerCase())) {
-      files.push(fullPath);
+      const stats = await fs.stat(fullPath);
+      files.push({
+        path: fullPath,
+        name: entry.name,
+        size: stats.size,
+        mtimeMs: stats.mtimeMs,
+      });
     }
   }
   return files;
@@ -46,11 +52,22 @@ export async function syncSqliteData({ silent = false } = {}) {
       return;
     }
 
+    // Prefer the largest (or newest) file when duplicates share the same name.
+    const dedupedByName = new Map();
+    for (const file of sqliteFiles) {
+      const current = dedupedByName.get(file.name);
+      const isLarger = !current || file.size > current.size;
+      const isNewerSameSize = current && file.size === current.size && file.mtimeMs > current.mtimeMs;
+      if (isLarger || isNewerSameSize) {
+        dedupedByName.set(file.name, file);
+      }
+    }
+    const filesToCopy = Array.from(dedupedByName.values());
+
     let copies = 0;
-    for (const filePath of sqliteFiles) {
-      const fileName = path.basename(filePath);
-      const destPath = path.join(publicDataDir, fileName);
-      await fs.copyFile(filePath, destPath);
+    for (const file of filesToCopy) {
+      const destPath = path.join(publicDataDir, file.name);
+      await fs.copyFile(file.path, destPath);
       copies += 1;
     }
 

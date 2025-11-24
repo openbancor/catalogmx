@@ -83,7 +83,7 @@ pip show catalogmx
 - **Version**: 0.3.0
 - **npm**: https://www.npmjs.com/package/catalogmx
 - **Build System**: TypeScript compiler
-- **Node Versions**: >=16.0.0
+- **Node Versions**: >=18.0.0
 
 ### Verify Package Build
 
@@ -289,4 +289,3 @@ Ensure versions match across:
 - `package.json`
 - `README.md`
 - `__init__.py` (if version is defined there)
-

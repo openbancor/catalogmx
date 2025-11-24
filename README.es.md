@@ -178,7 +178,7 @@ yarn add catalogmx
 ```
 
 **Requisitos**:
-- Node.js 16 o superior
+- Node.js 18 o superior
 - TypeScript 5.0+ (opcional, definiciones de tipos incluidas)
 
 ---
