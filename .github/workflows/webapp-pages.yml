@@ -42,7 +42,8 @@ jobs:
             --pattern "sepomex.db" \
             --pattern "clave_prod_serv.db" \
             --pattern "localidades.db" \
-            --dir packages/shared-data/sqlite
+            --dir packages/shared-data/sqlite \
+            --clobber
 
       - name: Install dependencies
         working-directory: packages/webapp
