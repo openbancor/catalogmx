@@ -218,7 +218,9 @@ function AppInner() {
 
           <div className="flex flex-col">
             <span className="text-xs uppercase tracking-widest text-muted-foreground">catalogmx</span>
-            <span className="text-base font-semibold">{currentNavItem?.label}</span>
+            <span className="text-base font-semibold">
+              {currentNavItem ? t(currentNavItem.label) : ''}
+            </span>
           </div>
 
           <div className="ml-auto flex items-center gap-2">
