@@ -3,11 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AlertTriangle, CheckCircle2, Database, Loader2, MapPin, Package, Building2, Search, ChevronLeft, ChevronRight } from 'lucide-react';
-import CatalogsSection from '@/components/CatalogsSection';
+import { Database, MapPin, Package, Building2 } from 'lucide-react';
 import { emitNavigation } from '@/lib/navigation';
-import { queryDatabase, queryJsonArrayTable, querySqlTable, listTables, getTableInfo, queryTable, getTableCount } from '@/lib/database';
-import { datasetConfigs, type DatasetConfig } from '@/data/datasets';
 
 const formatBytes = (bytes: number): string => {
   if (!bytes) return '-';
@@ -48,16 +45,14 @@ const sqliteCatalogs = [
   }
 ];
 
-const datasetOptions: DatasetConfig[] = datasetConfigs;
-
 export default function CatalogsPage() {
   const [fileMeta, setFileMeta] = useState<{ size?: number; modified?: string }>({});
-  const [tableCounts, setTableCounts] = useState<Record<string, number>>({});
-  const [tableNames, setTableNames] = useState<string[]>([]);
-  const [countError, setCountError] = useState<string | null>(null);
-  const [countsLoading, setCountsLoading] = useState(false);
-  const [tableFilter, setTableFilter] = useState('');
-  const [showAllCatalogs, setShowAllCatalogs] = useState(false);
+  const [tableCounts] = useState<Record<string, number>>({});
+  const [tableNames] = useState<string[]>([]);
+  const [countError] = useState<string | null>(null);
+  const [countsLoading] = useState(false);
+  const [tableFilter] = useState('');
+  const [showAllCatalogs] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -73,38 +68,7 @@ export default function CatalogsPage() {
     return () => controller.abort();
   }, []);
 
-  useEffect(() => {
-    let cancelled = false;
-    setCountsLoading(true);
-    setCountError(null);
-    (async () => {
-      try {
-        const tables = await listTables('mexico');
-        setTableNames(tables);
-        const entries = await Promise.all(
-          tables.map(async (table) => {
-            const total = await getTableCount('mexico', table);
-            return [table, total] as const;
-          })
-        );
-        if (!cancelled) {
-          setTableCounts(Object.fromEntries(entries));
-        }
-      } catch (error) {
-        console.error('[catalogs] failed to load table counts', error);
-        if (!cancelled) {
-          setCountError('No se pudieron leer los conteos desde mexico.sqlite3.');
-        }
-      } finally {
-        if (!cancelled) {
-          setCountsLoading(false);
-        }
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  useEffect(() => {}, []);
 
   const totalRows = useMemo(
     () => Object.values(tableCounts).reduce((sum, value) => sum + (value ?? 0), 0),
@@ -139,27 +103,20 @@ export default function CatalogsPage() {
     return value.toLocaleString('es-MX');
   };
 
-  const filteredTables = useMemo(() => {
-    const q = tableFilter.trim().toLowerCase();
-    return tableNames
-      .filter((name) => (q ? name.toLowerCase().includes(q) : true))
-      .sort((a, b) => a.localeCompare(b));
-  }, [tableFilter, tableNames]);
-
   return (
     <div className="space-y-8">
       <section className="grid gap-4 lg:grid-cols-[2fr,1fr]">
         <Card className="border-none bg-gradient-to-r from-primary to-emerald-500 text-primary-foreground shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl">mexico.sqlite3</CardTitle>
-            <CardDescription className="text-primary-foreground/80">
-              Serverless SQLite build that merges every catalog into a single file ready for HTTP range queries.
-            </CardDescription>
+          <CardTitle className="text-2xl">mexico.sqlite3</CardTitle>
+          <CardDescription className="text-primary-foreground/80">
+            Build SQLite unificado listo para consultas HTTP/Range sin servidor.
+          </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 text-sm">
             <p>
-              Drop <code className="font-mono">mexico.sqlite3</code> in <code className="font-mono">/public/data</code> and the demo loads it locally with sql.js.
-              No server, no API keys—just deterministic compliance data.
+              Copia <code className="font-mono">mexico.sqlite3</code> en <code className="font-mono">/public/data</code> y el demo lo carga localmente con sql.js.
+              Sin servidor, sin API keys: datos normativos deterministas.
             </p>
             <div className="flex flex-wrap gap-3">
               <a
@@ -168,7 +125,7 @@ export default function CatalogsPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-primary shadow hover:bg-white"
               >
-                Download database
+                Descargar base de datos
               </a>
               <a
                 href="https://github.com/OpenBancor/catalogmx/blob/main/packages/webapp/SPEC-sqlite-vfs.MD"
@@ -176,15 +133,15 @@ export default function CatalogsPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full border border-white/60 px-4 py-2 text-sm font-semibold text-white/90 hover:bg-white/10"
               >
-                Read VFS spec
+                Leer spec de VFS
               </a>
             </div>
             <div className="flex flex-wrap gap-3 text-xs text-primary-foreground/80">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1">
-                Size: {fileMeta.size ? formatBytes(fileMeta.size) : '—'}
+                Tamaño: {fileMeta.size ? formatBytes(fileMeta.size) : '—'}
               </span>
               <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1">
-                Last modified: {formatDate(fileMeta.modified)}
+                Última modificación: {formatDate(fileMeta.modified)}
               </span>
             </div>
           </CardContent>
@@ -293,18 +250,7 @@ export default function CatalogsPage() {
       <AllTablesExplorer />
       <DatasetExplorer />
 
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-semibold">Catálogos completos</h2>
-            <p className="text-sm text-muted-foreground">Búsqueda simple por nombre/descr. de los 58 catálogos.</p>
-          </div>
-          <Button variant="outline" size="sm" onClick={() => setShowAllCatalogs((v) => !v)}>
-            {showAllCatalogs ? 'Ocultar listado' : 'Ver listado'}
-          </Button>
-        </div>
-        {showAllCatalogs ? <CatalogsSection showHeader={false} /> : null}
-      </section>
+      {/* Catálogo completo movido a su propia página (CatalogListPage) */}
     </div>
   );
 }

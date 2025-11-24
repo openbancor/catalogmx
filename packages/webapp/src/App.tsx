@@ -24,10 +24,13 @@ import ISRPage from '@/pages/ISRPage';
 import IVAPage from '@/pages/IVAPage';
 import IEPSPage from '@/pages/IEPSPage';
 import ReferencePage from '@/pages/ReferencePage';
+import TablesPage from '@/pages/TablesPage';
+import CatalogListPage from '@/pages/CatalogListPage';
 
 type PageId =
   | 'rfc' | 'curp' | 'clabe' | 'nss'
-  | 'catalogs' | 'postal-codes' | 'localidades' | 'productos'
+  | 'catalogs' | 'tables' | 'catalog-list'
+  | 'postal-codes' | 'localidades' | 'productos'
   | 'isr' | 'iva' | 'ieps'
   | 'reference'
   | DatasetPageId;
@@ -45,7 +48,7 @@ interface NavSection {
 
 const navigation: NavSection[] = [
   {
-    title: 'Validators',
+    title: 'Validadores',
     items: [
       { id: 'rfc', label: 'RFC', icon: Building2 },
       { id: 'curp', label: 'CURP', icon: User },
@@ -54,24 +57,18 @@ const navigation: NavSection[] = [
     ]
   },
   {
-    title: 'Catalogs',
+    title: 'Catálogos',
     items: [
-      { id: 'catalogs', label: 'Browse All', icon: Database },
-      { id: 'postal-codes', label: 'Postal Codes', icon: MapPin },
-      { id: 'localidades', label: 'Localities', icon: MapPin },
-      { id: 'productos', label: 'Products/Services', icon: Package },
+      { id: 'catalogs', label: 'Explorar todo', icon: Database },
+      { id: 'tables', label: 'Tablas SQLite', icon: Database },
+      { id: 'catalog-list', label: 'Catálogos completos', icon: Layers },
+      { id: 'postal-codes', label: 'Códigos postales', icon: MapPin },
+      { id: 'localidades', label: 'Localidades', icon: MapPin },
+      { id: 'productos', label: 'Productos/Servicios', icon: Package },
     ]
   },
   {
-    title: 'Catálogos (individuales)',
-    items: datasetConfigs.map((d) => ({
-      id: `dataset-${d.id}` as PageId,
-      label: d.label,
-      icon: Layers,
-    })),
-  },
-  {
-    title: 'Calculators',
+    title: 'Calculadoras',
     items: [
       { id: 'isr', label: 'ISR', icon: Receipt },
       { id: 'iva', label: 'IVA', icon: Percent },
@@ -79,9 +76,9 @@ const navigation: NavSection[] = [
     ]
   },
   {
-    title: 'Reference',
+    title: 'Referencia',
     items: [
-      { id: 'reference', label: 'Code Examples', icon: Code },
+      { id: 'reference', label: 'Ejemplos de código', icon: Code },
     ]
   }
 ];
@@ -96,6 +93,8 @@ const pageComponents: Record<PageId, React.ComponentType> = {
   'clabe': CLABEPage,
   'nss': NSSPage,
   'catalogs': CatalogsPage,
+  'tables': TablesPage,
+  'catalog-list': CatalogListPage,
   'postal-codes': PostalCodesPage,
   'localidades': LocalidadesPage,
   'productos': ProductosPage,
