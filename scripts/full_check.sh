@@ -10,6 +10,22 @@ step() {
   echo "==> $*"
 }
 
+info() {
+  echo "ℹ️  $*"
+}
+
+step "Update UDI data from Banxico (optional)"
+if [ -n "${BANXICO_TOKEN:-}" ]; then
+  pushd "${ROOT_DIR}/packages/shared-data" >/dev/null
+  python3 scripts/fetch_udis_banxico.py --token "${BANXICO_TOKEN}" || {
+    echo "⚠️  Warning: Failed to fetch UDI data from Banxico, continuing with existing data..."
+  }
+  popd >/dev/null
+else
+  info "BANXICO_TOKEN not set, skipping UDI update"
+  info "To enable: export BANXICO_TOKEN='your_token' or get one at https://www.banxico.org.mx/SieAPIRest/service/v1/token"
+fi
+
 step "Build SQLite data (mexico.sqlite3 and public/data copies)"
 pushd "${ROOT_DIR}/packages/webapp" >/dev/null
 npm run data:build

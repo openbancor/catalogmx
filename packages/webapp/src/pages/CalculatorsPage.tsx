@@ -3,6 +3,7 @@ import { useLocale } from '@/lib/locale';
 import ISRPage from './ISRPage';
 import IVAPage from './IVAPage';
 import IEPSPage from './IEPSPage';
+import UDIPage from './UDIPage';
 
 export default function CalculatorsPage() {
   const { t } = useLocale();
@@ -21,21 +22,27 @@ export default function CalculatorsPage() {
           <TabsList className="w-full sm:w-auto justify-start bg-transparent sm:bg-muted p-0 sm:p-1 gap-2 sm:gap-1 h-auto">
             <TabsTrigger 
               value="isr" 
-              className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none border border-transparent data-[state=active]:border-primary/20 bg-muted/50 w-full sm:w-auto"
+              className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none border border-transparent data-[state=active]:border-primary/20 bg-muted/50 min-w-[70px]"
             >
-              ISR (Renta)
+              ISR
             </TabsTrigger>
             <TabsTrigger 
               value="iva" 
-              className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none border border-transparent data-[state=active]:border-primary/20 bg-muted/50 w-full sm:w-auto"
+              className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none border border-transparent data-[state=active]:border-primary/20 bg-muted/50 min-w-[70px]"
             >
-              IVA (Valor Agregado)
+              IVA
             </TabsTrigger>
             <TabsTrigger 
               value="ieps" 
-              className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none border border-transparent data-[state=active]:border-primary/20 bg-muted/50 w-full sm:w-auto"
+              className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none border border-transparent data-[state=active]:border-primary/20 bg-muted/50 min-w-[70px]"
             >
-              IEPS (Especial)
+              IEPS
+            </TabsTrigger>
+            <TabsTrigger 
+              value="udi" 
+              className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none border border-transparent data-[state=active]:border-primary/20 bg-muted/50 min-w-[70px]"
+            >
+              UDI
             </TabsTrigger>
           </TabsList>
         </div>
@@ -48,6 +55,9 @@ export default function CalculatorsPage() {
         </TabsContent>
         <TabsContent value="ieps" className="mt-0 focus-visible:ring-0">
           <IEPSPage />
+        </TabsContent>
+        <TabsContent value="udi" className="mt-0 focus-visible:ring-0">
+          <UDIPage />
         </TabsContent>
       </Tabs>
     </div>

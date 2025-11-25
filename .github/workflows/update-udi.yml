@@ -1,0 +1,79 @@
+name: Update UDI Data from Banxico
+
+on:
+  schedule:
+    # Run daily at 10 AM UTC (4 AM Mexico City)
+    - cron: '0 10 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-udi:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Fetch UDI data from Banxico
+        env:
+          BANXICO_TOKEN: ${{ secrets.BANXICO_TOKEN }}
+        run: |
+          cd packages/shared-data
+          python scripts/fetch_udis_banxico.py
+          
+      - name: Check for changes
+        id: check
+        run: |
+          cd packages/shared-data
+          if git diff --quiet banxico/udis.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            RECORDS=$(jq '. | length' banxico/udis.json)
+            LATEST=$(jq -r '.[-1] | "\(.fecha): \(.valor) MXN"' banxico/udis.json)
+            echo "records=$RECORDS" >> $GITHUB_OUTPUT
+            echo "latest=$LATEST" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.check.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "data: update UDI values from Banxico API"
+          title: "📊 Actualización automática de UDIs desde Banxico"
+          body: |
+            ## 📊 Actualización de UDIs
+            
+            Datos actualizados automáticamente desde la API de Banco de México.
+            
+            **Estadísticas:**
+            - 📈 Total de registros: ${{ steps.check.outputs.records }}
+            - 📅 Último valor: ${{ steps.check.outputs.latest }}
+            - 🤖 Fuente: API Banxico (Serie SF43718)
+            
+            Este PR actualiza el archivo `packages/shared-data/banxico/udis.json` con los valores más recientes.
+          branch: auto-update-udi
+          delete-branch: true
+          labels: |
+            data-update
+            automated
+
+      - name: Summary
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          echo "✅ UDI data updated successfully"
+          echo "📊 Total records: ${{ steps.check.outputs.records }}"
+          echo "📅 Latest: ${{ steps.check.outputs.latest }}"
+          echo "🔀 Pull request created"
+

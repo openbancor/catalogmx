@@ -54,18 +54,22 @@ class UDICatalog:
             if not fecha:
                 continue
 
+            tipo = record.get("tipo", "")
+
             existing = cls._by_fecha.get(fecha)
             if existing is None or (
-                record.get("tipo") == "diario" and existing.get("tipo") != "diario"
+                tipo in ("diario", "oficial_banxico")
+                and existing.get("tipo") not in ("diario", "oficial_banxico")
             ):
                 cls._by_fecha[fecha] = record
 
-            if record.get("tipo") == "diario":
+            # Treat "oficial_banxico" as daily data (it is)
+            if tipo in ("diario", "oficial_banxico"):
                 daily.append(record)
-            elif record.get("tipo") == "promedio_mensual":
+            elif tipo == "promedio_mensual":
                 key = f"{record.get('año')}-{int(record.get('mes', 0)):02d}"
                 cls._mensual[key] = record
-            elif record.get("tipo") == "promedio_anual":
+            elif tipo == "promedio_anual":
                 cls._anual[int(record.get("año"))] = record
 
         daily.sort(key=lambda r: r["fecha"])
