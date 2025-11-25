@@ -95,7 +95,9 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
    */
   protected ensureMinimalSchema(db: Database.Database): void {
     const hasTable = db
-      .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='clave_prod_serv' LIMIT 1")
+      .prepare(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='clave_prod_serv' LIMIT 1"
+      )
       .get() as Record<string, unknown> | undefined;
     if (!hasTable) {
       db.exec(
@@ -160,21 +162,27 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
       const insertFts = db.prepare(
         `INSERT INTO clave_prod_serv_fts (clave, descripcion, complemento, palabras_similares) VALUES (@clave, @descripcion, @complemento, @palabras_similares)`
       );
-    const maybeTx = (db as { transaction?: (cb: (rows: Record<string, unknown>[]) => void) => (rows: Record<string, unknown>[]) => void }).transaction;
-    if (maybeTx) {
-      const tx = maybeTx((rows: Record<string, unknown>[]) => {
-        rows.forEach((row: Record<string, unknown>) => {
+      const maybeTx = (
+        db as {
+          transaction?: (
+            cb: (rows: Record<string, unknown>[]) => void
+          ) => (rows: Record<string, unknown>[]) => void;
+        }
+      ).transaction;
+      if (maybeTx) {
+        const tx = maybeTx((rows: Record<string, unknown>[]) => {
+          rows.forEach((row: Record<string, unknown>) => {
+            insert.run(row);
+            insertFts.run(row);
+          });
+        });
+        tx(sampleRows);
+      } else {
+        sampleRows.forEach((row) => {
           insert.run(row);
           insertFts.run(row);
         });
-      });
-      tx(sampleRows);
-    } else {
-      sampleRows.forEach((row) => {
-        insert.run(row);
-        insertFts.run(row);
-      });
-    }
+      }
     }
     this._seeded = true;
   }
@@ -249,10 +257,10 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const rows = this.query(
-        'SELECT * FROM clave_prod_serv WHERE clave LIKE ? LIMIT ?',
-        [`${prefix}%`, limit]
-      ) as Record<string, unknown>[];
+      const rows = this.query('SELECT * FROM clave_prod_serv WHERE clave LIKE ? LIMIT ?', [
+        `${prefix}%`,
+        limit,
+      ]) as Record<string, unknown>[];
       const mapped = rows.map((row) => this.rowToClaveProdServ(row));
       if (mapped.length > 0) return mapped;
       return this.getFallbackData()
@@ -270,10 +278,10 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const rows = this.query(
-        'SELECT * FROM clave_prod_serv WHERE incluye_iva = ? LIMIT ?',
-        [includesIVA ? 1 : 0, limit]
-      ) as Record<string, unknown>[];
+      const rows = this.query('SELECT * FROM clave_prod_serv WHERE incluye_iva = ? LIMIT ?', [
+        includesIVA ? 1 : 0,
+        limit,
+      ]) as Record<string, unknown>[];
       return rows.map((row) => this.rowToClaveProdServ(row));
     } else {
       return this._data!.filter(
@@ -289,10 +297,10 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const rows = this.query(
-        'SELECT * FROM clave_prod_serv WHERE incluye_ieps = ? LIMIT ?',
-        [includesIEPS ? 1 : 0, limit]
-      ) as Record<string, unknown>[];
+      const rows = this.query('SELECT * FROM clave_prod_serv WHERE incluye_ieps = ? LIMIT ?', [
+        includesIEPS ? 1 : 0,
+        limit,
+      ]) as Record<string, unknown>[];
       return rows.map((row) => this.rowToClaveProdServ(row));
     } else {
       return this._data!.filter(
@@ -308,10 +316,10 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
     this.loadData();
 
     if (this._usingSqlite) {
-      const rows = this.query(
-        'SELECT * FROM clave_prod_serv LIMIT ? OFFSET ?',
-        [limit, offset]
-      ) as Record<string, unknown>[];
+      const rows = this.query('SELECT * FROM clave_prod_serv LIMIT ? OFFSET ?', [
+        limit,
+        offset,
+      ]) as Record<string, unknown>[];
       const mapped = rows.map((row) => this.rowToClaveProdServ(row));
       if (mapped.length > 0) return mapped;
       return this.getFallbackData().slice(offset, offset + limit);

@@ -8,6 +8,8 @@ const TRANSLATIONS: Record<Locale, Messages> = {
   es: {
     'nav.validators.title': 'Validadores',
     'nav.catalogs.title': 'Catálogos',
+    'nav.catalogs.quick': 'Catálogos',
+    'nav.catalogs.quickView': 'Abrir catálogo',
     'nav.calculators.title': 'Calculadoras',
     'nav.reference.title': 'Referencia',
     'nav.items.rfc': 'RFC',
@@ -51,6 +53,8 @@ const TRANSLATIONS: Record<Locale, Messages> = {
   en: {
     'nav.validators.title': 'Validators',
     'nav.catalogs.title': 'Catalogs',
+    'nav.catalogs.quick': 'Catalogs',
+    'nav.catalogs.quickView': 'Open catalog',
     'nav.calculators.title': 'Calculators',
     'nav.reference.title': 'Reference',
     'nav.items.rfc': 'RFC',

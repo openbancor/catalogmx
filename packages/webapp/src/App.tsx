@@ -123,6 +123,7 @@ function AppInner() {
   });
   const flatNavigation = navigation.flatMap(s => s.items);
   const currentNavItem = flatNavigation.find(i => i.id === currentPage);
+  const catalogQuickLinks = datasetConfigs.slice(0, 8);
 
   const PageComponent = pageComponents[currentPage];
 
@@ -224,6 +225,36 @@ function AppInner() {
               </div>
             </div>
           ))}
+
+          {sidebarOpen && (
+            <div className="mt-6 px-3">
+              <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/80 mb-2">
+                {t('nav.catalogs.quick')}
+              </div>
+              <div className="space-y-1">
+                {catalogQuickLinks.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setCurrentPage(`dataset-${cat.id}` as PageId)}
+                    className={cn(
+                      "w-full rounded-lg px-3 py-2 text-left text-xs font-medium hover:bg-muted",
+                      currentPage === `dataset-${cat.id}` ? "bg-primary/10 text-primary" : "text-muted-foreground"
+                    )}
+                  >
+                    <div className="truncate">{cat.label}</div>
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setCurrentPage('catalog-list')}
+                className={cn(
+                  "mt-2 w-full text-left text-xs font-semibold text-primary hover:underline"
+                )}
+              >
+                {t('nav.catalogs.quickView')}
+              </button>
+            </div>
+          )}
         </nav>
 
         {sidebarOpen && (

@@ -272,9 +272,7 @@ const VOCALES = 'AEIOUÁÉÍÓÚ';
 function cleanName(value: string, excluded: string[]): string {
   const upper = removeAccents(value.toUpperCase());
   const sanitized = upper.replace(/[^A-ZÑ&\s]/g, ' ');
-  const parts = sanitized
-    .split(/\s+/)
-    .filter((p) => p.length > 0 && !excluded.includes(p));
+  const parts = sanitized.split(/\s+/).filter((p) => p.length > 0 && !excluded.includes(p));
   return parts.join(' ');
 }
 
@@ -298,7 +296,12 @@ function removeAccents(str: string): string {
 }
 
 function cleanNameForHomoclave(value: string): string {
-  return removeAccents(value.toUpperCase().replace(/[^A-ZÑ&\s]/g, ' ').trim());
+  return removeAccents(
+    value
+      .toUpperCase()
+      .replace(/[^A-ZÑ&\s]/g, ' ')
+      .trim()
+  );
 }
 
 /**
@@ -467,7 +470,11 @@ export function generateRfcPersonaFisica(input: {
 
   const paternoSafe = paterno || 'X';
   let iniciales = paternoSafe.charAt(0);
-  const paternoVowel = paternoSafe.slice(1).split('').find((c) => VOCALES.includes(c)) || 'X';
+  const paternoVowel =
+    paternoSafe
+      .slice(1)
+      .split('')
+      .find((c) => VOCALES.includes(c)) || 'X';
   let extraLetter = false;
   iniciales += paternoVowel;
 

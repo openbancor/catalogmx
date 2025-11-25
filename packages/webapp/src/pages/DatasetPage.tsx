@@ -143,42 +143,42 @@ export default function DatasetPage({ datasetId }: DatasetPageProps) {
       )}
 
       {!error && (
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-muted">
-                  <tr>
-                    {config.columns.map((col) => (
-                      <th key={col.key} className="p-3 text-left font-medium">
-                        {col.label}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {rows.map((row, idx) => (
-                    <tr key={idx} className="hover:bg-muted/50">
-                      {config.columns.map((col) => {
-                        const value = row[col.key];
-                        const rendered =
-                          typeof value === 'boolean'
-                            ? value
+      <Card>
+        <CardContent className="p-0 overflow-x-auto">
+          <div className="min-w-full">
+            <table className="w-full min-w-[720px] text-sm table-auto">
+              <thead className="bg-muted">
+                <tr>
+                  {config.columns.map((col) => (
+                    <th key={col.key} className="p-3 text-left font-medium whitespace-nowrap">
+                      {col.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {rows.map((row, idx) => (
+                  <tr key={idx} className="hover:bg-muted/50">
+                    {config.columns.map((col) => {
+                      const value = row[col.key];
+                      const rendered =
+                        typeof value === 'boolean'
+                          ? value
                               ? 'Sí'
                               : 'No'
                             : value === null || value === undefined
                               ? '-'
                               : typeof value === 'object'
                                 ? JSON.stringify(value)
-                                : value;
-                        return (
-                          <td key={col.key} className="p-3">
-                            {rendered as React.ReactNode}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
+                          : value;
+                      return (
+                        <td key={col.key} className="p-3 align-top break-words">
+                          {rendered as React.ReactNode}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
                   {rows.length === 0 && (
                     <tr>
                       <td colSpan={config.columns.length} className="p-4 text-center text-muted-foreground">

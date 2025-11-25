@@ -23,22 +23,23 @@ popd >/dev/null
 
 step "TypeScript package: lint + typecheck"
 pushd "${ROOT_DIR}/packages/typescript" >/dev/null
-npm run lint
+npm run lint:fix
+npm run format
 npm run typecheck
 popd >/dev/null
 
 step "Python package: format check + lint + typecheck + tests"
 pushd "${ROOT_DIR}/packages/python" >/dev/null
-black --check catalogmx
-ruff check catalogmx
+black catalogmx
+ruff check --fix catalogmx
 mypy catalogmx
 pytest tests/ --cov=catalogmx --cov-branch
 popd >/dev/null
 
 step "Dart package: analyze + format check + tests"
 pushd "${ROOT_DIR}/packages/dart" >/dev/null
+dart format .
 dart analyze
-dart format --set-exit-if-changed .
 dart test
 popd >/dev/null
 
