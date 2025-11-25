@@ -433,9 +433,9 @@ export async function querySqlTable<T>(
 }
 
 export async function queryJsonArrayTable<T extends Record<string, unknown>>(
-  dbName: string,
-  table: string,
-  column: string,
+  _dbName: string,
+  jsonPath: string,
+  _column: string,
   {
     page = 1,
     pageSize = 50,
@@ -448,23 +448,13 @@ export async function queryJsonArrayTable<T extends Record<string, unknown>>(
     searchColumns?: string[];
   } = {}
 ): Promise<PaginatedResult<T>> {
-  const db = await loadDatabase(dbName);
-  const stmt = db.prepare(`SELECT ${column} FROM ${table} LIMIT 1`);
-  stmt.step();
-  const raw = stmt.get()[0];
-  stmt.free();
-
-  let records: T[] = [];
-  if (typeof raw === 'string') {
-    try {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        records = parsed as T[];
-      }
-    } catch (error) {
-      console.error('[database] Failed to parse JSON column', { table, column, error });
-    }
+  // Load JSON file directly from public/data directory
+  const response = await fetch(`/data/${jsonPath}`);
+  if (!response.ok) {
+    throw new Error(`Failed to load JSON file: ${jsonPath}`);
   }
+
+  const records: T[] = await response.json();
 
   const normalizedSearch = search ? normalizeText(search) : '';
   let filtered = records;

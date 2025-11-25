@@ -14,6 +14,7 @@ export type PageId =
   | 'postal-codes' | 'localidades' | 'productos' // Individual catalogs still routable?
   | 'rfc' | 'curp' | 'clabe' | 'nss' // Keep these as they might be used internally by the tabs or direct links
   | 'isr' | 'iva' | 'ieps'
+  | 'exchange' | 'inflation' | 'salary' // New calculators
   | DatasetPageId;
 
 export interface NavItem {

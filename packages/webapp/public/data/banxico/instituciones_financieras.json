@@ -1,0 +1,289 @@
+{
+  "metadata": {
+    "catalog": "Banxico_Instituciones_Financieras",
+    "description": "Catálogo de tipos de instituciones del sistema financiero mexicano",
+    "source": "Banco de México (Banxico)",
+    "last_updated": "2025-02-01",
+    "notes": "Catálogo de tipos de instituciones supervisadas y reguladas en México"
+  },
+  "tipos_institucion": [
+    {
+      "codigo": "01",
+      "tipo": "Banco Múltiple",
+      "descripcion": "Instituciones de crédito autorizadas para captar recursos del público y otorgar créditos",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley de Instituciones de Crédito",
+      "ejemplos": ["BBVA México", "Banorte", "Santander", "Citibanamex", "HSBC", "Scotiabank"]
+    },
+    {
+      "codigo": "02",
+      "tipo": "Banco de Desarrollo",
+      "descripcion": "Instituciones de banca de desarrollo del Gobierno Federal",
+      "regulador": "SHCP/CNBV",
+      "ley_aplicable": "Ley de Instituciones de Crédito",
+      "ejemplos": ["Bancomext", "Nafin", "Banobras", "SHF", "Financiera Rural"]
+    },
+    {
+      "codigo": "03",
+      "tipo": "Casa de Bolsa",
+      "descripcion": "Intermediarios autorizados para operar en el mercado de valores",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley del Mercado de Valores",
+      "ejemplos": ["GBM", "Actinver", "Accival", "Kuspit", "Vector"]
+    },
+    {
+      "codigo": "04",
+      "tipo": "Sociedad Financiera de Objeto Múltiple (SOFOM ENR)",
+      "descripcion": "Sociedades financieras de objeto múltiple no reguladas",
+      "regulador": "CONDUSEF",
+      "ley_aplicable": "Ley General de Organizaciones y Actividades Auxiliares del Crédito",
+      "ejemplos": ["SOFOM's de arrendamiento", "SOFOM's de factoraje"]
+    },
+    {
+      "codigo": "05",
+      "tipo": "Sociedad Financiera de Objeto Múltiple (SOFOM ER)",
+      "descripcion": "Sociedades financieras de objeto múltiple reguladas",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley General de Organizaciones y Actividades Auxiliares del Crédito",
+      "ejemplos": ["SOFOM's reguladas por CNBV"]
+    },
+    {
+      "codigo": "06",
+      "tipo": "Sociedad Cooperativa de Ahorro y Préstamo",
+      "descripcion": "Sociedades cooperativas autorizadas para realizar operaciones de ahorro y préstamo",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley de Ahorro y Crédito Popular",
+      "ejemplos": ["Caja Popular Mexicana", "Caja Morelia Valladolid"]
+    },
+    {
+      "codigo": "07",
+      "tipo": "Sociedad Financiera Popular",
+      "descripcion": "Sociedades anónimas de capital variable autorizadas para ahorro y crédito popular",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley de Ahorro y Crédito Popular",
+      "ejemplos": ["SOFIPO's varias"]
+    },
+    {
+      "codigo": "08",
+      "tipo": "Unión de Crédito",
+      "descripcion": "Organizaciones auxiliares del crédito que facilitan el uso del crédito a sus socios",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley General de Organizaciones y Actividades Auxiliares del Crédito",
+      "ejemplos": ["Uniones de crédito agrícolas", "Uniones de crédito industriales"]
+    },
+    {
+      "codigo": "09",
+      "tipo": "Arrendadora Financiera",
+      "descripcion": "Instituciones especializadas en arrendamiento financiero",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley General de Organizaciones y Actividades Auxiliares del Crédito",
+      "ejemplos": ["Arrendadoras filiales de bancos"]
+    },
+    {
+      "codigo": "10",
+      "tipo": "Empresa de Factoraje Financiero",
+      "descripcion": "Instituciones especializadas en operaciones de factoraje",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley General de Organizaciones y Actividades Auxiliares del Crédito",
+      "ejemplos": ["Empresas de factoraje varias"]
+    },
+    {
+      "codigo": "11",
+      "tipo": "Almacén General de Depósito",
+      "descripcion": "Instituciones autorizadas para el almacenamiento y custodia de mercancías",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley General de Organizaciones y Actividades Auxiliares del Crédito",
+      "ejemplos": ["Almacenadoras certificadas"]
+    },
+    {
+      "codigo": "12",
+      "tipo": "Casa de Cambio",
+      "descripcion": "Instituciones autorizadas para compra-venta de divisas",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley General de Organizaciones y Actividades Auxiliares del Crédito",
+      "ejemplos": ["Casas de cambio autorizadas"]
+    },
+    {
+      "codigo": "13",
+      "tipo": "Institución de Seguros",
+      "descripcion": "Compañías aseguradoras autorizadas",
+      "regulador": "CNSF",
+      "ley_aplicable": "Ley de Instituciones de Seguros y Fianzas",
+      "ejemplos": ["GNP", "AXA", "Mapfre", "Qualitas", "Inbursa Seguros"]
+    },
+    {
+      "codigo": "14",
+      "tipo": "Institución de Fianzas",
+      "descripcion": "Instituciones autorizadas para otorgar fianzas",
+      "regulador": "CNSF",
+      "ley_aplicable": "Ley de Instituciones de Seguros y Fianzas",
+      "ejemplos": ["Afianzadora Sofimex", "Fianzas Monterrey"]
+    },
+    {
+      "codigo": "15",
+      "tipo": "AFORE",
+      "descripcion": "Administradoras de Fondos para el Retiro",
+      "regulador": "CONSAR",
+      "ley_aplicable": "Ley de los Sistemas de Ahorro para el Retiro",
+      "ejemplos": ["Coppel", "XXI Banorte", "SURA", "Invercap", "Principal"]
+    },
+    {
+      "codigo": "16",
+      "tipo": "SIEFORE",
+      "descripcion": "Sociedades de Inversión Especializadas en Fondos para el Retiro",
+      "regulador": "CONSAR",
+      "ley_aplicable": "Ley de los Sistemas de Ahorro para el Retiro",
+      "ejemplos": ["SIEFORE's de AFORE's"]
+    },
+    {
+      "codigo": "17",
+      "tipo": "Sociedad de Inversión",
+      "descripcion": "Sociedades que invierten en instrumentos del mercado de valores",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley de Sociedades de Inversión",
+      "ejemplos": ["Fondos de inversión diversos"]
+    },
+    {
+      "codigo": "18",
+      "tipo": "Sociedad Operadora de Sociedades de Inversión",
+      "descripcion": "Sociedades que administran fondos de inversión",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley de Sociedades de Inversión",
+      "ejemplos": ["Operadoras de fondos"]
+    },
+    {
+      "codigo": "19",
+      "tipo": "Sociedad Distribuidora de Acciones de Sociedades de Inversión",
+      "descripcion": "Intermediarios para distribución de fondos de inversión",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley de Sociedades de Inversión",
+      "ejemplos": ["Distribuidoras independientes"]
+    },
+    {
+      "codigo": "20",
+      "tipo": "Sociedad Valuadora",
+      "descripcion": "Sociedades autorizadas para valuar activos financieros",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley del Mercado de Valores",
+      "ejemplos": ["Valuadoras certificadas"]
+    },
+    {
+      "codigo": "21",
+      "tipo": "Calificadora de Valores",
+      "descripcion": "Instituciones autorizadas para calificar valores y riesgos",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley del Mercado de Valores",
+      "ejemplos": ["HR Ratings", "Fitch México", "Moody's México", "S&P México"]
+    },
+    {
+      "codigo": "22",
+      "tipo": "Bolsa de Valores",
+      "descripcion": "Mercados organizados para la compraventa de valores",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley del Mercado de Valores",
+      "ejemplos": ["Bolsa Mexicana de Valores (BMV)", "Bolsa Institucional de Valores (BIVA)"]
+    },
+    {
+      "codigo": "23",
+      "tipo": "Bolsa de Derivados",
+      "descripcion": "Mercado de productos derivados",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley del Mercado de Valores",
+      "ejemplos": ["MexDer"]
+    },
+    {
+      "codigo": "24",
+      "tipo": "Contraparte Central de Valores",
+      "descripcion": "Cámara de compensación de valores",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley del Mercado de Valores",
+      "ejemplos": ["Asigna"]
+    },
+    {
+      "codigo": "25",
+      "tipo": "Depósito Central de Valores",
+      "descripcion": "Institución para depósito, custodia y liquidación de valores",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley del Mercado de Valores",
+      "ejemplos": ["Indeval"]
+    },
+    {
+      "codigo": "26",
+      "tipo": "Institución para el Depósito de Valores",
+      "descripcion": "Custodios de valores del mercado de valores",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley del Mercado de Valores",
+      "ejemplos": ["Indeval"]
+    },
+    {
+      "codigo": "27",
+      "tipo": "Proveedor de Precios",
+      "descripcion": "Instituciones autorizadas para proveer precios de valores",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley del Mercado de Valores",
+      "ejemplos": ["Proveedores de precios certificados"]
+    },
+    {
+      "codigo": "28",
+      "tipo": "Institución de Tecnología Financiera (ITF) - Financiamiento Colectivo",
+      "descripcion": "Plataformas de crowdfunding",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley para Regular las Instituciones de Tecnología Financiera (Ley Fintech)",
+      "ejemplos": ["Playbusiness", "Doopla", "Prestadero"]
+    },
+    {
+      "codigo": "29",
+      "tipo": "Institución de Tecnología Financiera (ITF) - Fondos de Pago Electrónico",
+      "descripcion": "Plataformas de pagos electrónicos",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley para Regular las Instituciones de Tecnología Financiera (Ley Fintech)",
+      "ejemplos": ["Mercado Pago", "PayPal México", "Stripe México"]
+    },
+    {
+      "codigo": "30",
+      "tipo": "Institución de Tecnología Financiera (ITF) - Activos Virtuales",
+      "descripcion": "Plataformas de intercambio de criptomonedas",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley para Regular las Instituciones de Tecnología Financiera (Ley Fintech)",
+      "ejemplos": ["Bitso", "Tauros"]
+    },
+    {
+      "codigo": "31",
+      "tipo": "Entidad de Ahorro y Crédito Popular",
+      "descripcion": "Entidades del sector de ahorro y crédito popular",
+      "regulador": "CNBV",
+      "ley_aplicable": "Ley de Ahorro y Crédito Popular",
+      "ejemplos": ["Cooperativas y SOFIPOs autorizadas"]
+    },
+    {
+      "codigo": "90",
+      "tipo": "Banco de México",
+      "descripcion": "Banco central de México",
+      "regulador": "Autónomo",
+      "ley_aplicable": "Ley del Banco de México",
+      "ejemplos": ["Banco de México (Banxico)"]
+    },
+    {
+      "codigo": "91",
+      "tipo": "IPAB",
+      "descripcion": "Instituto para la Protección al Ahorro Bancario",
+      "regulador": "Gobierno Federal",
+      "ley_aplicable": "Ley de Protección al Ahorro Bancario",
+      "ejemplos": ["IPAB"]
+    }
+  ],
+  "reguladores": {
+    "CNBV": "Comisión Nacional Bancaria y de Valores",
+    "CNSF": "Comisión Nacional de Seguros y Fianzas",
+    "CONSAR": "Comisión Nacional del Sistema de Ahorro para el Retiro",
+    "CONDUSEF": "Comisión Nacional para la Protección y Defensa de los Usuarios de Servicios Financieros",
+    "SHCP": "Secretaría de Hacienda y Crédito Público"
+  },
+  "estadisticas": {
+    "total_tipos": 33,
+    "entidades_reguladas_cnbv": 25,
+    "entidades_reguladas_cnsf": 2,
+    "entidades_reguladas_consar": 2,
+    "fecha_actualizacion": "2025-02-01"
+  }
+}

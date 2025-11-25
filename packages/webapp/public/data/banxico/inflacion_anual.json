@@ -1,0 +1,1658 @@
+[
+  {
+    "fecha": "2010-07-01",
+    "inflacion_anual": 1.61,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2010,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2010-08-01",
+    "inflacion_anual": 1.89,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2010,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2010-09-01",
+    "inflacion_anual": 2.43,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2010,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2010-10-01",
+    "inflacion_anual": 3.06,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2010,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2010-11-01",
+    "inflacion_anual": 3.89,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2010,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2010-12-01",
+    "inflacion_anual": 4.4,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2010,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2011-01-01",
+    "inflacion_anual": 0.49,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2011,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2011-02-01",
+    "inflacion_anual": 0.86,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2011,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2011-03-01",
+    "inflacion_anual": 1.06,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2011,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2011-04-01",
+    "inflacion_anual": 1.05,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2011,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2011-05-01",
+    "inflacion_anual": 0.3,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2011,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2011-06-01",
+    "inflacion_anual": 0.3,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2011,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2011-07-01",
+    "inflacion_anual": 0.78,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2011,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2011-08-01",
+    "inflacion_anual": 0.94,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2011,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2011-09-01",
+    "inflacion_anual": 1.19,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2011,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2011-10-01",
+    "inflacion_anual": 1.87,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2011,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2011-11-01",
+    "inflacion_anual": 2.97,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2011,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2011-12-01",
+    "inflacion_anual": 3.82,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2011,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2012-01-01",
+    "inflacion_anual": 0.71,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2012,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2012-02-01",
+    "inflacion_anual": 0.91,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2012,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2012-03-01",
+    "inflacion_anual": 0.97,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2012,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2012-04-01",
+    "inflacion_anual": 0.65,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2012,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2012-05-01",
+    "inflacion_anual": 0.34,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2012,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2012-06-01",
+    "inflacion_anual": 0.8,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2012,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2012-07-01",
+    "inflacion_anual": 1.36,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2012,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2012-08-01",
+    "inflacion_anual": 1.67,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2012,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2012-09-01",
+    "inflacion_anual": 2.12,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2012,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2012-10-01",
+    "inflacion_anual": 2.63,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2012,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2012-11-01",
+    "inflacion_anual": 3.33,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2012,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2012-12-01",
+    "inflacion_anual": 3.57,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2012,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2013-01-01",
+    "inflacion_anual": 0.4,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2013,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2013-02-01",
+    "inflacion_anual": 0.9,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2013,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2013-03-01",
+    "inflacion_anual": 1.64,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2013,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2013-04-01",
+    "inflacion_anual": 1.7,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2013,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2013-05-01",
+    "inflacion_anual": 1.37,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2013,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2013-06-01",
+    "inflacion_anual": 1.3,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2013,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2013-07-01",
+    "inflacion_anual": 1.27,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2013,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2013-08-01",
+    "inflacion_anual": 1.56,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2013,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2013-09-01",
+    "inflacion_anual": 1.94,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2013,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2013-10-01",
+    "inflacion_anual": 2.43,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2013,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2013-11-01",
+    "inflacion_anual": 3.38,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2013,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2013-12-01",
+    "inflacion_anual": 3.97,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2013,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2014-01-01",
+    "inflacion_anual": 0.89,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2014,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2014-02-01",
+    "inflacion_anual": 1.15,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2014,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2014-03-01",
+    "inflacion_anual": 1.43,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2014,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2014-04-01",
+    "inflacion_anual": 1.24,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2014,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2014-05-01",
+    "inflacion_anual": 0.91,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2014,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2014-06-01",
+    "inflacion_anual": 1.09,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2014,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2014-07-01",
+    "inflacion_anual": 1.37,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2014,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2014-08-01",
+    "inflacion_anual": 1.73,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2014,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2014-09-01",
+    "inflacion_anual": 2.18,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2014,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2014-10-01",
+    "inflacion_anual": 2.74,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2014,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2014-11-01",
+    "inflacion_anual": 3.57,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2014,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2014-12-01",
+    "inflacion_anual": 4.08,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2014,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2015-01-01",
+    "inflacion_anual": -0.09,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2015,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2015-02-01",
+    "inflacion_anual": 0.1,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2015,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2015-03-01",
+    "inflacion_anual": 0.51,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2015,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2015-04-01",
+    "inflacion_anual": 0.25,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2015,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2015-05-01",
+    "inflacion_anual": -0.26,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2015,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2015-06-01",
+    "inflacion_anual": -0.09,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2015,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2015-07-01",
+    "inflacion_anual": 0.06,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2015,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2015-08-01",
+    "inflacion_anual": 0.27,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2015,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2015-09-01",
+    "inflacion_anual": 0.65,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2015,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2015-10-01",
+    "inflacion_anual": 1.16,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2015,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2015-11-01",
+    "inflacion_anual": 1.72,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2015,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2015-12-01",
+    "inflacion_anual": 2.13,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2015,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2016-01-01",
+    "inflacion_anual": 0.38,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2016,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2016-02-01",
+    "inflacion_anual": 0.82,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2016,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2016-03-01",
+    "inflacion_anual": 0.97,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2016,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2016-04-01",
+    "inflacion_anual": 0.65,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2016,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2016-05-01",
+    "inflacion_anual": 0.2,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2016,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2016-06-01",
+    "inflacion_anual": 0.31,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2016,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2016-07-01",
+    "inflacion_anual": 0.57,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2016,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2016-08-01",
+    "inflacion_anual": 0.86,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2016,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2016-09-01",
+    "inflacion_anual": 1.47,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2016,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2016-10-01",
+    "inflacion_anual": 2.09,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2016,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2016-11-01",
+    "inflacion_anual": 2.89,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2016,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2016-12-01",
+    "inflacion_anual": 3.36,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2016,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2017-01-01",
+    "inflacion_anual": 1.7,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2017,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2017-02-01",
+    "inflacion_anual": 2.29,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2017,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2017-03-01",
+    "inflacion_anual": 2.92,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2017,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2017-04-01",
+    "inflacion_anual": 3.04,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2017,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2017-05-01",
+    "inflacion_anual": 2.92,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2017,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2017-06-01",
+    "inflacion_anual": 3.18,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2017,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2017-07-01",
+    "inflacion_anual": 3.57,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2017,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2017-08-01",
+    "inflacion_anual": 4.08,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2017,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2017-09-01",
+    "inflacion_anual": 4.41,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2017,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2017-10-01",
+    "inflacion_anual": 5.06,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2017,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2017-11-01",
+    "inflacion_anual": 6.15,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2017,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2017-12-01",
+    "inflacion_anual": 6.77,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2017,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2018-01-01",
+    "inflacion_anual": 0.53,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2018,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2018-02-01",
+    "inflacion_anual": 0.91,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2018,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2018-03-01",
+    "inflacion_anual": 1.24,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2018,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2018-04-01",
+    "inflacion_anual": 0.9,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2018,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2018-05-01",
+    "inflacion_anual": 0.73,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2018,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2018-06-01",
+    "inflacion_anual": 1.12,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2018,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2018-07-01",
+    "inflacion_anual": 1.66,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2018,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2018-08-01",
+    "inflacion_anual": 2.26,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2018,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2018-09-01",
+    "inflacion_anual": 2.69,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2018,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2018-10-01",
+    "inflacion_anual": 3.22,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2018,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2018-11-01",
+    "inflacion_anual": 4.1,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2018,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2018-12-01",
+    "inflacion_anual": 4.83,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2018,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2019-01-01",
+    "inflacion_anual": 0.09,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2019,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2019-02-01",
+    "inflacion_anual": 0.06,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2019,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2019-03-01",
+    "inflacion_anual": 0.44,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2019,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2019-04-01",
+    "inflacion_anual": 0.5,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2019,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2019-05-01",
+    "inflacion_anual": 0.21,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2019,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2019-06-01",
+    "inflacion_anual": 0.27,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2019,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2019-07-01",
+    "inflacion_anual": 0.65,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2019,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2019-08-01",
+    "inflacion_anual": 0.63,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2019,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2019-09-01",
+    "inflacion_anual": 0.89,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2019,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2019-10-01",
+    "inflacion_anual": 1.44,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2019,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2019-11-01",
+    "inflacion_anual": 2.26,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2019,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2019-12-01",
+    "inflacion_anual": 2.83,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2019,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2020-01-01",
+    "inflacion_anual": 0.48,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2020,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2020-02-01",
+    "inflacion_anual": 0.9,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2020,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2020-03-01",
+    "inflacion_anual": 0.85,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2020,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2020-04-01",
+    "inflacion_anual": -0.17,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2020,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2020-05-01",
+    "inflacion_anual": 0.22,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2020,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2020-06-01",
+    "inflacion_anual": 0.76,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2020,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2020-07-01",
+    "inflacion_anual": 1.43,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2020,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2020-08-01",
+    "inflacion_anual": 1.82,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2020,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2020-09-01",
+    "inflacion_anual": 2.06,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2020,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2020-10-01",
+    "inflacion_anual": 2.68,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2020,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2020-11-01",
+    "inflacion_anual": 2.76,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2020,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2020-12-01",
+    "inflacion_anual": 3.15,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2020,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2021-01-01",
+    "inflacion_anual": 0.86,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2021,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2021-02-01",
+    "inflacion_anual": 1.5,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2021,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2021-03-01",
+    "inflacion_anual": 2.34,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2021,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2021-04-01",
+    "inflacion_anual": 2.67,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2021,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2021-05-01",
+    "inflacion_anual": 2.88,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2021,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2021-06-01",
+    "inflacion_anual": 3.43,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2021,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2021-07-01",
+    "inflacion_anual": 4.04,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2021,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2021-08-01",
+    "inflacion_anual": 4.24,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2021,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2021-09-01",
+    "inflacion_anual": 4.88,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2021,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2021-10-01",
+    "inflacion_anual": 5.76,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2021,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2021-11-01",
+    "inflacion_anual": 6.97,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2021,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2021-12-01",
+    "inflacion_anual": 7.36,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2021,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2022-01-01",
+    "inflacion_anual": 0.59,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2022,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2022-02-01",
+    "inflacion_anual": 1.43,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2022,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2022-03-01",
+    "inflacion_anual": 2.43,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2022,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2022-04-01",
+    "inflacion_anual": 2.98,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2022,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2022-05-01",
+    "inflacion_anual": 3.17,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2022,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2022-06-01",
+    "inflacion_anual": 4.04,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2022,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2022-07-01",
+    "inflacion_anual": 4.81,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2022,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2022-08-01",
+    "inflacion_anual": 5.54,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2022,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2022-09-01",
+    "inflacion_anual": 6.19,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2022,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2022-10-01",
+    "inflacion_anual": 6.79,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2022,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2022-11-01",
+    "inflacion_anual": 7.41,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2022,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2022-12-01",
+    "inflacion_anual": 7.82,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2022,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2023-01-01",
+    "inflacion_anual": 0.68,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2023,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2023-02-01",
+    "inflacion_anual": 1.24,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2023,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2023-03-01",
+    "inflacion_anual": 1.51,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2023,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2023-04-01",
+    "inflacion_anual": 1.49,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2023,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2023-05-01",
+    "inflacion_anual": 1.27,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2023,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2023-06-01",
+    "inflacion_anual": 1.37,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2023,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2023-07-01",
+    "inflacion_anual": 1.86,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2023,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2023-08-01",
+    "inflacion_anual": 2.42,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2023,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2023-09-01",
+    "inflacion_anual": 2.88,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2023,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2023-10-01",
+    "inflacion_anual": 3.27,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2023,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2023-11-01",
+    "inflacion_anual": 3.93,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2023,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2023-12-01",
+    "inflacion_anual": 4.66,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2023,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2024-01-01",
+    "inflacion_anual": 0.89,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2024,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2024-02-01",
+    "inflacion_anual": 0.99,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2024,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2024-03-01",
+    "inflacion_anual": 1.28,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2024,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2024-04-01",
+    "inflacion_anual": 1.48,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2024,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2024-05-01",
+    "inflacion_anual": 1.29,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2024,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2024-06-01",
+    "inflacion_anual": 1.68,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2024,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2024-07-01",
+    "inflacion_anual": 2.74,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2024,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2024-08-01",
+    "inflacion_anual": 2.75,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2024,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2024-09-01",
+    "inflacion_anual": 2.8,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2024,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2024-10-01",
+    "inflacion_anual": 3.37,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2024,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2024-11-01",
+    "inflacion_anual": 3.82,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2024,
+    "mes": 11,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2024-12-01",
+    "inflacion_anual": 4.21,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2024,
+    "mes": 12,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2025-01-01",
+    "inflacion_anual": 0.29,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2025,
+    "mes": 1,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2025-02-01",
+    "inflacion_anual": 0.56,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2025,
+    "mes": 2,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2025-03-01",
+    "inflacion_anual": 0.88,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2025,
+    "mes": 3,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2025-04-01",
+    "inflacion_anual": 1.21,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2025,
+    "mes": 4,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2025-05-01",
+    "inflacion_anual": 1.5,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2025,
+    "mes": 5,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2025-06-01",
+    "inflacion_anual": 1.78,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2025,
+    "mes": 6,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2025-07-01",
+    "inflacion_anual": 2.05,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2025,
+    "mes": 7,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2025-08-01",
+    "inflacion_anual": 2.12,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2025,
+    "mes": 8,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2025-09-01",
+    "inflacion_anual": 2.35,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2025,
+    "mes": 9,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  },
+  {
+    "fecha": "2025-10-01",
+    "inflacion_anual": 2.72,
+    "indice": "INPC",
+    "tipo": "anual",
+    "año": 2025,
+    "mes": 10,
+    "fuente": "Banco de México - INPC Inflación Anual"
+  }
+]
