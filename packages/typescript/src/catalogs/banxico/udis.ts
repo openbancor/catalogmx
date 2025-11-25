@@ -27,11 +27,15 @@ export class UDICatalog {
 
     for (const item of this._data!) {
       const existing = this._byFecha.get(item.fecha);
-      if (!existing || (item.tipo === 'diario' && existing.tipo !== 'diario')) {
+      const isDailyType = item.tipo === 'diario' || item.tipo === 'oficial_banxico';
+      const existingIsDaily = existing?.tipo === 'diario' || existing?.tipo === 'oficial_banxico';
+
+      if (!existing || (isDailyType && !existingIsDaily)) {
         this._byFecha.set(item.fecha, item);
       }
 
-      if (item.tipo === 'diario') {
+      // Treat "oficial_banxico" as daily data (from Banxico API)
+      if (isDailyType) {
         daily.push(item);
       } else if (item.tipo === 'promedio_mensual' && item.mes) {
         this._mensual.set(`${item.año}-${item.mes.toString().padStart(2, '0')}`, item);
@@ -52,7 +56,9 @@ export class UDICatalog {
   private static getByDate(fecha: string): UDI | undefined {
     this.loadData();
     const registro = this._byFecha!.get(fecha);
-    if (registro && registro.tipo === 'diario') {
+    const isDailyType = registro?.tipo === 'diario' || registro?.tipo === 'oficial_banxico';
+
+    if (registro && isDailyType) {
       return registro;
     }
 
@@ -203,6 +209,12 @@ export class UDICatalog {
    * Get initial UDI value (April 4, 1995)
    */
   static getValorInicial(): UDI | undefined {
-    return this.getData().find((u) => u.tipo === 'valor_inicial');
+    this.loadData();
+    // Look for explicit valor_inicial type, or just the first record (1995-04-04)
+    return (
+      this.getData().find((u) => u.tipo === 'valor_inicial') ||
+      this.getData().find((u) => u.fecha === '1995-04-04') ||
+      this.getData()[0]
+    );
   }
 }

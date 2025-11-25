@@ -595,10 +595,11 @@ export interface UDI {
   fecha: string;
   valor: number;
   moneda: string;
-  tipo: 'diario' | 'promedio_mensual' | 'promedio_anual' | 'valor_inicial';
+  tipo: 'diario' | 'promedio_mensual' | 'promedio_anual' | 'valor_inicial' | 'oficial_banxico';
   año: number;
   mes?: number;
   notas?: string;
+  fuente?: string;
 }
 
 // CDMX - Hoy No Circula

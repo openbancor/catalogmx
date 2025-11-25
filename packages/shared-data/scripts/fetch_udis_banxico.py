@@ -26,7 +26,7 @@ UDIS_FILE = DATA_ROOT / "banxico" / "udis.json"
 
 # Banxico API configuration
 BANXICO_API = "https://www.banxico.org.mx/SieAPIRest/service/v1"
-UDI_SERIES = "SF43718"  # Serie de UDI
+UDI_SERIES = "SP68257"  # Serie: Valor de UDIS (Unidades de Inversión)
 
 # Rate limiting
 RATE_LIMIT_DELAY = 0.7  # seconds between requests (allows ~85 req/min, under 100 limit)
@@ -229,36 +229,34 @@ def main():
                 start_date = "1995-04-04"
                 print("[fetch] No existing data found, starting from UDI inception (1995-04-04)")
     
-    # Banxico publishes with 1-2 day delay, adjust end date if needed
+    # Banxico publishes UDI values for the entire month at the beginning
+    # So we can request up to the end of current month
     today = datetime.now().date()
     requested_end = datetime.strptime(args.end_date, '%Y-%m-%d').date()
     
-    # Calculate the expected last available date (2 days ago to be safe)
-    expected_last_date = today - timedelta(days=2)
-    expected_last_date_str = expected_last_date.strftime('%Y-%m-%d')
+    # Calculate end of current month
+    if today.month == 12:
+        end_of_month = today.replace(year=today.year + 1, month=1, day=1) - timedelta(days=1)
+    else:
+        end_of_month = today.replace(month=today.month + 1, day=1) - timedelta(days=1)
     
-    if requested_end >= today:
-        # Request until 2 days ago to account for publication delay
-        args.end_date = expected_last_date_str
-        print(f"[fetch] Adjusted end date to {args.end_date} (Banxico publishes with 1-2 day delay)")
+    # Always try to get up to end of current month
+    args.end_date = end_of_month.strftime('%Y-%m-%d')
+    print(f"[fetch] Requesting data up to end of current month: {args.end_date}")
+    
+    expected_last_date = end_of_month
+    expected_last_date_str = end_of_month.strftime('%Y-%m-%d')
     
     # Parse dates for comparison
     start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
     end_date_obj = datetime.strptime(args.end_date, '%Y-%m-%d').date()
     
-    # Check if start date is already beyond what Banxico would have
-    if start_date_obj > expected_last_date:
-        last_date = get_last_date_in_file(args.output)
-        print(f"[fetch] ✓ Data is already up to date")
-        print(f"[fetch]   Last record: {last_date}")
-        print(f"[fetch]   Expected Banxico latest: {expected_last_date_str}")
-        print(f"[fetch]   Next fetch will be possible after: {(expected_last_date + timedelta(days=1)).strftime('%Y-%m-%d')}")
-        return 0
-    
     # Check if we need to fetch anything
     if start_date_obj > end_date_obj:
         last_date = get_last_date_in_file(args.output)
-        print(f"[fetch] ✓ Data is already up to date (last: {last_date})")
+        print(f"[fetch] ✓ Data is already up to date")
+        print(f"[fetch]   Last record: {last_date}")
+        print(f"[fetch]   Already have data through end of month: {expected_last_date_str}")
         return 0
     
     try:

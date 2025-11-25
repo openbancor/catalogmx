@@ -6,9 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Calculator, DollarSign, TrendingUp, Calendar } from 'lucide-react';
 
 // Latest UDI value from Banxico (Nov 2025)
-// TODO: Fetch dynamically from database
-const LATEST_UDI = 18.4997; 
-const LATEST_UDI_DATE = '2025-11-24';
+// Updated from Banxico API - Serie SP68257
+const LATEST_UDI = 8.597109; 
+const LATEST_UDI_DATE = '2025-11-23';
 
 export default function UDIPage() {
   
@@ -320,13 +320,13 @@ export default function UDIPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
             {[
               { year: 1995, value: 1.0, note: 'Inicio' },
-              { year: 2000, value: 3.16, note: '216% ↑' },
-              { year: 2005, value: 3.87, note: '287% ↑' },
-              { year: 2010, value: 4.56, note: '356% ↑' },
-              { year: 2015, value: 5.28, note: '428% ↑' },
-              { year: 2020, value: 6.77, note: '577% ↑' },
-              { year: 2024, value: 8.39, note: '739% ↑' },
-              { year: 2025, value: 18.50, note: 'Nov' },
+              { year: 2000, value: 3.16, note: '+216%' },
+              { year: 2005, value: 3.87, note: '+287%' },
+              { year: 2010, value: 4.56, note: '+356%' },
+              { year: 2015, value: 5.28, note: '+428%' },
+              { year: 2020, value: 6.77, note: '+577%' },
+              { year: 2024, value: 8.39, note: '+739%' },
+              { year: 2025, value: 8.60, note: 'Nov' },
             ].map((item) => (
               <div key={item.year} className="p-3 bg-muted rounded-lg">
                 <div className="flex items-center justify-between mb-1">

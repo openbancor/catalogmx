@@ -59,11 +59,12 @@ pushd "${ROOT_DIR}/packages/webapp" >/dev/null
 npm run build
 popd >/dev/null
 
-step "TypeScript package: lint + typecheck"
+step "TypeScript package: lint + typecheck + tests"
 pushd "${ROOT_DIR}/packages/typescript" >/dev/null
 npm run lint:fix
 npm run format
 npm run typecheck
+npm test
 popd >/dev/null
 
 step "Python package: format check + lint + typecheck + tests"
