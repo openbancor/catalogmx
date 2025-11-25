@@ -1,13 +1,14 @@
-import { Calculator, CheckCircle2, Home, Code } from 'lucide-react';
+import { Calculator, CheckCircle2, Home, Code, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { type PageId } from '@/lib/routes';
 
 interface MobileNavProps {
   currentPage: PageId;
   onNavigate: (id: PageId) => void;
+  onOpenSearch?: () => void;
 }
 
-export default function MobileNav({ currentPage, onNavigate }: MobileNavProps) {
+export default function MobileNav({ currentPage, onNavigate, onOpenSearch }: MobileNavProps) {
   const tabs = [
     {
       id: 'home' as PageId,
@@ -35,6 +36,8 @@ export default function MobileNav({ currentPage, onNavigate }: MobileNavProps) {
     },
   ];
 
+  const hasSearchHandler = typeof onOpenSearch === 'function';
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-16 items-center justify-around border-t border-border bg-background/95 backdrop-blur px-1 shadow-[0_-1px_3px_rgba(0,0,0,0.05)] md:hidden">
       {tabs.map((tab) => {
@@ -53,6 +56,15 @@ export default function MobileNav({ currentPage, onNavigate }: MobileNavProps) {
           </button>
         );
       })}
+      {hasSearchHandler && (
+        <button
+          onClick={onOpenSearch}
+          className="flex flex-1 flex-col items-center justify-center gap-1 rounded-lg py-1 text-muted-foreground hover:text-foreground transition-colors active:scale-95"
+        >
+          <Search className="h-5 w-5" />
+          <span className="text-[10px] tracking-tight">Buscar</span>
+        </button>
+      )}
     </nav>
   );
 }

@@ -265,7 +265,13 @@ function AppInner() {
               variant="outline"
               size="sm"
               className="hidden sm:flex"
-              onClick={() => setCatalogQuickOpen(true)}
+              onClick={() => {
+                setCatalogQuickOpen(true);
+                // Close sidebar on tablet to give more space
+                if (window.innerWidth < 1024) {
+                  setSidebarOpen(false);
+                }
+              }}
             >
               <span>Buscar catálogo</span>
             </Button>
@@ -296,40 +302,44 @@ function AppInner() {
       <MobileNav
         currentPage={currentPage}
         onNavigate={setCurrentPage}
+        onOpenSearch={() => setCatalogQuickOpen(true)}
       />
 
       <Dialog open={catalogQuickOpen} onOpenChange={setCatalogQuickOpen}>
-        <DialogContent className="max-w-md w-[min(90vw,480px)]">
-          <DialogHeader>
-            <DialogTitle>Buscar Catálogo</DialogTitle>
+        <DialogContent className="max-w-lg w-[calc(100vw-2rem)] sm:w-[90vw] md:w-[600px] max-h-[90vh] flex flex-col p-0">
+          <DialogHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-4 border-b">
+            <DialogTitle className="text-lg sm:text-xl">Buscar Catálogo</DialogTitle>
           </DialogHeader>
-          <div className="space-y-3">
+          <div className="flex-1 overflow-hidden flex flex-col px-4 sm:px-6 py-4 gap-4">
             <Input
               placeholder="Buscar por nombre o tabla..."
               value={catalogSearch}
               onChange={(e) => setCatalogSearch(e.target.value)}
               autoFocus
+              className="w-full"
             />
-            <div className="max-h-[400px] overflow-auto divide-y rounded border">
-              {filteredCatalogs.map((cat) => (
-                <button
-                  key={cat.id}
-                  className="w-full text-left px-3 py-2 hover:bg-muted text-sm"
-                  onClick={() => {
-                    setCurrentPage(`dataset-${cat.id}` as PageId);
-                    setCatalogQuickOpen(false);
-                    setCatalogSearch('');
-                  }}
-                >
-                  <div className="font-medium">{cat.label}</div>
-                  <div className="text-xs text-muted-foreground truncate">
-                    {cat.description}
-                  </div>
-                </button>
-              ))}
-              {!filteredCatalogs.length && (
-                <div className="px-3 py-2 text-sm text-muted-foreground">Sin resultados</div>
-              )}
+            <div className="flex-1 overflow-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
+              <div className="divide-y rounded border">
+                {filteredCatalogs.map((cat) => (
+                  <button
+                    key={cat.id}
+                    className="w-full text-left px-3 sm:px-4 py-3 hover:bg-muted text-sm transition-colors active:bg-accent"
+                    onClick={() => {
+                      setCurrentPage(`dataset-${cat.id}` as PageId);
+                      setCatalogQuickOpen(false);
+                      setCatalogSearch('');
+                    }}
+                  >
+                    <div className="font-medium mb-1">{cat.label}</div>
+                    <div className="text-xs text-muted-foreground line-clamp-2">
+                      {cat.description}
+                    </div>
+                  </button>
+                ))}
+                {!filteredCatalogs.length && (
+                  <div className="px-4 py-8 text-center text-sm text-muted-foreground">Sin resultados</div>
+                )}
+              </div>
             </div>
           </div>
         </DialogContent>
