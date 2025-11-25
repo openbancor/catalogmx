@@ -73,23 +73,23 @@ export default function CatalogsPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <section className="grid gap-4 lg:grid-cols-[2fr,1fr]">
         <Card className="border-none bg-gradient-to-r from-primary to-emerald-500 text-primary-foreground shadow-lg">
           <CardHeader>
-            <CardTitle className="text-xl sm:text-2xl">mexico.sqlite3</CardTitle>
+            <CardTitle className="text-lg sm:text-2xl leading-tight">mexico.sqlite3</CardTitle>
             <CardDescription className="text-primary-foreground/80 text-sm sm:text-base">
               {t('catalogs.hero.subtitle')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 text-sm">
             <p className="text-sm sm:text-base">{t('catalogs.hero.description')}</p>
-            <div className="flex flex-wrap gap-2 sm:gap-3">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
               <a
                 href={`${import.meta.env.BASE_URL}data/mexico.sqlite3`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full bg-white/90 px-3 sm:px-4 py-2 text-sm font-semibold text-primary shadow hover:bg-white"
+                className="inline-flex items-center justify-center rounded-full bg-white/90 px-3 sm:px-4 py-2 text-sm font-semibold text-primary shadow hover:bg-white w-full sm:w-auto"
               >
                 {t('catalogs.hero.download')}
               </a>
@@ -97,12 +97,12 @@ export default function CatalogsPage() {
                 href="https://github.com/OpenBancor/catalogmx/blob/main/packages/webapp/SPEC-sqlite-vfs.MD"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-white/60 px-3 sm:px-4 py-2 text-sm font-semibold text-white/90 hover:bg-white/10"
+                className="inline-flex items-center justify-center rounded-full border border-white/60 px-3 sm:px-4 py-2 text-sm font-semibold text-white/90 hover:bg-white/10 w-full sm:w-auto"
               >
                 {t('catalogs.hero.spec')}
               </a>
             </div>
-            <div className="flex flex-wrap gap-3 text-xs text-primary-foreground/80">
+            <div className="flex flex-wrap gap-2 sm:gap-3 text-xs text-primary-foreground/80">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1">
                 {t('catalogs.hero.size')}: {fileMeta.size ? formatBytes(fileMeta.size) : '—'}
               </span>

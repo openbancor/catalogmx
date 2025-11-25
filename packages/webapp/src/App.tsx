@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import {
-  Database, Code, Menu, X,
+  Database, Code, Menu, X, Download,
   CreditCard, User, Building2, Shield, MapPin, Package,
   Receipt, Percent, DollarSign, Layers
 } from 'lucide-react';
@@ -10,6 +10,8 @@ import ThemeToggle from '@/components/ThemeToggle';
 import { NAVIGATION_EVENT } from '@/lib/navigation';
 import DatasetPage from '@/pages/DatasetPage';
 import { datasetConfigs, type DatasetPageId } from '@/data/datasets';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 
 // Pages
 import RFCPage from '@/pages/RFCPage';
@@ -121,6 +123,8 @@ function AppInner() {
     if (typeof window === 'undefined') return true;
     return window.innerWidth >= 768;
   });
+  const [catalogQuickOpen, setCatalogQuickOpen] = useState(false);
+  const [catalogSearch, setCatalogSearch] = useState('');
   const flatNavigation = navigation.flatMap(s => s.items);
   const currentNavItem = flatNavigation.find(i => i.id === currentPage);
   const catalogQuickLinks = datasetConfigs.slice(0, 8);
@@ -157,6 +161,15 @@ function AppInner() {
       window.removeEventListener(NAVIGATION_EVENT, handleNavigate as EventListener);
     };
   }, []);
+
+  const filteredCatalogs = datasetConfigs.filter((cat) => {
+    const q = catalogSearch.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      cat.label.toLowerCase().includes(q) ||
+      cat.table.toLowerCase().includes(q)
+    );
+  });
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
@@ -294,6 +307,15 @@ function AppInner() {
           </div>
 
           <div className="ml-auto flex items-center gap-2 overflow-x-auto whitespace-nowrap">
+            <Button
+              variant="outline"
+              size="sm"
+              className="sm:hidden"
+              onClick={() => setCatalogQuickOpen(true)}
+            >
+              <Database className="h-4 w-4" />
+              <span className="ml-1">Catálogos</span>
+            </Button>
             <a
               href="https://github.com/openbancor/catalogmx"
               target="_blank"
@@ -306,9 +328,20 @@ function AppInner() {
               href={`${import.meta.env.BASE_URL}data/mexico.sqlite3`}
               target="_blank"
               rel="noopener noreferrer"
-              className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'rounded-full')}
+              className={cn(
+                buttonVariants({ variant: 'outline', size: 'sm' }),
+                'rounded-full hidden sm:inline-flex'
+              )}
             >
               Download DB
+            </a>
+            <a
+              href={`${import.meta.env.BASE_URL}data/mexico.sqlite3`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'sm:hidden rounded-full')}
+            >
+              <Download className="h-4 w-4" />
             </a>
             <Button variant="outline" size="sm" onClick={() => setLocale(locale === 'es' ? 'en' : 'es')}>
               {locale === 'es' ? 'EN' : 'ES'}
@@ -323,6 +356,47 @@ function AppInner() {
           </div>
         </div>
       </main>
+
+      <Dialog open={catalogQuickOpen} onOpenChange={setCatalogQuickOpen}>
+        <DialogContent className="max-w-md w-[min(90vw,480px)]">
+          <DialogHeader>
+            <DialogTitle>{t('nav.catalogs.title')}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <Input
+              placeholder="Buscar catálogo..."
+              value={catalogSearch}
+              onChange={(e) => setCatalogSearch(e.target.value)}
+            />
+            <div className="max-h-[320px] overflow-auto divide-y rounded border">
+              {filteredCatalogs.map((cat) => (
+                <button
+                  key={cat.id}
+                  className="w-full text-left px-3 py-2 hover:bg-muted text-sm"
+                  onClick={() => {
+                    setCurrentPage(`dataset-${cat.id}` as PageId);
+                    setCatalogQuickOpen(false);
+                  }}
+                >
+                  <div className="font-medium">{cat.label}</div>
+                  <div className="text-xs text-muted-foreground truncate">
+                    {cat.description}
+                  </div>
+                </button>
+              ))}
+              {!filteredCatalogs.length && (
+                <div className="px-3 py-2 text-sm text-muted-foreground">Sin resultados</div>
+              )}
+            </div>
+            <Button variant="outline" onClick={() => {
+              setCatalogQuickOpen(false);
+              setCurrentPage('catalog-list');
+            }}>
+              {t('nav.catalogs.quickView')}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
