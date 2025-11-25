@@ -177,9 +177,7 @@ def get_cetes_por_fecha(fecha: str) -> dict | None:
     return CETES28Catalog.get_por_fecha(fecha)
 
 
-def calcular_rendimiento_cetes(
-    inversion: float, fecha_inicio: str, fecha_fin: str
-) -> float | None:
+def calcular_rendimiento_cetes(inversion: float, fecha_inicio: str, fecha_fin: str) -> float | None:
     """Calculate CETES investment return"""
     return CETES28Catalog.calcular_rendimiento(inversion, fecha_inicio, fecha_fin)
 

@@ -105,11 +105,15 @@ npm run typecheck
 npm test
 popd >/dev/null
 
-step "Python package: format check + lint + typecheck + tests"
+step "Python package: format + lint + typecheck + tests"
 pushd "${ROOT_DIR}/packages/python" >/dev/null
+echo "📝 Formatting with black..."
 black catalogmx
+echo "🔍 Linting with ruff..."
 ruff check --fix catalogmx
+echo "📊 Type checking with mypy..."
 mypy catalogmx
+echo "🧪 Running tests with pytest..."
 pytest tests/ --cov=catalogmx --cov-branch
 popd >/dev/null
 
