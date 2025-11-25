@@ -162,7 +162,7 @@ function AppInner() {
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm md:hidden"
           onClick={() => setSidebarOpen(false)}
           aria-hidden="true"
         />
@@ -172,7 +172,9 @@ function AppInner() {
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 flex flex-col border-r border-border bg-card/95 p-0 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-card/90 transition-[width,transform] duration-300",
-          sidebarOpen ? "w-64 translate-x-0" : "w-16 -translate-x-full md:translate-x-0"
+          sidebarOpen
+            ? "w-72 max-w-[80vw] md:w-64 translate-x-0"
+            : "w-16 -translate-x-full md:translate-x-0"
         )}
       >
         <div className="h-16 flex items-center px-4 border-b border-border/60">
@@ -182,6 +184,17 @@ function AppInner() {
             </div>
             {sidebarOpen && <span className="text-base font-semibold">catalogmx</span>}
           </div>
+          {sidebarOpen && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="ml-auto md:hidden rounded-full"
+              onClick={() => setSidebarOpen(false)}
+              aria-label="Cerrar navegación"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          )}
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4">

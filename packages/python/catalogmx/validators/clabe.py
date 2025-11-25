@@ -167,7 +167,7 @@ class CLABEValidator:
             return self.clabe[17]
         return None
 
-    def get_parts(self) -> dict[str, str] | None:
+    def get_parts(self) -> dict[str, str | None] | None:
         """
         Returns all CLABE parts as a dictionary
         :return: Dictionary with bank_code, branch_code, account_number, check_digit
@@ -222,7 +222,7 @@ def generate_clabe(bank_code: str | int, branch_code: str | int, account_number:
     return clabe_17 + check_digit
 
 
-def get_clabe_info(clabe: str | None) -> dict[str, str] | None:
+def get_clabe_info(clabe: str | None) -> dict[str, str | None] | None:
     """
     Helper function to get information from a CLABE
 

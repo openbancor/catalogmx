@@ -83,7 +83,7 @@ export default function TablesPage() {
               {t('tables.error')}
             </div>
           ) : (
-            <div className="max-h-[32rem] overflow-auto rounded-lg border divide-y">
+            <div className="overflow-auto md:max-h-[32rem] rounded-lg border divide-y">
               {countsLoading && !filteredTables.length ? (
                 <div className="flex items-center gap-2 p-3 text-sm text-muted-foreground">
                   <Loader2 className="h-4 w-4 animate-spin" />

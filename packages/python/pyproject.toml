@@ -150,6 +150,19 @@ warn_redundant_casts = true
 warn_unused_ignores = true
 strict_equality = true
 
+[[tool.mypy.overrides]]
+module = [
+    "catalogmx.catalogs.*",
+]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = [
+    "unidecode",
+    "click",
+]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 minversion = "7.0"
 testpaths = ["tests"]

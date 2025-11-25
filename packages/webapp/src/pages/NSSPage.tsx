@@ -121,12 +121,14 @@ export default function NSSPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="font-mono text-lg p-4 bg-muted rounded text-center tracking-widest">
-              <span className="text-blue-600">SS</span>
-              <span className="text-green-600">AA</span>
-              <span className="text-purple-600">BB</span>
-              <span className="text-orange-600">NNNN</span>
-              <span className="text-red-600">C</span>
+            <div className="font-mono text-lg p-4 bg-muted rounded text-center">
+              <div className="flex flex-wrap items-center justify-center gap-2 tracking-widest">
+                <span className="text-blue-600">SS</span>
+                <span className="text-green-600">AA</span>
+                <span className="text-purple-600">BB</span>
+                <span className="text-orange-600">NNNN</span>
+                <span className="text-red-600">C</span>
+              </div>
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2">

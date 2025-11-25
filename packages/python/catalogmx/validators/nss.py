@@ -184,7 +184,7 @@ class NSSValidator:
             return self.nss[10]
         return None
 
-    def get_parts(self) -> dict[str, str] | None:
+    def get_parts(self) -> dict[str, str | None] | None:
         """
         Returns all NSS parts as a dictionary
         :return: Dictionary with subdelegation, registration_year, birth_year, sequential, check_digit
@@ -249,7 +249,7 @@ def generate_nss(
     return nss_10 + check_digit
 
 
-def get_nss_info(nss: str | None) -> dict[str, str] | None:
+def get_nss_info(nss: str | None) -> dict[str, str | None] | None:
     """
     Helper function to get information from an NSS
 

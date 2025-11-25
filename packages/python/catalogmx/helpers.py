@@ -21,7 +21,7 @@ def generate_rfc_persona_fisica(
     apellido_paterno: str,
     apellido_materno: str,
     fecha_nacimiento: datetime.date | str,
-    **kwargs,
+    **kwargs: object,
 ) -> str:
     """
     Generate RFC for a natural person (Persona Física).
@@ -60,7 +60,7 @@ def generate_rfc_persona_fisica(
 
 
 def generate_rfc_persona_moral(
-    razon_social: str, fecha_constitucion: datetime.date | str, **kwargs
+    razon_social: str, fecha_constitucion: datetime.date | str, **kwargs: object
 ) -> str:
     """
     Generate RFC for a legal entity (Persona Moral/company).

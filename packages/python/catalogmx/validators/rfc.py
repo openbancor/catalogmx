@@ -264,8 +264,7 @@ class RFCValidator(RFCGeneral):
                 return "Persona Física"
             if self.is_moral():
                 return "Persona Moral"
-        else:
-            return "RFC Inválido"
+        return "RFC Inválido"
 
     def is_generic(self) -> bool:
         """
@@ -322,7 +321,7 @@ class RFCValidator(RFCGeneral):
         return False
 
     @classmethod
-    def calculate_last_digit(cls, rfc: str, with_checksum: bool = True) -> str | bool:
+    def calculate_last_digit(cls, rfc: str, with_checksum: bool = True) -> str:
         """
         Calculates the checksum of an RFC.
 
@@ -332,7 +331,7 @@ class RFCValidator(RFCGeneral):
         if bool(rfc) and isinstance(rfc, str):
             str_rfc = rfc.strip().upper()
         else:
-            return False
+            return ""
         if with_checksum:
             str_rfc = str_rfc[:-1]
         assert len(str_rfc) in (11, 12)
@@ -607,7 +606,7 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
         return self._paterno
 
     @paterno.setter
-    def paterno(self, name: str):
+    def paterno(self, name: str) -> None:
         self._paterno = self.name_adapter(name)
 
     @property
@@ -615,7 +614,7 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
         return self._materno
 
     @materno.setter
-    def materno(self, name: str):
+    def materno(self, name: str) -> None:
         self._materno = self.name_adapter(name, non_strict=True)
 
     @property
@@ -623,7 +622,7 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
         return self._nombre
 
     @nombre.setter
-    def nombre(self, name: str):
+    def nombre(self, name: str) -> None:
         self._nombre = self.name_adapter(name)
 
     @property
@@ -631,7 +630,7 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
         return self._dob
 
     @dob.setter
-    def dob(self, date: datetime.date):
+    def dob(self, date: datetime.date) -> None:
         if isinstance(date, datetime.date):
             self._dob = date
 
@@ -649,26 +648,26 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
 
     def generate_letters(self) -> str:
         extra_letter = False
-        clave = []
-        clave.append(self.paterno_calculo[0])
+        parts: list[str] = []
+        parts.append(self.paterno_calculo[0])
         second_value = list(
             filter(lambda x: x >= 0, map(self.paterno_calculo[1:].find, self.vocales))
         )
         if len(second_value) > 0:
-            clave.append(self.paterno_calculo[min(second_value) + 1])
+            parts.append(self.paterno_calculo[min(second_value) + 1])
         else:
             extra_letter = True
         if self.materno_calculo:
-            clave.append(self.materno_calculo[0])
+            parts.append(self.materno_calculo[0])
         else:
             if extra_letter:
-                clave.append(self.paterno_calculo[1])
+                parts.append(self.paterno_calculo[1])
             else:
                 extra_letter = True
-        clave.append(self.nombre_iniciales[0])
-        if extra_letter:
-            clave.append(self.nombre_iniciales[1])
-        clave = "".join(clave)
+        parts.append(self.nombre_iniciales[0])
+        if extra_letter and len(self.nombre_iniciales) > 1:
+            parts.append(self.nombre_iniciales[1])
+        clave = "".join(parts)
         if clave in self.cacophonic_words:
             clave = clave[:-1] + "X"
         return clave
@@ -758,7 +757,7 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         return self._razon_social
 
     @razon_social.setter
-    def razon_social(self, name: str):
+    def razon_social(self, name: str) -> None:
         if isinstance(name, str):
             self._razon_social = name.upper().strip()
         else:
@@ -769,7 +768,7 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         return self._fecha
 
     @fecha.setter
-    def fecha(self, date: datetime.date):
+    def fecha(self, date: datetime.date) -> None:
         if isinstance(date, datetime.date):
             self._fecha = date
         else:

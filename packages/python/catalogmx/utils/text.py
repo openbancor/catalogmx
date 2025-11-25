@@ -5,8 +5,13 @@ Text normalization utilities for catalogmx
 Provides accent-insensitive text normalization for searching across catalogs.
 """
 
+from collections.abc import Callable
+from typing import cast
+
 try:
     from unidecode import unidecode
+
+    unidecode = cast(Callable[[str], str], unidecode)
 except ImportError:
     # Fallback if unidecode not available
     def unidecode(text: str) -> str:
@@ -36,7 +41,8 @@ def normalize_text(text: str) -> str:
         >>> normalize_text("Michoacán de Ocampo")
         'MICHOACAN DE OCAMPO'
     """
-    return unidecode(text).upper()
+    result = unidecode(text)
+    return str(result).upper()
 
 
 def normalize_for_search(text: str) -> str:
