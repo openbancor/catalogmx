@@ -92,8 +92,10 @@ export default function TablesPage() {
               ) : (
                 filteredTables.map((table) => (
                   <div key={table} className="flex items-center justify-between px-3 py-2 text-sm">
-                    <div className="font-mono">{table}</div>
-                    <Badge variant="secondary">{formatRecordCount(table)}</Badge>
+                    <div className="font-mono truncate max-w-[60%] sm:max-w-none">{table}</div>
+                    <Badge variant="secondary" className="text-[11px] px-2 py-1 min-w-[64px] justify-center">
+                      {formatRecordCount(table)}
+                    </Badge>
                   </div>
                 ))
               )}

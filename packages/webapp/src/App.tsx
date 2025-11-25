@@ -225,14 +225,14 @@ function AppInner() {
             {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col min-w-0">
             <span className="text-xs uppercase tracking-widest text-muted-foreground">catalogmx</span>
-            <span className="text-base font-semibold">
+            <span className="text-base font-semibold truncate">
               {currentNavItem ? t(currentNavItem.label) : ''}
             </span>
           </div>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-2 overflow-x-auto whitespace-nowrap">
             <a
               href="https://github.com/openbancor/catalogmx"
               target="_blank"

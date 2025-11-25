@@ -43,8 +43,8 @@ export default function RFCPage() {
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-bold">RFC Validator</h1>
-        <p className="text-muted-foreground mt-1">
+        <h1 className="text-2xl sm:text-3xl font-bold">RFC Validator</h1>
+        <p className="text-muted-foreground mt-1 text-sm sm:text-base">
           Registro Federal de Contribuyentes - Mexican tax identification number
         </p>
       </div>
@@ -148,7 +148,7 @@ export default function RFCPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-sm font-medium mb-1 block">First Name</label>
                 <Input

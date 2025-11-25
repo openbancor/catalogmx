@@ -19,8 +19,8 @@ export default function NSSPage() {
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-bold">NSS Validator</h1>
-        <p className="text-muted-foreground mt-1">
+        <h1 className="text-2xl sm:text-3xl font-bold">NSS Validator</h1>
+        <p className="text-muted-foreground mt-1 text-sm sm:text-base">
           Numero de Seguridad Social - Mexican Social Security Number (IMSS)
         </p>
       </div>
@@ -80,7 +80,7 @@ export default function NSSPage() {
                 {result.parsed && (
                   <div className="space-y-3">
                     <div className="text-sm font-medium">Registration Information</div>
-                    <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                       <div className="p-3 bg-muted rounded">
                         <div className="text-muted-foreground">Subdelegation</div>
                         <div className="font-mono font-medium text-lg">{result.parsed.subdelegation}</div>

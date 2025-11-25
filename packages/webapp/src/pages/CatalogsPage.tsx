@@ -77,19 +77,19 @@ export default function CatalogsPage() {
       <section className="grid gap-4 lg:grid-cols-[2fr,1fr]">
         <Card className="border-none bg-gradient-to-r from-primary to-emerald-500 text-primary-foreground shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl">mexico.sqlite3</CardTitle>
-            <CardDescription className="text-primary-foreground/80">
+            <CardTitle className="text-xl sm:text-2xl">mexico.sqlite3</CardTitle>
+            <CardDescription className="text-primary-foreground/80 text-sm sm:text-base">
               {t('catalogs.hero.subtitle')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 text-sm">
-            <p>{t('catalogs.hero.description')}</p>
-            <div className="flex flex-wrap gap-3">
+            <p className="text-sm sm:text-base">{t('catalogs.hero.description')}</p>
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               <a
                 href={`${import.meta.env.BASE_URL}data/mexico.sqlite3`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-primary shadow hover:bg-white"
+                className="inline-flex items-center justify-center rounded-full bg-white/90 px-3 sm:px-4 py-2 text-sm font-semibold text-primary shadow hover:bg-white"
               >
                 {t('catalogs.hero.download')}
               </a>
@@ -97,7 +97,7 @@ export default function CatalogsPage() {
                 href="https://github.com/OpenBancor/catalogmx/blob/main/packages/webapp/SPEC-sqlite-vfs.MD"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-white/60 px-4 py-2 text-sm font-semibold text-white/90 hover:bg-white/10"
+                className="inline-flex items-center justify-center rounded-full border border-white/60 px-3 sm:px-4 py-2 text-sm font-semibold text-white/90 hover:bg-white/10"
               >
                 {t('catalogs.hero.spec')}
               </a>
@@ -112,15 +112,15 @@ export default function CatalogsPage() {
             </div>
           </CardContent>
         </Card>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+        <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-1">
           {heroStats.map((stat) => (
             <Card key={stat.label}>
               <CardContent className="py-6">
-                <div className="text-3xl font-semibold">{stat.value}</div>
-                <div className="mt-2 text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                <div className="text-2xl sm:text-3xl font-semibold">{stat.value}</div>
+                <div className="mt-2 text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide">
                   {stat.label}
                 </div>
-                <div className="text-sm text-muted-foreground">{stat.detail}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">{stat.detail}</div>
               </CardContent>
             </Card>
           ))}
