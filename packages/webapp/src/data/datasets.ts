@@ -248,10 +248,11 @@ export const datasetConfigs = [
   {
     id: 'banxico-udis',
     label: 'UDI',
-    type: 'json-array',
-    table: 'banxico/udis.json',
+    type: 'sql',
+    table: 'banxico_udis',
     category: 'banking',
     searchColumns: ['fecha', 'valor', 'tipo'],
+    orderBy: 'fecha DESC',
     columns: [
       { key: 'fecha', label: 'Fecha' },
       { key: 'valor', label: 'Valor' },
@@ -263,10 +264,11 @@ export const datasetConfigs = [
   {
     id: 'banxico-tipo-cambio-fix',
     label: 'Tipo de Cambio FIX',
-    type: 'json-array',
-    table: 'banxico/tipo_cambio_usd.json',
+    type: 'sql',
+    table: 'banxico_tipo_cambio_usd',
     category: 'banking',
     searchColumns: ['fecha', 'tipo_cambio', 'tipo'],
+    orderBy: 'fecha DESC',
     columns: [
       { key: 'fecha', label: 'Fecha' },
       { key: 'tipo_cambio', label: 'MXN/USD' },
@@ -279,10 +281,11 @@ export const datasetConfigs = [
   {
     id: 'banxico-tipo-cambio-historico',
     label: 'Tipo de Cambio Histórico',
-    type: 'json-array',
-    table: 'banxico/tipo_cambio_hist.json',
+    type: 'sql',
+    table: 'banxico_tipo_cambio_hist',
     category: 'banking',
     searchColumns: ['fecha', 'tipo_cambio', 'tipo'],
+    orderBy: 'fecha DESC',
     columns: [
       { key: 'fecha', label: 'Fecha' },
       { key: 'tipo_cambio', label: 'MXN/USD' },
@@ -295,10 +298,11 @@ export const datasetConfigs = [
   {
     id: 'banxico-tiie-28',
     label: 'TIIE 28 días',
-    type: 'json-array',
-    table: 'banxico/tiie_28.json',
+    type: 'sql',
+    table: 'banxico_tiie_28',
     category: 'banking',
     searchColumns: ['fecha', 'tasa', 'tipo'],
+    orderBy: 'fecha DESC',
     columns: [
       { key: 'fecha', label: 'Fecha' },
       { key: 'tasa', label: 'Tasa (%)' },
@@ -310,10 +314,11 @@ export const datasetConfigs = [
   {
     id: 'banxico-cetes-28',
     label: 'CETES 28 días',
-    type: 'json-array',
-    table: 'banxico/cetes_28.json',
+    type: 'sql',
+    table: 'banxico_cetes_28',
     category: 'banking',
     searchColumns: ['fecha', 'tasa', 'instrumento'],
+    orderBy: 'fecha DESC',
     columns: [
       { key: 'fecha', label: 'Fecha' },
       { key: 'tasa', label: 'Tasa (%)' },
@@ -326,10 +331,11 @@ export const datasetConfigs = [
   {
     id: 'banxico-inflacion-anual',
     label: 'Inflación Anual',
-    type: 'json-array',
-    table: 'banxico/inflacion_anual.json',
+    type: 'sql',
+    table: 'banxico_inflacion_anual',
     category: 'banking',
     searchColumns: ['fecha', 'inflacion_anual', 'indice'],
+    orderBy: 'fecha DESC',
     columns: [
       { key: 'fecha', label: 'Fecha' },
       { key: 'inflacion_anual', label: 'Inflación (%)' },
@@ -341,10 +347,11 @@ export const datasetConfigs = [
   {
     id: 'banxico-salarios-minimos',
     label: 'Salarios Mínimos Banxico',
-    type: 'json-array',
-    table: 'banxico/salarios_minimos.json',
+    type: 'sql',
+    table: 'banxico_salarios_minimos',
     category: 'national',
     searchColumns: ['fecha', 'salario_minimo', 'zona', 'tipo'],
+    orderBy: 'fecha DESC',
     columns: [
       { key: 'fecha', label: 'Fecha' },
       { key: 'salario_minimo', label: 'Salario ($)' },
