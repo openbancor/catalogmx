@@ -25,14 +25,18 @@ export default function RFCPage() {
 
   const handleGenerate = () => {
     if (genNombre && genPaterno && genFecha) {
-      const fecha = new Date(genFecha);
-      const rfc = generateRFC({
-        nombre: genNombre,
-        paterno: genPaterno,
-        materno: genMaterno || 'X',
-        fecha
-      });
-      setGeneratedRFC(rfc);
+      const fecha = new Date(`${genFecha}T00:00:00`);
+      if (!Number.isNaN(fecha.getTime())) {
+        const rfc = generateRFC({
+          nombre: genNombre,
+          paterno: genPaterno,
+          materno: genMaterno || 'X',
+          fecha
+        });
+        setGeneratedRFC(rfc);
+      } else {
+        setGeneratedRFC('');
+      }
     }
   };
 
@@ -140,7 +144,7 @@ export default function RFCPage() {
           <CardHeader>
             <CardTitle>Generate RFC</CardTitle>
             <CardDescription>
-              Generate an RFC from personal data (without homoclave)
+              Generate a full RFC from personal data (homoclave + checksum included)
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -189,7 +193,7 @@ export default function RFCPage() {
                   {generatedRFC}
                 </div>
                 <div className="text-xs text-muted-foreground mt-2">
-                  Note: Homoclave (last 3 characters) is placeholder. Official homoclave requires SAT verification.
+                  Uses SAT homoclave and checksum formulas; enter date as AAAA-MM-DD.
                 </div>
               </div>
             )}

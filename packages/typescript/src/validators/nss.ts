@@ -3,16 +3,18 @@
  * Mexican Social Security Number (IMSS)
  *
  * Structure (11 digits):
- *   - 5 digits: Subdelegation code
- *   - 2 digits: Registration year
- *   - 4 digits: Serial number
+ *   - 2 digits: Subdelegation code (IMSS office)
+ *   - 2 digits: Registration year (last 2 digits)
+ *   - 2 digits: Birth year (last 2 digits)
+ *   - 4 digits: Sequential number
  *   - 1 digit: Check digit (modified Luhn algorithm)
  *
  * Example: 12345678903
- *   12345: Subdelegation
- *   67: Year
- *   8903: Serial
- *   Last digit may vary
+ *   12: Subdelegation
+ *   34: Registration year (2034 or 1934)
+ *   56: Birth year (2056 or 1956)
+ *   7890: Sequential
+ *   3: Check digit
  */
 
 export class NSSValidator {
@@ -103,27 +105,35 @@ export class NSSValidator {
   }
 
   /**
-   * Extract subdelegation code (first 5 digits)
+   * Extract subdelegation code (first 2 digits)
    */
   getSubdelegation(): string | null {
     if (!this.isValid()) return null;
-    return this.nss.slice(0, 5);
+    return this.nss.slice(0, 2);
   }
 
   /**
-   * Extract registration year (digits 6-7)
+   * Extract registration year (digits 3-4)
    */
   getRegistrationYear(): string | null {
     if (!this.isValid()) return null;
-    return this.nss.slice(5, 7);
+    return this.nss.slice(2, 4);
   }
 
   /**
-   * Extract serial number (digits 8-11, excluding check digit)
+   * Extract birth year (digits 5-6)
    */
-  getSerialNumber(): string | null {
+  getBirthYear(): string | null {
     if (!this.isValid()) return null;
-    return this.nss.slice(7, 10);
+    return this.nss.slice(4, 6);
+  }
+
+  /**
+   * Extract sequential number (digits 7-10)
+   */
+  getSequential(): string | null {
+    if (!this.isValid()) return null;
+    return this.nss.slice(6, 10);
   }
 
   /**
@@ -131,15 +141,17 @@ export class NSSValidator {
    */
   getComponents(): {
     subdelegation: string;
-    year: string;
-    serial: string;
+    registrationYear: string;
+    birthYear: string;
+    sequential: string;
     checkDigit: string;
   } | null {
     if (!this.isValid()) return null;
     return {
-      subdelegation: this.nss.slice(0, 5),
-      year: this.nss.slice(5, 7),
-      serial: this.nss.slice(7, 10),
+      subdelegation: this.getSubdelegation()!,
+      registrationYear: this.getRegistrationYear()!,
+      birthYear: this.getBirthYear()!,
+      sequential: this.getSequential()!,
       checkDigit: this.nss[10],
     };
   }
@@ -160,13 +172,18 @@ export function validateNss(nss: string): boolean {
 /**
  * Generate an NSS from components
  */
-export function generateNss(subdelegation: string, year: string, serial: string): string {
-  // Validate and format components
-  const subdelPadded = subdelegation.padStart(5, '0').slice(0, 5);
-  const yearPadded = year.padStart(2, '0').slice(0, 2);
-  const serialPadded = serial.padStart(3, '0').slice(0, 3);
+export function generateNss(
+  subdelegation: string,
+  registrationYear: string,
+  birthYear: string,
+  sequential: string
+): string {
+  const subdel = subdelegation.padStart(2, '0').slice(0, 2);
+  const regYear = registrationYear.padStart(2, '0').slice(0, 2);
+  const birth = birthYear.padStart(2, '0').slice(0, 2);
+  const seq = sequential.padStart(4, '0').slice(0, 4);
 
-  const nss10 = subdelPadded + yearPadded + serialPadded;
+  const nss10 = subdel + regYear + birth + seq;
 
   if (nss10.length !== 10 || !/^\d+$/.test(nss10)) {
     throw new Error('Invalid NSS components');

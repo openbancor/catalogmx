@@ -4,16 +4,16 @@
 /// (Instituto Mexicano del Seguro Social).
 ///
 /// Structure:
-/// - 2 digits: Subdelegation code
-/// - 2 digits: Year of registration (last 2 digits)
-/// - 2 digits: Registration serial number
+/// - 2 digits: Subdelegation code (IMSS office)
+/// - 2 digits: Registration year (last 2 digits)
+/// - 2 digits: Birth year (last 2 digits)
 /// - 4 digits: Sequential number
 /// - 1 digit: Check digit (modified Luhn algorithm)
 ///
 /// Example: 12345678903
 /// - 12: Subdelegation
-/// - 34: Year (2034 or 1934)
-/// - 56: Serial
+/// - 34: Registration year (2034 or 1934)
+/// - 56: Birth year (2056 or 1956)
 /// - 7890: Sequential
 /// - 3: Check digit
 library;
@@ -126,15 +126,15 @@ class NSSValidator {
 
   /// Extracts the registration year (digits 3-4, last 2 digits of year)
   /// Note: This is ambiguous - could be 19XX or 20XX
-  String? getYear() {
+  String? getRegistrationYear() {
     if (nss.length >= 4) {
       return nss.substring(2, 4);
     }
     return null;
   }
 
-  /// Extracts the registration serial (digits 5-6)
-  String? getSerial() {
+  /// Extracts the birth year (digits 5-6, last 2 digits of year)
+  String? getBirthYear() {
     if (nss.length >= 6) {
       return nss.substring(4, 6);
     }
@@ -163,8 +163,8 @@ class NSSValidator {
 
     return {
       'subdelegation': getSubdelegation(),
-      'year': getYear(),
-      'serial': getSerial(),
+      'registration_year': getRegistrationYear(),
+      'birth_year': getBirthYear(),
       'sequential': getSequential(),
       'check_digit': getCheckDigit(),
       'nss': nss,
@@ -187,30 +187,30 @@ bool validateNSS(String? nss) {
 /// Generates a complete NSS with check digit
 String generateNSS({
   required String subdelegation,
-  required String year,
-  required String serial,
+  required String registrationYear,
+  required String birthYear,
   required String sequential,
 }) {
   // Ensure all parts are strings and properly formatted
   final sub = subdelegation.padLeft(2, '0');
-  final yr = year.padLeft(2, '0');
-  final ser = serial.padLeft(2, '0');
+  final regYr = registrationYear.padLeft(2, '0');
+  final birthYr = birthYear.padLeft(2, '0');
   final seq = sequential.padLeft(4, '0');
 
   if (sub.length != 2) {
     throw NSSException('Subdelegation must be 2 digits');
   }
-  if (yr.length != 2) {
-    throw NSSException('Year must be 2 digits');
+  if (regYr.length != 2) {
+    throw NSSException('Registration year must be 2 digits');
   }
-  if (ser.length != 2) {
-    throw NSSException('Serial must be 2 digits');
+  if (birthYr.length != 2) {
+    throw NSSException('Birth year must be 2 digits');
   }
   if (seq.length != 4) {
     throw NSSException('Sequential must be 4 digits');
   }
 
-  final nss10 = sub + yr + ser + seq;
+  final nss10 = sub + regYr + birthYr + seq;
   final checkDigit = NSSValidator.calculateCheckDigit(nss10);
 
   return nss10 + checkDigit;

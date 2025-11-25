@@ -435,9 +435,9 @@ export interface NSSValidationResult {
   };
   parsed?: {
     subdelegation: string;
-    birthYear: string;
     registrationYear: string;
-    serial: string;
+    birthYear: string;
+    sequential: string;
     checkDigit: string;
   };
 }
@@ -470,9 +470,9 @@ export function validateNSS(nss: string): NSSValidationResult {
 
   result.parsed = {
     subdelegation: nssClean.slice(0, 2),
-    birthYear: nssClean.slice(2, 4),
-    registrationYear: nssClean.slice(4, 6),
-    serial: nssClean.slice(6, 10),
+    registrationYear: nssClean.slice(2, 4),
+    birthYear: nssClean.slice(4, 6),
+    sequential: nssClean.slice(6, 10),
     checkDigit: nssClean[10]
   };
 

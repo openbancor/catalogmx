@@ -30,14 +30,14 @@ void main() {
       expect(validator.getSubdelegation(), equals('12'));
     });
 
-    test('extracts year', () {
+    test('extracts registration year', () {
       final validator = NSSValidator('12345678903');
-      expect(validator.getYear(), equals('34'));
+      expect(validator.getRegistrationYear(), equals('34'));
     });
 
-    test('extracts serial', () {
+    test('extracts birth year', () {
       final validator = NSSValidator('12345678903');
-      expect(validator.getSerial(), equals('56'));
+      expect(validator.getBirthYear(), equals('56'));
     });
 
     test('extracts sequential', () {
@@ -56,8 +56,8 @@ void main() {
 
       expect(parts, isNotNull);
       expect(parts!['subdelegation'], equals('12'));
-      expect(parts['year'], equals('34'));
-      expect(parts['serial'], equals('56'));
+      expect(parts['registration_year'], equals('34'));
+      expect(parts['birth_year'], equals('56'));
       expect(parts['sequential'], equals('7890'));
       expect(parts['check_digit'], equals('3'));
     });
@@ -72,8 +72,8 @@ void main() {
     test('generates valid NSS', () {
       final nss = generateNSS(
         subdelegation: '12',
-        year: '34',
-        serial: '56',
+        registrationYear: '34',
+        birthYear: '56',
         sequential: '7890',
       );
 
@@ -84,8 +84,8 @@ void main() {
     test('pads short values', () {
       final nss = generateNSS(
         subdelegation: '1',
-        year: '2',
-        serial: '3',
+        registrationYear: '2',
+        birthYear: '3',
         sequential: '456',
       );
 
@@ -96,8 +96,8 @@ void main() {
       expect(
         () => generateNSS(
           subdelegation: '123',
-          year: '34',
-          serial: '56',
+          registrationYear: '34',
+          birthYear: '56',
           sequential: '7890',
         ),
         throwsA(isA<NSSException>()),

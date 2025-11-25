@@ -384,16 +384,16 @@ function NSSValidator() {
                   <div className="font-bold text-sm">{result.parsed.subdelegation}</div>
                 </div>
                 <div className="p-2 bg-purple-100 rounded">
-                  <div className="text-[10px] text-purple-600">Birth</div>
-                  <div className="font-bold text-sm">{result.parsed.birthYear}</div>
-                </div>
-                <div className="p-2 bg-orange-100 rounded">
-                  <div className="text-[10px] text-orange-600">Reg.</div>
+                  <div className="text-[10px] text-purple-600">Reg.</div>
                   <div className="font-bold text-sm">{result.parsed.registrationYear}</div>
                 </div>
+                <div className="p-2 bg-orange-100 rounded">
+                  <div className="text-[10px] text-orange-600">Birth</div>
+                  <div className="font-bold text-sm">{result.parsed.birthYear}</div>
+                </div>
                 <div className="p-2 bg-gray-100 rounded">
-                  <div className="text-[10px] text-gray-600">Serial</div>
-                  <div className="font-bold text-sm">{result.parsed.serial}</div>
+                  <div className="text-[10px] text-gray-600">Seq</div>
+                  <div className="font-bold text-sm">{result.parsed.sequential}</div>
                 </div>
                 <div className="p-2 bg-green-100 rounded">
                   <div className="text-[10px] text-green-600">Check</div>

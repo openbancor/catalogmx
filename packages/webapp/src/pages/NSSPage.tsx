@@ -86,20 +86,20 @@ export default function NSSPage() {
                         <div className="font-mono font-medium text-lg">{result.parsed.subdelegation}</div>
                         <div className="text-xs text-muted-foreground">IMSS regional office</div>
                       </div>
+              <div className="p-3 bg-muted rounded">
+                <div className="text-muted-foreground">Registration Year</div>
+                <div className="font-mono font-medium text-lg">19{result.parsed.registrationYear}</div>
+                <div className="text-xs text-muted-foreground">or 20{result.parsed.registrationYear}</div>
+              </div>
+              <div className="p-3 bg-muted rounded">
+                <div className="text-muted-foreground">Birth Year</div>
+                <div className="font-mono font-medium text-lg">19{result.parsed.birthYear}</div>
+                <div className="text-xs text-muted-foreground">or 20{result.parsed.birthYear}</div>
+              </div>
                       <div className="p-3 bg-muted rounded">
-                        <div className="text-muted-foreground">Birth Year</div>
-                        <div className="font-mono font-medium text-lg">19{result.parsed.birthYear}</div>
-                        <div className="text-xs text-muted-foreground">or 20{result.parsed.birthYear}</div>
-                      </div>
-                      <div className="p-3 bg-muted rounded">
-                        <div className="text-muted-foreground">Registration Year</div>
-                        <div className="font-mono font-medium text-lg">19{result.parsed.registrationYear}</div>
-                        <div className="text-xs text-muted-foreground">or 20{result.parsed.registrationYear}</div>
-                      </div>
-                      <div className="p-3 bg-muted rounded">
-                        <div className="text-muted-foreground">Serial Number</div>
-                        <div className="font-mono font-medium text-lg">{result.parsed.serial}</div>
-                        <div className="text-xs text-muted-foreground">Sequential</div>
+                        <div className="text-muted-foreground">Sequential Number</div>
+                        <div className="font-mono font-medium text-lg">{result.parsed.sequential}</div>
+                        <div className="text-xs text-muted-foreground">Secuencial</div>
                       </div>
                     </div>
                   </div>
@@ -135,15 +135,15 @@ export default function NSSPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Badge className="bg-green-600">AA</Badge>
-                <span>Birth Year (2 digits)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge className="bg-purple-600">BB</Badge>
                 <span>Registration Year (2 digits)</span>
               </div>
               <div className="flex items-center gap-2">
+                <Badge className="bg-purple-600">BB</Badge>
+                <span>Birth Year (2 digits)</span>
+              </div>
+              <div className="flex items-center gap-2">
                 <Badge className="bg-orange-600">NNNN</Badge>
-                <span>Serial Number (4 digits)</span>
+                <span>Sequential (4 digits)</span>
               </div>
               <div className="flex items-center gap-2">
                 <Badge className="bg-red-600">C</Badge>

@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Database, MapPin, Package, Building2 } from 'lucide-react';
 import { emitNavigation } from '@/lib/navigation';
+import { useLocale } from '@/lib/locale';
 
 const formatBytes = (bytes: number): string => {
   if (!bytes) return '-';
@@ -48,6 +49,7 @@ const featuredCatalogs = [
 ];
 
 export default function CatalogsPage() {
+  const { t } = useLocale();
   const [fileMeta, setFileMeta] = useState<{ size?: number; modified?: string }>({});
 
   useEffect(() => {
@@ -65,9 +67,9 @@ export default function CatalogsPage() {
   }, []);
 
   const heroStats = [
-    { label: 'Tablas en mexico.sqlite3', value: '58', detail: 'Banxico · SAT · INEGI · SEPOMEX' },
-    { label: 'Filas totales', value: '470k+', detail: 'Datos consolidados' },
-    { label: 'Última modificación', value: formatDate(fileMeta.modified), detail: 'Cabecera HTTP Last-Modified' },
+    { label: t('catalogs.stats.tables'), value: '58', detail: t('catalogs.stats.detail') },
+    { label: t('catalogs.stats.rows'), value: '470k+', detail: t('catalogs.stats.rowsDetail') },
+    { label: t('catalogs.stats.modified'), value: formatDate(fileMeta.modified), detail: 'Cabecera HTTP Last-Modified' },
   ];
 
   return (
@@ -77,14 +79,11 @@ export default function CatalogsPage() {
           <CardHeader>
             <CardTitle className="text-2xl">mexico.sqlite3</CardTitle>
             <CardDescription className="text-primary-foreground/80">
-              Build SQLite unificado listo para consultas HTTP/Range sin servidor.
+              {t('catalogs.hero.subtitle')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 text-sm">
-            <p>
-              Copia <code className="font-mono">mexico.sqlite3</code> en <code className="font-mono">/public/data</code> y el demo lo carga localmente con sql.js.
-              Sin servidor, sin API keys: datos normativos deterministas.
-            </p>
+            <p>{t('catalogs.hero.description')}</p>
             <div className="flex flex-wrap gap-3">
               <a
                 href={`${import.meta.env.BASE_URL}data/mexico.sqlite3`}
@@ -92,7 +91,7 @@ export default function CatalogsPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-primary shadow hover:bg-white"
               >
-                Descargar base de datos
+                {t('catalogs.hero.download')}
               </a>
               <a
                 href="https://github.com/OpenBancor/catalogmx/blob/main/packages/webapp/SPEC-sqlite-vfs.MD"
@@ -100,15 +99,15 @@ export default function CatalogsPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full border border-white/60 px-4 py-2 text-sm font-semibold text-white/90 hover:bg-white/10"
               >
-                Leer spec de VFS
+                {t('catalogs.hero.spec')}
               </a>
             </div>
             <div className="flex flex-wrap gap-3 text-xs text-primary-foreground/80">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1">
-                Tamaño: {fileMeta.size ? formatBytes(fileMeta.size) : '—'}
+                {t('catalogs.hero.size')}: {fileMeta.size ? formatBytes(fileMeta.size) : '—'}
               </span>
               <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1">
-                Última modificación: {formatDate(fileMeta.modified)}
+                {t('catalogs.hero.modified')}: {formatDate(fileMeta.modified)}
               </span>
             </div>
           </CardContent>
@@ -131,7 +130,7 @@ export default function CatalogsPage() {
       <section className="space-y-4">
         <div className="flex items-center gap-2">
           <Database className="h-5 w-5 text-primary" />
-          <h2 className="text-xl font-semibold">Catálogos principales</h2>
+          <h2 className="text-xl font-semibold">{t('catalogs.main.title')}</h2>
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {featuredCatalogs.map((catalog) => (
@@ -146,7 +145,7 @@ export default function CatalogsPage() {
               <CardContent className="mt-auto space-y-3 text-sm">
                 <div className="flex items-center justify-between rounded-lg border px-3 py-2">
                   <div>
-                    <div className="font-medium text-foreground">Tabla</div>
+                    <div className="font-medium text-foreground">{t('catalogs.feature.table')}</div>
                     <div className="font-mono text-xs">{catalog.table}</div>
                   </div>
                   <Badge variant="secondary">{catalog.countHint}</Badge>
@@ -156,7 +155,7 @@ export default function CatalogsPage() {
                   className="w-full"
                   onClick={() => emitNavigation(catalog.id)}
                 >
-                  Abrir
+                  {t('catalogs.feature.open')}
                 </Button>
               </CardContent>
             </Card>

@@ -117,7 +117,7 @@ function CatalogDialog({ catalog, onClose }: { catalog: CatalogItem | null; onCl
 
   return (
     <Dialog open={!!catalog} onOpenChange={() => onClose()}>
-      <DialogContent className="max-w-3xl space-y-4">
+      <DialogContent className="max-w-3xl w-[min(100vw-2rem,960px)] space-y-4">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {catalog.name}

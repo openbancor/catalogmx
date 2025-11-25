@@ -135,27 +135,27 @@ class TestNSSValidator:
         validator = NSSValidator("1")
         assert validator.get_subdelegation() is None
 
-    def test_get_year(self):
-        """Test extracting year"""
+    def test_get_registration_year(self):
+        """Test extracting registration year"""
         nss = "12345678903"
         validator = NSSValidator(nss)
-        assert validator.get_year() == "34"
+        assert validator.get_registration_year() == "34"
 
-    def test_get_year_short_nss(self):
-        """Test extracting year from short NSS"""
+    def test_get_registration_year_short_nss(self):
+        """Test extracting registration year from short NSS"""
         validator = NSSValidator("123")
-        assert validator.get_year() is None
+        assert validator.get_registration_year() is None
 
-    def test_get_serial(self):
-        """Test extracting serial"""
+    def test_get_birth_year(self):
+        """Test extracting birth year"""
         nss = "12345678903"
         validator = NSSValidator(nss)
-        assert validator.get_serial() == "56"
+        assert validator.get_birth_year() == "56"
 
-    def test_get_serial_short_nss(self):
-        """Test extracting serial from short NSS"""
+    def test_get_birth_year_short_nss(self):
+        """Test extracting birth year from short NSS"""
         validator = NSSValidator("12345")
-        assert validator.get_serial() is None
+        assert validator.get_birth_year() is None
 
     def test_get_sequential(self):
         """Test extracting sequential number"""
@@ -187,8 +187,8 @@ class TestNSSValidator:
         
         assert parts is not None
         assert parts["subdelegation"] == "12"
-        assert parts["year"] == "34"
-        assert parts["serial"] == "56"
+        assert parts["registration_year"] == "34"
+        assert parts["birth_year"] == "56"
         assert parts["sequential"] == "7890"
         assert parts["check_digit"] == "3"
         assert parts["nss"] == nss
@@ -244,17 +244,17 @@ class TestNSSHelperFunctions:
             generate_nss("12345", "34", "56", "7890")
         assert "Subdelegation must be 2 digits" in str(exc.value)
 
-    def test_generate_nss_invalid_year(self):
-        """Test generating NSS with invalid year length"""
+    def test_generate_nss_invalid_reg_year(self):
+        """Test generating NSS with invalid registration year length"""
         with pytest.raises(NSSStructureError) as exc:
             generate_nss("12", "12345", "56", "7890")
-        assert "Year must be 2 digits" in str(exc.value)
+        assert "Registration year must be 2 digits" in str(exc.value)
 
-    def test_generate_nss_invalid_serial(self):
-        """Test generating NSS with invalid serial length"""
+    def test_generate_nss_invalid_birth_year(self):
+        """Test generating NSS with invalid birth year length"""
         with pytest.raises(NSSStructureError) as exc:
             generate_nss("12", "34", "12345", "7890")
-        assert "Serial must be 2 digits" in str(exc.value)
+        assert "Birth year must be 2 digits" in str(exc.value)
 
     def test_generate_nss_invalid_sequential(self):
         """Test generating NSS with invalid sequential length"""
@@ -268,8 +268,8 @@ class TestNSSHelperFunctions:
         info = get_nss_info(nss)
         assert info is not None
         assert info["subdelegation"] == "12"
-        assert info["year"] == "34"
-        assert info["serial"] == "56"
+        assert info["registration_year"] == "34"
+        assert info["birth_year"] == "56"
         assert info["sequential"] == "7890"
         assert info["check_digit"] == "3"
 
@@ -348,8 +348,8 @@ class TestNSSCheckDigitAlgorithm:
             ("55", "66", "77", "8888"),
         ]
         
-        for subdel, year, serial, seq in test_cases:
-            nss = generate_nss(subdel, year, serial, seq)
+        for subdel, reg_year, birth_year, seq in test_cases:
+            nss = generate_nss(subdel, reg_year, birth_year, seq)
             validator = NSSValidator(nss)
             assert validator.is_valid(), f"NSS {nss} should be valid"
             
@@ -370,4 +370,3 @@ class TestNSSCheckDigitAlgorithm:
         # Verify the calculation produces a valid NSS
         nss = nss_10 + check_digit
         assert validate_nss(nss) is True
-

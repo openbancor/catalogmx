@@ -4,8 +4,10 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { AlertTriangle, Database, Loader2, Search } from 'lucide-react';
 import { getTableCount, listTables } from '@/lib/database';
+import { useLocale } from '@/lib/locale';
 
 export default function TablesPage() {
+  const { t } = useLocale();
   const [tableCounts, setTableCounts] = useState<Record<string, number>>({});
   const [tableNames, setTableNames] = useState<string[]>([]);
   const [tableFilter, setTableFilter] = useState('');
@@ -61,9 +63,9 @@ export default function TablesPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Database className="h-5 w-5 text-primary" />
-            Tablas de mexico.sqlite3
+            {t('tables.title')}
           </CardTitle>
-          <CardDescription>Busca y navega cualquier tabla del archivo consolidado.</CardDescription>
+          <CardDescription>{t('tables.subtitle')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="relative max-w-md">
@@ -71,21 +73,21 @@ export default function TablesPage() {
             <Input
               value={tableFilter}
               onChange={(e) => setTableFilter(e.target.value)}
-              placeholder="Buscar tabla (ej. sat_cfdi_4_0_c_formapago)…"
+              placeholder={t('tables.search.placeholder')}
               className="pl-10"
             />
           </div>
           {countError ? (
             <div className="flex items-center gap-2 text-sm text-red-600">
               <AlertTriangle className="h-4 w-4" />
-              {countError}
+              {t('tables.error')}
             </div>
           ) : (
             <div className="max-h-[32rem] overflow-auto rounded-lg border divide-y">
               {countsLoading && !filteredTables.length ? (
                 <div className="flex items-center gap-2 p-3 text-sm text-muted-foreground">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Cargando tablas…
+                  {t('tables.loading')}
                 </div>
               ) : (
                 filteredTables.map((table) => (
@@ -96,7 +98,7 @@ export default function TablesPage() {
                 ))
               )}
               {!countsLoading && filteredTables.length === 0 ? (
-                <div className="p-3 text-sm text-muted-foreground">Sin resultados</div>
+                <div className="p-3 text-sm text-muted-foreground">{t('tables.empty')}</div>
               ) : null}
             </div>
           )}

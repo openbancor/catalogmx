@@ -142,6 +142,15 @@ function AppInner() {
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm md:hidden"
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Sidebar */}
       <aside
         className={cn(
@@ -248,7 +257,9 @@ function AppInner() {
         </header>
 
         <div className="p-4 sm:p-6">
-          <PageComponent />
+          <div className="mx-auto w-full max-w-6xl">
+            <PageComponent />
+          </div>
         </div>
       </main>
     </div>

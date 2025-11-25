@@ -4,18 +4,19 @@ NSS (Número de Seguridad Social) Validator
 
 NSS is the 11-digit social security number issued by IMSS (Instituto Mexicano del Seguro Social).
 
-Structure:
-    - 2 digits: Subdelegation code
-    - 2 digits: Year of registration (last 2 digits)
-    - 2 digits: Registration serial number
-    - 5 digits: Sequential number
+Structure (11 digits):
+    - 2 digits: Subdelegation code (IMSS office)
+    - 2 digits: Registration year (last 2 digits)
+    - 2 digits: Birth year (last 2 digits)
+    - 4 digits: Sequential number
     - 1 digit: Check digit (modified Luhn algorithm)
 
 Example: 12345678903
     12: Subdelegation
-    34: Year (2034 or 1934)
-    56: Serial
-    78903: Sequential and check digit
+    34: Registration year (2034 or 1934)
+    56: Birth year (2056 or 1956)
+    7890: Sequential
+    3: Check digit
 
 Note: The check digit uses a modified Luhn algorithm specific to NSS.
 """
@@ -145,7 +146,7 @@ class NSSValidator:
             return self.nss[:2]
         return None
 
-    def get_year(self) -> str | None:
+    def get_registration_year(self) -> str | None:
         """
         Extracts the registration year (digits 3-4, last 2 digits of year)
         Note: This is ambiguous - could be 19XX or 20XX
@@ -155,10 +156,11 @@ class NSSValidator:
             return self.nss[2:4]
         return None
 
-    def get_serial(self) -> str | None:
+    def get_birth_year(self) -> str | None:
         """
-        Extracts the registration serial (digits 5-6)
-        :return: Serial number as string
+        Extracts the birth year (digits 5-6, last 2 digits of year)
+        Note: This is ambiguous - could be 19XX or 20XX
+        :return: Year suffix as string
         """
         if len(self.nss) >= 6:
             return self.nss[4:6]
@@ -185,15 +187,15 @@ class NSSValidator:
     def get_parts(self) -> dict[str, str] | None:
         """
         Returns all NSS parts as a dictionary
-        :return: Dictionary with subdelegation, year, serial, sequential, check_digit
+        :return: Dictionary with subdelegation, registration_year, birth_year, sequential, check_digit
         """
         if not self.is_valid():
             return None
 
         return {
             "subdelegation": self.get_subdelegation(),
-            "year": self.get_year(),
-            "serial": self.get_serial(),
+            "registration_year": self.get_registration_year(),
+            "birth_year": self.get_birth_year(),
             "sequential": self.get_sequential(),
             "check_digit": self.get_check_digit(),
             "nss": self.nss,
@@ -212,33 +214,36 @@ def validate_nss(nss: str | None) -> bool:
 
 
 def generate_nss(
-    subdelegation: str | int, year: str | int, serial: str | int, sequential: str | int
+    subdelegation: str | int,
+    registration_year: str | int,
+    birth_year: str | int,
+    sequential: str | int,
 ) -> str:
     """
     Generates a complete NSS with check digit
 
     :param subdelegation: 2-digit subdelegation code
-    :param year: 2-digit year (last 2 digits)
-    :param serial: 2-digit serial number
+    :param registration_year: 2-digit registration year (last 2 digits)
+    :param birth_year: 2-digit birth year (last 2 digits)
     :param sequential: 4-digit sequential number
     :return: Complete 11-digit NSS
     """
     # Ensure all parts are strings and properly formatted
     subdelegation = str(subdelegation).zfill(2)
-    year = str(year).zfill(2)
-    serial = str(serial).zfill(2)
+    registration_year = str(registration_year).zfill(2)
+    birth_year = str(birth_year).zfill(2)
     sequential = str(sequential).zfill(4)
 
     if len(subdelegation) != 2:
         raise NSSStructureError("Subdelegation must be 2 digits")
-    if len(year) != 2:
-        raise NSSStructureError("Year must be 2 digits")
-    if len(serial) != 2:
-        raise NSSStructureError("Serial must be 2 digits")
+    if len(registration_year) != 2:
+        raise NSSStructureError("Registration year must be 2 digits")
+    if len(birth_year) != 2:
+        raise NSSStructureError("Birth year must be 2 digits")
     if len(sequential) != 4:
         raise NSSStructureError("Sequential must be 4 digits")
 
-    nss_10 = subdelegation + year + serial + sequential
+    nss_10 = subdelegation + registration_year + birth_year + sequential
     check_digit = NSSValidator.calculate_check_digit(nss_10)
 
     return nss_10 + check_digit
