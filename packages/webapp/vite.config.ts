@@ -5,9 +5,9 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
-  base: './',
+  base: mode === 'production' ? './' : '/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -18,19 +18,9 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['@sqlite.org/sqlite-wasm'],
+    include: ['sql.js', 'sql.js/dist/sql-wasm.js'],
   },
-  server: {
-    headers: {
-      // Enable SharedArrayBuffer for SQLite WASM
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
-    },
+  ssr: {
+    noExternal: ['sql.js'],
   },
-  preview: {
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
-    },
-  },
-});
+}));

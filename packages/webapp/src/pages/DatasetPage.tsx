@@ -206,58 +206,58 @@ export default function DatasetPage({ datasetId }: DatasetPageProps) {
 
           {/* Desktop Table View */}
           <Card className="hidden md:block">
-            <CardContent className="p-0 overflow-x-auto">
-              <div className="min-w-full">
-                <table className="w-full min-w-[720px] text-sm table-auto">
-                  <thead className="bg-muted">
-                    <tr>
-                      {config.columns.map((col) => (
-                        <th key={col.key} className="p-3 text-left font-medium whitespace-nowrap">
-                          {col.label}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {rows.map((row, idx) => (
-                      <tr key={idx} className="hover:bg-muted/50">
+        <CardContent className="p-0 overflow-x-auto">
+          <div className="min-w-full">
+            <table className="w-full min-w-[720px] text-sm table-auto">
+              <thead className="bg-muted">
+                <tr>
+                  {config.columns.map((col) => (
+                    <th key={col.key} className="p-3 text-left font-medium whitespace-nowrap">
+                      {col.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {rows.map((row, idx) => (
+                  <tr key={idx} className="hover:bg-muted/50">
                         {config.columns.map((col) => (
-                          <td key={col.key} className="p-3 align-top break-words">
+                        <td key={col.key} className="p-3 align-top break-words">
                             {renderValue(row[col.key])}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                    {rows.length === 0 && (
-                      <tr>
-                        <td colSpan={config.columns.length} className="p-4 text-center text-muted-foreground">
-                          {loading ? 'Cargando...' : 'Sin resultados'}
                         </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-              <div className="flex items-center justify-between px-4 py-3 text-sm text-muted-foreground">
+                        ))}
+                  </tr>
+                ))}
+                  {rows.length === 0 && (
+                    <tr>
+                      <td colSpan={config.columns.length} className="p-4 text-center text-muted-foreground">
+                        {loading ? 'Cargando...' : 'Sin resultados'}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className="flex items-center justify-between px-4 py-3 text-sm text-muted-foreground">
+              <span>
+                Mostrando {rows.length ? (page - 1) * pageSize + 1 : 0}-{Math.min(page * pageSize, total)} de {total.toLocaleString()}
+              </span>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={() => load(page - 1)} disabled={page <= 1 || loading}>
+                  <ChevronLeft className="h-4 w-4" />
+                  Anterior
+                </Button>
                 <span>
-                  Mostrando {rows.length ? (page - 1) * pageSize + 1 : 0}-{Math.min(page * pageSize, total)} de {total.toLocaleString()}
+                  Página {page} de {totalPages}
                 </span>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => load(page - 1)} disabled={page <= 1 || loading}>
-                    <ChevronLeft className="h-4 w-4" />
-                    Anterior
-                  </Button>
-                  <span>
-                    Página {page} de {totalPages}
-                  </span>
-                  <Button variant="outline" size="sm" onClick={() => load(page + 1)} disabled={page >= totalPages || loading}>
-                    Siguiente
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
+                <Button variant="outline" size="sm" onClick={() => load(page + 1)} disabled={page >= totalPages || loading}>
+                  Siguiente
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </CardContent>
+        </Card>
         </>
       )}
     </div>
