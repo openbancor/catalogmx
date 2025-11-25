@@ -162,28 +162,28 @@ export default function ProductosPage() {
                       <tr key={i} className="hover:bg-muted/50">
                         <td className="p-3">
                           <Badge variant="secondary" className="font-mono">
-                            {prod.id}
+                            {prod.clave}
                           </Badge>
                         </td>
                         <td className="p-3">
                           <div className="font-medium max-w-md">{prod.descripcion}</div>
-                          {prod.complementoQueDebeIncluir && (
+                          {prod.complemento && (
                             <div className="text-xs text-muted-foreground mt-1">
-                              Complement: {prod.complementoQueDebeIncluir}
+                              Complement: {prod.complemento}
                             </div>
                           )}
                         </td>
                         <td className="p-3 text-center">
-                          {renderTaxIndicator(prod.incluirIVATrasladado)}
+                          {renderTaxIndicator(prod.incluye_iva ? 'Sí' : 'No')}
                         </td>
                         <td className="p-3 text-center">
-                          {renderTaxIndicator(prod.incluirIEPSTrasladado)}
+                          {renderTaxIndicator(prod.incluye_ieps ? 'Sí' : 'No')}
                         </td>
                         <td className="p-3 text-center">
-                          {renderTaxIndicator(prod.estimuloFranjaFronteriza)}
+                          {renderTaxIndicator(prod.estimulo_franja_fronteriza)}
                         </td>
                         <td className="p-3 text-muted-foreground text-xs max-w-xs truncate">
-                          {prod.palabrasSimilares || '-'}
+                          {prod.palabras_similares || '-'}
                         </td>
                       </tr>
                     ))}

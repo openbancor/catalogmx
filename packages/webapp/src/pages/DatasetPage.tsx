@@ -12,6 +12,19 @@ interface DatasetPageProps {
   datasetId: DatasetId;
 }
 
+const renderValue = (value: unknown): React.ReactNode => {
+  if (typeof value === 'boolean') {
+    return value ? 'Sí' : 'No';
+  }
+  if (value === null || value === undefined) {
+    return '-';
+  }
+  if (typeof value === 'object') {
+    return JSON.stringify(value);
+  }
+  return value as React.ReactNode;
+};
+
 export default function DatasetPage({ datasetId }: DatasetPageProps) {
   const config = datasetConfigs.find((d) => d.id === datasetId) as DatasetConfig | undefined;
   const [search, setSearch] = useState('');
@@ -143,72 +156,109 @@ export default function DatasetPage({ datasetId }: DatasetPageProps) {
       )}
 
       {!error && (
-      <Card>
-        <CardContent className="p-0 overflow-x-auto">
-          <div className="min-w-full">
-            <table className="w-full min-w-[720px] text-sm table-auto">
-              <thead className="bg-muted">
-                <tr>
-                  {config.columns.map((col) => (
-                    <th key={col.key} className="p-3 text-left font-medium whitespace-nowrap">
-                      {col.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {rows.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-muted/50">
-                    {config.columns.map((col) => {
-                      const value = row[col.key];
-                      const rendered =
-                        typeof value === 'boolean'
-                          ? value
-                              ? 'Sí'
-                              : 'No'
-                            : value === null || value === undefined
-                              ? '-'
-                              : typeof value === 'object'
-                                ? JSON.stringify(value)
-                          : value;
-                      return (
-                        <td key={col.key} className="p-3 align-top break-words">
-                          {rendered as React.ReactNode}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-                  {rows.length === 0 && (
-                    <tr>
-                      <td colSpan={config.columns.length} className="p-4 text-center text-muted-foreground">
-                        {loading ? 'Cargando...' : 'Sin resultados'}
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-            <div className="flex items-center justify-between px-4 py-3 text-sm text-muted-foreground">
+        <>
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-4">
+            {rows.map((row, idx) => (
+              <Card key={idx} className="overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="divide-y">
+                    {config.columns.map((col) => (
+                      <div key={col.key} className="flex flex-col p-3">
+                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">
+                          {col.label}
+                        </span>
+                        <span className="text-sm break-words">
+                          {renderValue(row[col.key])}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+            {rows.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">
+                {loading ? 'Cargando...' : 'Sin resultados'}
+              </div>
+            )}
+            
+            {/* Mobile Pagination */}
+            <div className="flex flex-col items-center gap-3 py-4 text-sm text-muted-foreground">
               <span>
-                Mostrando {rows.length ? (page - 1) * pageSize + 1 : 0}-{Math.min(page * pageSize, total)} de {total.toLocaleString()}
+                {rows.length ? (page - 1) * pageSize + 1 : 0}-{Math.min(page * pageSize, total)} de {total.toLocaleString()}
               </span>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={() => load(page - 1)} disabled={page <= 1 || loading}>
-                  <ChevronLeft className="h-4 w-4" />
+              <div className="flex items-center gap-2 w-full justify-center">
+                <Button variant="outline" size="sm" onClick={() => load(page - 1)} disabled={page <= 1 || loading} className="flex-1">
+                  <ChevronLeft className="h-4 w-4 mr-1" />
                   Anterior
                 </Button>
-                <span>
-                  Página {page} de {totalPages}
+                <span className="mx-2">
+                   {page}/{totalPages}
                 </span>
-                <Button variant="outline" size="sm" onClick={() => load(page + 1)} disabled={page >= totalPages || loading}>
+                <Button variant="outline" size="sm" onClick={() => load(page + 1)} disabled={page >= totalPages || loading} className="flex-1">
                   Siguiente
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+
+          {/* Desktop Table View */}
+          <Card className="hidden md:block">
+            <CardContent className="p-0 overflow-x-auto">
+              <div className="min-w-full">
+                <table className="w-full min-w-[720px] text-sm table-auto">
+                  <thead className="bg-muted">
+                    <tr>
+                      {config.columns.map((col) => (
+                        <th key={col.key} className="p-3 text-left font-medium whitespace-nowrap">
+                          {col.label}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {rows.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-muted/50">
+                        {config.columns.map((col) => (
+                          <td key={col.key} className="p-3 align-top break-words">
+                            {renderValue(row[col.key])}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                    {rows.length === 0 && (
+                      <tr>
+                        <td colSpan={config.columns.length} className="p-4 text-center text-muted-foreground">
+                          {loading ? 'Cargando...' : 'Sin resultados'}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              <div className="flex items-center justify-between px-4 py-3 text-sm text-muted-foreground">
+                <span>
+                  Mostrando {rows.length ? (page - 1) * pageSize + 1 : 0}-{Math.min(page * pageSize, total)} de {total.toLocaleString()}
+                </span>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" onClick={() => load(page - 1)} disabled={page <= 1 || loading}>
+                    <ChevronLeft className="h-4 w-4" />
+                    Anterior
+                  </Button>
+                  <span>
+                    Página {page} de {totalPages}
+                  </span>
+                  <Button variant="outline" size="sm" onClick={() => load(page + 1)} disabled={page >= totalPages || loading}>
+                    Siguiente
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </>
       )}
     </div>
   );

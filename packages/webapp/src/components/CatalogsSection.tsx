@@ -1,144 +1,119 @@
 import { useState, useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Search, Database } from 'lucide-react';
-import { CATALOG_CATEGORIES, CATALOGS, type CatalogItem } from '@/data/catalogs';
+import { Search, Database, ArrowRight } from 'lucide-react';
+import { datasetConfigs, type DatasetConfig } from '@/data/datasets';
+import { emitNavigation } from '@/lib/navigation';
+import { useLocale } from '@/lib/locale';
 
 interface CatalogsSectionProps {
   showHeader?: boolean;
 }
 
 export default function CatalogsSection({ showHeader = true }: CatalogsSectionProps) {
+  const { t } = useLocale();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCatalog, setSelectedCatalog] = useState<CatalogItem | null>(null);
 
   const filteredCatalogs = useMemo(() => {
-    if (!searchQuery) return CATALOGS;
+    if (!searchQuery) return datasetConfigs;
     const q = searchQuery.toLowerCase();
-    return CATALOGS.filter(c =>
-      c.name.toLowerCase().includes(q) ||
-      c.description.toLowerCase().includes(q)
+    return datasetConfigs.filter(c =>
+      c.label.toLowerCase().includes(q) ||
+      c.table.toLowerCase().includes(q) ||
+      (c.description && c.description.toLowerCase().includes(q))
     );
   }, [searchQuery]);
 
+  // Group by prefix (e.g. "sat", "banxico", "inegi")
   const catalogsByCategory = useMemo(() => {
-    const map = new Map<string, CatalogItem[]>();
-    CATALOG_CATEGORIES.forEach(cat => map.set(cat.id, []));
+    const map = new Map<string, DatasetConfig[]>();
+    
     filteredCatalogs.forEach(catalog => {
-      const list = map.get(catalog.category);
-      if (list) list.push(catalog);
+      const prefix = catalog.id.split('-')[0].toUpperCase();
+      const category = ['SAT', 'BANXICO', 'INEGI', 'SEPOMEX', 'IFT'].includes(prefix) 
+        ? prefix 
+        : 'OTROS';
+      
+      if (!map.has(category)) map.set(category, []);
+      map.get(category)?.push(catalog);
     });
-    return map;
+    
+    // Sort categories
+    return new Map([...map.entries()].sort());
   }, [filteredCatalogs]);
 
   return (
     <div className="space-y-8">
-      {showHeader ? (
+      {showHeader && (
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold mb-2">Official Mexican Catalogs</h2>
+          <h2 className="text-3xl font-bold mb-2">{t('catalogs.main.title')}</h2>
           <p className="text-muted-foreground mb-6">
-            Browse 58 official catalogs with 470,000+ records from SAT, Banxico, INEGI, and more
+            {t('catalogs.list.subtitle')}
           </p>
-
-          <div className="relative mx-auto max-w-md">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-            <Input
-              placeholder="Search catalogs..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </div>
-      ) : (
-        <div className="relative max-w-xl">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-          <Input
-            placeholder="Search catalogs..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
         </div>
       )}
 
-      <div className="space-y-6">
-        {CATALOG_CATEGORIES.map(category => {
-          const catalogs = catalogsByCategory.get(category.id) || [];
-          if (catalogs.length === 0) return null;
-
-          return (
-            <Card key={category.id}>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Database className="h-5 w-5 text-primary" />
-                  {category.name}
-                </CardTitle>
-                <CardDescription>{category.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                  {catalogs.map(catalog => (
-                    <button
-                      key={catalog.id}
-                      onClick={() => setSelectedCatalog(catalog)}
-                      className="text-left p-4 rounded-lg border bg-card hover:bg-accent hover:border-primary transition-colors"
-                    >
-                      <div className="font-medium mb-1">{catalog.name}</div>
-                      <div className="text-sm text-muted-foreground mb-2">{catalog.description}</div>
-                      <Badge variant="secondary" className="text-xs">{catalog.recordCount}</Badge>
-                    </button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+      <div className="relative max-w-xl mx-auto mb-8">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
+        <Input
+          placeholder={t('tables.search.placeholder')}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
       </div>
 
-      <CatalogDialog
-        catalog={selectedCatalog}
-        onClose={() => setSelectedCatalog(null)}
-      />
-    </div>
-  );
-}
+      <div className="space-y-8">
+        {Array.from(catalogsByCategory.entries()).map(([category, catalogs]) => (
+          <div key={category}>
+            <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+              <Badge variant="outline" className="text-base py-1 px-3 bg-muted/50">
+                {category}
+              </Badge>
+              <span className="text-sm text-muted-foreground font-normal">
+                {catalogs.length} catálogos
+              </span>
+            </h3>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {catalogs.map(catalog => (
+                <button
+                  key={catalog.id}
+                  onClick={() => emitNavigation(`dataset-${catalog.id}`)}
+                  className="flex flex-col text-left h-full p-4 rounded-xl border bg-card hover:bg-accent/50 hover:border-primary/50 transition-all group shadow-sm hover:shadow-md"
+                >
+                  <div className="flex items-start justify-between w-full mb-2">
+                    <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      <Database className="h-4 w-4" />
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </div>
+                  
+                  <div className="font-semibold leading-tight mb-1 group-hover:text-primary transition-colors">
+                    {catalog.label}
+                  </div>
+                  
+                  <div className="text-xs text-muted-foreground mb-3 line-clamp-2 min-h-[2.5em]">
+                    {catalog.description || 'Catálogo oficial'}
+                  </div>
 
-function CatalogDialog({ catalog, onClose }: { catalog: CatalogItem | null; onClose: () => void }) {
-  if (!catalog) return null;
-
-  const info = [
-    { label: 'Registros', value: catalog.recordCount },
-    { label: 'Fuente', value: catalog.source },
-    { label: 'ID', value: catalog.id },
-  ];
-
-  return (
-    <Dialog open={!!catalog} onOpenChange={() => onClose()}>
-      <DialogContent className="max-w-3xl w-[min(100vw-2rem,960px)] space-y-4">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            {catalog.name}
-            <Badge variant="outline">{catalog.recordCount}</Badge>
-          </DialogTitle>
-          <DialogDescription>{catalog.description}</DialogDescription>
-        </DialogHeader>
-
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {info.map((item) => (
-            <div key={item.label} className="rounded-lg border bg-muted/40 px-3 py-2">
-              <div className="text-xs uppercase tracking-wide text-muted-foreground">{item.label}</div>
-              <div className="text-sm font-medium">{item.value}</div>
+                  <div className="mt-auto pt-3 border-t border-border/50 w-full flex items-center justify-between text-xs text-muted-foreground">
+                    <code className="bg-muted px-1.5 py-0.5 rounded font-mono text-[10px]">
+                      {catalog.table}
+                    </code>
+                  </div>
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
 
-        <div className="rounded-lg border bg-muted/40 px-3 py-3 text-sm text-muted-foreground">
-          No mostramos muestras aquí. Usa “Explorar cualquier tabla” o “Explorar catálogos (sqlite)” en la página principal para consultar el catálogo completo con paginación y búsqueda sin acentos.
-        </div>
-      </DialogContent>
-    </Dialog>
+        {filteredCatalogs.length === 0 && (
+          <div className="text-center py-12 text-muted-foreground">
+            {t('tables.empty')}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

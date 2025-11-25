@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Check, X, Building2, User, AlertCircle } from 'lucide-react';
 import { validateRFC, generateRFC, type RFCValidationResult } from '@/lib/validators';
+import { useLocale } from '@/lib/locale';
 
 export default function RFCPage() {
+  const { t } = useLocale();
   const [rfcInput, setRfcInput] = useState('');
   const [result, setResult] = useState<RFCValidationResult | null>(null);
 
@@ -43,9 +45,9 @@ export default function RFCPage() {
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold">RFC Validator</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('validators.rfc.title')}</h1>
         <p className="text-muted-foreground mt-1 text-sm sm:text-base">
-          Registro Federal de Contribuyentes - Mexican tax identification number
+          {t('validators.rfc.subtitle')}
         </p>
       </div>
 
@@ -53,23 +55,23 @@ export default function RFCPage() {
         {/* Validator */}
         <Card>
           <CardHeader>
-            <CardTitle>Validate RFC</CardTitle>
+            <CardTitle>{t('validators.rfc.card.validate')}</CardTitle>
             <CardDescription>
-              Enter an RFC to validate its format, date, and check digit
+              {t('validators.rfc.card.validate.desc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-sm font-medium mb-2 block">RFC</label>
+              <label className="text-sm font-medium mb-2 block">{t('validators.rfc.label')}</label>
               <Input
-                placeholder="XAXX010101000"
+                placeholder={t('validators.rfc.placeholder')}
                 value={rfcInput}
                 onChange={(e) => setRfcInput(e.target.value.toUpperCase())}
                 className="font-mono"
               />
             </div>
             <Button onClick={handleValidate} className="w-full">
-              Validate
+              {t('validators.rfc.button.validate')}
             </Button>
 
             {result && (
@@ -80,12 +82,12 @@ export default function RFCPage() {
                 }`}>
                   {result.isValid ? <Check className="h-5 w-5" /> : <X className="h-5 w-5" />}
                   <span className="font-medium">
-                    {result.isValid ? 'Valid RFC' : 'Invalid RFC'}
+                    {result.isValid ? t('validators.rfc.status.valid') : t('validators.rfc.status.invalid')}
                   </span>
                   {result.type !== 'invalid' && (
                     <Badge variant="outline" className="ml-auto">
-                      {result.type === 'persona_fisica' && <><User className="h-3 w-3 mr-1" /> Persona Fisica</>}
-                      {result.type === 'persona_moral' && <><Building2 className="h-3 w-3 mr-1" /> Persona Moral</>}
+                      {result.type === 'persona_fisica' && <><User className="h-3 w-3 mr-1" /> PF</>}
+                      {result.type === 'persona_moral' && <><Building2 className="h-3 w-3 mr-1" /> PM</>}
                       {result.type === 'generic' && <><AlertCircle className="h-3 w-3 mr-1" /> Generic</>}
                     </Badge>
                   )}
@@ -93,19 +95,19 @@ export default function RFCPage() {
 
                 {/* Validation Details */}
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">Validation Details</div>
+                  <div className="text-sm font-medium">{t('validators.rfc.details')}</div>
                   <div className="grid grid-cols-3 gap-2">
                     <div className={`p-2 rounded text-center text-sm ${result.details.format ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'}`}>
-                      <div className="font-medium">Format</div>
-                      <div>{result.details.format ? 'Valid' : 'Invalid'}</div>
+                      <div className="font-medium">{t('validators.rfc.format')}</div>
+                      <div>{result.details.format ? '✓' : '✗'}</div>
                     </div>
                     <div className={`p-2 rounded text-center text-sm ${result.details.date ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'}`}>
-                      <div className="font-medium">Date</div>
-                      <div>{result.details.date ? 'Valid' : 'Invalid'}</div>
+                      <div className="font-medium">{t('validators.rfc.date')}</div>
+                      <div>{result.details.date ? '✓' : '✗'}</div>
                     </div>
                     <div className={`p-2 rounded text-center text-sm ${result.details.checksum ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'}`}>
-                      <div className="font-medium">Checksum</div>
-                      <div>{result.details.checksum ? 'Valid' : 'Invalid'}</div>
+                      <div className="font-medium">{t('validators.rfc.checksum')}</div>
+                      <div>{result.details.checksum ? '✓' : '✗'}</div>
                     </div>
                   </div>
                 </div>
@@ -113,22 +115,22 @@ export default function RFCPage() {
                 {/* Parsed Components */}
                 {result.parsed && (
                   <div className="space-y-2">
-                    <div className="text-sm font-medium">Parsed Components</div>
+                    <div className="text-sm font-medium">{t('validators.rfc.parsed')}</div>
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div className="p-2 bg-muted rounded">
-                        <div className="text-muted-foreground">Initials</div>
+                        <div className="text-muted-foreground">{t('validators.rfc.initials')}</div>
                         <div className="font-mono font-medium">{result.parsed.initials}</div>
                       </div>
                       <div className="p-2 bg-muted rounded">
-                        <div className="text-muted-foreground">Date</div>
+                        <div className="text-muted-foreground">{t('validators.rfc.date')}</div>
                         <div className="font-mono font-medium">{result.parsed.date}</div>
                       </div>
                       <div className="p-2 bg-muted rounded">
-                        <div className="text-muted-foreground">Homoclave</div>
+                        <div className="text-muted-foreground">{t('validators.rfc.homoclave')}</div>
                         <div className="font-mono font-medium">{result.parsed.homoclave}</div>
                       </div>
                       <div className="p-2 bg-muted rounded">
-                        <div className="text-muted-foreground">Check Digit</div>
+                        <div className="text-muted-foreground">{t('validators.rfc.checkDigit')}</div>
                         <div className="font-mono font-medium">{result.parsed.checkDigit}</div>
                       </div>
                     </div>
@@ -142,15 +144,15 @@ export default function RFCPage() {
         {/* Generator */}
         <Card>
           <CardHeader>
-            <CardTitle>Generate RFC</CardTitle>
+            <CardTitle>{t('validators.rfc.generate.title')}</CardTitle>
             <CardDescription>
-              Generate a full RFC from personal data (homoclave + checksum included)
+              {t('validators.rfc.generate.desc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-sm font-medium mb-1 block">First Name</label>
+                <label className="text-sm font-medium mb-1 block">{t('validators.rfc.generate.name')}</label>
                 <Input
                   placeholder="Juan"
                   value={genNombre}
@@ -158,7 +160,7 @@ export default function RFCPage() {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium mb-1 block">Paternal Surname</label>
+                <label className="text-sm font-medium mb-1 block">{t('validators.rfc.generate.paterno')}</label>
                 <Input
                   placeholder="Garcia"
                   value={genPaterno}
@@ -166,7 +168,7 @@ export default function RFCPage() {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium mb-1 block">Maternal Surname</label>
+                <label className="text-sm font-medium mb-1 block">{t('validators.rfc.generate.materno')}</label>
                 <Input
                   placeholder="Lopez"
                   value={genMaterno}
@@ -174,7 +176,7 @@ export default function RFCPage() {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium mb-1 block">Birth Date</label>
+                <label className="text-sm font-medium mb-1 block">{t('validators.rfc.generate.birthdate')}</label>
                 <Input
                   type="date"
                   value={genFecha}
@@ -183,17 +185,17 @@ export default function RFCPage() {
               </div>
             </div>
             <Button onClick={handleGenerate} className="w-full">
-              Generate
+              {t('validators.rfc.generate.button')}
             </Button>
 
             {generatedRFC && (
               <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <div className="text-sm text-muted-foreground mb-1">Generated RFC</div>
+                <div className="text-sm text-muted-foreground mb-1">{t('validators.rfc.generate.result')}</div>
                 <div className="text-2xl font-mono font-bold tracking-wider">
                   {generatedRFC}
                 </div>
                 <div className="text-xs text-muted-foreground mt-2">
-                  Uses SAT homoclave and checksum formulas; enter date as AAAA-MM-DD.
+                  {t('validators.rfc.generate.note')}
                 </div>
               </div>
             )}
@@ -204,18 +206,17 @@ export default function RFCPage() {
       {/* Documentation */}
       <Card>
         <CardHeader>
-          <CardTitle>RFC Structure</CardTitle>
+          <CardTitle>{t('validators.rfc.docs.title')}</CardTitle>
         </CardHeader>
         <CardContent className="prose prose-sm dark:prose-invert max-w-none">
-          <p>The RFC (Registro Federal de Contribuyentes) is the Mexican tax ID:</p>
           <ul>
-            <li><strong>Persona Fisica (13 chars):</strong> 4 letters + 6 digit date + 3 char homoclave</li>
-            <li><strong>Persona Moral (12 chars):</strong> 3 letters + 6 digit date + 3 char homoclave</li>
+            <li><strong>{t('validators.rfc.docs.pf')}</strong></li>
+            <li><strong>{t('validators.rfc.docs.pm')}</strong></li>
           </ul>
-          <p>Special RFCs:</p>
+          <p>{t('validators.rfc.docs.special')}</p>
           <ul>
-            <li><code className="text-sm">XAXX010101000</code> - Generic RFC for national operations</li>
-            <li><code className="text-sm">XEXX010101000</code> - Generic RFC for foreign operations</li>
+            <li><code className="text-sm">XAXX010101000</code> - {t('validators.rfc.docs.generic')}</li>
+            <li><code className="text-sm">XEXX010101000</code> - {t('validators.rfc.docs.foreign')}</li>
           </ul>
         </CardContent>
       </Card>
