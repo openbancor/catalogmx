@@ -414,6 +414,13 @@ def finalize_database(conn: sqlite3.Connection) -> None:
     create_fts_indexes(conn)
     conn.commit()
     conn.execute("ANALYZE;")
+    
+    # Close WAL mode for browser compatibility
+    # IMPORTANT: SQLite WASM and sql.js need clean database files
+    print("[build] Closing WAL mode for browser compatibility...")
+    conn.execute("PRAGMA wal_checkpoint(TRUNCATE);")
+    conn.execute("PRAGMA journal_mode=DELETE;")
+    
     conn.execute("VACUUM;")
 
 

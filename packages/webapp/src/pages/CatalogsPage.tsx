@@ -108,7 +108,7 @@ export default function CatalogsPage() {
         </Card>
         
         <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:gap-4 h-full">
-          {heroStats.map((stat, i) => (
+          {heroStats.map((stat) => (
             <Card key={stat.label} className="flex flex-col justify-center border-none bg-card/50 shadow-sm">
               <CardContent className="py-6 px-6">
                 <div className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">{stat.value}</div>

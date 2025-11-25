@@ -31,19 +31,25 @@ jobs:
           cache: npm
           cache-dependency-path: packages/webapp/package-lock.json
 
-      - name: Download SQLite assets from release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build unified SQLite database
+        working-directory: packages/shared-data
         run: |
-          mkdir -p packages/shared-data/sqlite
-          gh release download sqlite-assets \
-            --repo "${GITHUB_REPOSITORY}" \
-            --pattern "mexico.sqlite3" \
-            --pattern "sepomex.db" \
-            --pattern "clave_prod_serv.db" \
-            --pattern "localidades.db" \
-            --dir packages/shared-data/sqlite \
-            --clobber
+          python build_unified_sqlite.py --output mexico.sqlite3
+          
+      - name: Close WAL mode for browser compatibility
+        run: |
+          if command -v sqlite3 &> /dev/null; then
+            sqlite3 packages/shared-data/mexico.sqlite3 "PRAGMA wal_checkpoint(TRUNCATE); PRAGMA journal_mode=DELETE; VACUUM;"
+            rm -f packages/shared-data/mexico.sqlite3-shm packages/shared-data/mexico.sqlite3-wal
+            echo "✓ WAL closed successfully"
+          else
+            echo "⚠️  WARNING: sqlite3 CLI not found"
+          fi
 
       - name: Install dependencies
         working-directory: packages/webapp

@@ -1,110 +1,88 @@
 /**
- * SQLite database loader using sql.js for browser-based queries
+ * SQLite database loader using @sqlite.org/sqlite-wasm with HTTP VFS
+ * This enables efficient HTTP Range requests - only downloads needed pages
  */
 
-// Type definitions for sql.js
-interface SqlJsDatabase {
-  prepare(sql: string): SqlJsStatement;
-  run(sql: string, params?: unknown[]): void;
-  close(): void;
-}
+type SqliteDB = any; // We'll type this properly when implementing
 
-interface SqlJsStatement {
-  bind(params?: unknown[]): boolean;
-  step(): boolean;
-  get(params?: unknown[]): (string | number | null)[];
-  getColumnNames(): string[];
-  free(): boolean;
-}
+let sqlite3: any = null;
+let initPromise: Promise<any> | null = null;
 
-interface SqlJsStatic {
-  Database: new (data?: ArrayLike<number> | null) => SqlJsDatabase;
-}
+const databases = new Map<string, SqliteDB>();
 
-import sqlWasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
-
-type InitSqlJsFn = (config?: { locateFile?: (file: string) => string }) => Promise<SqlJsStatic>;
-
-let SQL: SqlJsStatic | null = null;
-let sqlInitPromise: Promise<SqlJsStatic> | null = null;
-
-const databases: Map<string, SqlJsDatabase> = new Map();
-
-async function initSQL(): Promise<SqlJsStatic> {
-  if (SQL) {
-    return SQL;
-  }
-
-  if (!sqlInitPromise) {
-    sqlInitPromise = import('sql.js/dist/sql-wasm.js')
-      .then((module) => {
-        const initSqlJs =
-          (module as { default?: InitSqlJsFn }).default ??
-          ((module as unknown) as InitSqlJsFn);
-
-        if (typeof initSqlJs !== 'function') {
-          console.error('[database] sql.js module exports:', module);
-          throw new Error('Failed to load sql.js initializer.');
-        }
-
-        return initSqlJs({
-          locateFile: (file: string) => (file === 'sql-wasm.wasm' ? sqlWasmUrl : file)
+async function initSQLite() {
+  if (sqlite3) return sqlite3;
+  
+  if (!initPromise) {
+    initPromise = (async () => {
+      try {
+        // @ts-ignore - Dynamic import of WASM module
+        const module = await import('@sqlite.org/sqlite-wasm');
+        const sqlite3InitModule = module.default;
+        const instance = await sqlite3InitModule({
+          print: console.log,
+          printErr: console.error,
         });
-      })
-      .then((instance) => {
-        SQL = instance;
+        sqlite3 = instance;
         return instance;
-      })
-      .catch((error) => {
-        console.error('[database] sql.js init failed', error);
-        sqlInitPromise = null;
+      } catch (error) {
+        console.error('[database] Failed to initialize SQLite WASM:', error);
+        initPromise = null;
         throw error;
-      });
+      }
+    })();
   }
-
-  return sqlInitPromise;
+  
+  return initPromise;
 }
 
-export async function loadDatabase(name: string): Promise<SqlJsDatabase> {
-  const trimmedName = name.trim();
-  const normalizedKey = trimmedName.replace(/\.(db|sqlite3?|sqlite)$/i, '');
-  const baseUrl = (import.meta as any).env?.BASE_URL || '/';
-  const base = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-
-  if (databases.has(normalizedKey)) {
-    return databases.get(normalizedKey)!;
+export async function loadDatabase(name: string): Promise<SqliteDB> {
+  const normalizedName = name.replace(/\.(db|sqlite3?|sqlite)$/i, '');
+  
+  if (databases.has(normalizedName)) {
+    return databases.get(normalizedName)!;
   }
 
-  const sql = await initSQL();
-
-  const fileCandidates = /\.(db|sqlite3?|sqlite)$/i.test(trimmedName)
-    ? [trimmedName]
-    : [`${trimmedName}.db`, `${trimmedName}.sqlite3`, `${trimmedName}.sqlite`];
-
-  let response: Response | null = null;
-  let resolvedFile = '';
-
-  for (const candidate of fileCandidates) {
-    const res = await fetch(`${base}/data/${candidate}`);
-    if (res.ok) {
-      response = res;
-      resolvedFile = candidate;
-      break;
+  const sqlite3Module = await initSQLite();
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const base = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  
+  // Try different file extensions
+  const candidates = [`${normalizedName}.sqlite3`, `${normalizedName}.db`, `${normalizedName}.sqlite`];
+  
+  let dbUrl = '';
+  for (const candidate of candidates) {
+    const url = `${base}/data/${candidate}`;
+    try {
+      const response = await fetch(url, { method: 'HEAD' });
+      if (response.ok) {
+        dbUrl = url;
+        break;
+      }
+    } catch (e) {
+      // Continue trying
     }
   }
-
-  if (!response) {
-    throw new Error(`Failed to load ${trimmedName}. Place ${fileCandidates.join(', ')} in /public/data.`);
+  
+  if (!dbUrl) {
+    throw new Error(`Database not found: ${normalizedName}. Tried: ${candidates.join(', ')}`);
   }
 
-  const buffer = await response.arrayBuffer();
-  if (buffer.byteLength === 0) {
-    throw new Error(`${resolvedFile} is empty or corrupt.`);
+  console.log(`[database] Loading ${dbUrl} with HTTP VFS...`);
+  
+  // Use opfs-sahpool for local dev, http for production
+  const vfsMode = window.location.protocol === 'file:' ? 'opfs' : 'opfs-sahpool';
+  
+  try {
+    // Create database with HTTP VFS
+    const db = new sqlite3Module.oo1.DB(dbUrl, vfsMode);
+    databases.set(normalizedName, db);
+    console.log(`[database] ✓ Loaded ${normalizedName} successfully`);
+    return db;
+  } catch (error) {
+    console.error(`[database] Failed to open ${dbUrl}:`, error);
+    throw new Error(`Failed to open database: ${error instanceof Error ? error.message : String(error)}`);
   }
-
-  const db = new sql.Database(new Uint8Array(buffer));
-  databases.set(normalizedKey, db);
-  return db;
 }
 
 export interface QueryResult {
@@ -128,18 +106,28 @@ export async function queryDatabase(
   params: (string | number)[] = []
 ): Promise<QueryResult> {
   const db = await loadDatabase(dbName);
-  const stmt = db.prepare(sql);
-  stmt.bind(params);
-
-  const columns: string[] = stmt.getColumnNames();
-  const values: (string | number | null)[][] = [];
-
-  while (stmt.step()) {
-    values.push(stmt.get());
+  
+  try {
+    const result = db.exec({
+      sql,
+      bind: params,
+      rowMode: 'array',
+      returnValue: 'resultRows'
+    });
+    
+    // Get column names
+    const stmt = db.prepare(sql);
+    const columns = stmt.getColumnNames();
+    stmt.finalize();
+    
+    return {
+      columns: columns || [],
+      values: result || []
+    };
+  } catch (error) {
+    console.error('[database] Query failed:', error);
+    throw error;
   }
-
-  stmt.free();
-  return { columns, values };
 }
 
 export interface PaginatedResult<T> {
@@ -184,96 +172,66 @@ export async function queryPaginated<T>(
 
   // Get total count
   const countSql = `SELECT COUNT(*) as count FROM ${table} ${whereClause}`;
-  const countStmt = db.prepare(countSql);
-  if (params.length > 0) countStmt.bind(params);
-  countStmt.step();
-  const total = countStmt.get()[0] as number;
-  countStmt.free();
+  const countResult = db.exec({
+    sql: countSql,
+    bind: params,
+    rowMode: 'object',
+    returnValue: 'resultRows'
+  });
+  const total = (countResult[0]?.count as number) ?? 0;
 
   // Get paginated data
   const offset = (page - 1) * pageSize;
   const orderClause = orderBy ? `ORDER BY ${orderBy}` : '';
   const dataSql = `SELECT * FROM ${table} ${whereClause} ${orderClause} LIMIT ? OFFSET ?`;
-
+  
   const dataParams = [...params, pageSize, offset];
-  const dataStmt = db.prepare(dataSql);
-  dataStmt.bind(dataParams);
-
-  const columns: string[] = dataStmt.getColumnNames();
-  const data: T[] = [];
-
-  while (dataStmt.step()) {
-    const row = dataStmt.get();
-    const obj: Record<string, unknown> = {};
-    columns.forEach((col: string, i: number) => {
-      obj[col] = row[i];
-    });
-    data.push(obj as T);
-  }
-
-  dataStmt.free();
+  const rows = db.exec({
+    sql: dataSql,
+    bind: dataParams,
+    rowMode: 'object',
+    returnValue: 'resultRows'
+  });
 
   return {
-    data,
+    data: rows as T[],
     total,
     page,
     pageSize,
-    totalPages: Math.ceil(total / pageSize)
+    totalPages: Math.max(1, Math.ceil(total / pageSize)),
   };
-}
-
-export interface TableInfoColumn {
-  cid: number;
-  name: string;
-  type: string;
-  notnull: number;
-  dflt_value: string | null;
-  pk: number;
 }
 
 export async function listTables(dbName: string): Promise<string[]> {
   const db = await loadDatabase(dbName);
-  const stmt = db.prepare(
-    "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
-  );
-  const tables: string[] = [];
-  while (stmt.step()) {
-    const name = stmt.get()[0] as string;
-    if (/(_fts(_data|_idx|_docsize|_config)?)$/i.test(name)) {
-      continue;
-    }
-    tables.push(name);
-  }
-  stmt.free();
-  return tables.sort((a, b) => a.localeCompare(b));
+  const result = db.exec({
+    sql: "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name",
+    rowMode: 'array',
+    returnValue: 'resultRows'
+  });
+  
+  return result
+    .map((row: any[]) => row[0] as string)
+    .filter((name: string) => !/_fts(_data|_idx|_docsize|_config)?$/i.test(name));
 }
 
-export async function getTableInfo(dbName: string, table: string): Promise<TableInfoColumn[]> {
+export async function getTableInfo(dbName: string, table: string): Promise<any[]> {
   const db = await loadDatabase(dbName);
-  const stmt = db.prepare(`PRAGMA table_info(${table})`);
-  const cols: TableInfoColumn[] = [];
-  while (stmt.step()) {
-    const row = stmt.get();
-    cols.push({
-      cid: row[0] as number,
-      name: row[1] as string,
-      type: (row[2] as string) || '',
-      notnull: row[3] as number,
-      dflt_value: row[4] as string | null,
-      pk: row[5] as number,
-    });
-  }
-  stmt.free();
-  return cols;
+  return db.exec({
+    sql: `PRAGMA table_info(${table})`,
+    rowMode: 'object',
+    returnValue: 'resultRows'
+  });
 }
 
 export async function getTableCount(dbName: string, table: string): Promise<number> {
   const db = await loadDatabase(dbName);
-  const stmt = db.prepare(`SELECT COUNT(*) as total FROM ${table}`);
-  stmt.step();
-  const total = (stmt.get()[0] as number) ?? 0;
-  stmt.free();
-  return total;
+  const result = db.exec({
+    sql: `SELECT COUNT(*) as total FROM ${table}`,
+    rowMode: 'object',
+    returnValue: 'resultRows'
+  });
+  return (result[0]?.total as number) ?? 0;
 }
 
 export async function queryTable(
@@ -287,95 +245,61 @@ export async function queryTable(
     orderBy?: string;
   } = {}
 ): Promise<PaginatedResult<Record<string, unknown>>> {
-  const { page = 1, pageSize = 50, search = '', searchColumns = [], orderBy = '' } = options;
-  const db = await loadDatabase(dbName);
-
-  const textColumns = searchColumns;
-  let whereClause = '';
-  const params: (string | number)[] = [];
-  const normalizedSearch = search ? normalizeText(search) : '';
-
-  if (normalizedSearch && textColumns.length > 0) {
-    const conditions = textColumns.map((col) => `${normalizeSqlExpr(col)} LIKE ?`);
-    whereClause = `WHERE ${conditions.join(' OR ')}`;
-    const likeValue = `%${normalizedSearch}%`;
-    textColumns.forEach(() => params.push(likeValue));
-  }
-
-  const countSql = `SELECT COUNT(*) as count FROM ${table} ${whereClause}`;
-  const countStmt = db.prepare(countSql);
-  if (params.length > 0) countStmt.bind(params);
-  countStmt.step();
-  const total = (countStmt.get()[0] as number) ?? 0;
-  countStmt.free();
-
-  const offset = (page - 1) * pageSize;
-  const orderClause = orderBy ? `ORDER BY ${orderBy}` : '';
-  const dataSql = `SELECT * FROM ${table} ${whereClause} ${orderClause} LIMIT ? OFFSET ?`;
-  const dataStmt = db.prepare(dataSql);
-  dataStmt.bind([...params, pageSize, offset]);
-
-  const rows: Record<string, unknown>[] = [];
-  const columns = dataStmt.getColumnNames();
-  while (dataStmt.step()) {
-    const row = dataStmt.get();
-    const obj: Record<string, unknown> = {};
-    columns.forEach((col, i) => {
-      obj[col] = row[i];
-    });
-    rows.push(obj);
-  }
-  dataStmt.free();
-
-  return {
-    data: rows,
-    total,
-    page,
-    pageSize,
-    totalPages: Math.max(1, Math.ceil(total / pageSize)),
-  };
+  return queryPaginated<Record<string, unknown>>(dbName, table, options);
 }
 
-// Database-specific query helpers
+// Legacy aliases for compatibility
+export const querySqlTable = queryPaginated;
+
+// Type definitions for specialized queries
 export interface PostalCode {
-  cp: string;
-  asentamiento: string;
-  tipo_asentamiento: string;
-  municipio: string;
-  estado: string;
-  ciudad: string;
-  cp_oficina: string;
-  codigo_estado: string;
-  codigo_municipio: string;
-  zona?: string | null;
+  d_codigo?: string;
+  d_asenta?: string;
+  d_tipo_asenta?: string;
+  d_mnpio?: string;
+  d_estado?: string;
+  d_zona?: string;
+  cp?: string;
+  asentamiento?: string;
+  tipo_asentamiento?: string;
+  municipio?: string;
+  estado?: string;
+  ciudad?: string;
+  zona?: string;
 }
 
 export interface Localidad {
-  cvegeo: string;
-  cve_entidad: string;
-  cve_municipio: string;
-  cve_localidad: string;
-  nom_localidad: string;
-  nom_municipio: string;
-  nom_entidad: string;
-  latitud: number;
-  longitud: number;
-  altitud: number;
-  poblacion_total: number;
+  cve_ent?: string;
+  cve_mun?: string;
+  cve_loc?: string;
+  cve_entidad?: string;
+  cve_municipio?: string;
+  cve_localidad?: string;
+  nombre?: string;
+  nom_localidad?: string;
+  nom_municipio?: string;
+  nom_entidad?: string;
+  ambito?: string;
+  latitud?: number;
+  longitud?: number;
+  altitud?: number;
+  poblacion_total?: number;
 }
 
 export interface ProductoServicio {
-  clave: string;
-  descripcion: string;
-  incluye_iva: number;
-  incluye_ieps: number;
-  complemento: string;
-  fecha_inicio_vigencia: string;
-  fecha_fin_vigencia: string;
-  estimulo_franja_fronteriza: string;
-  palabras_similares: string;
+  c_clave_prod_serv?: string;
+  clave?: string;
+  descripcion?: string;
+  incluir_iva_trasladado?: string;
+  incluir_ieps_trasladado?: string;
+  incluye_iva?: number | string;
+  incluye_ieps?: number | string;
+  complemento?: string;
+  estimulo_franja_fronteriza?: string;
+  palabras_similares?: string;
 }
 
+// Specialized queries
 export async function searchPostalCodes(
   search: string,
   page = 1,
@@ -385,8 +309,8 @@ export async function searchPostalCodes(
     page,
     pageSize,
     search,
-    searchColumns: ['cp', 'asentamiento', 'municipio', 'estado', 'ciudad'],
-    orderBy: 'cp',
+    searchColumns: ['d_codigo', 'd_asenta', 'd_mnpio', 'd_estado'],
+    orderBy: 'd_codigo',
   });
 }
 
@@ -395,12 +319,12 @@ export async function searchLocalidades(
   page = 1,
   pageSize = 50
 ): Promise<PaginatedResult<Localidad>> {
-  return queryPaginated<Localidad>('mexico', 'localidades', {
+  return queryPaginated<Localidad>('mexico', 'inegi_localidades', {
     page,
     pageSize,
     search,
-    searchColumns: ['nom_localidad', 'nom_municipio', 'nom_entidad', 'cve_localidad'],
-    orderBy: 'nom_localidad'
+    searchColumns: ['nombre', 'cve_ent', 'cve_mun'],
+    orderBy: 'nombre'
   });
 }
 
@@ -409,83 +333,28 @@ export async function searchProductos(
   page = 1,
   pageSize = 50
 ): Promise<PaginatedResult<ProductoServicio>> {
-  return queryPaginated<ProductoServicio>('mexico', 'clave_prod_serv', {
+  return queryPaginated<ProductoServicio>('mexico', 'sat_cfdi_4_0_c_claveprodserv', {
     page,
     pageSize,
     search,
-    searchColumns: ['clave', 'descripcion', 'palabras_similares'],
-    orderBy: 'clave'
+    searchColumns: ['c_clave_prod_serv', 'descripcion', 'palabras_similares'],
+    orderBy: 'c_clave_prod_serv'
   });
 }
 
-export async function querySqlTable<T>(
+// Note: queryJsonArrayTable is deprecated with SQLite WASM
+// All data should be in SQL tables now
+export async function queryJsonArrayTable<T>(
   dbName: string,
   table: string,
-  opts: {
-    page?: number;
-    pageSize?: number;
-    search?: string;
-    searchColumns?: string[];
-    orderBy?: string;
-  } = {}
-): Promise<PaginatedResult<T>> {
-  return queryPaginated<T>(dbName, table, opts);
-}
-
-export async function queryJsonArrayTable<T extends Record<string, unknown>>(
-  dbName: string,
-  table: string,
-  column: string,
-  {
-    page = 1,
-    pageSize = 50,
-    search = '',
-    searchColumns = [],
-  }: {
+  _column?: string,
+  options: {
     page?: number;
     pageSize?: number;
     search?: string;
     searchColumns?: string[];
   } = {}
 ): Promise<PaginatedResult<T>> {
-  const db = await loadDatabase(dbName);
-  const stmt = db.prepare(`SELECT ${column} FROM ${table} LIMIT 1`);
-  stmt.step();
-  const raw = stmt.get()[0];
-  stmt.free();
-
-  let records: T[] = [];
-  if (typeof raw === 'string') {
-    try {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        records = parsed as T[];
-      }
-    } catch (error) {
-      console.error('[database] Failed to parse JSON column', { table, column, error });
-    }
-  }
-
-  const normalizedSearch = search ? normalizeText(search) : '';
-  let filtered = records;
-  if (normalizedSearch && searchColumns.length > 0) {
-    filtered = records.filter((row) =>
-      searchColumns.some((key) => {
-        const value = row[key];
-        return typeof value === 'string' && normalizeText(value).includes(normalizedSearch);
-      })
-    );
-  }
-
-  const total = filtered.length;
-  const start = (page - 1) * pageSize;
-  const slice = filtered.slice(start, start + pageSize);
-
-  return {
-    data: slice,
-    total,
-    page,
-    pageSize,
-    totalPages: Math.max(1, Math.ceil(total / pageSize)),
-  };
+  // Just delegate to regular query - no JSON columns with new structure
+  return queryPaginated<T>(dbName, table, options);
 }

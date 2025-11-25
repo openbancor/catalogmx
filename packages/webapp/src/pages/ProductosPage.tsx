@@ -180,7 +180,7 @@ export default function ProductosPage() {
                           {renderTaxIndicator(prod.incluye_ieps ? 'Sí' : 'No')}
                         </td>
                         <td className="p-3 text-center">
-                          {renderTaxIndicator(prod.estimulo_franja_fronteriza)}
+                          {renderTaxIndicator(prod.estimulo_franja_fronteriza || null)}
                         </td>
                         <td className="p-3 text-muted-foreground text-xs max-w-xs truncate">
                           {prod.palabras_similares || '-'}

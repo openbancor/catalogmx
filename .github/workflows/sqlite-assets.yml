@@ -1,0 +1,112 @@
+name: Build and Publish SQLite Assets
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "packages/shared-data/**"
+      - ".github/workflows/sqlite-assets.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build unified SQLite database
+        working-directory: packages/shared-data
+        run: |
+          python build_unified_sqlite.py --output mexico.sqlite3
+          
+      - name: Close WAL mode for browser compatibility
+        working-directory: packages/shared-data
+        run: |
+          # Close WAL on main database
+          sqlite3 mexico.sqlite3 "PRAGMA wal_checkpoint(TRUNCATE); PRAGMA journal_mode=DELETE; VACUUM;"
+          rm -f mexico.sqlite3-shm mexico.sqlite3-wal
+          
+          # Close WAL on individual databases
+          for db in sqlite/*.{db,sqlite,sqlite3} 2>/dev/null; do
+            if [ -f "$db" ]; then
+              sqlite3 "$db" "PRAGMA wal_checkpoint(TRUNCATE); PRAGMA journal_mode=DELETE; VACUUM;" || true
+              rm -f "${db}-shm" "${db}-wal"
+            fi
+          done
+          
+          echo "✓ All databases cleaned for browser use"
+
+      - name: Verify databases are browser-ready
+        working-directory: packages/shared-data
+        run: |
+          echo "=== Main Database ==="
+          ls -lh mexico.sqlite3
+          echo "Journal mode: $(sqlite3 mexico.sqlite3 'PRAGMA journal_mode;')"
+          echo "Tables: $(sqlite3 mexico.sqlite3 "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';")"
+          
+          echo ""
+          echo "=== Checking for WAL files (should be none) ==="
+          ls -la *.sqlite3-* 2>/dev/null || echo "✓ No WAL files found"
+
+      - name: Update or Create Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd packages/shared-data
+          
+          # Delete existing release and tag if exists
+          gh release delete sqlite-assets --yes --cleanup-tag 2>/dev/null || true
+          
+          # Create new release with assets
+          gh release create sqlite-assets \
+            --repo "${GITHUB_REPOSITORY}" \
+            --title "SQLite Assets (Auto-updated)" \
+            --notes "📦 Unified SQLite databases for catalogmx
+
+**mexico.sqlite3**: Complete database with all 58 catalogs
+- ✅ Optimized for browser (WAL disabled)
+- ✅ Compatible with SQLite WASM HTTP VFS
+- ✅ Ready for HTTP Range requests
+- 📊 470,000+ records from SAT, INEGI, Banxico, SEPOMEX
+
+**Individual databases**: Lighter alternatives
+- sepomex.db (~25 MB)
+- localidades.db (~12 MB)  
+- clave_prod_serv.db (~8 MB)
+
+🔄 Auto-updated on every push to main
+🌐 Use for serverless data access
+
+**Example usage:**
+\`\`\`javascript
+const sqlite3 = await sqlite3InitModule();
+const db = new sqlite3.oo1.DB(
+  'https://github.com/openbancor/catalogmx/releases/download/sqlite-assets/mexico.sqlite3',
+  'opfs-sahpool'
+);
+
+// Only downloads ~20-100 KB per query via HTTP Range
+const result = db.exec('SELECT * FROM banxico_banks LIMIT 10');
+\`\`\`" \
+            mexico.sqlite3 \
+            sqlite/*.db \
+            sqlite/*.sqlite3
+
+      - name: Summary
+        run: |
+          echo "✅ SQLite assets published to GitHub Releases"
+          echo ""
+          echo "📦 Main database:"
+          echo "https://github.com/${GITHUB_REPOSITORY}/releases/download/sqlite-assets/mexico.sqlite3"
+          echo ""
+          echo "Use this URL in your webapp with SQLite WASM HTTP VFS"

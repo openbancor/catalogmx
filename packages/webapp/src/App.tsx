@@ -290,7 +290,6 @@ function AppInner() {
       <MobileNav
         currentPage={currentPage}
         onNavigate={setCurrentPage}
-        onToggleSidebar={() => setSidebarOpen(true)}
       />
 
       <Dialog open={catalogQuickOpen} onOpenChange={setCatalogQuickOpen}>

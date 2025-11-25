@@ -18,9 +18,19 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['sql.js', 'sql.js/dist/sql-wasm.js'],
+    exclude: ['@sqlite.org/sqlite-wasm'],
   },
-  ssr: {
-    noExternal: ['sql.js'],
+  server: {
+    headers: {
+      // Enable SharedArrayBuffer for SQLite WASM
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  },
+  preview: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
   },
 });

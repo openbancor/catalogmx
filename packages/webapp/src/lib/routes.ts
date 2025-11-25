@@ -1,6 +1,5 @@
 import {
-  Database, Code,
-  Calculator, CheckCircle2, Home
+  Code, Calculator, CheckCircle2, Home
 } from 'lucide-react';
 import { type DatasetPageId } from '@/data/datasets';
 
@@ -31,7 +30,7 @@ export interface NavSection {
 export const navigation: NavSection[] = [
   {
     items: [
-      { id: 'home', label: 'nav.catalogs.title', icon: Home }, // Home shows catalogs
+      { id: 'home', label: 'nav.catalogs.title', icon: Home },
       { id: 'validators', label: 'nav.validators.title', icon: CheckCircle2 },
       { id: 'calculators', label: 'nav.calculators.title', icon: Calculator },
       { id: 'reference', label: 'nav.reference.title', icon: Code },

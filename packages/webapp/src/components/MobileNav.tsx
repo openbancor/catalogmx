@@ -1,14 +1,13 @@
-import { Calculator, CheckCircle2, Home, Menu, Code } from 'lucide-react';
+import { Calculator, CheckCircle2, Home, Code } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { type PageId } from '@/lib/routes';
 
 interface MobileNavProps {
   currentPage: PageId;
   onNavigate: (id: PageId) => void;
-  onToggleSidebar: () => void;
 }
 
-export default function MobileNav({ currentPage, onNavigate, onToggleSidebar }: MobileNavProps) {
+export default function MobileNav({ currentPage, onNavigate }: MobileNavProps) {
   const tabs = [
     {
       id: 'home' as PageId,
