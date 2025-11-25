@@ -117,11 +117,28 @@ export default function App() {
 function AppInner() {
   const { locale, setLocale, t } = useLocale();
   const [currentPage, setCurrentPage] = useState<PageId>('catalogs');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return window.innerWidth >= 768;
+  });
   const flatNavigation = navigation.flatMap(s => s.items);
   const currentNavItem = flatNavigation.find(i => i.id === currentPage);
 
   const PageComponent = pageComponents[currentPage];
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window === 'undefined') return;
+      if (window.innerWidth < 768 && sidebarOpen) {
+        setSidebarOpen(false);
+      }
+      if (window.innerWidth >= 768 && !sidebarOpen) {
+        setSidebarOpen(true);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [sidebarOpen]);
 
   useEffect(() => {
     const handleNavigate = (event: Event) => {
