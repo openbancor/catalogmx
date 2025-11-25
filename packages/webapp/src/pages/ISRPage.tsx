@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calculator, DollarSign, Info } from 'lucide-react';
 import { calculateISR, type ISRCalculationResult } from '@/lib/calculators';
+import { useLocale } from '@/lib/locale';
 
 export default function ISRPage() {
+  const { t } = useLocale();
   const [income, setIncome] = useState('');
   const [period, setPeriod] = useState<'mensual' | 'quincenal' | 'semanal' | 'anual'>('mensual');
   const [result, setResult] = useState<ISRCalculationResult | null>(null);
@@ -21,9 +23,9 @@ export default function ISRPage() {
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-bold">ISR Calculator</h1>
+        <h1 className="text-2xl font-bold">{t('calculators.isr.title')}</h1>
         <p className="text-muted-foreground mt-1">
-          Impuesto Sobre la Renta - Mexican income tax with 2024 brackets and employment subsidy
+          {t('calculators.isr.subtitle')}
         </p>
       </div>
 
@@ -33,17 +35,17 @@ export default function ISRPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calculator className="h-5 w-5" />
-              Calculate ISR
+              {t('calculators.isr.card.title')}
               <Badge variant="outline">2024</Badge>
             </CardTitle>
             <CardDescription>
-              Enter taxable income to calculate ISR with step-by-step breakdown
+              {t('calculators.isr.card.desc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium mb-2 block">Taxable Income (MXN)</label>
+                <label className="text-sm font-medium mb-2 block">{t('calculators.isr.label.income')}</label>
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -56,23 +58,23 @@ export default function ISRPage() {
                 </div>
               </div>
               <div>
-                <label className="text-sm font-medium mb-2 block">Period</label>
+                <label className="text-sm font-medium mb-2 block">{t('calculators.isr.label.period')}</label>
                 <select
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                   value={period}
                   onChange={(e) => setPeriod(e.target.value as typeof period)}
                 >
-                  <option value="mensual">Monthly (Mensual)</option>
-                  <option value="quincenal">Biweekly (Quincenal)</option>
-                  <option value="semanal">Weekly (Semanal)</option>
-                  <option value="anual">Annual (Anual)</option>
+                  <option value="mensual">{t('calculators.isr.period.monthly')}</option>
+                  <option value="quincenal">{t('calculators.isr.period.biweekly')}</option>
+                  <option value="semanal">{t('calculators.isr.period.weekly')}</option>
+                  <option value="anual">{t('calculators.isr.period.annual')}</option>
                 </select>
               </div>
             </div>
 
             <Button onClick={handleCalculate} className="w-full">
               <Calculator className="h-4 w-4 mr-2" />
-              Calculate ISR
+              {t('calculators.isr.button.calculate')}
             </Button>
 
             {result && (
@@ -80,13 +82,13 @@ export default function ISRPage() {
                 {/* Summary */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-4 bg-primary/10 rounded-lg text-center">
-                    <div className="text-sm text-muted-foreground">ISR to Pay</div>
+                    <div className="text-sm text-muted-foreground">{t('calculators.isr.result.pay')}</div>
                     <div className="text-2xl font-bold text-primary">
                       ${result.isrFinal.toFixed(2)}
                     </div>
                   </div>
                   <div className="p-4 bg-muted rounded-lg text-center">
-                    <div className="text-sm text-muted-foreground">Effective Rate</div>
+                    <div className="text-sm text-muted-foreground">{t('calculators.isr.result.rate')}</div>
                     <div className="text-2xl font-bold">
                       {result.tasaEfectiva.toFixed(2)}%
                     </div>
@@ -97,7 +99,7 @@ export default function ISRPage() {
                 <div className="border rounded-lg overflow-hidden">
                   <div className="bg-muted px-4 py-2 font-medium flex items-center gap-2">
                     <Info className="h-4 w-4" />
-                    Step-by-Step Calculation
+                    {t('calculators.isr.steps.title')}
                   </div>
                   <div className="divide-y">
                     {result.steps.map((step) => (
@@ -128,12 +130,12 @@ export default function ISRPage() {
 
                 {/* Bracket info */}
                 <div className="p-4 bg-muted/50 rounded-lg text-sm">
-                  <div className="font-medium mb-2">Applied Bracket</div>
+                  <div className="font-medium mb-2">{t('calculators.isr.bracket.title')}</div>
                   <div className="grid grid-cols-2 gap-2 text-muted-foreground">
-                    <div>Lower Limit: ${result.bracket.limiteInferior.toFixed(2)}</div>
-                    <div>Upper Limit: ${result.bracket.limiteSuperior === Infinity ? 'unlimited' : result.bracket.limiteSuperior.toFixed(2)}</div>
-                    <div>Fixed Fee: ${result.bracket.cuotaFija.toFixed(2)}</div>
-                    <div>Marginal Rate: {result.bracket.tasa}%</div>
+                    <div>{t('calculators.isr.bracket.lower')}: ${result.bracket.limiteInferior.toFixed(2)}</div>
+                    <div>{t('calculators.isr.bracket.upper')}: ${result.bracket.limiteSuperior === Infinity ? '∞' : result.bracket.limiteSuperior.toFixed(2)}</div>
+                    <div>{t('calculators.isr.bracket.fixed')}: ${result.bracket.cuotaFija.toFixed(2)}</div>
+                    <div>{t('calculators.isr.bracket.rate')}: {result.bracket.tasa}%</div>
                   </div>
                 </div>
               </div>
@@ -145,7 +147,7 @@ export default function ISRPage() {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">2024 Monthly Brackets</CardTitle>
+              <CardTitle className="text-lg">{t('calculators.isr.info.brackets')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2 text-sm">
@@ -183,13 +185,11 @@ export default function ISRPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Employment Subsidy</CardTitle>
+              <CardTitle className="text-lg">{t('calculators.isr.info.subsidy')}</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
               <p>
-                The employment subsidy (subsidio al empleo) reduces ISR for low-income workers.
-                It applies to monthly incomes up to $7,382.33 and can result in zero or even
-                negative ISR (refund).
+                {t('calculators.isr.info.subsidy.desc')}
               </p>
             </CardContent>
           </Card>

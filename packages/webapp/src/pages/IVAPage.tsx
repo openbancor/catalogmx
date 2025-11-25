@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DollarSign, Calculator, ArrowRight } from 'lucide-react';
 import { calculateIVA } from '@/lib/calculators';
+import { useLocale } from '@/lib/locale';
 
 export default function IVAPage() {
+  const { t } = useLocale();
   const [base, setBase] = useState('');
   const [rate, setRate] = useState(16);
   const [result, setResult] = useState<ReturnType<typeof calculateIVA> | null>(null);
@@ -39,9 +41,9 @@ export default function IVAPage() {
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-bold">IVA Calculator</h1>
+        <h1 className="text-2xl font-bold">{t('calculators.iva.title')}</h1>
         <p className="text-muted-foreground mt-1">
-          Impuesto al Valor Agregado - Mexican Value Added Tax
+          {t('calculators.iva.subtitle')}
         </p>
       </div>
 
@@ -51,16 +53,16 @@ export default function IVAPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calculator className="h-5 w-5" />
-              Calculate IVA from Base
+              {t('calculators.iva.card.calc.title')}
             </CardTitle>
             <CardDescription>
-              Enter base amount to calculate IVA and total
+              {t('calculators.iva.card.calc.desc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-sm font-medium mb-1 block">Base Amount (MXN)</label>
+                <label className="text-sm font-medium mb-1 block">{t('calculators.iva.label.base')}</label>
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -73,21 +75,21 @@ export default function IVAPage() {
                 </div>
               </div>
               <div>
-                <label className="text-sm font-medium mb-1 block">IVA Rate</label>
+                <label className="text-sm font-medium mb-1 block">{t('calculators.iva.label.rate')}</label>
                 <select
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                   value={rate}
                   onChange={(e) => setRate(parseInt(e.target.value))}
                 >
-                  <option value={16}>16% (Standard)</option>
-                  <option value={8}>8% (Border Zone)</option>
-                  <option value={0}>0% (Exempt)</option>
+                  <option value={16}>{t('calculators.iva.rate.16')}</option>
+                  <option value={8}>{t('calculators.iva.rate.8')}</option>
+                  <option value={0}>{t('calculators.iva.rate.0')}</option>
                 </select>
               </div>
             </div>
 
             <Button onClick={handleCalculate} className="w-full">
-              Calculate
+              {t('calculators.iva.button.calculate')}
             </Button>
 
             {result && (
@@ -108,16 +110,16 @@ export default function IVAPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <ArrowRight className="h-5 w-5 rotate-180" />
-              Extract IVA from Total
+              {t('calculators.iva.card.reverse.title')}
             </CardTitle>
             <CardDescription>
-              Enter total amount to extract base and IVA
+              {t('calculators.iva.card.reverse.desc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-sm font-medium mb-1 block">Total Amount (MXN)</label>
+                <label className="text-sm font-medium mb-1 block">{t('calculators.iva.label.total')}</label>
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -130,34 +132,34 @@ export default function IVAPage() {
                 </div>
               </div>
               <div>
-                <label className="text-sm font-medium mb-1 block">IVA Rate</label>
+                <label className="text-sm font-medium mb-1 block">{t('calculators.iva.label.rate')}</label>
                 <select
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                   value={reverseRate}
                   onChange={(e) => setReverseRate(parseInt(e.target.value))}
                 >
-                  <option value={16}>16% (Standard)</option>
-                  <option value={8}>8% (Border Zone)</option>
+                  <option value={16}>{t('calculators.iva.rate.16')}</option>
+                  <option value={8}>{t('calculators.iva.rate.8')}</option>
                 </select>
               </div>
             </div>
 
             <Button onClick={handleReverseCalculate} className="w-full">
-              Extract
+              {t('calculators.iva.button.extract')}
             </Button>
 
             {reverseResult && (
               <div className="space-y-2 p-4 bg-primary/10 rounded-lg font-mono text-sm">
                 <div className="flex justify-between">
-                  <span>Base (Subtotal)</span>
+                  <span>{t('calculators.iva.result.base')}</span>
                   <span>${reverseResult.base.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>IVA ({reverseRate}%)</span>
+                  <span>{t('calculators.iva.result.iva')} ({reverseRate}%)</span>
                   <span>${reverseResult.iva.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between font-bold pt-2 border-t">
-                  <span>Total</span>
+                  <span>{t('calculators.iva.result.total')}</span>
                   <span>${reverseResult.total.toFixed(2)}</span>
                 </div>
               </div>
@@ -172,14 +174,11 @@ export default function IVAPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Badge className="bg-blue-600">16%</Badge>
-              Standard Rate
+              {t('calculators.iva.info.16.title')}
             </CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            <p>
-              The general IVA rate in Mexico is 16%. This applies to most goods and services
-              throughout the country.
-            </p>
+            <p>{t('calculators.iva.info.16.desc')}</p>
           </CardContent>
         </Card>
 
@@ -187,14 +186,11 @@ export default function IVAPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Badge className="bg-green-600">8%</Badge>
-              Border Zone Rate
+              {t('calculators.iva.info.8.title')}
             </CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            <p>
-              A reduced rate of 8% applies in the northern and southern border zones
-              (franja fronteriza) as an economic stimulus measure.
-            </p>
+            <p>{t('calculators.iva.info.8.desc')}</p>
           </CardContent>
         </Card>
 
@@ -202,38 +198,35 @@ export default function IVAPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Badge variant="outline">0%</Badge>
-              Zero Rate / Exempt
+              {t('calculators.iva.info.0.title')}
             </CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            <p>
-              Certain essential goods are taxed at 0% rate, including basic food items,
-              medicines, and books. Exempt items include housing sales and medical services.
-            </p>
+            <p>{t('calculators.iva.info.0.desc')}</p>
           </CardContent>
         </Card>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>IVA Calculation Formula</CardTitle>
+          <CardTitle>{t('calculators.iva.formula.title')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid sm:grid-cols-2 gap-4 text-sm">
             <div className="p-4 bg-muted rounded-lg">
-              <div className="font-medium mb-2">From Base to Total</div>
+              <div className="font-medium mb-2">{t('calculators.iva.formula.base')}</div>
               <div className="font-mono space-y-1">
-                <div>IVA = Base x Rate</div>
+                <div>IVA = Base × Tasa</div>
                 <div>Total = Base + IVA</div>
-                <div className="text-muted-foreground">Total = Base x (1 + Rate)</div>
+                <div className="text-muted-foreground">Total = Base × (1 + Tasa)</div>
               </div>
             </div>
             <div className="p-4 bg-muted rounded-lg">
-              <div className="font-medium mb-2">From Total to Base</div>
+              <div className="font-medium mb-2">{t('calculators.iva.formula.total')}</div>
               <div className="font-mono space-y-1">
-                <div>Base = Total / (1 + Rate)</div>
+                <div>Base = Total / (1 + Tasa)</div>
                 <div>IVA = Total - Base</div>
-                <div className="text-muted-foreground">IVA = Total x Rate / (1 + Rate)</div>
+                <div className="text-muted-foreground">IVA = Total × Tasa / (1 + Tasa)</div>
               </div>
             </div>
           </div>
