@@ -75,7 +75,7 @@ export default function CatalogsPage() {
   return (
     <div className="space-y-6 sm:space-y-8">
       <section className="grid gap-4 lg:grid-cols-[2fr,1fr]">
-        <Card className="border-none bg-gradient-to-r from-primary to-emerald-500 text-primary-foreground shadow-lg">
+        <Card className="border-none bg-gradient-to-r from-primary to-emerald-500 text-primary-foreground shadow-lg overflow-hidden">
           <CardHeader>
             <CardTitle className="text-lg sm:text-2xl leading-tight">mexico.sqlite3</CardTitle>
             <CardDescription className="text-primary-foreground/80 text-sm sm:text-base">

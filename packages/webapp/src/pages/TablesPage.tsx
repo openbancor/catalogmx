@@ -59,7 +59,7 @@ export default function TablesPage() {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Database className="h-5 w-5 text-primary" />
@@ -83,25 +83,27 @@ export default function TablesPage() {
               {t('tables.error')}
             </div>
           ) : (
-            <div className="overflow-auto md:max-h-[32rem] rounded-lg border divide-y">
-              {countsLoading && !filteredTables.length ? (
-                <div className="flex items-center gap-2 p-3 text-sm text-muted-foreground">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  {t('tables.loading')}
-                </div>
-              ) : (
-                filteredTables.map((table) => (
-                  <div key={table} className="flex items-center justify-between px-3 py-2 text-sm">
-                    <div className="font-mono truncate max-w-[60%] sm:max-w-none">{table}</div>
-                    <Badge variant="secondary" className="text-[11px] px-2 py-1 min-w-[64px] justify-center">
-                      {formatRecordCount(table)}
-                    </Badge>
+            <div className="overflow-auto rounded-lg border divide-y">
+              <div className="min-w-[320px]">
+                {countsLoading && !filteredTables.length ? (
+                  <div className="flex items-center gap-2 p-3 text-sm text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {t('tables.loading')}
                   </div>
-                ))
-              )}
-              {!countsLoading && filteredTables.length === 0 ? (
-                <div className="p-3 text-sm text-muted-foreground">{t('tables.empty')}</div>
-              ) : null}
+                ) : (
+                  filteredTables.map((table) => (
+                    <div key={table} className="flex items-center justify-between px-3 py-2 text-sm">
+                      <div className="font-mono truncate max-w-[60%] sm:max-w-none">{table}</div>
+                      <Badge variant="secondary" className="text-[11px] px-2 py-1 min-w-[64px] justify-center">
+                        {formatRecordCount(table)}
+                      </Badge>
+                    </div>
+                  ))
+                )}
+                {!countsLoading && filteredTables.length === 0 ? (
+                  <div className="p-3 text-sm text-muted-foreground">{t('tables.empty')}</div>
+                ) : null}
+              </div>
             </div>
           )}
         </CardContent>
