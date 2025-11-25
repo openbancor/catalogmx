@@ -42,7 +42,7 @@ FTS_CONFIG = [
     {
         "name": "clave_prod_serv_fts",
         "content_table": "clave_prod_serv",
-        "columns": ["id", "descripcion", "palabrasSimilares"],
+        "columns": ["clave", "descripcion", "palabras_similares"],
     },
 ]
 
@@ -232,6 +232,64 @@ def transform_special_case(path: Path, payload: object) -> list[dict] | None:
     return None
 
 
+def normalize_clave_prod_serv_schema(conn: sqlite3.Connection) -> None:
+    """Align clave_prod_serv schema with legacy snake_case expected by SDKs and tests."""
+    table_exists = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='clave_prod_serv'"
+    ).fetchone()
+    if not table_exists:
+        return
+
+    cols = {row[1] for row in conn.execute("PRAGMA table_info(clave_prod_serv)").fetchall()}
+
+    # Already normalized
+    if {"clave", "descripcion", "incluye_iva", "incluye_ieps"}.issubset(cols):
+        return
+
+    expected_source = {
+        "id",
+        "descripcion",
+        "incluirIVATrasladado",
+        "incluirIEPSTrasladado",
+        "complementoQueDebeIncluir",
+        "fechaInicioVigencia",
+        "fechaFinVigencia",
+        "estimuloFranjaFronteriza",
+        "palabrasSimilares",
+    }
+    if not expected_source.issubset(cols):
+        print("[build] WARNING: clave_prod_serv schema unexpected; leaving as-is")
+        return
+
+    conn.execute("DROP TABLE IF EXISTS clave_prod_serv_tmp")
+    conn.execute(
+        """
+        CREATE TABLE clave_prod_serv_tmp AS
+        SELECT
+            id AS clave,
+            descripcion,
+            CASE
+                WHEN lower(incluirIVATrasladado) IN ('si','sí','1','true','yes') THEN 1
+                ELSE 0
+            END AS incluye_iva,
+            CASE
+                WHEN lower(incluirIEPSTrasladado) IN ('si','sí','1','true','yes') THEN 1
+                ELSE 0
+            END AS incluye_ieps,
+            complementoQueDebeIncluir AS complemento,
+            fechaInicioVigencia AS fecha_inicio_vigencia,
+            fechaFinVigencia AS fecha_fin_vigencia,
+            estimuloFranjaFronteriza AS estimulo_franja_fronteriza,
+            palabrasSimilares AS palabras_similares
+        FROM clave_prod_serv
+        """
+    )
+    conn.execute("DROP TABLE clave_prod_serv")
+    conn.execute("ALTER TABLE clave_prod_serv_tmp RENAME TO clave_prod_serv")
+    conn.commit()
+    print("[build] Normalized clave_prod_serv schema to snake_case")
+
+
 def infer_column_types(records: List[dict], columns: Sequence[str]) -> dict[str, str]:
     def infer(values: Iterable[object]) -> str:
         column_type = "TEXT"
@@ -300,6 +358,9 @@ def import_json_catalogs(conn: sqlite3.Connection) -> None:
         )
         conn.commit()
         print(f"[build] Imported {table_name} ({len(rows):,} rows) from {json_path.relative_to(DATA_ROOT)}")
+
+    # Post-process schemas that need legacy compatibility
+    normalize_clave_prod_serv_schema(conn)
 
 
 def create_indexes(conn: sqlite3.Connection) -> None:
