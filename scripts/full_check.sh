@@ -14,15 +14,48 @@ info() {
   echo "ℹ️  $*"
 }
 
-step "Update UDI data from Banxico (optional)"
+step "Update Banxico data (optional)"
 if [ -n "${BANXICO_TOKEN:-}" ]; then
   pushd "${ROOT_DIR}/packages/shared-data" >/dev/null
+
+  echo "📊 Updating UDI data..."
   python3 scripts/fetch_udis_banxico.py --token "${BANXICO_TOKEN}" || {
-    echo "⚠️  Warning: Failed to fetch UDI data from Banxico, continuing with existing data..."
+    echo "⚠️  Warning: Failed to fetch UDI data from Banxico, continuing..."
   }
+
+  echo "💱 Updating Tipo de Cambio FIX..."
+  python3 scripts/fetch_tipo_cambio_banxico.py --token "${BANXICO_TOKEN}" || {
+    echo "⚠️  Warning: Failed to fetch Tipo de Cambio FIX from Banxico, continuing..."
+  }
+
+  echo "📈 Updating Tipo de Cambio Histórico..."
+  python3 scripts/fetch_tipo_cambio_hist_banxico.py --token "${BANXICO_TOKEN}" || {
+    echo "⚠️  Warning: Failed to fetch Tipo de Cambio Histórico from Banxico, continuing..."
+  }
+
+  echo "💰 Updating TIIE 28 días..."
+  python3 scripts/fetch_tiie_banxico.py --token "${BANXICO_TOKEN}" || {
+    echo "⚠️  Warning: Failed to fetch TIIE 28d from Banxico, continuing..."
+  }
+
+  echo "📊 Updating CETES 28 días..."
+  python3 scripts/fetch_cetes_banxico.py --token "${BANXICO_TOKEN}" || {
+    echo "⚠️  Warning: Failed to fetch CETES 28d from Banxico, continuing..."
+  }
+
+  echo "📈 Updating Inflación Anual..."
+  python3 scripts/fetch_inflacion_banxico.py --token "${BANXICO_TOKEN}" || {
+    echo "⚠️  Warning: Failed to fetch Inflación from Banxico, continuing..."
+  }
+
+  echo "💼 Updating Salarios Mínimos..."
+  python3 scripts/fetch_salarios_minimos_banxico.py --token "${BANXICO_TOKEN}" || {
+    echo "⚠️  Warning: Failed to fetch Salarios Mínimos from Banxico, continuing..."
+  }
+
   popd >/dev/null
 else
-  info "BANXICO_TOKEN not set, skipping UDI update"
+  info "BANXICO_TOKEN not set, skipping Banxico data updates"
   info "To enable: export BANXICO_TOKEN='your_token' or get one at https://www.banxico.org.mx/SieAPIRest/service/v1/token"
 fi
 
@@ -31,6 +64,11 @@ pushd "${ROOT_DIR}/packages/webapp" >/dev/null
 npm run data:build
 npm run sync:data
 popd >/dev/null
+
+step "Copy Banxico JSON data to webapp"
+cp "${ROOT_DIR}/packages/shared-data/banxico"/*.json "${ROOT_DIR}/packages/webapp/public/data/banxico/" || {
+  echo "⚠️  Warning: Failed to copy some Banxico JSON files, continuing..."
+}
 
 step "Close WAL mode for browser compatibility (SQLite WASM / sql.js)"
 MEXICO_DB="${ROOT_DIR}/packages/shared-data/mexico.sqlite3"

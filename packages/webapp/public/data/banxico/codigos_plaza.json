@@ -1,0 +1,2791 @@
+{
+  "metadata": {
+    "catalog": "BANXICO_Codigos_Plaza_CLABE",
+    "description": "Códigos de plaza para el sistema CLABE (Clave Bancaria Estandarizada)",
+    "source": "Banco de México (BANXICO) / Sistema de Pagos Electrónicos Interbancarios (SPEI)",
+    "last_updated": "2025-11-10",
+    "total_codes": 404,
+    "total_plazas": 463,
+    "notes": "Códigos de 3 dígitos que identifican la plaza bancaria en el sistema CLABE. Algunas plazas tienen múltiples códigos por razones geográficas o históricas. Por ejemplo: Tonalá (135 en Chiapas, 320 en Jalisco), Túxpam (404 en Jalisco, 575 en Nayarit, 903 en Veracruz)."
+  },
+  "plazas": [
+    {
+      "codigo": "010",
+      "plaza": "Aguascalientes",
+      "estado": "Aguascalientes",
+      "cve_entidad": "01"
+    },
+    {
+      "codigo": "012",
+      "plaza": "Calvillo",
+      "estado": "Aguascalientes",
+      "cve_entidad": "01"
+    },
+    {
+      "codigo": "014",
+      "plaza": "Jesús María",
+      "estado": "Aguascalientes",
+      "cve_entidad": "01"
+    },
+    {
+      "codigo": "020",
+      "plaza": "Mexicali",
+      "estado": "Baja California",
+      "cve_entidad": "02"
+    },
+    {
+      "codigo": "022",
+      "plaza": "Ensenada",
+      "estado": "Baja California",
+      "cve_entidad": "02"
+    },
+    {
+      "codigo": "027",
+      "plaza": "Tecate",
+      "estado": "Baja California",
+      "cve_entidad": "02"
+    },
+    {
+      "codigo": "027",
+      "plaza": "Tijuana",
+      "estado": "Baja California",
+      "cve_entidad": "02"
+    },
+    {
+      "codigo": "028",
+      "plaza": "La Mesa",
+      "estado": "Baja California",
+      "cve_entidad": "02"
+    },
+    {
+      "codigo": "028",
+      "plaza": "Rosarito",
+      "estado": "Baja California",
+      "cve_entidad": "02"
+    },
+    {
+      "codigo": "028",
+      "plaza": "Tijuana",
+      "estado": "Baja California",
+      "cve_entidad": "02"
+    },
+    {
+      "codigo": "040",
+      "plaza": "La Paz",
+      "estado": "Baja California Sur",
+      "cve_entidad": "03"
+    },
+    {
+      "codigo": "041",
+      "plaza": "Cabo San Lucas",
+      "estado": "Baja California Sur",
+      "cve_entidad": "03"
+    },
+    {
+      "codigo": "042",
+      "plaza": "Ciudad Constitución",
+      "estado": "Baja California Sur",
+      "cve_entidad": "03"
+    },
+    {
+      "codigo": "043",
+      "plaza": "Guerrero Negro",
+      "estado": "Baja California Sur",
+      "cve_entidad": "03"
+    },
+    {
+      "codigo": "045",
+      "plaza": "San José del Cabo",
+      "estado": "Baja California Sur",
+      "cve_entidad": "03"
+    },
+    {
+      "codigo": "046",
+      "plaza": "Santa Rosalía",
+      "estado": "Baja California Sur",
+      "cve_entidad": "03"
+    },
+    {
+      "codigo": "050",
+      "plaza": "Campeche",
+      "estado": "Campeche",
+      "cve_entidad": "04"
+    },
+    {
+      "codigo": "051",
+      "plaza": "Calkiní",
+      "estado": "Campeche",
+      "cve_entidad": "04"
+    },
+    {
+      "codigo": "052",
+      "plaza": "Ciudad del Carmen",
+      "estado": "Campeche",
+      "cve_entidad": "04"
+    },
+    {
+      "codigo": "053",
+      "plaza": "Champotón",
+      "estado": "Campeche",
+      "cve_entidad": "04"
+    },
+    {
+      "codigo": "060",
+      "plaza": "Gómez Palacio",
+      "estado": "Coahuila",
+      "cve_entidad": "05"
+    },
+    {
+      "codigo": "060",
+      "plaza": "Torreón",
+      "estado": "Coahuila",
+      "cve_entidad": "05"
+    },
+    {
+      "codigo": "062",
+      "plaza": "Ciudad Acuña",
+      "estado": "Coahuila",
+      "cve_entidad": "05"
+    },
+    {
+      "codigo": "068",
+      "plaza": "Monclova",
+      "estado": "Coahuila",
+      "cve_entidad": "05"
+    },
+    {
+      "codigo": "071",
+      "plaza": "Nava",
+      "estado": "Coahuila",
+      "cve_entidad": "05"
+    },
+    {
+      "codigo": "072",
+      "plaza": "Nueva Rosita",
+      "estado": "Coahuila",
+      "cve_entidad": "05"
+    },
+    {
+      "codigo": "074",
+      "plaza": "Parras de la Fuente",
+      "estado": "Coahuila",
+      "cve_entidad": "05"
+    },
+    {
+      "codigo": "075",
+      "plaza": "Piedras Negras",
+      "estado": "Coahuila",
+      "cve_entidad": "05"
+    },
+    {
+      "codigo": "076",
+      "plaza": "Ramos Arizpe",
+      "estado": "Coahuila",
+      "cve_entidad": "05"
+    },
+    {
+      "codigo": "077",
+      "plaza": "Sabinas",
+      "estado": "Coahuila",
+      "cve_entidad": "05"
+    },
+    {
+      "codigo": "078",
+      "plaza": "Saltillo",
+      "estado": "Coahuila",
+      "cve_entidad": "05"
+    },
+    {
+      "codigo": "080",
+      "plaza": "San Pedro de las Colonias",
+      "estado": "Coahuila",
+      "cve_entidad": "05"
+    },
+    {
+      "codigo": "090",
+      "plaza": "Colima",
+      "estado": "Colima",
+      "cve_entidad": "06"
+    },
+    {
+      "codigo": "095",
+      "plaza": "Manzanillo",
+      "estado": "Colima",
+      "cve_entidad": "06"
+    },
+    {
+      "codigo": "097",
+      "plaza": "Tecomán",
+      "estado": "Colima",
+      "cve_entidad": "06"
+    },
+    {
+      "codigo": "100",
+      "plaza": "Terán",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "100",
+      "plaza": "Tuxtla Gutiérrez",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "103",
+      "plaza": "Arriaga",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "107",
+      "plaza": "Cintalapa",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "109",
+      "plaza": "Comitán",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "109",
+      "plaza": "Villa Las Rosas",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "111",
+      "plaza": "Chiapa de Corso",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "113",
+      "plaza": "F. Comalapa",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "114",
+      "plaza": "Huixtla",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "123",
+      "plaza": "Ocosingo",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "124",
+      "plaza": "Ocozocuautla",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "125",
+      "plaza": "Palenque",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "126",
+      "plaza": "Pichucalco",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "127",
+      "plaza": "Pijijiapan",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "128",
+      "plaza": "Reforma",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "130",
+      "plaza": "San Cristóbal de las Casas",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "131",
+      "plaza": "Simojovel",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "133",
+      "plaza": "Tapachula",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "135",
+      "plaza": "Tonala",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "137",
+      "plaza": "Venustiano Carranza",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "138",
+      "plaza": "Villa Flores",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "140",
+      "plaza": "Yajalón",
+      "estado": "Chiapas",
+      "cve_entidad": "07"
+    },
+    {
+      "codigo": "150",
+      "plaza": "Chihuahua",
+      "estado": "Chihuahua",
+      "cve_entidad": "08"
+    },
+    {
+      "codigo": "150",
+      "plaza": "Ciudad Delicias",
+      "estado": "Chihuahua",
+      "cve_entidad": "08"
+    },
+    {
+      "codigo": "152",
+      "plaza": "Ciudad Anáhuac",
+      "estado": "Chihuahua",
+      "cve_entidad": "08"
+    },
+    {
+      "codigo": "155",
+      "plaza": "Ciudad Camargo",
+      "estado": "Chihuahua",
+      "cve_entidad": "08"
+    },
+    {
+      "codigo": "158",
+      "plaza": "Ciudad Cuauhtémoc",
+      "estado": "Chihuahua",
+      "cve_entidad": "08"
+    },
+    {
+      "codigo": "161",
+      "plaza": "Ciudad Guerrero",
+      "estado": "Chihuahua",
+      "cve_entidad": "08"
+    },
+    {
+      "codigo": "162",
+      "plaza": "Parral",
+      "estado": "Chihuahua",
+      "cve_entidad": "08"
+    },
+    {
+      "codigo": "163",
+      "plaza": "Ciudad Jiménez",
+      "estado": "Chihuahua",
+      "cve_entidad": "08"
+    },
+    {
+      "codigo": "164",
+      "plaza": "Ciudad Juárez",
+      "estado": "Chihuahua",
+      "cve_entidad": "08"
+    },
+    {
+      "codigo": "165",
+      "plaza": "Ciudad Madera",
+      "estado": "Chihuahua",
+      "cve_entidad": "08"
+    },
+    {
+      "codigo": "167",
+      "plaza": "El Molino de Namiquipa",
+      "estado": "Chihuahua",
+      "cve_entidad": "08"
+    },
+    {
+      "codigo": "168",
+      "plaza": "Nuevo Casas Grandes",
+      "estado": "Chihuahua",
+      "cve_entidad": "08"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Atizapan",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Chalco",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Ciudad de México",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Coacalco",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Cuautitlán Izcalli",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Cuautitlán",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Ecatepec",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Huehuetoca",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Huixquilucan",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Ixtapaluca",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Los Reyes La Paz",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Naucalpan",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Nezahualcóyotl",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Tecamac",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Teotihuacán",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Texcoco",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "180",
+      "plaza": "Tlalnepantla",
+      "estado": "CDMX",
+      "cve_entidad": "09"
+    },
+    {
+      "codigo": "190",
+      "plaza": "Durango",
+      "estado": "Durango",
+      "cve_entidad": "10"
+    },
+    {
+      "codigo": "201",
+      "plaza": "Tepehuanes",
+      "estado": "Durango",
+      "cve_entidad": "10"
+    },
+    {
+      "codigo": "202",
+      "plaza": "Vicente Guerrero",
+      "estado": "Durango",
+      "cve_entidad": "10"
+    },
+    {
+      "codigo": "210",
+      "plaza": "Guanajuato",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "211",
+      "plaza": "Abasolo",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "212",
+      "plaza": "Acámbaro",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "213",
+      "plaza": "Apaseo el Alto",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "214",
+      "plaza": "Apaseo el Grande",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "215",
+      "plaza": "Celaya",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "216",
+      "plaza": "Comonfort",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "217",
+      "plaza": "Coroneo",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "218",
+      "plaza": "Cortazar",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "219",
+      "plaza": "Cuerámaro",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "220",
+      "plaza": "Dolores Hidalgo",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "222",
+      "plaza": "Irapuato",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "223",
+      "plaza": "Jaral del Progreso",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "224",
+      "plaza": "Jerécuaro",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "225",
+      "plaza": "León",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "226",
+      "plaza": "Cd. Manuel Doblado",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "227",
+      "plaza": "Moroleón",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "229",
+      "plaza": "Pénjamo",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "232",
+      "plaza": "Romita",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "233",
+      "plaza": "Salamanca",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "234",
+      "plaza": "Salvatierra",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "236",
+      "plaza": "San Felipe",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "237",
+      "plaza": "Purísima de Bustos",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "237",
+      "plaza": "San Francisco del Rincoón",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "238",
+      "plaza": "San José Iturbide",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "239",
+      "plaza": "San Luis de la Paz",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "240",
+      "plaza": "San Miguel Allende",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "244",
+      "plaza": "Silao",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "247",
+      "plaza": "Uriangato",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "248",
+      "plaza": "Valle de Santiago",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "249",
+      "plaza": "Yuriria",
+      "estado": "Guanajuato",
+      "cve_entidad": "11"
+    },
+    {
+      "codigo": "260",
+      "plaza": "Chilpancingo",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "261",
+      "plaza": "Acapulco",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "263",
+      "plaza": "Arcelia",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "264",
+      "plaza": "Atoyac de Álvarez",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "266",
+      "plaza": "Ciudad Altamirano",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "267",
+      "plaza": "Coyuca de Benítez",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "270",
+      "plaza": "Chilapa",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "271",
+      "plaza": "Huitzuco",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "272",
+      "plaza": "Iguala",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "272",
+      "plaza": "La Sabana",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "274",
+      "plaza": "Cuajinicuilapa",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "274",
+      "plaza": "Ometepec",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "275",
+      "plaza": "San Marcos",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "276",
+      "plaza": "Taxco",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "278",
+      "plaza": "Teloloapan",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "281",
+      "plaza": "Tlapa",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "282",
+      "plaza": "Ixtapa Zihuatanejo",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "282",
+      "plaza": "Zihuatanejo",
+      "estado": "Guerrero",
+      "cve_entidad": "12"
+    },
+    {
+      "codigo": "290",
+      "plaza": "Pachuca",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "291",
+      "plaza": "Actopan",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "292",
+      "plaza": "Apam",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "293",
+      "plaza": "Atotonilco el Grande",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "294",
+      "plaza": "Ciudad Sahagún",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "294",
+      "plaza": "Teocaltiche",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "295",
+      "plaza": "Cuautepec",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "296",
+      "plaza": "Huejutla",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "297",
+      "plaza": "Huichapan",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "298",
+      "plaza": "Ixmiquilpan",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "303",
+      "plaza": "Progreso de Obregón",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "305",
+      "plaza": "Tepeapulco",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "308",
+      "plaza": "Tizayuca",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "311",
+      "plaza": "Tula de Allende",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "312",
+      "plaza": "Tulancingo",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "313",
+      "plaza": "Zacualtipán",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "314",
+      "plaza": "Zimapán",
+      "estado": "Hidalgo",
+      "cve_entidad": "13"
+    },
+    {
+      "codigo": "320",
+      "plaza": "El Salto",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "320",
+      "plaza": "Guadalajara",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "320",
+      "plaza": "San Pedro Tlaquepaque",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "320",
+      "plaza": "Tlajomulco",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "320",
+      "plaza": "Tonala",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "320",
+      "plaza": "Zapopan",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "324",
+      "plaza": "Ajijic",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "326",
+      "plaza": "Ameca",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "327",
+      "plaza": "Arandas",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "330",
+      "plaza": "Atotonilco el Alto",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "331",
+      "plaza": "Atequiza",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "333",
+      "plaza": "Autlán",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "334",
+      "plaza": "Azteca",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "340",
+      "plaza": "Casimiro Castillo",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "341",
+      "plaza": "Cihuatlán",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "342",
+      "plaza": "Ciudad Guzmán",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "346",
+      "plaza": "Chapala",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "348",
+      "plaza": "El Grullo",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "355",
+      "plaza": "Ixtlahuacán del Río",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "356",
+      "plaza": "Jalostotitlán",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "357",
+      "plaza": "Jamay",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "361",
+      "plaza": "La Barca",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "362",
+      "plaza": "Lagos de Moreno",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "370",
+      "plaza": "Ocotlán",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "373",
+      "plaza": "Pihuamo",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "375",
+      "plaza": "Las Juntas",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "375",
+      "plaza": "Nuevo Vallarta",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "375",
+      "plaza": "Pitillal",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "375",
+      "plaza": "Puerto Vallarta",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "381",
+      "plaza": "San Juan de los Lagos",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "384",
+      "plaza": "San Miguel el Alto",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "385",
+      "plaza": "San Patricio Melaque",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "386",
+      "plaza": "Sayula",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "387",
+      "plaza": "Tala",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "389",
+      "plaza": "Tamazula de Gordiano",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "391",
+      "plaza": "Tecalitlán",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "396",
+      "plaza": "Tepatitlán",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "397",
+      "plaza": "Tequila",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "403",
+      "plaza": "Tototlán",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "404",
+      "plaza": "Túxpam",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "411",
+      "plaza": "Villa Hidalgo",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "413",
+      "plaza": "Zacoalco de Torres",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "414",
+      "plaza": "Zapotiltic",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "416",
+      "plaza": "Zapotlanejo",
+      "estado": "Jalisco",
+      "cve_entidad": "14"
+    },
+    {
+      "codigo": "420",
+      "plaza": "Toluca",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "421",
+      "plaza": "Acambay",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "422",
+      "plaza": "Almoloya de Juárez",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "424",
+      "plaza": "Amecameca",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "425",
+      "plaza": "Apaxco",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "426",
+      "plaza": "Atlacomulco",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "428",
+      "plaza": "Coatepec de Harinas",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "430",
+      "plaza": "Chicoloapan",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "431",
+      "plaza": "Chiconcuac",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "432",
+      "plaza": "El Oro",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "433",
+      "plaza": "Ixtapan de la Sal",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "434",
+      "plaza": "Ixtlahuaca",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "435",
+      "plaza": "Jilotepec",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "438",
+      "plaza": "Lerma",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "441",
+      "plaza": "Metepec",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "443",
+      "plaza": "Otumba",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "445",
+      "plaza": "San Mateo Atenco",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "446",
+      "plaza": "Tejupilco",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "448",
+      "plaza": "Temascaltepec",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "449",
+      "plaza": "Temoaya",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "450",
+      "plaza": "Tenancingo",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "451",
+      "plaza": "Tenago del Valle",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "453",
+      "plaza": "Santiago Tiangistenco",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "455",
+      "plaza": "Tultepec",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "456",
+      "plaza": "Tultitlán",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "457",
+      "plaza": "Valle de Bravo",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "460",
+      "plaza": "Villa Nicolás Romero",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "463",
+      "plaza": "Zumpango",
+      "estado": "Estado de México",
+      "cve_entidad": "15"
+    },
+    {
+      "codigo": "470",
+      "plaza": "Morelia",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "472",
+      "plaza": "Aguililla",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "476",
+      "plaza": "Apatzingán",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "480",
+      "plaza": "Ciudad Hidalgo",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "483",
+      "plaza": "Cotija",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "484",
+      "plaza": "Cuitzeo",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "492",
+      "plaza": "Huetamo",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "493",
+      "plaza": "Jacona",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "494",
+      "plaza": "Jiquilpan",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "496",
+      "plaza": "La Piedad",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "497",
+      "plaza": "Lázaro Cárdenas",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "498",
+      "plaza": "Los Reyes",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "499",
+      "plaza": "Maravatío",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "501",
+      "plaza": "Nueva Italia",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "506",
+      "plaza": "Pátzcuaro",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "508",
+      "plaza": "Purépero",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "509",
+      "plaza": "Puruandiro",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "512",
+      "plaza": "Sahuayo",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "515",
+      "plaza": "Tacámbaro",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "517",
+      "plaza": "Tangancícuaro",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "519",
+      "plaza": "Tepalcatepec",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "523",
+      "plaza": "Tlazazalca",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "528",
+      "plaza": "Uruapan",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "533",
+      "plaza": "Yurécuaro",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "534",
+      "plaza": "Zacapu",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "535",
+      "plaza": "Zamora",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "536",
+      "plaza": "Zinapécuaro",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "537",
+      "plaza": "Zitácuaro",
+      "estado": "Michoacán",
+      "cve_entidad": "16"
+    },
+    {
+      "codigo": "540",
+      "plaza": "Cuernavaca",
+      "estado": "Morelos",
+      "cve_entidad": "17"
+    },
+    {
+      "codigo": "542",
+      "plaza": "Cuautla",
+      "estado": "Morelos",
+      "cve_entidad": "17"
+    },
+    {
+      "codigo": "542",
+      "plaza": "Oaxtepec, Morelos",
+      "estado": "Morelos",
+      "cve_entidad": "17"
+    },
+    {
+      "codigo": "543",
+      "plaza": "Jiutepec",
+      "estado": "Morelos",
+      "cve_entidad": "17"
+    },
+    {
+      "codigo": "544",
+      "plaza": "Jojutla",
+      "estado": "Morelos",
+      "cve_entidad": "17"
+    },
+    {
+      "codigo": "545",
+      "plaza": "Puente de Ixtla",
+      "estado": "Morelos",
+      "cve_entidad": "17"
+    },
+    {
+      "codigo": "546",
+      "plaza": "Temixco",
+      "estado": "Morelos",
+      "cve_entidad": "17"
+    },
+    {
+      "codigo": "548",
+      "plaza": "Tetecala",
+      "estado": "Morelos",
+      "cve_entidad": "17"
+    },
+    {
+      "codigo": "549",
+      "plaza": "Yautepec",
+      "estado": "Morelos",
+      "cve_entidad": "17"
+    },
+    {
+      "codigo": "552",
+      "plaza": "Zacatepec",
+      "estado": "Morelos",
+      "cve_entidad": "17"
+    },
+    {
+      "codigo": "560",
+      "plaza": "Tepic",
+      "estado": "Nayarit",
+      "cve_entidad": "18"
+    },
+    {
+      "codigo": "561",
+      "plaza": "Acaponeta",
+      "estado": "Nayarit",
+      "cve_entidad": "18"
+    },
+    {
+      "codigo": "562",
+      "plaza": "Ahuacatlán",
+      "estado": "Nayarit",
+      "cve_entidad": "18"
+    },
+    {
+      "codigo": "564",
+      "plaza": "Compostela",
+      "estado": "Nayarit",
+      "cve_entidad": "18"
+    },
+    {
+      "codigo": "566",
+      "plaza": "Ixtlán del Río",
+      "estado": "Nayarit",
+      "cve_entidad": "18"
+    },
+    {
+      "codigo": "571",
+      "plaza": "San Blas",
+      "estado": "Nayarit",
+      "cve_entidad": "18"
+    },
+    {
+      "codigo": "573",
+      "plaza": "Santiago Ixcuintla",
+      "estado": "Nayarit",
+      "cve_entidad": "18"
+    },
+    {
+      "codigo": "575",
+      "plaza": "Túxpam",
+      "estado": "Nayarit",
+      "cve_entidad": "18"
+    },
+    {
+      "codigo": "580",
+      "plaza": "Apodaca",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "580",
+      "plaza": "Cadereyta",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "580",
+      "plaza": "Cd. Guadalupe",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "580",
+      "plaza": "General Escobedo",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "580",
+      "plaza": "Monterrey",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "580",
+      "plaza": "San Nicolás de los Garza",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "580",
+      "plaza": "San Pedro Garza García",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "580",
+      "plaza": "Santa Catarina",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "583",
+      "plaza": "Allende",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "592",
+      "plaza": "General Zuazua",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "595",
+      "plaza": "Linares",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "597",
+      "plaza": "Montemorelos",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "599",
+      "plaza": "Sabinas Hidalgo",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "600",
+      "plaza": "Salinas Victoria",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "601",
+      "plaza": "El Cercado",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "601",
+      "plaza": "Villa de Santiago",
+      "estado": "Nuevo León",
+      "cve_entidad": "19"
+    },
+    {
+      "codigo": "610",
+      "plaza": "Oaxaca",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "613",
+      "plaza": "Tlaxiaco",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "614",
+      "plaza": "Huajuapan de León",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "616",
+      "plaza": "Ixtepec",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "617",
+      "plaza": "Juchitán",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "619",
+      "plaza": "Loma Bonita",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "620",
+      "plaza": "Matías Romero",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "621",
+      "plaza": "Miahuatlán",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "622",
+      "plaza": "Ocotlán",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "624",
+      "plaza": "Puerto Escondido",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "626",
+      "plaza": "Salina Cruz",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "627",
+      "plaza": "Lagunas",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "628",
+      "plaza": "Tuxtepec",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "630",
+      "plaza": "Pochutla",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "631",
+      "plaza": "San Pedro Tapanatepec",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "632",
+      "plaza": "Santa Lucía del Camino",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "634",
+      "plaza": "Bahías de Huatulco",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "635",
+      "plaza": "Santiago Juxtlahuaca",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "636",
+      "plaza": "Pinotepa Nacional",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "637",
+      "plaza": "Tehuantepec",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "638",
+      "plaza": "Tlacolula",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "640",
+      "plaza": "Zimatlán",
+      "estado": "Oaxaca",
+      "cve_entidad": "20"
+    },
+    {
+      "codigo": "650",
+      "plaza": "Cholula",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "650",
+      "plaza": "La Resurrección",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "650",
+      "plaza": "Puebla",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "650",
+      "plaza": "San Baltazar Campeche",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "652",
+      "plaza": "Acatzingo",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "654",
+      "plaza": "Atlixco",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "656",
+      "plaza": "Cuetzalan",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "659",
+      "plaza": "Huauchinango",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "662",
+      "plaza": "Izúcar de Matamoros",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "667",
+      "plaza": "San Martín Texmelucan",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "668",
+      "plaza": "San Felipe Hueyotlipan",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "669",
+      "plaza": "Tecamachalco",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "670",
+      "plaza": "Tehuacán",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "671",
+      "plaza": "San Lorenzo",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "672",
+      "plaza": "Teziutlán",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "674",
+      "plaza": "Xicotepec de Juárez",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "676",
+      "plaza": "Zacatlán",
+      "estado": "Puebla",
+      "cve_entidad": "21"
+    },
+    {
+      "codigo": "680",
+      "plaza": "Pedro Escobedo",
+      "estado": "Querétaro",
+      "cve_entidad": "22"
+    },
+    {
+      "codigo": "680",
+      "plaza": "Querétaro",
+      "estado": "Querétaro",
+      "cve_entidad": "22"
+    },
+    {
+      "codigo": "680",
+      "plaza": "Villa Corregidora",
+      "estado": "Querétaro",
+      "cve_entidad": "22"
+    },
+    {
+      "codigo": "681",
+      "plaza": "Amealco",
+      "estado": "Querétaro",
+      "cve_entidad": "22"
+    },
+    {
+      "codigo": "685",
+      "plaza": "San Juan del Río",
+      "estado": "Querétaro",
+      "cve_entidad": "22"
+    },
+    {
+      "codigo": "686",
+      "plaza": "Tequisquiapan",
+      "estado": "Querétaro",
+      "cve_entidad": "22"
+    },
+    {
+      "codigo": "690",
+      "plaza": "Chetumal",
+      "estado": "Quintana Roo",
+      "cve_entidad": "23"
+    },
+    {
+      "codigo": "691",
+      "plaza": "Cancún",
+      "estado": "Quintana Roo",
+      "cve_entidad": "23"
+    },
+    {
+      "codigo": "691",
+      "plaza": "Col. Puerto Juárez",
+      "estado": "Quintana Roo",
+      "cve_entidad": "23"
+    },
+    {
+      "codigo": "692",
+      "plaza": "Cozumel",
+      "estado": "Quintana Roo",
+      "cve_entidad": "23"
+    },
+    {
+      "codigo": "694",
+      "plaza": "Playa del Carmen",
+      "estado": "Quintana Roo",
+      "cve_entidad": "23"
+    },
+    {
+      "codigo": "700",
+      "plaza": "San Luis Potosí",
+      "estado": "San Luis Potosí",
+      "cve_entidad": "24"
+    },
+    {
+      "codigo": "703",
+      "plaza": "Cerritos",
+      "estado": "San Luis Potosí",
+      "cve_entidad": "24"
+    },
+    {
+      "codigo": "705",
+      "plaza": "Ciudad Valles",
+      "estado": "San Luis Potosí",
+      "cve_entidad": "24"
+    },
+    {
+      "codigo": "709",
+      "plaza": "Matehuala",
+      "estado": "San Luis Potosí",
+      "cve_entidad": "24"
+    },
+    {
+      "codigo": "711",
+      "plaza": "Río Verde",
+      "estado": "San Luis Potosí",
+      "cve_entidad": "24"
+    },
+    {
+      "codigo": "716",
+      "plaza": "Tamuín",
+      "estado": "San Luis Potosí",
+      "cve_entidad": "24"
+    },
+    {
+      "codigo": "730",
+      "plaza": "Culiacán",
+      "estado": "Sinaloa",
+      "cve_entidad": "25"
+    },
+    {
+      "codigo": "735",
+      "plaza": "Concordia",
+      "estado": "Sinaloa",
+      "cve_entidad": "25"
+    },
+    {
+      "codigo": "736",
+      "plaza": "Cosala",
+      "estado": "Sinaloa",
+      "cve_entidad": "25"
+    },
+    {
+      "codigo": "737",
+      "plaza": "Choix",
+      "estado": "Sinaloa",
+      "cve_entidad": "25"
+    },
+    {
+      "codigo": "738",
+      "plaza": "El Fuerte",
+      "estado": "Sinaloa",
+      "cve_entidad": "25"
+    },
+    {
+      "codigo": "739",
+      "plaza": "Escuinapa",
+      "estado": "Sinaloa",
+      "cve_entidad": "25"
+    },
+    {
+      "codigo": "740",
+      "plaza": "Guamúchil",
+      "estado": "Sinaloa",
+      "cve_entidad": "25"
+    },
+    {
+      "codigo": "741",
+      "plaza": "Guasave",
+      "estado": "Sinaloa",
+      "cve_entidad": "25"
+    },
+    {
+      "codigo": "743",
+      "plaza": "Los Mochis",
+      "estado": "Sinaloa",
+      "cve_entidad": "25"
+    },
+    {
+      "codigo": "743",
+      "plaza": "Topolobampo",
+      "estado": "Sinaloa",
+      "cve_entidad": "25"
+    },
+    {
+      "codigo": "744",
+      "plaza": "Mazatlán",
+      "estado": "Sinaloa",
+      "cve_entidad": "25"
+    },
+    {
+      "codigo": "745",
+      "plaza": "Mocorito",
+      "estado": "Sinaloa",
+      "cve_entidad": "25"
+    },
+    {
+      "codigo": "746",
+      "plaza": "Navolato",
+      "estado": "Sinaloa",
+      "cve_entidad": "25"
+    },
+    {
+      "codigo": "760",
+      "plaza": "Hermosillo",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "761",
+      "plaza": "Agua Prieta",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "765",
+      "plaza": "Caborca",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "766",
+      "plaza": "Cananea",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "767",
+      "plaza": "Ciudad Obregón",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "767",
+      "plaza": "Esperanza",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "769",
+      "plaza": "Empalme",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "770",
+      "plaza": "Guaymas",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "770",
+      "plaza": "San Carlos",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "771",
+      "plaza": "Huatabampo",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "773",
+      "plaza": "Magdalena",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "776",
+      "plaza": "Nacozari de García",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "777",
+      "plaza": "Navojoa",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "778",
+      "plaza": "Nogales",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "779",
+      "plaza": "Puerto Peñasco",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "780",
+      "plaza": "San Luis Río Colorado",
+      "estado": "Sonora",
+      "cve_entidad": "26"
+    },
+    {
+      "codigo": "790",
+      "plaza": "Tamulte",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "790",
+      "plaza": "Villa Hermosa",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "792",
+      "plaza": "Cárdenas",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "793",
+      "plaza": "Ciudad Pemex",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "794",
+      "plaza": "Comalcalco",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "796",
+      "plaza": "Emiliano Zapata",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "797",
+      "plaza": "Frontera",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "798",
+      "plaza": "Huimanguillo",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "800",
+      "plaza": "Jalpa de Méndez",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "802",
+      "plaza": "Macuspana",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "803",
+      "plaza": "Nacajuca",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "804",
+      "plaza": "Paraíso",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "805",
+      "plaza": "Tacotalpa",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "806",
+      "plaza": "Teapa",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "807",
+      "plaza": "Tenosique",
+      "estado": "Tabasco",
+      "cve_entidad": "27"
+    },
+    {
+      "codigo": "810",
+      "plaza": "Ciudad Victoria",
+      "estado": "Tamaulipas",
+      "cve_entidad": "28"
+    },
+    {
+      "codigo": "811",
+      "plaza": "Altamira",
+      "estado": "Tamaulipas",
+      "cve_entidad": "28"
+    },
+    {
+      "codigo": "813",
+      "plaza": "Ciudad Madero",
+      "estado": "Tamaulipas",
+      "cve_entidad": "28"
+    },
+    {
+      "codigo": "813",
+      "plaza": "Tampico",
+      "estado": "Tamaulipas",
+      "cve_entidad": "28"
+    },
+    {
+      "codigo": "814",
+      "plaza": "Ciudad Mante",
+      "estado": "Tamaulipas",
+      "cve_entidad": "28"
+    },
+    {
+      "codigo": "818",
+      "plaza": "Matamoros",
+      "estado": "Tamaulipas",
+      "cve_entidad": "28"
+    },
+    {
+      "codigo": "821",
+      "plaza": "Colombia",
+      "estado": "Tamaulipas",
+      "cve_entidad": "28"
+    },
+    {
+      "codigo": "821",
+      "plaza": "Nuevo Laredo",
+      "estado": "Tamaulipas",
+      "cve_entidad": "28"
+    },
+    {
+      "codigo": "822",
+      "plaza": "Reynosa",
+      "estado": "Tamaulipas",
+      "cve_entidad": "28"
+    },
+    {
+      "codigo": "823",
+      "plaza": "Río Bravo",
+      "estado": "Tamaulipas",
+      "cve_entidad": "28"
+    },
+    {
+      "codigo": "825",
+      "plaza": "Soto La Marina",
+      "estado": "Tamaulipas",
+      "cve_entidad": "28"
+    },
+    {
+      "codigo": "826",
+      "plaza": "Valle Hermoso",
+      "estado": "Tamaulipas",
+      "cve_entidad": "28"
+    },
+    {
+      "codigo": "830",
+      "plaza": "Tlaxcala",
+      "estado": "Tlaxcala",
+      "cve_entidad": "29"
+    },
+    {
+      "codigo": "832",
+      "plaza": "Apizaco",
+      "estado": "Tlaxcala",
+      "cve_entidad": "29"
+    },
+    {
+      "codigo": "834",
+      "plaza": "Santa Ana Chiautempan",
+      "estado": "Tlaxcala",
+      "cve_entidad": "29"
+    },
+    {
+      "codigo": "840",
+      "plaza": "Jalapa",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "841",
+      "plaza": "Acayucan",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "843",
+      "plaza": "Agua Dulce",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "845",
+      "plaza": "Álamo",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "846",
+      "plaza": "Altotonga",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "848",
+      "plaza": "Banderilla",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "849",
+      "plaza": "Boca del Río",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "852",
+      "plaza": "Ciudad Mendoza",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "853",
+      "plaza": "Coatepec",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "854",
+      "plaza": "Coatzacoalcos",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "855",
+      "plaza": "Córdoba",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "856",
+      "plaza": "Cosamaloapan",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "860",
+      "plaza": "Cuitláhuac",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "863",
+      "plaza": "Fortín de las Flores",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "864",
+      "plaza": "Gutiérrez Zamora",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "865",
+      "plaza": "Huatusco",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "867",
+      "plaza": "Isla",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "868",
+      "plaza": "Ixtaczoquitlán",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "869",
+      "plaza": "Jáltipan",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "871",
+      "plaza": "Juan Rodríguez Clara",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "872",
+      "plaza": "Villa José Cardel",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "873",
+      "plaza": "Las Choapas",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "875",
+      "plaza": "Naranjos",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "876",
+      "plaza": "Martínez de la Torre",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "877",
+      "plaza": "Minatitlán",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "878",
+      "plaza": "Misantla",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "879",
+      "plaza": "Nanchital",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "882",
+      "plaza": "Orizaba",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "885",
+      "plaza": "Papantla",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "886",
+      "plaza": "Perote",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "888",
+      "plaza": "Poza Rica",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "889",
+      "plaza": "Río Blanco",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "890",
+      "plaza": "San Andrés Tuxtla",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "891",
+      "plaza": "San Rafael",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "894",
+      "plaza": "Platón Sánchez",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "894",
+      "plaza": "Tantoyuca",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "895",
+      "plaza": "Tempoal",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "898",
+      "plaza": "Tierra Blanca",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "901",
+      "plaza": "Tlapacoyan",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "903",
+      "plaza": "Túxpam de Rodríguez Cano",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "905",
+      "plaza": "Cd. Industrial Framboyan",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "905",
+      "plaza": "Veracruz",
+      "estado": "Veracruz",
+      "cve_entidad": "30"
+    },
+    {
+      "codigo": "910",
+      "plaza": "Mérida",
+      "estado": "Yucatán",
+      "cve_entidad": "31"
+    },
+    {
+      "codigo": "913",
+      "plaza": "Motul",
+      "estado": "Yucatán",
+      "cve_entidad": "31"
+    },
+    {
+      "codigo": "914",
+      "plaza": "Oxkutzcab",
+      "estado": "Yucatán",
+      "cve_entidad": "31"
+    },
+    {
+      "codigo": "915",
+      "plaza": "Progreso",
+      "estado": "Yucatán",
+      "cve_entidad": "31"
+    },
+    {
+      "codigo": "917",
+      "plaza": "Ticul",
+      "estado": "Yucatán",
+      "cve_entidad": "31"
+    },
+    {
+      "codigo": "918",
+      "plaza": "Tizimín",
+      "estado": "Yucatán",
+      "cve_entidad": "31"
+    },
+    {
+      "codigo": "920",
+      "plaza": "Valladolid",
+      "estado": "Yucatán",
+      "cve_entidad": "31"
+    },
+    {
+      "codigo": "930",
+      "plaza": "Zacatecas",
+      "estado": "Zacatecas",
+      "cve_entidad": "32"
+    },
+    {
+      "codigo": "933",
+      "plaza": "Fresnillo",
+      "estado": "Zacatecas",
+      "cve_entidad": "32"
+    },
+    {
+      "codigo": "934",
+      "plaza": "Guadalupe",
+      "estado": "Zacatecas",
+      "cve_entidad": "32"
+    },
+    {
+      "codigo": "935",
+      "plaza": "Jalpa",
+      "estado": "Zacatecas",
+      "cve_entidad": "32"
+    },
+    {
+      "codigo": "936",
+      "plaza": "Jerez de G. Salinas",
+      "estado": "Zacatecas",
+      "cve_entidad": "32"
+    },
+    {
+      "codigo": "938",
+      "plaza": "Juchipila",
+      "estado": "Zacatecas",
+      "cve_entidad": "32"
+    },
+    {
+      "codigo": "939",
+      "plaza": "Loreto",
+      "estado": "Zacatecas",
+      "cve_entidad": "32"
+    },
+    {
+      "codigo": "946",
+      "plaza": "Nochistlán",
+      "estado": "Zacatecas",
+      "cve_entidad": "32"
+    },
+    {
+      "codigo": "958",
+      "plaza": "Valparaíso",
+      "estado": "Zacatecas",
+      "cve_entidad": "32"
+    },
+    {
+      "codigo": "960",
+      "plaza": "Calera de V. Rosales",
+      "estado": "Zacatecas",
+      "cve_entidad": "32"
+    }
+  ]
+}
