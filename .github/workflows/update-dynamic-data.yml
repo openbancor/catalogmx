@@ -1,0 +1,198 @@
+name: Update Dynamic Data (Daily)
+
+# Este workflow actualiza los datos dinámicos de Banxico (UDI, tipo cambio, etc.)
+# y publica el SQLite actualizado en GitHub Releases SIN crear un nuevo release de la librería
+
+on:
+  schedule:
+    # Ejecutar diariamente a las 10 AM UTC (4 AM Ciudad de México)
+    - cron: '0 10 * * *'
+
+  workflow_dispatch:
+    inputs:
+      force_update:
+        description: 'Force update even if no changes'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: write  # Necesario para crear releases
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Fetch latest data from Banxico
+        env:
+          BANXICO_TOKEN: ${{ secrets.BANXICO_TOKEN }}
+        run: |
+          cd packages/shared-data
+
+          echo "📥 Fetching latest data from Banxico..."
+
+          # Fetch all Banxico data
+          python scripts/fetch_udis_banxico.py || echo "⚠️ UDIs fetch failed"
+          python scripts/fetch_tipo_cambio_banxico.py || echo "⚠️ Tipo cambio fetch failed"
+          python scripts/fetch_tipo_cambio_hist_banxico.py || echo "⚠️ Tipo cambio hist fetch failed"
+          python scripts/fetch_tiie_banxico.py || echo "⚠️ TIIE fetch failed"
+          python scripts/fetch_cetes_banxico.py || echo "⚠️ CETES fetch failed"
+          python scripts/fetch_inflacion_banxico.py || echo "⚠️ Inflación fetch failed"
+          python scripts/fetch_salarios_minimos_banxico.py || echo "⚠️ Salarios fetch failed"
+
+          echo "✅ Data fetch complete"
+
+      - name: Check for data changes
+        id: check_changes
+        run: |
+          cd packages/shared-data
+
+          # Check if any banxico JSON files changed
+          if git diff --quiet banxico/*.json; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No changes detected in Banxico data"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "✅ Changes detected in Banxico data"
+          fi
+
+      - name: Build SQLite from JSONs
+        if: steps.check_changes.outputs.has_changes == 'true' || github.event.inputs.force_update == 'true'
+        run: |
+          cd packages/shared-data
+
+          echo "🔨 Building SQLite database..."
+          python scripts/json_to_sqlite_dynamic.py
+
+          # Verify database was created
+          if [ ! -f mexico_dynamic.sqlite3 ]; then
+            echo "❌ Failed to create SQLite database"
+            exit 1
+          fi
+
+          # Show database stats
+          python -c "
+          import sqlite3
+          db = sqlite3.connect('mexico_dynamic.sqlite3')
+          cursor = db.execute('SELECT COUNT(*) FROM udis')
+          print(f'UDIs: {cursor.fetchone()[0]:,}')
+          cursor = db.execute('SELECT COUNT(*) FROM tipo_cambio')
+          print(f'Tipo cambio: {cursor.fetchone()[0]:,}')
+          cursor = db.execute('SELECT value FROM _metadata WHERE key = \"version\"')
+          version = cursor.fetchone()[0]
+          print(f'Version: {version}')
+          db.close()
+          "
+
+          echo "✅ SQLite database built successfully"
+
+      - name: Create GitHub Release with data
+        if: steps.check_changes.outputs.has_changes == 'true' || github.event.inputs.force_update == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd packages/shared-data
+
+          VERSION=$(date +%Y-%m-%d)
+          TAG="data-${VERSION}"
+
+          echo "📦 Creating release: ${TAG}"
+
+          # Get database version from SQLite
+          DB_VERSION=$(python -c "
+          import sqlite3
+          db = sqlite3.connect('mexico_dynamic.sqlite3')
+          cursor = db.execute('SELECT value FROM _metadata WHERE key = \"version\"')
+          print(cursor.fetchone()[0])
+          db.close()
+          ")
+
+          # Count records
+          STATS=$(python -c "
+          import sqlite3
+          db = sqlite3.connect('mexico_dynamic.sqlite3')
+          udis = db.execute('SELECT COUNT(*) FROM udis').fetchone()[0]
+          tc = db.execute('SELECT COUNT(*) FROM tipo_cambio').fetchone()[0]
+          tiie = db.execute('SELECT COUNT(*) FROM tiie').fetchone()[0]
+          cetes = db.execute('SELECT COUNT(*) FROM cetes').fetchone()[0]
+          infl = db.execute('SELECT COUNT(*) FROM inflacion').fetchone()[0]
+          total = udis + tc + tiie + cetes + infl
+          print(f'- **UDIs**: {udis:,} registros')
+          print(f'- **Tipo de Cambio**: {tc:,} registros')
+          print(f'- **TIIE**: {tiie:,} registros')
+          print(f'- **CETES**: {cetes:,} registros')
+          print(f'- **Inflación**: {infl:,} registros')
+          print(f'- **TOTAL**: {total:,} registros')
+          db.close()
+          ")
+
+          # Create release notes
+          cat > release-notes.md <<EOF
+          # 📊 Actualización de Datos - ${VERSION}
+
+          Datos actualizados de Banco de México.
+
+          ## 📈 Estadísticas
+
+          ${STATS}
+
+          ## 🔧 Uso
+
+          La librería \`catalogmx\` descargará automáticamente esta versión si tiene más de 24 horas de antigüedad.
+
+          Para forzar actualización manual:
+
+          \`\`\`python
+          from catalogmx.data import DataUpdater
+
+          updater = DataUpdater()
+          updater.download_latest(force=True)
+          \`\`\`
+
+          ## 📅 Fuente de Datos
+
+          - **Banco de México (Banxico)**: API SIE
+          - **Versión de datos**: ${DB_VERSION}
+          - **Fecha de generación**: ${VERSION}
+
+          ---
+
+          **Nota**: Este es un release de DATOS únicamente. No requiere actualizar la librería \`catalogmx\`.
+          EOF
+
+          # Delete previous 'latest' tag if exists
+          gh release delete latest --yes 2>/dev/null || true
+          git push origin :refs/tags/latest 2>/dev/null || true
+
+          # Create new 'latest' release
+          gh release create latest \
+            mexico_dynamic.sqlite3 \
+            --title "Latest Data (${VERSION})" \
+            --notes-file release-notes.md
+
+          # Also create dated release for archive
+          gh release create "${TAG}" \
+            mexico_dynamic.sqlite3 \
+            --title "Data Update ${VERSION}" \
+            --notes-file release-notes.md
+
+          echo "✅ Releases created successfully"
+          echo "   - latest (always points to newest data)"
+          echo "   - ${TAG} (archived version)"
+
+      - name: Summary
+        if: always()
+        run: |
+          if [ "${{ steps.check_changes.outputs.has_changes }}" == "true" ]; then
+            echo "✅ Data updated and published to GitHub Releases"
+          else
+            echo "ℹ️ No changes detected, skipping update"
+          fi
