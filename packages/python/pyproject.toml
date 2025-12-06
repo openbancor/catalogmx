@@ -94,7 +94,11 @@ include = ["catalogmx*"]
 exclude = ["tests*"]
 
 [tool.setuptools.package-data]
-catalogmx = ["py.typed"]
+catalogmx = [
+    "py.typed",
+    "data/*.sqlite3",
+    "data/*.db"
+]
 
 [tool.black]
 line-length = 100

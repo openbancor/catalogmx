@@ -349,7 +349,7 @@ def migrate_salarios_minimos(db: sqlite3.Connection, data_dir: Path) -> int:
     inserted = 0
     for record in salarios:
         fecha = record.get("fecha")
-        salario = record.get("salario_diario") or record.get("valor")
+        salario = record.get("salario_diario") or record.get("salario_minimo") or record.get("valor")
         zona = record.get("zona", "general")
 
         if not fecha or not salario:
