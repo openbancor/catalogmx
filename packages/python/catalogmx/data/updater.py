@@ -174,9 +174,7 @@ class DataUpdater:
                 print(f"❌ Error downloading data: {e}")
             return False
 
-    def auto_update(
-        self, max_age_hours: int = 24, verbose: bool = False
-    ) -> Path:
+    def auto_update(self, max_age_hours: int = 24, verbose: bool = False) -> Path:
         """
         Auto-update with intelligent fallback
 

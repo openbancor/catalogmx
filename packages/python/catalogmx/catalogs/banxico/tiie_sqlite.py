@@ -157,9 +157,7 @@ class TIIECatalog:
         return results
 
     @classmethod
-    def calcular_variacion(
-        cls, fecha_inicio: str, fecha_fin: str, plazo: int = 28
-    ) -> float | None:
+    def calcular_variacion(cls, fecha_inicio: str, fecha_fin: str, plazo: int = 28) -> float | None:
         """
         Calculate variation between two dates
 

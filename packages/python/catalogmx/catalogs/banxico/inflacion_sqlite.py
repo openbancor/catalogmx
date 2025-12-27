@@ -38,12 +38,12 @@ class InflacionCatalog:
             "año": row["anio"],
             "mes": row["mes"],
             "inpc": row["inpc"] if row["inpc"] is not None else None,
-            "inflacion_mensual": row["inflacion_mensual"]
-            if row["inflacion_mensual"] is not None
-            else None,
-            "inflacion_anual": row["inflacion_anual"]
-            if row["inflacion_anual"] is not None
-            else None,
+            "inflacion_mensual": (
+                row["inflacion_mensual"] if row["inflacion_mensual"] is not None else None
+            ),
+            "inflacion_anual": (
+                row["inflacion_anual"] if row["inflacion_anual"] is not None else None
+            ),
         }
 
     @classmethod
@@ -236,9 +236,7 @@ class InflacionCatalog:
             return None
 
         inflaciones = [
-            r.get("inflacion_anual")
-            for r in records
-            if r.get("inflacion_anual") is not None
+            r.get("inflacion_anual") for r in records if r.get("inflacion_anual") is not None
         ]
         return sum(inflaciones) / len(inflaciones) if inflaciones else None
 
