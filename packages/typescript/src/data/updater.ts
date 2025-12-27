@@ -26,7 +26,8 @@ interface DataUpdaterConfig {
 const DEFAULT_CONFIG: Required<DataUpdaterConfig> = {
   cacheDir: '.catalogmx',
   maxAgeHours: 24,
-  dataUrl: 'https://github.com/openbancor/catalogmx/releases/download/latest/mexico_dynamic.sqlite3',
+  dataUrl:
+    'https://github.com/openbancor/catalogmx/releases/download/latest/mexico_dynamic.sqlite3',
   autoUpdate: true,
 };
 
@@ -105,19 +106,21 @@ class NodeDataUpdater {
 
       await new Promise<void>((resolve, reject) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        https.get(this.config.dataUrl, (response: any) => {
-          if (response.statusCode !== 200) {
-            reject(new Error(`HTTP ${response.statusCode}`));
-            return;
-          }
+        https
+          .get(this.config.dataUrl, (response: any) => {
+            if (response.statusCode !== 200) {
+              reject(new Error(`HTTP ${response.statusCode}`));
+              return;
+            }
 
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
-          const writeStream = require('fs').createWriteStream('', { fd: file.fd });
-          response.pipe(writeStream);
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const writeStream = require('fs').createWriteStream('', { fd: file.fd });
+            response.pipe(writeStream);
 
-          writeStream.on('finish', () => resolve());
-          writeStream.on('error', reject);
-        }).on('error', reject);
+            writeStream.on('finish', () => resolve());
+            writeStream.on('error', reject);
+          })
+          .on('error', reject);
       });
 
       await file.close();
@@ -249,7 +252,7 @@ class BrowserDataUpdater {
       request.onerror = () => reject(request.error);
       request.onsuccess = () => resolve(request.result);
 
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains(this.storeName)) {
           db.createObjectStore(this.storeName);

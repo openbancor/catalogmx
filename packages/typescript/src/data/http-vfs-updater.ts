@@ -41,8 +41,7 @@ export class HttpVfsUpdater {
 
     const SQL = await import('sql.js');
     this.sqljs = await SQL.default({
-      locateFile: (file: string) =>
-        `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`,
+      locateFile: (file: string) => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`,
     });
 
     return this.sqljs;
@@ -53,7 +52,11 @@ export class HttpVfsUpdater {
    *
    * This implements a virtual file system that fetches SQLite pages
    * on-demand using HTTP Range requests.
+   *
+   * @unused - Reserved for future HTTP VFS implementation
    */
+  // @ts-expect-error - Reserved for future use
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private createHttpVfs() {
     const url = this.config.dataUrl;
     const pageCache = new Map<number, Uint8Array>();
