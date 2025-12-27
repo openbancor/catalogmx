@@ -24,9 +24,8 @@ import os
 import shutil
 import sqlite3
 import urllib.request
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
-
 
 # Configuration
 GITHUB_RELEASE_URL = os.getenv(

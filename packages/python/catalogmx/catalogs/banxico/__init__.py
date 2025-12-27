@@ -16,17 +16,17 @@ Catálogos incluidos:
 
 # Static catalogs (JSON-based, don't change frequently)
 from .banks import BankCatalog
+from .cetes_sqlite import CETESCatalog as CETES28Catalog
 from .codigos_plaza import CodigosPlazaCatalog
+from .inflacion_sqlite import InflacionCatalog as InflacionAnualCatalog
 from .instituciones_financieras import InstitucionesFinancieras
 from .monedas_divisas import MonedasDivisas
+from .salarios_minimos_sqlite import SalariosMinimosCatalog
+from .tiie_sqlite import TIIECatalog as TIIE28Catalog
+from .tipo_cambio_usd_sqlite import TipoCambioUSDCatalog
 
 # Dynamic catalogs (SQLite-based, auto-updating)
 from .udis_sqlite import UDICatalog
-from .tipo_cambio_usd_sqlite import TipoCambioUSDCatalog
-from .salarios_minimos_sqlite import SalariosMinimosCatalog
-from .tiie_sqlite import TIIECatalog as TIIE28Catalog
-from .cetes_sqlite import CETESCatalog as CETES28Catalog
-from .inflacion_sqlite import InflacionCatalog as InflacionAnualCatalog
 
 __all__ = [
     "BankCatalog",

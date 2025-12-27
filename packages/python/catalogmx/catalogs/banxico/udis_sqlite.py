@@ -8,7 +8,6 @@ UDIs are inflation-indexed investment units used in Mexico.
 """
 
 import sqlite3
-from datetime import datetime
 from pathlib import Path
 
 from catalogmx.data.updater import get_database_path
