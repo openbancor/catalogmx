@@ -505,8 +505,8 @@ export function generateRfcPersonaFisica(input: {
   const homoclave = calculateHomoclave(`${paterno} ${materno} ${nombre}`);
   const rfcWithHomoclave = rfcBase + homoclave;
 
-  // Calculate checksum
-  const checksum = calculateChecksum(rfcWithHomoclave);
+  // Calculate checksum (add placeholder '0' because calculateChecksum expects 13 chars and removes last one)
+  const checksum = calculateChecksum(rfcWithHomoclave + '0');
 
   return rfcWithHomoclave + checksum;
 }
@@ -587,8 +587,8 @@ export function generateRfcPersonaMoral(input: {
   // Homoclave placeholder (XX)
   const rfcWithHomoclave = rfcBase + 'XX';
 
-  // Calculate checksum
-  const checksum = calculateChecksum(rfcWithHomoclave);
+  // Calculate checksum (add placeholder '0' because calculateChecksum expects 12 chars and removes last one)
+  const checksum = calculateChecksum(rfcWithHomoclave + '0');
 
   return rfcWithHomoclave + checksum;
 }
