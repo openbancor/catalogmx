@@ -39,29 +39,38 @@ jobs:
 
           echo "📥 Fetching latest data from Banxico..."
 
-          # Fetch all Banxico data
-          python scripts/fetch_udis_banxico.py || echo "⚠️ UDIs fetch failed"
-          python scripts/fetch_tipo_cambio_banxico.py || echo "⚠️ Tipo cambio fetch failed"
-          python scripts/fetch_tipo_cambio_hist_banxico.py || echo "⚠️ Tipo cambio hist fetch failed"
-          python scripts/fetch_tiie_banxico.py || echo "⚠️ TIIE fetch failed"
-          python scripts/fetch_cetes_banxico.py || echo "⚠️ CETES fetch failed"
-          python scripts/fetch_inflacion_banxico.py || echo "⚠️ Inflación fetch failed"
-          python scripts/fetch_salarios_minimos_banxico.py || echo "⚠️ Salarios fetch failed"
+          # Fetch all Banxico data with better error handling
+          FAILED_SCRIPTS=""
+
+          python scripts/fetch_udis_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS UDIs"
+          python scripts/fetch_tipo_cambio_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS TipoCambio"
+          python scripts/fetch_tipo_cambio_hist_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS TipoCambioHist"
+          python scripts/fetch_tiie_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS TIIE"
+          python scripts/fetch_cetes_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS CETES"
+          python scripts/fetch_inflacion_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS Inflacion"
+          python scripts/fetch_salarios_minimos_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS Salarios"
+
+          if [ -n "$FAILED_SCRIPTS" ]; then
+            echo "⚠️ Some scripts failed:$FAILED_SCRIPTS"
+            echo "⚠️ Continuing with existing data..."
+          fi
 
           echo "✅ Data fetch complete"
 
       - name: Check for data changes
         id: check_changes
         run: |
-          cd packages/shared-data
-
           # Check if any banxico JSON files changed
-          if git diff --quiet banxico/*.json; then
+          if git diff --quiet HEAD packages/shared-data/banxico/*.json; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
             echo "ℹ️ No changes detected in Banxico data"
           else
             echo "has_changes=true" >> $GITHUB_OUTPUT
             echo "✅ Changes detected in Banxico data"
+
+            # Show what changed
+            echo "Changed files:"
+            git diff --name-only HEAD packages/shared-data/banxico/*.json
           fi
 
       - name: Build SQLite from JSONs
@@ -124,12 +133,14 @@ jobs:
           tiie = db.execute('SELECT COUNT(*) FROM tiie').fetchone()[0]
           cetes = db.execute('SELECT COUNT(*) FROM cetes').fetchone()[0]
           infl = db.execute('SELECT COUNT(*) FROM inflacion').fetchone()[0]
-          total = udis + tc + tiie + cetes + infl
+          sal = db.execute('SELECT COUNT(*) FROM salarios_minimos').fetchone()[0]
+          total = udis + tc + tiie + cetes + infl + sal
           print(f'- **UDIs**: {udis:,} registros')
           print(f'- **Tipo de Cambio**: {tc:,} registros')
           print(f'- **TIIE**: {tiie:,} registros')
           print(f'- **CETES**: {cetes:,} registros')
           print(f'- **Inflación**: {infl:,} registros')
+          print(f'- **Salarios Mínimos**: {sal:,} registros')
           print(f'- **TOTAL**: {total:,} registros')
           db.close()
           ")
