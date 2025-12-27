@@ -25,8 +25,9 @@ class SalariosMinimosCatalog {
     final generalRecords = _data!.where((r) => r['zona'] == 'general').toList();
     if (generalRecords.isEmpty) return null;
 
-    generalRecords
-        .sort((a, b) => (b['fecha'] as String).compareTo(a['fecha'] as String));
+    generalRecords.sort(
+      (a, b) => (b['fecha'] as String).compareTo(a['fecha'] as String),
+    );
     return generalRecords.first;
   }
 
@@ -34,18 +35,21 @@ class SalariosMinimosCatalog {
     _loadData();
     if (_data!.isEmpty) return null;
 
-    final fronteraRecords =
-        _data!.where((r) => r['zona'] == 'frontera_norte').toList();
+    final fronteraRecords = _data!
+        .where((r) => r['zona'] == 'frontera_norte')
+        .toList();
     if (fronteraRecords.isEmpty) return null;
 
-    fronteraRecords
-        .sort((a, b) => (b['fecha'] as String).compareTo(a['fecha'] as String));
+    fronteraRecords.sort(
+      (a, b) => (b['fecha'] as String).compareTo(a['fecha'] as String),
+    );
     return fronteraRecords.first;
   }
 
   static double? getSalarioActualZona(String zona) {
-    final record =
-        zona == 'frontera_norte' ? getActualFrontera() : getActualGeneral();
+    final record = zona == 'frontera_norte'
+        ? getActualFrontera()
+        : getActualGeneral();
     return record?['salario_minimo'] as double?;
   }
 }

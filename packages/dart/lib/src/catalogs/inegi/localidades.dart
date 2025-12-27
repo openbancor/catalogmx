@@ -42,8 +42,10 @@ class InegLocalidades {
   }
 
   /// Searches localities by name within a municipality
-  static List<Map<String, dynamic>> search(String query,
-      {String? claveMunicipio}) {
+  static List<Map<String, dynamic>> search(
+    String query, {
+    String? claveMunicipio,
+  }) {
     _loadData();
     final normalized = query.toLowerCase().trim();
 

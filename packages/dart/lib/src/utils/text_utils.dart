@@ -59,7 +59,10 @@ String? getFirstConsonant(String text, {int startIndex = 0}) {
 
 /// Cleans a name by removing accents and excluded words
 String cleanName(
-    String name, List<String> excludedWords, List<String> allowedChars) {
+  String name,
+  List<String> excludedWords,
+  List<String> allowedChars,
+) {
   // Remove excluded words
   final filtered = removeExcludedWords(name, excludedWords);
 

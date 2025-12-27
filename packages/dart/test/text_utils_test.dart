@@ -38,20 +38,26 @@ void main() {
   group('removeExcludedWords', () {
     test('removes excluded words', () {
       final excluded = ['DE', 'LA', 'EL'];
-      expect(removeExcludedWords('JUAN DE LA CRUZ', excluded),
-          equals('JUAN CRUZ'));
+      expect(
+        removeExcludedWords('JUAN DE LA CRUZ', excluded),
+        equals('JUAN CRUZ'),
+      );
     });
 
     test('handles case sensitivity', () {
       // Function is case-insensitive - converts words to uppercase before checking
       final excluded = ['DE', 'LA'];
-      expect(removeExcludedWords('juan de la cruz', excluded),
-          equals('juan cruz'));
+      expect(
+        removeExcludedWords('juan de la cruz', excluded),
+        equals('juan cruz'),
+      );
     });
 
     test('handles empty excluded list', () {
-      expect(removeExcludedWords('JUAN DE LA CRUZ', []),
-          equals('JUAN DE LA CRUZ'));
+      expect(
+        removeExcludedWords('JUAN DE LA CRUZ', []),
+        equals('JUAN DE LA CRUZ'),
+      );
     });
 
     test('handles empty text', () {
@@ -121,7 +127,9 @@ void main() {
       final excluded = ['DE', 'LA'];
       final allowed = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ '.split('');
       expect(
-          cleanName('JUAN DE LA CRUZ', excluded, allowed), equals('JUAN CRUZ'));
+        cleanName('JUAN DE LA CRUZ', excluded, allowed),
+        equals('JUAN CRUZ'),
+      );
     });
 
     test('removes accents', () {

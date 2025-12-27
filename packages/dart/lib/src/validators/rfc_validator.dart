@@ -33,8 +33,9 @@ class RFCException implements Exception {
 class RFCValidator {
   final String rfc;
 
-  static final RegExp _generalRegex =
-      RegExp(r'^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{2}[0-9A]$');
+  static final RegExp _generalRegex = RegExp(
+    r'^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{2}[0-9A]$',
+  );
   static const String _homoclaveChars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789';
 
   static const Map<String, String> _checksumTable = {
@@ -223,8 +224,10 @@ class RFCValidator {
   /// Validates the date portion
   bool validateDate() {
     if (!validateGeneralRegex()) return false;
-    final dateStr =
-        rfc.substring(rfc.length == 13 ? 4 : 3, rfc.length == 13 ? 10 : 9);
+    final dateStr = rfc.substring(
+      rfc.length == 13 ? 4 : 3,
+      rfc.length == 13 ? 10 : 9,
+    );
     return isValidDateYYMMDD(dateStr);
   }
 
@@ -256,7 +259,8 @@ class RFCValidator {
     }
     if (rfcStr.length != 12) {
       throw RFCException(
-          'RFC must be 11 or 12 characters for checksum calculation');
+        'RFC must be 11 or 12 characters for checksum calculation',
+      );
     }
 
     int sum = 0;

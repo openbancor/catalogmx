@@ -453,7 +453,8 @@ class CURPGenerator {
     final differentiator = fechaNacimiento.year < 2000 ? '0' : 'A';
 
     // Position 18: Check digit (calculable)
-    final tempCurp = _generateLetters() +
+    final tempCurp =
+        _generateLetters() +
         _generateDate() +
         sexo.toUpperCase() +
         _getStateCode(estado) +
@@ -469,7 +470,8 @@ class CURPGenerator {
   static String calculateCheckDigit(String curp17) {
     if (curp17.length != 17) {
       throw CURPException(
-          'CURP must have exactly 17 characters for check digit calculation');
+        'CURP must have exactly 17 characters for check digit calculation',
+      );
     }
 
     const dictionary = '0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';

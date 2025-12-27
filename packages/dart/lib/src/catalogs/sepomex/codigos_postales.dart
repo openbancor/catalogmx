@@ -57,8 +57,10 @@ class SepomexCodigosPostales {
   }
 
   /// Searches postal codes by colonia name
-  static List<Map<String, dynamic>> searchByColonia(String query,
-      {String? codigoPostal}) {
+  static List<Map<String, dynamic>> searchByColonia(
+    String query, {
+    String? codigoPostal,
+  }) {
     _loadData();
     final normalized = query.toLowerCase().trim();
 

@@ -17,8 +17,10 @@ void main() {
     });
 
     test('rejects CURP with invalid structure', () {
-      expect(validateCURP('1EAF771012HMCRGR08'),
-          isFalse); // First char must be letter
+      expect(
+        validateCURP('1EAF771012HMCRGR08'),
+        isFalse,
+      ); // First char must be letter
       expect(validateCURP('OEAF771012XMCRGR08'), isFalse); // Invalid gender
     });
 
