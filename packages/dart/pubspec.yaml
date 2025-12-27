@@ -12,6 +12,8 @@ environment:
 dependencies:
   # For accent removal (like unidecode in Python)
   diacritic: ^0.1.5
+  # For HTTP requests in data updater
+  http: ^1.1.0
 
 dev_dependencies:
   test: ^1.24.0

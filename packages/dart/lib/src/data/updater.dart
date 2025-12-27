@@ -4,7 +4,6 @@
 /// Works across all Flutter platforms: mobile, desktop, and web.
 library;
 
-import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 
