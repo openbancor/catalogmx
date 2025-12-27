@@ -197,6 +197,62 @@ class TIIECatalog:
         tasas = [r.get("tasa") for r in records if r.get("tasa") is not None]
         return sum(tasas) / len(tasas) if tasas else None
 
+    @classmethod
+    def get_tasa_actual(cls, plazo: int = 28) -> float | None:
+        """
+        Get current TIIE rate value (alias for get_valor_actual)
+
+        :param plazo: Term in days (28, 91, or 182)
+        :return: Current TIIE rate or None
+        """
+        return cls.get_valor_actual(plazo)
+
+    @classmethod
+    def calcular_interes(
+        cls, monto: float, fecha_inicio: str, fecha_fin: str, plazo: int = 28
+    ) -> float | None:
+        """
+        Calculate interest using TIIE rate
+
+        :param monto: Principal amount
+        :param fecha_inicio: Start date (YYYY-MM-DD)
+        :param fecha_fin: End date (YYYY-MM-DD)
+        :param plazo: Term in days (28, 91, or 182)
+        :return: Interest amount or None if data not available
+        """
+        from datetime import datetime
+
+        record_inicio = cls.get_por_fecha(fecha_inicio, plazo)
+        record_fin = cls.get_por_fecha(fecha_fin, plazo)
+
+        if not record_inicio and not record_fin:
+            return None
+
+        # Use available rate (start or end, or average if both)
+        tasa = None
+        if record_inicio and record_fin:
+            tasa = (record_inicio.get("tasa", 0) + record_fin.get("tasa", 0)) / 2
+        elif record_inicio:
+            tasa = record_inicio.get("tasa")
+        elif record_fin:
+            tasa = record_fin.get("tasa")
+
+        if tasa is None:
+            return None
+
+        # Calculate days between dates
+        date_inicio = datetime.strptime(fecha_inicio, "%Y-%m-%d")
+        date_fin = datetime.strptime(fecha_fin, "%Y-%m-%d")
+        dias = (date_fin - date_inicio).days
+
+        if dias <= 0:
+            return 0.0
+
+        # Calculate simple interest: I = P * r * t / 36500
+        # (tasa is annual percentage, divide by 100 to get decimal, then by 365 for daily rate)
+        interes = monto * (tasa / 100) * (dias / 365)
+        return round(interes, 2)
+
 
 # Convenience functions for TIIE 28 (most commonly used)
 def get_tiie_actual(plazo: int = 28) -> dict | None:

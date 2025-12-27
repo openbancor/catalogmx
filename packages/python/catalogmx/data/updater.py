@@ -284,6 +284,14 @@ class DataUpdater:
         except OSError:
             return False
 
+    def clearCache(self) -> bool:
+        """
+        Clear local cache (camelCase alias for clear_cache)
+
+        :return: True if cache cleared successfully
+        """
+        return self.clear_cache()
+
 
 # Singleton instance for convenience
 _default_updater = DataUpdater()
