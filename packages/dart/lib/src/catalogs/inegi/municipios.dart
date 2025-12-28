@@ -84,8 +84,8 @@ class InegMunicipios {
 
     return searchList.where((muni) {
       return (muni['nom_municipio'] as String).toLowerCase().contains(
-        normalized,
-      );
+            normalized,
+          );
     }).toList();
   }
 

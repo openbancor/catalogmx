@@ -80,8 +80,7 @@ class MobileDataUpdater extends BaseDataUpdater {
   MobileDataUpdater(super.config) {
     // TODO: Use path_provider to get application documents directory
     // For now, use a placeholder
-    final homeDir =
-        Platform.environment['HOME'] ??
+    final homeDir = Platform.environment['HOME'] ??
         Platform.environment['USERPROFILE'] ??
         '';
     final cacheDir = '$homeDir/${config.cacheDir}';
