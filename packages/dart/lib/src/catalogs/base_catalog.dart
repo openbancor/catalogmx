@@ -16,7 +16,8 @@ abstract class BaseCatalog<T> {
 
   /// Loads JSON data from file path with caching
   static Future<List<Map<String, dynamic>>> loadJsonData(
-      String relativePath) async {
+    String relativePath,
+  ) async {
     if (_cache.containsKey(relativePath)) {
       return _cache[relativePath]!;
     }

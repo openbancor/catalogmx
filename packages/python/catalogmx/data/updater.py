@@ -24,9 +24,8 @@ import os
 import shutil
 import sqlite3
 import urllib.request
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
-
 
 # Configuration
 GITHUB_RELEASE_URL = os.getenv(
@@ -174,9 +173,7 @@ class DataUpdater:
                 print(f"❌ Error downloading data: {e}")
             return False
 
-    def auto_update(
-        self, max_age_hours: int = 24, verbose: bool = False
-    ) -> Path:
+    def auto_update(self, max_age_hours: int = 24, verbose: bool = False) -> Path:
         """
         Auto-update with intelligent fallback
 
@@ -285,6 +282,14 @@ class DataUpdater:
             return True
         except OSError:
             return False
+
+    def clearCache(self) -> bool:
+        """
+        Clear local cache (camelCase alias for clear_cache)
+
+        :return: True if cache cleared successfully
+        """
+        return self.clear_cache()
 
 
 # Singleton instance for convenience

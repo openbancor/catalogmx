@@ -4,7 +4,6 @@
 /// Works across all Flutter platforms: mobile, desktop, and web.
 library;
 
-import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 
@@ -51,7 +50,8 @@ class DataUpdaterConfig {
   const DataUpdaterConfig({
     this.cacheDir = '.catalogmx',
     this.maxAgeHours = 24,
-    this.dataUrl = 'https://github.com/openbancor/catalogmx/releases/download/latest/mexico_dynamic.sqlite3',
+    this.dataUrl =
+        'https://github.com/openbancor/catalogmx/releases/download/latest/mexico_dynamic.sqlite3',
     this.autoUpdate = true,
   });
 }
@@ -80,7 +80,9 @@ class MobileDataUpdater extends BaseDataUpdater {
   MobileDataUpdater(super.config) {
     // TODO: Use path_provider to get application documents directory
     // For now, use a placeholder
-    final homeDir = Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'] ?? '';
+    final homeDir = Platform.environment['HOME'] ??
+        Platform.environment['USERPROFILE'] ??
+        '';
     final cacheDir = '$homeDir/${config.cacheDir}';
 
     cacheDbPath = '$cacheDir/mexico_dynamic.sqlite3';
@@ -242,8 +244,11 @@ class DataUpdater {
 
     // Platform detection
     try {
-      if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS ||
-          Platform.isLinux || Platform.isWindows) {
+      if (Platform.isAndroid ||
+          Platform.isIOS ||
+          Platform.isMacOS ||
+          Platform.isLinux ||
+          Platform.isWindows) {
         _updater = MobileDataUpdater(cfg);
       } else {
         // Fallback to web

@@ -10,7 +10,8 @@ import 'dart:io';
 class CatalogHelper {
   /// Loads JSON data from a file path
   static Future<List<Map<String, dynamic>>> loadJsonList(
-      String filePath) async {
+    String filePath,
+  ) async {
     try {
       final file = File(filePath);
       final contents = await file.readAsString();

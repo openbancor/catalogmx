@@ -469,7 +469,8 @@ class CURPGenerator {
   static String calculateCheckDigit(String curp17) {
     if (curp17.length != 17) {
       throw CURPException(
-          'CURP must have exactly 17 characters for check digit calculation');
+        'CURP must have exactly 17 characters for check digit calculation',
+      );
     }
 
     const dictionary = '0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';

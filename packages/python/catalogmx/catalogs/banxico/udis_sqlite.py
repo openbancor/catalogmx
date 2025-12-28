@@ -8,7 +8,6 @@ UDIs are inflation-indexed investment units used in Mexico.
 """
 
 import sqlite3
-from datetime import datetime
 from pathlib import Path
 
 from catalogmx.data.updater import get_database_path
@@ -289,9 +288,7 @@ class UDICatalog:
         :param fecha_fin: End date (YYYY-MM-DD)
         :return: Percentage variation or None if values not found
         """
-        record_inicio = cls.get_por_fecha(fecha_inicio) or cls._get_valor_cercano(
-            fecha_inicio
-        )
+        record_inicio = cls.get_por_fecha(fecha_inicio) or cls._get_valor_cercano(fecha_inicio)
         record_fin = cls.get_por_fecha(fecha_fin) or cls._get_valor_cercano(fecha_fin)
 
         if not record_inicio or not record_fin:

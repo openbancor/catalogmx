@@ -37,6 +37,7 @@ class SalariosMinimosCatalog:
             "fecha": row["fecha"],
             "zona": row["zona"],
             "salario_diario": row["salario_diario"],
+            "salario_minimo": row["salario_diario"],  # Alias for compatibility
             "año": row["anio"],
             "mes": row["mes"],
         }
@@ -218,6 +219,45 @@ class SalariosMinimosCatalog:
 
         salario_diario = record.get("salario_diario")
         return salario_diario * 365 if salario_diario else None
+
+    @classmethod
+    def get_actual_general(cls) -> dict | None:
+        """
+        Get current minimum wage for general zone
+
+        :return: Latest minimum wage record for general zone
+        """
+        return cls.get_actual(zona="general")
+
+    @classmethod
+    def get_actual_frontera(cls) -> dict | None:
+        """
+        Get current minimum wage for northern border zone
+
+        :return: Latest minimum wage record for frontera_norte zone
+        """
+        return cls.get_actual(zona="frontera_norte")
+
+    @classmethod
+    def get_salario_actual_zona(cls, zona: str) -> float | None:
+        """
+        Get current salary value for a specific zone
+
+        :param zona: Zone ('general' or 'frontera_norte')
+        :return: Current daily minimum wage value or None
+        """
+        return cls.get_valor_actual(zona)
+
+    @classmethod
+    def get_por_fecha_zona(cls, fecha: str, zona: str) -> dict | None:
+        """
+        Get minimum wage by date and zone
+
+        :param fecha: Date string in YYYY-MM-DD format
+        :param zona: Zone ('general' or 'frontera_norte')
+        :return: Minimum wage record or None if not found
+        """
+        return cls.get_por_fecha(fecha, zona)
 
 
 # Convenience functions

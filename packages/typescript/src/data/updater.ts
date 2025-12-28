@@ -26,7 +26,8 @@ interface DataUpdaterConfig {
 const DEFAULT_CONFIG: Required<DataUpdaterConfig> = {
   cacheDir: '.catalogmx',
   maxAgeHours: 24,
-  dataUrl: 'https://github.com/openbancor/catalogmx/releases/download/latest/mexico_dynamic.sqlite3',
+  dataUrl:
+    'https://github.com/openbancor/catalogmx/releases/download/latest/mexico_dynamic.sqlite3',
   autoUpdate: true,
 };
 
@@ -45,7 +46,9 @@ class NodeDataUpdater {
 
     this.config = { ...DEFAULT_CONFIG, ...config };
 
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const os = require('os');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const path = require('path');
     const cacheDir = path.join(os.homedir(), this.config.cacheDir);
 
@@ -54,6 +57,7 @@ class NodeDataUpdater {
   }
 
   async getLocalVersion(): Promise<string | null> {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fs = require('fs').promises;
     try {
       const data = await fs.readFile(this.versionFilePath, 'utf-8');
@@ -65,6 +69,7 @@ class NodeDataUpdater {
   }
 
   async getLocalAgeHours(): Promise<number | null> {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fs = require('fs').promises;
     try {
       const data = await fs.readFile(this.versionFilePath, 'utf-8');
@@ -77,12 +82,16 @@ class NodeDataUpdater {
     }
   }
 
-  async downloadLatest(force = false, verbose = true): Promise<boolean> {
+  async downloadLatest(_force = false, verbose = true): Promise<boolean> {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fs = require('fs').promises;
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const path = require('path');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const https = require('https');
 
     if (verbose) {
+      // eslint-disable-next-line no-console
       console.log(`📥 Downloading data from ${this.config.dataUrl}...`);
     }
 
@@ -96,23 +105,28 @@ class NodeDataUpdater {
       const file = await fs.open(tempPath, 'w');
 
       await new Promise<void>((resolve, reject) => {
-        https.get(this.config.dataUrl, (response: any) => {
-          if (response.statusCode !== 200) {
-            reject(new Error(`HTTP ${response.statusCode}`));
-            return;
-          }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        https
+          .get(this.config.dataUrl, (response: any) => {
+            if (response.statusCode !== 200) {
+              reject(new Error(`HTTP ${response.statusCode}`));
+              return;
+            }
 
-          const writeStream = require('fs').createWriteStream('', { fd: file.fd });
-          response.pipe(writeStream);
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const writeStream = require('fs').createWriteStream('', { fd: file.fd });
+            response.pipe(writeStream);
 
-          writeStream.on('finish', () => resolve());
-          writeStream.on('error', reject);
-        }).on('error', reject);
+            writeStream.on('finish', () => resolve());
+            writeStream.on('error', reject);
+          })
+          .on('error', reject);
       });
 
       await file.close();
 
       // Verify database integrity
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const betterSqlite3 = require('better-sqlite3');
       const db = betterSqlite3(tempPath, { readonly: true });
       const row = db.prepare('SELECT value FROM _metadata WHERE key = ?').get('version');
@@ -121,6 +135,7 @@ class NodeDataUpdater {
 
       if (!version) {
         await fs.unlink(tempPath);
+        // eslint-disable-next-line no-console
         if (verbose) console.error('❌ Downloaded database is invalid');
         return false;
       }
@@ -138,11 +153,13 @@ class NodeDataUpdater {
       await fs.writeFile(this.versionFilePath, JSON.stringify(versionInfo, null, 2));
 
       if (verbose) {
+        // eslint-disable-next-line no-console
         console.log(`✅ Data updated to version ${version}`);
       }
       return true;
     } catch (error) {
       if (verbose) {
+        // eslint-disable-next-line no-console
         console.error(`❌ Error downloading data:`, error);
       }
       return false;
@@ -151,11 +168,13 @@ class NodeDataUpdater {
 
   async autoUpdate(verbose = false): Promise<string> {
     if (!this.config.autoUpdate) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const fs = require('fs');
       if (fs.existsSync(this.cacheDbPath)) {
         return this.cacheDbPath;
       }
       // Fallback to embedded
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       return require.resolve('catalogmx/dist/data/mexico_dynamic.sqlite3');
     }
 
@@ -167,6 +186,7 @@ class NodeDataUpdater {
     }
 
     // Return cache if exists
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fs = require('fs');
     if (fs.existsSync(this.cacheDbPath)) {
       return this.cacheDbPath;
@@ -174,8 +194,10 @@ class NodeDataUpdater {
 
     // Fallback to embedded
     if (verbose) {
+      // eslint-disable-next-line no-console
       console.warn('⚠️  Using embedded data (may be outdated)');
     }
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     return require.resolve('catalogmx/dist/data/mexico_dynamic.sqlite3');
   }
 
@@ -184,15 +206,18 @@ class NodeDataUpdater {
       return this.autoUpdate();
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fs = require('fs');
     if (fs.existsSync(this.cacheDbPath)) {
       return this.cacheDbPath;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     return require.resolve('catalogmx/dist/data/mexico_dynamic.sqlite3');
   }
 
   async clearCache(): Promise<boolean> {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fs = require('fs').promises;
     try {
       await fs.unlink(this.cacheDbPath);
@@ -227,7 +252,7 @@ class BrowserDataUpdater {
       request.onerror = () => reject(request.error);
       request.onsuccess = () => resolve(request.result);
 
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains(this.storeName)) {
           db.createObjectStore(this.storeName);
@@ -272,8 +297,9 @@ class BrowserDataUpdater {
     });
   }
 
-  async downloadLatest(force = false, verbose = true): Promise<boolean> {
+  async downloadLatest(_force = false, verbose = true): Promise<boolean> {
     if (verbose) {
+      // eslint-disable-next-line no-console
       console.log(`📥 Downloading data from ${this.config.dataUrl}...`);
     }
 
@@ -323,11 +349,13 @@ class BrowserDataUpdater {
       });
 
       if (verbose) {
+        // eslint-disable-next-line no-console
         console.log(`✅ Data updated to version ${version}`);
       }
       return true;
     } catch (error) {
       if (verbose) {
+        // eslint-disable-next-line no-console
         console.error(`❌ Error downloading data:`, error);
       }
       return false;

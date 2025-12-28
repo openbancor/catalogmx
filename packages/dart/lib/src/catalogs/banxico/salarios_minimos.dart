@@ -25,8 +25,9 @@ class SalariosMinimosCatalog {
     final generalRecords = _data!.where((r) => r['zona'] == 'general').toList();
     if (generalRecords.isEmpty) return null;
 
-    generalRecords
-        .sort((a, b) => (b['fecha'] as String).compareTo(a['fecha'] as String));
+    generalRecords.sort(
+      (a, b) => (b['fecha'] as String).compareTo(a['fecha'] as String),
+    );
     return generalRecords.first;
   }
 
@@ -38,8 +39,9 @@ class SalariosMinimosCatalog {
         _data!.where((r) => r['zona'] == 'frontera_norte').toList();
     if (fronteraRecords.isEmpty) return null;
 
-    fronteraRecords
-        .sort((a, b) => (b['fecha'] as String).compareTo(a['fecha'] as String));
+    fronteraRecords.sort(
+      (a, b) => (b['fecha'] as String).compareTo(a['fecha'] as String),
+    );
     return fronteraRecords.first;
   }
 

@@ -62,7 +62,8 @@ class CLABEValidator {
     // Check length
     if (value.length != length) {
       throw CLABEException(
-          'CLABE length must be $length digits, got ${value.length}');
+        'CLABE length must be $length digits, got ${value.length}',
+      );
     }
 
     // Check if all characters are digits

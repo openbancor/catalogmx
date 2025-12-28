@@ -59,11 +59,17 @@ void main() {
 
     test('calculates check digit correctly', () {
       expect(
-          CLABEValidator.calculateCheckDigit('00201007777777777'), equals('1'));
+        CLABEValidator.calculateCheckDigit('00201007777777777'),
+        equals('1'),
+      );
       expect(
-          CLABEValidator.calculateCheckDigit('01218000123456789'), equals('9'));
+        CLABEValidator.calculateCheckDigit('01218000123456789'),
+        equals('9'),
+      );
       expect(
-          CLABEValidator.calculateCheckDigit('01402800000530053'), equals('7'));
+        CLABEValidator.calculateCheckDigit('01402800000530053'),
+        equals('7'),
+      );
     });
   });
 

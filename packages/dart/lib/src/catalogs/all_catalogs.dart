@@ -21,11 +21,11 @@ class SatAeropuertos {
     _byCode = {for (var item in _data!) item['code'] as String: item};
     _byIATA = {
       for (var item in _data!)
-        if (item.containsKey('iata')) item['iata'] as String: item
+        if (item.containsKey('iata')) item['iata'] as String: item,
     };
     _byICAO = {
       for (var item in _data!)
-        if (item.containsKey('icao')) item['icao'] as String: item
+        if (item.containsKey('icao')) item['icao'] as String: item,
     };
   }
 
@@ -60,7 +60,8 @@ class SatPuertosMaritimos {
   static void _loadData() {
     if (_data != null) return;
     _data = BaseCatalog.loadJsonDataSync(
-        'sat/carta_porte_3/puertos_maritimos.json');
+      'sat/carta_porte_3/puertos_maritimos.json',
+    );
     _byCode = {for (var item in _data!) item['code'] as String: item};
   }
 
@@ -108,8 +109,9 @@ class SatTipoEmbalaje {
 
   static void _loadData() {
     if (_data != null) return;
-    _data =
-        BaseCatalog.loadJsonDataSync('sat/carta_porte_3/tipo_embalaje.json');
+    _data = BaseCatalog.loadJsonDataSync(
+      'sat/carta_porte_3/tipo_embalaje.json',
+    );
     _byCode = {for (var item in _data!) item['clave'] as String: item};
   }
 
@@ -194,8 +196,9 @@ class BanxicoInstituciones {
 
   static void _loadData() {
     if (_data != null) return;
-    _data =
-        BaseCatalog.loadJsonDataSync('banxico/instituciones_financieras.json');
+    _data = BaseCatalog.loadJsonDataSync(
+      'banxico/instituciones_financieras.json',
+    );
     _byCode = {for (var item in _data!) item['code'] as String: item};
   }
 

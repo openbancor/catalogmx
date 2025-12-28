@@ -38,12 +38,12 @@ class InflacionCatalog:
             "año": row["anio"],
             "mes": row["mes"],
             "inpc": row["inpc"] if row["inpc"] is not None else None,
-            "inflacion_mensual": row["inflacion_mensual"]
-            if row["inflacion_mensual"] is not None
-            else None,
-            "inflacion_anual": row["inflacion_anual"]
-            if row["inflacion_anual"] is not None
-            else None,
+            "inflacion_mensual": (
+                row["inflacion_mensual"] if row["inflacion_mensual"] is not None else None
+            ),
+            "inflacion_anual": (
+                row["inflacion_anual"] if row["inflacion_anual"] is not None else None
+            ),
         }
 
     @classmethod
@@ -236,11 +236,43 @@ class InflacionCatalog:
             return None
 
         inflaciones = [
-            r.get("inflacion_anual")
-            for r in records
-            if r.get("inflacion_anual") is not None
+            r.get("inflacion_anual") for r in records if r.get("inflacion_anual") is not None
         ]
         return sum(inflaciones) / len(inflaciones) if inflaciones else None
+
+    @classmethod
+    def get_tasa_actual(cls) -> float | None:
+        """
+        Get current inflation rate (alias for get_inflacion_anual_actual)
+
+        :return: Current annual inflation rate or None
+        """
+        return cls.get_inflacion_anual_actual()
+
+    @classmethod
+    def ajustar_por_inflacion(cls, monto: float, fecha_inicio: str, fecha_fin: str) -> float | None:
+        """
+        Adjust an amount for inflation between two dates
+
+        :param monto: Original amount
+        :param fecha_inicio: Start date (YYYY-MM-DD)
+        :param fecha_fin: End date (YYYY-MM-DD)
+        :return: Inflation-adjusted amount or None if data not available
+        """
+        record_inicio = cls.get_por_fecha(fecha_inicio)
+        record_fin = cls.get_por_fecha(fecha_fin)
+
+        if not record_inicio or not record_fin:
+            return None
+
+        inpc_inicio = record_inicio.get("inpc")
+        inpc_fin = record_fin.get("inpc")
+
+        if inpc_inicio is None or inpc_fin is None or inpc_inicio == 0:
+            return None
+
+        # Adjust amount using INPC ratio
+        return round(monto * (inpc_fin / inpc_inicio), 2)
 
 
 # Convenience functions

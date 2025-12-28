@@ -37,9 +37,9 @@ jobs:
         run: |
           ruff check catalogmx/
 
-      - name: Format with black
+      - name: Check format with black
         run: |
-          black catalogmx/
+          black --check catalogmx/
 
       - name: Type check with mypy
         run: |
