@@ -498,6 +498,11 @@ def main():
         print(f"❌ Error: No existe el directorio {banxico_dir}")
         sys.exit(1)
 
+    # Eliminar base de datos existente para evitar conflictos de schema
+    if db_path.exists():
+        print(f"🧹 Eliminando base de datos existente: {db_path}")
+        db_path.unlink()
+
     # Crear base de datos
     try:
         create_database(db_path, schema_path, data_dir)

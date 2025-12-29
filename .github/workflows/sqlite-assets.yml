@@ -63,32 +63,33 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd packages/shared-data
-          
+
           # Delete existing release and tag if exists
           gh release delete sqlite-assets --yes --cleanup-tag 2>/dev/null || true
-          
-          # Create new release with assets
-          gh release create sqlite-assets \
-            --repo "${GITHUB_REPOSITORY}" \
-            --title "SQLite Assets (Auto-updated)" \
-            --notes "📦 Unified SQLite databases for catalogmx
 
-**mexico.sqlite3**: Complete database with all 58 catalogs
+          # Create release notes file
+          cat > release_notes.md << 'EOF'
+# 📦 Unified SQLite Databases for catalogmx
+
+## mexico.sqlite3: Complete database with all 58 catalogs
+
 - ✅ Optimized for browser (WAL disabled)
 - ✅ Compatible with SQLite WASM HTTP VFS
 - ✅ Ready for HTTP Range requests
 - 📊 470,000+ records from SAT, INEGI, Banxico, SEPOMEX
 
-**Individual databases**: Lighter alternatives
+## Individual databases: Lighter alternatives
+
 - sepomex.db (~25 MB)
-- localidades.db (~12 MB)  
+- localidades.db (~12 MB)
 - clave_prod_serv.db (~8 MB)
 
 🔄 Auto-updated on every push to main
 🌐 Use for serverless data access
 
-**Example usage:**
-\`\`\`javascript
+## Example usage:
+
+```javascript
 const sqlite3 = await sqlite3InitModule();
 const db = new sqlite3.oo1.DB(
   'https://github.com/openbancor/catalogmx/releases/download/sqlite-assets/mexico.sqlite3',
@@ -97,7 +98,14 @@ const db = new sqlite3.oo1.DB(
 
 // Only downloads ~20-100 KB per query via HTTP Range
 const result = db.exec('SELECT * FROM banxico_banks LIMIT 10');
-\`\`\`" \
+```
+EOF
+
+          # Create new release with assets
+          gh release create sqlite-assets \
+            --repo "${GITHUB_REPOSITORY}" \
+            --title "SQLite Assets (Auto-updated)" \
+            --notes-file release_notes.md \
             mexico.sqlite3 \
             sqlite/*.db \
             sqlite/*.sqlite3
