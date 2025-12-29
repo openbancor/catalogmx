@@ -17,8 +17,8 @@ CREATE TABLE IF NOT EXISTS udis (
     updated_at TEXT DEFAULT (datetime('now'))
 );
 
-CREATE INDEX idx_udis_anio_mes ON udis(anio, mes);
-CREATE INDEX idx_udis_tipo ON udis(tipo);
+CREATE INDEX IF NOT EXISTS idx_udis_anio_mes ON udis(anio, mes);
+CREATE INDEX IF NOT EXISTS idx_udis_tipo ON udis(tipo);
 
 -- Tabla de Tipo de Cambio USD/MXN
 -- Fuentes:
@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS tipo_cambio (
     PRIMARY KEY (fecha, fuente)
 );
 
-CREATE INDEX idx_tipo_cambio_anio ON tipo_cambio(anio);
-CREATE INDEX idx_tipo_cambio_fuente ON tipo_cambio(fuente);
+CREATE INDEX IF NOT EXISTS idx_tipo_cambio_anio ON tipo_cambio(anio);
+CREATE INDEX IF NOT EXISTS idx_tipo_cambio_fuente ON tipo_cambio(fuente);
 
 -- Tabla de TIIE (Tasa de Interés Interbancaria de Equilibrio)
 -- Fuentes:
@@ -57,8 +57,8 @@ CREATE TABLE IF NOT EXISTS tiie (
     PRIMARY KEY (fecha, plazo)
 );
 
-CREATE INDEX idx_tiie_plazo ON tiie(plazo);
-CREATE INDEX idx_tiie_anio ON tiie(anio);
+CREATE INDEX IF NOT EXISTS idx_tiie_plazo ON tiie(plazo);
+CREATE INDEX IF NOT EXISTS idx_tiie_anio ON tiie(anio);
 
 -- Tabla de CETES (Certificados de la Tesorería)
 -- Fuentes:
@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS cetes (
     PRIMARY KEY (fecha, plazo)
 );
 
-CREATE INDEX idx_cetes_plazo ON cetes(plazo);
-CREATE INDEX idx_cetes_anio ON cetes(anio);
+CREATE INDEX IF NOT EXISTS idx_cetes_plazo ON cetes(plazo);
+CREATE INDEX IF NOT EXISTS idx_cetes_anio ON cetes(anio);
 
 -- Tabla de Inflación
 -- Fuentes:
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS inflacion (
     updated_at TEXT DEFAULT (datetime('now'))
 );
 
-CREATE INDEX idx_inflacion_anio_mes ON inflacion(anio, mes);
+CREATE INDEX IF NOT EXISTS idx_inflacion_anio_mes ON inflacion(anio, mes);
 
 -- Tabla de Salarios Mínimos
 -- Fuentes:
@@ -112,8 +112,8 @@ CREATE TABLE IF NOT EXISTS salarios_minimos (
     PRIMARY KEY (fecha, zona)
 );
 
-CREATE INDEX idx_salarios_zona ON salarios_minimos(zona);
-CREATE INDEX idx_salarios_anio ON salarios_minimos(anio);
+CREATE INDEX IF NOT EXISTS idx_salarios_zona ON salarios_minimos(zona);
+CREATE INDEX IF NOT EXISTS idx_salarios_anio ON salarios_minimos(anio);
 
 -- Tabla de Metadata (información de la base de datos)
 CREATE TABLE IF NOT EXISTS _metadata (
