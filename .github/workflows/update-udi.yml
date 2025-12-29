@@ -46,6 +46,7 @@ jobs:
           fi
 
       - name: Create Pull Request
+        id: create_pr
         if: steps.check.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
@@ -54,20 +55,27 @@ jobs:
           title: "📊 Actualización automática de UDIs desde Banxico"
           body: |
             ## 📊 Actualización de UDIs
-            
+
             Datos actualizados automáticamente desde la API de Banco de México.
-            
+
             **Estadísticas:**
             - 📈 Total de registros: ${{ steps.check.outputs.records }}
             - 📅 Último valor: ${{ steps.check.outputs.latest }}
             - 🤖 Fuente: API Banxico (Serie SF43718)
-            
+
             Este PR actualiza el archivo `packages/shared-data/banxico/udis.json` con los valores más recientes.
           branch: auto-update-udi
           delete-branch: true
           labels: |
             data-update
             automated
+
+      - name: Check PR result
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          echo "PR Number: ${{ steps.create_pr.outputs.pull-request-number }}"
+          echo "PR URL: ${{ steps.create_pr.outputs.pull-request-url }}"
+          echo "PR Operation: ${{ steps.create_pr.outputs.pull-request-operation }}"
 
       - name: Summary
         if: steps.check.outputs.changed == 'true'
