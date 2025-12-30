@@ -14,6 +14,18 @@ DATA_ROOT = Path(__file__).resolve().parent
 DEFAULT_OUTPUT = DATA_ROOT / "mexico.sqlite3"
 
 SQLITE_SOURCES = [
+    {
+        "path": DATA_ROOT / "mexico_dynamic.sqlite3",
+        "tables": {
+            # Map dynamic tables to banxico_ prefixed names for consistency
+            "udis": "banxico_udis",
+            "tipo_cambio": "banxico_tipo_cambio",
+            "tiie": "banxico_tiie",
+            "cetes": "banxico_cetes",
+            "inflacion": "banxico_inflacion",
+            "salarios_minimos": "banxico_salarios_minimos",
+        },
+    },
 ]
 
 INDEX_DEFINITIONS: dict[str, list[Sequence[str]]] = {
@@ -55,9 +67,17 @@ JSON_TABLE_OVERRIDES = {
     "sat/cfdi_4.0/clave_prod_serv.json": "clave_prod_serv",
 }
 
-# Files that should not be imported (e.g., truncated/demo datasets).
+# Files that should not be imported (e.g., truncated/demo datasets or migrated to SQLite).
 SKIP_JSON_FILES = {
     "sepomex/codigos_postales.json",
+    # Banxico data now comes from mexico_dynamic.sqlite3
+    "banxico/udis.json",
+    "banxico/tipo_cambio_usd.json",
+    "banxico/tipo_cambio_hist.json",
+    "banxico/tiie_28.json",
+    "banxico/cetes_28.json",
+    "banxico/inflacion_anual.json",
+    "banxico/salarios_minimos.json",
 }
 
 

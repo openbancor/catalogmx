@@ -36,6 +36,23 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Download latest dynamic data from releases
+        working-directory: packages/shared-data
+        run: |
+          echo "📥 Downloading latest mexico_dynamic.sqlite3 from releases..."
+
+          # Try to get latest release with mexico_dynamic.sqlite3
+          RELEASE_URL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases | \
+            jq -r '[.[] | select(.assets[].name == "mexico_dynamic.sqlite3")] | first | .assets[] | select(.name == "mexico_dynamic.sqlite3") | .browser_download_url')
+
+          if [ -n "$RELEASE_URL" ]; then
+            curl -L -o mexico_dynamic.sqlite3 "$RELEASE_URL"
+            echo "✅ Downloaded mexico_dynamic.sqlite3 from releases"
+          else
+            echo "⚠️ No dynamic data release found, building from scratch..."
+            python scripts/json_to_sqlite_dynamic.py
+          fi
+
       - name: Build unified SQLite database
         working-directory: packages/shared-data
         run: |
