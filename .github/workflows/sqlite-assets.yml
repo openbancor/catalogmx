@@ -68,17 +68,17 @@ jobs:
           gh release delete sqlite-assets --yes --cleanup-tag 2>/dev/null || true
 
           # Create release notes file
-          cat > release_notes.md << 'EOF'
+          cat > release_notes.md <<'NOTES'
 # 📦 Unified SQLite Databases for catalogmx
 
-## mexico.sqlite3: Complete database with all 58 catalogs
+## mexico.sqlite3 - Complete database with all 58 catalogs
 
 - ✅ Optimized for browser (WAL disabled)
 - ✅ Compatible with SQLite WASM HTTP VFS
 - ✅ Ready for HTTP Range requests
 - 📊 470,000+ records from SAT, INEGI, Banxico, SEPOMEX
 
-## Individual databases: Lighter alternatives
+## Individual databases - Lighter alternatives
 
 - sepomex.db (~25 MB)
 - localidades.db (~12 MB)
@@ -87,9 +87,9 @@ jobs:
 🔄 Auto-updated on every push to main
 🌐 Use for serverless data access
 
-## Example usage:
+## Example usage
 
-```javascript
+JavaScript:
 const sqlite3 = await sqlite3InitModule();
 const db = new sqlite3.oo1.DB(
   'https://github.com/openbancor/catalogmx/releases/download/sqlite-assets/mexico.sqlite3',
@@ -98,8 +98,7 @@ const db = new sqlite3.oo1.DB(
 
 // Only downloads ~20-100 KB per query via HTTP Range
 const result = db.exec('SELECT * FROM banxico_banks LIMIT 10');
-```
-EOF
+NOTES
 
           # Create new release with assets
           gh release create sqlite-assets \

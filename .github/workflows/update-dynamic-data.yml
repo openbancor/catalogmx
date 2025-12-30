@@ -167,16 +167,24 @@ jobs:
           EOF
 
           # Delete previous 'latest' tag if exists
+          echo "🗑️  Deleting old 'latest' release if exists..."
           gh release delete latest --yes 2>/dev/null || true
           git push origin :refs/tags/latest 2>/dev/null || true
 
+          # Delete dated tag if exists (in case of re-run on same day)
+          echo "🗑️  Deleting old '${TAG}' release if exists..."
+          gh release delete "${TAG}" --yes 2>/dev/null || true
+          git push origin :refs/tags/"${TAG}" 2>/dev/null || true
+
           # Create new 'latest' release
+          echo "📦 Creating 'latest' release..."
           gh release create latest \
             mexico_dynamic.sqlite3 \
             --title "Latest Data (${VERSION})" \
             --notes-file release-notes.md
 
           # Also create dated release for archive
+          echo "📦 Creating '${TAG}' release..."
           gh release create "${TAG}" \
             mexico_dynamic.sqlite3 \
             --title "Data Update ${VERSION}" \
