@@ -74,12 +74,11 @@ def fetch_chunk(token: str, start_date: str, end_date: str) -> list[dict[str, An
             records.append({
                 "fecha": date_obj.strftime('%Y-%m-%d'),
                 "tipo_cambio": valor,
-                "moneda_origen": "USD",
-                "moneda_destino": "MXN",
-                "tipo": "oficial_banxico_fix",
-                "año": date_obj.year,
+                "fuente": "FIX",
+                "anio": date_obj.year,
                 "mes": date_obj.month,
-                "fuente": "Banco de México - Tipo de cambio FIX"
+                "moneda_origen": "USD",
+                "moneda_destino": "MXN"
             })
         
         return records

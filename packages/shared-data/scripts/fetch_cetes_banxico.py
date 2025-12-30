@@ -65,13 +65,10 @@ def fetch_chunk(token: str, start_date: str, end_date: str) -> list[dict[str, An
             
             records.append({
                 "fecha": date_obj.strftime('%Y-%m-%d'),
-                "tasa": valor,
                 "plazo": 28,
-                "instrumento": "CETES",
-                "tipo": "primaria",
-                "año": date_obj.year,
-                "mes": date_obj.month,
-                "fuente": "Banco de México"
+                "tasa": valor,
+                "anio": date_obj.year,
+                "mes": date_obj.month
             })
         
         return records
