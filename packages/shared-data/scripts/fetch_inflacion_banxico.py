@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetch INPC inflation data from Banxico API
+Fetch INPC inflation data from Banxico API and write to SQLite
 
 Serie: SP30579 - Inflación anual
 Periodicidad: Mensual
@@ -17,10 +17,11 @@ from pathlib import Path
 from typing import Any
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
+from banxico_sqlite_helper import ensure_database_exists, get_last_date, save_to_db, get_table_stats, DB_FILE
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_ROOT = SCRIPT_DIR.parent
-OUTPUT_FILE = DATA_ROOT / "banxico" / "inflacion_anual.json"
+DB_FILE = DB_FILE  # Imported from helper
 
 BANXICO_API = "https://www.banxico.org.mx/SieAPIRest/service/v1"
 INFLATION_SERIES = "SP30579"  # Inflación anual INPC
@@ -87,22 +88,6 @@ def fetch_chunk(token: str, start_date: str, end_date: str) -> list[dict[str, An
         return records
 
 
-def get_last_date_in_file(filepath: Path) -> str | None:
-    """Get the last date in the existing file"""
-    if not filepath.exists():
-        return None
-
-    try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            if not data:
-                return None
-            last_record = max(data, key=lambda x: x['fecha'])
-            return last_record['fecha']
-    except Exception:
-        return None
-
-
 def fetch_data(token: str, start_date: str, end_date: str) -> list[dict[str, Any]]:
     """Fetch inflation data in chunks"""
     start = datetime.strptime(start_date, '%Y-%m-%d')
@@ -148,7 +133,7 @@ def main():
     parser.add_argument("--token", default=os.environ.get("BANXICO_TOKEN"))
     parser.add_argument("--start-date", help="Start date (YYYY-MM-DD)")
     parser.add_argument("--end-date", default=datetime.now().strftime('%Y-%m-%d'))
-    parser.add_argument("--output", type=Path, default=OUTPUT_FILE)
+    parser.add_argument("--database", type=Path, default=DB_FILE)
     parser.add_argument("--full", action="store_true")
 
     args = parser.parse_args()
@@ -157,6 +142,9 @@ def main():
         print("ERROR: BANXICO_TOKEN required")
         return 1
 
+    # Ensure database exists
+    ensure_database_exists(args.database)
+
     # Determine start date
     start_date = args.start_date
     if not start_date:
@@ -164,7 +152,7 @@ def main():
             start_date = "2010-07-01"
             print("[fetch] Full download: starting from 2010-07-01")
         else:
-            last_date = get_last_date_in_file(args.output)
+            last_date = get_last_date(args.database, "inflacion")
             if last_date:
                 start_date_obj = datetime.strptime(last_date, '%Y-%m-%d') + timedelta(days=32)  # Next month
                 start_date = start_date_obj.strftime('%Y-%m-01')
@@ -175,7 +163,7 @@ def main():
 
     # Check if up to date
     if start_date > args.end_date:
-        print(f"[fetch] ✓ Already up to date (last: {get_last_date_in_file(args.output)})")
+        print(f"[fetch] ✓ Already up to date (last: {get_last_date(args.database, "inflacion")})")
         return 0
 
     try:
