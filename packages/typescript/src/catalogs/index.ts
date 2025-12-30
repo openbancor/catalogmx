@@ -3,11 +3,18 @@
  * Mexican official catalogs
  */
 
-// Banxico
+// Banxico (static catalogs)
 export { BankCatalog } from './banxico/banks';
 export { InstitucionesFinancieras } from './banxico/instituciones-financieras';
 export { MonedasDivisas } from './banxico/monedas-divisas';
-export { UDICatalog } from './banxico/udis';
+
+// Banxico (dynamic SQLite-backed catalogs)
+export { UDICatalog } from './banxico/udis-sqlite';
+export { TipoCambioUSDCatalog } from './banxico/tipo-cambio-usd-sqlite';
+export { TIIE28Catalog } from './banxico/tiie-28-sqlite';
+export { CETES28Catalog } from './banxico/cetes-28-sqlite';
+export { InflacionAnualCatalog } from './banxico/inflacion-anual-sqlite';
+export { SalariosMinimosCatalog } from './banxico/salarios-minimos-sqlite';
 
 // IFT (Instituto Federal de Telecomunicaciones)
 export { OperadoresMoviles } from './ift/operadores-moviles';
