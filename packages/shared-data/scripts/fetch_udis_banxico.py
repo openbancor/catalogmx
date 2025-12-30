@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetch historical UDI data from Banxico API and update udis.json
+Fetch historical UDI data from Banxico API and update SQLite database
 
 API Documentation: https://www.banxico.org.mx/SieAPIRest/service/v1/
 Series: SF43718 (UDI)
@@ -13,6 +13,7 @@ Get your token at: https://www.banxico.org.mx/SieAPIRest/service/v1/token
 import argparse
 import json
 import os
+import sqlite3
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -22,7 +23,7 @@ from urllib.error import HTTPError, URLError
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_ROOT = SCRIPT_DIR.parent
-UDIS_FILE = DATA_ROOT / "banxico" / "udis.json"
+DB_FILE = DATA_ROOT / "mexico_dynamic.sqlite3"
 
 # Banxico API configuration
 BANXICO_API = "https://www.banxico.org.mx/SieAPIRest/service/v1"
@@ -85,13 +86,13 @@ def fetch_udi_chunk(token: str, start_date: str, end_date: str) -> list[dict[str
             records.append({
                 "fecha": date_obj.strftime('%Y-%m-%d'),
                 "valor": valor,
-                "moneda": "MXN",
-                "tipo": "oficial_banxico",
-                "año": date_obj.year,
+                "anio": date_obj.year,
                 "mes": date_obj.month,
+                "tipo": "oficial_banxico",
+                "moneda": "MXN",
                 "notas": "Valor oficial publicado por Banco de México"
             })
-        
+
         return records
 
 
@@ -149,22 +150,86 @@ def fetch_udi_data(token: str, start_date: str, end_date: str) -> list[dict[str,
         raise ValueError(f"Error fetching UDI data: {e}")
 
 
-def get_last_date_in_file(filepath: Path) -> str | None:
-    """Get the last date in the existing file"""
-    if not filepath.exists():
+def get_last_date_from_db(db_path: Path) -> str | None:
+    """Get the last date from the SQLite database"""
+    if not db_path.exists():
         return None
-    
+
     try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            if not data:
-                return None
-            # Assuming data is sorted by date
-            last_record = max(data, key=lambda x: x['fecha'])
-            return last_record['fecha']
+        db = sqlite3.connect(db_path)
+        cursor = db.execute("SELECT MAX(fecha) FROM udis")
+        row = cursor.fetchone()
+        db.close()
+
+        return row[0] if row and row[0] else None
     except Exception as e:
-        print(f"[fetch] Warning: Could not read existing file: {e}")
+        print(f"[fetch] Warning: Could not read from database: {e}")
         return None
+
+
+def ensure_database_exists(db_path: Path):
+    """Ensure the database and udis table exist"""
+    if not db_path.exists():
+        print(f"[fetch] Creating new database at {db_path}")
+        # Create database with schema
+        schema_path = DATA_ROOT / "schema_dynamic.sql"
+        if schema_path.exists():
+            db = sqlite3.connect(db_path)
+            with open(schema_path, 'r', encoding='utf-8') as f:
+                db.executescript(f.read())
+            db.close()
+            print(f"[fetch] ✓ Database created with schema")
+        else:
+            print(f"[fetch] Warning: schema_dynamic.sql not found, creating minimal schema")
+            db = sqlite3.connect(db_path)
+            db.execute("""
+                CREATE TABLE IF NOT EXISTS udis (
+                    fecha TEXT PRIMARY KEY,
+                    valor REAL NOT NULL,
+                    anio INTEGER,
+                    mes INTEGER,
+                    tipo TEXT,
+                    moneda TEXT DEFAULT 'MXN',
+                    notas TEXT,
+                    updated_at TEXT DEFAULT (datetime('now'))
+                )
+            """)
+            db.commit()
+            db.close()
+
+
+def save_records_to_db(db_path: Path, records: list[dict[str, Any]]) -> int:
+    """
+    Save UDI records to SQLite database
+
+    Returns: number of records inserted/updated
+    """
+    if not records:
+        return 0
+
+    db = sqlite3.connect(db_path)
+    cursor = db.cursor()
+
+    inserted = 0
+    for record in records:
+        cursor.execute("""
+            INSERT OR REPLACE INTO udis (fecha, valor, anio, mes, tipo, moneda, notas)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (
+            record['fecha'],
+            record['valor'],
+            record['anio'],
+            record['mes'],
+            record.get('tipo', 'oficial_banxico'),
+            record.get('moneda', 'MXN'),
+            record.get('notas')
+        ))
+        inserted += 1
+
+    db.commit()
+    db.close()
+
+    return inserted
 
 
 def main():
@@ -184,10 +249,10 @@ def main():
         help="End date (YYYY-MM-DD). Default: today",
     )
     parser.add_argument(
-        "--output",
+        "--database",
         type=Path,
-        default=UDIS_FILE,
-        help=f"Output file. Default: {UDIS_FILE}",
+        default=DB_FILE,
+        help=f"SQLite database file. Default: {DB_FILE}",
     )
     parser.add_argument(
         "--full",
@@ -211,6 +276,9 @@ def main():
         print(f"  python {Path(__file__).name} --token your_token_here")
         return 1
     
+    # Ensure database exists
+    ensure_database_exists(args.database)
+
     # Determine start date
     start_date = args.start_date
     if not start_date:
@@ -218,7 +286,7 @@ def main():
             start_date = "1995-04-04"
             print("[fetch] Full download mode: starting from UDI inception (1995-04-04)")
         else:
-            last_date = get_last_date_in_file(args.output)
+            last_date = get_last_date_from_db(args.database)
             if last_date:
                 # Start from day after last record
                 last_date_obj = datetime.strptime(last_date, '%Y-%m-%d')
@@ -253,51 +321,46 @@ def main():
     
     # Check if we need to fetch anything
     if start_date_obj > end_date_obj:
-        last_date = get_last_date_in_file(args.output)
+        last_date = get_last_date_from_db(args.database)
         print(f"[fetch] ✓ Data is already up to date")
         print(f"[fetch]   Last record: {last_date}")
         print(f"[fetch]   Already have data through end of month: {expected_last_date_str}")
         return 0
-    
+
     try:
         new_records = fetch_udi_data(args.token, start_date, args.end_date)
-        
+
         if not new_records:
             print("[fetch] No new records retrieved")
             return 1
-        
-        # Merge with existing data
-        all_records = new_records
-        if not args.full and args.output.exists():
-            try:
-                with open(args.output, 'r', encoding='utf-8') as f:
-                    existing = json.load(f)
-                    if existing:
-                        print(f"[fetch] Merging with {len(existing)} existing records...")
-                        all_records = existing + new_records
-            except Exception as e:
-                print(f"[fetch] Warning: Could not merge with existing data: {e}")
-        
-        # Remove duplicates and sort
-        unique_records = {r['fecha']: r for r in all_records}
-        records = sorted(unique_records.values(), key=lambda x: x['fecha'])
-        
-        # Write to file
-        with open(args.output, 'w', encoding='utf-8') as f:
-            json.dump(records, f, indent=2, ensure_ascii=False)
-        
-        print(f"[fetch] ✓ Saved {len(records)} total UDI records to {args.output}")
-        print(f"[fetch] Date range: {records[0]['fecha']} to {records[-1]['fecha']}")
-        print(f"[fetch] Latest UDI: {records[-1]['valor']} MXN ({records[-1]['fecha']})")
-        print(f"[fetch] New records added: {len(new_records)}")
-        
+
+        # Save records to database (INSERT OR REPLACE handles duplicates automatically)
+        inserted_count = save_records_to_db(args.database, new_records)
+
+        print(f"[fetch] ✓ Saved {inserted_count} UDI records to {args.database}")
+        print(f"[fetch] Date range: {new_records[0]['fecha']} to {new_records[-1]['fecha']}")
+        print(f"[fetch] Latest UDI: {new_records[-1]['valor']} MXN ({new_records[-1]['fecha']})")
+
+        # Get total count from database
+        db = sqlite3.connect(args.database)
+        cursor = db.execute("SELECT COUNT(*) FROM udis")
+        total_count = cursor.fetchone()[0]
+        cursor = db.execute("SELECT MIN(fecha), MAX(fecha) FROM udis")
+        date_range = cursor.fetchone()
+        db.close()
+
+        print(f"[fetch] Total records in database: {total_count}")
+        print(f"[fetch] Database date range: {date_range[0]} to {date_range[1]}")
+
         return 0
-        
+
     except ValueError as e:
         print(f"[fetch] ERROR: {e}")
         return 1
     except Exception as e:
         print(f"[fetch] Unexpected error: {e}")
+        import traceback
+        traceback.print_exc()
         return 1
 
 

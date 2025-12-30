@@ -34,15 +34,15 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Fetch latest data from Banxico
+      - name: Fetch latest data from Banxico and update SQLite
         env:
           BANXICO_TOKEN: ${{ secrets.BANXICO_TOKEN }}
         run: |
           cd packages/shared-data
 
-          echo "📥 Fetching latest data from Banxico..."
+          echo "📥 Fetching latest data from Banxico and writing to SQLite..."
 
-          # Fetch all Banxico data with better error handling
+          # Fetch all Banxico data - scripts now write directly to SQLite
           FAILED_SCRIPTS=""
 
           python scripts/fetch_udis_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS UDIs"
@@ -58,39 +58,20 @@ jobs:
             echo "⚠️ Continuing with existing data..."
           fi
 
-          echo "✅ Data fetch complete"
+          echo "✅ Data fetch complete - SQLite updated directly"
 
-      - name: Check for data changes
+      - name: Check if database changed
         id: check_changes
-        run: |
-          # Check if any banxico JSON files changed
-          if git diff --quiet HEAD packages/shared-data/banxico/*.json; then
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-            echo "ℹ️ No changes detected in Banxico data"
-          else
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-            echo "✅ Changes detected in Banxico data"
-
-            # Show what changed
-            echo "Changed files:"
-            git diff --name-only HEAD packages/shared-data/banxico/*.json
-          fi
-
-      - name: Build SQLite from JSONs
-        if: steps.check_changes.outputs.has_changes == 'true' || github.event.inputs.force_update == 'true'
         run: |
           cd packages/shared-data
 
-          echo "🔨 Building SQLite database..."
-          python scripts/json_to_sqlite_dynamic.py
-
-          # Verify database was created
+          # Verify database was created/updated
           if [ ! -f mexico_dynamic.sqlite3 ]; then
-            echo "❌ Failed to create SQLite database"
+            echo "❌ SQLite database not found!"
             exit 1
           fi
 
-          # Show database stats
+          # Get database stats
           python -c "
           import sqlite3
           db = sqlite3.connect('mexico_dynamic.sqlite3')
@@ -98,13 +79,16 @@ jobs:
           print(f'UDIs: {cursor.fetchone()[0]:,}')
           cursor = db.execute('SELECT COUNT(*) FROM tipo_cambio')
           print(f'Tipo cambio: {cursor.fetchone()[0]:,}')
-          cursor = db.execute('SELECT value FROM _metadata WHERE key = \"version\"')
-          version = cursor.fetchone()[0]
+          cursor = db.execute(\"SELECT value FROM _metadata WHERE key = 'version'\")
+          row = cursor.fetchone()
+          version = row[0] if row else 'unknown'
           print(f'Version: {version}')
           db.close()
           "
 
-          echo "✅ SQLite database built successfully"
+          # Always publish if database exists (data was updated)
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+          echo "✅ SQLite database ready for publishing"
 
       - name: Create GitHub Release with data
         if: steps.check_changes.outputs.has_changes == 'true' || github.event.inputs.force_update == 'true'
