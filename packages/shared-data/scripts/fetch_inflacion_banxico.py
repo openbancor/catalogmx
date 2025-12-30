@@ -21,7 +21,6 @@ from banxico_sqlite_helper import ensure_database_exists, get_last_date, save_to
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_ROOT = SCRIPT_DIR.parent
-DB_FILE = DB_FILE  # Imported from helper
 
 BANXICO_API = "https://www.banxico.org.mx/SieAPIRest/service/v1"
 INFLATION_SERIES = "SP30579"  # Inflación anual INPC
@@ -163,7 +162,8 @@ def main():
 
     # Check if up to date
     if start_date > args.end_date:
-        print(f"[fetch] ✓ Already up to date (last: {get_last_date(args.database, "inflacion")})")
+        last_date = get_last_date(args.database, "inflacion")
+        print(f"[fetch] ✓ Already up to date (last: {last_date})")
         return 0
 
     try:
@@ -173,30 +173,17 @@ def main():
             print("[fetch] No new records")
             return 1
 
-        # Merge with existing
-        all_records = new_records
-        if not args.full and args.output.exists():
-            try:
-                with open(args.output, 'r', encoding='utf-8') as f:
-                    existing = json.load(f)
-                    if existing:
-                        print(f"[fetch] Merging with {len(existing)} existing...")
-                        all_records = existing + new_records
-            except Exception as e:
-                print(f"[fetch] Warning: {e}")
+        # Save to database
+        inserted_count = save_to_db(args.database, "inflacion", new_records)
 
-        # Deduplicate and sort
-        unique = {r['fecha']: r for r in all_records}
-        records = sorted(unique.values(), key=lambda x: x['fecha'])
+        print(f"[fetch] ✓ Saved {inserted_count} records to database")
+        print(f"[fetch] Latest: {new_records[-1]['inflacion_anual']}% ({new_records[-1]['fecha']})")
 
-        # Write
-        with open(args.output, 'w', encoding='utf-8') as f:
-            json.dump(records, f, indent=2, ensure_ascii=False)
-
-        print(f"[fetch] ✓ Saved {len(records)} total records")
-        print(f"[fetch] Range: {records[0]['fecha']} to {records[-1]['fecha']}")
-        print(f"[fetch] Latest: {records[-1]['inflacion_anual']}%")
-        print(f"[fetch] New: {len(new_records)}")
+        # Get total count from database
+        stats = get_table_stats(args.database, "inflacion")
+        print(f"[fetch] Total records in database: {stats['count']:,}")
+        if stats['min_date'] and stats['max_date']:
+            print(f"[fetch] Database date range: {stats['min_date']} to {stats['max_date']}")
 
         return 0
 
