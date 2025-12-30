@@ -16,15 +16,15 @@ DEFAULT_OUTPUT = DATA_ROOT / "mexico.sqlite3"
 SQLITE_SOURCES = [
     {
         "path": DATA_ROOT / "mexico_dynamic.sqlite3",
-        "tables": {
-            # Map dynamic tables to banxico_ prefixed names for consistency
-            "udis": "banxico_udis",
-            "tipo_cambio": "banxico_tipo_cambio",
-            "tiie": "banxico_tiie",
-            "cetes": "banxico_cetes",
-            "inflacion": "banxico_inflacion",
-            "salarios_minimos": "banxico_salarios_minimos",
-        },
+        "tables": [
+            {"source": "udis", "target": "banxico_udis"},
+            {"source": "tipo_cambio", "target": "banxico_tipo_cambio", "where": "fuente = 'FIX'"},
+            {"source": "tipo_cambio", "target": "banxico_tipo_cambio_hist", "where": "fuente = 'historico'"},
+            {"source": "tiie", "target": "banxico_tiie"},
+            {"source": "cetes", "target": "banxico_cetes"},
+            {"source": "inflacion", "target": "banxico_inflacion"},
+            {"source": "salarios_minimos", "target": "banxico_salarios_minimos"},
+        ],
     },
 ]
 
@@ -143,10 +143,16 @@ def attach_and_copy_tables(conn: sqlite3.Connection) -> None:
             create_sql = rewrite_create_sql(schema_row[0], src_table, dest_table)
             conn.execute(create_sql)
             try:
-                conn.execute(
+                # Build INSERT query with optional WHERE clause
+                where_clause = table_spec.get("where", "")
+                insert_query = (
                     f"INSERT INTO {quote_ident(dest_table)} "
                     f"SELECT * FROM {attach_name}.{quote_ident(src_table)}"
                 )
+                if where_clause:
+                    insert_query += f" WHERE {where_clause}"
+
+                conn.execute(insert_query)
             except sqlite3.Error as exc:
                 print(f"[build] WARNING: failed to copy {src_table} from {db_path.name}: {exc}")
                 conn.execute(f"DROP TABLE IF EXISTS {quote_ident(dest_table)}")
@@ -155,7 +161,8 @@ def attach_and_copy_tables(conn: sqlite3.Connection) -> None:
             count = conn.execute(
                 f"SELECT COUNT(*) FROM {quote_ident(dest_table)}"
             ).fetchone()[0]
-            print(f"[build] Imported {dest_table} ({count:,} rows) from {db_path.name}")
+            filter_msg = f" (filtered: {where_clause})" if where_clause else ""
+            print(f"[build] Imported {dest_table} ({count:,} rows) from {db_path.name}{filter_msg}")
 
         conn.execute(f"DETACH DATABASE {attach_name}")
 
