@@ -53,7 +53,10 @@ export class SalariosMinimosCatalog {
   /**
    * Get minimum wage for a specific date and zone
    */
-  static async getPorFechaZona(fecha: string, zona: string = 'general'): Promise<SalarioMinimoRecord | null> {
+  static async getPorFechaZona(
+    fecha: string,
+    zona: string = 'general'
+  ): Promise<SalarioMinimoRecord | null> {
     const updater = this.getUpdater();
 
     const result = await updater.query(
@@ -122,7 +125,10 @@ export class SalariosMinimosCatalog {
   /**
    * Get all minimum wages for a specific year and zone
    */
-  static async getPorAnioZona(anio: number, zona: string = 'general'): Promise<SalarioMinimoRecord[]> {
+  static async getPorAnioZona(
+    anio: number,
+    zona: string = 'general'
+  ): Promise<SalarioMinimoRecord[]> {
     const updater = this.getUpdater();
 
     const result = await updater.query(
