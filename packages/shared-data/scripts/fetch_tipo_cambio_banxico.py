@@ -20,7 +20,6 @@ from banxico_sqlite_helper import ensure_database_exists, get_last_date, save_to
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_ROOT = SCRIPT_DIR.parent
-DB_FILE = DB_FILE  # Imported from helper
 
 BANXICO_API = "https://www.banxico.org.mx/SieAPIRest/service/v1"
 EXCHANGE_RATE_SERIES = "SF43718"  # Serie: Tipo de cambio FIX USD/MXN
@@ -161,43 +160,31 @@ def main():
     
     # Check if up to date
     if start_date > args.end_date:
-        print(f"[fetch] ✓ Already up to date (last: {get_last_date(args.database, "tipo_cambio", where_clause="fuente = 'FIX'")})")
+        last_date = get_last_date(args.database, "tipo_cambio", where_clause="fuente = 'FIX'")
+        print(f"[fetch] ✓ Already up to date (last: {last_date})")
         return 0
     
     try:
         new_records = fetch_data(args.token, start_date, args.end_date)
-        
+
         if not new_records:
             print("[fetch] No new records")
             return 1
-        
-        # Merge with existing
-        all_records = new_records
-        if not args.full and args.output.exists():
-            try:
-                with open(args.output, 'r', encoding='utf-8') as f:
-                    existing = json.load(f)
-                    if existing:
-                        print(f"[fetch] Merging with {len(existing)} existing...")
-                        all_records = existing + new_records
-            except Exception as e:
-                print(f"[fetch] Warning: {e}")
-        
-        # Deduplicate and sort
-        unique = {r['fecha']: r for r in all_records}
-        records = sorted(unique.values(), key=lambda x: x['fecha'])
-        
-        # Write
-        with open(args.output, 'w', encoding='utf-8') as f:
-            json.dump(records, f, indent=2, ensure_ascii=False)
-        
-        print(f"[fetch] ✓ Saved {len(records)} total records")
-        print(f"[fetch] Range: {records[0]['fecha']} to {records[-1]['fecha']}")
-        print(f"[fetch] Latest: {records[-1]['tipo_cambio']} MXN per USD")
-        print(f"[fetch] New: {len(new_records)}")
-        
+
+        # Save to database
+        inserted_count = save_to_db(args.database, "tipo_cambio", new_records)
+
+        print(f"[fetch] ✓ Saved {inserted_count} records to database")
+        print(f"[fetch] Latest: {new_records[-1]['tipo_cambio']} MXN per USD ({new_records[-1]['fecha']})")
+
+        # Get total count from database
+        stats = get_table_stats(args.database, "tipo_cambio")
+        print(f"[fetch] Total records in database: {stats['count']:,}")
+        if stats['min_date'] and stats['max_date']:
+            print(f"[fetch] Database date range: {stats['min_date']} to {stats['max_date']}")
+
         return 0
-        
+
     except ValueError as e:
         print(f"[fetch] ERROR: {e}")
         return 1

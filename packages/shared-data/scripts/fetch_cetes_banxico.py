@@ -17,10 +17,10 @@ from pathlib import Path
 from typing import Any
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
+from banxico_sqlite_helper import ensure_database_exists, get_last_date, save_to_db, get_table_stats, DB_FILE
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_ROOT = SCRIPT_DIR.parent
-DB_FILE = DB_FILE  # Imported from helper
 
 BANXICO_API = "https://www.banxico.org.mx/SieAPIRest/service/v1"
 CETES_SERIES = "SF43936"
@@ -66,7 +66,7 @@ def fetch_chunk(token: str, start_date: str, end_date: str) -> list[dict[str, An
             records.append({
                 "fecha": date_obj.strftime('%Y-%m-%d'),
                 "tasa": valor,
-                "plazo_dias": 28,
+                "plazo": 28,
                 "instrumento": "CETES",
                 "tipo": "primaria",
                 "año": date_obj.year,
@@ -113,38 +113,44 @@ def main():
     if not args.token:
         print("ERROR: BANXICO_TOKEN required")
         return 1
-    
+
+    # Ensure database exists
+    ensure_database_exists(args.database)
+
+    # Determine start date
     start_date = args.start_date
     if not start_date:
         if args.full:
             start_date = "1978-01-05"
+            print("[fetch] Full download: starting from 1978-01-05")
         else:
-            last = get_last_date(args.database, "cetes", where_clause="plazo = 28")
-            start_date = (datetime.strptime(last, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d') if last else "1978-01-05"
-    
+            last_date = get_last_date(args.database, "cetes", where_clause="plazo = 28")
+            if last_date:
+                start_date_obj = datetime.strptime(last_date, '%Y-%m-%d') + timedelta(days=1)
+                start_date = start_date_obj.strftime('%Y-%m-%d')
+                print(f"[fetch] Incremental: last={last_date}, fetching from {start_date}")
+            else:
+                start_date = "1978-01-05"
+                print("[fetch] No data found, starting from 1978-01-05")
+
+    # Check if up to date
     if start_date > args.end_date:
-        print("[fetch] ✓ Up to date")
+        last_date = get_last_date(args.database, "cetes", where_clause="plazo = 28")
+        print(f"[fetch] ✓ Already up to date (last: {last_date})")
         return 0
-    
+
     try:
         new_records = fetch_data(args.token, start_date, args.end_date)
-        
-        all_records = new_records
-        if not args.full and args.output.exists():
-            try:
-                with open(args.output, 'r') as f:
-                    all_records = json.load(f) + new_records
-            except:
-                pass
-        
-        unique = {r['fecha']: r for r in all_records}
-        records = sorted(unique.values(), key=lambda x: x['fecha'])
-        
-        with open(args.output, 'w', encoding='utf-8') as f:
-            json.dump(records, f, indent=2, ensure_ascii=False)
-        
-        print(f"[fetch] ✓ Saved {len(records)} total")
-        print(f"[fetch] Latest: {records[-1]['tasa']}% ({records[-1]['fecha']})")
+
+        if not new_records:
+            print("[fetch] No new records")
+            return 1
+
+        # Save to database
+        inserted_count = save_to_db(args.database, "cetes", new_records)
+
+        print(f"[fetch] ✓ Saved {inserted_count} records to database")
+        print(f"[fetch] Latest: {new_records[-1]['tasa']}% ({new_records[-1]['fecha']})")
 
         # Get total count from database
         stats = get_table_stats(args.database, "cetes")
