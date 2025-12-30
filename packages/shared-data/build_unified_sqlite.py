@@ -86,8 +86,11 @@ def quote_ident(name: str) -> str:
 
 
 def rewrite_create_sql(sql: str, old: str, new: str) -> str:
+    """Rewrite CREATE TABLE statement to use a new table name."""
+    # Match: CREATE TABLE [IF NOT EXISTS] old_name
+    # Handles optional quotes/backticks around table name
     pattern = re.compile(
-        rf"(CREATE TABLE(?: IF NOT EXISTS)?)\s+([`\"[]?){re.escape(old)}([`\"\\]]?)",
+        rf"(CREATE\s+TABLE(?:\s+IF\s+NOT\s+EXISTS)?)\s+[`\"]?{re.escape(old)}[`\"]?\b",
         re.IGNORECASE,
     )
     return pattern.sub(rf"\1 {quote_ident(new)}", sql, count=1)
@@ -164,6 +167,8 @@ def attach_and_copy_tables(conn: sqlite3.Connection) -> None:
             filter_msg = f" (filtered: {where_clause})" if where_clause else ""
             print(f"[build] Imported {dest_table} ({count:,} rows) from {db_path.name}{filter_msg}")
 
+        # Commit before detaching to avoid "database is locked" errors
+        conn.commit()
         conn.execute(f"DETACH DATABASE {attach_name}")
 
 
