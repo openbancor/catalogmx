@@ -16,7 +16,8 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build && npm test"
+    "prepublishOnly": "npm run build && npm test",
+    "validate": "npm run format:check && npm run typecheck && npm run lint"
   },
   "keywords": [
     "mexico",

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetch TIIE 28 days from Banxico API
+Fetch TIIE 28 days from Banxico API and write to SQLite
 
 Serie: SF43783 - TIIE 28 días
 Periodicidad: Diaria
@@ -20,7 +20,7 @@ from urllib.error import HTTPError
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_ROOT = SCRIPT_DIR.parent
-OUTPUT_FILE = DATA_ROOT / "banxico" / "tiie_28.json"
+DB_FILE = DB_FILE  # Imported from helper
 
 BANXICO_API = "https://www.banxico.org.mx/SieAPIRest/service/v1"
 TIIE_SERIES = "SF43783"
@@ -76,17 +76,6 @@ def fetch_chunk(token: str, start_date: str, end_date: str) -> list[dict[str, An
         return records
 
 
-def get_last_date_in_file(filepath: Path) -> str | None:
-    if not filepath.exists():
-        return None
-    try:
-        with open(filepath, 'r') as f:
-            data = json.load(f)
-            return max(data, key=lambda x: x['fecha'])['fecha'] if data else None
-    except:
-        return None
-
-
 def fetch_data(token: str, start_date: str, end_date: str) -> list[dict[str, Any]]:
     start = datetime.strptime(start_date, '%Y-%m-%d')
     end = datetime.strptime(end_date, '%Y-%m-%d')
@@ -115,7 +104,7 @@ def main():
     parser.add_argument("--token", default=os.environ.get("BANXICO_TOKEN"))
     parser.add_argument("--start-date")
     parser.add_argument("--end-date", default=datetime.now().strftime('%Y-%m-%d'))
-    parser.add_argument("--output", type=Path, default=OUTPUT_FILE)
+    parser.add_argument("--database", type=Path, default=DB_FILE)
     parser.add_argument("--full", action="store_true")
     
     args = parser.parse_args()
@@ -129,7 +118,7 @@ def main():
         if args.full:
             start_date = "1995-03-23"
         else:
-            last = get_last_date_in_file(args.output)
+            last = get_last_date(args.database, "tiie", where_clause="plazo = 28")
             start_date = (datetime.strptime(last, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d') if last else "1995-03-23"
     
     if start_date > args.end_date:
@@ -155,6 +144,13 @@ def main():
         
         print(f"[fetch] ✓ Saved {len(records)} total")
         print(f"[fetch] Latest: {records[-1]['tasa']}% ({records[-1]['fecha']})")
+
+        # Get total count from database
+        stats = get_table_stats(args.database, "tiie")
+        print(f"[fetch] Total records in database: {stats['count']:,}")
+        if stats['min_date'] and stats['max_date']:
+            print(f"[fetch] Database date range: {stats['min_date']} to {stats['max_date']}")
+
         return 0
     except ValueError as e:
         print(f"[fetch] ERROR: {e}")
