@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn, normalizeText } from '@/lib/utils';
 import { Menu, X, Download, Github } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -102,12 +102,12 @@ function AppInner() {
   }, []);
 
   const filteredCatalogs = datasetConfigs.filter((cat) => {
-    const q = catalogSearch.trim().toLowerCase();
+    const q = normalizeText(catalogSearch.trim());
     if (!q) return true;
     return (
-      cat.label.toLowerCase().includes(q) ||
-      cat.table.toLowerCase().includes(q) ||
-      (cat.description && cat.description.toLowerCase().includes(q))
+      normalizeText(cat.label).includes(q) ||
+      normalizeText(cat.table).includes(q) ||
+      (cat.description && normalizeText(cat.description).includes(q))
     );
   });
 

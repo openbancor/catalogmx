@@ -2,6 +2,8 @@
  * Catalog data for demo - organized by category
  */
 
+import { normalizeText } from '@/lib/utils';
+
 export interface CatalogItem {
   id: string;
   name: string;
@@ -341,19 +343,19 @@ export function getCatalogsByCategory(categoryId: string): CatalogItem[] {
 }
 
 export function searchCatalogs(query: string): CatalogItem[] {
-  const q = query.toLowerCase();
+  const q = normalizeText(query);
   return CATALOGS.filter(c =>
-    c.name.toLowerCase().includes(q) ||
-    c.description.toLowerCase().includes(q) ||
-    c.category.toLowerCase().includes(q)
+    normalizeText(c.name).includes(q) ||
+    normalizeText(c.description).includes(q) ||
+    normalizeText(c.category).includes(q)
   );
 }
 
 export function searchInCatalog(catalog: CatalogItem, query: string): Record<string, unknown>[] {
-  const q = query.toLowerCase();
+  const q = normalizeText(query);
   return catalog.data.filter(row =>
     Object.values(row).some(v =>
-      String(v).toLowerCase().includes(q)
+      normalizeText(String(v)).includes(q)
     )
   );
 }

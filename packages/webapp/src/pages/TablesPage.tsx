@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { AlertTriangle, Database, Loader2, Search } from 'lucide-react';
 import { getTableCount, listTables } from '@/lib/database';
 import { useLocale } from '@/lib/locale';
+import { normalizeText } from '@/lib/utils';
 
 export default function TablesPage() {
   const { t } = useLocale();
@@ -44,9 +45,9 @@ export default function TablesPage() {
   }, []);
 
   const filteredTables = useMemo(() => {
-    const q = tableFilter.trim().toLowerCase();
+    const q = normalizeText(tableFilter.trim());
     return tableNames
-      .filter((name) => (q ? name.toLowerCase().includes(q) : true))
+      .filter((name) => (q ? normalizeText(name).includes(q) : true))
       .sort((a, b) => a.localeCompare(b));
   }, [tableFilter, tableNames]);
 

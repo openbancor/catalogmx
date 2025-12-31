@@ -6,7 +6,7 @@ import { Search, Database, ArrowRight, ChevronDown, ChevronUp, MapPin, FileText,
 import { datasetConfigs, type DatasetConfig } from '@/data/datasets';
 import { emitNavigation } from '@/lib/navigation';
 import { useLocale } from '@/lib/locale';
-import { cn } from '@/lib/utils';
+import { cn, normalizeText } from '@/lib/utils';
 
 interface CatalogsSectionProps {
   showHeader?: boolean;
@@ -41,11 +41,11 @@ export default function CatalogsSection({ showHeader = true }: CatalogsSectionPr
 
   const filteredCatalogs = useMemo(() => {
     if (!searchQuery) return datasetConfigs;
-    const q = searchQuery.toLowerCase();
+    const q = normalizeText(searchQuery);
     return datasetConfigs.filter(c =>
-      c.label.toLowerCase().includes(q) ||
-      c.table.toLowerCase().includes(q) ||
-      (c.description && c.description.toLowerCase().includes(q))
+      normalizeText(c.label).includes(q) ||
+      normalizeText(c.table).includes(q) ||
+      (c.description && normalizeText(c.description).includes(q))
     );
   }, [searchQuery]);
 
