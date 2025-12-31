@@ -246,7 +246,7 @@ def main():
 
         print(f"[fetch] ✓ Saved {inserted_count} records to database")
         if new_records:
-            print(f"[fetch] Latest: ${new_records[-1]['salario_minimo']:.2f} ({new_records[-1]['zona']}, {new_records[-1]['fecha']})")
+            print(f"[fetch] Latest: ${new_records[-1]['salario_diario']:.2f} ({new_records[-1]['zona']}, {new_records[-1]['fecha']})")
 
         # Get total count from database
         stats = get_table_stats(args.database, "salarios_minimos")
