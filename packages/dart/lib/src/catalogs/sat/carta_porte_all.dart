@@ -67,7 +67,7 @@ class AeropuertosCatalog {
 }
 
 /// Catálogo de Puertos Marítimos
-class PuertosMarit imosCatalog {
+class PuertosMaritimosCatalog {
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byCode;
 

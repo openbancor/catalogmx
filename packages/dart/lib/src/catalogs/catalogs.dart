@@ -18,7 +18,7 @@ export 'banxico/codigos_plaza.dart';
 export 'banxico/inflacion_anual.dart';
 export 'banxico/instituciones_financieras.dart';
 export 'banxico/monedas_divisas.dart';
-export 'banxico/salarios_minimos.dart';
+export 'banxico/salarios_minimos.dart' hide SalariosMinimosCatalog;  // Conflicts with Mexico version
 export 'banxico/tiie_28.dart';
 export 'banxico/tipo_cambio_usd.dart';
 export 'banxico/udis.dart';
@@ -40,7 +40,7 @@ export 'inegi/states.dart';
 // ============================================================================
 export 'mexico/hoy_no_circula.dart';
 export 'mexico/placas_formatos.dart';
-export 'mexico/salarios_minimos.dart';
+export 'mexico/salarios_minimos.dart';  // This is the main SalariosMinimosCatalog
 export 'mexico/uma.dart';
 
 // ============================================================================

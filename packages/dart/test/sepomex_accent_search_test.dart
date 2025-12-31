@@ -2,6 +2,8 @@
 ///
 /// This test verifies that searches without accents properly find results
 /// with accents, which is critical for Spanish-speaking users.
+library;
+
 import 'package:catalogmx/catalogmx.dart';
 import 'package:test/test.dart';
 
