@@ -5,7 +5,6 @@
  * with accents, which is critical for Spanish-speaking users.
  */
 
-import { describe, it, expect } from 'vitest';
 import { CodigosPostales } from '../src/catalogs/sepomex/codigos-postales';
 import { normalizeText } from '../src/utils/text';
 
