@@ -109,7 +109,8 @@ export 'src/catalogs/sat/nomina_all.dart';
 
 // Legacy catalog exports (backwards compatibility)
 export 'src/catalogs/sat/cfdi_catalogs.dart';
-export 'src/catalogs/all_catalogs.dart' hide SatAeropuertos;  // Conflicts with sat/aeropuertos.dart
+// Note: all_catalogs.dart is not exported to avoid ambiguous exports
+// All catalogs are already exported individually from their respective modules
 
 // ============================================================================
 // UTILITIES
