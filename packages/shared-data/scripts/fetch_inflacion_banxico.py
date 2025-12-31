@@ -76,12 +76,9 @@ def fetch_chunk(token: str, start_date: str, end_date: str) -> list[dict[str, An
 
             records.append({
                 "fecha": date_obj.strftime('%Y-%m-%d'),
-                "inflacion_anual": valor,
-                "indice": "INPC",
-                "tipo": "anual",
-                "año": date_obj.year,
+                "anio": date_obj.year,
                 "mes": date_obj.month,
-                "fuente": "Banco de México - INPC Inflación Anual"
+                "inflacion_anual": valor
             })
 
         return records

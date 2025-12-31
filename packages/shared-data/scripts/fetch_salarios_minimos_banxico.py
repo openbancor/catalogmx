@@ -142,20 +142,17 @@ def fetch_series_chunk(token: str, series_id: str, series_info: dict, start_date
             # Banxico returns data in format "01/MM/YYYY"
             date_obj = datetime.strptime(fecha, '%d/%m/%Y')
 
+            # Only include nominal salary series (skip real/index series)
+            if series_info["type"] != "nominal":
+                continue
+
             record = {
                 "fecha": date_obj.strftime('%Y-%m-%d'),
-                "salario_minimo": valor,
-                "tipo": series_info["type"],
                 "zona": series_info["zone"],
-                "periodo": series_info["period"],
-                "serie": series_id,
-                "año": date_obj.year,
-                "mes": date_obj.month,
-                "fuente": "Banco de México - Salarios Mínimos"
+                "salario_diario": valor,
+                "anio": date_obj.year,
+                "mes": date_obj.month
             }
-
-            if "base_year" in series_info:
-                record["base_year"] = series_info["base_year"]
 
             records.append(record)
 
