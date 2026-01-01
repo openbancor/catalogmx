@@ -86,7 +86,8 @@ class SepomexCodigosPostales {
     }
 
     return searchList.where((code) {
-      final colonia = code['colonia'] as String? ?? code['d_asenta'] as String? ?? '';
+      final colonia =
+          code['colonia'] as String? ?? code['d_asenta'] as String? ?? '';
       return normalizeText(colonia).contains(normalized);
     }).toList();
   }
@@ -97,7 +98,8 @@ class SepomexCodigosPostales {
     final normalized = normalizeText(query);
 
     return _data!.where((code) {
-      final mun = code['municipio'] as String? ?? code['d_mnpio'] as String? ?? '';
+      final mun =
+          code['municipio'] as String? ?? code['d_mnpio'] as String? ?? '';
       return normalizeText(mun).contains(normalized);
     }).toList();
   }

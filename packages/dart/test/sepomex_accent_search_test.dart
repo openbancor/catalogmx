@@ -10,7 +10,9 @@ import 'package:test/test.dart';
 void main() {
   group('SEPOMEX Accent-Insensitive Search', () {
     group('searchByColonia', () {
-      test('should find "Las Águilas" when searching for "Aguilas" (without accent)', () {
+      test(
+          'should find "Las Águilas" when searching for "Aguilas" (without accent)',
+          () {
         // Critical test: This is a real-world use case reported by users
         final results = SepomexCodigosPostales.searchByColonia('Aguilas');
 
@@ -20,22 +22,28 @@ void main() {
 
         // Check if any result contains "Águilas" (with accent)
         final foundWithAccent = results.any((result) {
-          final colonia = result['colonia'] as String? ?? result['d_asenta'] as String? ?? '';
+          final colonia = result['colonia'] as String? ??
+              result['d_asenta'] as String? ??
+              '';
           return colonia.toLowerCase().contains('águilas');
         });
 
         expect(foundWithAccent, isTrue,
-            reason: 'Search for "Aguilas" did not find "Las Águilas" (with accent)');
+            reason:
+                'Search for "Aguilas" did not find "Las Águilas" (with accent)');
       });
 
-      test('should find results when searching for "Mexico" (without accent)', () {
+      test('should find results when searching for "Mexico" (without accent)',
+          () {
         final results = SepomexCodigosPostales.searchByColonia('Mexico');
         expect(results.length, greaterThan(0));
       });
 
       test('should return same results with or without accents', () {
-        final resultsWithAccent = SepomexCodigosPostales.searchByColonia('Águilas');
-        final resultsWithoutAccent = SepomexCodigosPostales.searchByColonia('Aguilas');
+        final resultsWithAccent =
+            SepomexCodigosPostales.searchByColonia('Águilas');
+        final resultsWithoutAccent =
+            SepomexCodigosPostales.searchByColonia('Aguilas');
 
         expect(resultsWithAccent.length, greaterThan(0));
         expect(resultsWithoutAccent.length, greaterThan(0));
@@ -60,8 +68,10 @@ void main() {
 
     group('searchByMunicipio', () {
       test('should be accent-insensitive for municipalities', () {
-        final resultsWithAccent = SepomexCodigosPostales.searchByMunicipio('León');
-        final resultsWithoutAccent = SepomexCodigosPostales.searchByMunicipio('Leon');
+        final resultsWithAccent =
+            SepomexCodigosPostales.searchByMunicipio('León');
+        final resultsWithoutAccent =
+            SepomexCodigosPostales.searchByMunicipio('Leon');
 
         // Both should work
         expect(resultsWithAccent.length, greaterThan(0));
@@ -78,7 +88,8 @@ void main() {
         final results = SepomexCodigosPostales.searchByMunicipio('San José');
         expect(results, isA<List>());
 
-        final resultsNoAccent = SepomexCodigosPostales.searchByMunicipio('San Jose');
+        final resultsNoAccent =
+            SepomexCodigosPostales.searchByMunicipio('San Jose');
         expect(resultsNoAccent, isA<List>());
       });
     });
@@ -86,10 +97,12 @@ void main() {
     group('getByState', () {
       test('should be accent-insensitive for states', () {
         final resultsWithAccent = SepomexCodigosPostales.getByState('México');
-        final resultsWithoutAccent = SepomexCodigosPostales.getByState('Mexico');
+        final resultsWithoutAccent =
+            SepomexCodigosPostales.getByState('Mexico');
 
         // Both should work (Estado de México exists)
-        final hasResults = resultsWithAccent.isNotEmpty || resultsWithoutAccent.isNotEmpty;
+        final hasResults =
+            resultsWithAccent.isNotEmpty || resultsWithoutAccent.isNotEmpty;
         expect(hasResults, isTrue);
       });
 
@@ -128,7 +141,8 @@ void main() {
       test('should normalize complete words', () {
         expect(normalizeText('México'), equals('mexico'));
         expect(normalizeText('San José'), equals('san jose'));
-        expect(normalizeText('Michoacán de Ocampo'), equals('michoacan de ocampo'));
+        expect(normalizeText('Michoacán de Ocampo'),
+            equals('michoacan de ocampo'));
         expect(normalizeText('Las Águilas'), equals('las aguilas'));
       });
 

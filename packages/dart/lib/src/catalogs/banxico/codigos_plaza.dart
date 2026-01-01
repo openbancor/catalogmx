@@ -105,9 +105,7 @@ class CodigosPlazaCatalog {
   ///   Lista de plazas en esa entidad
   static List<Map<String, dynamic>> getPorCveEntidad(String cveEntidad) {
     _loadData();
-    return _data!
-        .where((p) => p['cve_entidad'] == cveEntidad)
-        .toList();
+    return _data!.where((p) => p['cve_entidad'] == cveEntidad).toList();
   }
 
   /// Valida un código de plaza dentro de una CLABE

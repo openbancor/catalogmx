@@ -13,7 +13,8 @@ class TipoComprobanteCatalog {
   static void _loadData() {
     if (_data != null) return;
 
-    final jsonData = BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/tipo_comprobante.json');
+    final jsonData =
+        BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/tipo_comprobante.json');
 
     // Handle both list and dict formats
     if (jsonData.isNotEmpty && jsonData.first.containsKey('tipos')) {
@@ -26,8 +27,7 @@ class TipoComprobanteCatalog {
 
     // Build index
     _byClave = {
-      for (var item in _data!)
-        item['clave'] as String: item,
+      for (var item in _data!) item['clave'] as String: item,
     };
   }
 

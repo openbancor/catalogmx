@@ -13,7 +13,8 @@ class FormaPagoCatalog {
   static void _loadData() {
     if (_data != null) return;
 
-    final jsonData = BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/forma_pago.json');
+    final jsonData =
+        BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/forma_pago.json');
 
     // Handle both list and dict formats
     if (jsonData.isNotEmpty && jsonData.first.containsKey('formas_pago')) {
@@ -26,8 +27,7 @@ class FormaPagoCatalog {
 
     // Build index
     _byClave = {
-      for (var item in _data!)
-        item['clave'] as String: item,
+      for (var item in _data!) item['clave'] as String: item,
     };
   }
 

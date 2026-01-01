@@ -29,13 +29,11 @@ class InstitucionesFinancierasCatalog {
 
     // Build indices
     _byCode = {
-      for (var inst in _data!)
-        inst['codigo'] as String: inst,
+      for (var inst in _data!) inst['codigo'] as String: inst,
     };
 
     _byName = {
-      for (var inst in _data!)
-        (inst['nombre'] as String).toUpperCase(): inst,
+      for (var inst in _data!) (inst['nombre'] as String).toUpperCase(): inst,
     };
   }
 
@@ -105,8 +103,6 @@ class InstitucionesFinancierasCatalog {
   ///   Lista de instituciones de ese tipo
   static List<Map<String, dynamic>> getByTipo(String tipo) {
     _loadData();
-    return _data!
-        .where((inst) => inst['tipo'] == tipo)
-        .toList();
+    return _data!.where((inst) => inst['tipo'] == tipo).toList();
   }
 }

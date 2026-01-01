@@ -18,7 +18,8 @@ class AeropuertosCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync('sat/carta_porte_3/aeropuertos.json');
+    final jsonData =
+        BaseCatalog.loadJsonDataSync('sat/carta_porte_3/aeropuertos.json');
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('aeropuertos')
         ? (jsonData.first['aeropuertos'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -59,10 +60,11 @@ class AeropuertosCatalog {
   static List<Map<String, dynamic>> search(String query) {
     _loadData();
     final q = query.toUpperCase();
-    return _data!.where((item) =>
-        (item['nombre'] as String? ?? '').toUpperCase().contains(q) ||
-        (item['ciudad'] as String? ?? '').toUpperCase().contains(q)
-    ).toList();
+    return _data!
+        .where((item) =>
+            (item['nombre'] as String? ?? '').toUpperCase().contains(q) ||
+            (item['ciudad'] as String? ?? '').toUpperCase().contains(q))
+        .toList();
   }
 }
 
@@ -73,7 +75,8 @@ class PuertosMaritimosCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync('sat/carta_porte_3/puertos_maritimos.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+        'sat/carta_porte_3/puertos_maritimos.json');
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('puertos')
         ? (jsonData.first['puertos'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -95,9 +98,10 @@ class PuertosMaritimosCatalog {
   static List<Map<String, dynamic>> search(String query) {
     _loadData();
     final q = query.toUpperCase();
-    return _data!.where((item) =>
-        (item['nombre'] as String? ?? '').toUpperCase().contains(q)
-    ).toList();
+    return _data!
+        .where((item) =>
+            (item['nombre'] as String? ?? '').toUpperCase().contains(q))
+        .toList();
   }
 }
 
@@ -108,7 +112,8 @@ class CarreterasCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync('sat/carta_porte_3/carreteras.json');
+    final jsonData =
+        BaseCatalog.loadJsonDataSync('sat/carta_porte_3/carreteras.json');
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('carreteras')
         ? (jsonData.first['carreteras'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -135,9 +140,11 @@ class ConfigAutotransporteCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync('sat/carta_porte_3/config_autotransporte.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+        'sat/carta_porte_3/config_autotransporte.json');
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('configuraciones')
-        ? (jsonData.first['configuraciones'] as List).cast<Map<String, dynamic>>()
+        ? (jsonData.first['configuraciones'] as List)
+            .cast<Map<String, dynamic>>()
         : jsonData;
     _byClave = {for (var item in _data!) item['clave'] as String: item};
   }
@@ -166,7 +173,8 @@ class MaterialPeligrosoCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync('sat/carta_porte_3/material_peligroso.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+        'sat/carta_porte_3/material_peligroso.json');
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('materiales')
         ? (jsonData.first['materiales'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -188,10 +196,11 @@ class MaterialPeligrosoCatalog {
   static List<Map<String, dynamic>> search(String query) {
     _loadData();
     final q = query.toUpperCase();
-    return _data!.where((item) =>
-        (item['descripcion'] as String? ?? '').toUpperCase().contains(q) ||
-        (item['nombre'] as String? ?? '').toUpperCase().contains(q)
-    ).toList();
+    return _data!
+        .where((item) =>
+            (item['descripcion'] as String? ?? '').toUpperCase().contains(q) ||
+            (item['nombre'] as String? ?? '').toUpperCase().contains(q))
+        .toList();
   }
 }
 
@@ -202,7 +211,8 @@ class TipoEmbalajeCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync('sat/carta_porte_3/tipo_embalaje.json');
+    final jsonData =
+        BaseCatalog.loadJsonDataSync('sat/carta_porte_3/tipo_embalaje.json');
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('tipos')
         ? (jsonData.first['tipos'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -229,7 +239,8 @@ class TipoPermisoCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync('sat/carta_porte_3/tipo_permiso.json');
+    final jsonData =
+        BaseCatalog.loadJsonDataSync('sat/carta_porte_3/tipo_permiso.json');
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('tipos')
         ? (jsonData.first['tipos'] as List).cast<Map<String, dynamic>>()
         : jsonData;

@@ -26,8 +26,7 @@ class UsoCFDICatalog {
 
     // Build index
     _byClave = {
-      for (var item in _data!)
-        item['clave'] as String: item,
+      for (var item in _data!) item['clave'] as String: item,
     };
   }
 
@@ -62,8 +61,9 @@ class UsoCFDICatalog {
   static List<Map<String, dynamic>> getParaPersonasFisicas() {
     _loadData();
     return _data!
-        .where((item) => item['persona_fisica'] == true ||
-                        item['aplicaPersonaFisica'] == 'Sí')
+        .where((item) =>
+            item['persona_fisica'] == true ||
+            item['aplicaPersonaFisica'] == 'Sí')
         .toList();
   }
 
@@ -71,8 +71,8 @@ class UsoCFDICatalog {
   static List<Map<String, dynamic>> getParaPersonasMorales() {
     _loadData();
     return _data!
-        .where((item) => item['persona_moral'] == true ||
-                        item['aplicaPersonaMoral'] == 'Sí')
+        .where((item) =>
+            item['persona_moral'] == true || item['aplicaPersonaMoral'] == 'Sí')
         .toList();
   }
 }

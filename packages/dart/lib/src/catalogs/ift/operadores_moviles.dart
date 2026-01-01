@@ -29,13 +29,11 @@ class OperadoresMovilesCatalog {
 
     // Build indices
     _byCode = {
-      for (var op in _data!)
-        op['codigo'] as String: op,
+      for (var op in _data!) op['codigo'] as String: op,
     };
 
     _byName = {
-      for (var op in _data!)
-        (op['nombre'] as String).toUpperCase(): op,
+      for (var op in _data!) (op['nombre'] as String).toUpperCase(): op,
     };
   }
 
@@ -91,17 +89,15 @@ class OperadoresMovilesCatalog {
     _loadData();
     final queryNorm = query.toUpperCase();
     return _data!
-        .where((op) =>
-            (op['nombre'] as String).toUpperCase().contains(queryNorm))
+        .where(
+            (op) => (op['nombre'] as String).toUpperCase().contains(queryNorm))
         .toList();
   }
 
   /// Obtiene operadores activos
   static List<Map<String, dynamic>> getActivos() {
     _loadData();
-    return _data!
-        .where((op) => op['activo'] == true)
-        .toList();
+    return _data!.where((op) => op['activo'] == true).toList();
   }
 
   /// Obtiene operadores por tipo de servicio
@@ -113,8 +109,6 @@ class OperadoresMovilesCatalog {
   ///   Lista de operadores que ofrecen ese servicio
   static List<Map<String, dynamic>> getByTipoServicio(String tipoServicio) {
     _loadData();
-    return _data!
-        .where((op) => op['tipo_servicio'] == tipoServicio)
-        .toList();
+    return _data!.where((op) => op['tipo_servicio'] == tipoServicio).toList();
   }
 }

@@ -13,7 +13,8 @@ class SalariosMinimosCatalog {
   static void _loadData() {
     if (_data != null) return;
 
-    final jsonData = BaseCatalog.loadJsonDataSync('mexico/salarios_minimos.json');
+    final jsonData =
+        BaseCatalog.loadJsonDataSync('mexico/salarios_minimos.json');
 
     // Handle both list and dict formats
     if (jsonData.isNotEmpty && jsonData.first.containsKey('salarios')) {
@@ -26,8 +27,7 @@ class SalariosMinimosCatalog {
 
     // Build index by year
     _byYear = {
-      for (var item in _data!)
-        (item['año'] ?? item['year']) as int: item,
+      for (var item in _data!) (item['año'] ?? item['year']) as int: item,
     };
   }
 

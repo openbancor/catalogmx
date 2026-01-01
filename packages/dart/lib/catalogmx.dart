@@ -65,7 +65,8 @@ export 'src/catalogs/banxico/instituciones_financieras.dart';
 export 'src/catalogs/banxico/monedas_divisas.dart';
 export 'src/catalogs/banxico/cetes_28.dart';
 export 'src/catalogs/banxico/inflacion_anual.dart';
-export 'src/catalogs/banxico/salarios_minimos.dart' hide SalariosMinimosCatalog;  // Conflicts with Mexico version
+export 'src/catalogs/banxico/salarios_minimos.dart'
+    hide SalariosMinimosCatalog; // Conflicts with Mexico version
 export 'src/catalogs/banxico/tiie_28.dart';
 export 'src/catalogs/banxico/tipo_cambio_usd.dart';
 export 'src/catalogs/banxico/udis.dart';
@@ -82,7 +83,7 @@ export 'src/catalogs/ift/operadores_moviles.dart';
 
 export 'src/catalogs/mexico/hoy_no_circula.dart';
 export 'src/catalogs/mexico/placas_formatos.dart';
-export 'src/catalogs/mexico/salarios_minimos.dart';  // This is the main SalariosMinimosCatalog
+export 'src/catalogs/mexico/salarios_minimos.dart'; // This is the main SalariosMinimosCatalog
 export 'src/catalogs/mexico/uma.dart';
 
 // ============================================================================

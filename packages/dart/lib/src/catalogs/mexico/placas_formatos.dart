@@ -14,7 +14,8 @@ class PlacasFormatosCatalog {
   static void _loadData() {
     if (_data != null) return;
 
-    final jsonData = BaseCatalog.loadJsonDataSync('mexico/placas_formatos.json');
+    final jsonData =
+        BaseCatalog.loadJsonDataSync('mexico/placas_formatos.json');
 
     // Handle both list and dict formats
     if (jsonData.isNotEmpty && jsonData.first.containsKey('estados')) {
@@ -32,8 +33,7 @@ class PlacasFormatosCatalog {
     };
 
     _byCveEstado = {
-      for (var estado in _data!)
-        estado['cve_estado'] as String: estado,
+      for (var estado in _data!) estado['cve_estado'] as String: estado,
     };
   }
 

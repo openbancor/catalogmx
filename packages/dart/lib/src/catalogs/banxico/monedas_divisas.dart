@@ -35,8 +35,7 @@ class MonedasDivisasCatalog {
     };
 
     _byNumeroISO = {
-      for (var moneda in _data!)
-        moneda['numero_iso'] as String: moneda,
+      for (var moneda in _data!) moneda['numero_iso'] as String: moneda,
     };
   }
 
@@ -81,25 +80,20 @@ class MonedasDivisasCatalog {
     _loadData();
     final paisLower = pais.toLowerCase();
     return _data!
-        .where((m) =>
-            (m['pais'] as String).toLowerCase().contains(paisLower))
+        .where((m) => (m['pais'] as String).toLowerCase().contains(paisLower))
         .toList();
   }
 
   /// Obtiene monedas con tipo de cambio publicado por Banxico
   static List<Map<String, dynamic>> getConTipoCambioBanxico() {
     _loadData();
-    return _data!
-        .where((m) => m['tipo_cambio_banxico'] == true)
-        .toList();
+    return _data!.where((m) => m['tipo_cambio_banxico'] == true).toList();
   }
 
   /// Obtiene monedas con tipo de cambio FIX
   static List<Map<String, dynamic>> getConTipoCambioFIX() {
     _loadData();
-    return _data!
-        .where((m) => m['tipo_cambio_fix'] == true)
-        .toList();
+    return _data!.where((m) => m['tipo_cambio_fix'] == true).toList();
   }
 
   /// Obtiene monedas principales para operaciones en México
@@ -109,9 +103,7 @@ class MonedasDivisasCatalog {
   static List<Map<String, dynamic>> getPrincipales() {
     _loadData();
     const principales = ['MXN', 'USD', 'EUR', 'CAD', 'GBP', 'JPY', 'CHF'];
-    return _data!
-        .where((m) => principales.contains(m['codigo_iso']))
-        .toList();
+    return _data!.where((m) => principales.contains(m['codigo_iso'])).toList();
   }
 
   /// Obtiene monedas latinoamericanas
@@ -129,9 +121,7 @@ class MonedasDivisasCatalog {
       'UYU',
       'VES'
     ];
-    return _data!
-        .where((m) => latam.contains(m['codigo_iso']))
-        .toList();
+    return _data!.where((m) => latam.contains(m['codigo_iso'])).toList();
   }
 
   /// Valida código ISO de moneda
@@ -187,16 +177,14 @@ class MonedasDivisasCatalog {
     _loadData();
     final nombreLower = nombre.toLowerCase();
     return _data!
-        .where((m) =>
-            (m['moneda'] as String).toLowerCase().contains(nombreLower))
+        .where(
+            (m) => (m['moneda'] as String).toLowerCase().contains(nombreLower))
         .toList();
   }
 
   /// Obtiene monedas activas
   static List<Map<String, dynamic>> getActivas() {
     _loadData();
-    return _data!
-        .where((m) => m['activa'] == true)
-        .toList();
+    return _data!.where((m) => m['activa'] == true).toList();
   }
 }

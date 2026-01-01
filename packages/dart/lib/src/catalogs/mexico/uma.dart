@@ -28,8 +28,7 @@ class UMACatalog {
 
     // Build index by year
     _byYear = {
-      for (var item in _data!)
-        (item['año'] ?? item['year']) as int: item,
+      for (var item in _data!) (item['año'] ?? item['year']) as int: item,
     };
   }
 
