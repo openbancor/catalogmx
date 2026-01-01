@@ -22,8 +22,9 @@ import 'package:catalogmx/src/utils/text_utils.dart';
 
 /// Exception for RFC validation errors
 class RFCException implements Exception {
-  final String message;
   RFCException(this.message);
+
+  final String message;
 
   @override
   String toString() => 'RFCException: $message';
@@ -31,6 +32,8 @@ class RFCException implements Exception {
 
 /// RFC Validator
 class RFCValidator {
+  RFCValidator(String rfc) : rfc = rfc.toUpperCase().trim();
+
   final String rfc;
 
   static final RegExp _generalRegex = RegExp(
@@ -201,8 +204,6 @@ class RFCValidator {
     'RUIN',
   ];
 
-  RFCValidator(String rfc) : rfc = rfc.toUpperCase().trim();
-
   /// Validates if the RFC is structurally valid
   bool validate({bool strict = true}) {
     if (!validateGeneralRegex()) return false;
@@ -323,6 +324,13 @@ class RFCValidator {
 
 /// RFC Generator for Persona Física (Individual)
 class RFCGeneratorFisica {
+  RFCGeneratorFisica({
+    required this.nombre,
+    required this.apellidoPaterno,
+    required this.apellidoMaterno,
+    required this.fechaNacimiento,
+  });
+
   final String nombre;
   final String apellidoPaterno;
   final String apellidoMaterno;
@@ -372,13 +380,6 @@ class RFCGeneratorFisica {
     'Z',
     '&',
   ];
-
-  RFCGeneratorFisica({
-    required this.nombre,
-    required this.apellidoPaterno,
-    required this.apellidoMaterno,
-    required this.fechaNacimiento,
-  });
 
   /// Generates the RFC
   String generate() {
@@ -439,7 +440,7 @@ class RFCGeneratorFisica {
       clave.write(nombreIniciales[1]);
     }
 
-    String result = clave.toString();
+    var result = clave.toString();
 
     // Check for cacophonic words
     if (RFCValidator._cacophonic.contains(result)) {
@@ -486,6 +487,11 @@ class RFCGeneratorFisica {
 
 /// RFC Generator for Persona Moral (Company)
 class RFCGeneratorMoral {
+  RFCGeneratorMoral({
+    required this.razonSocial,
+    required this.fechaConstitucion,
+  });
+
   final String razonSocial;
   final DateTime fechaConstitucion;
 
@@ -596,11 +602,6 @@ class RFCGeneratorMoral {
     '&',
   ];
 
-  RFCGeneratorMoral({
-    required this.razonSocial,
-    required this.fechaConstitucion,
-  });
-
   /// Generates the RFC
   String generate() {
     final letters = _generateLetters();
@@ -612,7 +613,7 @@ class RFCGeneratorMoral {
   }
 
   String _cleanRazonSocial() {
-    String razon = razonSocial.toUpperCase().trim();
+    var razon = razonSocial.toUpperCase().trim();
 
     // Remove excluded words
     for (final excluded in _excludedWords) {
@@ -665,7 +666,7 @@ class RFCGeneratorMoral {
     if (words.length == 1) {
       // Single word: First 3 letters
       final word = words[0];
-      clave.write(word.length > 0 ? word[0] : 'X');
+      clave.write(word.isNotEmpty ? word[0] : 'X');
       clave.write(word.length > 1 ? word[1] : 'X');
       clave.write(word.length > 2 ? word[2] : 'X');
     } else if (words.length == 2) {
@@ -681,11 +682,11 @@ class RFCGeneratorMoral {
       clave.write(words[2][0]);
     }
 
-    String result = clave.toString();
+    var result = clave.toString();
 
     // Check for cacophonic words
     if (RFCValidator._cacophonic.contains(result)) {
-      result = result.substring(0, result.length - 1) + 'X';
+      result = '${result.substring(0, result.length - 1)}X';
     }
 
     return result;

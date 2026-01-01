@@ -20,8 +20,9 @@ library;
 
 /// Exception for NSS validation errors
 class NSSException implements Exception {
-  final String message;
   NSSException(this.message);
+
+  final String message;
 
   @override
   String toString() => 'NSSException: $message';
@@ -29,11 +30,11 @@ class NSSException implements Exception {
 
 /// NSS Validator
 class NSSValidator {
+  NSSValidator(String? nss) : nss = nss?.trim() ?? '';
+
   final String nss;
 
   static const int length = 11;
-
-  NSSValidator(String? nss) : nss = nss?.trim() ?? '';
 
   /// Validates the NSS structure and check digit
   bool validate() {
@@ -85,11 +86,11 @@ class NSSValidator {
     }
 
     // Process digits from right to left
-    int total = 0;
+    var total = 0;
     final reversed = nss10.split('').reversed.toList();
 
     for (var i = 0; i < reversed.length; i++) {
-      int n = int.parse(reversed[i]);
+      var n = int.parse(reversed[i]);
 
       // Alternate between multiplying by 2 and 1 (starting with 2 for rightmost)
       if (i % 2 == 0) {

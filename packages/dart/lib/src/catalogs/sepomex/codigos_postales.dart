@@ -80,7 +80,7 @@ class SepomexCodigosPostales {
     _loadData();
     final normalized = normalizeText(query);
 
-    List<Map<String, dynamic>> searchList = _data!;
+    var searchList = _data!;
     if (codigoPostal != null) {
       searchList = getByCP(codigoPostal);
     }

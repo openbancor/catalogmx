@@ -7,12 +7,12 @@ import 'package:catalogmx/src/catalogs/base_catalog.dart';
 
 /// INEGI Municipios Catalog (2,469 municipalities)
 class InegMunicipios {
+  // Private constructor - all methods are static
+  InegMunicipios._();
+
   static List<Map<String, dynamic>>? _data;
   static Map<String, Map<String, dynamic>>? _byClave;
   static Map<String, List<Map<String, dynamic>>>? _byState;
-
-  // Private constructor - all methods are static
-  InegMunicipios._();
 
   /// Loads the municipios data
   static void _loadData() {
@@ -58,7 +58,7 @@ class InegMunicipios {
     _loadData();
     final normalized = name.toLowerCase().trim();
 
-    List<Map<String, dynamic>> searchList = _data!;
+    var searchList = _data!;
     if (stateCode != null) {
       searchList = getByState(stateCode);
     }
@@ -77,7 +77,7 @@ class InegMunicipios {
     _loadData();
     final normalized = query.toLowerCase().trim();
 
-    List<Map<String, dynamic>> searchList = _data!;
+    var searchList = _data!;
     if (stateCode != null) {
       searchList = getByState(stateCode);
     }
