@@ -56,14 +56,62 @@ export 'src/catalogs/inegi/localidades.dart';
 export 'src/catalogs/sepomex/codigos_postales.dart';
 
 // ============================================================================
+// CATALOGS - BANXICO (Banco de México)
+// ============================================================================
+
+export 'src/catalogs/banxico/banks.dart';
+export 'src/catalogs/banxico/codigos_plaza.dart';
+export 'src/catalogs/banxico/instituciones_financieras.dart';
+export 'src/catalogs/banxico/monedas_divisas.dart';
+export 'src/catalogs/banxico/cetes_28.dart';
+export 'src/catalogs/banxico/inflacion_anual.dart';
+export 'src/catalogs/banxico/salarios_minimos.dart'
+    hide SalariosMinimosCatalog; // Conflicts with Mexico version
+export 'src/catalogs/banxico/tiie_28.dart';
+export 'src/catalogs/banxico/tipo_cambio_usd.dart';
+export 'src/catalogs/banxico/udis.dart';
+
+// ============================================================================
+// CATALOGS - IFT (Instituto Federal de Telecomunicaciones)
+// ============================================================================
+
+export 'src/catalogs/ift/operadores_moviles.dart';
+
+// ============================================================================
+// CATALOGS - MEXICO (General Mexican Catalogs)
+// ============================================================================
+
+export 'src/catalogs/mexico/hoy_no_circula.dart';
+export 'src/catalogs/mexico/placas_formatos.dart';
+export 'src/catalogs/mexico/salarios_minimos.dart'; // This is the main SalariosMinimosCatalog
+export 'src/catalogs/mexico/uma.dart';
+
+// ============================================================================
 // CATALOGS - SAT (Servicio de Administración Tributaria)
 // ============================================================================
 
-// SAT CFDI 4.0 Catalogs (15 catalogs)
-export 'src/catalogs/sat/cfdi_catalogs.dart';
+// SAT CFDI 4.0 Catalogs (15+ catalogs)
+export 'src/catalogs/sat/cfdi/uso_cfdi.dart';
+export 'src/catalogs/sat/cfdi/forma_pago.dart';
+export 'src/catalogs/sat/cfdi/metodo_pago.dart';
+export 'src/catalogs/sat/cfdi/regimen_fiscal.dart';
+export 'src/catalogs/sat/cfdi/tipo_comprobante.dart';
+export 'src/catalogs/sat/cfdi_all.dart';
 
-// SAT Carta Porte, Banxico, IFT, Mexico (30+ catalogs)
-export 'src/catalogs/all_catalogs.dart';
+// SAT Carta Porte Catalogs (7+ catalogs)
+export 'src/catalogs/sat/aeropuertos.dart';
+export 'src/catalogs/sat/carta_porte_all.dart';
+
+// SAT Comercio Exterior Catalogs (8+ catalogs)
+export 'src/catalogs/sat/comercio_exterior_all.dart';
+
+// SAT Nómina Catalogs (7+ catalogs)
+export 'src/catalogs/sat/nomina_all.dart';
+
+// Legacy catalog exports (backwards compatibility)
+export 'src/catalogs/sat/cfdi_catalogs.dart';
+// Note: all_catalogs.dart is not exported to avoid ambiguous exports
+// All catalogs are already exported individually from their respective modules
 
 // ============================================================================
 // UTILITIES

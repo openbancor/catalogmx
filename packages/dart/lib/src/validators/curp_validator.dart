@@ -19,8 +19,9 @@ import 'package:catalogmx/src/utils/text_utils.dart';
 
 /// Exception for CURP validation errors
 class CURPException implements Exception {
-  final String message;
   CURPException(this.message);
+
+  final String message;
 
   @override
   String toString() => 'CURPException: $message';
@@ -28,6 +29,8 @@ class CURPException implements Exception {
 
 /// CURP Validator
 class CURPValidator {
+  CURPValidator(String curp) : curp = curp.toUpperCase().trim();
+
   final String curp;
 
   static final RegExp _generalRegex = RegExp(
@@ -158,8 +161,6 @@ class CURPValidator {
     'WUEY',
   ];
 
-  CURPValidator(String curp) : curp = curp.toUpperCase().trim();
-
   /// Validates if the CURP is structurally valid
   bool validate() {
     if (curp.length != length) {
@@ -213,6 +214,25 @@ class CURPValidator {
 
 /// CURP Generator
 class CURPGenerator {
+  CURPGenerator({
+    required this.nombre,
+    required this.apellidoPaterno,
+    required this.fechaNacimiento,
+    required this.sexo,
+    this.apellidoMaterno,
+    this.estado,
+  }) {
+    if (apellidoPaterno.trim().isEmpty) {
+      throw CURPException('Apellido paterno is required');
+    }
+    if (nombre.trim().isEmpty) {
+      throw CURPException('Nombre is required');
+    }
+    if (sexo.toUpperCase() != 'H' && sexo.toUpperCase() != 'M') {
+      throw CURPException('Sexo must be H or M');
+    }
+  }
+
   final String nombre;
   final String apellidoPaterno;
   final String? apellidoMaterno;
@@ -285,25 +305,6 @@ class CURPGenerator {
     'Y',
     'Z',
   ];
-
-  CURPGenerator({
-    required this.nombre,
-    required this.apellidoPaterno,
-    this.apellidoMaterno,
-    required this.fechaNacimiento,
-    required this.sexo,
-    this.estado,
-  }) {
-    if (apellidoPaterno.trim().isEmpty) {
-      throw CURPException('Apellido paterno is required');
-    }
-    if (nombre.trim().isEmpty) {
-      throw CURPException('Nombre is required');
-    }
-    if (sexo.toUpperCase() != 'H' && sexo.toUpperCase() != 'M') {
-      throw CURPException('sexo must be "H" (Hombre) or "M" (Mujer)');
-    }
-  }
 
   /// Generates the CURP
   String generate() {
@@ -378,11 +379,11 @@ class CURPGenerator {
     }
     clave.write(nombreInit[0]);
 
-    String result = clave.toString();
+    var result = clave.toString();
 
     // Check for cacophonic words - replace second character with 'X'
     if (CURPValidator._cacophonic.contains(result)) {
-      result = result[0] + 'X' + result.substring(2);
+      result = '${result[0]}X${result.substring(2)}';
     }
 
     return result;

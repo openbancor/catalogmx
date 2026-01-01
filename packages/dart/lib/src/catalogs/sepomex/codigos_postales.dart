@@ -5,6 +5,7 @@
 library;
 
 import 'package:catalogmx/src/catalogs/base_catalog.dart';
+import 'package:catalogmx/src/utils/text_utils.dart';
 
 /// SEPOMEX Postal Codes Catalog (157,000+ records)
 class SepomexCodigosPostales {
@@ -50,43 +51,56 @@ class SepomexCodigosPostales {
     return _byCP![codigoPostal] ?? [];
   }
 
-  /// Gets all postal codes for a state
+  /// Gets all postal codes for a state (accent-insensitive)
   static List<Map<String, dynamic>> getByState(String estado) {
     _loadData();
-    return _byState![estado.toUpperCase()] ?? [];
+    // Try exact match first, then normalized
+    final exactMatch = _byState![estado.toUpperCase()];
+    if (exactMatch != null && exactMatch.isNotEmpty) {
+      return exactMatch;
+    }
+
+    // Fallback to normalized search
+    final normalized = normalizeText(estado);
+    for (final entry in _byState!.entries) {
+      if (normalizeText(entry.key) == normalized) {
+        return entry.value;
+      }
+    }
+    return [];
   }
 
-  /// Searches postal codes by colonia name
+  /// Searches postal codes by colonia name (accent-insensitive)
+  ///
+  /// Example: searchByColonia("Aguilas") will find "Las Águilas"
   static List<Map<String, dynamic>> searchByColonia(
     String query, {
     String? codigoPostal,
   }) {
     _loadData();
-    final normalized = query.toLowerCase().trim();
+    final normalized = normalizeText(query);
 
-    List<Map<String, dynamic>> searchList = _data!;
+    var searchList = _data!;
     if (codigoPostal != null) {
       searchList = getByCP(codigoPostal);
     }
 
     return searchList.where((code) {
       final colonia =
-          (code['colonia'] as String? ?? code['d_asenta'] as String? ?? '')
-              .toLowerCase();
-      return colonia.contains(normalized);
+          code['colonia'] as String? ?? code['d_asenta'] as String? ?? '';
+      return normalizeText(colonia).contains(normalized);
     }).toList();
   }
 
-  /// Searches postal codes by municipality
+  /// Searches postal codes by municipality (accent-insensitive)
   static List<Map<String, dynamic>> searchByMunicipio(String query) {
     _loadData();
-    final normalized = query.toLowerCase().trim();
+    final normalized = normalizeText(query);
 
     return _data!.where((code) {
       final mun =
-          (code['municipio'] as String? ?? code['d_mnpio'] as String? ?? '')
-              .toLowerCase();
-      return mun.contains(normalized);
+          code['municipio'] as String? ?? code['d_mnpio'] as String? ?? '';
+      return normalizeText(mun).contains(normalized);
     }).toList();
   }
 

@@ -4,6 +4,7 @@
  */
 
 import { loadCatalogArray } from '../../utils/catalog-loader';
+import { normalizeText } from '../../utils/text';
 import type { PostalCode } from '../../types';
 
 export class CodigosPostales {
@@ -50,28 +51,30 @@ export class CodigosPostales {
   }
 
   /**
-   * Search by municipality
+   * Search by municipality (accent-insensitive)
    */
   static getByMunicipio(municipio: string): PostalCode[] {
-    const searchTerm = municipio.toUpperCase();
-    return this.getData().filter((postal) => postal.municipio.toUpperCase().includes(searchTerm));
+    const searchTerm = normalizeText(municipio);
+    return this.getData().filter((postal) => normalizeText(postal.municipio).includes(searchTerm));
   }
 
   /**
-   * Search by state
+   * Search by state (accent-insensitive)
    */
   static getByEstado(estado: string): PostalCode[] {
-    const searchTerm = estado.toUpperCase();
-    return this.getData().filter((postal) => postal.estado.toUpperCase() === searchTerm);
+    const searchTerm = normalizeText(estado);
+    return this.getData().filter((postal) => normalizeText(postal.estado) === searchTerm);
   }
 
   /**
-   * Search by settlement (asentamiento)
+   * Search by settlement (asentamiento) - accent-insensitive
+   *
+   * Example: searchByAsentamiento("Aguilas") will find "Las Águilas"
    */
   static searchByAsentamiento(asentamiento: string): PostalCode[] {
-    const searchTerm = asentamiento.toUpperCase();
+    const searchTerm = normalizeText(asentamiento);
     return this.getData().filter((postal) =>
-      postal.asentamiento.toUpperCase().includes(searchTerm)
+      normalizeText(postal.asentamiento).includes(searchTerm)
     );
   }
 

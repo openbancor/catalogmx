@@ -18,8 +18,9 @@ library;
 
 /// Exception for CLABE validation errors
 class CLABEException implements Exception {
-  final String message;
   CLABEException(this.message);
+
+  final String message;
 
   @override
   String toString() => 'CLABEException: $message';
@@ -27,6 +28,8 @@ class CLABEException implements Exception {
 
 /// CLABE Validator
 class CLABEValidator {
+  CLABEValidator(String? clabe) : clabe = clabe?.trim() ?? '';
+
   final String clabe;
 
   static const int length = 18;
@@ -52,8 +55,6 @@ class CLABEValidator {
     3,
     7,
   ];
-
-  CLABEValidator(String? clabe) : clabe = clabe?.trim() ?? '';
 
   /// Validates the CLABE structure and check digit
   bool validate() {
@@ -107,7 +108,7 @@ class CLABEValidator {
     }
 
     // Calculate weighted sum
-    int weightedSum = 0;
+    var weightedSum = 0;
     for (var i = 0; i < clabe17.length; i++) {
       final digit = int.parse(clabe17[i]);
       final product = digit * weights[i];

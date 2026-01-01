@@ -49,7 +49,7 @@ class InegLocalidades {
     _loadData();
     final normalized = query.toLowerCase().trim();
 
-    List<Map<String, dynamic>> searchList = _data!;
+    var searchList = _data!;
     if (claveMunicipio != null) {
       searchList = getByMunicipality(claveMunicipio);
     }
