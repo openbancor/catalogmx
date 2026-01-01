@@ -9,11 +9,6 @@ import 'package:http/http.dart' as http;
 
 /// Version information
 class VersionInfo {
-  final String version;
-  final DateTime updatedAt;
-  final String source;
-  final String? url;
-
   VersionInfo({
     required this.version,
     required this.updatedAt,
@@ -29,6 +24,11 @@ class VersionInfo {
       url: json['url'] as String?,
     );
   }
+
+  final String version;
+  final DateTime updatedAt;
+  final String source;
+  final String? url;
 
   Map<String, dynamic> toJson() {
     return {
@@ -58,9 +58,9 @@ class DataUpdaterConfig {
 
 /// Base class for platform-specific data updaters
 abstract class BaseDataUpdater {
-  final DataUpdaterConfig config;
-
   BaseDataUpdater(this.config);
+
+  final DataUpdaterConfig config;
 
   Future<String?> getLocalVersion();
   Future<double?> getLocalAgeHours();
@@ -74,9 +74,6 @@ abstract class BaseDataUpdater {
 
 /// Data Updater for Mobile/Desktop (using sqflite)
 class MobileDataUpdater extends BaseDataUpdater {
-  late final String cacheDbPath;
-  late final String versionFilePath;
-
   MobileDataUpdater(super.config) {
     // TODO: Use path_provider to get application documents directory
     // For now, use a placeholder
@@ -88,6 +85,9 @@ class MobileDataUpdater extends BaseDataUpdater {
     cacheDbPath = '$cacheDir/mexico_dynamic.sqlite3';
     versionFilePath = '$cacheDir/version.json';
   }
+
+  late final String cacheDbPath;
+  late final String versionFilePath;
 
   @override
   Future<String?> getLocalVersion() async {
@@ -237,8 +237,6 @@ class WebDataUpdater extends BaseDataUpdater {
 
 /// Universal Data Updater (auto-detects platform)
 class DataUpdater {
-  late final BaseDataUpdater _updater;
-
   DataUpdater([DataUpdaterConfig? config]) {
     final cfg = config ?? const DataUpdaterConfig();
 
@@ -259,6 +257,8 @@ class DataUpdater {
       _updater = WebDataUpdater(cfg);
     }
   }
+
+  late final BaseDataUpdater _updater;
 
   Future<String?> getLocalVersion() => _updater.getLocalVersion();
 
