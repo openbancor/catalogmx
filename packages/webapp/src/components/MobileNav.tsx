@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { type PageId } from '@/lib/routes';
 
 interface MobileNavProps {
-  currentPage: PageId;
+  currentPage: string;
   onNavigate: (id: PageId) => void;
   onOpenSearch?: () => void;
 }
@@ -14,25 +14,25 @@ export default function MobileNav({ currentPage, onNavigate, onOpenSearch }: Mob
       id: 'home' as PageId,
       label: 'Inicio',
       icon: Home,
-      isActive: (p: PageId) => ['home', 'catalogs', 'catalog-list'].includes(p) || p.startsWith('dataset-')
+      isActive: (p: string) => ['home', 'catalogs', 'catalog-list'].includes(p) || p.startsWith('dataset-')
     },
     {
       id: 'validators' as PageId,
       label: 'Validar',
       icon: CheckCircle2,
-      isActive: (p: PageId) => ['validators', 'rfc', 'curp', 'clabe', 'nss'].includes(p)
+      isActive: (p: string) => ['validators', 'rfc', 'curp', 'clabe', 'nss'].includes(p)
     },
     {
       id: 'calculators' as PageId,
       label: 'Calcular',
       icon: Calculator,
-      isActive: (p: PageId) => ['calculators', 'isr', 'iva', 'ieps'].includes(p)
+      isActive: (p: string) => ['calculators', 'isr', 'iva', 'ieps'].includes(p)
     },
     {
       id: 'reference' as PageId,
       label: 'Docs',
       icon: Code,
-      isActive: (p: PageId) => ['reference'].includes(p)
+      isActive: (p: string) => ['reference'].includes(p)
     },
   ];
 

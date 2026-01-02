@@ -1,3 +1,4 @@
+import { useParams, useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLocale } from '@/lib/locale';
 import RFCPage from './RFCPage';
@@ -7,6 +8,13 @@ import NSSPage from './NSSPage';
 
 export default function ValidatorsPage() {
   const { t } = useLocale();
+  const { validatorId } = useParams();
+  const navigate = useNavigate();
+  const activeTab = validatorId || 'rfc';
+
+  const handleTabChange = (value: string) => {
+    navigate(`/validators/${value}`);
+  };
 
   return (
     <div className="space-y-6">
@@ -17,7 +25,7 @@ export default function ValidatorsPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="rfc" className="w-full space-y-6">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full space-y-6">
         <div className="overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
           <TabsList className="w-full sm:w-auto justify-start bg-transparent sm:bg-muted p-0 sm:p-1 gap-2 sm:gap-1 h-auto">
             <TabsTrigger 

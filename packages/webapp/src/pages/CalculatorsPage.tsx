@@ -1,3 +1,4 @@
+import { useParams, useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLocale } from '@/lib/locale';
 import ISRPage from './ISRPage';
@@ -10,6 +11,13 @@ import MinimumWagePage from './MinimumWagePage';
 
 export default function CalculatorsPage() {
   const { t } = useLocale();
+  const { calculatorId } = useParams();
+  const navigate = useNavigate();
+  const activeTab = calculatorId || 'isr';
+
+  const handleTabChange = (value: string) => {
+    navigate(`/calculators/${value}`);
+  };
 
   return (
     <div className="space-y-6">
@@ -20,7 +28,7 @@ export default function CalculatorsPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="isr" className="w-full space-y-6">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full space-y-6">
         <div className="overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
           <TabsList className="w-full sm:w-auto justify-start bg-transparent sm:bg-muted p-0 sm:p-1 gap-2 sm:gap-1 h-auto">
             <TabsTrigger

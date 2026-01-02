@@ -21,6 +21,7 @@ export interface NavItem {
   id: PageId;
   label: string;
   icon: React.ElementType;
+  path: string;
 }
 
 export interface NavSection {
@@ -31,10 +32,10 @@ export interface NavSection {
 export const navigation: NavSection[] = [
   {
     items: [
-      { id: 'home', label: 'nav.catalogs.title', icon: Home },
-      { id: 'validators', label: 'nav.validators.title', icon: CheckCircle2 },
-      { id: 'calculators', label: 'nav.calculators.title', icon: Calculator },
-      { id: 'reference', label: 'nav.reference.title', icon: Code },
+      { id: 'home', label: 'nav.catalogs.title', icon: Home, path: '/' },
+      { id: 'validators', label: 'nav.validators.title', icon: CheckCircle2, path: '/validators' },
+      { id: 'calculators', label: 'nav.calculators.title', icon: Calculator, path: '/calculators' },
+      { id: 'reference', label: 'nav.reference.title', icon: Code, path: '/reference' },
     ]
   }
 ];
