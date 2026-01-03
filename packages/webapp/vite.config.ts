@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
-  base: mode === 'production' ? './' : '/',
+  base: mode === 'production' ? '/catalogmx/' : '/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
