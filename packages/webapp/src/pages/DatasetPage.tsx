@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AlertTriangle, Loader2, Search, ChevronLeft, ChevronRight, Database, X } from 'lucide-react';
 import { datasetConfigs, type DatasetId, type DatasetConfig } from '@/data/datasets';
-import { queryJsonArrayTable, querySqlTable } from '@/lib/database';
+import { queryJsonArrayTable, querySqlTable, type FieldFilter } from '@/lib/database';
+import AdvancedFilters from '@/components/AdvancedFilters';
 
 type AnyRow = Record<string, unknown>;
 
@@ -38,11 +39,13 @@ export default function DatasetPage({ datasetId }: DatasetPageProps) {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldFilters, setFieldFilters] = useState<FieldFilter[]>([]);
 
-  // Clear search when dataset changes
+  // Clear search and field filters when dataset changes
   useEffect(() => {
     setSearch('');
     setSearchParams({});
+    setFieldFilters([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [datasetId]);
 
@@ -71,12 +74,14 @@ export default function DatasetPage({ datasetId }: DatasetPageProps) {
               search,
               searchColumns: config.searchColumns,
               orderBy: config.orderBy,
+              fieldFilters,
             })
           : await queryJsonArrayTable('mexico', config.table, config.column ?? 'data', {
               page: targetPage,
               pageSize,
               search,
               searchColumns: config.searchColumns,
+              fieldFilters,
             });
       setRows(result.data as AnyRow[]);
       setTotal(result.total);
@@ -92,6 +97,11 @@ export default function DatasetPage({ datasetId }: DatasetPageProps) {
     load(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [datasetId, pageSize]);
+
+  const handleFieldFilters = (filters: FieldFilter[]) => {
+    setFieldFilters(filters);
+    load(1);
+  };
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
@@ -173,6 +183,13 @@ export default function DatasetPage({ datasetId }: DatasetPageProps) {
           </div>
         </CardContent>
       </Card>
+
+      <AdvancedFilters
+        columns={config.columns}
+        searchColumns={config.searchColumns}
+        onFilter={handleFieldFilters}
+        disabled={loading}
+      />
 
       {error && (
         <Card className="border-destructive">
