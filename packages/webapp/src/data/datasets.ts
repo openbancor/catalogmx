@@ -2,6 +2,9 @@ import type { LucideIcon } from 'lucide-react';
 
 export type DatasetType = 'sql' | 'json-array';
 export type CategoryId = 'geographic' | 'fiscal' | 'banking' | 'telecom' | 'national';
+export type SubcategoryId =
+  | 'cfdi' | 'carta-porte' | 'comercio-exterior' | 'nomina'
+  | 'sepomex' | 'inegi' | 'banxico' | 'other';
 
 export interface DatasetConfig {
   id: string;
@@ -15,6 +18,13 @@ export interface DatasetConfig {
   icon?: LucideIcon;
   description?: string;
   category: CategoryId;
+
+  // Extended metadata for better UX
+  tags?: string[]; // Keywords for search
+  source?: string; // Official source (SAT, Banxico, INEGI, etc)
+  subcategory?: SubcategoryId; // For better organization
+  relatedCatalogs?: string[]; // Related catalog IDs
+  helpText?: string; // Extended description
 }
 
 export const DATASET_CATEGORIES = [
@@ -44,6 +54,11 @@ export const datasetConfigs = [
       { key: 'zona', label: 'Zona' },
     ],
     description: '157k códigos postales SEPOMEX.',
+    tags: ['cp', 'postal', 'sepomex', 'direccion', 'colonia', 'asentamiento', 'geografico'],
+    source: 'SEPOMEX',
+    subcategory: 'sepomex',
+    relatedCatalogs: ['inegi-estados', 'inegi-municipios', 'inegi-localidades'],
+    helpText: 'Catálogo completo de códigos postales de México del Servicio Postal Mexicano. Incluye 157,000+ códigos con información de asentamientos, colonias, municipios y estados.',
   },
   {
     id: 'inegi-estados',
@@ -60,6 +75,11 @@ export const datasetConfigs = [
       { key: 'clave_inegi', label: 'INEGI' },
     ],
     description: '32 estados INEGI.',
+    tags: ['estados', 'entidades', 'inegi', 'geografia', 'curp', 'rfc'],
+    source: 'INEGI',
+    subcategory: 'inegi',
+    relatedCatalogs: ['inegi-municipios', 'inegi-localidades', 'sepomex-codigos-postales'],
+    helpText: 'Los 32 estados de México con códigos CURP, claves INEGI y abreviaturas oficiales.',
   },
   {
     id: 'inegi-municipios',
@@ -77,6 +97,11 @@ export const datasetConfigs = [
       { key: 'poblacion_total', label: 'Población' },
     ],
     description: '2,478 municipios INEGI.',
+    tags: ['municipios', 'alcaldias', 'inegi', 'geografia', 'poblacion'],
+    source: 'INEGI',
+    subcategory: 'inegi',
+    relatedCatalogs: ['inegi-estados', 'inegi-localidades', 'sepomex-codigos-postales'],
+    helpText: 'Catálogo completo de municipios de México con población total y cabeceras municipales.',
   },
   {
     id: 'inegi-localidades',
@@ -95,6 +120,11 @@ export const datasetConfigs = [
       { key: 'longitud', label: 'Lng' },
     ],
     description: '10k localidades INEGI con coordenadas.',
+    tags: ['localidades', 'poblados', 'inegi', 'geografia', 'coordenadas', 'gps'],
+    source: 'INEGI',
+    subcategory: 'inegi',
+    relatedCatalogs: ['inegi-municipios', 'inegi-estados'],
+    helpText: 'Localidades de México con coordenadas geográficas y datos de población. Útil para geolocalización y análisis demográfico.',
   },
 
   // ========== FISCALES (SAT) ==========
@@ -113,6 +143,11 @@ export const datasetConfigs = [
       { key: 'incluye_ieps', label: 'IEPS' },
     ],
     description: '52k productos CFDI 4.0.',
+    tags: ['productos', 'servicios', 'cfdi', 'clave', 'facturacion', 'sat'],
+    source: 'SAT',
+    subcategory: 'cfdi',
+    relatedCatalogs: ['sat-clave-unidad', 'sat-impuesto', 'sat-tipo-comprobante'],
+    helpText: 'Catálogo completo de productos y servicios SAT para facturación electrónica CFDI 4.0. Incluye más de 52,000 claves con palabras similares para búsqueda.',
   },
   {
     id: 'sat-regimen-fiscal',
@@ -852,9 +887,9 @@ export const datasetConfigs = [
     ],
     description: 'Formatos de placas vehiculares por estado.',
   },
-] as const satisfies DatasetConfig[];
+] as DatasetConfig[];
 
-export type DatasetId = typeof datasetConfigs[number]['id'];
+export type DatasetId = string;
 export type DatasetPageId = `dataset-${DatasetId}`;
 
 export function getDatasetsByCategory(categoryId: CategoryId): DatasetConfig[] {
