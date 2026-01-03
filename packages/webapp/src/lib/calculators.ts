@@ -1,9 +1,34 @@
 /**
  * Mexican Tax Calculators with step-by-step breakdown
+ * Supports multiple years: 2024, 2025, 2026
+ * Uses official tax tables from Anexo 8 RMF
  */
 
+import {
+  ISR_2026_DAILY,
+  ISR_2026_WEEKLY,
+  ISR_2026_BIWEEKLY,
+  ISR_2026_MONTHLY,
+  ISR_2026_ANNUAL,
+  type ISRBracket
+} from './isr-tables-2026';
+
+export type ISRYear = 2024 | 2025 | 2026;
+export type ISRPeriod = 'diaria' | 'semanal' | 'decenal' | 'quincenal' | 'mensual' | 'anual';
+
+interface ISRSubsidyBracket {
+  desde: number;
+  hasta: number;
+  subsidio: number;
+}
+
+interface ISRSubsidyFlat {
+  amount: number;
+  maxIncome: number;
+}
+
 // ISR 2024 Monthly brackets
-const ISR_MONTHLY_BRACKETS = [
+const ISR_2024_MONTHLY_BRACKETS: ISRBracket[] = [
   { limiteInferior: 0.01, limiteSuperior: 746.04, cuotaFija: 0, tasa: 1.92 },
   { limiteInferior: 746.05, limiteSuperior: 6332.05, cuotaFija: 14.32, tasa: 6.40 },
   { limiteInferior: 6332.06, limiteSuperior: 11128.01, cuotaFija: 371.83, tasa: 10.88 },
@@ -17,8 +42,11 @@ const ISR_MONTHLY_BRACKETS = [
   { limiteInferior: 375975.62, limiteSuperior: Infinity, cuotaFija: 117912.32, tasa: 35.00 }
 ];
 
-// ISR Subsidy (subsidio al empleo) 2024 monthly
-const ISR_SUBSIDY_MONTHLY = [
+// ISR 2025 Monthly brackets (same as 2024 - no inflation adjustment)
+const ISR_2025_MONTHLY_BRACKETS: ISRBracket[] = ISR_2024_MONTHLY_BRACKETS;
+
+// ISR Subsidy (subsidio al empleo) 2024 monthly - tiered system
+const ISR_2024_SUBSIDY_MONTHLY: ISRSubsidyBracket[] = [
   { desde: 0.01, hasta: 1768.96, subsidio: 407.02 },
   { desde: 1768.97, hasta: 2653.38, subsidio: 406.83 },
   { desde: 2653.39, hasta: 3472.84, subsidio: 406.62 },
@@ -32,6 +60,51 @@ const ISR_SUBSIDY_MONTHLY = [
   { desde: 7382.34, hasta: Infinity, subsidio: 0 }
 ];
 
+// ISR Subsidy 2025 - flat amount system (Decree May 2024)
+const ISR_2025_SUBSIDY_MONTHLY: ISRSubsidyFlat = {
+  amount: 475.00,
+  maxIncome: 10171.00
+};
+
+// ISR Subsidy 2026 - flat amount system (15.02% of monthly UMA)
+const ISR_2026_SUBSIDY_MONTHLY: ISRSubsidyFlat = {
+  amount: 536.21,
+  maxIncome: 11492.66
+};
+
+// Helper to get brackets for a specific year and period
+function getISRBrackets(year: ISRYear, period: ISRPeriod): ISRBracket[] {
+  // For 2026, use official tables for each period
+  if (year === 2026) {
+    switch (period) {
+      case 'diaria': return ISR_2026_DAILY;
+      case 'semanal': return ISR_2026_WEEKLY;
+      case 'quincenal': return ISR_2026_BIWEEKLY;
+      case 'mensual': return ISR_2026_MONTHLY;
+      case 'anual': return ISR_2026_ANNUAL;
+      case 'decenal': return ISR_2026_MONTHLY; // Fallback to monthly, rare use case
+    }
+  }
+
+  // For 2024/2025, use monthly table (will convert with factors)
+  if (year === 2025) return ISR_2025_MONTHLY_BRACKETS;
+  return ISR_2024_MONTHLY_BRACKETS;
+}
+
+// Helper to calculate subsidy for a specific year
+function calculateSubsidy(income: number, year: ISRYear): number {
+  if (year === 2024) {
+    const bracket = ISR_2024_SUBSIDY_MONTHLY.find(s =>
+      income >= s.desde && income <= s.hasta
+    );
+    return bracket?.subsidio || 0;
+  } else if (year === 2025) {
+    return income <= ISR_2025_SUBSIDY_MONTHLY.maxIncome ? ISR_2025_SUBSIDY_MONTHLY.amount : 0;
+  } else { // 2026
+    return income <= ISR_2026_SUBSIDY_MONTHLY.maxIncome ? ISR_2026_SUBSIDY_MONTHLY.amount : 0;
+  }
+}
+
 export interface ISRCalculationStep {
   step: number;
   description: string;
@@ -43,6 +116,7 @@ export interface ISRCalculationStep {
 export interface ISRCalculationResult {
   ingresoGravable: number;
   periodo: string;
+  year: ISRYear;
   ingresoMensualizado: number;
   bracket: {
     limiteInferior: number;
@@ -61,9 +135,114 @@ export interface ISRCalculationResult {
 
 export function calculateISR(
   ingresoGravable: number,
-  periodo: 'mensual' | 'quincenal' | 'semanal' | 'anual' = 'mensual'
+  periodo: ISRPeriod = 'mensual',
+  year: ISRYear = 2026
 ): ISRCalculationResult {
   const steps: ISRCalculationStep[] = [];
+
+  // For 2026, use period-specific tables directly
+  const usePeriodTables = year === 2026 && ['diaria', 'semanal', 'quincenal', 'mensual', 'anual'].includes(periodo);
+
+  if (usePeriodTables) {
+    // Use official tables for the period
+    const brackets = getISRBrackets(year, periodo);
+
+    // Step 1: Find bracket (no conversion needed)
+    const bracket = brackets.find(b =>
+      ingresoGravable >= b.limiteInferior && ingresoGravable <= b.limiteSuperior
+    ) || brackets[brackets.length - 1];
+
+    steps.push({
+      step: 1,
+      description: `Identificar rango ISR ${periodo}`,
+      formula: `$${bracket.limiteInferior.toFixed(2)} ≤ ingreso ≤ $${bracket.limiteSuperior === Infinity ? '∞' : bracket.limiteSuperior.toFixed(2)}`,
+      result: bracket.tasa,
+      details: `Tasa marginal: ${bracket.tasa}%, Cuota fija: $${bracket.cuotaFija.toFixed(2)}`
+    });
+
+    // Step 2: Calculate excess
+    const excedente = ingresoGravable - bracket.limiteInferior;
+
+    steps.push({
+      step: 2,
+      description: 'Calcular excedente sobre límite inferior',
+      formula: `$${ingresoGravable.toFixed(2)} - $${bracket.limiteInferior.toFixed(2)}`,
+      result: excedente
+    });
+
+    // Step 3: Calculate marginal tax
+    const impuestoMarginal = excedente * (bracket.tasa / 100);
+
+    steps.push({
+      step: 3,
+      description: 'Calcular impuesto marginal',
+      formula: `$${excedente.toFixed(2)} × ${bracket.tasa}%`,
+      result: impuestoMarginal
+    });
+
+    // Step 4: Add fixed fee
+    const isrAntesSubsidio = bracket.cuotaFija + impuestoMarginal;
+
+    steps.push({
+      step: 4,
+      description: 'Sumar cuota fija',
+      formula: `$${bracket.cuotaFija.toFixed(2)} + $${impuestoMarginal.toFixed(2)}`,
+      result: isrAntesSubsidio
+    });
+
+    // Step 5: Calculate subsidy (convert to monthly equivalent)
+    const periodFactors: Record<ISRPeriod, number> = {
+      'diaria': 30.4,
+      'semanal': 4.33,
+      'decenal': 3,
+      'quincenal': 2,
+      'mensual': 1,
+      'anual': 1/12
+    };
+    const ingresoMensualEquivalente = ingresoGravable * periodFactors[periodo];
+    const subsidio = calculateSubsidy(ingresoMensualEquivalente, year);
+    const subsidioProrrateado = subsidio / periodFactors[periodo];
+
+    const subsidyDetails = subsidio > 0 ? `Cuota mensual: $${subsidio.toFixed(2)} / ${periodFactors[periodo]} = $${subsidioProrrateado.toFixed(2)}` : 'Ingreso excede límite';
+
+    steps.push({
+      step: 5,
+      description: 'Determinar subsidio al empleo',
+      formula: `Ingreso equiv. mensual: $${ingresoMensualEquivalente.toFixed(2)}`,
+      result: subsidioProrrateado,
+      details: subsidyDetails
+    });
+
+    // Step 6: Final ISR
+    const isrFinal = Math.max(0, isrAntesSubsidio - subsidioProrrateado);
+
+    steps.push({
+      step: 6,
+      description: 'ISR final (ISR - Subsidio)',
+      formula: `max(0, $${isrAntesSubsidio.toFixed(2)} - $${subsidioProrrateado.toFixed(2)})`,
+      result: isrFinal
+    });
+
+    const tasaEfectiva = ingresoGravable > 0 ? (isrFinal / ingresoGravable) * 100 : 0;
+
+    return {
+      ingresoGravable,
+      periodo,
+      year,
+      ingresoMensualizado: ingresoMensualEquivalente,
+      bracket,
+      excedente,
+      impuestoMarginal,
+      isrAntesSubsidio,
+      subsidio: subsidioProrrateado,
+      isrFinal,
+      tasaEfectiva,
+      steps
+    };
+  }
+
+  // For 2024/2025 or decenal period, use factor-based conversion
+  const brackets = getISRBrackets(year, 'mensual');
 
   // Step 1: Convert to monthly
   let ingresoMensualizado = ingresoGravable;
@@ -71,6 +250,8 @@ export function calculateISR(
   switch (periodo) {
     case 'quincenal': factor = 2; break;
     case 'semanal': factor = 4.33; break;
+    case 'decenal': factor = 3; break;
+    case 'diaria': factor = 30.4; break;
     case 'anual': factor = 1/12; break;
   }
   ingresoMensualizado = ingresoGravable * factor;
@@ -86,9 +267,9 @@ export function calculateISR(
   });
 
   // Step 2: Find bracket
-  const bracket = ISR_MONTHLY_BRACKETS.find(b =>
+  const bracket = brackets.find(b =>
     ingresoMensualizado >= b.limiteInferior && ingresoMensualizado <= b.limiteSuperior
-  ) || ISR_MONTHLY_BRACKETS[ISR_MONTHLY_BRACKETS.length - 1];
+  ) || brackets[brackets.length - 1];
 
   steps.push({
     step: 2,
@@ -129,17 +310,20 @@ export function calculateISR(
   });
 
   // Step 6: Calculate subsidy
-  const subsidyBracket = ISR_SUBSIDY_MONTHLY.find(s =>
-    ingresoMensualizado >= s.desde && ingresoMensualizado <= s.hasta
-  ) || { subsidio: 0 };
-  const subsidio = subsidyBracket.subsidio;
+  const subsidio = calculateSubsidy(ingresoMensualizado, year);
+
+  const subsidyDetails = year === 2024
+    ? (subsidio > 0 ? 'Sistema escalonado: Aplica subsidio' : 'Sistema escalonado: No aplica subsidio')
+    : (subsidio > 0 ? `Cuota fija: $${subsidio.toFixed(2)}` : 'Ingreso excede límite');
 
   steps.push({
     step: 6,
     description: 'Determinar subsidio al empleo',
-    formula: `Rango: $${ingresoMensualizado.toFixed(2)}`,
+    formula: year === 2024
+      ? `Rango: $${ingresoMensualizado.toFixed(2)}`
+      : `Ingreso ≤ $${year === 2025 ? ISR_2025_SUBSIDY_MONTHLY.maxIncome.toFixed(2) : ISR_2026_SUBSIDY_MONTHLY.maxIncome.toFixed(2)}`,
     result: subsidio,
-    details: subsidio > 0 ? 'Aplica subsidio' : 'No aplica subsidio'
+    details: subsidyDetails
   });
 
   // Step 7: Final ISR
@@ -169,6 +353,7 @@ export function calculateISR(
   return {
     ingresoGravable,
     periodo,
+    year,
     ingresoMensualizado,
     bracket,
     excedente,
