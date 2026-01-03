@@ -64,7 +64,7 @@ def test_isr_brackets_2026():
     """Test ISR brackets retrieval for 2026"""
     from catalogmx.calculators.isr import get_isr_brackets
 
-    brackets = get_isr_brackets(year=2026, periodo="mensual")
+    brackets = get_isr_brackets(2026, "mensual")
     assert len(brackets) > 0
     assert all("limiteInferior" in b for b in brackets)
     assert all("tasa" in b for b in brackets)
@@ -74,7 +74,7 @@ def test_resico_brackets_2026():
     """Test RESICO brackets retrieval for 2026"""
     from catalogmx.calculators.resico import get_resico_brackets
 
-    brackets = get_resico_brackets(year=2026, periodo="mensual")
+    brackets = get_resico_brackets(2026, "mensual")
     assert len(brackets) == 5  # 5 RESICO brackets
     assert all("limiteInferior" in b for b in brackets)
     assert all("tasa" in b for b in brackets)
