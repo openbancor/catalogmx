@@ -86,10 +86,129 @@ def test_subsidy_calculation():
     """Test subsidy calculation"""
     from catalogmx.calculators.isr import calculate_subsidy
 
-    # Low income should get subsidy
-    subsidy = calculate_subsidy(5000, year=2026)
-    assert subsidy >= 0
+    # Low income should get subsidy (2026 flat system)
+    subsidy_2026 = calculate_subsidy(5000, year=2026)
+    assert subsidy_2026 >= 0
 
     # High income should get no subsidy
-    subsidy = calculate_subsidy(50000, year=2026)
-    assert subsidy == 0
+    subsidy_high = calculate_subsidy(50000, year=2026)
+    assert subsidy_high == 0
+
+    # Test 2024 tiered system
+    subsidy_2024_low = calculate_subsidy(3000, year=2024)
+    assert subsidy_2024_low > 0  # Should get subsidy in 2024 tiered system
+
+    subsidy_2024_high = calculate_subsidy(50000, year=2024)
+    assert subsidy_2024_high == 0  # High income gets no subsidy
+
+    # Test 2025 flat system
+    subsidy_2025_low = calculate_subsidy(5000, year=2025)
+    assert subsidy_2025_low > 0
+
+
+def test_isr_calculation_2024():
+    """Test ISR calculation for 2024 (tiered subsidy)"""
+    from catalogmx.calculators.isr import calculate_isr
+
+    result = calculate_isr(10000, periodo="mensual", year=2024)
+    assert result["year"] == 2024
+    assert result["ingresoGravable"] == 10000
+    assert "isrFinal" in result
+    assert "subsidio" in result
+
+
+def test_isr_calculation_2025():
+    """Test ISR calculation for 2025 (flat subsidy)"""
+    from catalogmx.calculators.isr import calculate_isr
+
+    result = calculate_isr(10000, periodo="mensual", year=2025)
+    assert result["year"] == 2025
+    assert result["ingresoGravable"] == 10000
+    assert "isrFinal" in result
+
+
+def test_isr_different_periods():
+    """Test ISR calculation with different periods"""
+    from catalogmx.calculators.isr import calculate_isr
+
+    # Test quincenal
+    result_quincenal = calculate_isr(5000, periodo="quincenal", year=2026)
+    assert result_quincenal["periodo"] == "quincenal"
+    assert result_quincenal["ingresoGravable"] == 5000
+
+    # Test semanal
+    result_semanal = calculate_isr(2000, periodo="semanal", year=2026)
+    assert result_semanal["periodo"] == "semanal"
+    assert result_semanal["ingresoGravable"] == 2000
+
+    # Test anual
+    result_anual = calculate_isr(120000, periodo="anual", year=2026)
+    assert result_anual["periodo"] == "anual"
+    assert result_anual["ingresoGravable"] == 120000
+
+
+def test_isr_high_income_bracket():
+    """Test ISR with very high income to hit last bracket"""
+    from catalogmx.calculators.isr import calculate_isr
+
+    # Very high income to ensure we hit the last bracket
+    result = calculate_isr(500000, periodo="mensual", year=2026)
+    assert result["ingresoGravable"] == 500000
+    assert result["isrFinal"] > 0
+    assert result["tasaEfectiva"] > 0
+
+
+def test_resico_edge_cases():
+    """Test RESICO with edge cases"""
+    from catalogmx.calculators.resico import calculate_resico
+
+    # Minimum income
+    result_min = calculate_resico(0.01, periodo="mensual", year=2026)
+    assert result_min["resicoCalculado"] >= 0
+
+    # Income at bracket boundary
+    result_boundary = calculate_resico(25000, periodo="mensual", year=2026)
+    assert result_boundary["ingreso"] == 25000
+
+    # Annual period
+    result_annual = calculate_resico(1000000, periodo="anual", year=2026)
+    assert result_annual["periodo"] == "anual"
+    assert result_annual["dentroDeLimite"] is True
+
+    # Income exceeding limit
+    result_exceed = calculate_resico(400000, periodo="mensual", year=2026)
+    assert result_exceed["dentroDeLimite"] is False
+
+
+def test_isr_brackets_all_years():
+    """Test ISR brackets for all years"""
+    from catalogmx.calculators.isr import get_isr_brackets
+
+    # Test 2024
+    brackets_2024 = get_isr_brackets(2024, "mensual")
+    assert len(brackets_2024) > 0
+
+    # Test 2025
+    brackets_2025 = get_isr_brackets(2025, "mensual")
+    assert len(brackets_2025) > 0
+
+    # Test 2026
+    brackets_2026 = get_isr_brackets(2026, "mensual")
+    assert len(brackets_2026) > 0
+
+
+def test_resico_brackets_all_years():
+    """Test RESICO brackets for all years"""
+    from catalogmx.calculators.resico import get_resico_brackets
+
+    # Test 2024
+    brackets_2024 = get_resico_brackets(2024, "mensual")
+    assert len(brackets_2024) == 5
+
+    # Test 2025
+    brackets_2025 = get_resico_brackets(2025, "mensual")
+    assert len(brackets_2025) == 5
+
+    # Test 2026
+    brackets_2026 = get_resico_brackets(2026, "mensual")
+    assert len(brackets_2026) == 5
