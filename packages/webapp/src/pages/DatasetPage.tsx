@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AlertTriangle, Loader2, Search, ChevronLeft, ChevronRight, Database } from 'lucide-react';
+import { AlertTriangle, Loader2, Search, ChevronLeft, ChevronRight, Database, X } from 'lucide-react';
 import { datasetConfigs, type DatasetId, type DatasetConfig } from '@/data/datasets';
 import { queryJsonArrayTable, querySqlTable } from '@/lib/database';
 
@@ -27,13 +28,23 @@ const renderValue = (value: unknown): React.ReactNode => {
 
 export default function DatasetPage({ datasetId }: DatasetPageProps) {
   const config = datasetConfigs.find((d) => d.id === datasetId) as DatasetConfig | undefined;
-  const [search, setSearch] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Get search from URL, but clear it when datasetId changes
+  const [search, setSearch] = useState(searchParams.get('q') || '');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(100);
   const [rows, setRows] = useState<AnyRow[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Clear search when dataset changes
+  useEffect(() => {
+    setSearch('');
+    setSearchParams({});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [datasetId]);
 
   if (!config) {
     return (
@@ -113,9 +124,26 @@ export default function DatasetPage({ datasetId }: DatasetPageProps) {
                 placeholder="Buscar (sin acentos)..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && load(1)}
-                className="pl-10"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    setSearchParams(search ? { q: search } : {});
+                    load(1);
+                  }
+                }}
+                className="pl-10 pr-10"
               />
+              {search && (
+                <button
+                  onClick={() => {
+                    setSearch('');
+                    setSearchParams({});
+                    load(1);
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
             <div className="flex items-center gap-2">
               <label className="text-xs text-muted-foreground">Filas/página</label>
@@ -136,7 +164,10 @@ export default function DatasetPage({ datasetId }: DatasetPageProps) {
                 ))}
               </select>
             </div>
-            <Button onClick={() => load(1)} disabled={loading}>
+            <Button onClick={() => {
+              setSearchParams(search ? { q: search } : {});
+              load(1);
+            }} disabled={loading}>
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Buscar'}
             </Button>
           </div>
