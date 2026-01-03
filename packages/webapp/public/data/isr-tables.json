@@ -1,0 +1,252 @@
+{
+  "metadata": {
+    "description": "Tablas ISR México - Impuesto Sobre la Renta",
+    "source": "Anexo 8 RMF (Resolución Miscelánea Fiscal)",
+    "currency": "MXN",
+    "years": [2024, 2025, 2026]
+  },
+  "subsidies": {
+    "2024": {
+      "type": "tiered",
+      "description": "Sistema escalonado con 11 rangos de ingreso",
+      "monthly": [
+        {"desde": 0.01, "hasta": 1768.96, "subsidio": 407.02},
+        {"desde": 1768.97, "hasta": 2653.38, "subsidio": 406.83},
+        {"desde": 2653.39, "hasta": 3472.84, "subsidio": 406.62},
+        {"desde": 3472.85, "hasta": 3537.87, "subsidio": 392.77},
+        {"desde": 3537.88, "hasta": 4446.15, "subsidio": 382.46},
+        {"desde": 4446.16, "hasta": 4717.18, "subsidio": 354.23},
+        {"desde": 4717.19, "hasta": 5335.42, "subsidio": 324.87},
+        {"desde": 5335.43, "hasta": 6224.67, "subsidio": 294.63},
+        {"desde": 6224.68, "hasta": 7113.90, "subsidio": 253.54},
+        {"desde": 7113.91, "hasta": 7382.33, "subsidio": 217.61},
+        {"desde": 7382.34, "hasta": null, "subsidio": 0}
+      ]
+    },
+    "2025": {
+      "type": "flat",
+      "description": "Cuota fija - Decreto mayo 2024",
+      "monthly": {
+        "amount": 475.00,
+        "maxIncome": 10171.00
+      }
+    },
+    "2026": {
+      "type": "flat",
+      "description": "Cuota fija - 15.02% del UMA mensual",
+      "monthly": {
+        "amount": 536.21,
+        "maxIncome": 11492.66
+      }
+    }
+  },
+  "brackets": {
+    "2024": {
+      "inflationFactor": 1.0,
+      "description": "Tarifas base",
+      "daily": [
+        {"limiteInferior": 0.01, "limiteSuperior": 24.54, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 24.55, "limiteSuperior": 208.29, "cuotaFija": 0.47, "tasa": 6.40},
+        {"limiteInferior": 208.30, "limiteSuperior": 366.07, "cuotaFija": 12.23, "tasa": 10.88},
+        {"limiteInferior": 366.08, "limiteSuperior": 425.52, "cuotaFija": 29.39, "tasa": 16.00},
+        {"limiteInferior": 425.53, "limiteSuperior": 509.40, "cuotaFija": 38.90, "tasa": 17.92},
+        {"limiteInferior": 509.41, "limiteSuperior": 1027.84, "cuotaFija": 53.94, "tasa": 21.36},
+        {"limiteInferior": 1027.85, "limiteSuperior": 1619.19, "cuotaFija": 164.61, "tasa": 23.52},
+        {"limiteInferior": 1619.20, "limiteSuperior": 3092.09, "cuotaFija": 303.70, "tasa": 30.00},
+        {"limiteInferior": 3092.10, "limiteSuperior": 4122.78, "cuotaFija": 745.57, "tasa": 32.00},
+        {"limiteInferior": 4122.79, "limiteSuperior": 12368.35, "cuotaFija": 1075.39, "tasa": 34.00},
+        {"limiteInferior": 12368.36, "limiteSuperior": null, "cuotaFija": 3878.90, "tasa": 35.00}
+      ],
+      "weekly": [
+        {"limiteInferior": 0.01, "limiteSuperior": 171.78, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 171.79, "limiteSuperior": 1458.03, "cuotaFija": 3.29, "tasa": 6.40},
+        {"limiteInferior": 1458.04, "limiteSuperior": 2562.49, "cuotaFija": 85.61, "tasa": 10.88},
+        {"limiteInferior": 2562.50, "limiteSuperior": 2978.64, "cuotaFija": 205.73, "tasa": 16.00},
+        {"limiteInferior": 2978.65, "limiteSuperior": 3565.80, "cuotaFija": 272.30, "tasa": 17.92},
+        {"limiteInferior": 3565.81, "limiteSuperior": 7194.88, "cuotaFija": 377.58, "tasa": 21.36},
+        {"limiteInferior": 7194.89, "limiteSuperior": 11334.33, "cuotaFija": 1152.27, "tasa": 23.52},
+        {"limiteInferior": 11334.34, "limiteSuperior": 21644.63, "cuotaFija": 2125.90, "tasa": 30.00},
+        {"limiteInferior": 21644.64, "limiteSuperior": 28859.46, "cuotaFija": 5218.99, "tasa": 32.00},
+        {"limiteInferior": 28859.47, "limiteSuperior": 86578.45, "cuotaFija": 7527.73, "tasa": 34.00},
+        {"limiteInferior": 86578.46, "limiteSuperior": null, "cuotaFija": 27152.30, "tasa": 35.00}
+      ],
+      "biweekly": [
+        {"limiteInferior": 0.01, "limiteSuperior": 368.10, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 368.11, "limiteSuperior": 3124.35, "cuotaFija": 7.07, "tasa": 6.40},
+        {"limiteInferior": 3124.36, "limiteSuperior": 5490.84, "cuotaFija": 183.45, "tasa": 10.88},
+        {"limiteInferior": 5490.85, "limiteSuperior": 6382.20, "cuotaFija": 440.69, "tasa": 16.00},
+        {"limiteInferior": 6382.21, "limiteSuperior": 7641.95, "cuotaFija": 583.31, "tasa": 17.92},
+        {"limiteInferior": 7641.96, "limiteSuperior": 15417.60, "cuotaFija": 808.87, "tasa": 21.36},
+        {"limiteInferior": 15417.61, "limiteSuperior": 24290.70, "cuotaFija": 2469.47, "tasa": 23.52},
+        {"limiteInferior": 24290.71, "limiteSuperior": 46381.71, "cuotaFija": 4554.23, "tasa": 30.00},
+        {"limiteInferior": 46381.72, "limiteSuperior": 61842.57, "cuotaFija": 11181.54, "tasa": 32.00},
+        {"limiteInferior": 61842.58, "limiteSuperior": 185527.61, "cuotaFija": 16128.81, "tasa": 34.00},
+        {"limiteInferior": 185527.62, "limiteSuperior": null, "cuotaFija": 58181.52, "tasa": 35.00}
+      ],
+      "monthly": [
+        {"limiteInferior": 0.01, "limiteSuperior": 746.04, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 746.05, "limiteSuperior": 6332.05, "cuotaFija": 14.32, "tasa": 6.40},
+        {"limiteInferior": 6332.06, "limiteSuperior": 11128.01, "cuotaFija": 371.83, "tasa": 10.88},
+        {"limiteInferior": 11128.02, "limiteSuperior": 12935.82, "cuotaFija": 893.63, "tasa": 16.00},
+        {"limiteInferior": 12935.83, "limiteSuperior": 15487.71, "cuotaFija": 1182.88, "tasa": 17.92},
+        {"limiteInferior": 15487.72, "limiteSuperior": 31236.49, "cuotaFija": 1640.18, "tasa": 21.36},
+        {"limiteInferior": 31236.50, "limiteSuperior": 49233.00, "cuotaFija": 5004.12, "tasa": 23.52},
+        {"limiteInferior": 49233.01, "limiteSuperior": 93993.90, "cuotaFija": 9236.89, "tasa": 30.00},
+        {"limiteInferior": 93993.91, "limiteSuperior": 125325.20, "cuotaFija": 22665.17, "tasa": 32.00},
+        {"limiteInferior": 125325.21, "limiteSuperior": 375975.61, "cuotaFija": 32691.18, "tasa": 34.00},
+        {"limiteInferior": 375975.62, "limiteSuperior": null, "cuotaFija": 117912.32, "tasa": 35.00}
+      ],
+      "annual": [
+        {"limiteInferior": 0.01, "limiteSuperior": 8952.49, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 8952.50, "limiteSuperior": 75984.55, "cuotaFija": 171.88, "tasa": 6.40},
+        {"limiteInferior": 75984.56, "limiteSuperior": 133536.07, "cuotaFija": 4461.94, "tasa": 10.88},
+        {"limiteInferior": 133536.08, "limiteSuperior": 155229.80, "cuotaFija": 10723.55, "tasa": 16.00},
+        {"limiteInferior": 155229.81, "limiteSuperior": 185852.57, "cuotaFija": 14194.54, "tasa": 17.92},
+        {"limiteInferior": 185852.58, "limiteSuperior": 374837.88, "cuotaFija": 19682.13, "tasa": 21.36},
+        {"limiteInferior": 374837.89, "limiteSuperior": 590796.00, "cuotaFija": 60049.40, "tasa": 23.52},
+        {"limiteInferior": 590796.01, "limiteSuperior": 1127926.84, "cuotaFija": 110842.74, "tasa": 30.00},
+        {"limiteInferior": 1127926.85, "limiteSuperior": 1503902.46, "cuotaFija": 271981.98, "tasa": 32.00},
+        {"limiteInferior": 1503902.47, "limiteSuperior": 4511707.37, "cuotaFija": 392294.23, "tasa": 34.00},
+        {"limiteInferior": 4511707.38, "limiteSuperior": null, "cuotaFija": 1414947.90, "tasa": 35.00}
+      ]
+    },
+    "2025": {
+      "inflationFactor": 1.0,
+      "description": "Tarifas iguales a 2024 (inflación < 10%)",
+      "daily": [
+        {"limiteInferior": 0.01, "limiteSuperior": 24.54, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 24.55, "limiteSuperior": 208.29, "cuotaFija": 0.47, "tasa": 6.40},
+        {"limiteInferior": 208.30, "limiteSuperior": 366.07, "cuotaFija": 12.23, "tasa": 10.88},
+        {"limiteInferior": 366.08, "limiteSuperior": 425.52, "cuotaFija": 29.39, "tasa": 16.00},
+        {"limiteInferior": 425.53, "limiteSuperior": 509.40, "cuotaFija": 38.90, "tasa": 17.92},
+        {"limiteInferior": 509.41, "limiteSuperior": 1027.84, "cuotaFija": 53.94, "tasa": 21.36},
+        {"limiteInferior": 1027.85, "limiteSuperior": 1619.19, "cuotaFija": 164.61, "tasa": 23.52},
+        {"limiteInferior": 1619.20, "limiteSuperior": 3092.09, "cuotaFija": 303.70, "tasa": 30.00},
+        {"limiteInferior": 3092.10, "limiteSuperior": 4122.78, "cuotaFija": 745.57, "tasa": 32.00},
+        {"limiteInferior": 4122.79, "limiteSuperior": 12368.35, "cuotaFija": 1075.39, "tasa": 34.00},
+        {"limiteInferior": 12368.36, "limiteSuperior": null, "cuotaFija": 3878.90, "tasa": 35.00}
+      ],
+      "weekly": [
+        {"limiteInferior": 0.01, "limiteSuperior": 171.78, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 171.79, "limiteSuperior": 1458.03, "cuotaFija": 3.29, "tasa": 6.40},
+        {"limiteInferior": 1458.04, "limiteSuperior": 2562.49, "cuotaFija": 85.61, "tasa": 10.88},
+        {"limiteInferior": 2562.50, "limiteSuperior": 2978.64, "cuotaFija": 205.73, "tasa": 16.00},
+        {"limiteInferior": 2978.65, "limiteSuperior": 3565.80, "cuotaFija": 272.30, "tasa": 17.92},
+        {"limiteInferior": 3565.81, "limiteSuperior": 7194.88, "cuotaFija": 377.58, "tasa": 21.36},
+        {"limiteInferior": 7194.89, "limiteSuperior": 11334.33, "cuotaFija": 1152.27, "tasa": 23.52},
+        {"limiteInferior": 11334.34, "limiteSuperior": 21644.63, "cuotaFija": 2125.90, "tasa": 30.00},
+        {"limiteInferior": 21644.64, "limiteSuperior": 28859.46, "cuotaFija": 5218.99, "tasa": 32.00},
+        {"limiteInferior": 28859.47, "limiteSuperior": 86578.45, "cuotaFija": 7527.73, "tasa": 34.00},
+        {"limiteInferior": 86578.46, "limiteSuperior": null, "cuotaFija": 27152.30, "tasa": 35.00}
+      ],
+      "biweekly": [
+        {"limiteInferior": 0.01, "limiteSuperior": 368.10, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 368.11, "limiteSuperior": 3124.35, "cuotaFija": 7.07, "tasa": 6.40},
+        {"limiteInferior": 3124.36, "limiteSuperior": 5490.84, "cuotaFija": 183.45, "tasa": 10.88},
+        {"limiteInferior": 5490.85, "limiteSuperior": 6382.20, "cuotaFija": 440.69, "tasa": 16.00},
+        {"limiteInferior": 6382.21, "limiteSuperior": 7641.95, "cuotaFija": 583.31, "tasa": 17.92},
+        {"limiteInferior": 7641.96, "limiteSuperior": 15417.60, "cuotaFija": 808.87, "tasa": 21.36},
+        {"limiteInferior": 15417.61, "limiteSuperior": 24290.70, "cuotaFija": 2469.47, "tasa": 23.52},
+        {"limiteInferior": 24290.71, "limiteSuperior": 46381.71, "cuotaFija": 4554.23, "tasa": 30.00},
+        {"limiteInferior": 46381.72, "limiteSuperior": 61842.57, "cuotaFija": 11181.54, "tasa": 32.00},
+        {"limiteInferior": 61842.58, "limiteSuperior": 185527.61, "cuotaFija": 16128.81, "tasa": 34.00},
+        {"limiteInferior": 185527.62, "limiteSuperior": null, "cuotaFija": 58181.52, "tasa": 35.00}
+      ],
+      "monthly": [
+        {"limiteInferior": 0.01, "limiteSuperior": 746.04, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 746.05, "limiteSuperior": 6332.05, "cuotaFija": 14.32, "tasa": 6.40},
+        {"limiteInferior": 6332.06, "limiteSuperior": 11128.01, "cuotaFija": 371.83, "tasa": 10.88},
+        {"limiteInferior": 11128.02, "limiteSuperior": 12935.82, "cuotaFija": 893.63, "tasa": 16.00},
+        {"limiteInferior": 12935.83, "limiteSuperior": 15487.71, "cuotaFija": 1182.88, "tasa": 17.92},
+        {"limiteInferior": 15487.72, "limiteSuperior": 31236.49, "cuotaFija": 1640.18, "tasa": 21.36},
+        {"limiteInferior": 31236.50, "limiteSuperior": 49233.00, "cuotaFija": 5004.12, "tasa": 23.52},
+        {"limiteInferior": 49233.01, "limiteSuperior": 93993.90, "cuotaFija": 9236.89, "tasa": 30.00},
+        {"limiteInferior": 93993.91, "limiteSuperior": 125325.20, "cuotaFija": 22665.17, "tasa": 32.00},
+        {"limiteInferior": 125325.21, "limiteSuperior": 375975.61, "cuotaFija": 32691.18, "tasa": 34.00},
+        {"limiteInferior": 375975.62, "limiteSuperior": null, "cuotaFija": 117912.32, "tasa": 35.00}
+      ],
+      "annual": [
+        {"limiteInferior": 0.01, "limiteSuperior": 8952.49, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 8952.50, "limiteSuperior": 75984.55, "cuotaFija": 171.88, "tasa": 6.40},
+        {"limiteInferior": 75984.56, "limiteSuperior": 133536.07, "cuotaFija": 4461.94, "tasa": 10.88},
+        {"limiteInferior": 133536.08, "limiteSuperior": 155229.80, "cuotaFija": 10723.55, "tasa": 16.00},
+        {"limiteInferior": 155229.81, "limiteSuperior": 185852.57, "cuotaFija": 14194.54, "tasa": 17.92},
+        {"limiteInferior": 185852.58, "limiteSuperior": 374837.88, "cuotaFija": 19682.13, "tasa": 21.36},
+        {"limiteInferior": 374837.89, "limiteSuperior": 590796.00, "cuotaFija": 60049.40, "tasa": 23.52},
+        {"limiteInferior": 590796.01, "limiteSuperior": 1127926.84, "cuotaFija": 110842.74, "tasa": 30.00},
+        {"limiteInferior": 1127926.85, "limiteSuperior": 1503902.46, "cuotaFija": 271981.98, "tasa": 32.00},
+        {"limiteInferior": 1503902.47, "limiteSuperior": 4511707.37, "cuotaFija": 392294.23, "tasa": 34.00},
+        {"limiteInferior": 4511707.38, "limiteSuperior": null, "cuotaFija": 1414947.90, "tasa": 35.00}
+      ]
+    },
+    "2026": {
+      "inflationFactor": 1.1321,
+      "description": "Tarifas actualizadas 13.21% por inflación acumulada",
+      "daily": [
+        {"limiteInferior": 0.01, "limiteSuperior": 27.78, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 27.79, "limiteSuperior": 235.81, "cuotaFija": 0.53, "tasa": 6.40},
+        {"limiteInferior": 235.82, "limiteSuperior": 414.41, "cuotaFija": 13.85, "tasa": 10.88},
+        {"limiteInferior": 414.42, "limiteSuperior": 481.73, "cuotaFija": 33.28, "tasa": 16.00},
+        {"limiteInferior": 481.74, "limiteSuperior": 576.76, "cuotaFija": 44.05, "tasa": 17.92},
+        {"limiteInferior": 576.77, "limiteSuperior": 1163.25, "cuotaFija": 61.08, "tasa": 21.36},
+        {"limiteInferior": 1163.26, "limiteSuperior": 1833.44, "cuotaFija": 186.35, "tasa": 23.52},
+        {"limiteInferior": 1833.45, "limiteSuperior": 3500.35, "cuotaFija": 343.98, "tasa": 30.00},
+        {"limiteInferior": 3500.36, "limiteSuperior": 4667.13, "cuotaFija": 844.05, "tasa": 32.00},
+        {"limiteInferior": 4667.14, "limiteSuperior": 14001.38, "cuotaFija": 1217.42, "tasa": 34.00},
+        {"limiteInferior": 14001.39, "limiteSuperior": null, "cuotaFija": 4391.07, "tasa": 35.00}
+      ],
+      "weekly": [
+        {"limiteInferior": 0.01, "limiteSuperior": 194.46, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 194.47, "limiteSuperior": 1650.67, "cuotaFija": 3.71, "tasa": 6.40},
+        {"limiteInferior": 1650.68, "limiteSuperior": 2900.87, "cuotaFija": 96.95, "tasa": 10.88},
+        {"limiteInferior": 2900.88, "limiteSuperior": 3372.11, "cuotaFija": 232.96, "tasa": 16.00},
+        {"limiteInferior": 3372.12, "limiteSuperior": 4037.32, "cuotaFija": 308.35, "tasa": 17.92},
+        {"limiteInferior": 4037.33, "limiteSuperior": 8142.75, "cuotaFija": 427.56, "tasa": 21.36},
+        {"limiteInferior": 8142.76, "limiteSuperior": 12834.08, "cuotaFija": 1304.45, "tasa": 23.52},
+        {"limiteInferior": 12834.09, "limiteSuperior": 24502.45, "cuotaFija": 2407.86, "tasa": 30.00},
+        {"limiteInferior": 24502.46, "limiteSuperior": 32669.91, "cuotaFija": 5908.35, "tasa": 32.00},
+        {"limiteInferior": 32669.92, "limiteSuperior": 98009.66, "cuotaFija": 8521.94, "tasa": 34.00},
+        {"limiteInferior": 98009.67, "limiteSuperior": null, "cuotaFija": 30737.49, "tasa": 35.00}
+      ],
+      "biweekly": [
+        {"limiteInferior": 0.01, "limiteSuperior": 416.70, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 416.71, "limiteSuperior": 3537.15, "cuotaFija": 7.95, "tasa": 6.40},
+        {"limiteInferior": 3537.16, "limiteSuperior": 6216.15, "cuotaFija": 207.75, "tasa": 10.88},
+        {"limiteInferior": 6216.16, "limiteSuperior": 7225.95, "cuotaFija": 499.20, "tasa": 16.00},
+        {"limiteInferior": 7225.96, "limiteSuperior": 8651.40, "cuotaFija": 660.75, "tasa": 17.92},
+        {"limiteInferior": 8651.41, "limiteSuperior": 17448.75, "cuotaFija": 916.20, "tasa": 21.36},
+        {"limiteInferior": 17448.76, "limiteSuperior": 27501.60, "cuotaFija": 2795.25, "tasa": 23.52},
+        {"limiteInferior": 27501.61, "limiteSuperior": 52505.25, "cuotaFija": 5159.70, "tasa": 30.00},
+        {"limiteInferior": 52505.26, "limiteSuperior": 70006.95, "cuotaFija": 12660.75, "tasa": 32.00},
+        {"limiteInferior": 70006.96, "limiteSuperior": 210020.70, "cuotaFija": 18261.30, "tasa": 34.00},
+        {"limiteInferior": 210020.71, "limiteSuperior": null, "cuotaFija": 65866.05, "tasa": 35.00}
+      ],
+      "monthly": [
+        {"limiteInferior": 0.01, "limiteSuperior": 844.59, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 844.60, "limiteSuperior": 7168.51, "cuotaFija": 16.22, "tasa": 6.40},
+        {"limiteInferior": 7168.52, "limiteSuperior": 12598.02, "cuotaFija": 420.95, "tasa": 10.88},
+        {"limiteInferior": 12598.03, "limiteSuperior": 14644.64, "cuotaFija": 1011.68, "tasa": 16.00},
+        {"limiteInferior": 14644.65, "limiteSuperior": 17533.64, "cuotaFija": 1339.14, "tasa": 17.92},
+        {"limiteInferior": 17533.65, "limiteSuperior": 35362.83, "cuotaFija": 1856.84, "tasa": 21.36},
+        {"limiteInferior": 35362.84, "limiteSuperior": 55736.68, "cuotaFija": 5665.16, "tasa": 23.52},
+        {"limiteInferior": 55736.69, "limiteSuperior": 106410.50, "cuotaFija": 10457.09, "tasa": 30.00},
+        {"limiteInferior": 106410.51, "limiteSuperior": 141880.66, "cuotaFija": 25659.23, "tasa": 32.00},
+        {"limiteInferior": 141880.67, "limiteSuperior": 425641.99, "cuotaFija": 37009.69, "tasa": 34.00},
+        {"limiteInferior": 425642.00, "limiteSuperior": null, "cuotaFija": 133488.54, "tasa": 35.00}
+      ],
+      "annual": [
+        {"limiteInferior": 0.01, "limiteSuperior": 10135.11, "cuotaFija": 0.00, "tasa": 1.92},
+        {"limiteInferior": 10135.12, "limiteSuperior": 86022.12, "cuotaFija": 194.59, "tasa": 6.40},
+        {"limiteInferior": 86022.13, "limiteSuperior": 151176.24, "cuotaFija": 5051.37, "tasa": 10.88},
+        {"limiteInferior": 151176.25, "limiteSuperior": 175735.68, "cuotaFija": 12140.13, "tasa": 16.00},
+        {"limiteInferior": 175735.69, "limiteSuperior": 210403.68, "cuotaFija": 16069.64, "tasa": 17.92},
+        {"limiteInferior": 210403.69, "limiteSuperior": 424353.96, "cuotaFija": 22282.10, "tasa": 21.36},
+        {"limiteInferior": 424353.97, "limiteSuperior": 668840.16, "cuotaFija": 67981.98, "tasa": 23.52},
+        {"limiteInferior": 668840.17, "limiteSuperior": 1276926.00, "cuotaFija": 125485.08, "tasa": 30.00},
+        {"limiteInferior": 1276926.01, "limiteSuperior": 1702567.92, "cuotaFija": 307910.82, "tasa": 32.00},
+        {"limiteInferior": 1702567.93, "limiteSuperior": 5107703.88, "cuotaFija": 444116.23, "tasa": 34.00},
+        {"limiteInferior": 5107703.89, "limiteSuperior": null, "cuotaFija": 1601862.48, "tasa": 35.00}
+      ]
+    }
+  }
+}

@@ -2,23 +2,31 @@
  * Mexican Tax Calculators with step-by-step breakdown
  * Supports multiple years: 2024, 2025, 2026
  * Uses official tax tables from Anexo 8 RMF
+ * Data loaded from centralized JSON (shared across platforms)
  */
 
-import {
-  ISR_2026_DAILY,
-  ISR_2026_WEEKLY,
-  ISR_2026_BIWEEKLY,
-  ISR_2026_MONTHLY,
-  ISR_2026_ANNUAL,
-  type ISRBracket
-} from './isr-tables-2026';
+import isrTablesData from '../../shared-data/isr-tables.json';
 
 export type ISRYear = 2024 | 2025 | 2026;
 export type ISRPeriod = 'diaria' | 'semanal' | 'decenal' | 'quincenal' | 'mensual' | 'anual';
 
+export interface ISRBracket {
+  limiteInferior: number;
+  limiteSuperior: number;
+  cuotaFija: number;
+  tasa: number;
+}
+
+interface ISRBracketJSON {
+  limiteInferior: number;
+  limiteSuperior: number | null;
+  cuotaFija: number;
+  tasa: number;
+}
+
 interface ISRSubsidyBracket {
   desde: number;
-  hasta: number;
+  hasta: number | null;
   subsidio: number;
 }
 
@@ -27,81 +35,51 @@ interface ISRSubsidyFlat {
   maxIncome: number;
 }
 
-// ISR 2024 Monthly brackets
-const ISR_2024_MONTHLY_BRACKETS: ISRBracket[] = [
-  { limiteInferior: 0.01, limiteSuperior: 746.04, cuotaFija: 0, tasa: 1.92 },
-  { limiteInferior: 746.05, limiteSuperior: 6332.05, cuotaFija: 14.32, tasa: 6.40 },
-  { limiteInferior: 6332.06, limiteSuperior: 11128.01, cuotaFija: 371.83, tasa: 10.88 },
-  { limiteInferior: 11128.02, limiteSuperior: 12935.82, cuotaFija: 893.63, tasa: 16.00 },
-  { limiteInferior: 12935.83, limiteSuperior: 15487.71, cuotaFija: 1182.88, tasa: 17.92 },
-  { limiteInferior: 15487.72, limiteSuperior: 31236.49, cuotaFija: 1640.18, tasa: 21.36 },
-  { limiteInferior: 31236.50, limiteSuperior: 49233.00, cuotaFija: 5004.12, tasa: 23.52 },
-  { limiteInferior: 49233.01, limiteSuperior: 93993.90, cuotaFija: 9236.89, tasa: 30.00 },
-  { limiteInferior: 93993.91, limiteSuperior: 125325.20, cuotaFija: 22665.17, tasa: 32.00 },
-  { limiteInferior: 125325.21, limiteSuperior: 375975.61, cuotaFija: 32691.18, tasa: 34.00 },
-  { limiteInferior: 375975.62, limiteSuperior: Infinity, cuotaFija: 117912.32, tasa: 35.00 }
-];
-
-// ISR 2025 Monthly brackets (same as 2024 - no inflation adjustment)
-const ISR_2025_MONTHLY_BRACKETS: ISRBracket[] = ISR_2024_MONTHLY_BRACKETS;
-
-// ISR Subsidy (subsidio al empleo) 2024 monthly - tiered system
-const ISR_2024_SUBSIDY_MONTHLY: ISRSubsidyBracket[] = [
-  { desde: 0.01, hasta: 1768.96, subsidio: 407.02 },
-  { desde: 1768.97, hasta: 2653.38, subsidio: 406.83 },
-  { desde: 2653.39, hasta: 3472.84, subsidio: 406.62 },
-  { desde: 3472.85, hasta: 3537.87, subsidio: 392.77 },
-  { desde: 3537.88, hasta: 4446.15, subsidio: 382.46 },
-  { desde: 4446.16, hasta: 4717.18, subsidio: 354.23 },
-  { desde: 4717.19, hasta: 5335.42, subsidio: 324.87 },
-  { desde: 5335.43, hasta: 6224.67, subsidio: 294.63 },
-  { desde: 6224.68, hasta: 7113.90, subsidio: 253.54 },
-  { desde: 7113.91, hasta: 7382.33, subsidio: 217.61 },
-  { desde: 7382.34, hasta: Infinity, subsidio: 0 }
-];
-
-// ISR Subsidy 2025 - flat amount system (Decree May 2024)
-const ISR_2025_SUBSIDY_MONTHLY: ISRSubsidyFlat = {
-  amount: 475.00,
-  maxIncome: 10171.00
-};
-
-// ISR Subsidy 2026 - flat amount system (15.02% of monthly UMA)
-const ISR_2026_SUBSIDY_MONTHLY: ISRSubsidyFlat = {
-  amount: 536.21,
-  maxIncome: 11492.66
+// Map JSON period names to ISRPeriod type
+const periodMapping: Record<ISRPeriod, string> = {
+  'diaria': 'daily',
+  'semanal': 'weekly',
+  'decenal': 'monthly', // No specific decenal table in JSON, use monthly
+  'quincenal': 'biweekly',
+  'mensual': 'monthly',
+  'anual': 'annual'
 };
 
 // Helper to get brackets for a specific year and period
 function getISRBrackets(year: ISRYear, period: ISRPeriod): ISRBracket[] {
-  // For 2026, use official tables for each period
-  if (year === 2026) {
-    switch (period) {
-      case 'diaria': return ISR_2026_DAILY;
-      case 'semanal': return ISR_2026_WEEKLY;
-      case 'quincenal': return ISR_2026_BIWEEKLY;
-      case 'mensual': return ISR_2026_MONTHLY;
-      case 'anual': return ISR_2026_ANNUAL;
-      case 'decenal': return ISR_2026_MONTHLY; // Fallback to monthly, rare use case
-    }
-  }
+  const yearStr = year.toString() as '2024' | '2025' | '2026';
+  const periodKey = periodMapping[period];
 
-  // For 2024/2025, use monthly table (will convert with factors)
-  if (year === 2025) return ISR_2025_MONTHLY_BRACKETS;
-  return ISR_2024_MONTHLY_BRACKETS;
+  // Access the brackets data with proper typing
+  const yearData = isrTablesData.brackets[yearStr];
+  const periodData = yearData[periodKey as 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'annual'] as ISRBracketJSON[];
+
+  // Convert null to Infinity for limiteSuperior
+  return periodData.map((b: ISRBracketJSON) => ({
+    limiteInferior: b.limiteInferior,
+    limiteSuperior: b.limiteSuperior === null ? Infinity : b.limiteSuperior,
+    cuotaFija: b.cuotaFija,
+    tasa: b.tasa
+  }));
 }
 
 // Helper to calculate subsidy for a specific year
 function calculateSubsidy(income: number, year: ISRYear): number {
-  if (year === 2024) {
-    const bracket = ISR_2024_SUBSIDY_MONTHLY.find(s =>
-      income >= s.desde && income <= s.hasta
-    );
+  const yearStr = year.toString() as '2024' | '2025' | '2026';
+  const subsidyData = isrTablesData.subsidies[yearStr];
+
+  if (subsidyData.type === 'tiered') {
+    // 2024: tiered system
+    const monthlyData = subsidyData.monthly as unknown as ISRSubsidyBracket[];
+    const bracket = monthlyData.find((s: ISRSubsidyBracket) => {
+      const hasta = s.hasta === null ? Infinity : s.hasta;
+      return income >= s.desde && income <= hasta;
+    });
     return bracket?.subsidio || 0;
-  } else if (year === 2025) {
-    return income <= ISR_2025_SUBSIDY_MONTHLY.maxIncome ? ISR_2025_SUBSIDY_MONTHLY.amount : 0;
-  } else { // 2026
-    return income <= ISR_2026_SUBSIDY_MONTHLY.maxIncome ? ISR_2026_SUBSIDY_MONTHLY.amount : 0;
+  } else {
+    // 2025/2026: flat system
+    const flatData = subsidyData.monthly as unknown as ISRSubsidyFlat;
+    return income <= flatData.maxIncome ? flatData.amount : 0;
   }
 }
 
@@ -312,6 +290,10 @@ export function calculateISR(
   // Step 6: Calculate subsidy
   const subsidio = calculateSubsidy(ingresoMensualizado, year);
 
+  const yearStr = year.toString() as '2024' | '2025' | '2026';
+  const subsidyData = isrTablesData.subsidies[yearStr];
+  const maxIncome = subsidyData.type === 'flat' ? (subsidyData.monthly as unknown as ISRSubsidyFlat).maxIncome : 7382.33;
+
   const subsidyDetails = year === 2024
     ? (subsidio > 0 ? 'Sistema escalonado: Aplica subsidio' : 'Sistema escalonado: No aplica subsidio')
     : (subsidio > 0 ? `Cuota fija: $${subsidio.toFixed(2)}` : 'Ingreso excede límite');
@@ -321,7 +303,7 @@ export function calculateISR(
     description: 'Determinar subsidio al empleo',
     formula: year === 2024
       ? `Rango: $${ingresoMensualizado.toFixed(2)}`
-      : `Ingreso ≤ $${year === 2025 ? ISR_2025_SUBSIDY_MONTHLY.maxIncome.toFixed(2) : ISR_2026_SUBSIDY_MONTHLY.maxIncome.toFixed(2)}`,
+      : `Ingreso ≤ $${maxIncome.toFixed(2)}`,
     result: subsidio,
     details: subsidyDetails
   });
