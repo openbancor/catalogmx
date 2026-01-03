@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useLocale } from '@/lib/locale';
 import { Download, Github, BookOpen, Calculator, CheckCircle2, Database, TrendingUp, MapPin, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import SEOHead from '@/components/SEOHead';
 
 const formatBytes = (bytes: number): string => {
   if (!bytes) return '-';
@@ -100,7 +101,9 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="space-y-8 pb-10">
+    <>
+      <SEOHead />
+      <div className="space-y-8 pb-10">
       {/* Hero Section */}
       <section className="flex flex-col gap-6 lg:grid lg:grid-cols-[1.6fr,1fr] xl:grid-cols-[2fr,1fr]">
         <Card className="border-none bg-gradient-to-br from-zinc-900 to-zinc-800 dark:from-zinc-900 dark:to-black text-white shadow-xl overflow-hidden flex flex-col justify-center min-h-[300px] relative">
@@ -273,6 +276,7 @@ export default function HomePage() {
           </CardContent>
         </Card>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

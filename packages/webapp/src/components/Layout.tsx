@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { navigation } from '@/lib/routes';
 import MobileNav from '@/components/MobileNav';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { datasetConfigs, DATASET_CATEGORIES, getDatasetsByCategory } from '@/data/datasets';
 import { useLocale } from '@/lib/locale';
 
@@ -261,6 +262,7 @@ export default function Layout() {
 
         <div className="p-4 sm:p-6 lg:p-8">
           <div className="mx-auto w-full max-w-7xl">
+            <Breadcrumbs />
             <Outlet />
           </div>
         </div>
