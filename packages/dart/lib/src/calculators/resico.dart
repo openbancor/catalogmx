@@ -27,8 +27,8 @@ enum RESICOPeriod {
   mensual('mensual'),
   anual('anual');
 
-  const RESICOPeriod(this.name);
-  final String name;
+  const RESICOPeriod(this.value);
+  final String value;
 }
 
 /// RESICO tax bracket structure (simplified - no cuota fija)
@@ -126,7 +126,7 @@ class RESICOCalculator {
       RESICOYear year, RESICOPeriod period) {
     final tables = _loadRESICOTables();
     final yearStr = year.value.toString();
-    final periodKey = period.name;
+    final periodKey = period.value;
 
     final brackets = tables['brackets']![yearStr]![periodKey] as List;
     return brackets.map((b) => RESICOBracket.fromJson(b)).toList();
@@ -191,7 +191,7 @@ class RESICOCalculator {
 
     return RESICOCalculationResult(
       ingreso: ingreso,
-      periodo: periodo.name,
+      periodo: periodo.value,
       year: year.value,
       limiteMaximo: limiteMaximo,
       dentroDeLimite: dentroDeLimite,

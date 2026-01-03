@@ -27,8 +27,8 @@ enum ISRPeriod {
   mensual('mensual', 'monthly', 1.0),
   anual('anual', 'annual', 1 / 12);
 
-  const ISRPeriod(this.name, this.jsonKey, this.factor);
-  final String name;
+  const ISRPeriod(this.value, this.jsonKey, this.factor);
+  final String value;
   final String jsonKey;
   final double factor;
 }
@@ -244,7 +244,7 @@ class ISRCalculator {
 
       return ISRCalculationResult(
         ingresoGravable: ingresoGravable,
-        periodo: periodo.name,
+        periodo: periodo.value,
         year: year.value,
         ingresoMensualizado: ingresoMensualEquivalente,
         bracket: bracket,
@@ -297,7 +297,7 @@ class ISRCalculator {
 
     return ISRCalculationResult(
       ingresoGravable: ingresoGravable,
-      periodo: periodo.name,
+      periodo: periodo.value,
       year: year.value,
       ingresoMensualizado: ingresoMensualizado,
       bracket: bracket,

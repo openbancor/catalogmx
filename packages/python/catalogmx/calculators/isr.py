@@ -10,13 +10,13 @@ import json
 from pathlib import Path
 from typing import Literal, TypedDict
 
-
 ISRYear = Literal[2024, 2025, 2026]
 ISRPeriod = Literal["diaria", "semanal", "decenal", "quincenal", "mensual", "anual"]
 
 
 class ISRBracket(TypedDict):
     """Tax bracket structure"""
+
     limiteInferior: float
     limiteSuperior: float | None
     cuotaFija: float
@@ -25,6 +25,7 @@ class ISRBracket(TypedDict):
 
 class ISRSubsidyBracket(TypedDict):
     """Subsidy bracket for tiered system (2024)"""
+
     desde: float
     hasta: float | None
     subsidio: float
@@ -32,12 +33,14 @@ class ISRSubsidyBracket(TypedDict):
 
 class ISRSubsidyFlat(TypedDict):
     """Flat subsidy system (2025/2026)"""
+
     amount: float
     maxIncome: float
 
 
 class ISRCalculationResult(TypedDict):
     """Complete ISR calculation result"""
+
     ingresoGravable: float
     periodo: str
     year: int
@@ -61,8 +64,13 @@ def _load_isr_tables() -> dict:
     if _ISR_TABLES is None:
         # Path from catalogmx/calculators/isr.py -> packages/shared-data/isr-tables.json
         # Go up: isr.py -> calculators -> catalogmx -> python -> packages -> catalogmx (root)
-        json_path = Path(__file__).parent.parent.parent.parent.parent / "packages" / "shared-data" / "isr-tables.json"
-        with open(json_path, 'r', encoding='utf-8') as f:
+        json_path = (
+            Path(__file__).parent.parent.parent.parent.parent
+            / "packages"
+            / "shared-data"
+            / "isr-tables.json"
+        )
+        with open(json_path, encoding="utf-8") as f:
             _ISR_TABLES = json.load(f)
     return _ISR_TABLES
 
@@ -74,7 +82,7 @@ PERIOD_MAPPING = {
     "decenal": "monthly",  # No specific decenal table, use monthly
     "quincenal": "biweekly",
     "mensual": "monthly",
-    "anual": "annual"
+    "anual": "annual",
 }
 
 # Period factors for conversion
@@ -84,7 +92,7 @@ PERIOD_FACTORS = {
     "decenal": 3.0,
     "quincenal": 2.0,
     "mensual": 1.0,
-    "anual": 1/12
+    "anual": 1 / 12,
 }
 
 
@@ -110,9 +118,9 @@ def get_isr_brackets(year: ISRYear, period: ISRPeriod) -> list[ISRBracket]:
     for b in brackets_data:
         bracket = ISRBracket(
             limiteInferior=b["limiteInferior"],
-            limiteSuperior=float('inf') if b["limiteSuperior"] is None else b["limiteSuperior"],
+            limiteSuperior=float("inf") if b["limiteSuperior"] is None else b["limiteSuperior"],
             cuotaFija=b["cuotaFija"],
-            tasa=b["tasa"]
+            tasa=b["tasa"],
         )
         brackets.append(bracket)
 
@@ -138,7 +146,7 @@ def calculate_subsidy(income: float, year: ISRYear) -> float:
         # 2024: tiered system
         monthly_data = subsidy_data["monthly"]
         for s in monthly_data:
-            hasta = float('inf') if s["hasta"] is None else s["hasta"]
+            hasta = float("inf") if s["hasta"] is None else s["hasta"]
             if s["desde"] <= income <= hasta:
                 return s["subsidio"]
         return 0.0
@@ -151,9 +159,7 @@ def calculate_subsidy(income: float, year: ISRYear) -> float:
 
 
 def calculate_isr(
-    ingreso_gravable: float,
-    periodo: ISRPeriod = "mensual",
-    year: ISRYear = 2026
+    ingreso_gravable: float, periodo: ISRPeriod = "mensual", year: ISRYear = 2026
 ) -> ISRCalculationResult:
     """
     Calculate ISR (Income Tax) for Mexico
@@ -176,7 +182,13 @@ def calculate_isr(
         ISR diario: $45.67
     """
     # For 2026, use period-specific tables directly
-    use_period_tables = year == 2026 and periodo in ["diaria", "semanal", "quincenal", "mensual", "anual"]
+    use_period_tables = year == 2026 and periodo in [
+        "diaria",
+        "semanal",
+        "quincenal",
+        "mensual",
+        "anual",
+    ]
 
     if use_period_tables:
         # Use official tables for the period (no conversion needed)
@@ -223,7 +235,7 @@ def calculate_isr(
             isrAntesSubsidio=isr_antes_subsidio,
             subsidio=subsidio_prorrateado,
             isrFinal=isr_final,
-            tasaEfectiva=tasa_efectiva
+            tasaEfectiva=tasa_efectiva,
         )
 
     # For 2024/2025 or decenal period, use factor-based conversion
@@ -274,5 +286,5 @@ def calculate_isr(
         isrAntesSubsidio=isr_antes_subsidio,
         subsidio=subsidio,
         isrFinal=isr_periodo,
-        tasaEfectiva=tasa_efectiva
+        tasaEfectiva=tasa_efectiva,
     )

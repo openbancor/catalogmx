@@ -7,20 +7,19 @@ Available calculators:
 """
 
 from catalogmx.calculators.isr import (
-    calculate_isr,
-    get_isr_brackets,
-    calculate_subsidy,
-    ISRYear,
-    ISRPeriod,
     ISRCalculationResult,
+    ISRPeriod,
+    ISRYear,
+    calculate_isr,
+    calculate_subsidy,
+    get_isr_brackets,
 )
-
 from catalogmx.calculators.resico import (
+    RESICOCalculationResult,
+    RESICOPeriod,
+    RESICOYear,
     calculate_resico,
     get_resico_brackets,
-    RESICOYear,
-    RESICOPeriod,
-    RESICOCalculationResult,
 )
 
 __all__ = [

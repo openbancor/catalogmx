@@ -14,13 +14,13 @@ import json
 from pathlib import Path
 from typing import Literal, TypedDict
 
-
 RESICOYear = Literal[2024, 2025, 2026]
 RESICOPeriod = Literal["mensual", "anual"]
 
 
 class RESICOBracket(TypedDict):
     """RESICO tax bracket structure (simplified - no cuota fija)"""
+
     limiteInferior: float
     limiteSuperior: float
     tasa: float
@@ -28,6 +28,7 @@ class RESICOBracket(TypedDict):
 
 class RESICOCalculationResult(TypedDict):
     """Complete RESICO calculation result"""
+
     ingreso: float
     periodo: str
     year: int
@@ -46,8 +47,13 @@ def _load_resico_tables() -> dict:
     """Load RESICO tables from shared JSON file"""
     global _RESICO_TABLES
     if _RESICO_TABLES is None:
-        json_path = Path(__file__).parent.parent.parent.parent.parent / "packages" / "shared-data" / "resico-tables.json"
-        with open(json_path, 'r', encoding='utf-8') as f:
+        json_path = (
+            Path(__file__).parent.parent.parent.parent.parent
+            / "packages"
+            / "shared-data"
+            / "resico-tables.json"
+        )
+        with open(json_path, encoding="utf-8") as f:
             _RESICO_TABLES = json.load(f)
     return _RESICO_TABLES
 
@@ -71,9 +77,7 @@ def get_resico_brackets(year: RESICOYear, periodo: RESICOPeriod) -> list[RESICOB
     brackets = []
     for b in brackets_data:
         bracket = RESICOBracket(
-            limiteInferior=b["limiteInferior"],
-            limiteSuperior=b["limiteSuperior"],
-            tasa=b["tasa"]
+            limiteInferior=b["limiteInferior"], limiteSuperior=b["limiteSuperior"], tasa=b["tasa"]
         )
         brackets.append(bracket)
 
@@ -81,9 +85,7 @@ def get_resico_brackets(year: RESICOYear, periodo: RESICOPeriod) -> list[RESICOB
 
 
 def calculate_resico(
-    ingreso: float,
-    periodo: RESICOPeriod = "mensual",
-    year: RESICOYear = 2026
+    ingreso: float, periodo: RESICOPeriod = "mensual", year: RESICOYear = 2026
 ) -> RESICOCalculationResult:
     """
     Calculate RESICO (Régimen Simplificado de Confianza) tax
@@ -116,7 +118,9 @@ def calculate_resico(
 
     # Get income limits
     limits = tables["limits"]["personaFisica"]
-    limite_maximo = limits["ingresoMensualMaximo"] if periodo == "mensual" else limits["ingresoAnualMaximo"]
+    limite_maximo = (
+        limits["ingresoMensualMaximo"] if periodo == "mensual" else limits["ingresoAnualMaximo"]
+    )
     dentro_de_limite = ingreso <= limite_maximo
 
     # Get brackets for year and period
@@ -146,5 +150,5 @@ def calculate_resico(
         dentroDeLimite=dentro_de_limite,
         bracket=dict(bracket),
         resicoCalculado=resico_calculado,
-        tasaEfectiva=tasa_efectiva
+        tasaEfectiva=tasa_efectiva,
     )
