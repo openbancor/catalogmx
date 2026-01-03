@@ -3,6 +3,7 @@ Tests for text normalization utilities.
 
 Tests the catalogmx.utils.text module functions.
 """
+
 from catalogmx.utils.text import normalize_text, normalize_for_search
 
 

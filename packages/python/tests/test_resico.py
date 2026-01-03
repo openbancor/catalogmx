@@ -10,7 +10,9 @@ print("=" * 80)
 # Test case 1: Monthly $50,000 → bracket 1.5% → ISR = $750
 result1 = calculate_resico(50000, "mensual", 2026)
 print(f"\nTest 1: Ingreso mensual $50,000")
-print(f"  Bracket: ${result1['bracket']['limiteInferior']:.2f} - ${result1['bracket']['limiteSuperior']:.2f}")
+print(
+    f"  Bracket: ${result1['bracket']['limiteInferior']:.2f} - ${result1['bracket']['limiteSuperior']:.2f}"
+)
 print(f"  Tasa: {result1['bracket']['tasa']}%")
 print(f"  RESICO: ${result1['resicoCalculado']:.2f}")
 print(f"  Tasa efectiva: {result1['tasaEfectiva']:.2f}%")

@@ -97,4 +97,3 @@ class TestCodigosPlazaComplete:
         assert isinstance(stats, dict)
         assert "total_plazas" in stats
         assert stats["total_plazas"] > 0
-

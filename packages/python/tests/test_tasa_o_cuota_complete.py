@@ -59,7 +59,7 @@ class TestTasaOCuotaComplete:
             impuesto="NONEXISTENT",
             factor="NONEXISTENT",
             trasladado=None,
-            retenido=None
+            retenido=None,
         )
         assert isinstance(results, list)
         assert len(results) == 0
@@ -73,7 +73,7 @@ class TestTasaOCuotaComplete:
             impuesto=None,
             factor=None,
             trasladado=None,
-            retenido=None
+            retenido=None,
         )
         assert isinstance(results, list)
 
@@ -87,6 +87,6 @@ class TestTasaOCuotaComplete:
             impuesto="001",  # ISR
             factor="Tasa",
             trasladado=True,
-            retenido=False
+            retenido=False,
         )
         assert isinstance(results, list)

@@ -251,7 +251,8 @@ class TestInflacionWithINPC:
         """Test get_actual when database is empty"""
         # Mock the database connection to return no rows
         import sqlite3
-        with patch('sqlite3.connect') as mock_connect:
+
+        with patch("sqlite3.connect") as mock_connect:
             mock_db = MagicMock()
             mock_cursor = MagicMock()
             mock_cursor.fetchone.return_value = None
@@ -264,10 +265,10 @@ class TestInflacionWithINPC:
     def test_calcular_inflacion_acumulada_with_inpc(self):
         """Test calculating accumulated inflation with INPC values"""
         # Mock get_por_fecha to return records with INPC
-        with patch.object(InflacionCatalog, 'get_por_fecha') as mock_get:
+        with patch.object(InflacionCatalog, "get_por_fecha") as mock_get:
             mock_get.side_effect = [
                 {"fecha": "2020-01-01", "inpc": 100.0, "inflacion_anual": 3.0},
-                {"fecha": "2021-01-01", "inpc": 110.0, "inflacion_anual": 4.0}
+                {"fecha": "2021-01-01", "inpc": 110.0, "inflacion_anual": 4.0},
             ]
 
             result = InflacionCatalog.calcular_inflacion_acumulada("2020-01-01", "2021-01-01")
@@ -279,10 +280,10 @@ class TestInflacionWithINPC:
     def test_ajustar_por_inflacion_with_inpc(self):
         """Test adjusting amount with INPC values"""
         # Mock get_por_fecha to return records with INPC
-        with patch.object(InflacionCatalog, 'get_por_fecha') as mock_get:
+        with patch.object(InflacionCatalog, "get_por_fecha") as mock_get:
             mock_get.side_effect = [
                 {"fecha": "2020-01-01", "inpc": 100.0, "inflacion_anual": 3.0},
-                {"fecha": "2021-01-01", "inpc": 110.0, "inflacion_anual": 4.0}
+                {"fecha": "2021-01-01", "inpc": 110.0, "inflacion_anual": 4.0},
             ]
 
             result = InflacionCatalog.ajustar_por_inflacion(10000, "2020-01-01", "2021-01-01")

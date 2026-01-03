@@ -4,7 +4,12 @@ Complete tests for RFC validator to achieve 100% coverage
 
 from datetime import date
 
-from catalogmx.validators.rfc import RFCGenerator, RFCGeneratorFisicas, RFCGeneratorMorales, RFCValidator
+from catalogmx.validators.rfc import (
+    RFCGenerator,
+    RFCGeneratorFisicas,
+    RFCGeneratorMorales,
+    RFCValidator,
+)
 
 
 class TestRFCValidatorComplete:
@@ -48,20 +53,14 @@ class TestRFCGeneratorFisicasComplete:
     def test_generate_with_very_old_date(self):
         """Test generating RFC with very old date"""
         rfc = RFCGenerator.generate_fisica(
-            nombre="Juan",
-            paterno="Garcia",
-            materno="Lopez",
-            fecha=date(1900, 1, 1)
+            nombre="Juan", paterno="Garcia", materno="Lopez", fecha=date(1900, 1, 1)
         )
         assert len(rfc) == 13
 
     def test_generate_with_enie_paterno(self):
         """Test generating RFC with ñ in paterno"""
         rfc = RFCGenerator.generate_fisica(
-            nombre="Juan",
-            paterno="Peña",
-            materno="Garcia",
-            fecha=date(1990, 5, 15)
+            nombre="Juan", paterno="Peña", materno="Garcia", fecha=date(1990, 5, 15)
         )
         assert len(rfc) == 13
         assert "Ñ" not in rfc  # Should be converted
@@ -69,20 +68,14 @@ class TestRFCGeneratorFisicasComplete:
     def test_generate_with_enie_materno(self):
         """Test generating RFC with ñ in materno"""
         rfc = RFCGenerator.generate_fisica(
-            nombre="Juan",
-            paterno="Garcia",
-            materno="Núñez",
-            fecha=date(1990, 5, 15)
+            nombre="Juan", paterno="Garcia", materno="Núñez", fecha=date(1990, 5, 15)
         )
         assert len(rfc) == 13
 
     def test_generate_with_enie_nombre(self):
         """Test generating RFC with ñ in nombre"""
         rfc = RFCGenerator.generate_fisica(
-            nombre="Toño",
-            paterno="Garcia",
-            materno="Lopez",
-            fecha=date(1990, 5, 15)
+            nombre="Toño", paterno="Garcia", materno="Lopez", fecha=date(1990, 5, 15)
         )
         assert len(rfc) == 13
 
@@ -90,8 +83,12 @@ class TestRFCGeneratorFisicasComplete:
         """Test generating RFC with various special characters"""
         # Test all edge cases in one test
         rfcs = [
-            RFCGenerator.generate_fisica(nombre="Juan", paterno="Garcia", materno="Lopez", fecha=date(1990, 5, 15)),
-            RFCGenerator.generate_fisica(nombre="María", paterno="Pérez", materno="González", fecha=date(1990, 5, 15)),
+            RFCGenerator.generate_fisica(
+                nombre="Juan", paterno="Garcia", materno="Lopez", fecha=date(1990, 5, 15)
+            ),
+            RFCGenerator.generate_fisica(
+                nombre="María", paterno="Pérez", materno="González", fecha=date(1990, 5, 15)
+            ),
         ]
         for rfc in rfcs:
             assert len(rfc) == 13
@@ -111,4 +108,3 @@ class TestRFCGeneratorMoralesComplete:
         for razon_social in test_cases:
             rfc = RFCGenerator.generate_moral(razon_social=razon_social, fecha=date(2009, 9, 9))
             assert len(rfc) == 12
-

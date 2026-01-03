@@ -52,10 +52,10 @@ class RESICOBracket {
   }
 
   Map<String, dynamic> toJson() => {
-        'limiteInferior': limiteInferior,
-        'limiteSuperior': limiteSuperior,
-        'tasa': tasa,
-      };
+    'limiteInferior': limiteInferior,
+    'limiteSuperior': limiteSuperior,
+    'tasa': tasa,
+  };
 }
 
 /// Complete RESICO calculation result
@@ -81,15 +81,15 @@ class RESICOCalculationResult {
   });
 
   Map<String, dynamic> toJson() => {
-        'ingreso': ingreso,
-        'periodo': periodo,
-        'year': year,
-        'limiteMaximo': limiteMaximo,
-        'dentroDeLimite': dentroDeLimite,
-        'bracket': bracket.toJson(),
-        'resicoCalculado': resicoCalculado,
-        'tasaEfectiva': tasaEfectiva,
-      };
+    'ingreso': ingreso,
+    'periodo': periodo,
+    'year': year,
+    'limiteMaximo': limiteMaximo,
+    'dentroDeLimite': dentroDeLimite,
+    'bracket': bracket.toJson(),
+    'resicoCalculado': resicoCalculado,
+    'tasaEfectiva': tasaEfectiva,
+  };
 }
 
 /// RESICO Calculator class
@@ -123,7 +123,9 @@ class RESICOCalculator {
 
   /// Get RESICO tax brackets for a specific year and period
   static List<RESICOBracket> getRESICOBrackets(
-      RESICOYear year, RESICOPeriod period) {
+    RESICOYear year,
+    RESICOPeriod period,
+  ) {
     final tables = _loadRESICOTables();
     final yearStr = year.value.toString();
     final periodKey = period.value;
@@ -178,8 +180,7 @@ class RESICOCalculator {
 
     // Find applicable bracket
     final bracket = brackets.firstWhere(
-      (b) =>
-          ingreso >= b.limiteInferior && ingreso <= b.limiteSuperior,
+      (b) => ingreso >= b.limiteInferior && ingreso <= b.limiteSuperior,
       orElse: () => brackets.last,
     );
 

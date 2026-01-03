@@ -296,9 +296,7 @@ class TestSalariosMinimosCatalogSQLite:
     def test_calcular_variacion(self):
         """Test calculating variation"""
         # Minimum wage changes are typically annual
-        variacion = SalariosMinimosCatalog.calcular_variacion(
-            "2024-01-01", "2025-01-01", "general"
-        )
+        variacion = SalariosMinimosCatalog.calcular_variacion("2024-01-01", "2025-01-01", "general")
 
         if variacion is not None:
             assert isinstance(variacion, float)

@@ -15,14 +15,12 @@ TEST_CASES = [
     (50000, "mensual", 2026, "Ingreso medio $50k"),
     (100000, "mensual", 2026, "Ingreso alto $100k"),
     (250000, "mensual", 2026, "Ingreso muy alto $250k"),
-
     # Annual tests
     (300000, "anual", 2026, "Ingreso anual $300k"),
     (500000, "anual", 2026, "Ingreso anual $500k"),
     (1000000, "anual", 2026, "Ingreso anual $1M"),
     (2500000, "anual", 2026, "Ingreso anual $2.5M"),
     (3500000, "anual", 2026, "Ingreso anual $3.5M (límite)"),
-
     # Different years
     (50000, "mensual", 2024, "Mensual $50k - 2024"),
     (50000, "mensual", 2025, "Mensual $50k - 2025"),
@@ -41,7 +39,9 @@ for ingreso, periodo, year, description in TEST_CASES:
 
     print(f"{description}")
     print(f"  Ingreso: ${result['ingreso']:,.2f} ({periodo})")
-    print(f"  Bracket: ${result['bracket']['limiteInferior']:,.2f} - ${result['bracket']['limiteSuperior']:,.2f}")
+    print(
+        f"  Bracket: ${result['bracket']['limiteInferior']:,.2f} - ${result['bracket']['limiteSuperior']:,.2f}"
+    )
     print(f"  Tasa: {result['bracket']['tasa']}%")
     print(f"  RESICO: ${result['resicoCalculado']:,.2f}")
     print(f"  Tasa efectiva: {result['tasaEfectiva']:.2f}%")
@@ -51,7 +51,8 @@ for ingreso, periodo, year, description in TEST_CASES:
 print("=" * 80)
 print("✅ VERIFICACIÓN COMPLETA")
 print("=" * 80)
-print("""
+print(
+    """
 ✓ Python: Calculadora RESICO funcionando
 ✓ TypeScript: Calculadora RESICO funcionando
 ✓ Dart: Calculadora RESICO implementada
@@ -73,7 +74,8 @@ Ejemplo comparativo (Ingreso mensual $50,000):
   - RESICO 2026:         $550    (tasa efectiva 1.1%)
 
   Ahorro RESICO: ~$850/mes (~$10,200/año)
-""")
+"""
+)
 
 print("\n🔧 VERIFICAR EQUIVALENCIA CROSS-PLATFORM:")
 print("  1. Python ✅ (ejecutado)")

@@ -212,3 +212,58 @@ def test_resico_brackets_all_years():
     # Test 2026
     brackets_2026 = get_resico_brackets(2026, "mensual")
     assert len(brackets_2026) == 5
+
+
+def test_isr_zero_income():
+    """Test ISR calculation with zero income (edge case for bracket fallback)"""
+    from catalogmx.calculators.isr import calculate_isr
+
+    # Zero income for 2026 (triggers bracket fallback at line 199-205)
+    result_2026 = calculate_isr(0.0, periodo="mensual", year=2026)
+    assert result_2026["ingresoGravable"] == 0.0
+    assert result_2026["isrFinal"] >= 0
+    assert result_2026["year"] == 2026
+
+    # Zero income for 2024 (triggers subsidy fallback at line 152 and bracket fallback at line 250-256)
+    result_2024 = calculate_isr(0.0, periodo="mensual", year=2024)
+    assert result_2024["ingresoGravable"] == 0.0
+    assert result_2024["isrFinal"] >= 0
+    assert result_2024["subsidio"] >= 0
+
+    # Zero income for 2025 (triggers bracket fallback in factor-based path)
+    result_2025 = calculate_isr(0.0, periodo="mensual", year=2025)
+    assert result_2025["ingresoGravable"] == 0.0
+    assert result_2025["isrFinal"] >= 0
+
+
+def test_isr_negative_income():
+    """Test ISR calculation with negative income (defensive edge case)"""
+    from catalogmx.calculators.isr import calculate_isr
+
+    # Negative income should still calculate (uses last bracket fallback)
+    result = calculate_isr(-1000, periodo="mensual", year=2026)
+    assert result["ingresoGravable"] == -1000
+    # ISR calculation should handle negative gracefully
+    assert "isrFinal" in result
+
+
+def test_isr_decenal_period_2024():
+    """Test ISR with decenal period for 2024 (uses factor-based path lines 250-256)"""
+    from catalogmx.calculators.isr import calculate_isr
+
+    # Decenal period uses monthly brackets with factor conversion (line 241-256)
+    result = calculate_isr(3000, periodo="decenal", year=2024)
+    assert result["periodo"] == "decenal"
+    assert result["year"] == 2024
+    assert result["ingresoGravable"] == 3000
+    assert result["ingresoMensualizado"] == 9000  # 3000 * 3.0
+    assert "isrFinal" in result
+
+
+def test_subsidy_extreme_high_income_2024():
+    """Test subsidy calculation with extremely high income in 2024"""
+    from catalogmx.calculators.isr import calculate_subsidy
+
+    # Very high income (way beyond all brackets) - should get subsidy = 0
+    subsidy = calculate_subsidy(1000000, year=2024)
+    assert subsidy == 0.0

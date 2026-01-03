@@ -7,12 +7,35 @@ from datetime import date
 
 from catalogmx.catalogs.banxico import UDICatalog
 from catalogmx.catalogs.inegi import StateCatalog
-from catalogmx.catalogs.mexico import HoyNoCirculaCatalog, PlacasFormatosCatalog, SalariosMinimos, UMACatalog
-from catalogmx.catalogs.sat.carta_porte import AeropuertosCatalog, CarreterasCatalog, MaterialPeligrosoCatalog, PuertosMaritimos, TipoEmbalajeCatalog, TipoPermisoCatalog
+from catalogmx.catalogs.mexico import (
+    HoyNoCirculaCatalog,
+    PlacasFormatosCatalog,
+    SalariosMinimos,
+    UMACatalog,
+)
+from catalogmx.catalogs.sat.carta_porte import (
+    AeropuertosCatalog,
+    CarreterasCatalog,
+    MaterialPeligrosoCatalog,
+    PuertosMaritimos,
+    TipoEmbalajeCatalog,
+    TipoPermisoCatalog,
+)
 from catalogmx.catalogs.sat.cfdi_4 import ClaveUnidadCatalog
 from catalogmx.catalogs.sat.cfdi_4.tasa_o_cuota import TasaOCuota
-from catalogmx.catalogs.sat.comercio_exterior import EstadoCatalog, IncotermsValidator, MonedaCatalog, PaisCatalog, RegistroIdentTribCatalog
-from catalogmx.catalogs.sat.nomina import PeriodicidadPagoCatalog, RiesgoPuestoCatalog, TipoContratoCatalog, TipoRegimenCatalog as NominaTipoRegimenCatalog
+from catalogmx.catalogs.sat.comercio_exterior import (
+    EstadoCatalog,
+    IncotermsValidator,
+    MonedaCatalog,
+    PaisCatalog,
+    RegistroIdentTribCatalog,
+)
+from catalogmx.catalogs.sat.nomina import (
+    PeriodicidadPagoCatalog,
+    RiesgoPuestoCatalog,
+    TipoContratoCatalog,
+    TipoRegimenCatalog as NominaTipoRegimenCatalog,
+)
 from catalogmx.catalogs.sepomex import CodigosPostales
 from catalogmx.helpers import generate_curp, validate_curp, validate_rfc
 from catalogmx.validators.curp import CURPGenerator
@@ -22,6 +45,7 @@ from catalogmx.validators.rfc import RFCGenerator
 # =============================================================================
 # UDI Catalog - Cover lines 55, 93-94, 160-182, 195-222, 239-269
 # =============================================================================
+
 
 class TestUDIEveryLine:
     """Cover every uncovered line in UDI catalog"""
@@ -70,6 +94,7 @@ class TestUDIEveryLine:
 # State Catalog - Cover lines 74-75, 96-98, 108, 117-118, 127-128, 134-135, 140
 # =============================================================================
 
+
 class TestStateCatalogEveryLine:
     """Cover every uncovered line in State catalog"""
 
@@ -79,19 +104,19 @@ class TestStateCatalogEveryLine:
         assert isinstance(all_states, list)
 
         # Test methods only if they exist
-        if hasattr(StateCatalog, 'get_state_by_abbreviation'):
+        if hasattr(StateCatalog, "get_state_by_abbreviation"):
             StateCatalog.get_state_by_abbreviation("JAL")
-        if hasattr(StateCatalog, 'get_state_by_name'):
+        if hasattr(StateCatalog, "get_state_by_name"):
             StateCatalog.get_state_by_name("Jalisco")
-        if hasattr(StateCatalog, 'get_inegi_code'):
+        if hasattr(StateCatalog, "get_inegi_code"):
             StateCatalog.get_inegi_code("JAL")
-        if hasattr(StateCatalog, 'get_abbreviation'):
+        if hasattr(StateCatalog, "get_abbreviation"):
             StateCatalog.get_abbreviation("14")
-        if hasattr(StateCatalog, 'get_by_inegi_code'):
+        if hasattr(StateCatalog, "get_by_inegi_code"):
             StateCatalog.get_by_inegi_code("14")
-        if hasattr(StateCatalog, 'search_by_name'):
+        if hasattr(StateCatalog, "search_by_name"):
             StateCatalog.search_by_name("Jalisco")
-        if hasattr(StateCatalog, 'get_capital'):
+        if hasattr(StateCatalog, "get_capital"):
             StateCatalog.get_capital("14")
 
 
@@ -99,18 +124,19 @@ class TestStateCatalogEveryLine:
 # Salarios Minimos - Cover lines 45-46, 74, 127-131, 137, 142, 147
 # =============================================================================
 
+
 class TestSalariosMinimosEveryLine:
     """Cover every uncovered line in Salarios Minimos"""
 
     def test_all_salarios_methods(self):
         """Test all available Salarios Minimos methods"""
         # Test get_all if it exists
-        if hasattr(SalariosMinimos, 'get_all'):
+        if hasattr(SalariosMinimos, "get_all"):
             result = SalariosMinimos.get_all()
             assert isinstance(result, list)
 
         # Test get_por_zona if it exists
-        if hasattr(SalariosMinimos, 'get_por_zona'):
+        if hasattr(SalariosMinimos, "get_por_zona"):
             SalariosMinimos.get_por_zona("frontera")
 
         # Test calcular methods - don't use zona param if not supported
@@ -125,12 +151,13 @@ class TestSalariosMinimosEveryLine:
 # UMA Catalog - Cover lines 49-50, 73, 77, 81, 106, 122, 128, 144, 160, 174, 182, 187, 192, 197
 # =============================================================================
 
+
 class TestUMAEveryLine:
     """Cover every uncovered line in UMA catalog"""
 
     def test_get_all(self):
         """Cover lines 49-50"""
-        if hasattr(UMACatalog, 'get_all'):
+        if hasattr(UMACatalog, "get_all"):
             result = UMACatalog.get_all()
             assert isinstance(result, list)
 
@@ -143,7 +170,9 @@ class TestUMAEveryLine:
             result1 = UMACatalog.calcular_monto(100, year, tipo="diario")
             result2 = UMACatalog.calcular_monto(100, year, tipo="mensual")
             result3 = UMACatalog.calcular_monto(100, year, tipo="anual")
-            assert all(r is None or isinstance(r, (int, float)) for r in [result1, result2, result3])
+            assert all(
+                r is None or isinstance(r, (int, float)) for r in [result1, result2, result3]
+            )
 
     def test_calcular_monto_when_none(self):
         """Cover line 106"""
@@ -186,12 +215,15 @@ class TestUMAEveryLine:
             result1 = UMACatalog.get_valor(year, tipo="diario")
             result2 = UMACatalog.get_valor(year, tipo="mensual")
             result3 = UMACatalog.get_valor(year, tipo="anual")
-            assert all(r is None or isinstance(r, (int, float)) for r in [result1, result2, result3])
+            assert all(
+                r is None or isinstance(r, (int, float)) for r in [result1, result2, result3]
+            )
 
 
 # =============================================================================
 # Additional catalog gaps
 # =============================================================================
+
 
 class TestCartaPorteEveryGap:
     """Cover all carta porte gaps"""
@@ -234,12 +266,13 @@ class TestCartaPorteEveryGap:
 # ClaveUnidad - Cover lines 148-150, 168-170, 184-185, 203-204, 228-255, 269-270, 286-292
 # =============================================================================
 
+
 class TestClaveUnidadEveryLine:
     """Cover every uncovered line in ClaveUnidad"""
 
     def test_get_by_tipo(self):
         """Cover lines 148-150"""
-        if hasattr(ClaveUnidadCatalog, 'get_by_tipo'):
+        if hasattr(ClaveUnidadCatalog, "get_by_tipo"):
             result = ClaveUnidadCatalog.get_by_tipo("peso")
             assert isinstance(result, list)
 
@@ -257,25 +290,25 @@ class TestClaveUnidadEveryLine:
 
     def test_get_ponderables(self):
         """Cover lines 203-204"""
-        if hasattr(ClaveUnidadCatalog, 'get_ponderables'):
+        if hasattr(ClaveUnidadCatalog, "get_ponderables"):
             result = ClaveUnidadCatalog.get_ponderables()
             assert isinstance(result, list)
 
     def test_get_imponderables(self):
         """Cover lines 228-255"""
-        if hasattr(ClaveUnidadCatalog, 'get_imponderables'):
+        if hasattr(ClaveUnidadCatalog, "get_imponderables"):
             result = ClaveUnidadCatalog.get_imponderables()
             assert isinstance(result, list)
 
     def test_get_by_symbol(self):
         """Cover lines 269-270"""
-        if hasattr(ClaveUnidadCatalog, 'get_by_symbol'):
+        if hasattr(ClaveUnidadCatalog, "get_by_symbol"):
             result = ClaveUnidadCatalog.get_by_symbol("m")
             assert isinstance(result, list)
 
     def test_conversion_methods(self):
         """Cover lines 286-292"""
-        if hasattr(ClaveUnidadCatalog, 'can_convert'):
+        if hasattr(ClaveUnidadCatalog, "can_convert"):
             result = ClaveUnidadCatalog.can_convert("KGM", "GRM")
             assert isinstance(result, bool)
 
@@ -283,6 +316,7 @@ class TestClaveUnidadEveryLine:
 # =============================================================================
 # Tasa o Cuota - Cover lines 21-24, 33-35
 # =============================================================================
+
 
 class TestTasaOCuotaEveryLine:
     """Cover all tasa o cuota lines"""
@@ -305,7 +339,7 @@ class TestTasaOCuotaEveryLine:
                 impuesto="002",
                 factor="Tasa",
                 trasladado=True,
-                retenido=False
+                retenido=False,
             )
             assert isinstance(result, list)
         except FileNotFoundError:
@@ -315,6 +349,7 @@ class TestTasaOCuotaEveryLine:
 # =============================================================================
 # Comercio Exterior gaps
 # =============================================================================
+
 
 class TestComercioExteriorEveryGap:
     """Cover comercio exterior gaps"""
@@ -329,20 +364,20 @@ class TestComercioExteriorEveryGap:
 
     def test_estado_search_and_get_by_name(self):
         """Cover estados.py lines 97-98, 111-122"""
-        if hasattr(EstadoCatalog, 'search'):
+        if hasattr(EstadoCatalog, "search"):
             EstadoCatalog.search("Texas", "USA")
-        if hasattr(EstadoCatalog, 'get_by_name'):
+        if hasattr(EstadoCatalog, "get_by_name"):
             EstadoCatalog.get_by_name("Texas", "USA")
 
     def test_incoterms_optional_methods(self):
         """Cover incoterms lines 102, 124-125, 140-141, 160-161, 180-181"""
-        if hasattr(IncotermsValidator, 'get_by_group'):
+        if hasattr(IncotermsValidator, "get_by_group"):
             IncotermsValidator.get_by_group("E")
-        if hasattr(IncotermsValidator, 'get_with_seller_risk'):
+        if hasattr(IncotermsValidator, "get_with_seller_risk"):
             IncotermsValidator.get_with_seller_risk()
-        if hasattr(IncotermsValidator, 'get_with_buyer_risk'):
+        if hasattr(IncotermsValidator, "get_with_buyer_risk"):
             IncotermsValidator.get_with_buyer_risk()
-        if hasattr(IncotermsValidator, 'requires_insurance'):
+        if hasattr(IncotermsValidator, "requires_insurance"):
             IncotermsValidator.requires_insurance("CIF")
 
     def test_moneda_catalog_errors(self):
@@ -374,33 +409,34 @@ class TestComercioExteriorEveryGap:
 # Nomina gaps
 # =============================================================================
 
+
 class TestNominaEveryGap:
     """Cover all nomina gaps"""
 
     def test_periodicidad_get_dias(self):
         """Cover lines 47-48"""
         all_items = PeriodicidadPagoCatalog.get_all()
-        if all_items and hasattr(PeriodicidadPagoCatalog, 'get_dias'):
+        if all_items and hasattr(PeriodicidadPagoCatalog, "get_dias"):
             result = PeriodicidadPagoCatalog.get_dias(all_items[0]["code"])
             assert result is None or isinstance(result, int)
 
     def test_riesgo_get_by_level(self):
         """Cover lines 47-48, 53-56"""
-        if hasattr(RiesgoPuestoCatalog, 'get_by_level'):
+        if hasattr(RiesgoPuestoCatalog, "get_by_level"):
             result = RiesgoPuestoCatalog.get_by_level("1")
             assert isinstance(result, list)
 
     def test_contrato_get_description(self):
         """Cover line 47"""
         all_items = TipoContratoCatalog.get_all()
-        if all_items and hasattr(TipoContratoCatalog, 'get_description'):
+        if all_items and hasattr(TipoContratoCatalog, "get_description"):
             result = TipoContratoCatalog.get_description(all_items[0]["code"])
             assert result is None or isinstance(result, str)
 
     def test_tipo_regimen_get_description(self):
         """Cover line 47"""
         all_items = NominaTipoRegimenCatalog.get_all()
-        if all_items and hasattr(NominaTipoRegimenCatalog, 'get_description'):
+        if all_items and hasattr(NominaTipoRegimenCatalog, "get_description"):
             result = NominaTipoRegimenCatalog.get_description(all_items[0]["code"])
             assert result is None or isinstance(result, str)
 
@@ -408,6 +444,7 @@ class TestNominaEveryGap:
 # =============================================================================
 # Codigos Postales - Cover lines 71-72, 122->129, 138, 167, 172, 177-178, 183-184
 # =============================================================================
+
 
 class TestCodigosPostalesEveryLine:
     """Cover every uncovered line in Codigos Postales"""
@@ -434,7 +471,7 @@ class TestCodigosPostalesEveryLine:
 
     def test_formatear_cp(self):
         """Cover lines 177-178, 183-184"""
-        if hasattr(CodigosPostales, 'formatear_cp'):
+        if hasattr(CodigosPostales, "formatear_cp"):
             result1 = CodigosPostales.formatear_cp("1234")
             result2 = CodigosPostales.formatear_cp("12345")
             assert len(result1) == 5
@@ -444,6 +481,7 @@ class TestCodigosPostalesEveryLine:
 # =============================================================================
 # CLI - Cover lines 95-96, 117-118, 180-181, 185
 # =============================================================================
+
 
 class TestCLIEveryLine:
     """Cover all CLI lines"""
@@ -456,19 +494,36 @@ class TestCLIEveryLine:
         runner = CliRunner()
 
         # Cover lines 95-96 (rfc_generate_fisica Exception branch)
-        result1 = runner.invoke(main, ['rfc', 'generate-fisica',
-                                       '--nombre', '', '--paterno', '', '--fecha', '1990-01-01'])
+        result1 = runner.invoke(
+            main,
+            ["rfc", "generate-fisica", "--nombre", "", "--paterno", "", "--fecha", "1990-01-01"],
+        )
         assert result1.exit_code == 0
 
         # Cover lines 117-118 (rfc_generate_moral Exception branch)
-        result2 = runner.invoke(main, ['rfc', 'generate-moral',
-                                       '--razon-social', '', '--fecha', '2009-09-09'])
+        result2 = runner.invoke(
+            main, ["rfc", "generate-moral", "--razon-social", "", "--fecha", "2009-09-09"]
+        )
         assert result2.exit_code == 0
 
         # Cover lines 180-181 (curp_generate Exception branch)
-        result3 = runner.invoke(main, ['curp', 'generate',
-                                       '--nombre', '', '--paterno', '',
-                                       '--fecha', '1990-01-01', '--sexo', 'H', '--estado', 'XX'])
+        result3 = runner.invoke(
+            main,
+            [
+                "curp",
+                "generate",
+                "--nombre",
+                "",
+                "--paterno",
+                "",
+                "--fecha",
+                "1990-01-01",
+                "--sexo",
+                "H",
+                "--estado",
+                "XX",
+            ],
+        )
         assert result3.exit_code == 0
 
         # Line 185 (if __name__ == "__main__") - can't test in unit tests
@@ -477,6 +532,7 @@ class TestCLIEveryLine:
 # =============================================================================
 # Helpers - Cover lines 115-116, 145-146, 243, 271, 324
 # =============================================================================
+
 
 class TestHelpersEveryLine:
     """Cover all helpers lines"""
@@ -489,8 +545,12 @@ class TestHelpersEveryLine:
     def test_generate_curp_with_all_params(self):
         """Cover lines 145-146, 243, 271, 324"""
         # Test with various differentiators to cover all branches
-        result1 = generate_curp("Juan", "Garcia", "Lopez", date(1990, 5, 15), "H", "Jalisco", differentiator="5")
-        result2 = generate_curp("Juan", "Garcia", "Lopez", date(1990, 5, 15), "H", "Jalisco", differentiator="A")
+        result1 = generate_curp(
+            "Juan", "Garcia", "Lopez", date(1990, 5, 15), "H", "Jalisco", differentiator="5"
+        )
+        result2 = generate_curp(
+            "Juan", "Garcia", "Lopez", date(1990, 5, 15), "H", "Jalisco", differentiator="A"
+        )
         result3 = generate_curp("Juan", "Garcia", "", date(1990, 5, 15), "H", "Jalisco")
         assert all(len(r) == 18 for r in [result1, result2, result3])
 
@@ -498,6 +558,7 @@ class TestHelpersEveryLine:
 # =============================================================================
 # CURP Validator - Cover lines 293->exit, 318, 329, 334, 342, 440, 462, 487, 582, 594-596, 613->623
 # =============================================================================
+
 
 class TestCURPValidatorEveryLine:
     """Cover all CURP validator lines"""
@@ -521,7 +582,7 @@ class TestCURPValidatorEveryLine:
                     materno="Test",
                     fecha_nacimiento=date(1990, 1, 1),
                     sexo="H",
-                    estado="Jalisco"
+                    estado="Jalisco",
                 )
                 # Trigger various validation paths
                 generator.curp
@@ -532,6 +593,7 @@ class TestCURPValidatorEveryLine:
 # =============================================================================
 # RFC Validator - Cover lines 215, 230, 235, 237-238, 265->exit, 295, 306-307, 335, 350, etc.
 # =============================================================================
+
 
 class TestRFCValidatorEveryLine:
     """Cover all RFC validator lines"""
@@ -572,6 +634,7 @@ class TestRFCValidatorEveryLine:
 # Additional small gaps
 # =============================================================================
 
+
 class TestAllRemainingSmallGaps:
     """Cover all remaining small gaps across modules"""
 
@@ -598,4 +661,3 @@ class TestAllRemainingSmallGaps:
         for placa in test_placas:
             result = PlacasFormatosCatalog.detect_formato(placa)
             assert result is None or isinstance(result, dict)
-

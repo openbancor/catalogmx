@@ -9,7 +9,7 @@ from catalogmx.catalogs.banxico import (
     TIIE28Catalog,
     CETES28Catalog,
     InflacionAnualCatalog,
-    SalariosMinimosCatalog
+    SalariosMinimosCatalog,
 )
 
 

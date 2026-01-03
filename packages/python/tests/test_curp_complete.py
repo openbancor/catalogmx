@@ -93,6 +93,7 @@ class TestCURPGeneratorComplete:
         """Test generating CURP with future date"""
         try:
             from datetime import date
+
             future_date = date(2099, 1, 1)
             generator = CURPGenerator(
                 nombre="Juan",
@@ -100,7 +101,7 @@ class TestCURPGeneratorComplete:
                 materno="Lopez",
                 fecha_nacimiento=future_date,
                 sexo="H",
-                estado="Jalisco"
+                estado="Jalisco",
             )
             # Should either raise or handle gracefully
             assert len(generator.curp) == 18
@@ -111,6 +112,7 @@ class TestCURPGeneratorComplete:
         """Test generating CURP with very old date"""
         try:
             from datetime import date
+
             old_date = date(1900, 1, 1)
             generator = CURPGenerator(
                 nombre="Juan",
@@ -118,7 +120,7 @@ class TestCURPGeneratorComplete:
                 materno="Lopez",
                 fecha_nacimiento=old_date,
                 sexo="H",
-                estado="Jalisco"
+                estado="Jalisco",
             )
             assert len(generator.curp) == 18
         except ValueError:
@@ -128,13 +130,14 @@ class TestCURPGeneratorComplete:
         """Test generating CURP with invalid estado"""
         try:
             from datetime import date
+
             generator = CURPGenerator(
                 nombre="Juan",
                 paterno="Garcia",
                 materno="Lopez",
                 fecha_nacimiento=date(1990, 5, 15),
                 sexo="H",
-                estado="InvalidState"
+                estado="InvalidState",
             )
             # Should either use default or raise
             assert len(generator.curp) == 18
@@ -144,26 +147,27 @@ class TestCURPGeneratorComplete:
     def test_generate_with_special_characters_in_names(self):
         """Test generating CURP with special characters in names"""
         from datetime import date
+
         generator = CURPGenerator(
             nombre="José María",
             paterno="O'Connor",
             materno="D'Almeida",
             fecha_nacimiento=date(1990, 5, 15),
             sexo="H",
-            estado="Jalisco"
+            estado="Jalisco",
         )
         assert len(generator.curp) == 18
 
     def test_generate_with_enie_in_names(self):
         """Test generating CURP with ñ in names"""
         from datetime import date
+
         generator = CURPGenerator(
             nombre="Juan",
             paterno="Peña",
             materno="Núñez",
             fecha_nacimiento=date(1990, 5, 15),
             sexo="H",
-            estado="Jalisco"
+            estado="Jalisco",
         )
         assert len(generator.curp) == 18
-

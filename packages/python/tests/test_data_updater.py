@@ -190,9 +190,7 @@ class TestDatabaseIntegrity:
         db = sqlite3.connect(EMBEDDED_DB)
 
         # Check for required tables
-        cursor = db.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
-        )
+        cursor = db.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
         tables = {row[0] for row in cursor.fetchall()}
 
         required_tables = {
@@ -234,9 +232,7 @@ class TestDatabaseIntegrity:
         db = sqlite3.connect(EMBEDDED_DB)
 
         # Check for indexes
-        cursor = db.execute(
-            "SELECT name FROM sqlite_master WHERE type='index' ORDER BY name"
-        )
+        cursor = db.execute("SELECT name FROM sqlite_master WHERE type='index' ORDER BY name")
         indexes = {row[0] for row in cursor.fetchall()}
 
         # Should have at least some indexes
@@ -351,7 +347,9 @@ class TestDataUpdaterErrorCases:
             db.close()
 
             # Mock urlretrieve to copy our test db
-            with mock.patch("catalogmx.data.updater.urllib.request.urlretrieve") as mock_urlretrieve:
+            with mock.patch(
+                "catalogmx.data.updater.urllib.request.urlretrieve"
+            ) as mock_urlretrieve:
 
                 def mock_retrieve(url, filename):
                     import shutil
@@ -383,7 +381,9 @@ class TestDataUpdaterErrorCases:
             updater = DataUpdater(cache_dir=Path(tmpdir))
 
             # Mock urlretrieve to create invalid database
-            with mock.patch("catalogmx.data.updater.urllib.request.urlretrieve") as mock_urlretrieve:
+            with mock.patch(
+                "catalogmx.data.updater.urllib.request.urlretrieve"
+            ) as mock_urlretrieve:
 
                 def mock_retrieve(url, filename):
                     # Create invalid database
@@ -517,5 +517,3 @@ class TestDataUpdaterErrorCases:
             db_path = updater.get_database_path(auto_update=False)
 
             assert db_path == updater.cache_db
-
-

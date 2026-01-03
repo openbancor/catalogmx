@@ -2,7 +2,12 @@
 Complete tests for INEGI catalogs
 """
 
-from catalogmx.catalogs.inegi import LocalidadesCatalog, MunicipiosCatalog, MunicipiosCompletoCatalog, StateCatalog
+from catalogmx.catalogs.inegi import (
+    LocalidadesCatalog,
+    MunicipiosCatalog,
+    MunicipiosCompletoCatalog,
+    StateCatalog,
+)
 
 
 class TestLocalidadesCatalog:
@@ -193,4 +198,3 @@ class TestMunicipiosCatalog:
     def test_is_valid_false(self):
         """Test is_valid with invalid code"""
         assert MunicipiosCatalog.is_valid("99999") is False
-

@@ -356,4 +356,3 @@ class TestBankCatalogComplete:
         """Test validating nonexistent bank code"""
         result = BankCatalog.validate_bank_code("999")
         assert result is False
-

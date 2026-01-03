@@ -8,12 +8,41 @@ from unittest.mock import patch
 
 from catalogmx.catalogs.banxico import BankCatalog, CodigosPlazaCatalog, UDICatalog
 from catalogmx.catalogs.banxico.banks import get_banks_dict, get_spei_banks
-from catalogmx.catalogs.inegi import LocalidadesCatalog, MunicipiosCatalog, MunicipiosCompletoCatalog, StateCatalog
-from catalogmx.catalogs.mexico import HoyNoCirculaCatalog, PlacasFormatosCatalog, SalariosMinimos, UMACatalog
-from catalogmx.catalogs.sat.carta_porte import AeropuertosCatalog, CarreterasCatalog, MaterialPeligrosoCatalog, PuertosMaritimos, TipoEmbalajeCatalog, TipoPermisoCatalog
+from catalogmx.catalogs.inegi import (
+    LocalidadesCatalog,
+    MunicipiosCatalog,
+    MunicipiosCompletoCatalog,
+    StateCatalog,
+)
+from catalogmx.catalogs.mexico import (
+    HoyNoCirculaCatalog,
+    PlacasFormatosCatalog,
+    SalariosMinimos,
+    UMACatalog,
+)
+from catalogmx.catalogs.sat.carta_porte import (
+    AeropuertosCatalog,
+    CarreterasCatalog,
+    MaterialPeligrosoCatalog,
+    PuertosMaritimos,
+    TipoEmbalajeCatalog,
+    TipoPermisoCatalog,
+)
 from catalogmx.catalogs.sat.cfdi_4.tasa_o_cuota import TasaOCuota
-from catalogmx.catalogs.sat.comercio_exterior import EstadoCatalog, IncotermsValidator, MonedaCatalog, PaisCatalog, RegistroIdentTribCatalog
-from catalogmx.catalogs.sat.nomina import PeriodicidadPagoCatalog, RiesgoPuestoCatalog, TipoContratoCatalog, TipoNominaCatalog, TipoRegimenCatalog as NominaTipoRegimenCatalog
+from catalogmx.catalogs.sat.comercio_exterior import (
+    EstadoCatalog,
+    IncotermsValidator,
+    MonedaCatalog,
+    PaisCatalog,
+    RegistroIdentTribCatalog,
+)
+from catalogmx.catalogs.sat.nomina import (
+    PeriodicidadPagoCatalog,
+    RiesgoPuestoCatalog,
+    TipoContratoCatalog,
+    TipoNominaCatalog,
+    TipoRegimenCatalog as NominaTipoRegimenCatalog,
+)
 from catalogmx.catalogs.sepomex import CodigosPostales
 from catalogmx.helpers import detect_rfc_type, get_curp_info
 
@@ -50,10 +79,11 @@ class TestCodigosPlazaUnidecodeFallback:
     def test_fallback_when_unidecode_not_available(self):
         """Test the fallback implementation when unidecode is not available"""
         # Mock the import to test the fallback
-        with patch.dict(sys.modules, {'unidecode': None}):
+        with patch.dict(sys.modules, {"unidecode": None}):
             # Force reimport
             import importlib
             from catalogmx.catalogs.banxico import codigos_plaza
+
             importlib.reload(codigos_plaza)
             # The fallback should work
             result = codigos_plaza.CodigosPlazaCatalog.get_all()
@@ -192,7 +222,7 @@ class TestSalariosMinimosComplete:
 
     def test_get_por_zona(self):
         """Test get_por_zona if method exists"""
-        if hasattr(SalariosMinimos, 'get_por_zona'):
+        if hasattr(SalariosMinimos, "get_por_zona"):
             result = SalariosMinimos.get_por_zona("A")
             assert result is None or isinstance(result, list)
 
@@ -283,14 +313,14 @@ class TestCartaPorteCatalogs:
 
     def test_material_get_by_packing_group(self):
         """Test get_by_packing_group"""
-        if hasattr(MaterialPeligrosoCatalog, 'get_by_packing_group'):
+        if hasattr(MaterialPeligrosoCatalog, "get_by_packing_group"):
             result = MaterialPeligrosoCatalog.get_by_packing_group("I")
             assert isinstance(result, list)
 
     def test_embalaje_get_by_material(self):
         """Test get_by_material if method exists"""
         all_embalajes = TipoEmbalajeCatalog.get_all()
-        if all_embalajes and hasattr(TipoEmbalajeCatalog, 'get_by_material'):
+        if all_embalajes and hasattr(TipoEmbalajeCatalog, "get_by_material"):
             for embalaje in all_embalajes:
                 if "material" in embalaje:
                     result = TipoEmbalajeCatalog.get_by_material(embalaje["material"])
@@ -300,7 +330,7 @@ class TestCartaPorteCatalogs:
     def test_permiso_get_by_transport(self):
         """Test get_by_transport if method exists"""
         all_permisos = TipoPermisoCatalog.get_all()
-        if all_permisos and hasattr(TipoPermisoCatalog, 'get_by_transport'):
+        if all_permisos and hasattr(TipoPermisoCatalog, "get_by_transport"):
             for permiso in all_permisos:
                 transport = permiso.get("transport", permiso.get("transporte", ""))
                 if transport:
@@ -326,7 +356,7 @@ class TestTasaOCuotaComplete:
                     impuesto=item.get("impuesto"),
                     factor=item.get("factor"),
                     trasladado=None,
-                    retenido=None
+                    retenido=None,
                 )
                 assert isinstance(result, list)
         except (FileNotFoundError, KeyError):
@@ -348,13 +378,13 @@ class TestEstadoCatalogComplete:
 
     def test_search(self):
         """Test search if method exists"""
-        if hasattr(EstadoCatalog, 'search'):
+        if hasattr(EstadoCatalog, "search"):
             result = EstadoCatalog.search("Texas", "USA")
             assert isinstance(result, list)
 
     def test_get_by_name(self):
         """Test get_by_name if method exists"""
-        if hasattr(EstadoCatalog, 'get_by_name'):
+        if hasattr(EstadoCatalog, "get_by_name"):
             result = EstadoCatalog.get_by_name("Texas", "USA")
             assert result is None or isinstance(result, dict)
 
@@ -364,14 +394,14 @@ class TestIncotermsComplete:
 
     def test_get_all_transport_modes(self):
         """Test get_by_transport_type if it exists"""
-        if hasattr(IncotermsValidator, 'get_by_transport_type'):
+        if hasattr(IncotermsValidator, "get_by_transport_type"):
             for mode in ["maritime", "any", "air"]:
                 result = IncotermsValidator.get_by_transport_type(mode)
                 assert isinstance(result, list)
 
     def test_get_by_group(self):
         """Test get_by_group if it exists"""
-        if hasattr(IncotermsValidator, 'get_by_group'):
+        if hasattr(IncotermsValidator, "get_by_group"):
             for group in ["E", "F", "C", "D"]:
                 result = IncotermsValidator.get_by_group(group)
                 assert isinstance(result, list)
@@ -387,12 +417,9 @@ class TestMonedaCatalogComplete:
         assert len(result1.get("errors", [])) > 0
 
         # Test valid moneda
-        result2 = MonedaCatalog.validate_conversion_usd({
-            "moneda": "MXN",
-            "total": 20000,
-            "tipo_cambio_usd": 20.0,
-            "total_usd": 1000
-        })
+        result2 = MonedaCatalog.validate_conversion_usd(
+            {"moneda": "MXN", "total": 20000, "tipo_cambio_usd": 20.0, "total_usd": 1000}
+        )
         assert isinstance(result2, dict)
 
 
@@ -407,8 +434,7 @@ class TestRegistroIdentTribComplete:
             for registro in all_registros:
                 if "format_pattern" in registro:
                     result = RegistroIdentTribCatalog.validate_tax_id(
-                        registro["code"],
-                        "INVALID_FORMAT"
+                        registro["code"], "INVALID_FORMAT"
                     )
                     assert isinstance(result, dict)
                     break
@@ -439,34 +465,34 @@ class TestNominaCatalogsComplete:
     def test_periodicidad_get_dias(self):
         """Test get_dias if method exists"""
         all_items = PeriodicidadPagoCatalog.get_all()
-        if all_items and hasattr(PeriodicidadPagoCatalog, 'get_dias'):
+        if all_items and hasattr(PeriodicidadPagoCatalog, "get_dias"):
             result = PeriodicidadPagoCatalog.get_dias(all_items[0]["code"])
             assert result is None or isinstance(result, int)
 
     def test_riesgo_get_by_level(self):
         """Test get_by_level"""
-        if hasattr(RiesgoPuestoCatalog, 'get_by_level'):
+        if hasattr(RiesgoPuestoCatalog, "get_by_level"):
             result = RiesgoPuestoCatalog.get_by_level("1")
             assert isinstance(result, list)
 
     def test_contrato_get_description(self):
         """Test get_description if method exists"""
         all_items = TipoContratoCatalog.get_all()
-        if all_items and hasattr(TipoContratoCatalog, 'get_description'):
+        if all_items and hasattr(TipoContratoCatalog, "get_description"):
             result = TipoContratoCatalog.get_description(all_items[0]["code"])
             assert result is None or isinstance(result, str)
 
     def test_nomina_is_extraordinaria(self):
         """Test is_extraordinaria if method exists"""
         all_items = TipoNominaCatalog.get_all()
-        if all_items and hasattr(TipoNominaCatalog, 'is_extraordinaria'):
+        if all_items and hasattr(TipoNominaCatalog, "is_extraordinaria"):
             result = TipoNominaCatalog.is_extraordinaria(all_items[0]["code"])
             assert isinstance(result, bool)
 
     def test_tipo_regimen_get_description(self):
         """Test get_description if method exists"""
         all_items = NominaTipoRegimenCatalog.get_all()
-        if all_items and hasattr(NominaTipoRegimenCatalog, 'get_description'):
+        if all_items and hasattr(NominaTipoRegimenCatalog, "get_description"):
             result = NominaTipoRegimenCatalog.get_description(all_items[0]["code"])
             assert result is None or isinstance(result, str)
 
@@ -531,26 +557,33 @@ class TestCLIFinal:
         from catalogmx.cli import main
 
         runner = CliRunner()
-        
+
         # Test RFC genera exception handling
-        result = runner.invoke(main, [
-            'rfc', 'generate-fisica',
-            '--nombre', '',
-            '--paterno', '',
-            '--fecha', '1990-01-01'
-        ])
+        result = runner.invoke(
+            main,
+            ["rfc", "generate-fisica", "--nombre", "", "--paterno", "", "--fecha", "1990-01-01"],
+        )
         # Should handle exception gracefully
         assert result.exit_code == 0 or "Error" in result.output
 
         # Test CURP generate exception handling
-        result2 = runner.invoke(main, [
-            'curp', 'generate',
-            '--nombre', '',
-            '--paterno', '',
-            '--fecha', '1990-01-01',
-            '--sexo', 'H',
-            '--estado', 'XX'
-        ])
+        result2 = runner.invoke(
+            main,
+            [
+                "curp",
+                "generate",
+                "--nombre",
+                "",
+                "--paterno",
+                "",
+                "--fecha",
+                "1990-01-01",
+                "--sexo",
+                "H",
+                "--estado",
+                "XX",
+            ],
+        )
         assert result2.exit_code == 0 or "Error" in result2.output
 
         # Test main invocation at line 185

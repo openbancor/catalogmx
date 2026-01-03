@@ -63,7 +63,8 @@ class TestTIIECatalogComplete:
     def test_get_actual_empty_database(self):
         """Test get_actual when database is empty"""
         import sqlite3
-        with patch('sqlite3.connect') as mock_connect:
+
+        with patch("sqlite3.connect") as mock_connect:
             mock_db = MagicMock()
             mock_cursor = MagicMock()
             mock_cursor.fetchone.return_value = None
@@ -116,10 +117,10 @@ class TestTIIECatalogComplete:
 
     def test_calcular_variacion_none_tasas(self):
         """Test calculating variation when records exist but tasas are None"""
-        with patch.object(TIIECatalog, 'get_por_fecha') as mock_get:
+        with patch.object(TIIECatalog, "get_por_fecha") as mock_get:
             mock_get.side_effect = [
                 {"fecha": "2024-01-01", "tasa": None, "plazo": 28},
-                {"fecha": "2024-02-01", "tasa": 10.0, "plazo": 28}
+                {"fecha": "2024-02-01", "tasa": 10.0, "plazo": 28},
             ]
 
             result = TIIECatalog.calcular_variacion("2024-01-01", "2024-02-01", plazo=28)
@@ -166,11 +167,8 @@ class TestTIIECatalogComplete:
 
     def test_calcular_interes_only_inicio(self):
         """Test calculating interest with only start date record"""
-        with patch.object(TIIECatalog, 'get_por_fecha') as mock_get:
-            mock_get.side_effect = [
-                {"fecha": "2024-01-01", "tasa": 10.0, "plazo": 28},
-                None
-            ]
+        with patch.object(TIIECatalog, "get_por_fecha") as mock_get:
+            mock_get.side_effect = [{"fecha": "2024-01-01", "tasa": 10.0, "plazo": 28}, None]
 
             result = TIIECatalog.calcular_interes(10000, "2024-01-01", "2024-02-01", plazo=28)
             assert result is not None
@@ -178,11 +176,8 @@ class TestTIIECatalogComplete:
 
     def test_calcular_interes_only_fin(self):
         """Test calculating interest with only end date record"""
-        with patch.object(TIIECatalog, 'get_por_fecha') as mock_get:
-            mock_get.side_effect = [
-                None,
-                {"fecha": "2024-02-01", "tasa": 10.0, "plazo": 28}
-            ]
+        with patch.object(TIIECatalog, "get_por_fecha") as mock_get:
+            mock_get.side_effect = [None, {"fecha": "2024-02-01", "tasa": 10.0, "plazo": 28}]
 
             result = TIIECatalog.calcular_interes(10000, "2024-01-01", "2024-02-01", plazo=28)
             assert result is not None
@@ -190,22 +185,16 @@ class TestTIIECatalogComplete:
 
     def test_calcular_interes_only_fin_none_tasa(self):
         """Test calculating interest with only end date record but tasa is None"""
-        with patch.object(TIIECatalog, 'get_por_fecha') as mock_get:
-            mock_get.side_effect = [
-                None,
-                {"fecha": "2024-02-01", "tasa": None, "plazo": 28}
-            ]
+        with patch.object(TIIECatalog, "get_por_fecha") as mock_get:
+            mock_get.side_effect = [None, {"fecha": "2024-02-01", "tasa": None, "plazo": 28}]
 
             result = TIIECatalog.calcular_interes(10000, "2024-01-01", "2024-02-01", plazo=28)
             assert result is None
 
     def test_calcular_interes_none_tasa(self):
         """Test calculating interest when tasa is None"""
-        with patch.object(TIIECatalog, 'get_por_fecha') as mock_get:
-            mock_get.side_effect = [
-                {"fecha": "2024-01-01", "tasa": None, "plazo": 28},
-                None
-            ]
+        with patch.object(TIIECatalog, "get_por_fecha") as mock_get:
+            mock_get.side_effect = [{"fecha": "2024-01-01", "tasa": None, "plazo": 28}, None]
 
             result = TIIECatalog.calcular_interes(10000, "2024-01-01", "2024-02-01", plazo=28)
             assert result is None

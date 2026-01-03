@@ -16,17 +16,17 @@ class TestTextUtilsFallback:
             # Force re-import of the module
             import importlib
             from catalogmx.utils import text
-            
+
             # Reload the module to trigger the except block
             importlib.reload(text)
-            
+
             # Now test the fallback implementation
             result = text.normalize_text("México")
             assert result == "MEXICO"
-            
+
             result = text.normalize_text("São Paulo")
             assert result == "SAO PAULO"
-            
+
             result = text.normalize_text("Michoacán")
             assert result == "MICHOACAN"
 
@@ -35,9 +35,8 @@ class TestTextUtilsFallback:
         with patch.dict(sys.modules, {"unidecode": None}):
             import importlib
             from catalogmx.utils import text
-            
+
             importlib.reload(text)
-            
+
             result = text.normalize_for_search("Jalisco")
             assert result == "JALISCO"
-

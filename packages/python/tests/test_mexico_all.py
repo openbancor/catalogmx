@@ -2,7 +2,12 @@
 Complete tests for Mexico catalogs
 """
 
-from catalogmx.catalogs.mexico import HoyNoCirculaCatalog, PlacasFormatosCatalog, SalariosMinimos, UMACatalog
+from catalogmx.catalogs.mexico import (
+    HoyNoCirculaCatalog,
+    PlacasFormatosCatalog,
+    SalariosMinimos,
+    UMACatalog,
+)
 
 
 class TestHoyNoCirculaCatalog:
@@ -171,20 +176,20 @@ class TestSalariosMinimos:
     def test_get_por_zona(self):
         """Test getting by zona"""
         # Test with default zona if method exists
-        if hasattr(SalariosMinimos, 'get_por_zona'):
+        if hasattr(SalariosMinimos, "get_por_zona"):
             result = SalariosMinimos.get_por_zona("General")
             assert isinstance(result, list) or result is None
 
     def test_get_por_zona_not_found(self):
         """Test getting by nonexistent zona"""
-        if hasattr(SalariosMinimos, 'get_por_zona'):
+        if hasattr(SalariosMinimos, "get_por_zona"):
             result = SalariosMinimos.get_por_zona("NonExistent")
             assert isinstance(result, list) or result is None
 
     def test_calcular_mensual(self):
         """Test calculating monthly"""
         # Get a valid year from data first
-        if hasattr(SalariosMinimos, 'get_all'):
+        if hasattr(SalariosMinimos, "get_all"):
             all_salarios = SalariosMinimos.get_all()
             if all_salarios:
                 year = all_salarios[0].get("año", all_salarios[0].get("year", 2024))
@@ -193,7 +198,7 @@ class TestSalariosMinimos:
 
     def test_calcular_anual(self):
         """Test calculating annual"""
-        if hasattr(SalariosMinimos, 'get_all'):
+        if hasattr(SalariosMinimos, "get_all"):
             all_salarios = SalariosMinimos.get_all()
             if all_salarios:
                 year = all_salarios[0].get("año", all_salarios[0].get("year", 2024))
@@ -217,7 +222,7 @@ class TestUMACatalog:
     def test_calcular_monto(self):
         """Test calculating monto"""
         # Get all UMAs and use a valid year
-        if hasattr(UMACatalog, 'get_all'):
+        if hasattr(UMACatalog, "get_all"):
             all_umas = UMACatalog.get_all()
             if all_umas:
                 year = all_umas[0].get("año", all_umas[0].get("year", 2024))
@@ -226,7 +231,7 @@ class TestUMACatalog:
 
     def test_calcular_umas(self):
         """Test calculating UMAs"""
-        if hasattr(UMACatalog, 'get_all'):
+        if hasattr(UMACatalog, "get_all"):
             all_umas = UMACatalog.get_all()
             if all_umas:
                 year = all_umas[0].get("año", all_umas[0].get("year", 2024))
@@ -235,17 +240,16 @@ class TestUMACatalog:
 
     def test_get_incremento(self):
         """Test getting increment"""
-        if hasattr(UMACatalog, 'get_incremento'):
+        if hasattr(UMACatalog, "get_incremento"):
             # Only test if method exists
             result = UMACatalog.get_incremento(2024)
             assert isinstance(result, float) or result is None
 
     def test_get_valor(self):
         """Test getting valor"""
-        if hasattr(UMACatalog, 'get_all'):
+        if hasattr(UMACatalog, "get_all"):
             all_umas = UMACatalog.get_all()
             if all_umas:
                 year = all_umas[0].get("año", all_umas[0].get("year", 2024))
                 result = UMACatalog.get_valor(year)
                 assert isinstance(result, float) or result is None
-
