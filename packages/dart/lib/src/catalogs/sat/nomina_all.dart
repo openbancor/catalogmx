@@ -16,8 +16,9 @@ class TipoNominaCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/nomina_1.2/tipo_nomina.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/nomina_1.2/tipo_nomina.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('tipos')
         ? (jsonData.first['tipos'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -44,8 +45,9 @@ class TipoContratoCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/nomina_1.2/tipo_contrato.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/nomina_1.2/tipo_contrato.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('tipos')
         ? (jsonData.first['tipos'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -72,8 +74,9 @@ class TipoJornadaCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/nomina_1.2/tipo_jornada.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/nomina_1.2/tipo_jornada.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('tipos')
         ? (jsonData.first['tipos'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -100,8 +103,9 @@ class TipoRegimenCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/nomina_1.2/tipo_regimen.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/nomina_1.2/tipo_regimen.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('tipos')
         ? (jsonData.first['tipos'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -128,11 +132,12 @@ class PeriodicidadPagoCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/nomina_1.2/periodicidad_pago.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/nomina_1.2/periodicidad_pago.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('periodicidades')
         ? (jsonData.first['periodicidades'] as List)
-            .cast<Map<String, dynamic>>()
+              .cast<Map<String, dynamic>>()
         : jsonData;
     _byClave = {for (var item in _data!) item['clave'] as String: item};
   }
@@ -180,8 +185,9 @@ class BancoNominaCatalog {
     _loadData();
     final q = query.toUpperCase();
     return _data!
-        .where((item) =>
-            (item['nombre'] as String? ?? '').toUpperCase().contains(q))
+        .where(
+          (item) => (item['nombre'] as String? ?? '').toUpperCase().contains(q),
+        )
         .toList();
   }
 }
@@ -193,8 +199,9 @@ class RiesgoPuestoCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/nomina_1.2/riesgo_puesto.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/nomina_1.2/riesgo_puesto.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('riesgos')
         ? (jsonData.first['riesgos'] as List).cast<Map<String, dynamic>>()
         : jsonData;

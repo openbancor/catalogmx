@@ -104,8 +104,10 @@ void main() {
       });
 
       test('validates ISO code', () {
-        expect(MonedasDivisasCatalog.validarCodigoISO('USD'),
-            anyOf(isTrue, isFalse));
+        expect(
+          MonedasDivisasCatalog.validarCodigoISO('USD'),
+          anyOf(isTrue, isFalse),
+        );
       });
 
       test('formats amount correctly', () {

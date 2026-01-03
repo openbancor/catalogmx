@@ -14,8 +14,9 @@ class PlacasFormatosCatalog {
   static void _loadData() {
     if (_data != null) return;
 
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('mexico/placas_formatos.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'mexico/placas_formatos.json',
+    );
 
     // Handle both list and dict formats
     if (jsonData.isNotEmpty && jsonData.first.containsKey('estados')) {

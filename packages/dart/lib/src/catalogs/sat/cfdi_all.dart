@@ -17,8 +17,9 @@ class ClaveProdServCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/clave_prod_serv.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/cfdi_4.0/clave_prod_serv.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('productos')
         ? (jsonData.first['productos'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -41,9 +42,13 @@ class ClaveProdServCatalog {
     _loadData();
     final q = query.toUpperCase();
     return _data!
-        .where((item) =>
-            (item['descripcion'] as String? ?? '').toUpperCase().contains(q) ||
-            (item['clave'] as String? ?? '').contains(q))
+        .where(
+          (item) =>
+              (item['descripcion'] as String? ?? '').toUpperCase().contains(
+                q,
+              ) ||
+              (item['clave'] as String? ?? '').contains(q),
+        )
         .toList();
   }
 }
@@ -55,8 +60,9 @@ class ClaveUnidadCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/clave_unidad.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/cfdi_4.0/clave_unidad.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('unidades')
         ? (jsonData.first['unidades'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -114,8 +120,9 @@ class TipoFactorCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/c_TipoFactor.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/cfdi_4.0/c_TipoFactor.json',
+    );
     _data = jsonData;
     _byClave = {for (var item in _data!) item['clave'] as String: item};
   }
@@ -139,8 +146,9 @@ class TasaOCuotaCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/c_TasaOCuota.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/cfdi_4.0/c_TasaOCuota.json',
+    );
     _data = jsonData;
   }
 
@@ -157,8 +165,9 @@ class ObjetoImpCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/objeto_imp.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/cfdi_4.0/objeto_imp.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('objetos')
         ? (jsonData.first['objetos'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -189,8 +198,9 @@ class ExportacionCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/exportacion.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/cfdi_4.0/exportacion.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('exportaciones')
         ? (jsonData.first['exportaciones'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -217,8 +227,9 @@ class PeriodicidadCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/c_Periodicidad.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/cfdi_4.0/c_Periodicidad.json',
+    );
     _data = jsonData;
     _byClave = {for (var item in _data!) item['clave'] as String: item};
   }
@@ -268,8 +279,9 @@ class TipoRelacionCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/tipo_relacion.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/cfdi_4.0/tipo_relacion.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('tipos')
         ? (jsonData.first['tipos'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -342,8 +354,10 @@ class PaisCFDICatalog {
     _loadData();
     final q = query.toUpperCase();
     return _data!
-        .where((item) =>
-            (item['descripcion'] as String? ?? '').toUpperCase().contains(q))
+        .where(
+          (item) =>
+              (item['descripcion'] as String? ?? '').toUpperCase().contains(q),
+        )
         .toList();
   }
 }

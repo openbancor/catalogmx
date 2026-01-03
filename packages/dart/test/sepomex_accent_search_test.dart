@@ -16,10 +16,12 @@ void main() {
       });
 
       test('should work with accented and non-accented queries equally', () {
-        final resultsWithAccent =
-            SepomexCodigosPostales.searchByColonia('Águilas');
-        final resultsWithoutAccent =
-            SepomexCodigosPostales.searchByColonia('Aguilas');
+        final resultsWithAccent = SepomexCodigosPostales.searchByColonia(
+          'Águilas',
+        );
+        final resultsWithoutAccent = SepomexCodigosPostales.searchByColonia(
+          'Aguilas',
+        );
 
         // Both should return lists
         expect(resultsWithAccent, isA<List>());
@@ -27,8 +29,11 @@ void main() {
 
         // If data exists, results should match
         if (resultsWithAccent.isNotEmpty || resultsWithoutAccent.isNotEmpty) {
-          expect(resultsWithAccent.length, equals(resultsWithoutAccent.length),
-              reason: 'Accent-insensitive search should return same count');
+          expect(
+            resultsWithAccent.length,
+            equals(resultsWithoutAccent.length),
+            reason: 'Accent-insensitive search should return same count',
+          );
         }
       });
 
@@ -54,10 +59,12 @@ void main() {
 
     group('searchByMunicipio', () {
       test('should be accent-insensitive for municipalities', () {
-        final resultsWithAccent =
-            SepomexCodigosPostales.searchByMunicipio('León');
-        final resultsWithoutAccent =
-            SepomexCodigosPostales.searchByMunicipio('Leon');
+        final resultsWithAccent = SepomexCodigosPostales.searchByMunicipio(
+          'León',
+        );
+        final resultsWithoutAccent = SepomexCodigosPostales.searchByMunicipio(
+          'Leon',
+        );
 
         // Both should work
         expect(resultsWithAccent, isA<List>());
@@ -78,8 +85,9 @@ void main() {
         final results = SepomexCodigosPostales.searchByMunicipio('San José');
         expect(results, isA<List>());
 
-        final resultsNoAccent =
-            SepomexCodigosPostales.searchByMunicipio('San Jose');
+        final resultsNoAccent = SepomexCodigosPostales.searchByMunicipio(
+          'San Jose',
+        );
         expect(resultsNoAccent, isA<List>());
       });
     });
@@ -87,8 +95,9 @@ void main() {
     group('getByState', () {
       test('should be accent-insensitive for states', () {
         final resultsWithAccent = SepomexCodigosPostales.getByState('México');
-        final resultsWithoutAccent =
-            SepomexCodigosPostales.getByState('Mexico');
+        final resultsWithoutAccent = SepomexCodigosPostales.getByState(
+          'Mexico',
+        );
 
         // Both should return lists
         expect(resultsWithAccent, isA<List>());
@@ -123,16 +132,21 @@ void main() {
 
         for (final entry in testCases.entries) {
           final result = normalizeText(entry.key);
-          expect(result.toLowerCase(), contains(entry.value),
-              reason: 'Failed to normalize ${entry.key} to ${entry.value}');
+          expect(
+            result.toLowerCase(),
+            contains(entry.value),
+            reason: 'Failed to normalize ${entry.key} to ${entry.value}',
+          );
         }
       });
 
       test('should normalize complete words', () {
         expect(normalizeText('México'), equals('mexico'));
         expect(normalizeText('San José'), equals('san jose'));
-        expect(normalizeText('Michoacán de Ocampo'),
-            equals('michoacan de ocampo'));
+        expect(
+          normalizeText('Michoacán de Ocampo'),
+          equals('michoacan de ocampo'),
+        );
         expect(normalizeText('Las Águilas'), equals('las aguilas'));
       });
 

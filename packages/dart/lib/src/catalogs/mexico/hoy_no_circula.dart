@@ -14,8 +14,9 @@ class HoyNoCirculaCatalog {
   static void _loadData() {
     if (_data != null) return;
 
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('mexico/hoy_no_circula_cdmx.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'mexico/hoy_no_circula_cdmx.json',
+    );
 
     // Handle both list and dict formats
     if (jsonData.isNotEmpty && jsonData.first.containsKey('reglas')) {

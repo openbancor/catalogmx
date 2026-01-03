@@ -16,7 +16,9 @@ void main() {
     periodo: ISRPeriod.mensual,
     year: ISRYear.year2024,
   );
-  print('\nISR 2024 Mensual (\$15,000): \$${result24.isrFinal.toStringAsFixed(2)}');
+  print(
+    '\nISR 2024 Mensual (\$15,000): \$${result24.isrFinal.toStringAsFixed(2)}',
+  );
   print('Tasa efectiva: ${result24.tasaEfectiva.toStringAsFixed(2)}%');
 
   // Test daily calculation
@@ -25,7 +27,9 @@ void main() {
     periodo: ISRPeriod.diaria,
     year: ISRYear.year2026,
   );
-  print('\nISR 2026 Diaria (\$500): \$${resultDaily.isrFinal.toStringAsFixed(2)}');
+  print(
+    '\nISR 2026 Diaria (\$500): \$${resultDaily.isrFinal.toStringAsFixed(2)}',
+  );
 
   print('\n✅ Dart calculator working!');
 }

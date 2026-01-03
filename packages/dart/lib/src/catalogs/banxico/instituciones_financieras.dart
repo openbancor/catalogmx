@@ -28,9 +28,7 @@ class InstitucionesFinancierasCatalog {
     }
 
     // Build indices
-    _byCode = {
-      for (var inst in _data!) inst['codigo'] as String: inst,
-    };
+    _byCode = {for (var inst in _data!) inst['codigo'] as String: inst};
 
     _byName = {
       for (var inst in _data!) (inst['nombre'] as String).toUpperCase(): inst,
@@ -89,8 +87,10 @@ class InstitucionesFinancierasCatalog {
     _loadData();
     final queryNorm = query.toUpperCase();
     return _data!
-        .where((inst) =>
-            (inst['nombre'] as String).toUpperCase().contains(queryNorm))
+        .where(
+          (inst) =>
+              (inst['nombre'] as String).toUpperCase().contains(queryNorm),
+        )
         .toList();
   }
 

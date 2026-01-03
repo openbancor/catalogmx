@@ -15,8 +15,9 @@ class OperadoresMovilesCatalog {
   static void _loadData() {
     if (_data != null) return;
 
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('ift/operadores_moviles.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'ift/operadores_moviles.json',
+    );
 
     // Handle both list and dict formats
     if (jsonData.isNotEmpty && jsonData.first.containsKey('operadores')) {
@@ -28,9 +29,7 @@ class OperadoresMovilesCatalog {
     }
 
     // Build indices
-    _byCode = {
-      for (var op in _data!) op['codigo'] as String: op,
-    };
+    _byCode = {for (var op in _data!) op['codigo'] as String: op};
 
     _byName = {
       for (var op in _data!) (op['nombre'] as String).toUpperCase(): op,
@@ -90,7 +89,8 @@ class OperadoresMovilesCatalog {
     final queryNorm = query.toUpperCase();
     return _data!
         .where(
-            (op) => (op['nombre'] as String).toUpperCase().contains(queryNorm))
+          (op) => (op['nombre'] as String).toUpperCase().contains(queryNorm),
+        )
         .toList();
   }
 

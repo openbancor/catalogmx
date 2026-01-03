@@ -13,8 +13,9 @@ class RegimenFiscalCatalog {
   static void _loadData() {
     if (_data != null) return;
 
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/regimen_fiscal.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/cfdi_4.0/regimen_fiscal.json',
+    );
 
     // Handle both list and dict formats
     if (jsonData.isNotEmpty && jsonData.first.containsKey('regimenes')) {
@@ -26,9 +27,7 @@ class RegimenFiscalCatalog {
     }
 
     // Build index
-    _byClave = {
-      for (var item in _data!) item['clave'] as String: item,
-    };
+    _byClave = {for (var item in _data!) item['clave'] as String: item};
   }
 
   /// Obtiene todos los regímenes fiscales
@@ -53,8 +52,10 @@ class RegimenFiscalCatalog {
     _loadData();
     final queryNorm = query.toUpperCase();
     return _data!
-        .where((item) =>
-            (item['descripcion'] as String).toUpperCase().contains(queryNorm))
+        .where(
+          (item) =>
+              (item['descripcion'] as String).toUpperCase().contains(queryNorm),
+        )
         .toList();
   }
 
@@ -62,9 +63,11 @@ class RegimenFiscalCatalog {
   static List<Map<String, dynamic>> getParaPersonasFisicas() {
     _loadData();
     return _data!
-        .where((item) =>
-            item['persona_fisica'] == true ||
-            item['aplicaPersonaFisica'] == 'Sí')
+        .where(
+          (item) =>
+              item['persona_fisica'] == true ||
+              item['aplicaPersonaFisica'] == 'Sí',
+        )
         .toList();
   }
 
@@ -72,8 +75,11 @@ class RegimenFiscalCatalog {
   static List<Map<String, dynamic>> getParaPersonasMorales() {
     _loadData();
     return _data!
-        .where((item) =>
-            item['persona_moral'] == true || item['aplicaPersonaMoral'] == 'Sí')
+        .where(
+          (item) =>
+              item['persona_moral'] == true ||
+              item['aplicaPersonaMoral'] == 'Sí',
+        )
         .toList();
   }
 }
