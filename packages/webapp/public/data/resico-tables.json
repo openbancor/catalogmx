@@ -1,0 +1,225 @@
+{
+  "metadata": {
+    "description": "Tablas RESICO México - Régimen Simplificado de Confianza",
+    "source": "Artículo 113-E LISR, RMF 2024-2026",
+    "currency": "MXN",
+    "years": [2024, 2025, 2026],
+    "note": "RESICO es un régimen opcional para personas físicas y morales con ingresos menores a los límites establecidos"
+  },
+  "limits": {
+    "personaFisica": {
+      "ingresoAnualMaximo": 3500000,
+      "description": "Límite anual para personas físicas en RESICO"
+    },
+    "personaMoral": {
+      "ingresoAnualMaximo": 35000000,
+      "description": "Límite anual para personas morales en RESICO"
+    }
+  },
+  "brackets": {
+    "2024": {
+      "description": "Tasas RESICO 2024 - Personas Físicas",
+      "inflationFactor": 1.0,
+      "personaFisica": [
+        {
+          "limiteInferior": 0.01,
+          "limiteSuperior": 300000,
+          "tasa": 1.0,
+          "cuotaFija": 0
+        },
+        {
+          "limiteInferior": 300000.01,
+          "limiteSuperior": 600000,
+          "tasa": 1.1,
+          "cuotaFija": 3000
+        },
+        {
+          "limiteInferior": 600000.01,
+          "limiteSuperior": 1000000,
+          "tasa": 1.5,
+          "cuotaFija": 6300
+        },
+        {
+          "limiteInferior": 1000000.01,
+          "limiteSuperior": 3500000,
+          "tasa": 2.0,
+          "cuotaFija": 12300
+        },
+        {
+          "limiteInferior": 3500000.01,
+          "limiteSuperior": null,
+          "tasa": 2.5,
+          "cuotaFija": 62300
+        }
+      ],
+      "personaMoral": [
+        {
+          "limiteInferior": 0.01,
+          "limiteSuperior": 300000,
+          "tasa": 1.0,
+          "cuotaFija": 0
+        },
+        {
+          "limiteInferior": 300000.01,
+          "limiteSuperior": 600000,
+          "tasa": 1.1,
+          "cuotaFija": 3000
+        },
+        {
+          "limiteInferior": 600000.01,
+          "limiteSuperior": 1000000,
+          "tasa": 1.5,
+          "cuotaFija": 6300
+        },
+        {
+          "limiteInferior": 1000000.01,
+          "limiteSuperior": 35000000,
+          "tasa": 2.0,
+          "cuotaFija": 12300
+        },
+        {
+          "limiteInferior": 35000000.01,
+          "limiteSuperior": null,
+          "tasa": 2.5,
+          "cuotaFija": 692300
+        }
+      ]
+    },
+    "2025": {
+      "description": "Tasas RESICO 2025 - Personas Físicas",
+      "inflationFactor": 1.0,
+      "personaFisica": [
+        {
+          "limiteInferior": 0.01,
+          "limiteSuperior": 300000,
+          "tasa": 1.0,
+          "cuotaFija": 0
+        },
+        {
+          "limiteInferior": 300000.01,
+          "limiteSuperior": 600000,
+          "tasa": 1.1,
+          "cuotaFija": 3000
+        },
+        {
+          "limiteInferior": 600000.01,
+          "limiteSuperior": 1000000,
+          "tasa": 1.5,
+          "cuotaFija": 6300
+        },
+        {
+          "limiteInferior": 1000000.01,
+          "limiteSuperior": 3500000,
+          "tasa": 2.0,
+          "cuotaFija": 12300
+        },
+        {
+          "limiteInferior": 3500000.01,
+          "limiteSuperior": null,
+          "tasa": 2.5,
+          "cuotaFija": 62300
+        }
+      ],
+      "personaMoral": [
+        {
+          "limiteInferior": 0.01,
+          "limiteSuperior": 300000,
+          "tasa": 1.0,
+          "cuotaFija": 0
+        },
+        {
+          "limiteInferior": 300000.01,
+          "limiteSuperior": 600000,
+          "tasa": 1.1,
+          "cuotaFija": 3000
+        },
+        {
+          "limiteInferior": 600000.01,
+          "limiteSuperior": 1000000,
+          "tasa": 1.5,
+          "cuotaFija": 6300
+        },
+        {
+          "limiteInferior": 1000000.01,
+          "limiteSuperior": 35000000,
+          "tasa": 2.0,
+          "cuotaFija": 12300
+        },
+        {
+          "limiteInferior": 35000000.01,
+          "limiteSuperior": null,
+          "tasa": 2.5,
+          "cuotaFija": 692300
+        }
+      ]
+    },
+    "2026": {
+      "description": "Tasas RESICO 2026 - Personas Físicas (actualizadas por inflación)",
+      "inflationFactor": 1.1321,
+      "personaFisica": [
+        {
+          "limiteInferior": 0.01,
+          "limiteSuperior": 339630,
+          "tasa": 1.0,
+          "cuotaFija": 0
+        },
+        {
+          "limiteInferior": 339630.01,
+          "limiteSuperior": 679260,
+          "tasa": 1.1,
+          "cuotaFija": 3396.30
+        },
+        {
+          "limiteInferior": 679260.01,
+          "limiteSuperior": 1132100,
+          "tasa": 1.5,
+          "cuotaFija": 7132.23
+        },
+        {
+          "limiteInferior": 1132100.01,
+          "limiteSuperior": 3962350,
+          "tasa": 2.0,
+          "cuotaFija": 13924.83
+        },
+        {
+          "limiteInferior": 3962350.01,
+          "limiteSuperior": null,
+          "tasa": 2.5,
+          "cuotaFija": 70529.83
+        }
+      ],
+      "personaMoral": [
+        {
+          "limiteInferior": 0.01,
+          "limiteSuperior": 339630,
+          "tasa": 1.0,
+          "cuotaFija": 0
+        },
+        {
+          "limiteInferior": 339630.01,
+          "limiteSuperior": 679260,
+          "tasa": 1.1,
+          "cuotaFija": 3396.30
+        },
+        {
+          "limiteInferior": 679260.01,
+          "limiteSuperior": 1132100,
+          "tasa": 1.5,
+          "cuotaFija": 7132.23
+        },
+        {
+          "limiteInferior": 1132100.01,
+          "limiteSuperior": 39623500,
+          "tasa": 2.0,
+          "cuotaFija": 13924.83
+        },
+        {
+          "limiteInferior": 39623500.01,
+          "limiteSuperior": null,
+          "tasa": 2.5,
+          "cuotaFija": 783753.83
+        }
+      ]
+    }
+  }
+}

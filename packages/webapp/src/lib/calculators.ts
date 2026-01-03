@@ -6,6 +6,7 @@
  */
 
 import isrTablesData from '../../shared-data/isr-tables.json';
+import resicoTablesData from '../../shared-data/resico-tables.json';
 
 export type ISRYear = 2024 | 2025 | 2026;
 export type ISRPeriod = 'diaria' | 'semanal' | 'decenal' | 'quincenal' | 'mensual' | 'anual';
@@ -407,5 +408,121 @@ export function calculateIEPS(base: number, productType: string): {
     product,
     ieps,
     total: base + ieps
+  };
+}
+
+// ============================================================================
+// RESICO (Régimen Simplificado de Confianza)
+// ============================================================================
+
+export type RESICOYear = 2024 | 2025 | 2026;
+export type RESICOTipoContribuyente = 'personaFisica' | 'personaMoral';
+
+interface RESICOBracket {
+  limiteInferior: number;
+  limiteSuperior: number;
+  cuotaFija: number;
+  tasa: number;
+}
+
+interface RESICOBracketJSON {
+  limiteInferior: number;
+  limiteSuperior: number | null;
+  cuotaFija: number;
+  tasa: number;
+}
+
+export interface RESICOCalculationResult {
+  ingresoAnual: number;
+  year: number;
+  tipoContribuyente: RESICOTipoContribuyente;
+  limiteMaximo: number;
+  dentroDeLimite: boolean;
+  bracket: {
+    limiteInferior: number;
+    limiteSuperior: number;
+    cuotaFija: number;
+    tasa: number;
+  };
+  baseGravable: number;
+  impuestoMarginal: number;
+  resicoAnual: number;
+  resicoMensual: number;
+  tasaEfectiva: number;
+}
+
+// Helper to get RESICO brackets for a specific year and taxpayer type
+function getRESICOBrackets(year: RESICOYear, tipo: RESICOTipoContribuyente): RESICOBracket[] {
+  const yearStr = year.toString() as '2024' | '2025' | '2026';
+  const bracketsData = resicoTablesData.brackets[yearStr][tipo] as RESICOBracketJSON[];
+
+  // Convert null to Infinity for limiteSuperior
+  return bracketsData.map((b: RESICOBracketJSON) => ({
+    limiteInferior: b.limiteInferior,
+    limiteSuperior: b.limiteSuperior === null ? Infinity : b.limiteSuperior,
+    cuotaFija: b.cuotaFija,
+    tasa: b.tasa
+  }));
+}
+
+/**
+ * Calculate RESICO (Régimen Simplificado de Confianza) tax
+ *
+ * @param ingresoAnual - Annual taxable income
+ * @param tipoContribuyente - Type of taxpayer (personaFisica or personaMoral)
+ * @param year - Tax year (2024, 2025, or 2026)
+ * @returns Complete RESICO calculation result
+ *
+ * @example
+ * ```typescript
+ * const result = calculateRESICO(500000, 'personaFisica', 2026);
+ * console.log(`RESICO anual: $${result.resicoAnual.toFixed(2)}`);
+ * console.log(`RESICO mensual: $${result.resicoMensual.toFixed(2)}`);
+ * ```
+ */
+export function calculateRESICO(
+  ingresoAnual: number,
+  tipoContribuyente: RESICOTipoContribuyente = 'personaFisica',
+  year: RESICOYear = 2026
+): RESICOCalculationResult {
+  // Get income limit for taxpayer type
+  const limiteMaximo = resicoTablesData.limits[tipoContribuyente].ingresoAnualMaximo;
+  const dentroDeLimite = ingresoAnual <= limiteMaximo;
+
+  // Get brackets for year and type
+  const brackets = getRESICOBrackets(year, tipoContribuyente);
+
+  // Find applicable bracket
+  const bracket = brackets.find(b =>
+    ingresoAnual >= b.limiteInferior && ingresoAnual <= b.limiteSuperior
+  ) || brackets[brackets.length - 1];
+
+  // Calculate base gravable (excess over lower limit)
+  const baseGravable = ingresoAnual - bracket.limiteInferior;
+
+  // Calculate marginal tax
+  const impuestoMarginal = baseGravable * (bracket.tasa / 100);
+
+  // Calculate total RESICO (annual)
+  const resicoAnual = bracket.cuotaFija + impuestoMarginal;
+
+  // Calculate monthly equivalent
+  const resicoMensual = resicoAnual / 12;
+
+  // Calculate effective rate
+  const tasaEfectiva = ingresoAnual > 0 ? (resicoAnual / ingresoAnual * 100) : 0;
+
+  return {
+    ingresoAnual,
+    year,
+    tipoContribuyente,
+    limiteMaximo,
+    dentroDeLimite,
+    bracket,
+    baseGravable,
+    impuestoMarginal,
+    resicoAnual,
+    resicoMensual,
+    tasaEfectiva
   };
 }
