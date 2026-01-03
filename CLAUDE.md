@@ -274,6 +274,219 @@ Code that fails any check will NOT be merged.
 
 ---
 
+## Quality Standards & CI/CD Pipeline
+
+### Overview
+
+catalogmx enforces **strict quality standards** through automated CI/CD pipelines on every push and pull request. All quality checks MUST pass before code can be merged.
+
+### CI Pipeline Structure
+
+The CI pipeline (`.github/workflows/ci.yml`) runs comprehensive quality gates across all three platforms:
+
+#### **Python Quality Gates** (Python 3.10-3.14)
+
+```bash
+# 1. Linting (REQUIRED - Must Pass)
+ruff check catalogmx/
+
+# 2. Code Formatting (REQUIRED - Must Pass)
+black --check catalogmx/
+
+# 3. Type Checking (RECOMMENDED - Warning only)
+mypy catalogmx/
+
+# 4. Test Suite (REQUIRED - Must Pass)
+pytest tests/ -v --cov=catalogmx --cov-report=xml --cov-report=term-missing --cov-branch
+
+# 5. Coverage Threshold (TARGET - Warning only)
+coverage report --fail-under=100  # Target: 100%, Minimum: 90%
+```
+
+**Quality Standards:**
+- ✅ **Linting**: Zero ruff violations
+- ✅ **Format**: 100% Black-compliant code
+- ⚠️ **Type Check**: mypy warnings (continue-on-error)
+- ✅ **Tests**: 100% passing (0 failures)
+- 🎯 **Coverage**: 90% minimum (current: 93.78%, target: 100%)
+
+#### **TypeScript Quality Gates** (Node 18, 20, 22)
+
+```bash
+# 1. Linting (REQUIRED - Must Pass)
+npm run lint
+
+# 2. Code Formatting (REQUIRED - Must Pass)
+npm run format:check
+
+# 3. Type Checking (REQUIRED - Must Pass)
+npm run typecheck
+
+# 4. Test Suite with Coverage (REQUIRED - Must Pass)
+npm run test:coverage
+
+# 5. Coverage Metrics Check (TARGET - Warning only)
+# Checks: lines, statements, functions, branches all at 100%
+```
+
+**Quality Standards:**
+- ✅ **ESLint**: Zero violations
+- ✅ **Prettier**: 100% formatted code
+- ✅ **TypeScript**: Strict mode, zero type errors
+- ✅ **Tests**: 100% passing (0 failures)
+- 🎯 **Coverage**: 90% minimum (target: 100% all metrics)
+
+#### **Dart/Flutter Quality Gates** (Stable & Beta)
+
+```bash
+# 1. Dependency Verification (REQUIRED - Must Pass)
+dart pub get
+dart pub deps
+
+# 2. Static Analysis (REQUIRED - Must Pass)
+dart analyze
+
+# 3. Code Formatting (REQUIRED - Must Pass)
+dart format --set-exit-if-changed .
+
+# 4. Test Suite with Coverage (REQUIRED - Must Pass)
+dart test --coverage=coverage
+
+# 5. Package Validation (REQUIRED - Must Pass)
+dart pub publish --dry-run
+```
+
+**Quality Standards:**
+- ✅ **Analyzer**: Zero errors/warnings (67 lint rules enforced)
+- ✅ **Format**: 100% dart-formatted code
+- ✅ **Tests**: 100% passing (0 failures)
+- ✅ **Package**: Valid pub.dev package structure
+- 🎯 **Coverage**: LCOV report generated
+
+### Coverage Reporting
+
+Separate coverage workflow (`.github/workflows/coverage-report.yml`) provides:
+
+1. **Codecov Integration**: Automated coverage uploads
+2. **PR Comments**: Coverage diff on pull requests
+   - 🟢 Green threshold: ≥90%
+   - 🟠 Orange threshold: ≥80%
+   - 🔴 Red: <80%
+3. **GitHub Pages**: HTML coverage reports
+   - Python: `https://[org].github.io/catalogmx/coverage/python/`
+   - TypeScript: `https://[org].github.io/catalogmx/coverage/typescript/`
+
+### Quality Gate Matrix
+
+| Platform   | Lint | Format | Types | Tests | Coverage | Min Coverage |
+|------------|------|--------|-------|-------|----------|--------------|
+| Python     | ✅   | ✅     | ⚠️    | ✅    | 🎯       | 90%          |
+| TypeScript | ✅   | ✅     | ✅    | ✅    | 🎯       | 90%          |
+| Dart       | ✅   | ✅     | ✅    | ✅    | 🎯       | 90%          |
+
+**Legend:**
+- ✅ **REQUIRED**: Must pass or CI fails
+- ⚠️ **WARNING**: Continues on error (soft requirement)
+- 🎯 **TARGET**: 100% goal, 90% minimum enforced with warnings
+
+### Pre-Commit Quality Checklist
+
+Before committing ANY code, run this full quality check:
+
+#### Python
+```bash
+cd packages/python
+
+# Full quality suite
+black catalogmx/ && \
+ruff check catalogmx/ && \
+mypy catalogmx/ && \
+pytest tests/ --cov=catalogmx --cov-branch --cov-report=term-missing
+
+# Check results:
+# ✅ Black: "reformatted" or "left unchanged"
+# ✅ Ruff: "All checks passed!"
+# ✅ Mypy: "Success: no issues found"
+# ✅ Pytest: "passed" (0 failed)
+# ✅ Coverage: ≥90% (target: 100%)
+```
+
+#### TypeScript
+```bash
+cd packages/typescript
+
+# Full quality suite
+npm run lint && \
+npm run format:check && \
+npm run typecheck && \
+npm run test:coverage
+
+# Check results:
+# ✅ ESLint: No errors
+# ✅ Prettier: All files formatted
+# ✅ TSC: Compiled successfully
+# ✅ Jest: All tests passed
+# ✅ Coverage: ≥90% lines/statements/functions/branches
+```
+
+#### Dart
+```bash
+cd packages/dart
+
+# Full quality suite
+dart analyze && \
+dart format --set-exit-if-changed . && \
+dart test --coverage=coverage && \
+dart pub publish --dry-run
+
+# Check results:
+# ✅ Analyzer: No issues found
+# ✅ Format: No formatting changes needed
+# ✅ Tests: All tests passed!
+# ✅ Pub: Package has 0 warnings
+```
+
+### CI/CD Workflow Triggers
+
+**Workflows run on:**
+- **Push** to: `main`, `master`, `develop` branches
+- **Pull Request** targeting: `main`, `master`, `develop` branches
+
+**Other CI Workflows:**
+- `publish.yml` - Automated package publishing to PyPI/npm/pub.dev
+- `sqlite-assets.yml` - Builds SQLite databases from JSON catalogs
+- `update-dynamic-data.yml` - Updates currency/inflation data from APIs
+- `webapp-pages.yml` - Deploys webapp to GitHub Pages
+
+### Enforcement Rules
+
+**BLOCKING (CI will FAIL):**
+- ❌ Linting errors (ruff, eslint, dart analyze)
+- ❌ Format violations (black, prettier, dart format)
+- ❌ TypeScript type errors
+- ❌ Test failures
+- ❌ Build failures
+- ❌ Invalid package structure (dart pub publish --dry-run)
+
+**NON-BLOCKING (Warnings only):**
+- ⚠️ Python mypy type errors (continue-on-error: true)
+- ⚠️ Coverage below 100% (target) but above 90% (minimum)
+- ⚠️ Codecov upload failures
+
+### Success Criteria Summary
+
+For **ANY** code change to be merge-ready:
+
+1. ✅ **All linters pass** (ruff, eslint, dart analyze)
+2. ✅ **All formatters pass** (black, prettier, dart format)
+3. ✅ **All tests pass** (pytest, jest, dart test)
+4. ✅ **Coverage ≥90%** (current: 93.78%, target: 100%)
+5. ✅ **Build succeeds** (tsc, dart pub)
+6. ✅ **Package validates** (twine check, dart pub publish --dry-run)
+7. ⚠️ **Type checking** (mypy warning-only, TSC required, dart analyze required)
+
+---
+
 ## When Adding New Features
 
 ### 1. **Write Tests First (TDD)**
@@ -492,25 +705,43 @@ npm run build
 
 ## Success Criteria
 
-For any change to be acceptable:
+For any change to be acceptable, all quality gates must pass (see **Quality Standards & CI/CD Pipeline** section):
 
-1. ✅ All 926 tests must pass
-2. ✅ Coverage must be >= 90%
-3. ✅ Code must be formatted (black + ruff)
-4. ✅ Package must build successfully
-5. ✅ Documentation must be updated
+1. ✅ **All linters pass** (ruff, eslint, dart analyze) - ZERO violations
+2. ✅ **All formatters pass** (black, prettier, dart format) - 100% compliant
+3. ✅ **All tests pass** (pytest, jest, dart test) - 0 failures across all platforms
+4. ✅ **Coverage ≥90%** (current: 93.78%, target: 100%)
+5. ✅ **All builds succeed** (python -m build, tsc, dart pub)
+6. ✅ **Package validation** (twine check, dart pub publish --dry-run)
+7. ⚠️ **Type checking** (mypy warning-only, tsc strict mode required)
+8. ✅ **CI pipeline passes** (all GitHub Actions workflows green)
+9. ✅ **Documentation updated** (if applicable)
+
+**Quick Validation:**
+```bash
+# Python
+cd packages/python && black catalogmx/ && ruff check catalogmx/ && mypy catalogmx/ && pytest tests/ --cov=catalogmx --cov-branch
+
+# TypeScript
+cd packages/typescript && npm run lint && npm run format:check && npm run typecheck && npm run test:coverage
+
+# Dart
+cd packages/dart && dart analyze && dart format --set-exit-if-changed . && dart test && dart pub publish --dry-run
+```
 
 ---
 
 ## Project Status: ✅ Production Ready
 
-- **Coverage**: 93.78% (exceeds 90% requirement)
-- **Tests**: 926 passing (0 failures)
-- **Packaging**: Modern pyproject.toml
+- **Coverage**: 93.78% (exceeds 90% minimum requirement)
+- **Tests**: 1,250+ passing (0 failures across all platforms)
+- **Packaging**: Modern (pyproject.toml, package.json, pubspec.yaml)
 - **Documentation**: Comprehensive and organized
-- **Quality**: Enterprise-grade
+- **Quality**: Enterprise-grade with automated CI/CD enforcement
+- **Platforms**: Python 3.10-3.14, TypeScript/Node 18-22, Dart Stable & Beta
+- **CI/CD**: 6 automated workflows (tests, coverage, publish, assets, data updates, webapp)
 
-**Last Updated**: November 2024
+**Last Updated**: January 2026
 **Maintained By**: Luis Fernando Barrera
 **License**: BSD-2-Clause
 
