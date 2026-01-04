@@ -52,10 +52,10 @@ class RESICOBracket {
   }
 
   Map<String, dynamic> toJson() => {
-    'limiteInferior': limiteInferior,
-    'limiteSuperior': limiteSuperior,
-    'tasa': tasa,
-  };
+        'limiteInferior': limiteInferior,
+        'limiteSuperior': limiteSuperior,
+        'tasa': tasa,
+      };
 }
 
 /// Complete RESICO calculation result
@@ -81,15 +81,15 @@ class RESICOCalculationResult {
   });
 
   Map<String, dynamic> toJson() => {
-    'ingreso': ingreso,
-    'periodo': periodo,
-    'year': year,
-    'limiteMaximo': limiteMaximo,
-    'dentroDeLimite': dentroDeLimite,
-    'bracket': bracket.toJson(),
-    'resicoCalculado': resicoCalculado,
-    'tasaEfectiva': tasaEfectiva,
-  };
+        'ingreso': ingreso,
+        'periodo': periodo,
+        'year': year,
+        'limiteMaximo': limiteMaximo,
+        'dentroDeLimite': dentroDeLimite,
+        'bracket': bracket.toJson(),
+        'resicoCalculado': resicoCalculado,
+        'tasaEfectiva': tasaEfectiva,
+      };
 }
 
 /// RESICO Calculator class

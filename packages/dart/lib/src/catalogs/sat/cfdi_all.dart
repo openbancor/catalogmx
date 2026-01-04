@@ -45,8 +45,8 @@ class ClaveProdServCatalog {
         .where(
           (item) =>
               (item['descripcion'] as String? ?? '').toUpperCase().contains(
-                q,
-              ) ||
+                    q,
+                  ) ||
               (item['clave'] as String? ?? '').contains(q),
         )
         .toList();

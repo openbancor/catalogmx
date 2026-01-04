@@ -137,7 +137,7 @@ class PeriodicidadPagoCatalog {
     );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('periodicidades')
         ? (jsonData.first['periodicidades'] as List)
-              .cast<Map<String, dynamic>>()
+            .cast<Map<String, dynamic>>()
         : jsonData;
     _byClave = {for (var item in _data!) item['clave'] as String: item};
   }
