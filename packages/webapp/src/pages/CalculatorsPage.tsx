@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLocale } from '@/lib/locale';
 import ISRPage from './ISRPage';
+import RESICOPage from './RESICOPage';
 import IVAPage from './IVAPage';
 import IEPSPage from './IEPSPage';
 import UDIPage from './UDIPage';
@@ -36,6 +37,12 @@ export default function CalculatorsPage() {
               className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none border border-transparent data-[state=active]:border-primary/20 bg-muted/50 min-w-[70px]"
             >
               ISR
+            </TabsTrigger>
+            <TabsTrigger
+              value="resico"
+              className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none border border-transparent data-[state=active]:border-primary/20 bg-muted/50 min-w-[80px]"
+            >
+              RESICO
             </TabsTrigger>
             <TabsTrigger
               value="iva"
@@ -78,6 +85,9 @@ export default function CalculatorsPage() {
 
         <TabsContent value="isr" className="mt-0 focus-visible:ring-0">
           <ISRPage />
+        </TabsContent>
+        <TabsContent value="resico" className="mt-0 focus-visible:ring-0">
+          <RESICOPage />
         </TabsContent>
         <TabsContent value="iva" className="mt-0 focus-visible:ring-0">
           <IVAPage />
