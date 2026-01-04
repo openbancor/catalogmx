@@ -5,7 +5,16 @@ Comprehensive CLI tests for 100% coverage
 from click.testing import CliRunner
 import pytest
 
-from catalogmx.cli import main, rfc, curp, rfc_validate, rfc_generate_fisica, rfc_generate_moral, curp_validate, curp_generate
+from catalogmx.cli import (
+    main,
+    rfc,
+    curp,
+    rfc_validate,
+    rfc_generate_fisica,
+    rfc_generate_moral,
+    curp_validate,
+    curp_generate,
+)
 
 
 class TestCLIMain:
@@ -22,27 +31,27 @@ class TestCLIMain:
 
     def test_main_help(self):
         """Test main --help"""
-        result = self.runner.invoke(main, ['--help'])
+        result = self.runner.invoke(main, ["--help"])
         assert result.exit_code == 0
-        assert 'RFC' in result.output or 'CURP' in result.output
+        assert "RFC" in result.output or "CURP" in result.output
 
     def test_main_version(self):
         """Test main --version"""
-        result = self.runner.invoke(main, ['--version'])
+        result = self.runner.invoke(main, ["--version"])
         assert result.exit_code == 0
-        assert '0.2.0' in result.output
+        assert "0.2.0" in result.output
 
     def test_rfc_group(self):
         """Test RFC group"""
-        result = self.runner.invoke(main, ['rfc', '--help'])
+        result = self.runner.invoke(main, ["rfc", "--help"])
         assert result.exit_code == 0
-        assert 'RFC' in result.output
+        assert "RFC" in result.output
 
     def test_curp_group(self):
         """Test CURP group"""
-        result = self.runner.invoke(main, ['curp', '--help'])
+        result = self.runner.invoke(main, ["curp", "--help"])
         assert result.exit_code == 0
-        assert 'CURP' in result.output
+        assert "CURP" in result.output
 
 
 class TestRFCValidateCLI:
@@ -53,17 +62,17 @@ class TestRFCValidateCLI:
 
     def test_rfc_validate_valid_fisica(self):
         """Test validating valid RFC fisica"""
-        result = self.runner.invoke(main, ['rfc', 'validate', 'GODE561231GR8'])
+        result = self.runner.invoke(main, ["rfc", "validate", "GODE561231GR8"])
         assert result.exit_code == 0
-        assert 'valid' in result.output.lower()
-        assert 'Type:' in result.output
-        assert 'Validation details:' in result.output
+        assert "valid" in result.output.lower()
+        assert "Type:" in result.output
+        assert "Validation details:" in result.output
 
     def test_rfc_validate_invalid(self):
         """Test validating invalid RFC"""
-        result = self.runner.invoke(main, ['rfc', 'validate', 'INVALID'])
+        result = self.runner.invoke(main, ["rfc", "validate", "INVALID"])
         assert result.exit_code == 0
-        assert 'invalid' in result.output.lower()
+        assert "invalid" in result.output.lower()
 
 
 class TestRFCGenerateFisicaCLI:
@@ -74,47 +83,67 @@ class TestRFCGenerateFisicaCLI:
 
     def test_rfc_generate_fisica_full(self):
         """Test generating RFC fisica with all params"""
-        result = self.runner.invoke(main, [
-            'rfc', 'generate-fisica',
-            '--nombre', 'Juan',
-            '--paterno', 'Garcia',
-            '--materno', 'Lopez',
-            '--fecha', '1990-05-15'
-        ])
+        result = self.runner.invoke(
+            main,
+            [
+                "rfc",
+                "generate-fisica",
+                "--nombre",
+                "Juan",
+                "--paterno",
+                "Garcia",
+                "--materno",
+                "Lopez",
+                "--fecha",
+                "1990-05-15",
+            ],
+        )
         assert result.exit_code == 0
-        assert 'Generated RFC:' in result.output
-        assert 'GALJ900515' in result.output
+        assert "Generated RFC:" in result.output
+        assert "GALJ900515" in result.output
 
     def test_rfc_generate_fisica_without_materno(self):
         """Test generating RFC fisica without materno"""
-        result = self.runner.invoke(main, [
-            'rfc', 'generate-fisica',
-            '--nombre', 'Juan',
-            '--paterno', 'Garcia',
-            '--fecha', '1990-05-15'
-        ])
+        result = self.runner.invoke(
+            main,
+            [
+                "rfc",
+                "generate-fisica",
+                "--nombre",
+                "Juan",
+                "--paterno",
+                "Garcia",
+                "--fecha",
+                "1990-05-15",
+            ],
+        )
         assert result.exit_code == 0
-        assert 'Generated RFC:' in result.output
+        assert "Generated RFC:" in result.output
 
     def test_rfc_generate_fisica_invalid_date(self):
         """Test generating RFC fisica with invalid date"""
-        result = self.runner.invoke(main, [
-            'rfc', 'generate-fisica',
-            '--nombre', 'Juan',
-            '--paterno', 'Garcia',
-            '--fecha', 'invalid-date'
-        ])
+        result = self.runner.invoke(
+            main,
+            [
+                "rfc",
+                "generate-fisica",
+                "--nombre",
+                "Juan",
+                "--paterno",
+                "Garcia",
+                "--fecha",
+                "invalid-date",
+            ],
+        )
         assert result.exit_code == 0
-        assert 'Error:' in result.output
+        assert "Error:" in result.output
 
     def test_rfc_generate_fisica_exception(self):
         """Test generating RFC fisica that triggers exception"""
-        result = self.runner.invoke(main, [
-            'rfc', 'generate-fisica',
-            '--nombre', '',
-            '--paterno', '',
-            '--fecha', '1990-01-01'
-        ])
+        result = self.runner.invoke(
+            main,
+            ["rfc", "generate-fisica", "--nombre", "", "--paterno", "", "--fecha", "1990-01-01"],
+        )
         assert result.exit_code == 0
         # Should either show error or handle gracefully
 
@@ -127,32 +156,35 @@ class TestRFCGenerateMoralCLI:
 
     def test_rfc_generate_moral_valid(self):
         """Test generating RFC moral"""
-        result = self.runner.invoke(main, [
-            'rfc', 'generate-moral',
-            '--razon-social', 'Tecnologia Sistemas Integrales',
-            '--fecha', '2009-09-09'
-        ])
+        result = self.runner.invoke(
+            main,
+            [
+                "rfc",
+                "generate-moral",
+                "--razon-social",
+                "Tecnologia Sistemas Integrales",
+                "--fecha",
+                "2009-09-09",
+            ],
+        )
         assert result.exit_code == 0
-        assert 'Generated RFC:' in result.output
-        assert 'TSI090909' in result.output
+        assert "Generated RFC:" in result.output
+        assert "TSI090909" in result.output
 
     def test_rfc_generate_moral_invalid_date(self):
         """Test generating RFC moral with invalid date"""
-        result = self.runner.invoke(main, [
-            'rfc', 'generate-moral',
-            '--razon-social', 'Test Company',
-            '--fecha', 'invalid-date'
-        ])
+        result = self.runner.invoke(
+            main,
+            ["rfc", "generate-moral", "--razon-social", "Test Company", "--fecha", "invalid-date"],
+        )
         assert result.exit_code == 0
-        assert 'Error:' in result.output
+        assert "Error:" in result.output
 
     def test_rfc_generate_moral_exception(self):
         """Test generating RFC moral that triggers exception"""
-        result = self.runner.invoke(main, [
-            'rfc', 'generate-moral',
-            '--razon-social', '',
-            '--fecha', '2009-09-09'
-        ])
+        result = self.runner.invoke(
+            main, ["rfc", "generate-moral", "--razon-social", "", "--fecha", "2009-09-09"]
+        )
         assert result.exit_code == 0
         # Should either show error or handle gracefully
 
@@ -165,15 +197,15 @@ class TestCURPValidateCLI:
 
     def test_curp_validate_valid(self):
         """Test validating valid CURP"""
-        result = self.runner.invoke(main, ['curp', 'validate', 'GORS561231HVZNNL00'])
+        result = self.runner.invoke(main, ["curp", "validate", "GORS561231HVZNNL00"])
         assert result.exit_code == 0
-        assert 'valid' in result.output.lower()
+        assert "valid" in result.output.lower()
 
     def test_curp_validate_invalid(self):
         """Test validating invalid CURP"""
-        result = self.runner.invoke(main, ['curp', 'validate', 'INVALID'])
+        result = self.runner.invoke(main, ["curp", "validate", "INVALID"])
         assert result.exit_code == 0
-        assert 'invalid' in result.output.lower()
+        assert "invalid" in result.output.lower()
 
 
 class TestCURPGenerateCLI:
@@ -184,69 +216,115 @@ class TestCURPGenerateCLI:
 
     def test_curp_generate_full(self):
         """Test generating CURP with all params"""
-        result = self.runner.invoke(main, [
-            'curp', 'generate',
-            '--nombre', 'Juan',
-            '--paterno', 'Garcia',
-            '--materno', 'Lopez',
-            '--fecha', '1990-05-15',
-            '--sexo', 'H',
-            '--estado', 'Jalisco'
-        ])
+        result = self.runner.invoke(
+            main,
+            [
+                "curp",
+                "generate",
+                "--nombre",
+                "Juan",
+                "--paterno",
+                "Garcia",
+                "--materno",
+                "Lopez",
+                "--fecha",
+                "1990-05-15",
+                "--sexo",
+                "H",
+                "--estado",
+                "Jalisco",
+            ],
+        )
         assert result.exit_code == 0
-        assert 'Generated CURP:' in result.output
-        assert 'homoclave' in result.output.lower()
-        assert 'RENAPO' in result.output
+        assert "Generated CURP:" in result.output
+        assert "homoclave" in result.output.lower()
+        assert "RENAPO" in result.output
 
     def test_curp_generate_without_materno(self):
         """Test generating CURP without materno"""
-        result = self.runner.invoke(main, [
-            'curp', 'generate',
-            '--nombre', 'Juan',
-            '--paterno', 'Garcia',
-            '--fecha', '1990-05-15',
-            '--sexo', 'H',
-            '--estado', 'Jalisco'
-        ])
+        result = self.runner.invoke(
+            main,
+            [
+                "curp",
+                "generate",
+                "--nombre",
+                "Juan",
+                "--paterno",
+                "Garcia",
+                "--fecha",
+                "1990-05-15",
+                "--sexo",
+                "H",
+                "--estado",
+                "Jalisco",
+            ],
+        )
         assert result.exit_code == 0
-        assert 'Generated CURP:' in result.output
+        assert "Generated CURP:" in result.output
 
     def test_curp_generate_female(self):
         """Test generating CURP for female"""
-        result = self.runner.invoke(main, [
-            'curp', 'generate',
-            '--nombre', 'Maria',
-            '--paterno', 'Garcia',
-            '--fecha', '1990-05-15',
-            '--sexo', 'M',
-            '--estado', 'Jalisco'
-        ])
+        result = self.runner.invoke(
+            main,
+            [
+                "curp",
+                "generate",
+                "--nombre",
+                "Maria",
+                "--paterno",
+                "Garcia",
+                "--fecha",
+                "1990-05-15",
+                "--sexo",
+                "M",
+                "--estado",
+                "Jalisco",
+            ],
+        )
         assert result.exit_code == 0
-        assert 'Generated CURP:' in result.output
+        assert "Generated CURP:" in result.output
 
     def test_curp_generate_invalid_date(self):
         """Test generating CURP with invalid date"""
-        result = self.runner.invoke(main, [
-            'curp', 'generate',
-            '--nombre', 'Juan',
-            '--paterno', 'Garcia',
-            '--fecha', 'invalid-date',
-            '--sexo', 'H',
-            '--estado', 'Jalisco'
-        ])
+        result = self.runner.invoke(
+            main,
+            [
+                "curp",
+                "generate",
+                "--nombre",
+                "Juan",
+                "--paterno",
+                "Garcia",
+                "--fecha",
+                "invalid-date",
+                "--sexo",
+                "H",
+                "--estado",
+                "Jalisco",
+            ],
+        )
         assert result.exit_code == 0
-        assert 'Error:' in result.output
+        assert "Error:" in result.output
 
     def test_curp_generate_exception(self):
         """Test generating CURP that triggers exception"""
-        result = self.runner.invoke(main, [
-            'curp', 'generate',
-            '--nombre', '',
-            '--paterno', '',
-            '--fecha', '1990-01-01',
-            '--sexo', 'H',
-            '--estado', 'InvalidState'
-        ])
+        result = self.runner.invoke(
+            main,
+            [
+                "curp",
+                "generate",
+                "--nombre",
+                "",
+                "--paterno",
+                "",
+                "--fecha",
+                "1990-01-01",
+                "--sexo",
+                "H",
+                "--estado",
+                "InvalidState",
+            ],
+        )
         assert result.exit_code == 0
         # Should either show error or handle gracefully
 
@@ -258,7 +336,7 @@ class TestCLIDirectCallable:
         """Test the if __name__ == '__main__' block"""
         # Simply import the module to ensure it doesn't crash
         import catalogmx.cli
-        # The main function should exist
-        assert hasattr(catalogmx.cli, 'main')
-        assert callable(catalogmx.cli.main)
 
+        # The main function should exist
+        assert hasattr(catalogmx.cli, "main")
+        assert callable(catalogmx.cli.main)

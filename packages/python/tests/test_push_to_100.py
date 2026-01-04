@@ -29,7 +29,9 @@ class TestClaveProdServComplete:
         all_items = ClaveProdServCatalog.get_all()
         if all_items:
             # Try different key names
-            code = all_items[0].get("codigo", all_items[0].get("code", all_items[0].get("clave", "")))
+            code = all_items[0].get(
+                "codigo", all_items[0].get("code", all_items[0].get("clave", ""))
+            )
             if code:
                 result = ClaveProdServCatalog.get_by_code(code)
                 assert result is not None or result is None
@@ -58,7 +60,9 @@ class TestClaveUnidadComplete:
         """Test getting by code"""
         all_items = ClaveUnidadCatalog.get_all()
         if all_items:
-            code = all_items[0].get("codigo", all_items[0].get("code", all_items[0].get("clave", "")))
+            code = all_items[0].get(
+                "codigo", all_items[0].get("code", all_items[0].get("clave", ""))
+            )
             if code:
                 result = ClaveUnidadCatalog.get_by_code(code)
                 assert result is not None or result is None
@@ -70,7 +74,7 @@ class TestClaveUnidadComplete:
 
     def test_search_if_exists(self):
         """Test search if method exists"""
-        if hasattr(ClaveUnidadCatalog, 'search'):
+        if hasattr(ClaveUnidadCatalog, "search"):
             result = ClaveUnidadCatalog.search("pieza")
             assert isinstance(result, list)
 
@@ -108,7 +112,7 @@ class TestStateCatalogExtendedCoverage:
 
     def test_get_state_by_abbreviation(self):
         """Test get_state_by_abbreviation if method exists"""
-        if hasattr(StateCatalog, 'get_state_by_abbreviation'):
+        if hasattr(StateCatalog, "get_state_by_abbreviation"):
             result = StateCatalog.get_state_by_abbreviation("JAL")
             assert result is not None or result is None
 
@@ -119,7 +123,7 @@ class TestStateCatalogExtendedCoverage:
 
     def test_get_by_inegi_code(self):
         """Test get_by_inegi_code if method exists"""
-        if hasattr(StateCatalog, 'get_by_inegi_code'):
+        if hasattr(StateCatalog, "get_by_inegi_code"):
             result = StateCatalog.get_by_inegi_code("14")
             assert result is not None or result is None
 
@@ -129,19 +133,19 @@ class TestSalariosMinimosExtendedCoverage:
 
     def test_get_all(self):
         """Test get_all if method exists"""
-        if hasattr(SalariosMinimos, 'get_all'):
+        if hasattr(SalariosMinimos, "get_all"):
             result = SalariosMinimos.get_all()
             assert isinstance(result, list)
 
     def test_get_por_zona_frontera(self):
         """Test get_por_zona with frontera"""
-        if hasattr(SalariosMinimos, 'get_por_zona'):
+        if hasattr(SalariosMinimos, "get_por_zona"):
             result = SalariosMinimos.get_por_zona("frontera")
             assert result is None or isinstance(result, (dict, list))
 
     def test_get_por_zona_general(self):
         """Test get_por_zona with general"""
-        if hasattr(SalariosMinimos, 'get_por_zona'):
+        if hasattr(SalariosMinimos, "get_por_zona"):
             result = SalariosMinimos.get_por_zona("general")
             assert result is None or isinstance(result, (dict, list))
 
@@ -151,7 +155,7 @@ class TestUMACatalogExtendedCoverage:
 
     def test_get_all(self):
         """Test get_all if method exists"""
-        if hasattr(UMACatalog, 'get_all'):
+        if hasattr(UMACatalog, "get_all"):
             result = UMACatalog.get_all()
             assert isinstance(result, list)
 
@@ -299,4 +303,3 @@ class TestRFCValidatorExtendedCoverage:
         result = validator.validators(strict=False)
         assert isinstance(result, dict)
         assert "checksum" not in result
-

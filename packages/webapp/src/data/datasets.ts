@@ -2,6 +2,9 @@ import type { LucideIcon } from 'lucide-react';
 
 export type DatasetType = 'sql' | 'json-array';
 export type CategoryId = 'geographic' | 'fiscal' | 'banking' | 'telecom' | 'national';
+export type SubcategoryId =
+  | 'cfdi' | 'carta-porte' | 'comercio-exterior' | 'nomina'
+  | 'sepomex' | 'inegi' | 'banxico' | 'other';
 
 export interface DatasetConfig {
   id: string;
@@ -15,6 +18,13 @@ export interface DatasetConfig {
   icon?: LucideIcon;
   description?: string;
   category: CategoryId;
+
+  // Extended metadata for better UX
+  tags?: string[]; // Keywords for search
+  source?: string; // Official source (SAT, Banxico, INEGI, etc)
+  subcategory?: SubcategoryId; // For better organization
+  relatedCatalogs?: string[]; // Related catalog IDs
+  helpText?: string; // Extended description
 }
 
 export const DATASET_CATEGORIES = [
@@ -44,6 +54,11 @@ export const datasetConfigs = [
       { key: 'zona', label: 'Zona' },
     ],
     description: '157k códigos postales SEPOMEX.',
+    tags: ['cp', 'postal', 'sepomex', 'direccion', 'colonia', 'asentamiento', 'geografico'],
+    source: 'SEPOMEX',
+    subcategory: 'sepomex',
+    relatedCatalogs: ['inegi-estados', 'inegi-municipios', 'inegi-localidades'],
+    helpText: 'Catálogo completo de códigos postales de México del Servicio Postal Mexicano. Incluye 157,000+ códigos con información de asentamientos, colonias, municipios y estados.',
   },
   {
     id: 'inegi-estados',
@@ -60,6 +75,11 @@ export const datasetConfigs = [
       { key: 'clave_inegi', label: 'INEGI' },
     ],
     description: '32 estados INEGI.',
+    tags: ['estados', 'entidades', 'inegi', 'geografia', 'curp', 'rfc'],
+    source: 'INEGI',
+    subcategory: 'inegi',
+    relatedCatalogs: ['inegi-municipios', 'inegi-localidades', 'sepomex-codigos-postales'],
+    helpText: 'Los 32 estados de México con códigos CURP, claves INEGI y abreviaturas oficiales.',
   },
   {
     id: 'inegi-municipios',
@@ -77,6 +97,11 @@ export const datasetConfigs = [
       { key: 'poblacion_total', label: 'Población' },
     ],
     description: '2,478 municipios INEGI.',
+    tags: ['municipios', 'alcaldias', 'inegi', 'geografia', 'poblacion'],
+    source: 'INEGI',
+    subcategory: 'inegi',
+    relatedCatalogs: ['inegi-estados', 'inegi-localidades', 'sepomex-codigos-postales'],
+    helpText: 'Catálogo completo de municipios de México con población total y cabeceras municipales.',
   },
   {
     id: 'inegi-localidades',
@@ -95,6 +120,11 @@ export const datasetConfigs = [
       { key: 'longitud', label: 'Lng' },
     ],
     description: '10k localidades INEGI con coordenadas.',
+    tags: ['localidades', 'poblados', 'inegi', 'geografia', 'coordenadas', 'gps'],
+    source: 'INEGI',
+    subcategory: 'inegi',
+    relatedCatalogs: ['inegi-municipios', 'inegi-estados'],
+    helpText: 'Localidades de México con coordenadas geográficas y datos de población. Útil para geolocalización y análisis demográfico.',
   },
 
   // ========== FISCALES (SAT) ==========
@@ -113,6 +143,11 @@ export const datasetConfigs = [
       { key: 'incluye_ieps', label: 'IEPS' },
     ],
     description: '52k productos CFDI 4.0.',
+    tags: ['productos', 'servicios', 'cfdi', 'clave', 'facturacion', 'sat'],
+    source: 'SAT',
+    subcategory: 'cfdi',
+    relatedCatalogs: ['sat-clave-unidad', 'sat-impuesto', 'sat-tipo-comprobante'],
+    helpText: 'Catálogo completo de productos y servicios SAT para facturación electrónica CFDI 4.0. Incluye más de 52,000 claves con palabras similares para búsqueda.',
   },
   {
     id: 'sat-regimen-fiscal',
@@ -196,6 +231,390 @@ export const datasetConfigs = [
     ],
     description: 'Tipos de jornada laboral.',
   },
+  {
+    id: 'sat-clave-unidad',
+    label: 'Unidades de Medida',
+    type: 'sql',
+    table: 'sat_cfdi_4_0_clave_unidad',
+    category: 'fiscal',
+    searchColumns: ['clave', 'nombre', 'descripcion'],
+    columns: [
+      { key: 'clave', label: 'Clave' },
+      { key: 'nombre', label: 'Nombre' },
+      { key: 'descripcion', label: 'Descripción' },
+      { key: 'simbolo', label: 'Símbolo' },
+    ],
+    description: 'Unidades de medida CFDI 4.0.',
+  },
+  {
+    id: 'sat-impuesto',
+    label: 'Impuestos',
+    type: 'sql',
+    table: 'sat_cfdi_4_0_impuesto',
+    category: 'fiscal',
+    searchColumns: ['code', 'description'],
+    columns: [
+      { key: 'code', label: 'Clave' },
+      { key: 'description', label: 'Impuesto' },
+      { key: 'retencion', label: 'Retención' },
+      { key: 'traslado', label: 'Traslado' },
+    ],
+    description: 'Catálogo de impuestos CFDI 4.0.',
+  },
+  {
+    id: 'sat-tipo-comprobante',
+    label: 'Tipo de Comprobante',
+    type: 'sql',
+    table: 'sat_cfdi_4_0_tipo_comprobante',
+    category: 'fiscal',
+    searchColumns: ['code', 'description'],
+    columns: [
+      { key: 'code', label: 'Clave' },
+      { key: 'description', label: 'Descripción' },
+    ],
+    description: 'Tipos de comprobante CFDI 4.0.',
+  },
+  {
+    id: 'sat-tipo-relacion',
+    label: 'Tipo de Relación CFDI',
+    type: 'sql',
+    table: 'sat_cfdi_4_0_tipo_relacion',
+    category: 'fiscal',
+    searchColumns: ['code', 'description'],
+    columns: [
+      { key: 'code', label: 'Clave' },
+      { key: 'description', label: 'Descripción' },
+    ],
+    description: 'Tipos de relación entre CFDIs.',
+  },
+  {
+    id: 'sat-objeto-imp',
+    label: 'Objeto de Impuesto',
+    type: 'sql',
+    table: 'sat_cfdi_4_0_objeto_imp',
+    category: 'fiscal',
+    searchColumns: ['code', 'description'],
+    columns: [
+      { key: 'code', label: 'Clave' },
+      { key: 'description', label: 'Descripción' },
+    ],
+    description: 'Objeto de impuesto CFDI 4.0.',
+  },
+  {
+    id: 'sat-exportacion',
+    label: 'Tipo de Exportación',
+    type: 'sql',
+    table: 'sat_cfdi_4_0_exportacion',
+    category: 'fiscal',
+    searchColumns: ['code', 'description'],
+    columns: [
+      { key: 'code', label: 'Clave' },
+      { key: 'description', label: 'Descripción' },
+    ],
+    description: 'Tipos de exportación CFDI 4.0.',
+  },
+  {
+    id: 'sat-claves-pedimento',
+    label: 'Claves de Pedimento',
+    type: 'sql',
+    table: 'sat_comercio_exterior_claves_pedimento',
+    category: 'fiscal',
+    searchColumns: ['clave', 'descripcion'],
+    orderBy: 'clave',
+    columns: [
+      { key: 'clave', label: 'Clave' },
+      { key: 'descripcion', label: 'Descripción' },
+    ],
+    description: 'Claves de pedimento comercio exterior.',
+  },
+  {
+    id: 'sat-ce-paises',
+    label: 'Países (Comercio Exterior)',
+    type: 'sql',
+    table: 'sat_comercio_exterior_paises',
+    category: 'fiscal',
+    searchColumns: ['code', 'descripcion', 'codigo_iso_alpha_3'],
+    columns: [
+      { key: 'code', label: 'Código' },
+      { key: 'descripcion', label: 'País' },
+      { key: 'codigo_iso_alpha_3', label: 'ISO-3' },
+    ],
+    description: 'Países para comercio exterior SAT.',
+  },
+  {
+    id: 'sat-ce-incoterms',
+    label: 'Incoterms',
+    type: 'sql',
+    table: 'sat_comercio_exterior_incoterms',
+    category: 'fiscal',
+    searchColumns: ['code', 'descripcion'],
+    columns: [
+      { key: 'code', label: 'Código' },
+      { key: 'descripcion', label: 'Descripción' },
+    ],
+    description: 'Incoterms comercio exterior.',
+  },
+  {
+    id: 'sat-aeropuertos',
+    label: 'Aeropuertos (Carta Porte)',
+    type: 'sql',
+    table: 'sat_carta_porte_3_aeropuertos',
+    category: 'fiscal',
+    searchColumns: ['clave_aeropuerto', 'nombre_aeropuerto', 'ciudad'],
+    columns: [
+      { key: 'clave_aeropuerto', label: 'Clave' },
+      { key: 'nombre_aeropuerto', label: 'Aeropuerto' },
+      { key: 'ciudad', label: 'Ciudad' },
+      { key: 'codigo_iata', label: 'IATA' },
+    ],
+    description: 'Aeropuertos para Carta Porte 3.0.',
+  },
+  {
+    id: 'sat-puertos',
+    label: 'Puertos Marítimos (Carta Porte)',
+    type: 'sql',
+    table: 'sat_carta_porte_3_puertos_maritimos',
+    category: 'fiscal',
+    searchColumns: ['clave_puerto', 'nombre_puerto', 'estado'],
+    columns: [
+      { key: 'clave_puerto', label: 'Clave' },
+      { key: 'nombre_puerto', label: 'Puerto' },
+      { key: 'estado', label: 'Estado' },
+    ],
+    description: 'Puertos marítimos Carta Porte 3.0.',
+  },
+  {
+    id: 'sat-material-peligroso',
+    label: 'Material Peligroso (Carta Porte)',
+    type: 'sql',
+    table: 'sat_carta_porte_3_material_peligroso',
+    category: 'fiscal',
+    searchColumns: ['clave_material_peligroso', 'descripcion'],
+    columns: [
+      { key: 'clave_material_peligroso', label: 'Clave' },
+      { key: 'descripcion', label: 'Descripción' },
+      { key: 'clase', label: 'Clase' },
+    ],
+    description: 'Material peligroso Carta Porte 3.0.',
+  },
+  {
+    id: 'sat-tipo-nomina',
+    label: 'Tipo de Nómina',
+    type: 'sql',
+    table: 'sat_nomina_1_2_tipo_nomina',
+    category: 'fiscal',
+    searchColumns: ['code', 'description'],
+    columns: [
+      { key: 'code', label: 'Clave' },
+      { key: 'description', label: 'Tipo de Nómina' },
+    ],
+    description: 'Tipos de nómina SAT.',
+  },
+  {
+    id: 'sat-periodicidad-pago',
+    label: 'Periodicidad de Pago',
+    type: 'sql',
+    table: 'sat_nomina_1_2_periodicidad_pago',
+    category: 'fiscal',
+    searchColumns: ['code', 'description'],
+    columns: [
+      { key: 'code', label: 'Clave' },
+      { key: 'description', label: 'Periodicidad' },
+    ],
+    description: 'Periodicidad de pago nómina.',
+  },
+  {
+    id: 'sat-riesgo-puesto',
+    label: 'Riesgo de Puesto',
+    type: 'sql',
+    table: 'sat_nomina_1_2_riesgo_puesto',
+    category: 'fiscal',
+    searchColumns: ['code', 'descripcion'],
+    columns: [
+      { key: 'code', label: 'Clase' },
+      { key: 'descripcion', label: 'Descripción' },
+      { key: 'prima_minima', label: 'Prima Mín.' },
+      { key: 'prima_media', label: 'Prima Media' },
+      { key: 'prima_maxima', label: 'Prima Máx.' },
+    ],
+    description: 'Clases de riesgo de trabajo.',
+  },
+  {
+    id: 'sat-tipo-regimen',
+    label: 'Tipo de Régimen (Nómina)',
+    type: 'sql',
+    table: 'sat_nomina_1_2_tipo_regimen',
+    category: 'fiscal',
+    searchColumns: ['code', 'description'],
+    columns: [
+      { key: 'code', label: 'Clave' },
+      { key: 'description', label: 'Régimen' },
+    ],
+    description: 'Tipos de régimen fiscal nómina.',
+  },
+  {
+    id: 'sat-meses',
+    label: 'Meses (CFDI)',
+    type: 'sql',
+    table: 'sat_cfdi_4_0_c_meses',
+    category: 'fiscal',
+    searchColumns: ['valor'],
+    columns: [
+      { key: 'valor', label: 'Mes' },
+    ],
+    description: 'Catálogo de meses CFDI 4.0.',
+  },
+  {
+    id: 'sat-periodicidad-cfdi',
+    label: 'Periodicidad (CFDI)',
+    type: 'sql',
+    table: 'sat_cfdi_4_0_c_periodicidad',
+    category: 'fiscal',
+    searchColumns: ['valor'],
+    columns: [
+      { key: 'valor', label: 'Periodicidad' },
+    ],
+    description: 'Periodicidad de pagos CFDI 4.0.',
+  },
+  {
+    id: 'sat-tipo-factor',
+    label: 'Tipo de Factor',
+    type: 'sql',
+    table: 'sat_cfdi_4_0_c_tipofactor',
+    category: 'fiscal',
+    searchColumns: ['valor'],
+    columns: [
+      { key: 'valor', label: 'Factor' },
+    ],
+    description: 'Tipos de factor de impuestos CFDI.',
+  },
+  {
+    id: 'sat-ce-monedas',
+    label: 'Monedas (Comercio Exterior)',
+    type: 'sql',
+    table: 'sat_comercio_exterior_monedas',
+    category: 'fiscal',
+    searchColumns: ['codigo', 'nombre', 'pais'],
+    columns: [
+      { key: 'codigo', label: 'Código' },
+      { key: 'nombre', label: 'Moneda' },
+      { key: 'pais', label: 'País' },
+      { key: 'decimales', label: 'Decimales' },
+    ],
+    description: 'Monedas para comercio exterior.',
+  },
+  {
+    id: 'sat-ce-estados-usa-canada',
+    label: 'Estados USA/Canadá',
+    type: 'sql',
+    table: 'sat_comercio_exterior_estados_usa_canada',
+    category: 'fiscal',
+    searchColumns: ['code', 'name', 'country'],
+    columns: [
+      { key: 'code', label: 'Código' },
+      { key: 'name', label: 'Estado' },
+      { key: 'country', label: 'País' },
+    ],
+    description: 'Estados de USA y Canadá para comercio exterior.',
+  },
+  {
+    id: 'sat-ce-motivos-traslado',
+    label: 'Motivos de Traslado',
+    type: 'sql',
+    table: 'sat_comercio_exterior_motivos_traslado',
+    category: 'fiscal',
+    searchColumns: ['code', 'descripcion'],
+    columns: [
+      { key: 'code', label: 'Clave' },
+      { key: 'descripcion', label: 'Motivo' },
+    ],
+    description: 'Motivos de traslado de mercancías.',
+  },
+  {
+    id: 'sat-ce-registro-trib',
+    label: 'Registro Tributario',
+    type: 'sql',
+    table: 'sat_comercio_exterior_registro_ident_trib',
+    category: 'fiscal',
+    searchColumns: ['code', 'descripcion'],
+    columns: [
+      { key: 'code', label: 'Clave' },
+      { key: 'descripcion', label: 'Tipo de Registro' },
+    ],
+    description: 'Tipos de registro de identificación tributaria.',
+  },
+  {
+    id: 'sat-ce-unidades-aduana',
+    label: 'Unidades de Aduana',
+    type: 'sql',
+    table: 'sat_comercio_exterior_unidades_aduana',
+    category: 'fiscal',
+    searchColumns: ['code', 'descripcion'],
+    columns: [
+      { key: 'code', label: 'Clave' },
+      { key: 'descripcion', label: 'Unidad' },
+    ],
+    description: 'Unidades de medida aduanera.',
+  },
+  {
+    id: 'sat-cp-carreteras',
+    label: 'Carreteras (Carta Porte)',
+    type: 'sql',
+    table: 'sat_carta_porte_3_carreteras',
+    category: 'fiscal',
+    searchColumns: ['code', 'nombre', 'origen', 'destino'],
+    columns: [
+      { key: 'code', label: 'Código' },
+      { key: 'nombre', label: 'Carretera' },
+      { key: 'origen', label: 'Origen' },
+      { key: 'destino', label: 'Destino' },
+      { key: 'tipo', label: 'Tipo' },
+    ],
+    description: 'Carreteras federales Carta Porte 3.0.',
+  },
+  {
+    id: 'sat-cp-config-auto',
+    label: 'Configuración Autotransporte',
+    type: 'sql',
+    table: 'sat_carta_porte_3_config_autotransporte',
+    category: 'fiscal',
+    searchColumns: ['code', 'name', 'type'],
+    columns: [
+      { key: 'code', label: 'Código' },
+      { key: 'name', label: 'Configuración' },
+      { key: 'type', label: 'Tipo' },
+      { key: 'axes', label: 'Ejes' },
+    ],
+    description: 'Configuraciones de autotransporte.',
+  },
+  {
+    id: 'sat-cp-tipo-embalaje',
+    label: 'Tipo de Embalaje',
+    type: 'sql',
+    table: 'sat_carta_porte_3_tipo_embalaje',
+    category: 'fiscal',
+    searchColumns: ['code', 'descripcion'],
+    columns: [
+      { key: 'code', label: 'Código' },
+      { key: 'descripcion', label: 'Embalaje' },
+      { key: 'categoria_onu', label: 'Cat. ONU' },
+    ],
+    description: 'Tipos de embalaje Carta Porte 3.0.',
+  },
+  {
+    id: 'sat-cp-tipo-permiso',
+    label: 'Tipo de Permiso (Carta Porte)',
+    type: 'sql',
+    table: 'sat_carta_porte_3_tipo_permiso',
+    category: 'fiscal',
+    searchColumns: ['code', 'name', 'type'],
+    columns: [
+      { key: 'code', label: 'Código' },
+      { key: 'name', label: 'Permiso' },
+      { key: 'type', label: 'Tipo' },
+    ],
+    description: 'Tipos de permiso SCT.',
+  },
 
   // ========== BANCARIOS ==========
   {
@@ -229,6 +648,38 @@ export const datasetConfigs = [
       { key: 'decimales', label: 'Decimales' },
     ],
     description: '30 monedas Banxico.',
+  },
+  {
+    id: 'banxico-codigos-plaza',
+    label: 'Códigos de Plaza Banxico',
+    type: 'sql',
+    table: 'banxico_codigos_plaza',
+    category: 'banking',
+    searchColumns: ['codigo', 'estado', 'plaza'],
+    orderBy: 'codigo',
+    columns: [
+      { key: 'codigo', label: 'Código' },
+      { key: 'cve_entidad', label: 'Cve. Entidad' },
+      { key: 'estado', label: 'Estado' },
+      { key: 'plaza', label: 'Plaza' },
+    ],
+    description: 'Códigos de plaza bancaria Banxico.',
+  },
+  {
+    id: 'banxico-instituciones',
+    label: 'Instituciones Financieras',
+    type: 'sql',
+    table: 'banxico_instituciones_financieras',
+    category: 'banking',
+    searchColumns: ['tipo', 'descripcion', 'regulador'],
+    columns: [
+      { key: 'codigo', label: 'Código' },
+      { key: 'tipo', label: 'Tipo' },
+      { key: 'descripcion', label: 'Descripción' },
+      { key: 'regulador', label: 'Regulador' },
+      { key: 'ley_aplicable', label: 'Ley Aplicable' },
+    ],
+    description: 'Tipos de instituciones financieras reguladas.',
   },
   {
     id: 'sat-nomina-bancos',
@@ -407,9 +858,38 @@ export const datasetConfigs = [
     ],
     description: 'Unidad de Medida y Actualización.',
   },
-] as const satisfies DatasetConfig[];
+  {
+    id: 'mexico-hoy-no-circula',
+    label: 'Hoy No Circula CDMX',
+    type: 'sql',
+    table: 'mexico_hoy_no_circula_cdmx',
+    category: 'national',
+    searchColumns: ['value'],
+    columns: [
+      { key: 'value', label: 'Municipio' },
+    ],
+    description: 'Municipios aplicables al programa Hoy No Circula.',
+  },
+  {
+    id: 'mexico-placas-formatos',
+    label: 'Formatos de Placas',
+    type: 'sql',
+    table: 'mexico_placas_formatos',
+    category: 'national',
+    searchColumns: ['estado', 'tipo', 'formato', 'descripcion'],
+    columns: [
+      { key: 'codigo_estado', label: 'Cve.' },
+      { key: 'estado', label: 'Estado' },
+      { key: 'tipo', label: 'Tipo' },
+      { key: 'formato', label: 'Formato' },
+      { key: 'descripcion', label: 'Descripción' },
+      { key: 'vigencia_inicio', label: 'Vigencia' },
+    ],
+    description: 'Formatos de placas vehiculares por estado.',
+  },
+] as DatasetConfig[];
 
-export type DatasetId = typeof datasetConfigs[number]['id'];
+export type DatasetId = string;
 export type DatasetPageId = `dataset-${DatasetId}`;
 
 export function getDatasetsByCategory(categoryId: CategoryId): DatasetConfig[] {

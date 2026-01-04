@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AlertTriangle, Loader2, Search, ChevronLeft, ChevronRight, Database } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { AlertTriangle, Loader2, Search, ChevronLeft, ChevronRight, Database, X, Download, ExternalLink, Info } from 'lucide-react';
 import { datasetConfigs, type DatasetId, type DatasetConfig } from '@/data/datasets';
-import { queryJsonArrayTable, querySqlTable } from '@/lib/database';
+import { queryJsonArrayTable, querySqlTable, type FieldFilter } from '@/lib/database';
+import AdvancedFilters from '@/components/AdvancedFilters';
 
 type AnyRow = Record<string, unknown>;
 
@@ -25,15 +28,61 @@ const renderValue = (value: unknown): React.ReactNode => {
   return value as React.ReactNode;
 };
 
+// CSV Export function
+const exportToCSV = (rows: AnyRow[], config: DatasetConfig) => {
+  if (rows.length === 0) return;
+
+  // Get column headers
+  const headers = config.columns.map(c => c.label);
+  const keys = config.columns.map(c => c.key);
+
+  // Build CSV content
+  const csvContent = [
+    headers.join(','),
+    ...rows.map(row =>
+      keys.map(key => {
+        const value = row[key];
+        const stringValue = value === null || value === undefined ? '' : String(value);
+        // Escape quotes and wrap in quotes if contains comma, quote, or newline
+        return /[",\n]/.test(stringValue)
+          ? `"${stringValue.replace(/"/g, '""')}"`
+          : stringValue;
+      }).join(',')
+    )
+  ].join('\n');
+
+  // Create download
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `${config.id}-${new Date().toISOString().split('T')[0]}.csv`;
+  link.click();
+  URL.revokeObjectURL(link.href);
+};
+
 export default function DatasetPage({ datasetId }: DatasetPageProps) {
   const config = datasetConfigs.find((d) => d.id === datasetId) as DatasetConfig | undefined;
-  const [search, setSearch] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  // Get search from URL, but clear it when datasetId changes
+  const [search, setSearch] = useState(searchParams.get('q') || '');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(100);
   const [rows, setRows] = useState<AnyRow[]>([]);
   const [total, setTotal] = useState(0);
+  const [totalUnfiltered, setTotalUnfiltered] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldFilters, setFieldFilters] = useState<FieldFilter[]>([]);
+
+  // Clear search and field filters when dataset changes
+  useEffect(() => {
+    setSearch('');
+    setSearchParams({});
+    setFieldFilters([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [datasetId]);
 
   if (!config) {
     return (
@@ -60,12 +109,14 @@ export default function DatasetPage({ datasetId }: DatasetPageProps) {
               search,
               searchColumns: config.searchColumns,
               orderBy: config.orderBy,
+              fieldFilters,
             })
           : await queryJsonArrayTable('mexico', config.table, config.column ?? 'data', {
               page: targetPage,
               pageSize,
               search,
               searchColumns: config.searchColumns,
+              fieldFilters,
             });
       setRows(result.data as AnyRow[]);
       setTotal(result.total);
@@ -82,24 +133,95 @@ export default function DatasetPage({ datasetId }: DatasetPageProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [datasetId, pageSize]);
 
+  // Load total count without filters on mount
+  useEffect(() => {
+    const loadTotal = async () => {
+      try {
+        const result = config.type === 'sql'
+          ? await querySqlTable('mexico', config.table, { page: 1, pageSize: 1 })
+          : await queryJsonArrayTable('mexico', config.table, config.column ?? 'data', { page: 1, pageSize: 1 });
+        setTotalUnfiltered(result.total);
+      } catch {
+        // Ignore errors
+      }
+    };
+    loadTotal();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [datasetId]);
+
+  const handleFieldFilters = (filters: FieldFilter[]) => {
+    setFieldFilters(filters);
+    load(1);
+  };
+
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   return (
     <div className="space-y-6 max-w-6xl">
-      <div className="flex items-start gap-3">
-        <div className="p-2 rounded-lg bg-primary/15 text-primary">
-          <Database className="h-6 w-6" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold">{config.label}</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            {config.description || 'Catálogo completo en mexico.sqlite3. Sin muestras: búsqueda sin acentos y paginación completa.'}
-          </p>
-          <div className="text-xs text-muted-foreground mt-1">
-            Tabla: <code className="font-mono">{config.table}</code>
-            {config.column ? (
-              <> · Columna JSON: <code className="font-mono">{config.column}</code></>
-            ) : null}
+      <div>
+        <div className="flex items-start gap-3 mb-3">
+          <div className="p-2 rounded-lg bg-primary/15 text-primary">
+            <Database className="h-6 w-6" />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 flex-wrap mb-2">
+              <h1 className="text-2xl font-bold">{config.label}</h1>
+              {config.source && (
+                <Badge variant="secondary" className="font-mono text-xs">
+                  {config.source}
+                </Badge>
+              )}
+              {config.subcategory && (
+                <Badge variant="outline" className="text-xs">
+                  {config.subcategory === 'cfdi' ? 'CFDI 4.0' :
+                   config.subcategory === 'carta-porte' ? 'Carta Porte' :
+                   config.subcategory === 'comercio-exterior' ? 'Comercio Ext.' :
+                   config.subcategory === 'nomina' ? 'Nómina' :
+                   config.subcategory}
+                </Badge>
+              )}
+            </div>
+            <p className="text-muted-foreground text-sm">
+              {config.description || 'Catálogo completo en mexico.sqlite3.'}
+            </p>
+            {config.helpText && (
+              <div className="mt-2 p-3 rounded-md bg-muted/50 border border-muted-foreground/20">
+                <div className="flex items-start gap-2">
+                  <Info className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {config.helpText}
+                  </p>
+                </div>
+              </div>
+            )}
+            <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground flex-wrap">
+              <span>
+                Tabla: <code className="font-mono bg-muted px-1.5 py-0.5 rounded">{config.table}</code>
+              </span>
+              {totalUnfiltered > 0 && (
+                <span className="font-medium text-foreground">
+                  {totalUnfiltered.toLocaleString()} registros
+                </span>
+              )}
+            </div>
+            {config.relatedCatalogs && config.relatedCatalogs.length > 0 && (
+              <div className="mt-3 flex items-center gap-2 flex-wrap">
+                <span className="text-xs text-muted-foreground">Ver también:</span>
+                {config.relatedCatalogs.map(relatedId => {
+                  const related = datasetConfigs.find(d => d.id === relatedId);
+                  return related ? (
+                    <button
+                      key={relatedId}
+                      onClick={() => navigate(`/catalogs/${relatedId}`)}
+                      className="text-xs bg-muted hover:bg-muted/70 px-2 py-1 rounded flex items-center gap-1 transition-colors"
+                    >
+                      {related.label}
+                      <ExternalLink className="h-3 w-3" />
+                    </button>
+                  ) : null;
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -113,9 +235,26 @@ export default function DatasetPage({ datasetId }: DatasetPageProps) {
                 placeholder="Buscar (sin acentos)..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && load(1)}
-                className="pl-10"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    setSearchParams(search ? { q: search } : {});
+                    load(1);
+                  }
+                }}
+                className="pl-10 pr-10"
               />
+              {search && (
+                <button
+                  onClick={() => {
+                    setSearch('');
+                    setSearchParams({});
+                    load(1);
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
             <div className="flex items-center gap-2">
               <label className="text-xs text-muted-foreground">Filas/página</label>
@@ -136,12 +275,31 @@ export default function DatasetPage({ datasetId }: DatasetPageProps) {
                 ))}
               </select>
             </div>
-            <Button onClick={() => load(1)} disabled={loading}>
+            <Button onClick={() => {
+              setSearchParams(search ? { q: search } : {});
+              load(1);
+            }} disabled={loading}>
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Buscar'}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => exportToCSV(rows, config)}
+              disabled={rows.length === 0 || loading}
+              className="flex items-center gap-2"
+            >
+              <Download className="h-4 w-4" />
+              <span className="hidden sm:inline">CSV</span>
             </Button>
           </div>
         </CardContent>
       </Card>
+
+      <AdvancedFilters
+        columns={config.columns}
+        searchColumns={config.searchColumns}
+        onFilter={handleFieldFilters}
+        disabled={loading}
+      />
 
       {error && (
         <Card className="border-destructive">

@@ -115,7 +115,7 @@ class TestNSSValidator:
         """Test check digit verification"""
         nss = "12345678903"
         assert NSSValidator.verify_check_digit(nss) is True
-        
+
         # Wrong check digit
         nss_wrong = "12345678902"
         assert NSSValidator.verify_check_digit(nss_wrong) is False
@@ -184,7 +184,7 @@ class TestNSSValidator:
         nss = "12345678903"
         validator = NSSValidator(nss)
         parts = validator.get_parts()
-        
+
         assert parts is not None
         assert parts["subdelegation"] == "12"
         assert parts["registration_year"] == "34"
@@ -347,12 +347,12 @@ class TestNSSCheckDigitAlgorithm:
             ("99", "99", "99", "9999"),
             ("55", "66", "77", "8888"),
         ]
-        
+
         for subdel, reg_year, birth_year, seq in test_cases:
             nss = generate_nss(subdel, reg_year, birth_year, seq)
             validator = NSSValidator(nss)
             assert validator.is_valid(), f"NSS {nss} should be valid"
-            
+
             # Verify check digit calculation
             nss_10 = nss[:10]
             calculated_digit = NSSValidator.calculate_check_digit(nss_10)
@@ -366,7 +366,7 @@ class TestNSSCheckDigitAlgorithm:
         check_digit = NSSValidator.calculate_check_digit(nss_10)
         assert len(check_digit) == 1
         assert check_digit.isdigit()
-        
+
         # Verify the calculation produces a valid NSS
         nss = nss_10 + check_digit
         assert validate_nss(nss) is True

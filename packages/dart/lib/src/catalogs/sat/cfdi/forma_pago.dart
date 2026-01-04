@@ -13,8 +13,9 @@ class FormaPagoCatalog {
   static void _loadData() {
     if (_data != null) return;
 
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/forma_pago.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/cfdi_4.0/forma_pago.json',
+    );
 
     // Handle both list and dict formats
     if (jsonData.isNotEmpty && jsonData.first.containsKey('formas_pago')) {
@@ -26,9 +27,7 @@ class FormaPagoCatalog {
     }
 
     // Build index
-    _byClave = {
-      for (var item in _data!) item['clave'] as String: item,
-    };
+    _byClave = {for (var item in _data!) item['clave'] as String: item};
   }
 
   /// Obtiene todas las formas de pago
@@ -53,8 +52,10 @@ class FormaPagoCatalog {
     _loadData();
     final queryNorm = query.toUpperCase();
     return _data!
-        .where((item) =>
-            (item['descripcion'] as String).toUpperCase().contains(queryNorm))
+        .where(
+          (item) =>
+              (item['descripcion'] as String).toUpperCase().contains(queryNorm),
+        )
         .toList();
   }
 }

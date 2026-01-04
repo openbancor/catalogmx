@@ -3,11 +3,21 @@ Additional tests to cover remaining gaps in coverage
 """
 
 from catalogmx.catalogs.sat.cfdi_4.tasa_o_cuota import TasaOCuota
-from catalogmx.catalogs.sat.comercio_exterior import EstadoCatalog, IncotermsValidator, MonedaCatalog, PaisCatalog, RegistroIdentTribCatalog
+from catalogmx.catalogs.sat.comercio_exterior import (
+    EstadoCatalog,
+    IncotermsValidator,
+    MonedaCatalog,
+    PaisCatalog,
+    RegistroIdentTribCatalog,
+)
 from catalogmx.catalogs.sepomex import CodigosPostales
 from catalogmx.catalogs.banxico import CodigosPlazaCatalog
 from catalogmx.catalogs.mexico import PlacasFormatosCatalog, SalariosMinimos, UMACatalog
-from catalogmx.catalogs.inegi import LocalidadesCatalog, MunicipiosCatalog, MunicipiosCompletoCatalog
+from catalogmx.catalogs.inegi import (
+    LocalidadesCatalog,
+    MunicipiosCatalog,
+    MunicipiosCompletoCatalog,
+)
 
 
 class TestTasaOCuotaCatalog:
@@ -34,7 +44,7 @@ class TestTasaOCuotaCatalog:
                     impuesto="001",
                     factor="Tasa",
                     trasladado=None,
-                    retenido=None
+                    retenido=None,
                 )
                 assert isinstance(result, list)
         except FileNotFoundError:
@@ -99,12 +109,9 @@ class TestMonedaCatalogComplete:
 
     def test_validate_conversion_usd(self):
         """Test validating USD conversion"""
-        result = MonedaCatalog.validate_conversion_usd({
-            "moneda": "USD",
-            "total": 100,
-            "tipo_cambio_usd": 1.0,
-            "total_usd": 100
-        })
+        result = MonedaCatalog.validate_conversion_usd(
+            {"moneda": "USD", "total": 100, "tipo_cambio_usd": 1.0, "total_usd": 100}
+        )
         assert isinstance(result, dict)
         assert "errors" in result
 
@@ -318,4 +325,3 @@ class TestMunicipiosComplete:
         """Test searching by nonexistent name"""
         result = MunicipiosCatalog.search_by_name("NonExistent12345")
         assert isinstance(result, list)
-

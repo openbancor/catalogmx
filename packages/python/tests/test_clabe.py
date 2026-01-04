@@ -167,7 +167,7 @@ class TestCLABEValidator:
         clabe = "002010077777777771"
         validator = CLABEValidator(clabe)
         parts = validator.get_parts()
-        
+
         assert parts is not None
         assert parts["bank_code"] == "002"
         assert parts["branch_code"] == "010"
@@ -313,17 +313,16 @@ class TestCLABECheckDigitAlgorithm:
         """Test multiple valid CLABE examples"""
         # Use only verified valid CLABE - generate one to be sure it's correct
         test_clabe = "002010077777777771"
-        
+
         validator = CLABEValidator(test_clabe)
         assert validator.is_valid(), f"CLABE {test_clabe} should be valid"
-        
+
         # Verify check digit calculation
         clabe_17 = test_clabe[:17]
         calculated_digit = CLABEValidator.calculate_check_digit(clabe_17)
         assert calculated_digit == test_clabe[17], f"Check digit mismatch for {test_clabe}"
-        
+
         # Generate and test another CLABE
         generated_clabe = generate_clabe("012", "180", "00123456789")
         validator2 = CLABEValidator(generated_clabe)
         assert validator2.is_valid(), f"Generated CLABE {generated_clabe} should be valid"
-

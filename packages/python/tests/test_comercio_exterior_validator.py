@@ -24,7 +24,7 @@ class TestComercioExteriorValidator:
             "moneda": "USD",
             "total": 100,
             "tipo_cambio_usd": 1.0,
-            "total_usd": 100
+            "total_usd": 100,
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -38,7 +38,7 @@ class TestComercioExteriorValidator:
             "moneda": "USD",
             "total": 100,
             "tipo_cambio_usd": 1.0,
-            "total_usd": 100
+            "total_usd": 100,
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -51,7 +51,7 @@ class TestComercioExteriorValidator:
             "moneda": "USD",
             "total": 100,
             "tipo_cambio_usd": 1.0,
-            "total_usd": 100
+            "total_usd": 100,
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -65,7 +65,7 @@ class TestComercioExteriorValidator:
             "moneda": "USD",
             "total": 100,
             "tipo_cambio_usd": 1.0,
-            "total_usd": 100
+            "total_usd": 100,
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -79,7 +79,7 @@ class TestComercioExteriorValidator:
             "total": 100,
             # Missing tipo_cambio_usd and total_usd
             "tipo_cambio_usd": None,
-            "total_usd": None
+            "total_usd": None,
         }
         result = ComercioExteriorValidator.validate(cfdi)
         # Should have errors about USD conversion
@@ -93,7 +93,7 @@ class TestComercioExteriorValidator:
             "moneda": "USD",
             "total": 100,
             "tipo_cambio_usd": 1.0,
-            "total_usd": 100
+            "total_usd": 100,
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -108,7 +108,7 @@ class TestComercioExteriorValidator:
             "total": 100,
             "tipo_cambio_usd": 1.0,
             "total_usd": 100,
-            "mercancias": [{}]
+            "mercancias": [{}],
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -123,7 +123,7 @@ class TestComercioExteriorValidator:
             "total": 100,
             "tipo_cambio_usd": 1.0,
             "total_usd": 100,
-            "mercancias": [{"fraccion_arancelaria": "123"}]  # Too short
+            "mercancias": [{"fraccion_arancelaria": "123"}],  # Too short
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -137,7 +137,7 @@ class TestComercioExteriorValidator:
             "total": 100,
             "tipo_cambio_usd": 1.0,
             "total_usd": 100,
-            "mercancias": [{"fraccion_arancelaria": "01010101"}]
+            "mercancias": [{"fraccion_arancelaria": "01010101"}],
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -152,11 +152,13 @@ class TestComercioExteriorValidator:
             "total": 100,
             "tipo_cambio_usd": 1.0,
             "total_usd": 100,
-            "mercancias": [{
-                "fraccion_arancelaria": "01010101",
-                "unidad_aduana": "KG",
-                "cantidad_aduana": 0  # Invalid: must be > 0
-            }]
+            "mercancias": [
+                {
+                    "fraccion_arancelaria": "01010101",
+                    "unidad_aduana": "KG",
+                    "cantidad_aduana": 0,  # Invalid: must be > 0
+                }
+            ],
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -170,12 +172,14 @@ class TestComercioExteriorValidator:
             "total": 100,
             "tipo_cambio_usd": 1.0,
             "total_usd": 100,
-            "mercancias": [{
-                "fraccion_arancelaria": "01010101",
-                "unidad_aduana": "KG",
-                "cantidad_aduana": 100,
-                "valor_unitario_aduana": 0  # Invalid
-            }]
+            "mercancias": [
+                {
+                    "fraccion_arancelaria": "01010101",
+                    "unidad_aduana": "KG",
+                    "cantidad_aduana": 100,
+                    "valor_unitario_aduana": 0,  # Invalid
+                }
+            ],
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -189,12 +193,14 @@ class TestComercioExteriorValidator:
             "total": 100,
             "tipo_cambio_usd": 1.0,
             "total_usd": 100,
-            "mercancias": [{
-                "fraccion_arancelaria": "01010101",
-                "unidad_aduana": "KG",
-                "cantidad_aduana": 100,
-                "valor_unitario_aduana": 10.0
-            }]
+            "mercancias": [
+                {
+                    "fraccion_arancelaria": "01010101",
+                    "unidad_aduana": "KG",
+                    "cantidad_aduana": 100,
+                    "valor_unitario_aduana": 10.0,
+                }
+            ],
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -209,14 +215,16 @@ class TestComercioExteriorValidator:
             "total": 100,
             "tipo_cambio_usd": 1.0,
             "total_usd": 100,
-            "mercancias": [{
-                "fraccion_arancelaria": "01010101",
-                "unidad_aduana": "KG",
-                "cantidad_aduana": 100,
-                "valor_unitario_aduana": 10.0,
-                "pais_origen": "MEX"
-            }],
-            "receptor": {}
+            "mercancias": [
+                {
+                    "fraccion_arancelaria": "01010101",
+                    "unidad_aduana": "KG",
+                    "cantidad_aduana": 100,
+                    "valor_unitario_aduana": 10.0,
+                    "pais_origen": "MEX",
+                }
+            ],
+            "receptor": {},
         }
         result = ComercioExteriorValidator.validate(cfdi)
         # Should have errors (about missing pais or estado validation)
@@ -231,14 +239,16 @@ class TestComercioExteriorValidator:
             "total": 100,
             "tipo_cambio_usd": 1.0,
             "total_usd": 100,
-            "mercancias": [{
-                "fraccion_arancelaria": "01010101",
-                "unidad_aduana": "KG",
-                "cantidad_aduana": 100,
-                "valor_unitario_aduana": 10.0,
-                "pais_origen": "MEX"
-            }],
-            "receptor": {"pais": "INVALID"}
+            "mercancias": [
+                {
+                    "fraccion_arancelaria": "01010101",
+                    "unidad_aduana": "KG",
+                    "cantidad_aduana": 100,
+                    "valor_unitario_aduana": 10.0,
+                    "pais_origen": "MEX",
+                }
+            ],
+            "receptor": {"pais": "INVALID"},
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -253,13 +263,15 @@ class TestComercioExteriorValidator:
             "total": 100,
             "tipo_cambio_usd": 1.0,
             "total_usd": 100,
-            "mercancias": [{
-                "fraccion_arancelaria": "01010101",
-                "unidad_aduana": "KG",
-                "cantidad_aduana": 100,
-                "valor_unitario_aduana": 10.0,
-                "pais_origen": "MEX"
-            }]
+            "mercancias": [
+                {
+                    "fraccion_arancelaria": "01010101",
+                    "unidad_aduana": "KG",
+                    "cantidad_aduana": 100,
+                    "valor_unitario_aduana": 10.0,
+                    "pais_origen": "MEX",
+                }
+            ],
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -276,13 +288,15 @@ class TestComercioExteriorValidator:
             "total": 100,
             "tipo_cambio_usd": 1.0,
             "total_usd": 100,
-            "mercancias": [{
-                "fraccion_arancelaria": "01010101",
-                "unidad_aduana": "KG",
-                "cantidad_aduana": 100,
-                "valor_unitario_aduana": 10.0,
-                "pais_origen": "MEX"
-            }]
+            "mercancias": [
+                {
+                    "fraccion_arancelaria": "01010101",
+                    "unidad_aduana": "KG",
+                    "cantidad_aduana": 100,
+                    "valor_unitario_aduana": 10.0,
+                    "pais_origen": "MEX",
+                }
+            ],
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -296,14 +310,16 @@ class TestComercioExteriorValidator:
             "total": 100,
             "tipo_cambio_usd": 1.0,
             "total_usd": 100,
-            "mercancias": [{
-                "fraccion_arancelaria": "01010101",
-                "unidad_aduana": "KG",
-                "cantidad_aduana": 100,
-                "valor_unitario_aduana": 10.0,
-                "pais_origen": "MEX"
-            }],
-            "certificado_origen": "2"  # Invalid: must be 0 or 1
+            "mercancias": [
+                {
+                    "fraccion_arancelaria": "01010101",
+                    "unidad_aduana": "KG",
+                    "cantidad_aduana": 100,
+                    "valor_unitario_aduana": 10.0,
+                    "pais_origen": "MEX",
+                }
+            ],
+            "certificado_origen": "2",  # Invalid: must be 0 or 1
         }
         result = ComercioExteriorValidator.validate(cfdi)
         assert result["valid"] is False
@@ -339,8 +355,7 @@ class TestComercioExteriorValidator:
             ("estado_usa", "TX"),
             ("provincia_canada", "ON"),
         ]
-        
+
         for field, value in fields:
             result = ComercioExteriorValidator.validate_quick(field, value)
             assert isinstance(result, bool)
-

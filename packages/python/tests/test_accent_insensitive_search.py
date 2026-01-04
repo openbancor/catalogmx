@@ -4,12 +4,17 @@ Tests for accent-insensitive search across all catalogs.
 Tests the normalize_text utility and accent-insensitive search functionality
 in all catalogs that support it.
 """
+
 from catalogmx.utils.text import normalize_text
 from catalogmx.catalogs.sepomex import CodigosPostales
 from catalogmx.catalogs.inegi import StateCatalog, LocalidadesCatalog, MunicipiosCatalog
 from catalogmx.catalogs.banxico import BankCatalog, CodigosPlazaCatalog, InstitucionesFinancieras
 from catalogmx.catalogs.sat.comercio_exterior import PaisCatalog
-from catalogmx.catalogs.sat.carta_porte import AeropuertosCatalog, PuertosMaritimos, CarreterasCatalog
+from catalogmx.catalogs.sat.carta_porte import (
+    AeropuertosCatalog,
+    PuertosMaritimos,
+    CarreterasCatalog,
+)
 
 
 class TestNormalizeText:
@@ -106,10 +111,12 @@ class TestBanxicoAccentInsensitive:
         all_plazas = CodigosPlazaCatalog.get_all()
         if all_plazas:
             # Find a plaza with accents in name
-            test_plaza = next((p for p in all_plazas if "á" in p['plaza'].lower()
-                             or "é" in p['plaza'].lower()), None)
+            test_plaza = next(
+                (p for p in all_plazas if "á" in p["plaza"].lower() or "é" in p["plaza"].lower()),
+                None,
+            )
             if test_plaza:
-                nombre = test_plaza['plaza']
+                nombre = test_plaza["plaza"]
                 # Test that search works
                 result = CodigosPlazaCatalog.buscar_por_plaza(nombre)
                 assert isinstance(result, list)

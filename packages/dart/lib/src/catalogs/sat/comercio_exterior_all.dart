@@ -17,7 +17,8 @@ class ClavePedimentoCatalog {
   static void _loadData() {
     if (_data != null) return;
     final jsonData = BaseCatalog.loadJsonDataSync(
-        'sat/comercio_exterior/claves_pedimento.json');
+      'sat/comercio_exterior/claves_pedimento.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('claves')
         ? (jsonData.first['claves'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -40,8 +41,10 @@ class ClavePedimentoCatalog {
     _loadData();
     final q = query.toUpperCase();
     return _data!
-        .where((item) =>
-            (item['descripcion'] as String? ?? '').toUpperCase().contains(q))
+        .where(
+          (item) =>
+              (item['descripcion'] as String? ?? '').toUpperCase().contains(q),
+        )
         .toList();
   }
 }
@@ -54,7 +57,8 @@ class UnidadAduanaCatalog {
   static void _loadData() {
     if (_data != null) return;
     final jsonData = BaseCatalog.loadJsonDataSync(
-        'sat/comercio_exterior/unidades_aduana.json');
+      'sat/comercio_exterior/unidades_aduana.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('unidades')
         ? (jsonData.first['unidades'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -90,8 +94,9 @@ class PaisComercioExteriorCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/comercio_exterior/paises.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/comercio_exterior/paises.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('paises')
         ? (jsonData.first['paises'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -114,9 +119,11 @@ class PaisComercioExteriorCatalog {
     _loadData();
     final q = query.toUpperCase();
     return _data!
-        .where((item) =>
-            (item['nombre'] as String? ?? '').toUpperCase().contains(q) ||
-            (item['pais'] as String? ?? '').toUpperCase().contains(q))
+        .where(
+          (item) =>
+              (item['nombre'] as String? ?? '').toUpperCase().contains(q) ||
+              (item['pais'] as String? ?? '').toUpperCase().contains(q),
+        )
         .toList();
   }
 }
@@ -129,7 +136,8 @@ class EstadosUSACanadaCatalog {
   static void _loadData() {
     if (_data != null) return;
     final jsonData = BaseCatalog.loadJsonDataSync(
-        'sat/comercio_exterior/estados_usa_canada.json');
+      'sat/comercio_exterior/estados_usa_canada.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('estados')
         ? (jsonData.first['estados'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -161,8 +169,9 @@ class MonedaComercioExteriorCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/comercio_exterior/monedas.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/comercio_exterior/monedas.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('monedas')
         ? (jsonData.first['monedas'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -189,8 +198,9 @@ class IncotermsCatalog {
 
   static void _loadData() {
     if (_data != null) return;
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('sat/comercio_exterior/incoterms.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'sat/comercio_exterior/incoterms.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('incoterms')
         ? (jsonData.first['incoterms'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -218,7 +228,8 @@ class MotivoTrasladoCatalog {
   static void _loadData() {
     if (_data != null) return;
     final jsonData = BaseCatalog.loadJsonDataSync(
-        'sat/comercio_exterior/motivos_traslado.json');
+      'sat/comercio_exterior/motivos_traslado.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('motivos')
         ? (jsonData.first['motivos'] as List).cast<Map<String, dynamic>>()
         : jsonData;
@@ -246,7 +257,8 @@ class RegistroIdentTribCatalog {
   static void _loadData() {
     if (_data != null) return;
     final jsonData = BaseCatalog.loadJsonDataSync(
-        'sat/comercio_exterior/registro_ident_trib.json');
+      'sat/comercio_exterior/registro_ident_trib.json',
+    );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('registros')
         ? (jsonData.first['registros'] as List).cast<Map<String, dynamic>>()
         : jsonData;

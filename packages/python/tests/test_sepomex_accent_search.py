@@ -25,12 +25,8 @@ class TestSepomexAccentSearch:
         assert len(results) > 0, "Search for 'Aguilas' returned no results"
 
         # Check if any result contains "Águilas" (with accent)
-        found_with_accent = any(
-            "águilas" in result["asentamiento"].lower() for result in results
-        )
-        assert (
-            found_with_accent
-        ), "Search for 'Aguilas' did not find 'Las Águilas' (with accent)"
+        found_with_accent = any("águilas" in result["asentamiento"].lower() for result in results)
+        assert found_with_accent, "Search for 'Aguilas' did not find 'Las Águilas' (with accent)"
 
     def test_search_mexico_finds_méxico(self):
         """Search for "Mexico" should find "México" """

@@ -16,8 +16,9 @@ class MonedasDivisasCatalog {
   static void _loadData() {
     if (_data != null) return;
 
-    final jsonData =
-        BaseCatalog.loadJsonDataSync('banxico/monedas_divisas.json');
+    final jsonData = BaseCatalog.loadJsonDataSync(
+      'banxico/monedas_divisas.json',
+    );
 
     // Handle both list and dict formats
     if (jsonData.isNotEmpty && jsonData.first.containsKey('monedas')) {
@@ -119,7 +120,7 @@ class MonedasDivisasCatalog {
       'GTQ',
       'CRC',
       'UYU',
-      'VES'
+      'VES',
     ];
     return _data!.where((m) => latam.contains(m['codigo_iso'])).toList();
   }
@@ -178,7 +179,8 @@ class MonedasDivisasCatalog {
     final nombreLower = nombre.toLowerCase();
     return _data!
         .where(
-            (m) => (m['moneda'] as String).toLowerCase().contains(nombreLower))
+          (m) => (m['moneda'] as String).toLowerCase().contains(nombreLower),
+        )
         .toList();
   }
 

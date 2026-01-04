@@ -142,6 +142,11 @@ export async function queryDatabase(
   return { columns, values };
 }
 
+export interface FieldFilter {
+  field: string;
+  value: string;
+}
+
 export interface PaginatedResult<T> {
   data: T[];
   total: number;
@@ -159,6 +164,7 @@ export async function queryPaginated<T>(
     search?: string;
     searchColumns?: string[];
     orderBy?: string;
+    fieldFilters?: FieldFilter[];
   } = {}
 ): Promise<PaginatedResult<T>> {
   const {
@@ -166,7 +172,8 @@ export async function queryPaginated<T>(
     pageSize = 50,
     search = '',
     searchColumns = [],
-    orderBy = ''
+    orderBy = '',
+    fieldFilters = []
   } = options;
 
   const db = await loadDatabase(dbName);
@@ -174,13 +181,27 @@ export async function queryPaginated<T>(
   // Build WHERE clause for search (accent-insensitive)
   const params: (string | number)[] = [];
   const normalizedSearch = search ? normalizeText(search) : '';
-  let whereClause = '';
+  const whereClauses: string[] = [];
 
+  // General search across all searchColumns (OR condition)
   if (normalizedSearch && searchColumns.length > 0) {
     const conditions = searchColumns.map((col) => `${normalizeSqlExpr(col)} LIKE ?`);
-    whereClause = `WHERE ${conditions.join(' OR ')}`;
+    whereClauses.push(`(${conditions.join(' OR ')})`);
     searchColumns.forEach(() => params.push(`%${normalizedSearch}%`));
   }
+
+  // Field-specific filters (AND conditions)
+  if (fieldFilters.length > 0) {
+    fieldFilters.forEach((filter) => {
+      if (filter.value.trim()) {
+        const normalizedValue = normalizeText(filter.value);
+        whereClauses.push(`${normalizeSqlExpr(filter.field)} LIKE ?`);
+        params.push(`%${normalizedValue}%`);
+      }
+    });
+  }
+
+  const whereClause = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
 
   // Get total count
   const countSql = `SELECT COUNT(*) as count FROM ${table} ${whereClause}`;
@@ -285,22 +306,37 @@ export async function queryTable(
     search?: string;
     searchColumns?: string[];
     orderBy?: string;
+    fieldFilters?: FieldFilter[];
   } = {}
 ): Promise<PaginatedResult<Record<string, unknown>>> {
-  const { page = 1, pageSize = 50, search = '', searchColumns = [], orderBy = '' } = options;
+  const { page = 1, pageSize = 50, search = '', searchColumns = [], orderBy = '', fieldFilters = [] } = options;
   const db = await loadDatabase(dbName);
 
   const textColumns = searchColumns;
-  let whereClause = '';
+  const whereClauses: string[] = [];
   const params: (string | number)[] = [];
   const normalizedSearch = search ? normalizeText(search) : '';
 
+  // General search across all searchColumns (OR condition)
   if (normalizedSearch && textColumns.length > 0) {
     const conditions = textColumns.map((col) => `${normalizeSqlExpr(col)} LIKE ?`);
-    whereClause = `WHERE ${conditions.join(' OR ')}`;
+    whereClauses.push(`(${conditions.join(' OR ')})`);
     const likeValue = `%${normalizedSearch}%`;
     textColumns.forEach(() => params.push(likeValue));
   }
+
+  // Field-specific filters (AND conditions)
+  if (fieldFilters.length > 0) {
+    fieldFilters.forEach((filter) => {
+      if (filter.value.trim()) {
+        const normalizedValue = normalizeText(filter.value);
+        whereClauses.push(`${normalizeSqlExpr(filter.field)} LIKE ?`);
+        params.push(`%${normalizedValue}%`);
+      }
+    });
+  }
+
+  const whereClause = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
 
   const countSql = `SELECT COUNT(*) as count FROM ${table} ${whereClause}`;
   const countStmt = db.prepare(countSql);
@@ -427,6 +463,7 @@ export async function querySqlTable<T>(
     search?: string;
     searchColumns?: string[];
     orderBy?: string;
+    fieldFilters?: FieldFilter[];
   } = {}
 ): Promise<PaginatedResult<T>> {
   return queryPaginated<T>(dbName, table, opts);
@@ -441,11 +478,13 @@ export async function queryJsonArrayTable<T extends Record<string, unknown>>(
     pageSize = 50,
     search = '',
     searchColumns = [],
+    fieldFilters = [],
   }: {
     page?: number;
     pageSize?: number;
     search?: string;
     searchColumns?: string[];
+    fieldFilters?: FieldFilter[];
   } = {}
 ): Promise<PaginatedResult<T>> {
   // Load JSON file directly from public/data directory
@@ -458,13 +497,28 @@ export async function queryJsonArrayTable<T extends Record<string, unknown>>(
 
   const normalizedSearch = search ? normalizeText(search) : '';
   let filtered = records;
+
+  // General search across all searchColumns (OR condition)
   if (normalizedSearch && searchColumns.length > 0) {
-    filtered = records.filter((row) =>
+    filtered = filtered.filter((row) =>
       searchColumns.some((key) => {
         const value = row[key];
         return typeof value === 'string' && normalizeText(value).includes(normalizedSearch);
       })
     );
+  }
+
+  // Field-specific filters (AND conditions)
+  if (fieldFilters.length > 0) {
+    fieldFilters.forEach((filter) => {
+      if (filter.value.trim()) {
+        const normalizedValue = normalizeText(filter.value);
+        filtered = filtered.filter((row) => {
+          const value = row[filter.field];
+          return typeof value === 'string' && normalizeText(value).includes(normalizedValue);
+        });
+      }
+    });
   }
 
   const total = filtered.length;

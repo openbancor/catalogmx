@@ -4,7 +4,16 @@ Achievable coverage improvements - simple, working tests
 
 from click.testing import CliRunner
 
-from catalogmx.cli import curp, curp_generate, curp_validate, main, rfc, rfc_generate_fisica, rfc_generate_moral, rfc_validate
+from catalogmx.cli import (
+    curp,
+    curp_generate,
+    curp_validate,
+    main,
+    rfc,
+    rfc_generate_fisica,
+    rfc_generate_moral,
+    rfc_validate,
+)
 
 
 class TestCLICommands:
@@ -47,7 +56,16 @@ class TestCLICommands:
         """Test RFC generate fisica shows all information"""
         result = self.runner.invoke(
             rfc_generate_fisica,
-            ["--nombre", "Juan", "--paterno", "Garcia", "--materno", "Lopez", "--fecha", "1990-05-15"]
+            [
+                "--nombre",
+                "Juan",
+                "--paterno",
+                "Garcia",
+                "--materno",
+                "Lopez",
+                "--fecha",
+                "1990-05-15",
+            ],
         )
         assert result.exit_code == 0
         assert "Generated RFC:" in result.output
@@ -58,7 +76,7 @@ class TestCLICommands:
         """Test RFC generate fisica with ValueError"""
         result = self.runner.invoke(
             rfc_generate_fisica,
-            ["--nombre", "Juan", "--paterno", "Garcia", "--fecha", "invalid-date"]
+            ["--nombre", "Juan", "--paterno", "Garcia", "--fecha", "invalid-date"],
         )
         assert result.exit_code == 0
         assert "Error:" in result.output
@@ -67,7 +85,7 @@ class TestCLICommands:
         """Test RFC generate moral shows all information"""
         result = self.runner.invoke(
             rfc_generate_moral,
-            ["--razon-social", "Tecnologia Sistemas Integrales", "--fecha", "2009-09-09"]
+            ["--razon-social", "Tecnologia Sistemas Integrales", "--fecha", "2009-09-09"],
         )
         assert result.exit_code == 0
         assert "Generated RFC:" in result.output
@@ -77,8 +95,7 @@ class TestCLICommands:
     def test_rfc_generate_moral_value_error(self):
         """Test RFC generate moral with ValueError"""
         result = self.runner.invoke(
-            rfc_generate_moral,
-            ["--razon-social", "Test", "--fecha", "invalid"]
+            rfc_generate_moral, ["--razon-social", "Test", "--fecha", "invalid"]
         )
         assert result.exit_code == 0
         assert "Error:" in result.output
@@ -99,8 +116,20 @@ class TestCLICommands:
         """Test CURP generate shows all information"""
         result = self.runner.invoke(
             curp_generate,
-            ["--nombre", "Juan", "--paterno", "Garcia", "--materno", "Lopez",
-             "--fecha", "1990-05-15", "--sexo", "H", "--estado", "Jalisco"]
+            [
+                "--nombre",
+                "Juan",
+                "--paterno",
+                "Garcia",
+                "--materno",
+                "Lopez",
+                "--fecha",
+                "1990-05-15",
+                "--sexo",
+                "H",
+                "--estado",
+                "Jalisco",
+            ],
         )
         assert result.exit_code == 0
         assert "Generated CURP:" in result.output
@@ -115,8 +144,18 @@ class TestCLICommands:
         """Test CURP generate with ValueError"""
         result = self.runner.invoke(
             curp_generate,
-            ["--nombre", "Juan", "--paterno", "Garcia", "--fecha", "invalid",
-             "--sexo", "H", "--estado", "Jalisco"]
+            [
+                "--nombre",
+                "Juan",
+                "--paterno",
+                "Garcia",
+                "--fecha",
+                "invalid",
+                "--sexo",
+                "H",
+                "--estado",
+                "Jalisco",
+            ],
         )
         assert result.exit_code == 0
         assert "Error:" in result.output
@@ -126,8 +165,20 @@ class TestCLICommands:
         # This will trigger the except Exception block by using invalid state
         result = self.runner.invoke(
             curp_generate,
-            ["--nombre", "Juan", "--paterno", "Garcia", "--materno", "Lopez",
-             "--fecha", "1990-05-15", "--sexo", "H", "--estado", "InvalidState"]
+            [
+                "--nombre",
+                "Juan",
+                "--paterno",
+                "Garcia",
+                "--materno",
+                "Lopez",
+                "--fecha",
+                "1990-05-15",
+                "--sexo",
+                "H",
+                "--estado",
+                "InvalidState",
+            ],
         )
         assert result.exit_code == 0
         # CURP generator handles invalid states gracefully and assigns default code
@@ -138,8 +189,7 @@ class TestCLICommands:
         """Test RFC fisica exception handling"""
         # Try to trigger exception with edge case
         result = self.runner.invoke(
-            rfc_generate_fisica,
-            ["--nombre", "", "--paterno", "X", "--fecha", "1900-01-01"]
+            rfc_generate_fisica, ["--nombre", "", "--paterno", "X", "--fecha", "1900-01-01"]
         )
         # Should handle gracefully
         assert result.exit_code == 0 or "error" in result.output.lower()
@@ -148,9 +198,7 @@ class TestCLICommands:
         """Test RFC moral exception handling"""
         # Try to trigger exception
         result = self.runner.invoke(
-            rfc_generate_moral,
-            ["--razon-social", "", "--fecha", "2009-09-09"]
+            rfc_generate_moral, ["--razon-social", "", "--fecha", "2009-09-09"]
         )
         # Should handle gracefully
         assert result.exit_code == 0 or "error" in result.output.lower()
-

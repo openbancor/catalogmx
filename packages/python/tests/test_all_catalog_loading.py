@@ -136,7 +136,10 @@ def test_material_peligroso_catalog_loads():
     if data:
         code = data[0].get("code", data[0].get("un_number", ""))
         if code:
-            assert MaterialPeligrosoCatalog.is_valid(code) is True or MaterialPeligrosoCatalog.is_valid(code) is False
+            assert (
+                MaterialPeligrosoCatalog.is_valid(code) is True
+                or MaterialPeligrosoCatalog.is_valid(code) is False
+            )
 
 
 def test_tipo_embalaje_catalog_loads():
@@ -255,7 +258,9 @@ def test_moneda_catalog_loads():
     if data:
         MonedaCatalog.is_valid(data[0]["codigo"])
         MonedaCatalog.search("USD")
-        MonedaCatalog.validate_conversion_usd({"moneda": "USD", "total": 100, "tipo_cambio_usd": 1, "total_usd": 100})
+        MonedaCatalog.validate_conversion_usd(
+            {"moneda": "USD", "total": 100, "tipo_cambio_usd": 1, "total_usd": 100}
+        )
 
 
 def test_motivo_traslado_catalog_loads():
@@ -283,4 +288,3 @@ def test_unidad_aduana_catalog_loads():
     if data:
         assert UnidadAduanaCatalog.is_valid(data[0]["code"]) is True
         UnidadAduanaCatalog.get_by_type("weight")
-

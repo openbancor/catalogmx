@@ -43,28 +43,47 @@ export default function CatalogsSection({ showHeader = true }: CatalogsSectionPr
     if (!searchQuery) return datasetConfigs;
     const q = searchQuery.toLowerCase();
     return datasetConfigs.filter(c =>
+      // Search in label, table, description
       c.label.toLowerCase().includes(q) ||
       c.table.toLowerCase().includes(q) ||
-      (c.description && c.description.toLowerCase().includes(q))
+      (c.description && c.description.toLowerCase().includes(q)) ||
+      // Search in tags
+      (c.tags && c.tags.some(tag => tag.toLowerCase().includes(q))) ||
+      // Search in source
+      (c.source && c.source.toLowerCase().includes(q)) ||
+      // Search in category
+      c.category.toLowerCase().includes(q) ||
+      // Search in subcategory
+      (c.subcategory && c.subcategory.toLowerCase().includes(q)) ||
+      // Search in help text
+      (c.helpText && c.helpText.toLowerCase().includes(q))
     );
   }, [searchQuery]);
 
   const catalogsByCategory = useMemo(() => {
-    const map = new Map<string, DatasetConfig[]>();
-    
+    const map = new Map<string, Map<string, DatasetConfig[]>>();
+
     filteredCatalogs.forEach(catalog => {
       const prefix = catalog.id.split('-')[0].toUpperCase();
-      const category = ['SAT', 'BANXICO', 'INEGI', 'SEPOMEX', 'IFT'].includes(prefix) 
-        ? prefix 
+      const category = ['SAT', 'BANXICO', 'INEGI', 'SEPOMEX', 'IFT'].includes(prefix)
+        ? prefix
         : 'OTROS';
-      
-      if (!map.has(category)) map.set(category, []);
-      map.get(category)?.push(catalog);
+
+      if (!map.has(category)) map.set(category, new Map());
+
+      // For SAT, use subcategory; for others, use 'default'
+      const subcategory = category === 'SAT' && catalog.subcategory
+        ? catalog.subcategory
+        : 'default';
+
+      const categoryMap = map.get(category)!;
+      if (!categoryMap.has(subcategory)) categoryMap.set(subcategory, []);
+      categoryMap.get(subcategory)?.push(catalog);
     });
-    
+
     // Sort categories by importance
     const order = ['SEPOMEX', 'SAT', 'INEGI', 'BANXICO', 'IFT', 'OTROS'];
-    return new Map([...map.entries()].sort((a, b) => 
+    return new Map([...map.entries()].sort((a, b) =>
       order.indexOf(a[0]) - order.indexOf(b[0])
     ));
   }, [filteredCatalogs]);
@@ -142,12 +161,25 @@ export default function CatalogsSection({ showHeader = true }: CatalogsSectionPr
       {/* All Catalogs by Category - Collapsible */}
       <div className="space-y-3">
         <h3 className="text-xl font-bold px-2">Todos los catálogos</h3>
-        
-        {Array.from(catalogsByCategory.entries()).map(([category, catalogs]) => {
+
+        {Array.from(catalogsByCategory.entries()).map(([category, subcategoriesMap]) => {
           const isExpanded = expandedCategories.has(category);
           const meta = CATEGORY_META[category] || { icon: Database, color: 'text-gray-600', label: category };
           const Icon = meta.icon;
-          
+
+          // Calculate total catalogs in category
+          const totalCatalogs = Array.from(subcategoriesMap.values()).reduce(
+            (sum, catalogs) => sum + catalogs.length, 0
+          );
+
+          const SUBCATEGORY_LABELS: Record<string, string> = {
+            'cfdi': 'CFDI 4.0',
+            'carta-porte': 'Carta Porte 3.0',
+            'comercio-exterior': 'Comercio Exterior',
+            'nomina': 'Nómina',
+            'default': ''
+          };
+
           return (
             <Card key={category} className="overflow-hidden">
               <button
@@ -159,13 +191,13 @@ export default function CatalogsSection({ showHeader = true }: CatalogsSectionPr
                   <div className="text-left">
                     <div className="font-bold text-lg">{meta.label}</div>
                     <div className="text-xs text-muted-foreground">
-                      {catalogs.length} catálogo{catalogs.length !== 1 ? 's' : ''}
+                      {totalCatalogs} catálogo{totalCatalogs !== 1 ? 's' : ''}
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Badge variant="secondary" className="hidden sm:inline-flex">
-                    {catalogs.length}
+                    {totalCatalogs}
                   </Badge>
                   {isExpanded ? (
                     <ChevronUp className="h-5 w-5 text-muted-foreground" />
@@ -176,35 +208,46 @@ export default function CatalogsSection({ showHeader = true }: CatalogsSectionPr
               </button>
 
               {isExpanded && (
-                <div className="px-4 sm:px-6 pb-4 pt-2 border-t">
-                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {catalogs.map(catalog => (
-                      <button
-                        key={catalog.id}
-                        onClick={() => emitNavigation(`dataset-${catalog.id}`)}
-                        className="flex flex-col text-left p-3 sm:p-4 rounded-lg border bg-card hover:bg-accent/50 hover:border-primary/50 transition-all group shadow-sm active:scale-[0.98]"
-                      >
-                        <div className="flex items-center justify-between w-full mb-2">
-                          <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 bg-muted/50">
-                            {catalog.id.split('-')[0].toUpperCase()}
-                          </Badge>
-                          <ArrowRight className="h-3 w-3 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                        </div>
-                        
-                        <div className="font-semibold text-sm leading-tight mb-2 group-hover:text-primary transition-colors">
-                          {catalog.label}
-                        </div>
-                        
-                        <div className="text-xs text-muted-foreground mb-3 line-clamp-2 min-h-[2.5em]">
-                          {catalog.description || 'Catálogo oficial'}
-                        </div>
+                <div className="px-4 sm:px-6 pb-4 pt-2 border-t space-y-6">
+                  {Array.from(subcategoriesMap.entries()).map(([subcategory, catalogs]) => (
+                    <div key={subcategory}>
+                      {subcategory !== 'default' && (
+                        <h4 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
+                          <div className="h-px flex-1 bg-border"></div>
+                          {SUBCATEGORY_LABELS[subcategory] || subcategory}
+                          <div className="h-px flex-1 bg-border"></div>
+                        </h4>
+                      )}
+                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        {catalogs.map(catalog => (
+                          <button
+                            key={catalog.id}
+                            onClick={() => emitNavigation(`dataset-${catalog.id}`)}
+                            className="flex flex-col text-left p-3 sm:p-4 rounded-lg border bg-card hover:bg-accent/50 hover:border-primary/50 transition-all group shadow-sm active:scale-[0.98]"
+                          >
+                            <div className="flex items-center justify-between w-full mb-2">
+                              <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 bg-muted/50">
+                                {catalog.subcategory ? SUBCATEGORY_LABELS[catalog.subcategory]?.substring(0, 10) || catalog.id.split('-')[0].toUpperCase() : catalog.id.split('-')[0].toUpperCase()}
+                              </Badge>
+                              <ArrowRight className="h-3 w-3 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                            </div>
 
-                        <code className="text-[10px] bg-muted/70 px-1.5 py-1 rounded font-mono text-muted-foreground block truncate">
-                          {catalog.table}
-                        </code>
-                      </button>
-                    ))}
-                  </div>
+                            <div className="font-semibold text-sm leading-tight mb-2 group-hover:text-primary transition-colors">
+                              {catalog.label}
+                            </div>
+
+                            <div className="text-xs text-muted-foreground mb-3 line-clamp-2 min-h-[2.5em]">
+                              {catalog.description || 'Catálogo oficial'}
+                            </div>
+
+                            <code className="text-[10px] bg-muted/70 px-1.5 py-1 rounded font-mono text-muted-foreground block truncate">
+                              {catalog.table}
+                            </code>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </Card>

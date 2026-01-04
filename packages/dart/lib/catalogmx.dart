@@ -42,6 +42,13 @@ export 'src/validators/clabe_validator.dart';
 export 'src/validators/nss_validator.dart';
 
 // ============================================================================
+// CALCULATORS
+// ============================================================================
+
+export 'src/calculators/isr.dart';
+export 'src/calculators/resico.dart';
+
+// ============================================================================
 // CATALOGS - INEGI (Instituto Nacional de Estadística y Geografía)
 // ============================================================================
 

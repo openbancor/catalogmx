@@ -21,26 +21,26 @@ class TestOperadoresMovilesCatalog(unittest.TestCase):
         self.assertIsInstance(activos, list)
         self.assertGreater(len(activos), 0)
         for op in activos:
-            self.assertTrue(op['activo'])
+            self.assertTrue(op["activo"])
 
     def test_get_inactivos(self):
         """Test getting inactive operators"""
         inactivos = OperadoresMovilesCatalog.get_inactivos()
         self.assertIsInstance(inactivos, list)
         for op in inactivos:
-            self.assertFalse(op['activo'])
+            self.assertFalse(op["activo"])
 
     def test_buscar_por_nombre_exact(self):
         """Test searching operator by exact name"""
         telcel = OperadoresMovilesCatalog.buscar_por_nombre("Telcel")
         self.assertIsNotNone(telcel)
-        self.assertIn("Telcel", telcel['nombre_comercial'])
+        self.assertIn("Telcel", telcel["nombre_comercial"])
 
     def test_buscar_por_nombre_case_insensitive(self):
         """Test case-insensitive operator search"""
         upper = OperadoresMovilesCatalog.buscar_por_nombre("TELCEL")
         lower = OperadoresMovilesCatalog.buscar_por_nombre("telcel")
-        self.assertEqual(upper['nombre_comercial'], lower['nombre_comercial'])
+        self.assertEqual(upper["nombre_comercial"], lower["nombre_comercial"])
 
     def test_buscar_por_nombre_partial(self):
         """Test partial name search"""
@@ -59,14 +59,14 @@ class TestOperadoresMovilesCatalog(unittest.TestCase):
         self.assertIsInstance(omr, list)
         self.assertGreater(len(omr), 0)
         for op in omr:
-            self.assertEqual(op['tipo'], "OMR")
+            self.assertEqual(op["tipo"], "OMR")
 
     def test_get_por_tipo_omv(self):
         """Test getting virtual operators (OMV)"""
         omv = OperadoresMovilesCatalog.get_por_tipo("OMV")
         self.assertIsInstance(omv, list)
         for op in omv:
-            self.assertEqual(op['tipo'], "OMV")
+            self.assertEqual(op["tipo"], "OMV")
 
     def test_get_por_tipo_case_insensitive(self):
         """Test case-insensitive type search"""
@@ -79,7 +79,7 @@ class TestOperadoresMovilesCatalog(unittest.TestCase):
         con_5g = OperadoresMovilesCatalog.get_con_tecnologia("5G")
         self.assertIsInstance(con_5g, list)
         for op in con_5g:
-            self.assertIn("5G", op['tecnologias'])
+            self.assertIn("5G", op["tecnologias"])
 
     def test_get_con_tecnologia_4g(self):
         """Test getting operators with 4G"""
@@ -87,7 +87,7 @@ class TestOperadoresMovilesCatalog(unittest.TestCase):
         self.assertIsInstance(con_4g, list)
         self.assertGreater(len(con_4g), 0)
         for op in con_4g:
-            self.assertIn("4G", op['tecnologias'])
+            self.assertIn("4G", op["tecnologias"])
 
     def test_get_con_tecnologia_case_insensitive(self):
         """Test case-insensitive technology search"""
@@ -101,14 +101,14 @@ class TestOperadoresMovilesCatalog(unittest.TestCase):
         self.assertIsInstance(nacionales, list)
         self.assertGreater(len(nacionales), 0)
         for op in nacionales:
-            self.assertEqual(op['cobertura'], "nacional")
+            self.assertEqual(op["cobertura"], "nacional")
 
     def test_get_por_cobertura_regional(self):
         """Test getting operators with regional coverage"""
         regionales = OperadoresMovilesCatalog.get_por_cobertura("regional")
         self.assertIsInstance(regionales, list)
         for op in regionales:
-            self.assertEqual(op['cobertura'], "regional")
+            self.assertEqual(op["cobertura"], "regional")
 
     def test_get_por_grupo(self):
         """Test getting operators by business group"""
@@ -117,7 +117,7 @@ class TestOperadoresMovilesCatalog(unittest.TestCase):
         self.assertIsInstance(america_movil, list)
         if len(america_movil) > 0:
             for op in america_movil:
-                self.assertIn("américa móvil", op['grupo_empresarial'].lower())
+                self.assertIn("américa móvil", op["grupo_empresarial"].lower())
 
     def test_get_por_grupo_case_insensitive(self):
         """Test case-insensitive group search"""
@@ -133,7 +133,7 @@ class TestOperadoresMovilesCatalog(unittest.TestCase):
         self.assertIsInstance(prepago, list)
         self.assertGreater(len(prepago), 0)
         for op in prepago:
-            self.assertIn("prepago", op['servicios'])
+            self.assertIn("prepago", op["servicios"])
 
     def test_get_con_servicio_postpago(self):
         """Test getting operators with postpaid service"""
@@ -141,14 +141,14 @@ class TestOperadoresMovilesCatalog(unittest.TestCase):
         self.assertIsInstance(postpago, list)
         self.assertGreater(len(postpago), 0)
         for op in postpago:
-            self.assertIn("postpago", op['servicios'])
+            self.assertIn("postpago", op["servicios"])
 
     def test_get_con_servicio_datos(self):
         """Test getting operators with data service"""
         datos = OperadoresMovilesCatalog.get_con_servicio("datos")
         self.assertIsInstance(datos, list)
         for op in datos:
-            self.assertIn("datos", op['servicios'])
+            self.assertIn("datos", op["servicios"])
 
     def test_get_top_por_market_share_default(self):
         """Test getting top operators by market share (default limit)"""
@@ -160,13 +160,12 @@ class TestOperadoresMovilesCatalog(unittest.TestCase):
         if len(top) > 1:
             for i in range(len(top) - 1):
                 self.assertGreaterEqual(
-                    top[i]['market_share_aprox'],
-                    top[i + 1]['market_share_aprox']
+                    top[i]["market_share_aprox"], top[i + 1]["market_share_aprox"]
                 )
 
         # Verify all are active
         for op in top:
-            self.assertTrue(op['activo'])
+            self.assertTrue(op["activo"])
 
     def test_get_top_por_market_share_custom_limit(self):
         """Test getting top operators with custom limit"""
@@ -178,24 +177,23 @@ class TestOperadoresMovilesCatalog(unittest.TestCase):
         """Test getting catalog statistics"""
         stats = OperadoresMovilesCatalog.get_estadisticas()
         self.assertIsInstance(stats, dict)
-        self.assertIn('total_operadores', stats)
-        self.assertIn('operadores_activos', stats)
-        self.assertIn('operadores_inactivos', stats)
-        self.assertIn('omr_count', stats)
-        self.assertIn('omv_count', stats)
-        self.assertIn('operadores_con_5g', stats)
-        self.assertIn('cobertura_nacional', stats)
-        self.assertIn('market_share_total', stats)
-        self.assertIn('tecnologias_disponibles', stats)
+        self.assertIn("total_operadores", stats)
+        self.assertIn("operadores_activos", stats)
+        self.assertIn("operadores_inactivos", stats)
+        self.assertIn("omr_count", stats)
+        self.assertIn("omv_count", stats)
+        self.assertIn("operadores_con_5g", stats)
+        self.assertIn("cobertura_nacional", stats)
+        self.assertIn("market_share_total", stats)
+        self.assertIn("tecnologias_disponibles", stats)
 
         # Verify reasonable values
-        self.assertGreater(stats['total_operadores'], 0)
+        self.assertGreater(stats["total_operadores"], 0)
         self.assertGreaterEqual(
-            stats['total_operadores'],
-            stats['operadores_activos'] + stats['operadores_inactivos']
+            stats["total_operadores"], stats["operadores_activos"] + stats["operadores_inactivos"]
         )
-        self.assertEqual(stats['tecnologias_disponibles'], ['2G', '3G', '4G', '5G'])
+        self.assertEqual(stats["tecnologias_disponibles"], ["2G", "3G", "4G", "5G"])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

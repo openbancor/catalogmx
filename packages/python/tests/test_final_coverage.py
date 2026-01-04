@@ -7,10 +7,35 @@ from datetime import date
 
 from catalogmx.catalogs.banxico import BankCatalog, CodigosPlazaCatalog, MonedasDivisas, UDICatalog
 from catalogmx.catalogs.inegi import StateCatalog
-from catalogmx.catalogs.mexico import HoyNoCirculaCatalog, PlacasFormatosCatalog, SalariosMinimos, UMACatalog
-from catalogmx.catalogs.sat.carta_porte import AeropuertosCatalog, CarreterasCatalog, ConfigAutotransporteCatalog, MaterialPeligrosoCatalog, PuertosMaritimos, TipoEmbalajeCatalog, TipoPermisoCatalog
-from catalogmx.catalogs.sat.comercio_exterior import EstadoCatalog, IncotermsValidator, MonedaCatalog, PaisCatalog, RegistroIdentTribCatalog
-from catalogmx.catalogs.sat.nomina import PeriodicidadPagoCatalog, RiesgoPuestoCatalog, TipoContratoCatalog, TipoNominaCatalog, TipoRegimenCatalog as NominaTipoRegimenCatalog
+from catalogmx.catalogs.mexico import (
+    HoyNoCirculaCatalog,
+    PlacasFormatosCatalog,
+    SalariosMinimos,
+    UMACatalog,
+)
+from catalogmx.catalogs.sat.carta_porte import (
+    AeropuertosCatalog,
+    CarreterasCatalog,
+    ConfigAutotransporteCatalog,
+    MaterialPeligrosoCatalog,
+    PuertosMaritimos,
+    TipoEmbalajeCatalog,
+    TipoPermisoCatalog,
+)
+from catalogmx.catalogs.sat.comercio_exterior import (
+    EstadoCatalog,
+    IncotermsValidator,
+    MonedaCatalog,
+    PaisCatalog,
+    RegistroIdentTribCatalog,
+)
+from catalogmx.catalogs.sat.nomina import (
+    PeriodicidadPagoCatalog,
+    RiesgoPuestoCatalog,
+    TipoContratoCatalog,
+    TipoNominaCatalog,
+    TipoRegimenCatalog as NominaTipoRegimenCatalog,
+)
 from catalogmx.helpers import generate_curp, generate_rfc_persona_fisica, generate_rfc_persona_moral
 
 
@@ -132,7 +157,7 @@ class TestSalariosMinimosAndUMAFinal:
 
     def test_salarios_get_por_zona(self):
         """Test getting salarios by zona"""
-        if hasattr(SalariosMinimos, 'get_por_zona'):
+        if hasattr(SalariosMinimos, "get_por_zona"):
             result = SalariosMinimos.get_por_zona("A")
             assert result is None or isinstance(result, list)
 
@@ -237,7 +262,7 @@ class TestNominaFinal:
     def test_riesgo_get_by_level(self):
         """Test getting riesgo by level if method exists"""
         all_riesgos = RiesgoPuestoCatalog.get_all()
-        if all_riesgos and hasattr(RiesgoPuestoCatalog, 'get_by_level'):
+        if all_riesgos and hasattr(RiesgoPuestoCatalog, "get_by_level"):
             for riesgo in all_riesgos:
                 if "level" in riesgo or "nivel" in riesgo:
                     level = riesgo.get("level", riesgo.get("nivel", ""))
@@ -265,11 +290,13 @@ class TestComercioExteriorFinal:
     def test_moneda_validate_conversion_usd_errors(self):
         """Test moneda conversion validation with errors"""
         # Missing fields should generate errors
-        result = MonedaCatalog.validate_conversion_usd({
-            "moneda": "MXN",
-            "total": 20000
-            # Missing tipo_cambio_usd and total_usd
-        })
+        result = MonedaCatalog.validate_conversion_usd(
+            {
+                "moneda": "MXN",
+                "total": 20000,
+                # Missing tipo_cambio_usd and total_usd
+            }
+        )
         assert isinstance(result, dict)
         assert "errors" in result
 
@@ -285,8 +312,7 @@ class TestComercioExteriorFinal:
             for registro in all_registros:
                 if "format_pattern" in registro:
                     result = RegistroIdentTribCatalog.validate_tax_id(
-                        registro["code"],
-                        "123456789ABC"
+                        registro["code"], "123456789ABC"
                     )
                     assert isinstance(result, dict)
                     break
@@ -303,7 +329,7 @@ class TestHelpersFinal:
             apellido_materno="Lopez",
             fecha_nacimiento=date(1990, 5, 15),
             sexo="H",
-            estado="Jalisco"
+            estado="Jalisco",
         )
         assert len(result) == 18
 
@@ -313,14 +339,13 @@ class TestHelpersFinal:
             nombre="Juan",
             apellido_paterno="Garcia",
             apellido_materno="Lopez",
-            fecha_nacimiento=date(1990, 5, 15)
+            fecha_nacimiento=date(1990, 5, 15),
         )
         assert len(result) == 13
 
     def test_generate_rfc_persona_moral_standard(self):
         """Test generating RFC moral"""
         result = generate_rfc_persona_moral(
-            razon_social="Tecnologia Sistemas Integrales S.A.",
-            fecha_constitucion=date(2009, 9, 9)
+            razon_social="Tecnologia Sistemas Integrales S.A.", fecha_constitucion=date(2009, 9, 9)
         )
         assert len(result) == 12

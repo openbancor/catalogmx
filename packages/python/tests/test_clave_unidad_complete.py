@@ -62,13 +62,12 @@ class TestClaveUnidadCatalog:
 
     def test_get_vigentes(self):
         """Test get_vigentes if method exists"""
-        if hasattr(ClaveUnidadCatalog, 'get_vigentes'):
+        if hasattr(ClaveUnidadCatalog, "get_vigentes"):
             result = ClaveUnidadCatalog.get_vigentes()
             assert isinstance(result, list)
 
     def test_get_obsoletas(self):
         """Test get_obsoletas if method exists"""
-        if hasattr(ClaveUnidadCatalog, 'get_obsoletas'):
+        if hasattr(ClaveUnidadCatalog, "get_obsoletas"):
             result = ClaveUnidadCatalog.get_obsoletas()
             assert isinstance(result, list)
-

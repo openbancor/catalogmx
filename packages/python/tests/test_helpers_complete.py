@@ -66,7 +66,7 @@ class TestCURPHelpersCoverage:
             fecha_nacimiento="1990-05-15",
             sexo="H",
             estado="Jalisco",
-            differentiator="5"
+            differentiator="5",
         )
         assert len(curp) == 18
 
@@ -79,7 +79,7 @@ class TestCURPHelpersCoverage:
             fecha_nacimiento="1990-05-15",
             sexo="H",
             estado="Jalisco",
-            differentiator="A"
+            differentiator="A",
         )
         assert len(curp) == 18
 
@@ -103,4 +103,3 @@ class TestCURPHelpersCoverage:
         """Test is_valid_rfc alias"""
         result = is_valid_rfc("GODE561231GR8")
         assert isinstance(result, bool)
-

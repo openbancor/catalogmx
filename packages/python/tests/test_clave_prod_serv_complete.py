@@ -100,4 +100,3 @@ class TestClaveProdServCatalog:
             assert "total" in result
         except FileNotFoundError:
             pass
-
