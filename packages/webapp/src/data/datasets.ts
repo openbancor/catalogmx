@@ -347,12 +347,15 @@ export const datasetConfigs = [
     type: 'sql',
     table: 'sat_comercio_exterior_incoterms',
     category: 'fiscal',
-    searchColumns: ['code', 'descripcion'],
+    subcategory: 'comercio-exterior',
+    searchColumns: ['code', 'name', 'name_es', 'description'],
     columns: [
       { key: 'code', label: 'Código' },
-      { key: 'descripcion', label: 'Descripción' },
+      { key: 'name', label: 'Nombre' },
+      { key: 'name_es', label: 'Nombre (ES)' },
+      { key: 'description', label: 'Descripción' },
     ],
-    description: 'Incoterms comercio exterior.',
+    description: 'Incoterms para comercio exterior (términos de comercio internacional).',
   },
   {
     id: 'sat-aeropuertos',
