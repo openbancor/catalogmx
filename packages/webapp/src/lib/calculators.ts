@@ -502,3 +502,155 @@ export function calculateRESICO(
     tasaEfectiva
   };
 }
+
+// ============================================================================
+// IMSS Calculators (Modalidad 10, Modalidad 40, Cuotas)
+// ============================================================================
+
+import imssTablesData from '../../shared-data/imss-tables.json';
+
+export type IMSSYear = 2024 | 2025 | 2026;
+
+// Modalidad 40 - Continuación Voluntaria
+export interface Modalidad40Result {
+  salarioBaseCotizacion: number;
+  year: number;
+  uma: number;
+  salarioEnUMAs: number;
+  dentroDeLimites: boolean;
+  cuotaMensual: number;
+  cuotaAnual: number;
+  componentes: {
+    cesantiaVejezPatron: number;
+    cesantiaVejezTrabajador: number;
+    invalidezVidaPatron: number;
+    invalidezVidaTrabajador: number;
+    gastosMedicosPatron: number;
+    gastosMedicosTrabajador: number;
+    prestacionesDineroPatron: number;
+    prestacionesDineroTrabajador: number;
+  };
+}
+
+export function calculateModalidad40(
+  salarioBaseCotizacion: number,
+  year: IMSSYear = 2026
+): Modalidad40Result {
+  const yearStr = year.toString() as '2024' | '2025' | '2026';
+  const uma = imssTablesData.uma[yearStr].diaria;
+  const salarioEnUMAs = salarioBaseCotizacion / uma;
+
+  // Validar límites (1 a 25 UMAs)
+  const limites = imssTablesData.modalidad_40.limites_salario;
+  const dentroDeLimites = salarioEnUMAs >= limites.minimo_uma && salarioEnUMAs <= limites.maximo_uma;
+
+  // Aplicar límites si está fuera de rango
+  let salarioAjustado = salarioBaseCotizacion;
+  if (salarioEnUMAs < limites.minimo_uma) {
+    salarioAjustado = uma * limites.minimo_uma;
+  } else if (salarioEnUMAs > limites.maximo_uma) {
+    salarioAjustado = uma * limites.maximo_uma;
+  }
+
+  // Calcular componentes
+  const componentes = imssTablesData.modalidad_40.cuota_mensual.componentes;
+
+  const result = {
+    cesantiaVejezPatron: salarioAjustado * 30 * componentes.cesantia_vejez_patron,
+    cesantiaVejezTrabajador: salarioAjustado * 30 * componentes.cesantia_vejez_trabajador,
+    invalidezVidaPatron: salarioAjustado * 30 * componentes.invalidez_vida_patron,
+    invalidezVidaTrabajador: salarioAjustado * 30 * componentes.invalidez_vida_trabajador,
+    gastosMedicosPatron: salarioAjustado * 30 * componentes.gastos_medicos_pensionados_patron,
+    gastosMedicosTrabajador: salarioAjustado * 30 * componentes.gastos_medicos_pensionados_trabajador,
+    prestacionesDineroPatron: salarioAjustado * 30 * componentes.prestaciones_dinero_patron,
+    prestacionesDineroTrabajador: salarioAjustado * 30 * componentes.prestaciones_dinero_trabajador,
+  };
+
+  const cuotaMensual = Object.values(result).reduce((sum, val) => sum + val, 0);
+
+  return {
+    salarioBaseCotizacion: salarioAjustado,
+    year,
+    uma,
+    salarioEnUMAs: salarioAjustado / uma,
+    dentroDeLimites,
+    cuotaMensual,
+    cuotaAnual: cuotaMensual * 12,
+    componentes: result
+  };
+}
+
+// Modalidad 10 - Incorporación Voluntaria
+export interface Modalidad10Result {
+  salarioBaseCotizacion: number;
+  year: number;
+  uma: number;
+  salarioEnUMAs: number;
+  dentroDeLimites: boolean;
+  cuotaMensual: number;
+  cuotaAnual: number;
+  cuotaFijaUMA: number;
+  cuotaVariable: number;
+  componentes: {
+    prestacionesEspecieFija: number;
+    cesantiaVejez: number;
+    invalidezVida: number;
+    gastosMedicos: number;
+    prestacionesDinero: number;
+    guarderias: number;
+  };
+}
+
+export function calculateModalidad10(
+  salarioBaseCotizacion: number,
+  year: IMSSYear = 2026
+): Modalidad10Result {
+  const yearStr = year.toString() as '2024' | '2025' | '2026';
+  const uma = imssTablesData.uma[yearStr].diaria;
+  const umaMensual = imssTablesData.uma[yearStr].mensual;
+  const salarioEnUMAs = salarioBaseCotizacion / uma;
+
+  // Validar límites (1 a 25 UMAs)
+  const limites = imssTablesData.modalidad_10.limites_salario;
+  const dentroDeLimites = salarioEnUMAs >= limites.minimo_uma && salarioEnUMAs <= limites.maximo_uma;
+
+  // Aplicar límites
+  let salarioAjustado = salarioBaseCotizacion;
+  if (salarioEnUMAs < limites.minimo_uma) {
+    salarioAjustado = uma * limites.minimo_uma;
+  } else if (salarioEnUMAs > limites.maximo_uma) {
+    salarioAjustado = uma * limites.maximo_uma;
+  }
+
+  // Cuota fija (3.3 UMAs mensuales)
+  const cuotaFijaUMA = umaMensual * imssTablesData.modalidad_10.cuota_mensual.cuota_fija_uma_factor;
+
+  // Componentes variables
+  const componentes = imssTablesData.modalidad_10.cuota_mensual.componentes;
+  const salarioMensual = salarioAjustado * 30;
+
+  const result = {
+    prestacionesEspecieFija: cuotaFijaUMA,
+    cesantiaVejez: salarioMensual * componentes.cesantia_vejez,
+    invalidezVida: salarioMensual * componentes.invalidez_vida,
+    gastosMedicos: salarioMensual * componentes.gastos_medicos_pensionados,
+    prestacionesDinero: salarioMensual * componentes.prestaciones_dinero,
+    guarderias: salarioMensual * componentes.guarderias,
+  };
+
+  const cuotaVariable = result.cesantiaVejez + result.invalidezVida + result.gastosMedicos + result.prestacionesDinero + result.guarderias;
+  const cuotaMensual = cuotaFijaUMA + cuotaVariable;
+
+  return {
+    salarioBaseCotizacion: salarioAjustado,
+    year,
+    uma,
+    salarioEnUMAs: salarioAjustado / uma,
+    dentroDeLimites,
+    cuotaMensual,
+    cuotaAnual: cuotaMensual * 12,
+    cuotaFijaUMA,
+    cuotaVariable,
+    componentes: result
+  };
+}
