@@ -50,14 +50,15 @@ __version__ = "0.3.0"
 from catalogmx.helpers import (
     # RFC helpers
     detect_rfc_type,
-    generate_rfc_persona_fisica,
-    generate_rfc_persona_moral,
-    # CURP helpers
-    generate_curp,
-    get_curp_info,
     # CLABE helpers
     generate_clabe,
+    generate_clabe_random,
+    # CURP helpers
+    generate_curp,
+    generate_rfc_persona_fisica,
+    generate_rfc_persona_moral,
     get_clabe_info,
+    get_curp_info,
     # NSS helpers
     get_nss_info,
     # Utility
@@ -137,6 +138,7 @@ __all__ = [
     "CURPStructureError",
     # CLABE Helper Functions
     "generate_clabe",
+    "generate_clabe_random",
     "validate_clabe",
     "get_clabe_info",
     "is_valid_clabe",

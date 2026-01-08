@@ -231,3 +231,53 @@ def get_clabe_info(clabe: str | None) -> dict[str, str | None] | None:
     """
     validator = CLABEValidator(clabe)
     return validator.get_parts()
+
+
+def generate_clabe_random(
+    bank_code: str | int | None = None,
+    branch_code: str | int | None = None,
+    account_number: str | int | None = None,
+) -> str:
+    """
+    Generates a random valid CLABE with optional parameters.
+    Any parameter not provided will be randomly generated.
+
+    :param bank_code: Optional 3-digit bank code (e.g., '012' for BBVA)
+    :param branch_code: Optional 3-digit branch/plaza code
+    :param account_number: Optional 11-digit account number
+    :return: Complete 18-digit CLABE
+
+    Example:
+        >>> # Fully random CLABE
+        >>> clabe = generate_clabe_random()
+        >>> len(clabe)
+        18
+        >>> # CLABE for specific bank
+        >>> clabe = generate_clabe_random(bank_code='012')
+        >>> clabe[:3]
+        '012'
+        >>> # Fully specified
+        >>> clabe = generate_clabe_random('002', '010', '12345678901')
+        >>> clabe
+        '002010123456789018'
+    """
+    import random
+
+    # Generate bank code if not provided
+    if bank_code is None:
+        # Common SPEI bank codes
+        common_banks = ["002", "012", "014", "021", "036", "044", "058", "072", "127"]
+        bank_code = random.choice(common_banks)
+    bank_str = str(bank_code).zfill(3)
+
+    # Generate branch code if not provided
+    if branch_code is None:
+        branch_code = random.randint(1, 999)
+    branch_str = str(branch_code).zfill(3)
+
+    # Generate account number if not provided
+    if account_number is None:
+        account_number = random.randint(0, 99999999999)
+    account_str = str(account_number).zfill(11)
+
+    return generate_clabe(bank_str, branch_str, account_str)
