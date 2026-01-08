@@ -3,21 +3,23 @@
 	import { ChevronRight, Building2, Loader2, AlertCircle } from 'lucide-svelte';
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface Bank {
 		code: string;
 		name: string;
 		full_name: string;
 		rfc: string | null;
-		spei: boolean;
+		spei: number;
 	}
 
 	let data = $state<Bank[]>([]);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 
-	const banksWithSPEI = $derived(data.filter(bank => bank.spei).length);
-	const banksWithRFC = $derived(data.filter(bank => bank.rfc !== null).length);
+	const banksWithSPEI = $derived(data.filter(bank => bank.spei === 1).length);
+	const banksWithRFC = $derived(data.filter(bank => bank.rfc !== null && bank.rfc !== '').length);
 
 	const columns: ColumnDef<Bank, unknown>[] = [
 		{
@@ -45,12 +47,8 @@
 			loading = true;
 			error = null;
 
-			// Load banks data from JSON
-			const response = await fetch('/data/banxico/banks.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			const banks = await response.json();
+			// Load banks data from SQLite
+			const banks = await query<Bank>('SELECT * FROM banxico_banks ORDER BY code');
 			data = banks;
 
 		} catch (e) {
@@ -74,9 +72,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/banxico" class="hover:text-brand-500">Banxico</a>
+		<a href="{base}/catalogos/banxico" class="hover:text-brand-500">Banxico</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">Bancos</span>
 	</nav>
@@ -136,7 +134,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center py-16">
 			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catálogo...</span>
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catálogo desde SQLite...</span>
 		</div>
 	{:else if error}
 		<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
