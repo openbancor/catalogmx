@@ -2,6 +2,7 @@
 	import { Database, CheckCircle, Calculator, ArrowRight, FileText, Building2, Sparkles, Shield, TrendingUp, DollarSign, Percent, Activity, Loader2 } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import { base } from '$app/paths';
+	import { queryOne } from '$lib/db';
 
 	// Live data state
 	let udiData = $state<{ value: number; date: string } | null>(null);
@@ -9,43 +10,39 @@
 	let ratesData = $state<{ cetes28: number; tiie28: number; date: string } | null>(null);
 	let loading = $state(true);
 
-	// Load live data on mount
+	interface UDIRecord { fecha: string; valor: number; }
+	interface TipoCambioRecord { fecha: string; tipo_cambio: number; }
+	interface TIIERecord { fecha: string; valor: number; }
+	interface CETESRecord { fecha: string; valor: number; }
+
+	// Load live data from SQLite on mount
 	onMount(async () => {
 		try {
-			const [udiRes, exchangeRes, ratesRes] = await Promise.all([
-				fetch(`${base}/data/banxico/udi.json`),
-				fetch(`${base}/data/banxico/tipo_cambio.json`),
-				fetch(`${base}/data/banxico/tasas.json`)
+			// Query SQLite for latest values
+			const [latestUdi, latestTipoCambio, latestTiie, latestCetes] = await Promise.all([
+				queryOne<UDIRecord>('SELECT fecha, valor FROM banxico_udis ORDER BY fecha DESC LIMIT 1'),
+				queryOne<TipoCambioRecord>('SELECT fecha, tipo_cambio FROM banxico_tipo_cambio ORDER BY fecha DESC LIMIT 1'),
+				queryOne<TIIERecord>('SELECT fecha, valor FROM banxico_tiie WHERE plazo = 28 ORDER BY fecha DESC LIMIT 1'),
+				queryOne<CETESRecord>('SELECT fecha, valor FROM banxico_cetes WHERE plazo = 28 ORDER BY fecha DESC LIMIT 1')
 			]);
 
-			if (udiRes.ok) {
-				const udi = await udiRes.json();
-				if (udi.values?.length > 0) {
-					udiData = { value: udi.values[0].value, date: udi.values[0].date };
-				}
+			if (latestUdi) {
+				udiData = { value: latestUdi.valor, date: latestUdi.fecha };
 			}
 
-			if (exchangeRes.ok) {
-				const exchange = await exchangeRes.json();
-				if (exchange.rates?.length > 0) {
-					exchangeData = { rate: exchange.rates[0].rate, date: exchange.rates[0].date };
-				}
+			if (latestTipoCambio) {
+				exchangeData = { rate: latestTipoCambio.tipo_cambio, date: latestTipoCambio.fecha };
 			}
 
-			if (ratesRes.ok) {
-				const rates = await ratesRes.json();
-				const cetes28 = rates.cetes_28?.rates?.[0];
-				const tiie28 = rates.tiie_28?.rates?.[0];
-				if (cetes28 || tiie28) {
-					ratesData = {
-						cetes28: cetes28?.rate ?? 0,
-						tiie28: tiie28?.rate ?? 0,
-						date: cetes28?.date ?? tiie28?.date ?? ''
-					};
-				}
+			if (latestTiie || latestCetes) {
+				ratesData = {
+					tiie28: latestTiie?.valor ?? 0,
+					cetes28: latestCetes?.valor ?? 0,
+					date: latestTiie?.fecha ?? latestCetes?.fecha ?? ''
+				};
 			}
 		} catch (e) {
-			console.error('Error loading live data:', e);
+			console.error('Error loading live data from SQLite:', e);
 		} finally {
 			loading = false;
 		}

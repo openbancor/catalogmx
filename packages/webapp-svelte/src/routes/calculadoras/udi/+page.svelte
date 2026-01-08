@@ -1,21 +1,12 @@
 <script lang="ts">
-	import { Calculator, Info, TrendingUp, Calendar, LineChart } from 'lucide-svelte';
+	import { Calculator, Info, TrendingUp, Calendar, LineChart, Loader2 } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import { query, queryOne } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface UDIValue {
-		date: string;
-		value: number;
-	}
-
-	interface UDIData {
-		metadata: {
-			source: string;
-			series: string;
-			description: string;
-			unit: string;
-			last_updated: string;
-		};
-		values: UDIValue[];
+		fecha: string;
+		valor: number;
 	}
 
 	// State
@@ -24,8 +15,13 @@
 	let fechaSeleccionada = $state<string>('');
 	let valorUDI = $state<number>(8.253456);
 	let resultado = $state<number | null>(null);
-	let udiData = $state<UDIData | null>(null);
 	let loading = $state<boolean>(true);
+	let error = $state<string | null>(null);
+
+	// Data from SQLite
+	let valorActual = $state<UDIValue | null>(null);
+	let minDate = $state<string>('');
+	let maxDate = $state<string>('');
 
 	// Investment calculator
 	let montoInicial = $state<number>(100000);
@@ -41,27 +37,41 @@
 		udisFinal: number;
 	} | null>(null);
 
-	// Derived
-	let fechasDisponibles = $derived(
-		udiData?.values.map((v) => v.date).sort((a, b) => b.localeCompare(a)) || []
-	);
-
-	let valorActual = $derived(udiData?.values[0]?.value || 8.253456);
-
 	onMount(async () => {
 		try {
-			const response = await fetch('/data/banxico/udi.json');
-			udiData = await response.json();
-			if (udiData && udiData.values.length > 0) {
-				fechaSeleccionada = udiData.values[0].date;
-				valorUDI = udiData.values[0].value;
+			// Get latest UDI value
+			const latest = await queryOne<UDIValue>(
+				'SELECT fecha, valor FROM banxico_udis ORDER BY fecha DESC LIMIT 1'
+			);
+			if (latest) {
+				valorActual = latest;
+				fechaSeleccionada = latest.fecha;
+				valorUDI = latest.valor;
 			}
-		} catch (error) {
-			console.error('Error loading UDI data:', error);
+
+			// Get date range
+			const range = await queryOne<{ min_fecha: string; max_fecha: string }>(
+				'SELECT MIN(fecha) as min_fecha, MAX(fecha) as max_fecha FROM banxico_udis'
+			);
+			if (range) {
+				minDate = range.min_fecha;
+				maxDate = range.max_fecha;
+			}
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Error loading data';
+			console.error('Error loading UDI data:', e);
 		} finally {
 			loading = false;
 		}
 	});
+
+	async function loadUdiForDate(fecha: string): Promise<number | null> {
+		const record = await queryOne<UDIValue>(
+			'SELECT fecha, valor FROM banxico_udis WHERE fecha <= ? ORDER BY fecha DESC LIMIT 1',
+			[fecha]
+		);
+		return record?.valor ?? null;
+	}
 
 	function calcular() {
 		if (!monto || monto <= 0) {
@@ -82,6 +92,11 @@
 			return;
 		}
 
+		if (valorUDIInicial <= 0 || valorUDIFinal <= 0) {
+			rendimiento = null;
+			return;
+		}
+
 		const udisInicial = montoInicial / valorUDIInicial;
 		const valorFinal = udisInicial * valorUDIFinal;
 		const rendimientoTotal = valorFinal - montoInicial;
@@ -96,25 +111,28 @@
 		};
 	}
 
-	function onFechaChange() {
-		const value = udiData?.values.find((v) => v.date === fechaSeleccionada);
-		if (value) {
-			valorUDI = value.value;
+	async function onFechaChange() {
+		if (!fechaSeleccionada) return;
+		const valor = await loadUdiForDate(fechaSeleccionada);
+		if (valor) {
+			valorUDI = valor;
 		}
 	}
 
-	function onFechaInicialChange() {
-		const value = udiData?.values.find((v) => v.date === fechaInicial);
-		if (value) {
-			valorUDIInicial = value.value;
+	async function onFechaInicialChange() {
+		if (!fechaInicial) return;
+		const valor = await loadUdiForDate(fechaInicial);
+		if (valor) {
+			valorUDIInicial = valor;
 			calcularRendimiento();
 		}
 	}
 
-	function onFechaFinalChange() {
-		const value = udiData?.values.find((v) => v.date === fechaFinal);
-		if (value) {
-			valorUDIFinal = value.value;
+	async function onFechaFinalChange() {
+		if (!fechaFinal) return;
+		const valor = await loadUdiForDate(fechaFinal);
+		if (valor) {
+			valorUDIFinal = valor;
 			calcularRendimiento();
 		}
 	}
@@ -130,6 +148,11 @@
 
 	function formatNumber(value: number, decimals: number = 6): string {
 		return value.toFixed(decimals);
+	}
+
+	function formatDate(dateStr: string): string {
+		const date = new Date(dateStr + 'T00:00:00');
+		return date.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
 	}
 
 	// Auto-calculate when inputs change
@@ -177,7 +200,7 @@
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex items-center gap-2 mb-4">
 			<a
-				href="/calculadoras"
+				href="{base}/calculadoras"
 				class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500"
 			>
 				Calculadoras
@@ -200,18 +223,20 @@
 			</div>
 		</div>
 
-		<div
-			class="flex items-start gap-2 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800"
-		>
-			<Info class="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-			<div class="text-sm text-blue-900 dark:text-blue-300">
-				<p class="font-medium mb-1">Unidades de Inversión (UDIs)</p>
-				<p>
-					Unidades de cuenta de valor real constante, basadas en el Índice Nacional de Precios al
-					Consumidor (INPC). Se utilizan para créditos hipotecarios y otros instrumentos financieros.
-				</p>
+		{#if valorActual}
+			<div class="p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg border border-green-200 dark:border-green-800">
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm text-slate-600 dark:text-slate-400">Valor actual de la UDI</p>
+						<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
+							{formatCurrency(valorActual.valor)}
+						</p>
+						<p class="text-xs text-slate-500 mt-1">{formatDate(valorActual.fecha)}</p>
+					</div>
+					<TrendingUp class="h-10 w-10 text-green-500 opacity-50" />
+				</div>
 			</div>
-		</div>
+		{/if}
 	</div>
 </section>
 
@@ -220,12 +245,12 @@
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 		{#if loading}
 			<div class="flex items-center justify-center py-12">
-				<div class="text-center">
-					<div
-						class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-slate-300 border-t-brand-500 mb-3"
-					></div>
-					<p class="text-sm text-slate-500">Cargando datos...</p>
-				</div>
+				<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
+				<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando datos desde SQLite...</span>
+			</div>
+		{:else if error}
+			<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+				<p class="text-red-800 dark:text-red-200">{error}</p>
 			</div>
 		{:else}
 			<div class="grid gap-6 lg:grid-cols-2">
@@ -289,11 +314,14 @@
 								<Calendar class="h-4 w-4 inline mr-1" />
 								Fecha del valor UDI
 							</label>
-							<select id="fecha" bind:value={fechaSeleccionada} class="input">
-								{#each fechasDisponibles as fecha}
-									<option value={fecha}>{fecha}</option>
-								{/each}
-							</select>
+							<input
+								id="fecha"
+								type="date"
+								bind:value={fechaSeleccionada}
+								min={minDate}
+								max={maxDate}
+								class="input"
+							/>
 						</div>
 
 						<!-- Valor UDI actual -->
@@ -303,7 +331,7 @@
 								{formatCurrency(valorUDI)}
 							</div>
 							<div class="text-xs text-slate-500 mt-1">
-								{fechaSeleccionada}
+								{fechaSeleccionada ? formatDate(fechaSeleccionada) : ''}
 							</div>
 						</div>
 					</div>
@@ -430,12 +458,14 @@
 							<Calendar class="h-4 w-4 inline mr-1" />
 							Fecha inicial
 						</label>
-						<select id="fechaInicial" bind:value={fechaInicial} class="input">
-							<option value="">Selecciona fecha</option>
-							{#each fechasDisponibles.slice().reverse() as fecha}
-								<option value={fecha}>{fecha}</option>
-							{/each}
-						</select>
+						<input
+							id="fechaInicial"
+							type="date"
+							bind:value={fechaInicial}
+							min={minDate}
+							max={maxDate}
+							class="input"
+						/>
 					</div>
 
 					<div>
@@ -446,12 +476,14 @@
 							<Calendar class="h-4 w-4 inline mr-1" />
 							Fecha final
 						</label>
-						<select id="fechaFinal" bind:value={fechaFinal} class="input">
-							<option value="">Selecciona fecha</option>
-							{#each fechasDisponibles as fecha}
-								<option value={fecha}>{fecha}</option>
-							{/each}
-						</select>
+						<input
+							id="fechaFinal"
+							type="date"
+							bind:value={fechaFinal}
+							min={fechaInicial || minDate}
+							max={maxDate}
+							class="input"
+						/>
 					</div>
 				</div>
 
@@ -532,7 +564,7 @@
 				<div class="card p-5">
 					<h3 class="font-semibold text-slate-900 dark:text-white mb-2">Fuente oficial</h3>
 					<p class="text-sm text-slate-600 dark:text-slate-400">
-						Datos oficiales del Banco de México (Serie SP68257) publicados diariamente.
+						Datos oficiales del Banco de México (Serie SP68257) con {minDate ? `datos desde ${formatDate(minDate)}` : 'histórico completo'}.
 					</p>
 				</div>
 			</div>
@@ -543,7 +575,7 @@
 			>
 				<p class="text-xs text-slate-500 dark:text-slate-400">
 					<strong>Nota:</strong> Esta calculadora es informativa y utiliza datos históricos del
-					Banco de México. Para cálculos oficiales de créditos hipotecarios u otros instrumentos,
+					Banco de México desde SQLite. Para cálculos oficiales de créditos hipotecarios u otros instrumentos,
 					consulta con tu institución financiera. El valor de la UDI se actualiza diariamente.
 				</p>
 			</div>
