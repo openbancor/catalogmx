@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { User, Info, Calendar, MapPin, CheckCircle2, AlertCircle } from 'lucide-svelte';
+	import { base } from '$app/paths';
 	import statesData from '../../../../../shared-data/inegi/states.json';
 
 	// Helper function to remove accents
@@ -276,7 +277,7 @@
 <section class="py-8 md:py-12 border-b border-slate-200 dark:border-slate-800">
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex items-center gap-2 mb-4">
-			<a href="/generadores" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
+			<a href="{base}/generadores" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
 				Generadores
 			</a>
 			<span class="text-slate-400">/</span>
