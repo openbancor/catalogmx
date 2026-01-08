@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { Building2, Info, Hash, CheckCircle2, Copy, Shuffle } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	type Bank = {
 		code: string;
 		name: string;
 		full_name: string;
 		rfc: string | null;
-		spei: boolean;
+		spei: number;
 	};
 
 	// State
@@ -32,10 +34,9 @@
 	// Load banks on mount
 	onMount(async () => {
 		try {
-			const response = await fetch('/data/banxico/banks.json');
-			const data = await response.json();
-			// Filter only SPEI-enabled banks
-			banks = data.filter((b: Bank) => b.spei);
+			// Load banks from SQLite - filter only SPEI-enabled banks
+			const data = await query<Bank>('SELECT code, name, full_name, rfc, spei FROM banxico_banks WHERE spei = 1 ORDER BY code');
+			banks = data;
 		} catch (error) {
 			console.error('Error loading banks:', error);
 		}
@@ -138,14 +139,14 @@
 
 <svelte:head>
 	<title>Generador CLABE - catalogmx</title>
-	<meta name="description" content="Genera CLABE (Clave Bancaria Estandarizada) con dígito verificador calculado. Herramienta para generar números de cuenta interbancarios válidos." />
+	<meta name="description" content="Genera CLABE (Clave Bancaria Estandarizada) con digito verificador calculado. Herramienta para generar numeros de cuenta interbancarios validos." />
 </svelte:head>
 
 <!-- Hero -->
 <section class="py-8 md:py-12 border-b border-slate-200 dark:border-slate-800">
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex items-center gap-2 mb-4">
-			<a href="/generadores" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
+			<a href="{base}/generadores" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
 				Generadores
 			</a>
 			<span class="text-slate-400">/</span>
@@ -161,7 +162,7 @@
 					Generador CLABE
 				</h1>
 				<p class="text-lg text-slate-600 dark:text-slate-300">
-					Genera CLABE con dígito verificador calculado para transferencias interbancarias
+					Genera CLABE con digito verificador calculado para transferencias interbancarias
 				</p>
 			</div>
 		</div>
@@ -170,7 +171,7 @@
 			<Info class="h-5 w-5 text-purple-600 dark:text-purple-400 mt-0.5 flex-shrink-0" />
 			<div class="text-sm text-purple-900 dark:text-purple-300">
 				<p class="font-medium mb-1">Clave Bancaria Estandarizada</p>
-				<p>CLABE es el número de cuenta de 18 dígitos usado en México para transferencias electrónicas interbancarias (SPEI). Incluye banco, sucursal, cuenta y dígito verificador.</p>
+				<p>CLABE es el numero de cuenta de 18 digitos usado en Mexico para transferencias electronicas interbancarias (SPEI). Incluye banco, sucursal, cuenta y digito verificador.</p>
 			</div>
 		</div>
 	</div>
@@ -213,7 +214,7 @@
 					<!-- Branch code -->
 					<div>
 						<label for="branch" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-							Código de Sucursal/Plaza *
+							Codigo de Sucursal/Plaza *
 						</label>
 						<input
 							id="branch"
@@ -225,14 +226,14 @@
 							placeholder="001"
 						/>
 						<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-							3 dígitos (se rellenará con ceros a la izquierda)
+							3 digitos (se rellenara con ceros a la izquierda)
 						</p>
 					</div>
 
 					<!-- Account number -->
 					<div>
 						<label for="account" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-							Número de Cuenta *
+							Numero de Cuenta *
 						</label>
 						<div class="flex gap-2">
 							<input
@@ -248,13 +249,13 @@
 								type="button"
 								onclick={generateRandomAccountNumber}
 								class="btn btn-secondary px-3"
-								title="Generar número aleatorio"
+								title="Generar numero aleatorio"
 							>
 								<Shuffle class="h-4 w-4" />
 							</button>
 						</div>
 						<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-							11 dígitos (se rellenará con ceros a la izquierda)
+							11 digitos (se rellenara con ceros a la izquierda)
 						</p>
 					</div>
 
@@ -263,7 +264,7 @@
 						<div class="flex gap-2 text-sm text-slate-600 dark:text-slate-400">
 							<Info class="h-4 w-4 flex-shrink-0 mt-0.5" />
 							<p>
-								El dígito verificador se calcula automáticamente usando el algoritmo modulo 10 con pesos [3,7,1].
+								El digito verificador se calcula automaticamente usando el algoritmo modulo 10 con pesos [3,7,1].
 							</p>
 						</div>
 					</div>
@@ -290,7 +291,7 @@
 							{#if isValid}
 								<div class="flex items-center gap-1 mt-2 text-xs text-green-600 dark:text-green-400">
 									<CheckCircle2 class="h-3 w-3" />
-									Dígito verificador válido
+									Digito verificador valido
 								</div>
 							{/if}
 						</div>
@@ -320,7 +321,7 @@
 
 								<!-- Account -->
 								<div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-									<span class="text-sm text-slate-600 dark:text-slate-400">Número de Cuenta</span>
+									<span class="text-sm text-slate-600 dark:text-slate-400">Numero de Cuenta</span>
 									<span class="text-sm font-mono font-semibold text-slate-900 dark:text-white">
 										{breakdown.accountNumber}
 									</span>
@@ -328,7 +329,7 @@
 
 								<!-- Check digit -->
 								<div class="flex justify-between items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-									<span class="text-sm text-green-700 dark:text-green-300 font-medium">Dígito Verificador</span>
+									<span class="text-sm text-green-700 dark:text-green-300 font-medium">Digito Verificador</span>
 									<span class="text-sm font-mono font-bold text-green-900 dark:text-green-100">
 										{breakdown.checkDigit}
 									</span>
@@ -366,11 +367,11 @@
 			<!-- Algorithm info -->
 			<div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
 				<h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">
-					Algoritmo de Verificación
+					Algoritmo de Verificacion
 				</h3>
 				<div class="text-xs text-slate-600 dark:text-slate-400 space-y-1">
-					<p>1. Multiplicar cada dígito por su peso (patrón 3,7,1)</p>
-					<p>2. Tomar módulo 10 de cada producto</p>
+					<p>1. Multiplicar cada digito por su peso (patron 3,7,1)</p>
+					<p>2. Tomar modulo 10 de cada producto</p>
 					<p>3. Sumar todos los resultados</p>
 					<p>4. Calcular: (10 - (suma % 10)) % 10</p>
 				</div>
@@ -382,10 +383,10 @@
 					Estructura CLABE
 				</h3>
 				<div class="text-xs text-slate-600 dark:text-slate-400 space-y-1">
-					<p><strong>Posiciones 1-3:</strong> Código del banco</p>
-					<p><strong>Posiciones 4-6:</strong> Código de sucursal/plaza</p>
-					<p><strong>Posiciones 7-17:</strong> Número de cuenta (11 dígitos)</p>
-					<p><strong>Posición 18:</strong> Dígito verificador</p>
+					<p><strong>Posiciones 1-3:</strong> Codigo del banco</p>
+					<p><strong>Posiciones 4-6:</strong> Codigo de sucursal/plaza</p>
+					<p><strong>Posiciones 7-17:</strong> Numero de cuenta (11 digitos)</p>
+					<p><strong>Posicion 18:</strong> Digito verificador</p>
 				</div>
 			</div>
 		</div>
@@ -393,9 +394,9 @@
 		<!-- Warning -->
 		<div class="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
 			<p class="text-xs text-amber-900 dark:text-amber-300">
-				<strong>Nota:</strong> Este generador crea CLABEs con estructura válida para propósitos de prueba y desarrollo.
+				<strong>Nota:</strong> Este generador crea CLABEs con estructura valida para propositos de prueba y desarrollo.
 				Para transferencias reales, siempre usa la CLABE oficial proporcionada por tu banco.
-				Las CLABEs generadas aquí no están registradas en el sistema bancario real.
+				Las CLABEs generadas aqui no estan registradas en el sistema bancario real.
 			</p>
 		</div>
 	</div>

@@ -3,29 +3,31 @@
 	import { ChevronRight, Phone, Loader2, AlertCircle } from 'lucide-svelte';
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface Operador {
 		nombre_comercial: string;
 		razon_social: string;
 		tipo: string;
-		red_anfitriona?: string;
-		grupo_empresarial?: string;
-		tecnologias: string[];
+		red_anfitriona: string | null;
+		grupo_empresarial: string | null;
+		tecnologias: string;
 		cobertura: string;
-		servicios: string[];
+		servicios: string;
 		market_share_aprox: number;
 		fecha_inicio_operaciones: string;
-		activo: boolean;
-		notas?: string;
+		activo: number;
+		notas: string | null;
 	}
 
 	let data = $state<Operador[]>([]);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 
-	const operadoresActivos = $derived(data.filter(op => op.activo).length);
-	const omrActivos = $derived(data.filter(op => op.activo && op.tipo === 'OMR').length);
-	const omvActivos = $derived(data.filter(op => op.activo && op.tipo === 'OMV').length);
+	const operadoresActivos = $derived(data.filter(op => op.activo === 1).length);
+	const omrActivos = $derived(data.filter(op => op.activo === 1 && op.tipo === 'OMR').length);
+	const omvActivos = $derived(data.filter(op => op.activo === 1 && op.tipo === 'OMV').length);
 
 	const columns: ColumnDef<Operador, unknown>[] = [
 		{
@@ -43,10 +45,16 @@
 		},
 		{
 			accessorKey: 'tecnologias',
-			header: 'Tecnologías',
+			header: 'Tecnologias',
 			cell: ({ getValue }) => {
-				const tecnologias = getValue() as string[];
-				return tecnologias.join(', ');
+				const tecnologias = getValue() as string;
+				// Parse JSON if stored as JSON string
+				try {
+					const parsed = JSON.parse(tecnologias);
+					return Array.isArray(parsed) ? parsed.join(', ') : tecnologias;
+				} catch {
+					return tecnologias;
+				}
 			},
 		},
 		{
@@ -61,8 +69,8 @@
 			accessorKey: 'activo',
 			header: 'Estado',
 			cell: ({ getValue }) => {
-				const activo = getValue() as boolean;
-				return activo ? 'Activo' : 'Inactivo';
+				const activo = getValue() as number;
+				return activo === 1 ? 'Activo' : 'Inactivo';
 			},
 		},
 	];
@@ -72,13 +80,8 @@
 			loading = true;
 			error = null;
 
-			// Load operators data from JSON
-			const response = await fetch('/data/ift/operadores_moviles.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			const jsonData = await response.json();
-			data = jsonData.operadores || [];
+			// Load operators data from SQLite
+			data = await query<Operador>('SELECT * FROM ift_operadores_moviles ORDER BY nombre_comercial');
 
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';
@@ -94,18 +97,18 @@
 </script>
 
 <svelte:head>
-	<title>Operadores Móviles - IFT - catalogmx</title>
-	<meta name="description" content="Catálogo de operadores de telefonía móvil en México (OMR y OMV)." />
+	<title>Operadores Moviles - IFT - catalogmx</title>
+	<meta name="description" content="Catalogo de operadores de telefonia movil en Mexico (OMR y OMV)." />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catalogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/ift" class="hover:text-brand-500">IFT</a>
+		<a href="{base}/catalogos/ift" class="hover:text-brand-500">IFT</a>
 		<ChevronRight class="h-4 w-4" />
-		<span class="text-slate-900 dark:text-white">Operadores Móviles</span>
+		<span class="text-slate-900 dark:text-white">Operadores Moviles</span>
 	</nav>
 
 	<!-- Header -->
@@ -116,10 +119,10 @@
 			</div>
 			<div>
 				<h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-					Operadores de Telefonía Móvil
+					Operadores de Telefonia Movil
 				</h1>
 				<p class="text-slate-600 dark:text-slate-300">
-					Catálogo de operadores móviles de red (OMR) y virtuales (OMV) en México
+					Catalogo de operadores moviles de red (OMR) y virtuales (OMV) en Mexico
 				</p>
 			</div>
 		</div>
@@ -173,7 +176,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center py-16">
 			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catálogo...</span>
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catalogo desde SQLite...</span>
 		</div>
 	{:else if error}
 		<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -193,7 +196,7 @@
 		<DataTable
 			{data}
 			{columns}
-			searchPlaceholder="Buscar por nombre, tipo o tecnología..."
+			searchPlaceholder="Buscar por nombre, tipo o tecnologia..."
 		/>
 	{/if}
 
@@ -201,23 +204,23 @@
 	{#if !loading && !error}
 		<div class="mt-8 card p-6">
 			<h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">
-				Acerca de este catálogo
+				Acerca de este catalogo
 			</h2>
 			<div class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
 				<p>
-					<strong>OMR (Operador Móvil de Red):</strong> Opera su propia infraestructura de telecomunicaciones
-					y tiene licencia para usar el espectro radioeléctrico.
+					<strong>OMR (Operador Movil de Red):</strong> Opera su propia infraestructura de telecomunicaciones
+					y tiene licencia para usar el espectro radioelectrico.
 				</p>
 				<p>
-					<strong>OMV (Operador Móvil Virtual):</strong> Utiliza infraestructura de terceros (OMR o red compartida)
-					para ofrecer servicios de telefonía móvil sin poseer espectro propio.
+					<strong>OMV (Operador Movil Virtual):</strong> Utiliza infraestructura de terceros (OMR o red compartida)
+					para ofrecer servicios de telefonia movil sin poseer espectro propio.
 				</p>
 				<p>
 					<strong>Fuente:</strong> Instituto Federal de Telecomunicaciones (IFT)
 				</p>
 				<p>
-					<strong>Uso:</strong> Este catálogo permite identificar todos los operadores móviles autorizados en México,
-					su tipo de operación, tecnologías soportadas y participación de mercado.
+					<strong>Uso:</strong> Este catalogo permite identificar todos los operadores moviles autorizados en Mexico,
+					su tipo de operacion, tecnologias soportadas y participacion de mercado.
 				</p>
 			</div>
 		</div>

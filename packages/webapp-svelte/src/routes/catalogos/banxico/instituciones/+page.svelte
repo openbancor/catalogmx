@@ -3,6 +3,8 @@
 	import { ChevronRight, Building, Loader2, AlertCircle } from 'lucide-svelte';
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
+	import { query, queryOne } from '$lib/db';
 
 	interface TipoInstitucion {
 		codigo: string;
@@ -10,35 +12,24 @@
 		descripcion: string;
 		regulador: string;
 		ley_aplicable: string;
-		ejemplos?: string[];
-	}
-
-	interface InstitucionesData {
-		metadata: {
-			catalog: string;
-			description: string;
-			source: string;
-			last_updated: string;
-			notes: string;
-		};
-		tipos_institucion: TipoInstitucion[];
+		ejemplos: string | null;
 	}
 
 	let data = $state<TipoInstitucion[]>([]);
-	let metadata = $state<InstitucionesData['metadata'] | null>(null);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 	let selectedRegulador = $state<string | null>(null);
+	let totalRecords = $state(0);
 
 	const columns: ColumnDef<TipoInstitucion, unknown>[] = [
 		{
 			accessorKey: 'codigo',
-			header: 'Código',
+			header: 'Codigo',
 			cell: ({ getValue }) => getValue() as string,
 		},
 		{
 			accessorKey: 'tipo',
-			header: 'Tipo de Institución',
+			header: 'Tipo de Institucion',
 		},
 		{
 			accessorKey: 'regulador',
@@ -66,15 +57,13 @@
 			loading = true;
 			error = null;
 
-			const response = await fetch('/data/banxico/instituciones_financieras.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
+			const countResult = await queryOne<{ cnt: number }>('SELECT COUNT(*) as cnt FROM banxico_instituciones_financieras');
+			totalRecords = countResult?.cnt ?? 0;
 
-			const jsonData: InstitucionesData = await response.json();
-			data = jsonData.tipos_institucion;
-			metadata = jsonData.metadata;
-
+			const results = await query<TipoInstitucion>(
+				'SELECT codigo, tipo, descripcion, regulador, ley_aplicable, ejemplos FROM banxico_instituciones_financieras ORDER BY codigo'
+			);
+			data = results;
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';
 			console.error('Error loading Banxico instituciones data:', e);
@@ -86,19 +75,28 @@
 	onMount(() => {
 		loadData();
 	});
+
+	function parseEjemplos(ejemplos: string | null): string[] {
+		if (!ejemplos) return [];
+		try {
+			return JSON.parse(ejemplos);
+		} catch {
+			return ejemplos.split(',').map(s => s.trim());
+		}
+	}
 </script>
 
 <svelte:head>
 	<title>Instituciones Financieras (Banxico) - catalogmx</title>
-	<meta name="description" content="Catálogo de tipos de instituciones del sistema financiero mexicano según Banxico." />
+	<meta name="description" content="Catalogo de tipos de instituciones del sistema financiero mexicano segun Banxico." />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catalogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/banxico" class="hover:text-brand-500">Banxico</a>
+		<a href="{base}/catalogos/banxico" class="hover:text-brand-500">Banxico</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">Instituciones</span>
 	</nav>
@@ -114,7 +112,7 @@
 					Instituciones Financieras
 				</h1>
 				<p class="text-slate-600 dark:text-slate-300">
-					Catálogo de tipos de instituciones del sistema financiero mexicano
+					Catalogo de tipos de instituciones del sistema financiero mexicano
 				</p>
 			</div>
 		</div>
@@ -124,7 +122,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center py-16">
 			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando instituciones...</span>
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando desde SQLite...</span>
 		</div>
 	{:else if error}
 		<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -143,9 +141,9 @@
 		<!-- Stats -->
 		<div class="grid gap-4 sm:grid-cols-3 mb-8">
 			<div class="card p-4">
-				<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Tipos de institución</p>
+				<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Tipos de institucion</p>
 				<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
-					{data.length}
+					{totalRecords}
 				</p>
 			</div>
 			<div class="card p-4">
@@ -182,7 +180,7 @@
 			<DataTable
 				data={filteredData}
 				{columns}
-				searchPlaceholder="Buscar por código, tipo o regulador..."
+				searchPlaceholder="Buscar por codigo, tipo o regulador..."
 				pageSize={20}
 			/>
 		</div>
@@ -190,9 +188,10 @@
 		<!-- Detailed list -->
 		<div class="space-y-4 mb-8">
 			<h2 class="text-lg font-semibold text-slate-900 dark:text-white">
-				Descripción detallada
+				Descripcion detallada
 			</h2>
 			{#each filteredData as institucion}
+				{@const ejemplos = parseEjemplos(institucion.ejemplos)}
 				<div class="card p-6">
 					<div class="flex items-start gap-3 mb-3">
 						<div class="bg-indigo-100 dark:bg-indigo-900/30 px-3 py-1 rounded text-sm font-mono text-indigo-700 dark:text-indigo-300">
@@ -217,11 +216,11 @@
 							<p class="text-sm text-slate-600 dark:text-slate-400">{institucion.ley_aplicable}</p>
 						</div>
 					</div>
-					{#if institucion.ejemplos && institucion.ejemplos.length > 0}
+					{#if ejemplos.length > 0}
 						<div class="mt-4">
 							<p class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Ejemplos:</p>
 							<div class="flex flex-wrap gap-2">
-								{#each institucion.ejemplos as ejemplo}
+								{#each ejemplos as ejemplo}
 									<span class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-1 rounded">
 										{ejemplo}
 									</span>
@@ -236,28 +235,25 @@
 		<!-- Info section -->
 		<div class="card p-6">
 			<h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">
-				Acerca de este catálogo
+				Acerca de este catalogo
 			</h2>
 			<div class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
 				<p>
 					<strong>Sistema Financiero Mexicano:</strong> Conjunto de instituciones reguladas que
-					facilitan la captación de recursos, otorgamiento de créditos, y servicios financieros.
+					facilitan la captacion de recursos, otorgamiento de creditos, y servicios financieros.
 				</p>
 				<p>
 					<strong>Principales reguladores:</strong>
 				</p>
 				<ul class="list-disc list-inside ml-4 space-y-1">
-					<li><strong>CNBV</strong> - Comisión Nacional Bancaria y de Valores</li>
-					<li><strong>CONSAR</strong> - Comisión Nacional del Sistema de Ahorro para el Retiro</li>
-					<li><strong>CNSF</strong> - Comisión Nacional de Seguros y Fianzas</li>
-					<li><strong>CONDUSEF</strong> - Comisión Nacional para la Protección y Defensa de los Usuarios de Servicios Financieros</li>
-					<li><strong>Banxico</strong> - Banco de México</li>
+					<li><strong>CNBV</strong> - Comision Nacional Bancaria y de Valores</li>
+					<li><strong>CONSAR</strong> - Comision Nacional del Sistema de Ahorro para el Retiro</li>
+					<li><strong>CNSF</strong> - Comision Nacional de Seguros y Fianzas</li>
+					<li><strong>CONDUSEF</strong> - Comision Nacional para la Proteccion y Defensa de los Usuarios de Servicios Financieros</li>
+					<li><strong>Banxico</strong> - Banco de Mexico</li>
 				</ul>
 				<p>
-					<strong>Fuente:</strong> {metadata?.source || 'Banco de México (Banxico)'}
-				</p>
-				<p>
-					<strong>Última actualización:</strong> {metadata?.last_updated || 'No disponible'}
+					<strong>Fuente:</strong> Banco de Mexico (Banxico)
 				</p>
 			</div>
 		</div>

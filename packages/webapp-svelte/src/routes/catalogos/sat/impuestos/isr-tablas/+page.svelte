@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { ChevronRight, Calculator, Loader2, AlertCircle } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface Tramo {
 		limite_inferior: number;
@@ -51,17 +53,58 @@
 		return `${value.toFixed(2)}%`;
 	}
 
+	interface ISRRow {
+		año: number;
+		periodicidad: string;
+		vigencia_inicio: string;
+		vigencia_fin: string | null;
+		notas: string | null;
+		limite_inferior: number;
+		limite_superior: number | null;
+		cuota_fija: number;
+		tasa_excedente: number;
+	}
+
 	async function loadData() {
 		try {
 			loading = true;
 			error = null;
 
-			const response = await fetch('/data/sat/impuestos/isr_tablas.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+			// Load ISR tablas data from SQLite
+			const rows = await query<ISRRow>('SELECT * FROM sat_impuestos_isr_tablas ORDER BY año DESC, limite_inferior ASC');
+
+			// Group rows by year to reconstruct the tablas structure
+			const tablasMap = new Map<number, Tabla>();
+			for (const row of rows) {
+				if (!tablasMap.has(row.año)) {
+					tablasMap.set(row.año, {
+						año: row.año,
+						periodicidad: row.periodicidad,
+						vigencia_inicio: row.vigencia_inicio,
+						vigencia_fin: row.vigencia_fin,
+						notas: row.notas || undefined,
+						tramos: []
+					});
+				}
+				tablasMap.get(row.año)!.tramos.push({
+					limite_inferior: row.limite_inferior,
+					limite_superior: row.limite_superior,
+					cuota_fija: row.cuota_fija,
+					tasa_excedente: row.tasa_excedente
+				});
 			}
-			const json = await response.json();
-			data = json;
+
+			data = {
+				metadata: {
+					catalog: 'SAT ISR Tablas',
+					description: 'Tablas del Impuesto Sobre la Renta',
+					source: 'SAT - Ley del ISR Art. 96',
+					last_updated: new Date().toISOString().split('T')[0],
+					notes: 'Tarifas mensuales históricas'
+				},
+				tablas: Array.from(tablasMap.values())
+			};
+
 			// Select the most recent year by default
 			if (data && data.tablas.length > 0) {
 				selectedYear = data.tablas[0].año;
@@ -90,11 +133,11 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat" class="hover:text-brand-500">SAT</a>
+		<a href="{base}/catalogos/sat" class="hover:text-brand-500">SAT</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat/impuestos" class="hover:text-brand-500">Impuestos</a>
+		<a href="{base}/catalogos/sat/impuestos" class="hover:text-brand-500">Impuestos</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">Tablas ISR</span>
 	</nav>
@@ -120,7 +163,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center py-16">
 			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catálogo...</span>
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catálogo desde SQLite...</span>
 		</div>
 	{:else if error}
 		<div

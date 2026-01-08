@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { ChevronRight, Percent, Loader2, AlertCircle } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface Tasa {
 		tipo: string;
@@ -65,12 +67,37 @@
 			loading = true;
 			error = null;
 
-			const response = await fetch('/data/sat/impuestos/iva_tasas.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			const json = await response.json();
-			data = json;
+			// Load IVA tasas data from SQLite
+			const tasas = await query<Tasa>('SELECT * FROM sat_impuestos_iva_tasas ORDER BY vigencia_inicio DESC');
+
+			// Construct the data structure with static exenciones and tasa_cero_productos
+			data = {
+				metadata: {
+					catalog: 'SAT IVA Tasas',
+					description: 'Tasas del Impuesto al Valor Agregado',
+					source: 'SAT - Ley del IVA',
+					last_updated: new Date().toISOString().split('T')[0],
+					notes: 'Tasas históricas y vigentes del IVA en México'
+				},
+				tasas: tasas,
+				exenciones: [
+					{ concepto: 'servicios_medicos', descripcion: 'Servicios médicos y hospitalarios', articulo: 'Art. 15, fracción XIV LIVA' },
+					{ concepto: 'educacion', descripcion: 'Servicios educativos', articulo: 'Art. 15, fracción IV LIVA' },
+					{ concepto: 'transporte_terrestre', descripcion: 'Transporte público terrestre de personas', articulo: 'Art. 15, fracción V LIVA' },
+					{ concepto: 'vivienda', descripcion: 'Enajenación de casa habitación', articulo: 'Art. 9, fracción II LIVA' }
+				],
+				tasa_cero_productos: [
+					{ categoria: 'alimentos', descripcion: 'Animales y vegetales no industrializados' },
+					{ categoria: 'alimentos', descripcion: 'Carne en estado natural' },
+					{ categoria: 'alimentos', descripcion: 'Leche y derivados' },
+					{ categoria: 'alimentos', descripcion: 'Huevo, harina, pan y tortillas' },
+					{ categoria: 'agropecuarios', descripcion: 'Invernaderos para cultivos' },
+					{ categoria: 'agropecuarios', descripcion: 'Tractores y maquinaria agrícola' },
+					{ categoria: 'medicinas', descripcion: 'Medicinas de patente' },
+					{ categoria: 'medicinas', descripcion: 'Productos destinados a la alimentación' },
+					{ categoria: 'libros', descripcion: 'Libros, periódicos y revistas' }
+				]
+			};
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';
 			console.error('Error loading IVA data:', e);
@@ -95,11 +122,11 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat" class="hover:text-brand-500">SAT</a>
+		<a href="{base}/catalogos/sat" class="hover:text-brand-500">SAT</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat/impuestos" class="hover:text-brand-500">Impuestos</a>
+		<a href="{base}/catalogos/sat/impuestos" class="hover:text-brand-500">Impuestos</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">Tasas IVA</span>
 	</nav>
@@ -125,7 +152,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center py-16">
 			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catálogo...</span>
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catálogo desde SQLite...</span>
 		</div>
 	{:else if error}
 		<div

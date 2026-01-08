@@ -3,6 +3,8 @@
 	import { ChevronRight, Building2, Loader2, AlertCircle } from 'lucide-svelte';
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface Sector {
 		codigo: string;
@@ -13,20 +15,7 @@
 		descripcion: string;
 	}
 
-	interface SCIANData {
-		_meta: {
-			description: string;
-			source: string;
-			url: string;
-			version: string;
-			updated: string;
-			structure: string;
-		};
-		sectores: Sector[];
-	}
-
 	let data = $state<Sector[]>([]);
-	let meta = $state<SCIANData['_meta'] | null>(null);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 
@@ -36,7 +25,7 @@
 	const columns: ColumnDef<Sector, unknown>[] = [
 		{
 			accessorKey: 'codigo',
-			header: 'Código',
+			header: 'Codigo',
 			cell: ({ getValue }) => getValue() as string,
 		},
 		{
@@ -60,14 +49,8 @@
 			loading = true;
 			error = null;
 
-			const response = await fetch('/data/inegi/scian/sectores.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-
-			const jsonData: SCIANData = await response.json();
-			data = jsonData.sectores;
-			meta = jsonData._meta;
+			// Load SCIAN sectores data from SQLite
+			data = await query<Sector>('SELECT * FROM inegi_scian_sectores ORDER BY codigo');
 
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';
@@ -83,16 +66,16 @@
 </script>
 
 <svelte:head>
-	<title>SCIAN - Sectores Económicos (INEGI) - catalogmx</title>
-	<meta name="description" content="Sistema de Clasificación Industrial de América del Norte (SCIAN). Catálogo de sectores económicos según INEGI." />
+	<title>SCIAN - Sectores Economicos (INEGI) - catalogmx</title>
+	<meta name="description" content="Sistema de Clasificacion Industrial de America del Norte (SCIAN). Catalogo de sectores economicos segun INEGI." />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catalogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/inegi" class="hover:text-brand-500">INEGI</a>
+		<a href="{base}/catalogos/inegi" class="hover:text-brand-500">INEGI</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">SCIAN</span>
 	</nav>
@@ -105,10 +88,10 @@
 			</div>
 			<div>
 				<h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-					SCIAN - Sectores Económicos
+					SCIAN - Sectores Economicos
 				</h1>
 				<p class="text-slate-600 dark:text-slate-300">
-					Sistema de Clasificación Industrial de América del Norte (SCIAN) {meta?.version || '2023'}
+					Sistema de Clasificacion Industrial de America del Norte (SCIAN) 2023
 				</p>
 			</div>
 		</div>
@@ -118,7 +101,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center py-16">
 			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando sectores...</span>
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando sectores desde SQLite...</span>
 		</div>
 	{:else if error}
 		<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -141,33 +124,33 @@
 				<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
 					{data.length}
 				</p>
-				<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Nivel 1 (2 dígitos)</p>
+				<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Nivel 1 (2 digitos)</p>
 			</div>
 			<div class="card p-4">
 				<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Subsectores</p>
 				<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
 					{totalSubsectores}
 				</p>
-				<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Nivel 2 (3 dígitos)</p>
+				<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Nivel 2 (3 digitos)</p>
 			</div>
 			<div class="card p-4">
 				<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Ramas</p>
 				<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
 					{totalRamas}
 				</p>
-				<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Nivel 3 (4 dígitos)</p>
+				<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Nivel 3 (4 digitos)</p>
 			</div>
 		</div>
 
 		<!-- Data table -->
 		<div class="card p-6">
 			<h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">
-				Sectores Económicos
+				Sectores Economicos
 			</h2>
 			<DataTable
 				{data}
 				{columns}
-				searchPlaceholder="Buscar por código o nombre..."
+				searchPlaceholder="Buscar por codigo o nombre..."
 				pageSize={20}
 			/>
 		</div>
@@ -179,22 +162,21 @@
 			</h2>
 			<div class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
 				<p>
-					<strong>SCIAN</strong> (Sistema de Clasificación Industrial de América del Norte) es un
-					clasificador de actividades económicas compatible entre México, Estados Unidos y Canadá.
+					<strong>SCIAN</strong> (Sistema de Clasificacion Industrial de America del Norte) es un
+					clasificador de actividades economicas compatible entre Mexico, Estados Unidos y Canada.
 				</p>
 				<p>
-					<strong>Estructura jerárquica:</strong> {meta?.structure || 'Sectores → Subsectores → Ramas → Subramas → Clases'}
+					<strong>Estructura jerarquica:</strong> Sectores - Subsectores - Ramas - Subramas - Clases
 				</p>
 				<p>
-					<strong>Fuente:</strong> {meta?.source || 'INEGI - Instituto Nacional de Estadística y Geografía'}
+					<strong>Fuente:</strong> INEGI - Instituto Nacional de Estadistica y Geografia
 				</p>
 				<p>
-					<strong>Versión:</strong> SCIAN {meta?.version || '2023'} |
-					<strong>Última actualización:</strong> {meta?.updated || '2026-01-08'}
+					<strong>Version:</strong> SCIAN 2023
 				</p>
 				<p>
-					<strong>Uso:</strong> El SCIAN se utiliza para censos económicos, estadísticas de establecimientos,
-					clasificación de empresas, y análisis sectoriales de la economía mexicana.
+					<strong>Uso:</strong> El SCIAN se utiliza para censos economicos, estadisticas de establecimientos,
+					clasificacion de empresas, y analisis sectoriales de la economia mexicana.
 				</p>
 			</div>
 		</div>

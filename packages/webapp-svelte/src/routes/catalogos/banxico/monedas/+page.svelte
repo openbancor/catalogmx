@@ -3,6 +3,8 @@
 	import { ChevronRight, Coins, Loader2, AlertCircle } from 'lucide-svelte';
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
+	import { query, queryOne } from '$lib/db';
 
 	interface Moneda {
 		codigo_iso: string;
@@ -11,28 +13,17 @@
 		pais: string;
 		simbolo: string;
 		decimales: number;
-		moneda_nacional: boolean;
-		tipo_cambio_banxico: boolean;
-		activa: boolean;
-	}
-
-	interface MonedasData {
-		metadata: {
-			catalog: string;
-			description: string;
-			source: string;
-			last_updated: string;
-			notes: string;
-		};
-		monedas: Moneda[];
+		moneda_nacional: number;
+		tipo_cambio_banxico: number;
+		activa: number;
 	}
 
 	let data = $state<Moneda[]>([]);
-	let metadata = $state<MonedasData['metadata'] | null>(null);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
-	let filterActive = $state<boolean | null>(null);
-	let filterBanxico = $state<boolean | null>(null);
+	let filterActive = $state<number | null>(null);
+	let filterBanxico = $state<number | null>(null);
+	let totalRecords = $state(0);
 
 	const columns: ColumnDef<Moneda, unknown>[] = [
 		{
@@ -55,8 +46,8 @@
 		},
 	];
 
-	const monedasActivas = $derived(data.filter(m => m.activa).length);
-	const monedasConTipoCambio = $derived(data.filter(m => m.tipo_cambio_banxico).length);
+	const monedasActivas = $derived(data.filter(m => m.activa === 1).length);
+	const monedasConTipoCambio = $derived(data.filter(m => m.tipo_cambio_banxico === 1).length);
 
 	const filteredData = $derived(() => {
 		let result = data;
@@ -74,15 +65,13 @@
 			loading = true;
 			error = null;
 
-			const response = await fetch('/data/banxico/monedas_divisas.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
+			const countResult = await queryOne<{ cnt: number }>('SELECT COUNT(*) as cnt FROM banxico_monedas_divisas');
+			totalRecords = countResult?.cnt ?? 0;
 
-			const jsonData: MonedasData = await response.json();
-			data = jsonData.monedas;
-			metadata = jsonData.metadata;
-
+			const results = await query<Moneda>(
+				'SELECT codigo_iso, numero_iso, moneda, pais, simbolo, decimales, moneda_nacional, tipo_cambio_banxico, activa FROM banxico_monedas_divisas ORDER BY codigo_iso'
+			);
+			data = results;
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';
 			console.error('Error loading Banxico monedas data:', e);
@@ -104,9 +93,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/banxico" class="hover:text-brand-500">Banxico</a>
+		<a href="{base}/catalogos/banxico" class="hover:text-brand-500">Banxico</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">Monedas</span>
 	</nav>
@@ -132,7 +121,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center py-16">
 			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando monedas...</span>
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando desde SQLite...</span>
 		</div>
 	{:else if error}
 		<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -153,7 +142,7 @@
 			<div class="card p-4">
 				<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Total monedas</p>
 				<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
-					{data.length}
+					{totalRecords}
 				</p>
 			</div>
 			<div class="card p-4">
@@ -180,8 +169,8 @@
 					</label>
 					<select class="input w-full" bind:value={filterActive}>
 						<option value={null}>Todas</option>
-						<option value={true}>Solo activas</option>
-						<option value={false}>Solo inactivas</option>
+						<option value={1}>Solo activas</option>
+						<option value={0}>Solo inactivas</option>
 					</select>
 				</div>
 				<div>
@@ -190,8 +179,8 @@
 					</label>
 					<select class="input w-full" bind:value={filterBanxico}>
 						<option value={null}>Todas</option>
-						<option value={true}>Con tipo de cambio</option>
-						<option value={false}>Sin tipo de cambio</option>
+						<option value={1}>Con tipo de cambio</option>
+						<option value={0}>Sin tipo de cambio</option>
 					</select>
 				</div>
 			</div>
@@ -226,12 +215,12 @@
 								</div>
 							</div>
 							<div class="flex gap-1">
-								{#if moneda.activa}
+								{#if moneda.activa === 1}
 									<span class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded">
 										Activa
 									</span>
 								{/if}
-								{#if moneda.moneda_nacional}
+								{#if moneda.moneda_nacional === 1}
 									<span class="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded">
 										MXN
 									</span>
@@ -255,7 +244,7 @@
 							</div>
 							<div class="flex justify-between">
 								<span>Tipo cambio Banxico:</span>
-								<span>{moneda.tipo_cambio_banxico ? 'Sí' : 'No'}</span>
+								<span>{moneda.tipo_cambio_banxico === 1 ? 'Sí' : 'No'}</span>
 							</div>
 						</div>
 					</div>
@@ -279,10 +268,7 @@
 					para las principales divisas internacionales utilizadas en operaciones cambiarias en México.
 				</p>
 				<p>
-					<strong>Fuente:</strong> {metadata?.source || 'Banco de México (Banxico)'}
-				</p>
-				<p>
-					<strong>Última actualización:</strong> {metadata?.last_updated || 'No disponible'}
+					<strong>Fuente:</strong> Banco de México (Banxico)
 				</p>
 			</div>
 		</div>

@@ -3,6 +3,8 @@
 	import { ChevronRight, FileText, Loader2, AlertCircle } from 'lucide-svelte';
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface RegimenFiscal {
 		valor: string;
@@ -28,12 +30,9 @@
 			loading = true;
 			error = null;
 
-			const response = await fetch('/data/sat/cfdi_4.0/c_RegimenFiscal.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			const json = await response.json();
-			data = json.data;
+			// Load regimen fiscal data from SQLite
+			const result = await query<RegimenFiscal>('SELECT * FROM sat_cfdi_4_0_regimen_fiscal ORDER BY valor');
+			data = result;
 
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';
@@ -49,18 +48,18 @@
 </script>
 
 <svelte:head>
-	<title>Régimen Fiscal (SAT CFDI 4.0) - catalogmx</title>
-	<meta name="description" content="Catálogo de regímenes fiscales del SAT para CFDI 4.0." />
+	<title>Regimen Fiscal (SAT CFDI 4.0) - catalogmx</title>
+	<meta name="description" content="Catalogo de regimenes fiscales del SAT para CFDI 4.0." />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catalogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat" class="hover:text-brand-500">SAT</a>
+		<a href="{base}/catalogos/sat" class="hover:text-brand-500">SAT</a>
 		<ChevronRight class="h-4 w-4" />
-		<span class="text-slate-900 dark:text-white">Régimen Fiscal</span>
+		<span class="text-slate-900 dark:text-white">Regimen Fiscal</span>
 	</nav>
 
 	<!-- Header -->
@@ -71,10 +70,10 @@
 			</div>
 			<div>
 				<h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-					Catálogo de Régimen Fiscal
+					Catalogo de Regimen Fiscal
 				</h1>
 				<p class="text-slate-600 dark:text-slate-300">
-					Regímenes fiscales válidos para facturas electrónicas (CFDI 4.0)
+					Regimenes fiscales validos para facturas electronicas (CFDI 4.0)
 				</p>
 			</div>
 		</div>
@@ -83,7 +82,7 @@
 	<!-- Stats -->
 	<div class="grid gap-4 sm:grid-cols-2 mb-8">
 		<div class="card p-4">
-			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Total regímenes fiscales</p>
+			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Total regimenes fiscales</p>
 			<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
 				{#if loading}
 					<span class="animate-pulse">--</span>
@@ -93,7 +92,7 @@
 			</p>
 		</div>
 		<div class="card p-4">
-			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Versión CFDI</p>
+			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Version CFDI</p>
 			<p class="text-2xl font-bold text-slate-900 dark:text-white">
 				4.0
 			</p>
@@ -104,7 +103,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center py-16">
 			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catálogo...</span>
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catalogo desde SQLite...</span>
 		</div>
 	{:else if error}
 		<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -132,12 +131,12 @@
 	{#if !loading && !error}
 		<div class="mt-8 card p-6">
 			<h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">
-				Acerca de este catálogo
+				Acerca de este catalogo
 			</h2>
 			<div class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
 				<p>
-					<strong>Régimen Fiscal</strong> es un elemento del CFDI que indica el régimen tributario
-					bajo el cual está dado de alta el contribuyente ante el SAT.
+					<strong>Regimen Fiscal</strong> es un elemento del CFDI que indica el regimen tributario
+					bajo el cual esta dado de alta el contribuyente ante el SAT.
 				</p>
 				<p>
 					<strong>Ejemplos comunes:</strong>
@@ -145,14 +144,14 @@
 				<ul class="list-disc list-inside ml-4 space-y-1">
 					<li><strong>601:</strong> General de Ley Personas Morales</li>
 					<li><strong>605:</strong> Sueldos y Salarios e Ingresos Asimilados a Salarios</li>
-					<li><strong>612:</strong> Personas Físicas con Actividades Empresariales y Profesionales</li>
-					<li><strong>626:</strong> Régimen Simplificado de Confianza</li>
+					<li><strong>612:</strong> Personas Fisicas con Actividades Empresariales y Profesionales</li>
+					<li><strong>626:</strong> Regimen Simplificado de Confianza</li>
 				</ul>
 				<p>
-					<strong>Fuente:</strong> Servicio de Administración Tributaria (SAT)
+					<strong>Fuente:</strong> Servicio de Administracion Tributaria (SAT)
 				</p>
 				<p>
-					<strong>Uso:</strong> Campo obligatorio en el CFDI 4.0 para identificar el régimen fiscal del emisor y receptor.
+					<strong>Uso:</strong> Campo obligatorio en el CFDI 4.0 para identificar el regimen fiscal del emisor y receptor.
 				</p>
 			</div>
 		</div>
