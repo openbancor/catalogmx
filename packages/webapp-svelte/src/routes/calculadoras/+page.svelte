@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Calculator, TrendingUp, Percent, DollarSign, Receipt } from 'lucide-svelte';
+	import { Calculator, TrendingUp, Percent, DollarSign, Receipt, Shield, Users } from 'lucide-svelte';
 
 	const calculators = [
 		{
@@ -22,33 +22,65 @@
 			id: 'resico',
 			name: 'RESICO',
 			description: 'Régimen Simplificado de Confianza',
-			longDescription: 'Calcula impuestos bajo el Régimen Simplificado de Confianza',
+			longDescription: 'Calcula impuestos bajo el Régimen Simplificado de Confianza para personas físicas',
 			href: '/calculadoras/resico',
 			icon: TrendingUp,
 			color: 'bg-blue-500',
 			features: [
-				'Tarifas RESICO',
-				'Cálculo simplificado',
-				'Estimación anual',
-				'Pagos provisionales'
+				'Tasas RESICO 1% a 2.5%',
+				'Verificación de elegibilidad',
+				'Límite $3.5M anuales',
+				'Comparación mensual/anual'
 			],
-			status: 'coming-soon'
+			status: 'available'
 		},
 		{
 			id: 'iva',
 			name: 'IVA',
 			description: 'Impuesto al Valor Agregado',
-			longDescription: 'Calcula IVA (16%), IVA retenido y IVA neto',
+			longDescription: 'Calcula IVA (16%), IVA retenido y desglose de impuestos',
 			href: '/calculadoras/iva',
 			icon: Percent,
 			color: 'bg-green-500',
 			features: [
 				'IVA 16% general',
 				'IVA 0% exportación',
-				'IVA retenido (2/3)',
-				'Acreditamiento IVA'
+				'IVA 8% zona fronteriza',
+				'Retención 2/3 IVA'
 			],
-			status: 'coming-soon'
+			status: 'available'
+		},
+		{
+			id: 'imss',
+			name: 'IMSS',
+			description: 'Cuotas de Seguro Social',
+			longDescription: 'Calcula cuotas IMSS obrero-patronales, Modalidad 40 y Modalidad 10',
+			href: '/calculadoras/imss',
+			icon: Shield,
+			color: 'bg-teal-500',
+			features: [
+				'Cuotas obrero-patronales',
+				'Modalidad 40 (voluntaria)',
+				'Modalidad 10 (independientes)',
+				'5 clases de riesgo de trabajo'
+			],
+			status: 'available'
+		},
+		{
+			id: 'costo-trabajador',
+			name: 'Costo Total Trabajador',
+			description: 'Costo real para el empleador',
+			longDescription: 'Calcula el costo total de un trabajador incluyendo prestaciones y cargas sociales',
+			href: '/calculadoras/costo-trabajador',
+			icon: Users,
+			color: 'bg-orange-500',
+			features: [
+				'IMSS, Infonavit, ISN',
+				'Aguinaldo, vacaciones, prima vacacional',
+				'PTU estimado',
+				'Reservas de liquidación'
+			],
+			status: 'available'
 		},
 		{
 			id: 'tipo-cambio',
@@ -67,15 +99,11 @@
 			status: 'coming-soon'
 		}
 	];
-
-	function formatFeatures(features: string[]): string {
-		return features.join(' • ');
-	}
 </script>
 
 <svelte:head>
 	<title>Calculadoras - catalogmx</title>
-	<meta name="description" content="Calculadoras fiscales y financieras de México: ISR, RESICO, IVA, tipo de cambio. Basadas en datos oficiales." />
+	<meta name="description" content="Calculadoras fiscales y laborales de México: ISR, RESICO, IVA, IMSS, Costo del Trabajador. Basadas en datos oficiales." />
 </svelte:head>
 
 <!-- Hero -->
@@ -91,8 +119,8 @@
 				</h1>
 			</div>
 			<p class="text-lg text-slate-600 dark:text-slate-300">
-				Herramientas para calcular impuestos, conversiones de moneda y más.
-				Todas basadas en datos oficiales y tarifas actualizadas.
+				Herramientas para calcular impuestos, cuotas de seguridad social, costos laborales y más.
+				Todas basadas en datos oficiales y tarifas actualizadas 2024-2026.
 			</p>
 		</div>
 	</div>
@@ -101,10 +129,10 @@
 <!-- Calculators Grid -->
 <section class="py-12">
 	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-		<div class="grid gap-6 md:grid-cols-2">
+		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{#each calculators as calc}
 				{@const Icon = calc.icon}
-				<div class="card p-6 relative overflow-hidden">
+				<div class="card p-6 relative overflow-hidden flex flex-col">
 					<!-- Status badge -->
 					{#if calc.status === 'coming-soon'}
 						<div class="absolute top-4 right-4">
@@ -114,11 +142,11 @@
 
 					<!-- Header -->
 					<div class="flex items-start gap-4 mb-4">
-						<div class="{calc.color} p-3 rounded-lg text-white">
+						<div class="{calc.color} p-3 rounded-lg text-white flex-shrink-0">
 							<Icon class="h-6 w-6" />
 						</div>
-						<div class="flex-1">
-							<h2 class="text-xl font-bold text-slate-900 dark:text-white mb-1">
+						<div class="flex-1 min-w-0">
+							<h2 class="text-xl font-bold text-slate-900 dark:text-white mb-1 truncate">
 								{calc.name}
 							</h2>
 							<p class="text-sm text-slate-600 dark:text-slate-400">
@@ -128,19 +156,16 @@
 					</div>
 
 					<!-- Description -->
-					<p class="text-slate-700 dark:text-slate-300 mb-4">
+					<p class="text-slate-700 dark:text-slate-300 mb-4 text-sm">
 						{calc.longDescription}
 					</p>
 
 					<!-- Features -->
-					<div class="mb-6">
-						<h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
-							Características:
-						</h3>
+					<div class="mb-6 flex-1">
 						<ul class="space-y-1.5">
 							{#each calc.features as feature}
 								<li class="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
-									<span class="text-brand-500 mt-0.5">✓</span>
+									<span class="text-brand-500 mt-0.5 flex-shrink-0">✓</span>
 									<span>{feature}</span>
 								</li>
 							{/each}
@@ -173,7 +198,7 @@
 			</h2>
 			<p class="text-slate-600 dark:text-slate-300 mb-6">
 				Todas las calculadoras utilizan tarifas y datos oficiales de fuentes gubernamentales:
-				SAT, Banxico, INEGI y SEPOMEX. Los cálculos son precisos y se actualizan regularmente.
+				SAT, IMSS, INFONAVIT, Banxico e INEGI. Los cálculos son precisos y se actualizan regularmente.
 			</p>
 			<div class="flex flex-wrap justify-center gap-4 text-sm text-slate-500 dark:text-slate-400">
 				<span class="flex items-center gap-2">
@@ -182,11 +207,11 @@
 				</span>
 				<span class="flex items-center gap-2">
 					<span class="w-2 h-2 rounded-full bg-blue-500"></span>
-					Datos oficiales verificados
+					UMA y salarios mínimos vigentes
 				</span>
 				<span class="flex items-center gap-2">
 					<span class="w-2 h-2 rounded-full bg-purple-500"></span>
-					Cálculos precisos
+					LFT 2023 (vacaciones)
 				</span>
 			</div>
 		</div>
