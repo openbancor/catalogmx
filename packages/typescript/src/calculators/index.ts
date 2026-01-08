@@ -1,6 +1,6 @@
 /**
  * Tax and Payroll Calculators for Mexico
- * ISR, RESICO, IMSS, IVA, IEPS, Retenciones, Impuestos Locales
+ * ISR, RESICO, IMSS, IVA, IEPS, Retenciones, Impuestos Locales, Worker Cost
  */
 
 export { ISRCalculator } from './isr-calculator';
@@ -28,3 +28,10 @@ export {
   RetencionCalculator,
   ImpuestosLocalesCalculator,
 } from './tax-calculator';
+export {
+  WorkerCostCalculator,
+  calcularCostoTotal,
+  obtenerDiasVacaciones,
+  type CostoTotalResult,
+  type CalcularCostoTotalOptions,
+} from './worker-cost-calculator';

@@ -137,9 +137,7 @@ export class RESICOCalculator {
    * @returns Bracket correspondiente o null
    */
   private static findBracket(ingreso: number, brackets: RESICOBracket[]): RESICOBracket | null {
-    return (
-      brackets.find((b) => ingreso >= b.limiteInferior && ingreso <= b.limiteSuperior) || null
-    );
+    return brackets.find((b) => ingreso >= b.limiteInferior && ingreso <= b.limiteSuperior) || null;
   }
 
   /**

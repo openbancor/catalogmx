@@ -49,6 +49,7 @@ export 'src/calculators/isr.dart';
 export 'src/calculators/resico.dart';
 export 'src/calculators/imss.dart';
 export 'src/calculators/impuestos.dart';
+export 'src/calculators/costo_trabajador.dart';
 
 // ============================================================================
 // CATALOGS - INEGI (Instituto Nacional de Estadística y Geografía)

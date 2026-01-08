@@ -9,8 +9,14 @@ Available calculators:
 - IEPS (Impuesto Especial sobre Producción y Servicios) - Special Production and Services Tax
 - Retenciones (Withholdings) - ISR and IVA withholdings
 - Impuestos Locales (Local Taxes) - State and municipal taxes
+- Costo Trabajador (Worker Cost) - Total cost of employing a worker
 """
 
+from catalogmx.calculators.costo_trabajador import (
+    CostoTotalResult,
+    calcular_costo_total,
+    obtener_dias_vacaciones,
+)
 from catalogmx.calculators.impuestos import (
     IEPSCalculationResult,
     IEPSCalculator,
@@ -100,4 +106,8 @@ __all__ = [
     # Impuestos Locales
     "ImpuestosLocalesCalculator",
     "ImpuestoEstatal",
+    # Costo Trabajador
+    "calcular_costo_total",
+    "obtener_dias_vacaciones",
+    "CostoTotalResult",
 ]
