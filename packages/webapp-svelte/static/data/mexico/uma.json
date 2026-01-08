@@ -1,0 +1,110 @@
+[
+  {
+    "año": 2025,
+    "vigencia_inicio": "2025-02-01",
+    "vigencia_fin": "2026-01-31",
+    "valor_diario": 113.14,
+    "valor_mensual": 3441.90,
+    "valor_anual": 41302.80,
+    "moneda": "MXN",
+    "publicacion_dof": "2025-01-10",
+    "incremento_porcentual": 4.21,
+    "notas": "UMA 2025"
+  },
+  {
+    "año": 2024,
+    "vigencia_inicio": "2024-02-01",
+    "vigencia_fin": "2025-01-31",
+    "valor_diario": 108.57,
+    "valor_mensual": 3300.53,
+    "valor_anual": 39606.36,
+    "moneda": "MXN",
+    "publicacion_dof": "2024-01-10",
+    "incremento_porcentual": 4.85,
+    "notas": "UMA 2024"
+  },
+  {
+    "año": 2023,
+    "vigencia_inicio": "2023-02-01",
+    "vigencia_fin": "2024-01-31",
+    "valor_diario": 103.74,
+    "valor_mensual": 3153.70,
+    "valor_anual": 37844.40,
+    "moneda": "MXN",
+    "publicacion_dof": "2023-01-10",
+    "incremento_porcentual": 7.82,
+    "notas": "UMA 2023"
+  },
+  {
+    "año": 2022,
+    "vigencia_inicio": "2022-02-01",
+    "vigencia_fin": "2023-01-31",
+    "valor_diario": 96.22,
+    "valor_mensual": 2925.09,
+    "valor_anual": 35101.08,
+    "moneda": "MXN",
+    "publicacion_dof": "2022-01-10",
+    "incremento_porcentual": 7.66,
+    "notas": "UMA 2022"
+  },
+  {
+    "año": 2021,
+    "vigencia_inicio": "2021-02-01",
+    "vigencia_fin": "2022-01-31",
+    "valor_diario": 89.62,
+    "valor_mensual": 2724.45,
+    "valor_anual": 32693.40,
+    "moneda": "MXN",
+    "publicacion_dof": "2021-01-11",
+    "incremento_porcentual": 3.24,
+    "notas": "UMA 2021"
+  },
+  {
+    "año": 2020,
+    "vigencia_inicio": "2020-02-01",
+    "vigencia_fin": "2021-01-31",
+    "valor_diario": 86.88,
+    "valor_mensual": 2641.15,
+    "valor_anual": 31693.80,
+    "moneda": "MXN",
+    "publicacion_dof": "2020-01-10",
+    "incremento_porcentual": 2.96,
+    "notas": "UMA 2020"
+  },
+  {
+    "año": 2019,
+    "vigencia_inicio": "2019-02-01",
+    "vigencia_fin": "2020-01-31",
+    "valor_diario": 84.49,
+    "valor_mensual": 2568.50,
+    "valor_anual": 30822.00,
+    "moneda": "MXN",
+    "publicacion_dof": "2019-01-10",
+    "incremento_porcentual": 4.20,
+    "notas": "UMA 2019"
+  },
+  {
+    "año": 2018,
+    "vigencia_inicio": "2018-02-01",
+    "vigencia_fin": "2019-01-31",
+    "valor_diario": 80.60,
+    "valor_mensual": 2450.24,
+    "valor_anual": 29402.88,
+    "moneda": "MXN",
+    "publicacion_dof": "2018-01-10",
+    "incremento_porcentual": 3.86,
+    "notas": "UMA 2018"
+  },
+  {
+    "año": 2017,
+    "vigencia_inicio": "2017-02-01",
+    "vigencia_fin": "2018-01-31",
+    "valor_diario": 75.49,
+    "valor_mensual": 2294.90,
+    "valor_anual": 27538.80,
+    "moneda": "MXN",
+    "publicacion_dof": "2017-01-10",
+    "incremento_porcentual": null,
+    "notas": "Primera UMA - reemplaza al salario mínimo como unidad de referencia"
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "catalog": "c_FormaPago",
+    "source": "http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd",
+    "xsd_name": "c_FormaPago",
+    "downloaded": "2025-11-09T05:36:54.020465"
+  },
+  "data": [
+    { "valor": "01", "descripcion": "Efectivo" },
+    { "valor": "02", "descripcion": "Cheque nominativo" },
+    { "valor": "03", "descripcion": "Transferencia electrónica de fondos" },
+    { "valor": "04", "descripcion": "Tarjeta de crédito" },
+    { "valor": "05", "descripcion": "Monedero electrónico" },
+    { "valor": "06", "descripcion": "Dinero electrónico" },
+    { "valor": "08", "descripcion": "Vales de despensa" },
+    { "valor": "12", "descripcion": "Dación en pago" },
+    { "valor": "13", "descripcion": "Pago por subrogación" },
+    { "valor": "14", "descripcion": "Pago por consignación" },
+    { "valor": "15", "descripcion": "Condonación" },
+    { "valor": "17", "descripcion": "Compensación" },
+    { "valor": "23", "descripcion": "Novación" },
+    { "valor": "24", "descripcion": "Confusión" },
+    { "valor": "25", "descripcion": "Remisión de deuda" },
+    { "valor": "26", "descripcion": "Prescripción o caducidad" },
+    { "valor": "27", "descripcion": "A satisfacción del acreedor" },
+    { "valor": "28", "descripcion": "Tarjeta de débito" },
+    { "valor": "29", "descripcion": "Tarjeta de servicios" },
+    { "valor": "30", "descripcion": "Aplicación de anticipos" },
+    { "valor": "31", "descripcion": "Intermediario pagos" },
+    { "valor": "99", "descripcion": "Por definir" }
+  ]
+}

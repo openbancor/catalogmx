@@ -1,0 +1,16 @@
+{
+  "_meta": {
+    "catalog": "c_MetodoPago",
+    "source": "http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd",
+    "xsd_name": "c_MetodoPago",
+    "downloaded": "2025-11-09T05:36:54.028482"
+  },
+  "data": [
+    {
+      "valor": "PUE"
+    },
+    {
+      "valor": "PPD"
+    }
+  ]
+}
