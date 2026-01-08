@@ -13,11 +13,13 @@
 	import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-svelte';
 	import { cn } from '$lib/utils';
 
-	type TData = Record<string, unknown>;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	type TData = Record<string, any>;
 
 	interface Props {
 		data: TData[];
-		columns: ColumnDef<TData, unknown>[];
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		columns: ColumnDef<any, any>[];
 		pageSize?: number;
 		searchable?: boolean;
 		searchPlaceholder?: string;
