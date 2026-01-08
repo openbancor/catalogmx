@@ -47,6 +47,14 @@
 		// IFT
 		{ source: 'IFT', id: 'operadores', name: 'Operadores Telefónicos', count: 50, description: 'Claves de operadores de telefonía (LADA)' },
 
+		// IMSS
+		{ source: 'IMSS', id: 'tipos-movimiento', name: 'Tipos de Movimiento Afiliatorio', count: 4, description: 'Claves de movimientos para el SUA' },
+		{ source: 'IMSS', id: 'tipos-trabajador', name: 'Tipos de Trabajador', count: 4, description: 'Clasificación de trabajadores según régimen laboral' },
+		{ source: 'IMSS', id: 'tipos-incapacidad', name: 'Tipos de Incapacidad', count: 3, description: 'Clasificación de incapacidades y subsidios' },
+		{ source: 'IMSS', id: 'seguros', name: 'Seguros del IMSS', count: 6, description: 'Ramos de aseguramiento y prestaciones' },
+		{ source: 'IMSS', id: 'pensiones', name: 'Tabulador de Pensiones', count: 3, description: 'Montos mínimos de pensiones 2024-2026' },
+		{ source: 'IMSS', id: 'semanas-cotizadas', name: 'Semanas Cotizadas', count: 3, description: 'Requisitos para pensiones por modalidad' },
+
 		// CNBV
 		{ source: 'CNBV', id: 'sectores', name: 'Sectores Financieros', count: 15, description: 'Sectores regulados por la CNBV' },
 
@@ -63,6 +71,7 @@
 		'Banxico': 'bg-green-600',
 		'SEPOMEX': 'bg-amber-500',
 		'IFT': 'bg-cyan-500',
+		'IMSS': 'bg-teal-500',
 		'CNBV': 'bg-purple-500',
 		'México': 'bg-emerald-500',
 	};
@@ -101,6 +110,7 @@
 			'Banxico': 'banxico',
 			'SEPOMEX': 'sepomex',
 			'IFT': 'ift',
+			'IMSS': 'imss',
 			'CNBV': 'cnbv',
 			'México': 'mexico',
 		};

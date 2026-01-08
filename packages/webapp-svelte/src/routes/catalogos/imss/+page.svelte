@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ChevronRight, FileText, Users, Activity, UserX, Shield, Building2, TrendingUp, Calendar } from 'lucide-svelte';
+	import { ChevronRight, FileText, Users, Activity, UserX, Shield, TrendingUp, Calendar } from 'lucide-svelte';
 
 	interface Catalog {
 		title: string;
@@ -37,13 +37,6 @@
 			href: '/catalogos/imss/seguros',
 			icon: Shield,
 			count: '6 seguros'
-		},
-		{
-			title: 'Subdelegaciones',
-			description: 'Catálogo de subdelegaciones del IMSS por estado',
-			href: '/catalogos/imss/subdelegaciones',
-			icon: Building2,
-			count: '4 ejemplos'
 		},
 		{
 			title: 'Tabulador de Pensiones',
