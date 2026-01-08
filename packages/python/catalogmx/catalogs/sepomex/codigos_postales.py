@@ -7,6 +7,8 @@ from catalogmx.utils.text import normalize_text
 
 
 class CodigosPostales:
+    """Catálogo de códigos postales (versión simple)"""
+
     _data: list[dict] | None = None
     _by_cp: dict[str, list[dict]] | None = None
     _by_estado: dict[str, list[dict]] | None = None
@@ -17,12 +19,12 @@ class CodigosPostales:
     def _load_data(cls) -> None:
         if cls._data is None:
             # Path: catalogmx/packages/python/catalogmx/catalogs/sepomex/codigos_postales.py
-            # Target: catalogmx/packages/shared-data/sepomex/codigos_postales_completo.json
+            # Target: catalogmx/packages/shared-data/sepomex/codigos_postales.json
             path = (
                 Path(__file__).parent.parent.parent.parent.parent
                 / "shared-data"
                 / "sepomex"
-                / "codigos_postales_completo.json"
+                / "codigos_postales.json"
             )
             with open(path, encoding="utf-8") as f:
                 cls._data = json.load(f)
