@@ -394,7 +394,6 @@ function calculateReservaLiquidacion(
   antiguedadAnios: number,
   year: PayrollYear
 ): ReservaLiquidacionDetail {
-  const uma = getUMA(year);
   const salarioMinimo = imssTablesData.salario_minimo[year.toString() as '2024' | '2025' | '2026'].general;
 
   // 3 meses de indemnización (Art. 50 LFT)
