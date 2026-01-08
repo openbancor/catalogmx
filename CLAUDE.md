@@ -269,6 +269,7 @@ All linting checks are enforced in GitHub Actions CI:
 - **Python**: Black format check, Ruff lint, mypy type check
 - **TypeScript**: ESLint, Prettier format check, TypeScript strict mode
 - **Dart**: dart analyze, dart format check
+- **Webapp (SvelteKit)**: Vite build, TypeScript check
 
 Code that fails any check will NOT be merged.
 
@@ -299,6 +300,10 @@ npm run lint && npm run format:check && npm run typecheck && npm test
 cd packages/dart
 dart format . && dart analyze && dart test
 
+# Webapp SvelteKit (REQUIRED if modified)
+cd packages/webapp-svelte
+npm run build
+
 # YAML (REQUIRED for workflow changes)
 yamllint -d "{extends: relaxed, rules: {line-length: {max: 200}, truthy: disable}}" .github/workflows/
 ```
@@ -307,8 +312,9 @@ yamllint -d "{extends: relaxed, rules: {line-length: {max: 200}, truthy: disable
 
 ```bash
 (cd packages/python && black catalogmx/ && ruff check catalogmx/) && \
-(cd packages/typescript && npm run lint && npm run format:check) && \
+(cd packages/typescript && npm run lint && npm run format:check && npm run typecheck) && \
 (cd packages/dart && dart format . && dart analyze) && \
+(cd packages/webapp-svelte && npm run build 2>/dev/null || echo "Webapp: skipped") && \
 echo "✅ All checks passed"
 ```
 

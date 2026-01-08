@@ -39,6 +39,7 @@ export 'cnbv/sectores.dart';
 // ============================================================================
 export 'inegi/localidades.dart';
 export 'inegi/municipios.dart';
+export 'inegi/municipios_completo.dart';
 export 'inegi/scian.dart';
 export 'inegi/states.dart';
 
@@ -81,3 +82,4 @@ export 'sat/nomina_all.dart';
 // SEPOMEX CATALOGS
 // ============================================================================
 export 'sepomex/codigos_postales.dart';
+export 'sepomex/codigos_postales_completo.dart';
