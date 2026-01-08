@@ -15,10 +15,24 @@ from .municipios_completo import MunicipiosCompletoCatalog
 from .scian import SCIANCatalog
 from .states import StateCatalog
 
+# Aliases for convenience
+States = StateCatalog
+Estados = StateCatalog
+Municipios = MunicipiosCatalog
+Localidades = LocalidadesCatalog
+SCIAN = SCIANCatalog
+
 __all__ = [
+    # Main classes
     "MunicipiosCatalog",
     "MunicipiosCompletoCatalog",
     "LocalidadesCatalog",
     "StateCatalog",
     "SCIANCatalog",
+    # Aliases
+    "States",
+    "Estados",
+    "Municipios",
+    "Localidades",
+    "SCIAN",
 ]
