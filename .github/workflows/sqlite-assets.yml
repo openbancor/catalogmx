@@ -37,7 +37,8 @@ jobs:
           rm -f mexico.sqlite3-shm mexico.sqlite3-wal
 
           # Close WAL on individual databases
-          for db in sqlite/*.{db,sqlite,sqlite3} 2>/dev/null; do
+          shopt -s nullglob
+          for db in sqlite/*.db sqlite/*.sqlite sqlite/*.sqlite3; do
             if [ -f "$db" ]; then
               sqlite3 "$db" "PRAGMA wal_checkpoint(TRUNCATE); PRAGMA journal_mode=DELETE; VACUUM;" || true
               rm -f "${db}-shm" "${db}-wal"
