@@ -8,6 +8,7 @@ Standard Products and Services Code).
 Este módulo usa SQLite con FTS5 para búsqueda eficiente de texto completo.
 """
 
+import atexit
 import sqlite3
 from pathlib import Path
 from typing import TypedDict
@@ -91,6 +92,13 @@ class ClaveProdServCatalog:
             cls._connection.row_factory = sqlite3.Row
             cls._ensure_schema(cls._connection)
         return cls._connection
+
+    @classmethod
+    def close(cls) -> None:
+        """Cierra la conexión a la base de datos y limpia el estado."""
+        if cls._connection is not None:
+            cls._connection.close()
+            cls._connection = None
 
     @classmethod
     def _ensure_schema(cls, conn: sqlite3.Connection) -> None:
@@ -451,3 +459,7 @@ class ClaveProdServCatalog:
             "vigentes": vigentes,
             "obsoletos": total - vigentes,
         }
+
+
+# Register cleanup to close database connection on exit
+atexit.register(ClaveProdServCatalog.close)

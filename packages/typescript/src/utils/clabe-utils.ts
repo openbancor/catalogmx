@@ -18,7 +18,7 @@
  * ```
  */
 
-import { CLABEValidator, generateClabe, validateClabe } from '../validators/clabe';
+import { generateClabe, validateClabe } from '../validators/clabe';
 import { BankCatalog } from '../catalogs/banxico/banks';
 import { CodigosPlazaCatalog, type CodigoPlaza } from '../catalogs/banxico/codigos-plaza';
 import type { Bank } from '../types';
