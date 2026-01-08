@@ -18,7 +18,7 @@ const config = {
 		}),
 		paths: {
 			// For GitHub Pages subdirectory deployment
-			// base: process.env.NODE_ENV === 'production' ? '/catalogmx' : '',
+			base: process.env.NODE_ENV === 'production' ? '/catalogmx' : '',
 		},
 		prerender: {
 			handleHttpError: ({ path, referrer, message }) => {
