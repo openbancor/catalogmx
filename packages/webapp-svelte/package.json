@@ -27,8 +27,7 @@
 	"dependencies": {
 		"@sveltejs/adapter-static": "^3.0.10",
 		"@tailwindcss/postcss": "^4.1.18",
-		"@tanstack/svelte-table": "^8.21.3",
-		"@tanstack/svelte-virtual": "^3.13.18",
+		"@tanstack/table-core": "^8.21.3",
 		"bits-ui": "^2.15.4",
 		"clsx": "^2.1.1",
 		"lucide-svelte": "^0.562.0",
