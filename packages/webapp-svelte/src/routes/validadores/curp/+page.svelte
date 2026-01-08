@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { User, CheckCircle2, XCircle, Info, Calendar, MapPin, Users } from 'lucide-svelte';
+	import { base } from '$app/paths';
 
 	// State
 	let curp = $state('');
@@ -153,7 +154,7 @@
 <section class="py-8 md:py-12 border-b border-slate-200 dark:border-slate-800">
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex items-center gap-2 mb-4">
-			<a href="/validadores" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
+			<a href="{base}/validadores" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
 				Validadores
 			</a>
 			<span class="text-slate-400">/</span>

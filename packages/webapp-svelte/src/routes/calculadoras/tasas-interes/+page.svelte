@@ -1,27 +1,12 @@
 <script lang="ts">
 	import { Calculator, Info, Percent, TrendingUp, Calendar, BarChart3 } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface TasaRate {
-		date: string;
-		rate: number;
-	}
-
-	interface TasasSeries {
-		series: string;
-		description: string;
-		rates: TasaRate[];
-	}
-
-	interface TasasData {
-		metadata: {
-			source: string;
-			description: string;
-			unit: string;
-			last_updated: string;
-		};
-		cetes_28: TasasSeries;
-		tiie_28: TasasSeries;
+		fecha: string;
+		valor: number;
 	}
 
 	// State
@@ -32,7 +17,8 @@
 	let tasaPromedio = $state<number>(0);
 	let interes = $state<number | null>(null);
 	let valorFinal = $state<number | null>(null);
-	let tasasData = $state<TasasData | null>(null);
+	let cetesRates = $state<TasaRate[]>([]);
+	let tiieRates = $state<TasaRate[]>([]);
 	let loading = $state<boolean>(true);
 
 	// Comparison state
@@ -44,11 +30,11 @@
 
 	// Derived
 	let fechasDisponiblesCETES = $derived(
-		tasasData?.cetes_28.rates.map((r) => r.date).sort((a, b) => b.localeCompare(a)) || []
+		cetesRates.map((r) => r.fecha).sort((a, b) => b.localeCompare(a))
 	);
 
 	let fechasDisponiblesTIIE = $derived(
-		tasasData?.tiie_28.rates.map((r) => r.date).sort((a, b) => b.localeCompare(a)) || []
+		tiieRates.map((r) => r.fecha).sort((a, b) => b.localeCompare(a))
 	);
 
 	let fechasDisponibles = $derived(
@@ -56,21 +42,25 @@
 	);
 
 	let tasaActual = $derived.by(() => {
-		if (!tasasData) return 0;
-		const serie = tipoTasa === 'cetes_28' ? tasasData.cetes_28 : tasasData.tiie_28;
-		return serie.rates[0]?.rate || 0;
+		const rates = tipoTasa === 'cetes_28' ? cetesRates : tiieRates;
+		return rates[0]?.valor || 0;
 	});
 
 	onMount(async () => {
 		try {
-			const response = await fetch('/data/banxico/tasas.json');
-			tasasData = await response.json();
-			if (tasasData) {
-				// Set initial dates
-				if (tasasData.cetes_28.rates.length > 0) {
-					fechaInicial = tasasData.cetes_28.rates[tasasData.cetes_28.rates.length - 1].date;
-					fechaFinal = tasasData.cetes_28.rates[0].date;
-				}
+			// Load CETES and TIIE rates from SQLite
+			const [cetes, tiie] = await Promise.all([
+				query<TasaRate>('SELECT fecha, valor FROM banxico_cetes WHERE plazo = 28 ORDER BY fecha DESC'),
+				query<TasaRate>('SELECT fecha, valor FROM banxico_tiie WHERE plazo = 28 ORDER BY fecha DESC')
+			]);
+
+			cetesRates = cetes;
+			tiieRates = tiie;
+
+			// Set initial dates
+			if (cetesRates.length > 0) {
+				fechaInicial = cetesRates[cetesRates.length - 1].fecha;
+				fechaFinal = cetesRates[0].fecha;
 			}
 		} catch (error) {
 			console.error('Error loading tasas data:', error);
@@ -86,12 +76,10 @@
 			return;
 		}
 
-		if (!tasasData) return;
-
-		const serie = tipoTasa === 'cetes_28' ? tasasData.cetes_28 : tasasData.tiie_28;
+		const rates = tipoTasa === 'cetes_28' ? cetesRates : tiieRates;
 
 		// Get rates between dates
-		const ratesInRange = serie.rates.filter((r) => r.date >= fechaInicial && r.date <= fechaFinal);
+		const ratesInRange = rates.filter((r) => r.fecha >= fechaInicial && r.fecha <= fechaFinal);
 
 		if (ratesInRange.length === 0) {
 			interes = null;
@@ -100,7 +88,7 @@
 		}
 
 		// Calculate average rate
-		const avgRate = ratesInRange.reduce((sum, r) => sum + r.rate, 0) / ratesInRange.length;
+		const avgRate = ratesInRange.reduce((sum, r) => sum + r.valor, 0) / ratesInRange.length;
 		tasaPromedio = avgRate;
 
 		// Calculate days
@@ -115,25 +103,25 @@
 	}
 
 	function compararTasas() {
-		if (!tasasData || !fechaInicial || !fechaFinal || !principal) return;
+		if (cetesRates.length === 0 || tiieRates.length === 0 || !fechaInicial || !fechaFinal || !principal) return;
 
 		// Get CETES rates
-		const ceteRates = tasasData.cetes_28.rates.filter(
-			(r) => r.date >= fechaInicial && r.date <= fechaFinal
+		const ceteRatesInRange = cetesRates.filter(
+			(r) => r.fecha >= fechaInicial && r.fecha <= fechaFinal
 		);
 		const avgCETES =
-			ceteRates.length > 0
-				? ceteRates.reduce((sum, r) => sum + r.rate, 0) / ceteRates.length
+			ceteRatesInRange.length > 0
+				? ceteRatesInRange.reduce((sum, r) => sum + r.valor, 0) / ceteRatesInRange.length
 				: 0;
 		tasaCETES = avgCETES;
 
 		// Get TIIE rates
-		const tiieRates = tasasData.tiie_28.rates.filter(
-			(r) => r.date >= fechaInicial && r.date <= fechaFinal
+		const tiieRatesInRange = tiieRates.filter(
+			(r) => r.fecha >= fechaInicial && r.fecha <= fechaFinal
 		);
 		const avgTIIE =
-			tiieRates.length > 0
-				? tiieRates.reduce((sum, r) => sum + r.rate, 0) / tiieRates.length
+			tiieRatesInRange.length > 0
+				? tiieRatesInRange.reduce((sum, r) => sum + r.valor, 0) / tiieRatesInRange.length
 				: 0;
 		tasaTIIE = avgTIIE;
 
@@ -176,7 +164,7 @@
 </script>
 
 <svelte:head>
-	<title>Calculadora Tasas de Interés CETES/TIIE - catalogmx</title>
+	<title>Calculadora Tasas de Interes CETES/TIIE - catalogmx</title>
 	<meta
 		name="description"
 		content="Calcula intereses con tasas CETES 28 y TIIE 28 de Banxico. Compara rendimientos entre diferentes instrumentos de renta fija."
@@ -188,14 +176,14 @@
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex items-center gap-2 mb-4">
 			<a
-				href="/calculadoras"
+				href="{base}/calculadoras"
 				class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500"
 			>
 				Calculadoras
 			</a>
 			<span class="text-slate-400">/</span>
 			<span class="text-sm text-slate-700 dark:text-slate-300 font-medium"
-				>Tasas de Interés</span
+				>Tasas de Interes</span
 			>
 		</div>
 
@@ -205,10 +193,10 @@
 			</div>
 			<div>
 				<h1 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-2">
-					Tasas de Interés CETES/TIIE
+					Tasas de Interes CETES/TIIE
 				</h1>
 				<p class="text-lg text-slate-600 dark:text-slate-300">
-					Calcula intereses y compara rendimientos - Banco de México
+					Calcula intereses y compara rendimientos - Banco de Mexico
 				</p>
 			</div>
 		</div>
@@ -220,8 +208,8 @@
 			<div class="text-sm text-emerald-900 dark:text-emerald-300">
 				<p class="font-medium mb-1">Tasas de referencia</p>
 				<p>
-					<strong>CETES 28:</strong> Certificados de la Tesorería (renta fija gubernamental).
-					<strong>TIIE 28:</strong> Tasa de Interés Interbancaria de Equilibrio (referencia bancaria).
+					<strong>CETES 28:</strong> Certificados de la Tesoreria (renta fija gubernamental).
+					<strong>TIIE 28:</strong> Tasa de Interes Interbancaria de Equilibrio (referencia bancaria).
 				</p>
 			</div>
 		</div>
@@ -237,7 +225,7 @@
 					<div
 						class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-slate-300 border-t-brand-500 mb-3"
 					></div>
-					<p class="text-sm text-slate-500">Cargando datos...</p>
+					<p class="text-sm text-slate-500">Cargando datos desde SQLite...</p>
 				</div>
 			</div>
 		{:else}
@@ -261,8 +249,8 @@
 								Instrumento
 							</label>
 							<select id="tipoTasa" bind:value={tipoTasa} class="input">
-								<option value="cetes_28">CETES 28 días</option>
-								<option value="tiie_28">TIIE 28 días</option>
+								<option value="cetes_28">CETES 28 dias</option>
+								<option value="tiie_28">TIIE 28 dias</option>
 							</select>
 						</div>
 
@@ -431,14 +419,14 @@
 				</div>
 			</div>
 
-			<!-- Comparación CETES vs TIIE -->
+			<!-- Comparacion CETES vs TIIE -->
 			{#if tasaCETES > 0 && tasaTIIE > 0}
 				<div class="mt-8 card p-6">
 					<h2
 						class="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2"
 					>
 						<BarChart3 class="h-5 w-5 text-brand-500" />
-						Comparación CETES 28 vs TIIE 28
+						Comparacion CETES 28 vs TIIE 28
 					</h2>
 
 					<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
@@ -468,7 +456,7 @@
 						</div>
 
 						<div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
-							<div class="text-sm text-slate-600 dark:text-slate-400 mb-1">Diferencia interés</div>
+							<div class="text-sm text-slate-600 dark:text-slate-400 mb-1">Diferencia interes</div>
 							<div
 								class="text-2xl font-bold tabular-nums {interesTIIE - interesCETES >= 0
 									? 'text-green-600 dark:text-green-400'
@@ -482,7 +470,7 @@
 					<div class="grid gap-4 sm:grid-cols-2">
 						<div class="p-5 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
 							<h3 class="font-semibold text-blue-900 dark:text-blue-100 mb-3">
-								Inversión en CETES 28
+								Inversion en CETES 28
 							</h3>
 							<div class="space-y-2 text-sm">
 								<div class="flex justify-between">
@@ -508,7 +496,7 @@
 
 						<div class="p-5 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
 							<h3 class="font-semibold text-purple-900 dark:text-purple-100 mb-3">
-								Inversión en TIIE 28
+								Inversion en TIIE 28
 							</h3>
 							<div class="space-y-2 text-sm">
 								<div class="flex justify-between">
@@ -540,7 +528,7 @@
 				<div class="card p-5">
 					<h3 class="font-semibold text-slate-900 dark:text-white mb-2">CETES</h3>
 					<p class="text-sm text-slate-600 dark:text-slate-400">
-						Certificados de la Tesorería emitidos por el gobierno federal. Instrumento de renta fija
+						Certificados de la Tesoreria emitidos por el gobierno federal. Instrumento de renta fija
 						de bajo riesgo.
 					</p>
 				</div>
@@ -548,16 +536,16 @@
 				<div class="card p-5">
 					<h3 class="font-semibold text-slate-900 dark:text-white mb-2">TIIE</h3>
 					<p class="text-sm text-slate-600 dark:text-slate-400">
-						Tasa de Interés Interbancaria de Equilibrio. Referencia para créditos y productos
-						bancarios en México.
+						Tasa de Interes Interbancaria de Equilibrio. Referencia para creditos y productos
+						bancarios en Mexico.
 					</p>
 				</div>
 
 				<div class="card p-5">
 					<h3 class="font-semibold text-slate-900 dark:text-white mb-2">Fuente oficial</h3>
 					<p class="text-sm text-slate-600 dark:text-slate-400">
-						Datos oficiales del Banco de México. CETES (SF43936) y TIIE (SF43878) actualizados
-						periódicamente.
+						Datos oficiales del Banco de Mexico. CETES (SF43936) y TIIE (SF43878) actualizados
+						periodicamente.
 					</p>
 				</div>
 			</div>
@@ -567,10 +555,10 @@
 				class="mt-8 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700"
 			>
 				<p class="text-xs text-slate-500 dark:text-slate-400">
-					<strong>Nota:</strong> Esta calculadora es informativa y utiliza tasas históricas de
-					Banxico. Los cálculos son aproximados usando interés simple a 360 días. Los rendimientos
-					reales pueden variar según el instrumento específico. Para inversiones formales, consulta
-					con tu institución financiera. No considera ISR ni otras retenciones.
+					<strong>Nota:</strong> Esta calculadora es informativa y utiliza tasas historicas de
+					Banxico. Los calculos son aproximados usando interes simple a 360 dias. Los rendimientos
+					reales pueden variar segun el instrumento especifico. Para inversiones formales, consulta
+					con tu institucion financiera. No considera ISR ni otras retenciones.
 				</p>
 			</div>
 		{/if}

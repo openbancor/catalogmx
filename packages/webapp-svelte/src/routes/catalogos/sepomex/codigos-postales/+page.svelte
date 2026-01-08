@@ -3,6 +3,8 @@
 	import { ChevronRight, MapPin, Loader2, AlertCircle } from 'lucide-svelte';
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface CodigoPostal {
 		cp: string;
@@ -59,12 +61,10 @@
 			loading = true;
 			error = null;
 
-			// Load postal codes data from JSON
-			const response = await fetch('/data/sepomex/codigos_postales.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			const postalCodes = await response.json();
+			// Load postal codes data from SQLite
+			const postalCodes = await query<CodigoPostal>(
+				'SELECT cp, asentamiento, tipo_asentamiento, municipio, estado, ciudad, cp_oficina, codigo_estado, codigo_municipio FROM codigos_postales ORDER BY cp LIMIT 500'
+			);
 			data = postalCodes;
 
 		} catch (e) {
@@ -81,18 +81,18 @@
 </script>
 
 <svelte:head>
-	<title>Códigos Postales - SEPOMEX - catalogmx</title>
-	<meta name="description" content="Catálogo de códigos postales de México con información de asentamientos, municipios y estados." />
+	<title>Codigos Postales - SEPOMEX - catalogmx</title>
+	<meta name="description" content="Catalogo de codigos postales de Mexico con informacion de asentamientos, municipios y estados." />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catalogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sepomex" class="hover:text-brand-500">SEPOMEX</a>
+		<a href="{base}/catalogos/sepomex" class="hover:text-brand-500">SEPOMEX</a>
 		<ChevronRight class="h-4 w-4" />
-		<span class="text-slate-900 dark:text-white">Códigos Postales</span>
+		<span class="text-slate-900 dark:text-white">Codigos Postales</span>
 	</nav>
 
 	<!-- Header -->
@@ -103,10 +103,10 @@
 			</div>
 			<div>
 				<h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-					Códigos Postales de México
+					Codigos Postales de Mexico
 				</h1>
 				<p class="text-slate-600 dark:text-slate-300">
-					Catálogo oficial de códigos postales del Servicio Postal Mexicano (muestra de 50 registros)
+					Catalogo oficial de codigos postales del Servicio Postal Mexicano (muestra de 500 registros)
 				</p>
 			</div>
 		</div>
@@ -115,7 +115,7 @@
 	<!-- Stats -->
 	<div class="grid gap-4 sm:grid-cols-3 mb-8">
 		<div class="card p-4">
-			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Total códigos postales</p>
+			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Total codigos postales</p>
 			<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
 				{#if loading}
 					<span class="animate-pulse">--</span>
@@ -150,7 +150,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center py-16">
 			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catálogo...</span>
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catalogo desde SQLite...</span>
 		</div>
 	{:else if error}
 		<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -178,23 +178,23 @@
 	{#if !loading && !error}
 		<div class="mt-8 card p-6">
 			<h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">
-				Acerca de este catálogo
+				Acerca de este catalogo
 			</h2>
 			<div class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
 				<p>
-					El <strong>código postal</strong> es un identificador numérico de 5 dígitos que permite ubicar una localidad
-					específica dentro del territorio nacional.
+					El <strong>codigo postal</strong> es un identificador numerico de 5 digitos que permite ubicar una localidad
+					especifica dentro del territorio nacional.
 				</p>
 				<p>
 					<strong>Fuente:</strong> Servicio Postal Mexicano (SEPOMEX)
 				</p>
 				<p>
-					<strong>Uso:</strong> Los códigos postales se utilizan para identificar ubicaciones geográficas en envíos,
-					direcciones fiscales, y servicios de geolocalización.
+					<strong>Uso:</strong> Los codigos postales se utilizan para identificar ubicaciones geograficas en envios,
+					direcciones fiscales, y servicios de geolocalizacion.
 				</p>
 				<p class="text-xs text-slate-500 dark:text-slate-400 mt-4">
-					<strong>Nota:</strong> Esta es una muestra de 50 códigos postales representativos de las principales
-					ciudades de México. El catálogo completo contiene más de 145,000 códigos postales.
+					<strong>Nota:</strong> Esta es una muestra de 500 codigos postales representativos de las principales
+					ciudades de Mexico. El catalogo completo contiene mas de 145,000 codigos postales.
 				</p>
 			</div>
 		</div>

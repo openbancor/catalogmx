@@ -1,21 +1,12 @@
 <script lang="ts">
 	import { Calculator, Info, DollarSign, TrendingUp, Calendar } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface ExchangeRate {
-		date: string;
-		rate: number;
-	}
-
-	interface ExchangeData {
-		metadata: {
-			source: string;
-			series: string;
-			description: string;
-			unit: string;
-			last_updated: string;
-		};
-		rates: ExchangeRate[];
+		fecha: string;
+		tipo_cambio: number;
 	}
 
 	// State
@@ -24,17 +15,17 @@
 	let fechaSeleccionada = $state<string>('');
 	let tasaCambio = $state<number>(18.45);
 	let resultado = $state<number | null>(null);
-	let exchangeData = $state<ExchangeData | null>(null);
+	let exchangeRates = $state<ExchangeRate[]>([]);
 	let loading = $state<boolean>(true);
 	let fechaComparacion = $state<string>('');
 	let tasaComparacion = $state<number>(0);
 
 	// Derived
 	let fechasDisponibles = $derived(
-		exchangeData?.rates.map((r) => r.date).sort((a, b) => b.localeCompare(a)) || []
+		exchangeRates.map((r) => r.fecha).sort((a, b) => b.localeCompare(a))
 	);
 
-	let tasaActual = $derived(exchangeData?.rates[0]?.rate || 18.45);
+	let tasaActual = $derived(exchangeRates[0]?.tipo_cambio || 18.45);
 
 	let diferenciaTasas = $derived.by(() => {
 		if (!fechaComparacion || !tasaComparacion) return null;
@@ -45,11 +36,16 @@
 
 	onMount(async () => {
 		try {
-			const response = await fetch('/data/banxico/tipo_cambio.json');
-			exchangeData = await response.json();
-			if (exchangeData && exchangeData.rates.length > 0) {
-				fechaSeleccionada = exchangeData.rates[0].date;
-				tasaCambio = exchangeData.rates[0].rate;
+			// Load exchange rates from SQLite
+			const rates = await query<ExchangeRate>(
+				'SELECT fecha, tipo_cambio FROM banxico_tipo_cambio ORDER BY fecha DESC'
+			);
+
+			exchangeRates = rates;
+
+			if (exchangeRates.length > 0) {
+				fechaSeleccionada = exchangeRates[0].fecha;
+				tasaCambio = exchangeRates[0].tipo_cambio;
 			}
 		} catch (error) {
 			console.error('Error loading exchange data:', error);
@@ -72,16 +68,16 @@
 	}
 
 	function onFechaChange() {
-		const rate = exchangeData?.rates.find((r) => r.date === fechaSeleccionada);
+		const rate = exchangeRates.find((r) => r.fecha === fechaSeleccionada);
 		if (rate) {
-			tasaCambio = rate.rate;
+			tasaCambio = rate.tipo_cambio;
 		}
 	}
 
 	function onFechaComparacionChange() {
-		const rate = exchangeData?.rates.find((r) => r.date === fechaComparacion);
+		const rate = exchangeRates.find((r) => r.fecha === fechaComparacion);
 		if (rate) {
-			tasaComparacion = rate.rate;
+			tasaComparacion = rate.tipo_cambio;
 		}
 	}
 
@@ -122,7 +118,7 @@
 	<title>Calculadora Tipo de Cambio USD/MXN - catalogmx</title>
 	<meta
 		name="description"
-		content="Convierte entre dólares (USD) y pesos mexicanos (MXN) con tipos de cambio históricos de Banxico. Calcula diferencias entre fechas."
+		content="Convierte entre dolares (USD) y pesos mexicanos (MXN) con tipos de cambio historicos de Banxico. Calcula diferencias entre fechas."
 	/>
 </svelte:head>
 
@@ -131,7 +127,7 @@
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex items-center gap-2 mb-4">
 			<a
-				href="/calculadoras"
+				href="{base}/calculadoras"
 				class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500"
 			>
 				Calculadoras
@@ -149,7 +145,7 @@
 					Tipo de Cambio USD/MXN
 				</h1>
 				<p class="text-lg text-slate-600 dark:text-slate-300">
-					Conversión y datos históricos del Banco de México
+					Conversion y datos historicos del Banco de Mexico
 				</p>
 			</div>
 		</div>
@@ -176,7 +172,7 @@
 			<div class="flex items-center justify-center py-12">
 				<div class="text-center">
 					<div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-slate-300 border-t-brand-500 mb-3"></div>
-					<p class="text-sm text-slate-500">Cargando datos...</p>
+					<p class="text-sm text-slate-500">Cargando datos desde SQLite...</p>
 				</div>
 			</div>
 		{:else}
@@ -200,7 +196,7 @@
 								Convertir de
 							</label>
 							<select id="monedaOrigen" bind:value={monedaOrigen} class="input">
-								<option value="USD">Dólares (USD)</option>
+								<option value="USD">Dolares (USD)</option>
 								<option value="MXN">Pesos mexicanos (MXN)</option>
 							</select>
 						</div>
@@ -276,7 +272,7 @@
 								class="p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg border border-purple-200 dark:border-purple-800"
 							>
 								<div class="text-sm font-medium text-purple-700 dark:text-purple-300 mb-1">
-									{monedaOrigen === 'USD' ? 'Pesos mexicanos (MXN)' : 'Dólares (USD)'}
+									{monedaOrigen === 'USD' ? 'Pesos mexicanos (MXN)' : 'Dolares (USD)'}
 								</div>
 								<div class="text-3xl font-bold text-purple-900 dark:text-purple-100 tabular-nums">
 									{formatCurrency(resultado, monedaOrigen === 'USD' ? 'MXN' : 'USD')}
@@ -407,23 +403,23 @@
 				<div class="card p-5">
 					<h3 class="font-semibold text-slate-900 dark:text-white mb-2">Tipo de Cambio FIX</h3>
 					<p class="text-sm text-slate-600 dark:text-slate-400">
-						Publicado diariamente por Banxico, válido para solventar obligaciones en moneda
+						Publicado diariamente por Banxico, valido para solventar obligaciones en moneda
 						extranjera.
 					</p>
 				</div>
 
 				<div class="card p-5">
-					<h3 class="font-semibold text-slate-900 dark:text-white mb-2">Días hábiles</h3>
+					<h3 class="font-semibold text-slate-900 dark:text-white mb-2">Dias habiles</h3>
 					<p class="text-sm text-slate-600 dark:text-slate-400">
-						El tipo de cambio se publica solo en días hábiles bancarios. Fines de semana y festivos
-						no hay publicación.
+						El tipo de cambio se publica solo en dias habiles bancarios. Fines de semana y festivos
+						no hay publicacion.
 					</p>
 				</div>
 
 				<div class="card p-5">
 					<h3 class="font-semibold text-slate-900 dark:text-white mb-2">Fuente oficial</h3>
 					<p class="text-sm text-slate-600 dark:text-slate-400">
-						Datos oficiales del Banco de México (Serie SF43718) actualizados diariamente.
+						Datos oficiales del Banco de Mexico (Serie SF43718) actualizados diariamente.
 					</p>
 				</div>
 			</div>
@@ -433,9 +429,9 @@
 				class="mt-8 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700"
 			>
 				<p class="text-xs text-slate-500 dark:text-slate-400">
-					<strong>Nota:</strong> Esta calculadora utiliza datos históricos del Banco de México. Los
+					<strong>Nota:</strong> Esta calculadora utiliza datos historicos del Banco de Mexico. Los
 					tipos de cambio mostrados son referenciales. Para transacciones oficiales, consulta la
-					publicación diaria del DOF o el sitio web de Banxico.
+					publicacion diaria del DOF o el sitio web de Banxico.
 				</p>
 			</div>
 		{/if}

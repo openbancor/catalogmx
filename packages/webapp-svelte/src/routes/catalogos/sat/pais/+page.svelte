@@ -3,6 +3,8 @@
 	import { ChevronRight, Globe, Loader2, AlertCircle } from 'lucide-svelte';
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface Pais {
 		valor: string;
@@ -15,7 +17,7 @@
 	const columns: ColumnDef<Pais, unknown>[] = [
 		{
 			accessorKey: 'valor',
-			header: 'Código ISO',
+			header: 'Codigo ISO',
 			cell: ({ getValue }) => {
 				const valor = getValue() as string;
 				return valor;
@@ -28,12 +30,9 @@
 			loading = true;
 			error = null;
 
-			const response = await fetch('/data/sat/cfdi_4.0/c_Pais.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			const json = await response.json();
-			data = json.data;
+			// Load pais data from SQLite
+			const result = await query<Pais>('SELECT * FROM sat_cfdi_4_0_c_pais ORDER BY valor');
+			data = result;
 
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';
@@ -49,18 +48,18 @@
 </script>
 
 <svelte:head>
-	<title>País (SAT CFDI 4.0) - catalogmx</title>
-	<meta name="description" content="Catálogo de países del SAT para CFDI 4.0." />
+	<title>Pais (SAT CFDI 4.0) - catalogmx</title>
+	<meta name="description" content="Catalogo de paises del SAT para CFDI 4.0." />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catalogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat" class="hover:text-brand-500">SAT</a>
+		<a href="{base}/catalogos/sat" class="hover:text-brand-500">SAT</a>
 		<ChevronRight class="h-4 w-4" />
-		<span class="text-slate-900 dark:text-white">País</span>
+		<span class="text-slate-900 dark:text-white">Pais</span>
 	</nav>
 
 	<!-- Header -->
@@ -71,10 +70,10 @@
 			</div>
 			<div>
 				<h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-					Catálogo de País
+					Catalogo de Pais
 				</h1>
 				<p class="text-slate-600 dark:text-slate-300">
-					Códigos ISO 3166-1 alpha-3 de países válidos para facturas electrónicas (CFDI 4.0)
+					Codigos ISO 3166-1 alpha-3 de paises validos para facturas electronicas (CFDI 4.0)
 				</p>
 			</div>
 		</div>
@@ -83,7 +82,7 @@
 	<!-- Stats -->
 	<div class="grid gap-4 sm:grid-cols-2 mb-8">
 		<div class="card p-4">
-			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Total países</p>
+			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Total paises</p>
 			<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
 				{#if loading}
 					<span class="animate-pulse">--</span>
@@ -93,7 +92,7 @@
 			</p>
 		</div>
 		<div class="card p-4">
-			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Versión CFDI</p>
+			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Version CFDI</p>
 			<p class="text-2xl font-bold text-slate-900 dark:text-white">
 				4.0
 			</p>
@@ -104,7 +103,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center py-16">
 			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catálogo...</span>
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catalogo desde SQLite...</span>
 		</div>
 	{:else if error}
 		<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -124,7 +123,7 @@
 		<DataTable
 			{data}
 			{columns}
-			searchPlaceholder="Buscar código de país (MEX, USA, CAN...)..."
+			searchPlaceholder="Buscar codigo de pais (MEX, USA, CAN...)..."
 		/>
 	{/if}
 
@@ -132,28 +131,28 @@
 	{#if !loading && !error}
 		<div class="mt-8 card p-6">
 			<h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">
-				Acerca de este catálogo
+				Acerca de este catalogo
 			</h2>
 			<div class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
 				<p>
-					<strong>País</strong> es un elemento del CFDI que indica el país de residencia del receptor
-					o el país de origen/destino en operaciones de comercio exterior, usando códigos ISO 3166-1 alpha-3.
+					<strong>Pais</strong> es un elemento del CFDI que indica el pais de residencia del receptor
+					o el pais de origen/destino en operaciones de comercio exterior, usando codigos ISO 3166-1 alpha-3.
 				</p>
 				<p>
-					<strong>Países comunes:</strong>
+					<strong>Paises comunes:</strong>
 				</p>
 				<ul class="list-disc list-inside ml-4 space-y-1">
-					<li><strong>MEX:</strong> México</li>
+					<li><strong>MEX:</strong> Mexico</li>
 					<li><strong>USA:</strong> Estados Unidos</li>
-					<li><strong>CAN:</strong> Canadá</li>
-					<li><strong>ESP:</strong> España</li>
+					<li><strong>CAN:</strong> Canada</li>
+					<li><strong>ESP:</strong> Espana</li>
 					<li><strong>CHN:</strong> China</li>
 				</ul>
 				<p>
-					<strong>Fuente:</strong> Servicio de Administración Tributaria (SAT) - ISO 3166-1
+					<strong>Fuente:</strong> Servicio de Administracion Tributaria (SAT) - ISO 3166-1
 				</p>
 				<p>
-					<strong>Uso:</strong> Campo utilizado en el CFDI 4.0 para especificar el país de residencia fiscal
+					<strong>Uso:</strong> Campo utilizado en el CFDI 4.0 para especificar el pais de residencia fiscal
 					del receptor y en complementos de comercio exterior.
 				</p>
 			</div>

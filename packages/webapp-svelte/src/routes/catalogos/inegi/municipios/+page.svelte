@@ -3,6 +3,8 @@
 	import { ChevronRight, MapPin, Loader2, AlertCircle } from 'lucide-svelte';
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface Municipio {
 		cve_entidad: string;
@@ -57,12 +59,8 @@
 			loading = true;
 			error = null;
 
-			const response = await fetch('/data/inegi/municipios.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-
-			data = await response.json();
+			// Load municipios data from SQLite
+			data = await query<Municipio>('SELECT * FROM inegi_municipios ORDER BY cve_completa');
 
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';
@@ -79,15 +77,15 @@
 
 <svelte:head>
 	<title>Municipios (INEGI) - catalogmx</title>
-	<meta name="description" content="Catálogo oficial de municipios de México según INEGI. Incluye claves y nombres de todos los municipios del país." />
+	<meta name="description" content="Catalogo oficial de municipios de Mexico segun INEGI. Incluye claves y nombres de todos los municipios del pais." />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catalogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/inegi" class="hover:text-brand-500">INEGI</a>
+		<a href="{base}/catalogos/inegi" class="hover:text-brand-500">INEGI</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">Municipios</span>
 	</nav>
@@ -100,10 +98,10 @@
 			</div>
 			<div>
 				<h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-					Municipios de México
+					Municipios de Mexico
 				</h1>
 				<p class="text-slate-600 dark:text-slate-300">
-					Catálogo oficial de municipios y demarcaciones territoriales según INEGI
+					Catalogo oficial de municipios y demarcaciones territoriales segun INEGI
 				</p>
 			</div>
 		</div>
@@ -113,7 +111,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center py-16">
 			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando municipios...</span>
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando municipios desde SQLite...</span>
 		</div>
 	{:else if error}
 		<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -179,19 +177,19 @@
 		<!-- Info section -->
 		<div class="mt-8 card p-6">
 			<h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">
-				Acerca de este catálogo
+				Acerca de este catalogo
 			</h2>
 			<div class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
 				<p>
-					<strong>Municipios:</strong> México está dividido en 32 entidades federativas que, a su vez,
-					se subdividen en 2,469 municipios (2,465 municipios + 1 Ciudad de México + 16 demarcaciones territoriales + 1 Isla Guadalupe).
+					<strong>Municipios:</strong> Mexico esta dividido en 32 entidades federativas que, a su vez,
+					se subdividen en 2,469 municipios (2,465 municipios + 1 Ciudad de Mexico + 16 demarcaciones territoriales + 1 Isla Guadalupe).
 				</p>
 				<p>
-					<strong>Fuente:</strong> Instituto Nacional de Estadística y Geografía (INEGI)
+					<strong>Fuente:</strong> Instituto Nacional de Estadistica y Geografia (INEGI)
 				</p>
 				<p>
-					<strong>Uso:</strong> Las claves de municipio se utilizan en el CURP, códigos postales,
-					y diversos sistemas oficiales de identificación geográfica.
+					<strong>Uso:</strong> Las claves de municipio se utilizan en el CURP, codigos postales,
+					y diversos sistemas oficiales de identificacion geografica.
 				</p>
 			</div>
 		</div>

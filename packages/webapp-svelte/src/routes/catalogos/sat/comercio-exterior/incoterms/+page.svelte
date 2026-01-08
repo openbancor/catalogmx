@@ -3,6 +3,8 @@
 	import { ChevronRight, Ship, Loader2, AlertCircle } from 'lucide-svelte';
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface Incoterm {
 		code: string;
@@ -83,12 +85,8 @@
 			loading = true;
 			error = null;
 
-			// Load incoterms data from JSON
-			const response = await fetch('/data/sat/comercio_exterior/incoterms.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			const incoterms = await response.json();
+			// Load incoterms data from SQLite
+			const incoterms = await query<Incoterm>('SELECT * FROM sat_comercio_exterior_incoterms ORDER BY code');
 			data = incoterms;
 
 		} catch (e) {
@@ -112,11 +110,11 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat" class="hover:text-brand-500">SAT</a>
+		<a href="{base}/catalogos/sat" class="hover:text-brand-500">SAT</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat/comercio-exterior" class="hover:text-brand-500">Comercio Exterior</a>
+		<a href="{base}/catalogos/sat/comercio-exterior" class="hover:text-brand-500">Comercio Exterior</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">Incoterms</span>
 	</nav>
@@ -176,7 +174,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center py-16">
 			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catálogo...</span>
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catálogo desde SQLite...</span>
 		</div>
 	{:else if error}
 		<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">

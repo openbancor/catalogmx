@@ -3,6 +3,8 @@
 	import { ChevronRight, MapPin, Loader2, AlertCircle } from 'lucide-svelte';
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
+	import { query, queryOne } from '$lib/db';
 
 	interface Plaza {
 		codigo: string;
@@ -11,24 +13,11 @@
 		cve_entidad: string;
 	}
 
-	interface PlazasData {
-		metadata: {
-			catalog: string;
-			description: string;
-			source: string;
-			last_updated: string;
-			total_codes: number;
-			total_plazas: number;
-			notes: string;
-		};
-		plazas: Plaza[];
-	}
-
 	let data = $state<Plaza[]>([]);
-	let metadata = $state<PlazasData['metadata'] | null>(null);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 	let selectedEstado = $state<string | null>(null);
+	let totalRecords = $state(0);
 
 	const columns: ColumnDef<Plaza, unknown>[] = [
 		{
@@ -70,15 +59,13 @@
 			loading = true;
 			error = null;
 
-			const response = await fetch('/data/banxico/codigos_plaza.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
+			const countResult = await queryOne<{ cnt: number }>('SELECT COUNT(*) as cnt FROM banxico_codigos_plaza');
+			totalRecords = countResult?.cnt ?? 0;
 
-			const jsonData: PlazasData = await response.json();
-			data = jsonData.plazas;
-			metadata = jsonData.metadata;
-
+			const results = await query<Plaza>(
+				'SELECT codigo, plaza, estado, cve_entidad FROM banxico_codigos_plaza ORDER BY codigo'
+			);
+			data = results;
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';
 			console.error('Error loading Banxico plazas data:', e);
@@ -100,9 +87,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/banxico" class="hover:text-brand-500">Banxico</a>
+		<a href="{base}/catalogos/banxico" class="hover:text-brand-500">Banxico</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">Plazas</span>
 	</nav>
@@ -128,7 +115,7 @@
 	{#if loading}
 		<div class="flex items-center justify-center py-16">
 			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando plazas...</span>
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando desde SQLite...</span>
 		</div>
 	{:else if error}
 		<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -149,13 +136,13 @@
 			<div class="card p-4">
 				<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Total códigos</p>
 				<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
-					{metadata?.total_codes?.toLocaleString('es-MX') || data.length.toLocaleString('es-MX')}
+					{totalRecords.toLocaleString('es-MX')}
 				</p>
 			</div>
 			<div class="card p-4">
 				<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Plazas únicas</p>
 				<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
-					{metadata?.total_plazas?.toLocaleString('es-MX') || [...new Set(data.map(p => p.plaza))].length.toLocaleString('es-MX')}
+					{[...new Set(data.map(p => p.plaza))].length.toLocaleString('es-MX')}
 				</p>
 			</div>
 			<div class="card p-4">
@@ -205,16 +192,8 @@
 					<strong>Estructura CLABE:</strong> Una CLABE completa tiene 18 dígitos:
 					3 dígitos de banco + 3 dígitos de plaza + 11 dígitos de cuenta + 1 dígito verificador.
 				</p>
-				{#if metadata?.notes}
-					<p>
-						<strong>Nota:</strong> {metadata.notes}
-					</p>
-				{/if}
 				<p>
-					<strong>Fuente:</strong> {metadata?.source || 'Banco de México (BANXICO)'}
-				</p>
-				<p>
-					<strong>Última actualización:</strong> {metadata?.last_updated || 'No disponible'}
+					<strong>Fuente:</strong> Banco de México (BANXICO)
 				</p>
 			</div>
 		</div>

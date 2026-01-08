@@ -1,52 +1,56 @@
 <script lang="ts">
-	import { ChevronRight, TrendingUp, Percent } from 'lucide-svelte';
+	import { ChevronRight, Percent, Loader2, AlertCircle } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
+	import { query, queryOne } from '$lib/db';
 
-	interface Rate {
-		date: string;
-		rate: number;
+	interface TIIERecord {
+		fecha: string;
+		valor: number;
+		plazo: number;
 	}
 
-	interface Series {
-		series: string;
-		description: string;
-		rates: Rate[];
+	interface CETESRecord {
+		fecha: string;
+		valor: number;
+		plazo: number;
 	}
 
-	interface Data {
-		metadata: {
-			source: string;
-			description: string;
-			unit: string;
-			last_updated: string;
-		};
-		cetes_28: Series;
-		tiie_28: Series;
-	}
-
-	let data = $state<Data | null>(null);
+	let tiieData = $state<TIIERecord[]>([]);
+	let cetesData = $state<CETESRecord[]>([]);
 	let loading = $state(true);
+	let error = $state<string | null>(null);
 	let selectedSeries = $state<'tiie' | 'cetes'>('tiie');
 	let displayLimit = $state(30);
 
-	const currentData = $derived(
-		selectedSeries === 'tiie' ? data?.tiie_28 : data?.cetes_28
-	);
-	const displayedRates = $derived(currentData?.rates.slice(0, displayLimit) ?? []);
+	const currentData = $derived(selectedSeries === 'tiie' ? tiieData : cetesData);
+	const displayedRates = $derived(currentData.slice(0, displayLimit));
+	const latestTiie = $derived(tiieData[0] ?? null);
+	const latestCetes = $derived(cetesData[0] ?? null);
 
 	onMount(async () => {
 		try {
-			const res = await fetch('/data/banxico/tasas.json');
-			data = await res.json();
-		} catch (error) {
-			console.error('Error loading data:', error);
+			loading = true;
+			error = null;
+
+			// Load TIIE and CETES data (28-day rates)
+			const [tiie, cetes] = await Promise.all([
+				query<TIIERecord>('SELECT fecha, valor, plazo FROM banxico_tiie WHERE plazo = 28 ORDER BY fecha DESC LIMIT 500'),
+				query<CETESRecord>('SELECT fecha, valor, plazo FROM banxico_cetes WHERE plazo = 28 ORDER BY fecha DESC LIMIT 500')
+			]);
+
+			tiieData = tiie;
+			cetesData = cetes;
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Error loading data';
+			console.error('Error loading tasas data:', e);
 		} finally {
 			loading = false;
 		}
 	});
 
 	function formatDate(dateStr: string): string {
-		const date = new Date(dateStr);
+		const date = new Date(dateStr + 'T00:00:00');
 		return date.toLocaleDateString('es-MX', {
 			weekday: 'short',
 			year: 'numeric',
@@ -68,9 +72,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/banxico" class="hover:text-brand-500">Banxico</a>
+		<a href="{base}/catalogos/banxico" class="hover:text-brand-500">Banxico</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">TIIE / CETES</span>
 	</nav>
@@ -93,11 +97,21 @@
 	</div>
 
 	{#if loading}
-		<div class="text-center py-12">
-			<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-500 mx-auto"></div>
-			<p class="mt-4 text-slate-500 dark:text-slate-400">Cargando datos...</p>
+		<div class="flex items-center justify-center py-16">
+			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
+			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando datos desde SQLite...</span>
 		</div>
-	{:else if data}
+	{:else if error}
+		<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+			<div class="flex items-start gap-3">
+				<AlertCircle class="h-5 w-5 text-red-500 mt-0.5" />
+				<div>
+					<p class="font-medium text-red-800 dark:text-red-200">Error al cargar datos</p>
+					<p class="text-sm text-red-600 dark:text-red-300 mt-1">{error}</p>
+				</div>
+			</div>
+		</div>
+	{:else}
 		<!-- Current rates cards -->
 		<div class="grid md:grid-cols-2 gap-4 mb-8">
 			<button
@@ -105,12 +119,16 @@
 				class="card p-6 text-left transition-all {selectedSeries === 'tiie' ? 'ring-2 ring-green-500 bg-green-50 dark:bg-green-900/20' : 'hover:border-slate-300 dark:hover:border-slate-600'}"
 			>
 				<p class="text-sm text-slate-500 dark:text-slate-400 font-medium">TIIE 28 días</p>
-				<p class="text-3xl font-bold text-green-600 dark:text-green-400 mt-1">
-					{data.tiie_28.rates[0].rate.toFixed(2)}%
-				</p>
-				<p class="text-xs text-slate-400 dark:text-slate-500 mt-2">
-					{formatDate(data.tiie_28.rates[0].date)}
-				</p>
+				{#if latestTiie}
+					<p class="text-3xl font-bold text-green-600 dark:text-green-400 mt-1">
+						{latestTiie.valor.toFixed(4)}%
+					</p>
+					<p class="text-xs text-slate-400 dark:text-slate-500 mt-2">
+						{formatDate(latestTiie.fecha)}
+					</p>
+				{:else}
+					<p class="text-xl text-slate-400 mt-1">Sin datos</p>
+				{/if}
 			</button>
 
 			<button
@@ -118,12 +136,16 @@
 				class="card p-6 text-left transition-all {selectedSeries === 'cetes' ? 'ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'hover:border-slate-300 dark:hover:border-slate-600'}"
 			>
 				<p class="text-sm text-slate-500 dark:text-slate-400 font-medium">CETES 28 días</p>
-				<p class="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-1">
-					{data.cetes_28.rates[0].rate.toFixed(2)}%
-				</p>
-				<p class="text-xs text-slate-400 dark:text-slate-500 mt-2">
-					{formatDate(data.cetes_28.rates[0].date)}
-				</p>
+				{#if latestCetes}
+					<p class="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-1">
+						{latestCetes.valor.toFixed(2)}%
+					</p>
+					<p class="text-xs text-slate-400 dark:text-slate-500 mt-2">
+						{formatDate(latestCetes.fecha)}
+					</p>
+				{:else}
+					<p class="text-xl text-slate-400 mt-1">Sin datos</p>
+				{/if}
 			</button>
 		</div>
 
@@ -144,14 +166,14 @@
 		</div>
 
 		<!-- Historical data table -->
-		{#if currentData}
+		{#if currentData.length > 0}
 			<div class="card overflow-hidden">
 				<div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
 					<h2 class="font-semibold text-slate-900 dark:text-white">
-						Histórico {currentData.description}
+						Histórico {selectedSeries === 'tiie' ? 'TIIE' : 'CETES'} 28 días
 					</h2>
 					<p class="text-sm text-slate-500 dark:text-slate-400">
-						Serie: {currentData.series} • {currentData.rates.length} registros
+						{currentData.length.toLocaleString('es-MX')} registros
 					</p>
 				</div>
 				<div class="overflow-x-auto">
@@ -165,8 +187,8 @@
 						<tbody class="divide-y divide-slate-200 dark:divide-slate-700">
 							{#each displayedRates as rate}
 								<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-									<td class="py-3 px-4 text-slate-700 dark:text-slate-300">{formatDate(rate.date)}</td>
-									<td class="py-3 px-4 text-right font-mono text-slate-900 dark:text-white">{rate.rate.toFixed(2)}%</td>
+									<td class="py-3 px-4 text-slate-700 dark:text-slate-300">{formatDate(rate.fecha)}</td>
+									<td class="py-3 px-4 text-right font-mono text-slate-900 dark:text-white">{rate.valor.toFixed(4)}%</td>
 								</tr>
 							{/each}
 						</tbody>
@@ -175,10 +197,10 @@
 			</div>
 
 			<!-- Load more -->
-			{#if displayedRates.length < currentData.rates.length}
+			{#if displayedRates.length < currentData.length}
 				<div class="text-center mt-6">
-					<button onclick={loadMore} class="btn-primary">
-						Cargar más ({currentData.rates.length - displayedRates.length} restantes)
+					<button onclick={loadMore} class="btn btn-primary">
+						Cargar más ({(currentData.length - displayedRates.length).toLocaleString('es-MX')} restantes)
 					</button>
 				</div>
 			{/if}

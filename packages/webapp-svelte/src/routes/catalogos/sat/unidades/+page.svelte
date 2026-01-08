@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { ChevronRight, Search, Ruler } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface Unidad {
 		id: string;
@@ -30,8 +32,8 @@
 
 	onMount(async () => {
 		try {
-			const res = await fetch('/data/sat/cfdi_4.0/clave_unidad.json');
-			unidades = await res.json();
+			// Load unidades data from SQLite
+			unidades = await query<Unidad>('SELECT * FROM sat_cfdi_4_0_clave_unidad ORDER BY id');
 		} catch (error) {
 			console.error('Error loading unidades:', error);
 		} finally {
@@ -52,9 +54,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat" class="hover:text-brand-500">SAT</a>
+		<a href="{base}/catalogos/sat" class="hover:text-brand-500">SAT</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">Claves de Unidad</span>
 	</nav>
@@ -90,7 +92,7 @@
 	{#if loading}
 		<div class="text-center py-12">
 			<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-500 mx-auto"></div>
-			<p class="mt-4 text-slate-500 dark:text-slate-400">Cargando unidades...</p>
+			<p class="mt-4 text-slate-500 dark:text-slate-400">Cargando unidades desde SQLite...</p>
 		</div>
 	{:else}
 		<!-- Results count -->

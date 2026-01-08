@@ -3,6 +3,8 @@
 	import { ChevronRight, Building2, Loader2, AlertCircle } from 'lucide-svelte';
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
+	import { query } from '$lib/db';
+	import { base } from '$app/paths';
 
 	interface Bank {
 		code: string;
@@ -42,12 +44,8 @@
 			loading = true;
 			error = null;
 
-			// Load banks data from JSON
-			const response = await fetch('/data/sat/nomina_1.2/banco.json');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			const banks = await response.json();
+			// Load banks data from SQLite
+			const banks = await query<Bank>('SELECT * FROM sat_nomina_1_2_banco ORDER BY code');
 			data = banks;
 
 		} catch (e) {
@@ -71,11 +69,11 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat" class="hover:text-brand-500">SAT</a>
+		<a href="{base}/catalogos/sat" class="hover:text-brand-500">SAT</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat/nomina" class="hover:text-brand-500">Nómina</a>
+		<a href="{base}/catalogos/sat/nomina" class="hover:text-brand-500">Nómina</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">Bancos</span>
 	</nav>
