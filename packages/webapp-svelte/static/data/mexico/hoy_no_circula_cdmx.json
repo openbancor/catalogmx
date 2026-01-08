@@ -1,0 +1,190 @@
+{
+  "metadata": {
+    "programa": "Hoy No Circula",
+    "jurisdiccion": "Ciudad de México y Zona Metropolitana del Valle de México",
+    "vigencia": "Permanente (desde 1989)",
+    "fuente": "Comisión Ambiental de la Megalópolis (CAMe)",
+    "ultima_actualizacion": "2024-01-01"
+  },
+  "restricciones_por_dia": [
+    {
+      "dia": "lunes",
+      "terminacion_placa": ["5", "6"],
+      "engomado": ["amarillo"],
+      "horario_restriccion": "05:00-22:00",
+      "aplica_sabados": false
+    },
+    {
+      "dia": "martes",
+      "terminacion_placa": ["7", "8"],
+      "engomado": ["rosa"],
+      "horario_restriccion": "05:00-22:00",
+      "aplica_sabados": false
+    },
+    {
+      "dia": "miércoles",
+      "terminacion_placa": ["3", "4"],
+      "engomado": ["rojo"],
+      "horario_restriccion": "05:00-22:00",
+      "aplica_sabados": false
+    },
+    {
+      "dia": "jueves",
+      "terminacion_placa": ["1", "2"],
+      "engomado": ["azul"],
+      "horario_restriccion": "05:00-22:00",
+      "aplica_sabados": false
+    },
+    {
+      "dia": "viernes",
+      "terminacion_placa": ["9", "0"],
+      "engomado": ["verde"],
+      "horario_restriccion": "05:00-22:00",
+      "aplica_sabados": false
+    },
+    {
+      "dia": "sábado",
+      "terminacion_placa": [],
+      "engomado": [],
+      "horario_restriccion": "05:00-22:00",
+      "aplica_contingencia": true,
+      "notas": "Solo aplica en contingencia ambiental o para vehículos sin verificación"
+    }
+  ],
+  "exenciones_por_holograma": [
+    {
+      "holograma": "00",
+      "exento": true,
+      "descripcion": "Cero emisiones - Vehículos eléctricos e híbridos",
+      "restriccion_sabatina": false
+    },
+    {
+      "holograma": "0",
+      "exento": true,
+      "descripcion": "Emisiones muy bajas",
+      "restriccion_sabatina": false
+    },
+    {
+      "holograma": "1",
+      "exento": false,
+      "descripcion": "Emisiones bajas - Circula todos los días excepto el día de su engomado",
+      "restriccion_sabatina": false
+    },
+    {
+      "holograma": "2",
+      "exento": false,
+      "descripcion": "Emisiones altas - No circula dos días por semana",
+      "restriccion_sabatina": true,
+      "dias_adicionales": "Un sábado al mes según terminación de placa",
+      "notas": "Consultar calendario mensual para sábados"
+    }
+  ],
+  "calendario_sabados_holograma_2": [
+    {
+      "mes": "enero",
+      "semana": 1,
+      "terminaciones": ["5", "6"],
+      "fecha_ejemplo": "primer sábado"
+    },
+    {
+      "mes": "enero",
+      "semana": 2,
+      "terminaciones": ["7", "8"],
+      "fecha_ejemplo": "segundo sábado"
+    },
+    {
+      "mes": "enero",
+      "semana": 3,
+      "terminaciones": ["3", "4"],
+      "fecha_ejemplo": "tercer sábado"
+    },
+    {
+      "mes": "enero",
+      "semana": 4,
+      "terminaciones": ["1", "2"],
+      "fecha_ejemplo": "cuarto sábado"
+    },
+    {
+      "mes": "enero",
+      "semana": 5,
+      "terminaciones": ["9", "0"],
+      "fecha_ejemplo": "quinto sábado (si aplica)"
+    }
+  ],
+  "contingencias_ambientales": [
+    {
+      "fase": "Fase 1 - Precontingencia",
+      "calidad_aire": "151-200 puntos IMECA",
+      "restriccion_adicional": "Hologramas 1 y 2 no circulan el día correspondiente + todos los vehículos sin verificación",
+      "vehiculos_exentos": ["Holograma 00", "Holograma 0"]
+    },
+    {
+      "fase": "Fase 1 - Contingencia Ambiental",
+      "calidad_aire": ">200 puntos IMECA",
+      "restriccion_adicional": "Holograma 2 no circula + restricción adicional al 50% de hologramas 1",
+      "vehiculos_exentos": ["Holograma 00", "Holograma 0"]
+    }
+  ],
+  "tipos_vehiculos_exentos": [
+    "Vehículos eléctricos e híbridos con holograma 00",
+    "Vehículos con holograma 0",
+    "Motocicletas",
+    "Vehículos de emergencia y seguridad pública",
+    "Transporte público concesionado",
+    "Vehículos de personas con discapacidad (con placas y credencial)",
+    "Vehículos con matrícula de auto antiguo o clásico"
+  ],
+  "zonas_aplicacion": [
+    "Ciudad de México (todas las alcaldías)",
+    "Estado de México - 18 municipios de la ZMVM",
+    "Hidalgo - Municipios conurbados",
+    "Morelos - Municipios conurbados",
+    "Puebla - Municipios conurbados",
+    "Tlaxcala - Municipios conurbados"
+  ],
+  "municipios_edomex": [
+    "Atizapán de Zaragoza",
+    "Coacalco de Berriozábal",
+    "Cuautitlán",
+    "Cuautitlán Izcalli",
+    "Chalco",
+    "Chicoloapan",
+    "Chimalhuacán",
+    "Ecatepec de Morelos",
+    "Huixquilucan",
+    "Ixtapaluca",
+    "La Paz",
+    "Naucalpan de Juárez",
+    "Nezahualcóyotl",
+    "Nicolás Romero",
+    "Tecámac",
+    "Tlalnepantla de Baz",
+    "Tultitlán",
+    "Valle de Chalco Solidaridad"
+  ],
+  "verificacion_vehicular": {
+    "periodicidad": "Semestral para hologramas 1 y 2",
+    "periodos": [
+      {
+        "periodo": "A",
+        "meses": ["Enero", "Febrero"],
+        "terminacion_placa": ["5", "6"]
+      },
+      {
+        "periodo": "B",
+        "meses": ["Marzo", "Abril"],
+        "terminacion_placa": ["7", "8", "9", "0"]
+      },
+      {
+        "periodo": "1",
+        "meses": ["Mayo", "Junio"],
+        "terminacion_placa": ["1", "2"]
+      },
+      {
+        "periodo": "2",
+        "meses": ["Julio", "Agosto"],
+        "terminacion_placa": ["3", "4"]
+      }
+    ]
+  }
+}

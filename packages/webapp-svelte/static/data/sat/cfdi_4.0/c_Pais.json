@@ -1,0 +1,760 @@
+{
+  "_meta": {
+    "catalog": "c_Pais",
+    "source": "http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd",
+    "xsd_name": "c_Pais",
+    "downloaded": "2025-11-09T05:36:54.034113"
+  },
+  "data": [
+    {
+      "valor": "AFG"
+    },
+    {
+      "valor": "ALA"
+    },
+    {
+      "valor": "ALB"
+    },
+    {
+      "valor": "DEU"
+    },
+    {
+      "valor": "AND"
+    },
+    {
+      "valor": "AGO"
+    },
+    {
+      "valor": "AIA"
+    },
+    {
+      "valor": "ATA"
+    },
+    {
+      "valor": "ATG"
+    },
+    {
+      "valor": "SAU"
+    },
+    {
+      "valor": "DZA"
+    },
+    {
+      "valor": "ARG"
+    },
+    {
+      "valor": "ARM"
+    },
+    {
+      "valor": "ABW"
+    },
+    {
+      "valor": "AUS"
+    },
+    {
+      "valor": "AUT"
+    },
+    {
+      "valor": "AZE"
+    },
+    {
+      "valor": "BHS"
+    },
+    {
+      "valor": "BGD"
+    },
+    {
+      "valor": "BRB"
+    },
+    {
+      "valor": "BHR"
+    },
+    {
+      "valor": "BEL"
+    },
+    {
+      "valor": "BLZ"
+    },
+    {
+      "valor": "BEN"
+    },
+    {
+      "valor": "BMU"
+    },
+    {
+      "valor": "BLR"
+    },
+    {
+      "valor": "MMR"
+    },
+    {
+      "valor": "BOL"
+    },
+    {
+      "valor": "BIH"
+    },
+    {
+      "valor": "BWA"
+    },
+    {
+      "valor": "BRA"
+    },
+    {
+      "valor": "BRN"
+    },
+    {
+      "valor": "BGR"
+    },
+    {
+      "valor": "BFA"
+    },
+    {
+      "valor": "BDI"
+    },
+    {
+      "valor": "BTN"
+    },
+    {
+      "valor": "CPV"
+    },
+    {
+      "valor": "KHM"
+    },
+    {
+      "valor": "CMR"
+    },
+    {
+      "valor": "CAN"
+    },
+    {
+      "valor": "QAT"
+    },
+    {
+      "valor": "BES"
+    },
+    {
+      "valor": "TCD"
+    },
+    {
+      "valor": "CHL"
+    },
+    {
+      "valor": "CHN"
+    },
+    {
+      "valor": "CYP"
+    },
+    {
+      "valor": "COL"
+    },
+    {
+      "valor": "COM"
+    },
+    {
+      "valor": "PRK"
+    },
+    {
+      "valor": "KOR"
+    },
+    {
+      "valor": "CIV"
+    },
+    {
+      "valor": "CRI"
+    },
+    {
+      "valor": "HRV"
+    },
+    {
+      "valor": "CUB"
+    },
+    {
+      "valor": "CUW"
+    },
+    {
+      "valor": "DNK"
+    },
+    {
+      "valor": "DMA"
+    },
+    {
+      "valor": "ECU"
+    },
+    {
+      "valor": "EGY"
+    },
+    {
+      "valor": "SLV"
+    },
+    {
+      "valor": "ARE"
+    },
+    {
+      "valor": "ERI"
+    },
+    {
+      "valor": "SVK"
+    },
+    {
+      "valor": "SVN"
+    },
+    {
+      "valor": "ESP"
+    },
+    {
+      "valor": "USA"
+    },
+    {
+      "valor": "EST"
+    },
+    {
+      "valor": "ETH"
+    },
+    {
+      "valor": "PHL"
+    },
+    {
+      "valor": "FIN"
+    },
+    {
+      "valor": "FJI"
+    },
+    {
+      "valor": "FRA"
+    },
+    {
+      "valor": "GAB"
+    },
+    {
+      "valor": "GMB"
+    },
+    {
+      "valor": "GEO"
+    },
+    {
+      "valor": "GHA"
+    },
+    {
+      "valor": "GIB"
+    },
+    {
+      "valor": "GRD"
+    },
+    {
+      "valor": "GRC"
+    },
+    {
+      "valor": "GRL"
+    },
+    {
+      "valor": "GLP"
+    },
+    {
+      "valor": "GUM"
+    },
+    {
+      "valor": "GTM"
+    },
+    {
+      "valor": "GUF"
+    },
+    {
+      "valor": "GGY"
+    },
+    {
+      "valor": "GIN"
+    },
+    {
+      "valor": "GNB"
+    },
+    {
+      "valor": "GNQ"
+    },
+    {
+      "valor": "GUY"
+    },
+    {
+      "valor": "HTI"
+    },
+    {
+      "valor": "HND"
+    },
+    {
+      "valor": "HKG"
+    },
+    {
+      "valor": "HUN"
+    },
+    {
+      "valor": "IND"
+    },
+    {
+      "valor": "IDN"
+    },
+    {
+      "valor": "IRQ"
+    },
+    {
+      "valor": "IRN"
+    },
+    {
+      "valor": "IRL"
+    },
+    {
+      "valor": "BVT"
+    },
+    {
+      "valor": "IMN"
+    },
+    {
+      "valor": "CXR"
+    },
+    {
+      "valor": "NFK"
+    },
+    {
+      "valor": "ISL"
+    },
+    {
+      "valor": "CYM"
+    },
+    {
+      "valor": "CCK"
+    },
+    {
+      "valor": "COK"
+    },
+    {
+      "valor": "FRO"
+    },
+    {
+      "valor": "SGS"
+    },
+    {
+      "valor": "HMD"
+    },
+    {
+      "valor": "FLK"
+    },
+    {
+      "valor": "MNP"
+    },
+    {
+      "valor": "MHL"
+    },
+    {
+      "valor": "PCN"
+    },
+    {
+      "valor": "SLB"
+    },
+    {
+      "valor": "TCA"
+    },
+    {
+      "valor": "UMI"
+    },
+    {
+      "valor": "VGB"
+    },
+    {
+      "valor": "VIR"
+    },
+    {
+      "valor": "ISR"
+    },
+    {
+      "valor": "ITA"
+    },
+    {
+      "valor": "JAM"
+    },
+    {
+      "valor": "JPN"
+    },
+    {
+      "valor": "JEY"
+    },
+    {
+      "valor": "JOR"
+    },
+    {
+      "valor": "KAZ"
+    },
+    {
+      "valor": "KEN"
+    },
+    {
+      "valor": "KGZ"
+    },
+    {
+      "valor": "KIR"
+    },
+    {
+      "valor": "KWT"
+    },
+    {
+      "valor": "LAO"
+    },
+    {
+      "valor": "LSO"
+    },
+    {
+      "valor": "LVA"
+    },
+    {
+      "valor": "LBN"
+    },
+    {
+      "valor": "LBR"
+    },
+    {
+      "valor": "LBY"
+    },
+    {
+      "valor": "LIE"
+    },
+    {
+      "valor": "LTU"
+    },
+    {
+      "valor": "LUX"
+    },
+    {
+      "valor": "MAC"
+    },
+    {
+      "valor": "MDG"
+    },
+    {
+      "valor": "MYS"
+    },
+    {
+      "valor": "MWI"
+    },
+    {
+      "valor": "MDV"
+    },
+    {
+      "valor": "MLI"
+    },
+    {
+      "valor": "MLT"
+    },
+    {
+      "valor": "MAR"
+    },
+    {
+      "valor": "MTQ"
+    },
+    {
+      "valor": "MUS"
+    },
+    {
+      "valor": "MRT"
+    },
+    {
+      "valor": "MYT"
+    },
+    {
+      "valor": "MEX"
+    },
+    {
+      "valor": "FSM"
+    },
+    {
+      "valor": "MDA"
+    },
+    {
+      "valor": "MCO"
+    },
+    {
+      "valor": "MNG"
+    },
+    {
+      "valor": "MNE"
+    },
+    {
+      "valor": "MSR"
+    },
+    {
+      "valor": "MOZ"
+    },
+    {
+      "valor": "NAM"
+    },
+    {
+      "valor": "NRU"
+    },
+    {
+      "valor": "NPL"
+    },
+    {
+      "valor": "NIC"
+    },
+    {
+      "valor": "NER"
+    },
+    {
+      "valor": "NGA"
+    },
+    {
+      "valor": "NIU"
+    },
+    {
+      "valor": "NOR"
+    },
+    {
+      "valor": "NCL"
+    },
+    {
+      "valor": "NZL"
+    },
+    {
+      "valor": "OMN"
+    },
+    {
+      "valor": "NLD"
+    },
+    {
+      "valor": "PAK"
+    },
+    {
+      "valor": "PLW"
+    },
+    {
+      "valor": "PSE"
+    },
+    {
+      "valor": "PAN"
+    },
+    {
+      "valor": "PNG"
+    },
+    {
+      "valor": "PRY"
+    },
+    {
+      "valor": "PER"
+    },
+    {
+      "valor": "PYF"
+    },
+    {
+      "valor": "POL"
+    },
+    {
+      "valor": "PRT"
+    },
+    {
+      "valor": "PRI"
+    },
+    {
+      "valor": "GBR"
+    },
+    {
+      "valor": "CAF"
+    },
+    {
+      "valor": "CZE"
+    },
+    {
+      "valor": "MKD"
+    },
+    {
+      "valor": "COG"
+    },
+    {
+      "valor": "COD"
+    },
+    {
+      "valor": "DOM"
+    },
+    {
+      "valor": "REU"
+    },
+    {
+      "valor": "RWA"
+    },
+    {
+      "valor": "ROU"
+    },
+    {
+      "valor": "RUS"
+    },
+    {
+      "valor": "ESH"
+    },
+    {
+      "valor": "WSM"
+    },
+    {
+      "valor": "ASM"
+    },
+    {
+      "valor": "BLM"
+    },
+    {
+      "valor": "KNA"
+    },
+    {
+      "valor": "SMR"
+    },
+    {
+      "valor": "MAF"
+    },
+    {
+      "valor": "SPM"
+    },
+    {
+      "valor": "VCT"
+    },
+    {
+      "valor": "SHN"
+    },
+    {
+      "valor": "LCA"
+    },
+    {
+      "valor": "STP"
+    },
+    {
+      "valor": "SEN"
+    },
+    {
+      "valor": "SRB"
+    },
+    {
+      "valor": "SYC"
+    },
+    {
+      "valor": "SLE"
+    },
+    {
+      "valor": "SGP"
+    },
+    {
+      "valor": "SXM"
+    },
+    {
+      "valor": "SYR"
+    },
+    {
+      "valor": "SOM"
+    },
+    {
+      "valor": "LKA"
+    },
+    {
+      "valor": "SWZ"
+    },
+    {
+      "valor": "ZAF"
+    },
+    {
+      "valor": "SDN"
+    },
+    {
+      "valor": "SSD"
+    },
+    {
+      "valor": "SWE"
+    },
+    {
+      "valor": "CHE"
+    },
+    {
+      "valor": "SUR"
+    },
+    {
+      "valor": "SJM"
+    },
+    {
+      "valor": "THA"
+    },
+    {
+      "valor": "TWN"
+    },
+    {
+      "valor": "TZA"
+    },
+    {
+      "valor": "TJK"
+    },
+    {
+      "valor": "IOT"
+    },
+    {
+      "valor": "ATF"
+    },
+    {
+      "valor": "TLS"
+    },
+    {
+      "valor": "TGO"
+    },
+    {
+      "valor": "TKL"
+    },
+    {
+      "valor": "TON"
+    },
+    {
+      "valor": "TTO"
+    },
+    {
+      "valor": "TUN"
+    },
+    {
+      "valor": "TKM"
+    },
+    {
+      "valor": "TUR"
+    },
+    {
+      "valor": "TUV"
+    },
+    {
+      "valor": "UKR"
+    },
+    {
+      "valor": "UGA"
+    },
+    {
+      "valor": "URY"
+    },
+    {
+      "valor": "UZB"
+    },
+    {
+      "valor": "VUT"
+    },
+    {
+      "valor": "VAT"
+    },
+    {
+      "valor": "VEN"
+    },
+    {
+      "valor": "VNM"
+    },
+    {
+      "valor": "WLF"
+    },
+    {
+      "valor": "YEM"
+    },
+    {
+      "valor": "DJI"
+    },
+    {
+      "valor": "ZMB"
+    },
+    {
+      "valor": "ZWE"
+    },
+    {
+      "valor": "ZZZ"
+    }
+  ]
+}

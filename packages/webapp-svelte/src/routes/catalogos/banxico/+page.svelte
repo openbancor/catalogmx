@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ChevronRight, Building2, MapPin, Coins, ArrowRight } from 'lucide-svelte';
+	import { ChevronRight, Building2, MapPin, Coins, ArrowRight, DollarSign, TrendingUp, Percent } from 'lucide-svelte';
 
 	const catalogs = [
 		{
@@ -16,7 +16,7 @@
 			description: 'Plazas bancarias para generación de CLABE',
 			icon: MapPin,
 			count: '900+',
-			available: false,
+			available: true,
 		},
 		{
 			id: 'monedas',
@@ -24,7 +24,39 @@
 			description: 'Catálogo de monedas y divisas internacionales',
 			icon: Coins,
 			count: '50+',
-			available: false,
+			available: true,
+		},
+		{
+			id: 'tipo-cambio',
+			name: 'Tipo de Cambio USD/MXN',
+			description: 'Histórico del tipo de cambio FIX',
+			icon: DollarSign,
+			count: '500+',
+			available: true,
+		},
+		{
+			id: 'udis',
+			name: 'Valor de la UDI',
+			description: 'Unidades de Inversión históricas',
+			icon: TrendingUp,
+			count: '500+',
+			available: true,
+		},
+		{
+			id: 'tiie',
+			name: 'TIIE / CETES',
+			description: 'Tasas de interés de referencia',
+			icon: Percent,
+			count: '200+',
+			available: true,
+		},
+		{
+			id: 'inflacion',
+			name: 'Inflación (INPC)',
+			description: 'Índice Nacional de Precios al Consumidor',
+			icon: TrendingUp,
+			count: '180+',
+			available: true,
 		},
 	];
 </script>

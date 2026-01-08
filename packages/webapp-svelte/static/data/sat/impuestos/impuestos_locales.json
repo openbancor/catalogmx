@@ -1,0 +1,103 @@
+{
+  "metadata": {
+    "catalog": "Impuestos_Locales",
+    "description": "Impuestos estatales y municipales en México",
+    "last_updated": "2025-01-01",
+    "notes": "Incluye nómina, hospedaje, tenencia, predial, etc."
+  },
+  "impuesto_nomina": [
+    {"estado": "Aguascalientes", "cve_estado": "01", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Baja California", "cve_estado": "02", "tasa": 2.5, "base": "total_percepciones"},
+    {"estado": "Baja California Sur", "cve_estado": "03", "tasa": 2.5, "base": "total_percepciones"},
+    {"estado": "Campeche", "cve_estado": "04", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Chiapas", "cve_estado": "07", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Chihuahua", "cve_estado": "08", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Ciudad de México", "cve_estado": "09", "tasa": 3.0, "base": "total_percepciones"},
+    {"estado": "Coahuila", "cve_estado": "05", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Colima", "cve_estado": "06", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Durango", "cve_estado": "10", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Guanajuato", "cve_estado": "11", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Guerrero", "cve_estado": "12", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Hidalgo", "cve_estado": "13", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Jalisco", "cve_estado": "14", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "México", "cve_estado": "15", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Michoacán", "cve_estado": "16", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Morelos", "cve_estado": "17", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Nayarit", "cve_estado": "18", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Nuevo León", "cve_estado": "19", "tasa": 3.0, "base": "total_percepciones"},
+    {"estado": "Oaxaca", "cve_estado": "20", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Puebla", "cve_estado": "21", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Querétaro", "cve_estado": "22", "tasa": 2.5, "base": "total_percepciones"},
+    {"estado": "Quintana Roo", "cve_estado": "23", "tasa": 2.5, "base": "total_percepciones"},
+    {"estado": "San Luis Potosí", "cve_estado": "24", "tasa": 2.5, "base": "total_percepciones"},
+    {"estado": "Sinaloa", "cve_estado": "25", "tasa": 2.5, "base": "total_percepciones"},
+    {"estado": "Sonora", "cve_estado": "26", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Tabasco", "cve_estado": "27", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Tamaulipas", "cve_estado": "28", "tasa": 3.0, "base": "total_percepciones"},
+    {"estado": "Tlaxcala", "cve_estado": "29", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Veracruz", "cve_estado": "30", "tasa": 2.0, "base": "total_percepciones"},
+    {"estado": "Yucatán", "cve_estado": "31", "tasa": 2.5, "base": "total_percepciones"},
+    {"estado": "Zacatecas", "cve_estado": "32", "tasa": 2.0, "base": "total_percepciones"}
+  ],
+  "impuesto_hospedaje": [
+    {"estado": "Aguascalientes", "cve_estado": "01", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Baja California", "cve_estado": "02", "tasa": 2.0, "base": "servicio_hospedaje"},
+    {"estado": "Baja California Sur", "cve_estado": "03", "tasa": 5.0, "base": "servicio_hospedaje"},
+    {"estado": "Campeche", "cve_estado": "04", "tasa": 2.0, "base": "servicio_hospedaje"},
+    {"estado": "Chiapas", "cve_estado": "07", "tasa": 2.0, "base": "servicio_hospedaje"},
+    {"estado": "Chihuahua", "cve_estado": "08", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Ciudad de México", "cve_estado": "09", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Coahuila", "cve_estado": "05", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Colima", "cve_estado": "06", "tasa": 2.0, "base": "servicio_hospedaje"},
+    {"estado": "Durango", "cve_estado": "10", "tasa": 2.0, "base": "servicio_hospedaje"},
+    {"estado": "Guanajuato", "cve_estado": "11", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Guerrero", "cve_estado": "12", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Hidalgo", "cve_estado": "13", "tasa": 2.5, "base": "servicio_hospedaje"},
+    {"estado": "Jalisco", "cve_estado": "14", "tasa": 2.5, "base": "servicio_hospedaje"},
+    {"estado": "México", "cve_estado": "15", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Michoacán", "cve_estado": "16", "tasa": 2.0, "base": "servicio_hospedaje"},
+    {"estado": "Morelos", "cve_estado": "17", "tasa": 2.0, "base": "servicio_hospedaje"},
+    {"estado": "Nayarit", "cve_estado": "18", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Nuevo León", "cve_estado": "19", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Oaxaca", "cve_estado": "20", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Puebla", "cve_estado": "21", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Querétaro", "cve_estado": "22", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Quintana Roo", "cve_estado": "23", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "San Luis Potosí", "cve_estado": "24", "tasa": 2.5, "base": "servicio_hospedaje"},
+    {"estado": "Sinaloa", "cve_estado": "25", "tasa": 2.0, "base": "servicio_hospedaje"},
+    {"estado": "Sonora", "cve_estado": "26", "tasa": 2.0, "base": "servicio_hospedaje"},
+    {"estado": "Tabasco", "cve_estado": "27", "tasa": 2.0, "base": "servicio_hospedaje"},
+    {"estado": "Tamaulipas", "cve_estado": "28", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Tlaxcala", "cve_estado": "29", "tasa": 2.0, "base": "servicio_hospedaje"},
+    {"estado": "Veracruz", "cve_estado": "30", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Yucatán", "cve_estado": "31", "tasa": 3.0, "base": "servicio_hospedaje"},
+    {"estado": "Zacatecas", "cve_estado": "32", "tasa": 2.0, "base": "servicio_hospedaje"}
+  ],
+  "otros_impuestos_estatales": [
+    {
+      "impuesto": "tenencia_vehicular",
+      "descripcion": "Impuesto sobre tenencia o uso de vehículos",
+      "nota": "Eliminado a nivel federal en 2012, algunos estados lo mantienen",
+      "estados_que_aplican": ["CDMX", "Michoacán", "Veracruz", "Guerrero"]
+    },
+    {
+      "impuesto": "cedular",
+      "descripcion": "Impuesto cedular (CDMX)",
+      "tasa": 5.0,
+      "base": "ingresos_personas_morales",
+      "estados": ["CDMX"]
+    },
+    {
+      "impuesto": "juegos_sorteos",
+      "descripcion": "Impuesto sobre loterías, rifas, sorteos y concursos",
+      "tasa_general": "6.0_a_30.0",
+      "nota": "Varía por estado"
+    }
+  ],
+  "predial": {
+    "descripcion": "Impuesto predial (municipal)",
+    "nota": "Tasa varía por municipio y valor catastral",
+    "rango_tasas": "0.1% a 2.0% del valor catastral anual",
+    "info": "Determinado por cada municipio según código fiscal local"
+  }
+}

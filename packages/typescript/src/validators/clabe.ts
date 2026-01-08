@@ -152,13 +152,43 @@ export function validateClabe(clabe: string): boolean {
 }
 
 /**
- * Generate a CLABE from components
+ * Calculates the check digit for a 17-digit CLABE
+ *
+ * @param clabe17 - The first 17 digits of a CLABE
+ * @returns The check digit as a string
+ *
+ * @example
+ * ```typescript
+ * calculateClabeCheckDigit('00201007777777777'); // Returns '1'
+ * ```
  */
-export function generateClabe(bankCode: string, branchCode: string, accountNumber: string): string {
-  // Validate and pad components
-  const bank = bankCode.padStart(3, '0').slice(0, 3);
-  const branch = branchCode.padStart(3, '0').slice(0, 3);
-  const account = accountNumber.padStart(11, '0').slice(0, 11);
+export function calculateClabeCheckDigit(clabe17: string): string {
+  return CLABEValidator.calculateCheckDigit(clabe17);
+}
+
+/**
+ * Generate a complete CLABE with check digit
+ *
+ * @param bankCode - 3-digit bank code (string or number)
+ * @param branchCode - 3-digit branch/plaza code (string or number)
+ * @param accountNumber - 11-digit account number (string or number)
+ * @returns Complete 18-digit CLABE with check digit
+ *
+ * @example
+ * ```typescript
+ * generateClabe('002', '010', '07777777777'); // Returns '002010077777777771'
+ * generateClabe(2, 10, 7777777777); // Returns '002010077777777771'
+ * ```
+ */
+export function generateClabe(
+  bankCode: string | number,
+  branchCode: string | number,
+  accountNumber: string | number
+): string {
+  // Convert to strings and pad components
+  const bank = String(bankCode).padStart(3, '0').slice(0, 3);
+  const branch = String(branchCode).padStart(3, '0').slice(0, 3);
+  const account = String(accountNumber).padStart(11, '0').slice(0, 11);
 
   const clabe17 = bank + branch + account;
 

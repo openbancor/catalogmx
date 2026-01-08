@@ -1,0 +1,214 @@
+{
+  "_meta": {
+    "description": "Catálogos del IMSS (Sistema Único de Autodeterminación - SUA)",
+    "source": "IMSS - Vigente 2024-2026",
+    "updated": "2026-01-05"
+  },
+  "tipos_movimiento_afiliatorio": [
+    {
+      "clave": "08",
+      "descripcion": "Alta de trabajador",
+      "tipo": "alta"
+    },
+    {
+      "clave": "02",
+      "descripcion": "Baja de trabajador",
+      "tipo": "baja"
+    },
+    {
+      "clave": "07",
+      "descripcion": "Modificación de salario",
+      "tipo": "modificacion"
+    },
+    {
+      "clave": "12",
+      "descripcion": "Reingreso",
+      "tipo": "reingreso"
+    }
+  ],
+  "tipos_trabajador": [
+    {
+      "clave": "1",
+      "descripcion": "Permanente",
+      "caracteristicas": "Relación laboral por tiempo indeterminado"
+    },
+    {
+      "clave": "2",
+      "descripcion": "Eventual Ciudad",
+      "caracteristicas": "Trabajador urbano eventual"
+    },
+    {
+      "clave": "3",
+      "descripcion": "Eventual del Campo",
+      "caracteristicas": "Trabajador agrícola eventual"
+    },
+    {
+      "clave": "4",
+      "descripcion": "Trabajador del hogar",
+      "caracteristicas": "Trabajador doméstico"
+    }
+  ],
+  "tipos_incapacidad": [
+    {
+      "clave": "1",
+      "descripcion": "Riesgo de trabajo",
+      "dias_pago": "100% del salario registrado"
+    },
+    {
+      "clave": "2",
+      "descripcion": "Enfermedad general",
+      "dias_pago": "60% del salario desde el 4to día"
+    },
+    {
+      "clave": "3",
+      "descripcion": "Maternidad",
+      "dias_pago": "100% del salario, 42 días antes y 42 después del parto"
+    }
+  ],
+  "seguros_imss": [
+    {
+      "id": "riesgo_trabajo",
+      "nombre": "Riesgos de Trabajo",
+      "descripcion": "Cubre accidentes y enfermedades de trabajo",
+      "beneficios": [
+        "Asistencia médica",
+        "Hospitalización",
+        "Medicamentos",
+        "Indemnizaciones por incapacidad",
+        "Pensión por invalidez o muerte"
+      ],
+      "cuota_patron": "Variable (0.5% a 15% según riesgo)",
+      "cuota_trabajador": "0%"
+    },
+    {
+      "id": "enfermedad_maternidad",
+      "nombre": "Enfermedad y Maternidad",
+      "descripcion": "Atención médica y prestaciones en dinero",
+      "beneficios": [
+        "Asistencia médica",
+        "Subsidios por incapacidad",
+        "Prestaciones de maternidad",
+        "Ayudas de lactancia"
+      ],
+      "cuota_patron": "20.4% (cuota fija) + 1.1% (excedente 3 UMAs) + 0.7% (dinero) + 1.05% (pensionados)",
+      "cuota_trabajador": "0.4% (excedente) + 0.25% (dinero) + 0.375% (pensionados)"
+    },
+    {
+      "id": "invalidez_vida",
+      "nombre": "Invalidez y Vida",
+      "descripcion": "Pensiones por invalidez o muerte del asegurado",
+      "beneficios": [
+        "Pensión por invalidez",
+        "Pensión de viudez",
+        "Pensión de orfandad",
+        "Ayuda asistencial"
+      ],
+      "cuota_patron": "1.75%",
+      "cuota_trabajador": "0.625%"
+    },
+    {
+      "id": "retiro",
+      "nombre": "Retiro",
+      "descripcion": "Aportaciones para el retiro (cuenta individual)",
+      "beneficios": [
+        "Ahorro para el retiro",
+        "Cuenta individual AFORE"
+      ],
+      "cuota_patron": "2%",
+      "cuota_trabajador": "0%"
+    },
+    {
+      "id": "cesantia_vejez",
+      "nombre": "Cesantía en Edad Avanzada y Vejez",
+      "descripcion": "Pensión al cumplir 60 o 65 años",
+      "beneficios": [
+        "Pensión por cesantía (60 años)",
+        "Pensión por vejez (65 años)",
+        "Asistencia médica"
+      ],
+      "cuota_patron": "3.15%",
+      "cuota_trabajador": "1.125%"
+    },
+    {
+      "id": "guarderias",
+      "nombre": "Guarderías y Prestaciones Sociales",
+      "descripcion": "Servicio de guardería y prestaciones sociales",
+      "beneficios": [
+        "Guarderías para hijos de trabajadoras",
+        "Prestaciones sociales",
+        "Centros vacacionales"
+      ],
+      "cuota_patron": "1%",
+      "cuota_trabajador": "0%"
+    }
+  ],
+  "subdelegaciones_ejemplo": [
+    {
+      "estado": "Ciudad de México",
+      "subdelegacion": "01",
+      "nombre": "Norte",
+      "alcaldias": ["Azcapotzalco", "Gustavo A. Madero"]
+    },
+    {
+      "estado": "Ciudad de México",
+      "subdelegacion": "02",
+      "nombre": "Sur",
+      "alcaldias": ["Coyoacán", "Tlalpan", "Xochimilco"]
+    },
+    {
+      "estado": "Jalisco",
+      "subdelegacion": "01",
+      "nombre": "Guadalajara",
+      "municipios": ["Guadalajara", "Zapopan", "Tlaquepaque"]
+    },
+    {
+      "estado": "Nuevo León",
+      "subdelegacion": "01",
+      "nombre": "Monterrey",
+      "municipios": ["Monterrey", "San Pedro Garza García", "Santa Catarina"]
+    }
+  ],
+  "tabulador_pensiones_minimas": {
+    "2024": {
+      "pension_minima_garantizada": 2622.00,
+      "ayuda_asistencial": 1311.00,
+      "asignaciones_familiares": {
+        "esposa": 262.20,
+        "hijo_menor_16": 174.80,
+        "ascendiente": 174.80
+      }
+    },
+    "2025": {
+      "pension_minima_garantizada": 2738.00,
+      "ayuda_asistencial": 1369.00,
+      "asignaciones_familiares": {
+        "esposa": 273.80,
+        "hijo_menor_16": 182.53,
+        "ascendiente": 182.53
+      }
+    },
+    "2026": {
+      "pension_minima_garantizada": 2738.00,
+      "ayuda_asistencial": 1369.00,
+      "asignaciones_familiares": {
+        "esposa": 273.80,
+        "hijo_menor_16": 182.53,
+        "ascendiente": 182.53
+      }
+    }
+  },
+  "semanas_cotizadas_requeridas": {
+    "pension_cesantia_vejez": {
+      "minimo": 1250,
+      "descripcion": "Semanas mínimas para pensión (Ley 97)"
+    },
+    "pension_vejez_ley_73": {
+      "minimo": 500,
+      "descripcion": "Semanas mínimas para pensión (Ley 73)"
+    },
+    "modalidad_40": {
+      "minimo": 52,
+      "descripcion": "Semanas previas requeridas para Modalidad 40"
+    }
+  }
+}

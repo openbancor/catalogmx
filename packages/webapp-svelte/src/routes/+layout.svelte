@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/stores';
-	import { Sun, Moon, Menu, X, Database, CheckCircle, Calculator, Code, Github, Search } from 'lucide-svelte';
+	import { Sun, Moon, Menu, X, Database, CheckCircle, Calculator, Code, Github, Search, Sparkles, Book } from 'lucide-svelte';
 
 	let { children } = $props();
 
@@ -12,8 +12,9 @@
 	const navItems = [
 		{ href: '/catalogos', label: 'Catálogos', icon: Database },
 		{ href: '/validadores', label: 'Validadores', icon: CheckCircle },
+		{ href: '/generadores', label: 'Generadores', icon: Sparkles },
 		{ href: '/calculadoras', label: 'Calculadoras', icon: Calculator },
-		{ href: '/api', label: 'API', icon: Code },
+		{ href: '/docs', label: 'Docs', icon: Book },
 	];
 
 	function toggleDarkMode() {

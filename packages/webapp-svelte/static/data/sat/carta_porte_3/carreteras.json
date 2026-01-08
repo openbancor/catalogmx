@@ -1,0 +1,22 @@
+[
+  {"code": "MEX015", "nombre": "México - Toluca", "origen": "Ciudad de México", "destino": "Toluca", "tipo": "Cuota"},
+  {"code": "MEX057", "nombre": "México - Querétaro", "origen": "Ciudad de México", "destino": "Querétaro", "tipo": "Cuota"},
+  {"code": "MEX095", "nombre": "México - Cuernavaca", "origen": "Ciudad de México", "destino": "Cuernavaca", "tipo": "Cuota"},
+  {"code": "MEX150", "nombre": "México - Puebla", "origen": "Ciudad de México", "destino": "Puebla", "tipo": "Cuota"},
+  {"code": "MEX085", "nombre": "México - Pachuca", "origen": "Ciudad de México", "destino": "Pachuca", "tipo": "Cuota"},
+  {"code": "GDL015", "nombre": "Guadalajara - Tepic", "origen": "Guadalajara", "destino": "Tepic", "tipo": "Cuota"},
+  {"code": "GDL054", "nombre": "Guadalajara - Colima", "origen": "Guadalajara", "destino": "Colima", "tipo": "Cuota"},
+  {"code": "MTY040", "nombre": "Monterrey - Reynosa", "origen": "Monterrey", "destino": "Reynosa", "tipo": "Cuota"},
+  {"code": "MTY085", "nombre": "Monterrey - Nuevo Laredo", "origen": "Monterrey", "destino": "Nuevo Laredo", "tipo": "Cuota"},
+  {"code": "MTY040A", "nombre": "Monterrey - Saltillo", "origen": "Monterrey", "destino": "Saltillo", "tipo": "Cuota"},
+  {"code": "TIJ001", "nombre": "Tijuana - Ensenada", "origen": "Tijuana", "destino": "Ensenada", "tipo": "Cuota"},
+  {"code": "CJS045", "nombre": "Ciudad Juárez - Chihuahua", "origen": "Ciudad Juárez", "destino": "Chihuahua", "tipo": "Cuota"},
+  {"code": "VER150", "nombre": "Veracruz - Xalapa", "origen": "Veracruz", "destino": "Xalapa", "tipo": "Libre"},
+  {"code": "CUN180", "nombre": "Cancún - Tulum", "origen": "Cancún", "destino": "Tulum", "tipo": "Cuota"},
+  {"code": "PUE140", "nombre": "Puebla - Oaxaca", "origen": "Puebla", "destino": "Oaxaca", "tipo": "Cuota"},
+  {"code": "AGS045", "nombre": "Aguascalientes - León", "origen": "Aguascalientes", "destino": "León", "tipo": "Cuota"},
+  {"code": "QRO045", "nombre": "Querétaro - San Luis Potosí", "origen": "Querétaro", "destino": "San Luis Potosí", "tipo": "Cuota"},
+  {"code": "TAM180", "nombre": "Tampico - Ciudad Victoria", "origen": "Tampico", "destino": "Ciudad Victoria", "tipo": "Libre"},
+  {"code": "HMO015", "nombre": "Hermosillo - Guaymas", "origen": "Hermosillo", "destino": "Guaymas", "tipo": "Cuota"},
+  {"code": "MID180", "nombre": "Mérida - Cancún", "origen": "Mérida", "destino": "Cancún", "tipo": "Cuota"}
+]

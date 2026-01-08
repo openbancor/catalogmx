@@ -1,0 +1,85 @@
+{
+  "_meta": {
+    "catalog": "c_UsoCFDI",
+    "source": "http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd",
+    "xsd_name": "c_UsoCFDI",
+    "downloaded": "2025-11-09T05:36:54.053167"
+  },
+  "data": [
+    {
+      "valor": "G01"
+    },
+    {
+      "valor": "G02"
+    },
+    {
+      "valor": "G03"
+    },
+    {
+      "valor": "I01"
+    },
+    {
+      "valor": "I02"
+    },
+    {
+      "valor": "I03"
+    },
+    {
+      "valor": "I04"
+    },
+    {
+      "valor": "I05"
+    },
+    {
+      "valor": "I06"
+    },
+    {
+      "valor": "I07"
+    },
+    {
+      "valor": "I08"
+    },
+    {
+      "valor": "D01"
+    },
+    {
+      "valor": "D02"
+    },
+    {
+      "valor": "D03"
+    },
+    {
+      "valor": "D04"
+    },
+    {
+      "valor": "D05"
+    },
+    {
+      "valor": "D06"
+    },
+    {
+      "valor": "D07"
+    },
+    {
+      "valor": "D08"
+    },
+    {
+      "valor": "D09"
+    },
+    {
+      "valor": "D10"
+    },
+    {
+      "valor": "P01"
+    },
+    {
+      "valor": "S01"
+    },
+    {
+      "valor": "CP01"
+    },
+    {
+      "valor": "CN01"
+    }
+  ]
+}

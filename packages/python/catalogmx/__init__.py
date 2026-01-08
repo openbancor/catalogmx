@@ -15,7 +15,7 @@ Usage:
     is_valid_nss('12345678903')  # True
 
     # Generators
-    from catalogmx import generate_rfc_persona_fisica, generate_curp
+    from catalogmx import generate_rfc_persona_fisica, generate_curp, generate_clabe
 
     rfc = generate_rfc_persona_fisica(
         nombre='Juan',
@@ -23,6 +23,12 @@ Usage:
         apellido_materno='García',
         fecha_nacimiento='1990-05-15'
     )
+
+    clabe = generate_clabe(
+        bank_code='002',      # Banamex
+        branch_code='010',    # Branch
+        account_number='07777777777'
+    )  # Returns: '002010077777777771'
 
     # Calculators
     from catalogmx.calculators import calculate_isr, calculate_resico
@@ -44,11 +50,13 @@ __version__ = "0.3.0"
 from catalogmx.helpers import (
     # RFC helpers
     detect_rfc_type,
+    # CLABE helpers
+    generate_clabe,
+    generate_clabe_random,
     # CURP helpers
     generate_curp,
     generate_rfc_persona_fisica,
     generate_rfc_persona_moral,
-    # CLABE helpers
     get_clabe_info,
     get_curp_info,
     # NSS helpers
@@ -129,6 +137,8 @@ __all__ = [
     "CURPLengthError",
     "CURPStructureError",
     # CLABE Helper Functions
+    "generate_clabe",
+    "generate_clabe_random",
     "validate_clabe",
     "get_clabe_info",
     "is_valid_clabe",

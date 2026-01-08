@@ -1,0 +1,25 @@
+{
+  "_meta": {
+    "catalog": "c_TipoDeComprobante",
+    "source": "http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd",
+    "xsd_name": "c_TipoDeComprobante",
+    "downloaded": "2025-11-09T05:36:54.039771"
+  },
+  "data": [
+    {
+      "valor": "I"
+    },
+    {
+      "valor": "E"
+    },
+    {
+      "valor": "T"
+    },
+    {
+      "valor": "N"
+    },
+    {
+      "valor": "P"
+    }
+  ]
+}

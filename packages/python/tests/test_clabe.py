@@ -11,6 +11,7 @@ from catalogmx.validators.clabe import (
     CLABEStructureError,
     CLABEValidator,
     generate_clabe,
+    generate_clabe_random,
     get_clabe_info,
     validate_clabe,
 )
@@ -326,3 +327,66 @@ class TestCLABECheckDigitAlgorithm:
         generated_clabe = generate_clabe("012", "180", "00123456789")
         validator2 = CLABEValidator(generated_clabe)
         assert validator2.is_valid(), f"Generated CLABE {generated_clabe} should be valid"
+
+
+class TestGenerateClabeRandom:
+    """Test random CLABE generation functionality"""
+
+    def test_generate_clabe_random_no_params(self):
+        """Test generating a random CLABE without parameters"""
+        clabe = generate_clabe_random()
+        assert len(clabe) == 18
+        assert clabe.isdigit()
+        assert validate_clabe(clabe)
+
+    def test_generate_clabe_random_with_bank_code(self):
+        """Test generating a random CLABE with specific bank code"""
+        clabe = generate_clabe_random(bank_code="012")
+        assert len(clabe) == 18
+        assert clabe.startswith("012")
+        assert validate_clabe(clabe)
+
+    def test_generate_clabe_random_with_bank_code_int(self):
+        """Test generating a random CLABE with bank code as int"""
+        clabe = generate_clabe_random(bank_code=14)
+        assert len(clabe) == 18
+        assert clabe.startswith("014")
+        assert validate_clabe(clabe)
+
+    def test_generate_clabe_random_with_plaza_code(self):
+        """Test generating a random CLABE with specific plaza code"""
+        clabe = generate_clabe_random(plaza_code="180")
+        assert len(clabe) == 18
+        assert clabe[3:6] == "180"
+        assert validate_clabe(clabe)
+
+    def test_generate_clabe_random_with_account_number(self):
+        """Test generating a random CLABE with specific account number"""
+        clabe = generate_clabe_random(account_number="12345678901")
+        assert len(clabe) == 18
+        assert clabe[6:17] == "12345678901"
+        assert validate_clabe(clabe)
+
+    def test_generate_clabe_random_with_all_params(self):
+        """Test generating a CLABE with all parameters specified"""
+        clabe = generate_clabe_random(
+            bank_code="002", plaza_code="010", account_number="07777777777"
+        )
+        assert clabe == "002010077777777771"
+        assert validate_clabe(clabe)
+
+    def test_generate_clabe_random_multiple_are_different(self):
+        """Test that multiple random CLABEs are different"""
+        clabes = {generate_clabe_random() for _ in range(10)}
+        # With high probability, all should be different
+        assert len(clabes) >= 9
+
+    def test_generate_clabe_random_uses_common_banks(self):
+        """Test that random bank codes are from common banks"""
+        common_banks = {"002", "012", "014", "021", "036", "044", "058", "072", "127"}
+        bank_codes_seen = set()
+        for _ in range(100):
+            clabe = generate_clabe_random()
+            bank_codes_seen.add(clabe[:3])
+        # Should see multiple bank codes from common_banks
+        assert bank_codes_seen & common_banks, "Should use common bank codes"

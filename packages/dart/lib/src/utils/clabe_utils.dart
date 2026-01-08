@@ -236,13 +236,22 @@ String generateCLABERandom({
     }
   }
 
-  // Get or generate account number
-  accountNumber ??= random.nextInt(99999999999).toString().padLeft(11, '0');
+  // Get or generate account number (11 digits)
+  // Cannot use nextInt(99999999999) as it exceeds 2^32
+  // Generate as string by concatenating random digits
+  final account = accountNumber ??
+      () {
+        var num = '';
+        for (var i = 0; i < 11; i++) {
+          num += random.nextInt(10).toString();
+        }
+        return num;
+      }();
 
   return generateCLABE(
     bankCode: bankCode,
     branchCode: plazaCode,
-    accountNumber: accountNumber,
+    accountNumber: account,
   );
 }
 

@@ -8,7 +8,7 @@ to work with Mexican identification codes without dealing with class constructor
 
 import datetime
 
-from .validators.clabe import CLABEValidator
+from .validators.clabe import CLABEValidator, generate_clabe, generate_clabe_random
 from .validators.curp import CURPGenerator, CURPValidator
 from .validators.nss import NSSValidator
 from .validators.rfc import RFCGeneratorFisicas, RFCGeneratorMorales, RFCValidator
@@ -468,3 +468,31 @@ def get_project_root() -> Path:
             return current_path
         current_path = current_path.parent
     raise FileNotFoundError("Project root not found. Could not find .git directory.")
+
+
+# Re-export CLABE generators for module-level access
+__all__ = [
+    # RFC
+    "generate_rfc_persona_fisica",
+    "generate_rfc_persona_moral",
+    "validate_rfc",
+    "detect_rfc_type",
+    "is_valid_rfc",
+    # CURP
+    "generate_curp",
+    "validate_curp",
+    "get_curp_info",
+    "is_valid_curp",
+    # CLABE
+    "generate_clabe",
+    "generate_clabe_random",
+    "validate_clabe",
+    "get_clabe_info",
+    "is_valid_clabe",
+    # NSS
+    "validate_nss",
+    "get_nss_info",
+    "is_valid_nss",
+    # Utility
+    "get_project_root",
+]
