@@ -13,6 +13,7 @@ export {
 
 export { CURPValidator, generateCurp, validateCurp } from './curp';
 
-export { CLABEValidator, validateClabe, generateClabe } from './clabe';
+export { CLABEValidator, validateClabe, generateClabe, getClabeInfo } from './clabe';
+export type { ClabeInfo } from './clabe';
 
 export { NSSValidator, validateNss, generateNss } from './nss';

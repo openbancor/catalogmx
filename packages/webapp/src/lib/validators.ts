@@ -479,3 +479,73 @@ export function validateNSS(nss: string): NSSValidationResult {
   result.isValid = result.details.format && result.details.checkDigit;
   return result;
 }
+
+// ============================================================================
+// CLABE GENERATOR
+// ============================================================================
+
+/**
+ * Calculate check digit for a 17-digit CLABE
+ */
+function calculateCLABECheckDigit(clabe17: string): string {
+  let sum = 0;
+  for (let i = 0; i < 17; i++) {
+    const digit = parseInt(clabe17[i]);
+    const product = (digit * CLABE_WEIGHTS[i]) % 10;
+    sum += product;
+  }
+  return ((10 - (sum % 10)) % 10).toString();
+}
+
+/**
+ * Generate a CLABE from components
+ */
+export function generateCLABE(bankCode: string, branchCode: string, accountNumber: string): string {
+  const bank = bankCode.padStart(3, '0').slice(0, 3);
+  const branch = branchCode.padStart(3, '0').slice(0, 3);
+  const account = accountNumber.padStart(11, '0').slice(0, 11);
+
+  const clabe17 = bank + branch + account;
+
+  if (clabe17.length !== 17 || !/^\d+$/.test(clabe17)) {
+    throw new Error('Invalid CLABE components');
+  }
+
+  return clabe17 + calculateCLABECheckDigit(clabe17);
+}
+
+/**
+ * Generate a random CLABE with optional parameters
+ */
+export function generateCLABERandom(options?: {
+  bankCode?: string;
+  branchCode?: string;
+  accountNumber?: string;
+}): string {
+  const bankCodes = Object.keys(BANK_NAMES);
+  const bankCode = options?.bankCode ||
+    bankCodes[Math.floor(Math.random() * bankCodes.length)];
+  const branchCode = options?.branchCode ||
+    Math.floor(Math.random() * 999 + 1).toString().padStart(3, '0');
+  const accountNumber = options?.accountNumber ||
+    Math.floor(Math.random() * 99999999999 + 1).toString().padStart(11, '0');
+
+  return generateCLABE(bankCode, branchCode, accountNumber);
+}
+
+/**
+ * Get all available bank codes and names
+ */
+export function getBankOptions(): Array<{ code: string; name: string }> {
+  return Object.entries(BANK_NAMES)
+    .map(([code, name]) => ({ code, name }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/**
+ * Format a CLABE with separators for readability
+ */
+export function formatCLABE(clabe: string, separator: string = '-'): string {
+  if (clabe.length !== 18) return clabe;
+  return `${clabe.slice(0, 3)}${separator}${clabe.slice(3, 6)}${separator}${clabe.slice(6, 17)}${separator}${clabe[17]}`;
+}

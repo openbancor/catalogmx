@@ -169,3 +169,36 @@ export function generateClabe(bankCode: string, branchCode: string, accountNumbe
   const checkDigit = CLABEValidator.calculateCheckDigit(clabe17);
   return clabe17 + checkDigit;
 }
+
+/**
+ * CLABE components with extracted information
+ */
+export interface ClabeInfo {
+  clabe: string;
+  bankCode: string;
+  branchCode: string;
+  accountNumber: string;
+  checkDigit: string;
+  isValid: boolean;
+}
+
+/**
+ * Get information from a CLABE
+ */
+export function getClabeInfo(clabe: string): ClabeInfo | null {
+  const validator = new CLABEValidator(clabe);
+  const isValid = validator.isValid();
+
+  if (clabe.length !== 18) {
+    return null;
+  }
+
+  return {
+    clabe: clabe,
+    bankCode: clabe.slice(0, 3),
+    branchCode: clabe.slice(3, 6),
+    accountNumber: clabe.slice(6, 17),
+    checkDigit: clabe[17],
+    isValid,
+  };
+}
