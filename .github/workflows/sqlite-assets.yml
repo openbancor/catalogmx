@@ -68,6 +68,9 @@ jobs:
           # Delete existing release and tag if exists
           gh release delete sqlite-assets --yes --cleanup-tag 2>/dev/null || true
 
+          # Wait for GitHub to process deletion
+          sleep 5
+
           # Create release notes file
           cat > release_notes.md << 'EOF'
           # Unified SQLite Databases for catalogmx
@@ -89,14 +92,24 @@ jobs:
           Use for serverless data access.
           EOF
 
+          # List files to upload
+          echo "Files to upload:"
+          ls -lh mexico.sqlite3 sqlite/*.db sqlite/*.sqlite3 2>/dev/null || true
+
           # Create new release with assets
           gh release create sqlite-assets \
             --repo "${GITHUB_REPOSITORY}" \
             --title "SQLite Assets (Auto-updated)" \
             --notes-file release_notes.md \
-            mexico.sqlite3 \
-            sqlite/*.db \
-            sqlite/*.sqlite3
+            mexico.sqlite3
+
+          # Upload additional assets separately (more reliable)
+          for f in sqlite/*.db sqlite/*.sqlite3; do
+            if [ -f "$f" ]; then
+              echo "Uploading $f..."
+              gh release upload sqlite-assets "$f" --clobber || true
+            fi
+          done
 
       - name: Summary
         run: |
