@@ -1,6 +1,6 @@
 /**
- * Tax Calculators for Mexico
- * ISR, RESICO, IVA, IEPS, Retenciones, Impuestos Locales
+ * Tax and Payroll Calculators for Mexico
+ * ISR, RESICO, IMSS, IVA, IEPS, Retenciones, Impuestos Locales
  */
 
 export { ISRCalculator } from './isr-calculator';
@@ -12,6 +12,16 @@ export {
   type RESICOLimits,
   type RESICOCalculationResult,
 } from './resico-calculator';
+export {
+  IMSSCalculator,
+  type IMSSYear,
+  type ZonaSalario,
+  type ClaseRiesgo,
+  type UMAInfo,
+  type CuotasIMSSResult,
+  type Modalidad40Result,
+  type Modalidad10Result,
+} from './imss-calculator';
 export {
   IVACalculator,
   IEPSCalculator,

@@ -47,6 +47,8 @@ export 'src/validators/nss_validator.dart';
 
 export 'src/calculators/isr.dart';
 export 'src/calculators/resico.dart';
+export 'src/calculators/imss.dart';
+export 'src/calculators/impuestos.dart';
 
 // ============================================================================
 // CATALOGS - INEGI (Instituto Nacional de Estadística y Geografía)
