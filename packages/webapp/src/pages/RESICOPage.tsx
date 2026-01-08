@@ -5,10 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calculator, DollarSign, Info, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { calculateRESICO, type RESICOCalculationResult, type RESICOYear, type RESICOPeriod } from '@/lib/calculators';
-import { useLocale } from '@/lib/locale';
-
 export default function RESICOPage() {
-  const { t } = useLocale();
   const [income, setIncome] = useState('');
   const [period, setPeriod] = useState<RESICOPeriod>('mensual');
   const [year, setYear] = useState<RESICOYear>(2026);

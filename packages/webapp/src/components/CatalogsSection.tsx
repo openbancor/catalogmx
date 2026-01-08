@@ -27,7 +27,9 @@ const CATEGORY_META: Record<string, { icon: typeof Database, color: string, labe
   'INEGI': { icon: MapPin, color: 'text-green-600 dark:text-green-400', label: 'Geografía' },
   'SAT': { icon: FileText, color: 'text-orange-600 dark:text-orange-400', label: 'Fiscal (SAT)' },
   'BANXICO': { icon: Building2, color: 'text-purple-600 dark:text-purple-400', label: 'Bancario' },
+  'CNBV': { icon: Building2, color: 'text-indigo-600 dark:text-indigo-400', label: 'CNBV (Financiero)' },
   'IFT': { icon: Database, color: 'text-pink-600 dark:text-pink-400', label: 'Telecomunicaciones' },
+  'MEXICO': { icon: Database, color: 'text-emerald-600 dark:text-emerald-400', label: 'Nacionales' },
 };
 
 export default function CatalogsSection({ showHeader = true }: CatalogsSectionProps) {
@@ -65,7 +67,7 @@ export default function CatalogsSection({ showHeader = true }: CatalogsSectionPr
 
     filteredCatalogs.forEach(catalog => {
       const prefix = catalog.id.split('-')[0].toUpperCase();
-      const category = ['SAT', 'BANXICO', 'INEGI', 'SEPOMEX', 'IFT'].includes(prefix)
+      const category = ['SAT', 'BANXICO', 'CNBV', 'INEGI', 'SEPOMEX', 'IFT', 'MEXICO'].includes(prefix)
         ? prefix
         : 'OTROS';
 
@@ -82,7 +84,7 @@ export default function CatalogsSection({ showHeader = true }: CatalogsSectionPr
     });
 
     // Sort categories by importance
-    const order = ['SEPOMEX', 'SAT', 'INEGI', 'BANXICO', 'IFT', 'OTROS'];
+    const order = ['SEPOMEX', 'SAT', 'INEGI', 'BANXICO', 'CNBV', 'IFT', 'MEXICO', 'OTROS'];
     return new Map([...map.entries()].sort((a, b) =>
       order.indexOf(a[0]) - order.indexOf(b[0])
     ));

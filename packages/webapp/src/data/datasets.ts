@@ -619,6 +619,26 @@ export const datasetConfigs = [
     description: 'Tipos de permiso SCT.',
   },
 
+  // ========== CNBV (Comisión Nacional Bancaria y de Valores) ==========
+  {
+    id: 'cnbv-sectores',
+    label: 'Sectores Financieros CNBV',
+    type: 'sql',
+    table: 'cnbv_sectores',
+    category: 'banking',
+    searchColumns: ['id', 'nombre', 'descripcion', 'regulador_principal'],
+    columns: [
+      { key: 'id', label: 'ID' },
+      { key: 'nombre', label: 'Sector' },
+      { key: 'descripcion', label: 'Descripción' },
+      { key: 'regulador_principal', label: 'Regulador' },
+    ],
+    description: '19 sectores financieros regulados CNBV.',
+    tags: ['cnbv', 'sectores', 'financiero', 'bancos', 'sofom', 'fintech'],
+    source: 'CNBV',
+    helpText: 'Sectores del sistema financiero mexicano regulados por CNBV: banca múltiple, SOFOM, fintech, seguros, etc.',
+  },
+
   // ========== BANCARIOS ==========
   {
     id: 'banxico-banks',
@@ -889,6 +909,41 @@ export const datasetConfigs = [
       { key: 'vigencia_inicio', label: 'Vigencia' },
     ],
     description: 'Formatos de placas vehiculares por estado.',
+  },
+  {
+    id: 'inegi-scian',
+    label: 'Sectores Económicos SCIAN',
+    type: 'sql',
+    table: 'inegi_scian_sectores',
+    category: 'national',
+    searchColumns: ['codigo', 'nombre', 'descripcion'],
+    columns: [
+      { key: 'codigo', label: 'Código' },
+      { key: 'nombre', label: 'Sector' },
+      { key: 'descripcion', label: 'Descripción' },
+    ],
+    description: '20 sectores económicos SCIAN/INEGI.',
+    tags: ['scian', 'sectores', 'economicos', 'inegi', 'clasificacion', 'industrial'],
+    source: 'INEGI',
+    helpText: 'Sistema de Clasificación Industrial de América del Norte. Clasificación de actividades económicas.',
+  },
+  {
+    id: 'mexico-giros-mercantiles',
+    label: 'Giros Mercantiles',
+    type: 'sql',
+    table: 'mexico_giros_mercantiles',
+    category: 'national',
+    searchColumns: ['id', 'nombre', 'categoria'],
+    columns: [
+      { key: 'id', label: 'ID' },
+      { key: 'nombre', label: 'Giro' },
+      { key: 'categoria', label: 'Categoría' },
+      { key: 'requiere_licencia_alcohol', label: 'Lic. Alcohol' },
+    ],
+    description: '82 giros mercantiles comunes.',
+    tags: ['giros', 'mercantiles', 'negocios', 'comercio', 'licencias', 'alcohol'],
+    source: 'Mexico',
+    helpText: 'Catálogo de giros mercantiles comunes para licencias de funcionamiento y registros comerciales.',
   },
 ] as DatasetConfig[];
 

@@ -127,4 +127,23 @@ export 'src/catalogs/sat/cfdi_catalogs.dart';
 export 'src/utils/text_utils.dart';
 export 'src/utils/date_utils.dart';
 export 'src/utils/catalog_helper.dart';
+export 'src/utils/clabe_utils.dart';
 export 'src/catalogs/base_catalog.dart';
+
+// ============================================================================
+// CATALOGS - CNBV (Comisión Nacional Bancaria y de Valores)
+// ============================================================================
+
+export 'src/catalogs/cnbv/sectores.dart';
+
+// ============================================================================
+// CATALOGS - SCIAN (Sistema de Clasificación Industrial de América del Norte)
+// ============================================================================
+
+export 'src/catalogs/inegi/scian.dart';
+
+// ============================================================================
+// CATALOGS - GIROS MERCANTILES
+// ============================================================================
+
+export 'src/catalogs/mexico/giros_mercantiles.dart';

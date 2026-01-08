@@ -1,0 +1,179 @@
+{
+  "_meta": {
+    "description": "Sistema de Clasificación Industrial de América del Norte (SCIAN) 2023",
+    "source": "INEGI - Instituto Nacional de Estadística y Geografía",
+    "url": "https://www.inegi.org.mx/app/scian/",
+    "version": "2023",
+    "updated": "2026-01-08",
+    "structure": "20 sectores (2 dígitos) → 94 subsectores (3 dígitos) → 304 ramas (4 dígitos) → 617 subramas (5 dígitos) → 1057 clases (6 dígitos)"
+  },
+  "sectores": [
+    {
+      "codigo": "11",
+      "nombre": "Agricultura, cría y explotación de animales, aprovechamiento forestal, pesca y caza",
+      "nombre_corto": "Agricultura y ganadería",
+      "subsectores": 5,
+      "ramas": 19,
+      "descripcion": "Unidades económicas dedicadas principalmente a la siembra, cultivo, cosecha y explotación de especies vegetales y animales"
+    },
+    {
+      "codigo": "21",
+      "nombre": "Minería",
+      "nombre_corto": "Minería",
+      "subsectores": 3,
+      "ramas": 10,
+      "descripcion": "Unidades económicas dedicadas principalmente a la extracción de minerales, petróleo y gas"
+    },
+    {
+      "codigo": "22",
+      "nombre": "Generación, transmisión, distribución y comercialización de energía eléctrica, suministro de agua y de gas natural por ductos al consumidor final",
+      "nombre_corto": "Energía y agua",
+      "subsectores": 3,
+      "ramas": 6,
+      "descripcion": "Unidades económicas dedicadas principalmente a la generación y distribución de energía, agua y gas"
+    },
+    {
+      "codigo": "23",
+      "nombre": "Construcción",
+      "nombre_corto": "Construcción",
+      "subsectores": 3,
+      "ramas": 10,
+      "descripcion": "Unidades económicas dedicadas principalmente a la edificación y obras de ingeniería civil"
+    },
+    {
+      "codigo": "31-33",
+      "nombre": "Industrias manufactureras",
+      "nombre_corto": "Manufactura",
+      "subsectores": 21,
+      "ramas": 86,
+      "descripcion": "Unidades económicas dedicadas principalmente a la transformación mecánica, física o química de materiales"
+    },
+    {
+      "codigo": "43",
+      "nombre": "Comercio al por mayor",
+      "nombre_corto": "Comercio mayorista",
+      "subsectores": 8,
+      "ramas": 33,
+      "descripcion": "Unidades económicas dedicadas principalmente a la compra-venta de bienes de capital, materias primas y suministros"
+    },
+    {
+      "codigo": "46",
+      "nombre": "Comercio al por menor",
+      "nombre_corto": "Comercio minorista",
+      "subsectores": 9,
+      "ramas": 34,
+      "descripcion": "Unidades económicas dedicadas principalmente a la compra-venta de bienes para su uso personal o doméstico"
+    },
+    {
+      "codigo": "48-49",
+      "nombre": "Transportes, correos y almacenamiento",
+      "nombre_corto": "Transporte y logística",
+      "subsectores": 11,
+      "ramas": 29,
+      "descripcion": "Unidades económicas dedicadas principalmente al transporte de personas y mercancías, servicios postales y de mensajería"
+    },
+    {
+      "codigo": "51",
+      "nombre": "Información en medios masivos",
+      "nombre_corto": "Medios de comunicación",
+      "subsectores": 6,
+      "ramas": 13,
+      "descripcion": "Unidades económicas dedicadas principalmente a la producción y distribución de información y productos culturales"
+    },
+    {
+      "codigo": "52",
+      "nombre": "Servicios financieros y de seguros",
+      "nombre_corto": "Servicios financieros",
+      "subsectores": 5,
+      "ramas": 14,
+      "descripcion": "Unidades económicas dedicadas principalmente a la intermediación crediticia, actividades bursátiles y de seguros"
+    },
+    {
+      "codigo": "53",
+      "nombre": "Servicios inmobiliarios y de alquiler de bienes muebles e intangibles",
+      "nombre_corto": "Inmobiliarios y alquiler",
+      "subsectores": 3,
+      "ramas": 8,
+      "descripcion": "Unidades económicas dedicadas principalmente a la compra-venta, alquiler y administración de bienes inmuebles"
+    },
+    {
+      "codigo": "54",
+      "nombre": "Servicios profesionales, científicos y técnicos",
+      "nombre_corto": "Servicios profesionales",
+      "subsectores": 1,
+      "ramas": 9,
+      "descripcion": "Unidades económicas dedicadas principalmente a proporcionar servicios que requieren conocimientos especializados"
+    },
+    {
+      "codigo": "55",
+      "nombre": "Corporativos",
+      "nombre_corto": "Corporativos",
+      "subsectores": 1,
+      "ramas": 1,
+      "descripcion": "Unidades económicas dedicadas principalmente a la dirección de empresas o grupos empresariales"
+    },
+    {
+      "codigo": "56",
+      "nombre": "Servicios de apoyo a los negocios y manejo de residuos, y servicios de remediación",
+      "nombre_corto": "Apoyo a negocios",
+      "subsectores": 2,
+      "ramas": 10,
+      "descripcion": "Unidades económicas dedicadas principalmente a proporcionar servicios de apoyo a las empresas"
+    },
+    {
+      "codigo": "61",
+      "nombre": "Servicios educativos",
+      "nombre_corto": "Educación",
+      "subsectores": 1,
+      "ramas": 7,
+      "descripcion": "Unidades económicas dedicadas principalmente a proporcionar instrucción y capacitación en diversos niveles"
+    },
+    {
+      "codigo": "62",
+      "nombre": "Servicios de salud y de asistencia social",
+      "nombre_corto": "Salud y asistencia social",
+      "subsectores": 4,
+      "ramas": 12,
+      "descripcion": "Unidades económicas dedicadas principalmente a proporcionar servicios de atención a la salud y asistencia social"
+    },
+    {
+      "codigo": "71",
+      "nombre": "Servicios de esparcimiento culturales y deportivos, y otros servicios recreativos",
+      "nombre_corto": "Entretenimiento",
+      "subsectores": 3,
+      "ramas": 9,
+      "descripcion": "Unidades económicas dedicadas principalmente a operar instalaciones o proporcionar servicios recreativos"
+    },
+    {
+      "codigo": "72",
+      "nombre": "Servicios de alojamiento temporal y de preparación de alimentos y bebidas",
+      "nombre_corto": "Hoteles y restaurantes",
+      "subsectores": 2,
+      "ramas": 4,
+      "descripcion": "Unidades económicas dedicadas principalmente a proporcionar alojamiento temporal y preparación de alimentos"
+    },
+    {
+      "codigo": "81",
+      "nombre": "Otros servicios excepto actividades gubernamentales",
+      "nombre_corto": "Otros servicios",
+      "subsectores": 4,
+      "ramas": 14,
+      "descripcion": "Unidades económicas dedicadas principalmente a proporcionar servicios de reparación, mantenimiento y servicios personales"
+    },
+    {
+      "codigo": "93",
+      "nombre": "Actividades legislativas, gubernamentales, de impartición de justicia y de organismos internacionales y extraterritoriales",
+      "nombre_corto": "Gobierno",
+      "subsectores": 3,
+      "ramas": 5,
+      "descripcion": "Unidades económicas de los tres niveles de gobierno dedicadas a la administración pública"
+    }
+  ],
+  "totales": {
+    "sectores": 20,
+    "subsectores": 94,
+    "ramas": 304,
+    "subramas": 617,
+    "clases": 1057
+  }
+}

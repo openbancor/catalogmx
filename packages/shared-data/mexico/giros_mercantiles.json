@@ -1,0 +1,144 @@
+{
+  "_meta": {
+    "description": "Catálogo de giros mercantiles comunes en México",
+    "source": "Compilación de usos comerciales y registros mercantiles",
+    "updated": "2026-01-08",
+    "uso": "Para clasificación de negocios, licencias de funcionamiento y registros comerciales"
+  },
+  "categorias": [
+    {
+      "id": "comercio",
+      "nombre": "Comercio",
+      "descripcion": "Compra y venta de bienes"
+    },
+    {
+      "id": "servicios",
+      "nombre": "Servicios",
+      "descripcion": "Prestación de servicios profesionales y personales"
+    },
+    {
+      "id": "alimentos",
+      "nombre": "Alimentos y Bebidas",
+      "descripcion": "Preparación y venta de alimentos"
+    },
+    {
+      "id": "industrial",
+      "nombre": "Industrial",
+      "descripcion": "Manufactura y transformación"
+    },
+    {
+      "id": "salud",
+      "nombre": "Salud",
+      "descripcion": "Servicios de salud y bienestar"
+    },
+    {
+      "id": "educacion",
+      "nombre": "Educación",
+      "descripcion": "Servicios educativos y capacitación"
+    },
+    {
+      "id": "tecnologia",
+      "nombre": "Tecnología",
+      "descripcion": "Servicios tecnológicos y digitales"
+    },
+    {
+      "id": "construccion",
+      "nombre": "Construcción",
+      "descripcion": "Construcción y obras"
+    },
+    {
+      "id": "transporte",
+      "nombre": "Transporte",
+      "descripcion": "Servicios de transporte y logística"
+    },
+    {
+      "id": "entretenimiento",
+      "nombre": "Entretenimiento",
+      "descripcion": "Esparcimiento y recreación"
+    }
+  ],
+  "giros": [
+    {"id": "abarrotes", "nombre": "Abarrotes y miscelánea", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "abarrotes_vinos", "nombre": "Abarrotes con venta de vinos y licores", "categoria": "comercio", "requiere_licencia_alcohol": true},
+    {"id": "accesorios_auto", "nombre": "Accesorios para automóviles", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "agencia_autos", "nombre": "Agencia de automóviles", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "agencia_viajes", "nombre": "Agencia de viajes", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "bar", "nombre": "Bar", "categoria": "alimentos", "requiere_licencia_alcohol": true},
+    {"id": "barberia", "nombre": "Barbería", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "boutique", "nombre": "Boutique de ropa", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "cafe_internet", "nombre": "Café internet", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "cafeteria", "nombre": "Cafetería", "categoria": "alimentos", "requiere_licencia_alcohol": false},
+    {"id": "cantina", "nombre": "Cantina", "categoria": "alimentos", "requiere_licencia_alcohol": true},
+    {"id": "carniceria", "nombre": "Carnicería", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "carpinteria", "nombre": "Carpintería", "categoria": "industrial", "requiere_licencia_alcohol": false},
+    {"id": "centro_salud", "nombre": "Centro de salud", "categoria": "salud", "requiere_licencia_alcohol": false},
+    {"id": "cine", "nombre": "Cine", "categoria": "entretenimiento", "requiere_licencia_alcohol": false},
+    {"id": "clinica_dental", "nombre": "Clínica dental", "categoria": "salud", "requiere_licencia_alcohol": false},
+    {"id": "clinica_medica", "nombre": "Clínica médica", "categoria": "salud", "requiere_licencia_alcohol": false},
+    {"id": "cocina_economica", "nombre": "Cocina económica", "categoria": "alimentos", "requiere_licencia_alcohol": false},
+    {"id": "consultorio_medico", "nombre": "Consultorio médico", "categoria": "salud", "requiere_licencia_alcohol": false},
+    {"id": "consultoria", "nombre": "Consultoría empresarial", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "contabilidad", "nombre": "Despacho contable", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "deposito", "nombre": "Depósito de cerveza", "categoria": "comercio", "requiere_licencia_alcohol": true},
+    {"id": "desarrollo_software", "nombre": "Desarrollo de software", "categoria": "tecnologia", "requiere_licencia_alcohol": false},
+    {"id": "discoteca", "nombre": "Discoteca / Antro", "categoria": "entretenimiento", "requiere_licencia_alcohol": true},
+    {"id": "dulceria", "nombre": "Dulcería", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "escuela", "nombre": "Escuela particular", "categoria": "educacion", "requiere_licencia_alcohol": false},
+    {"id": "estetica", "nombre": "Estética y salón de belleza", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "farmacia", "nombre": "Farmacia", "categoria": "salud", "requiere_licencia_alcohol": false},
+    {"id": "ferreteria", "nombre": "Ferretería", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "floreria", "nombre": "Florería", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "fonda", "nombre": "Fonda", "categoria": "alimentos", "requiere_licencia_alcohol": false},
+    {"id": "fruteria", "nombre": "Frutería y verdulería", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "funeraria", "nombre": "Funeraria", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "gasolinera", "nombre": "Gasolinera", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "gimnasio", "nombre": "Gimnasio", "categoria": "entretenimiento", "requiere_licencia_alcohol": false},
+    {"id": "herreria", "nombre": "Herrería", "categoria": "industrial", "requiere_licencia_alcohol": false},
+    {"id": "hotel", "nombre": "Hotel", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "imprenta", "nombre": "Imprenta", "categoria": "industrial", "requiere_licencia_alcohol": false},
+    {"id": "jardineria", "nombre": "Servicios de jardinería", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "joyeria", "nombre": "Joyería", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "jugueteria", "nombre": "Juguetería", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "laboratorio", "nombre": "Laboratorio clínico", "categoria": "salud", "requiere_licencia_alcohol": false},
+    {"id": "lavanderia", "nombre": "Lavandería", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "libreria", "nombre": "Librería", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "licoreria", "nombre": "Licorería", "categoria": "comercio", "requiere_licencia_alcohol": true},
+    {"id": "llantera", "nombre": "Llantera", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "loncheria", "nombre": "Lonchería", "categoria": "alimentos", "requiere_licencia_alcohol": false},
+    {"id": "maquiladora", "nombre": "Maquiladora", "categoria": "industrial", "requiere_licencia_alcohol": false},
+    {"id": "materiales", "nombre": "Materiales de construcción", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "mecanico", "nombre": "Taller mecánico automotriz", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "mensajeria", "nombre": "Mensajería y paquetería", "categoria": "transporte", "requiere_licencia_alcohol": false},
+    {"id": "muebleria", "nombre": "Mueblería", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "notaria", "nombre": "Notaría", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "oficina", "nombre": "Oficina administrativa", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "optica", "nombre": "Óptica", "categoria": "salud", "requiere_licencia_alcohol": false},
+    {"id": "panaderia", "nombre": "Panadería", "categoria": "alimentos", "requiere_licencia_alcohol": false},
+    {"id": "papeleria", "nombre": "Papelería", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "pasteleria", "nombre": "Pastelería", "categoria": "alimentos", "requiere_licencia_alcohol": false},
+    {"id": "peluqueria", "nombre": "Peluquería", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "pescaderia", "nombre": "Pescadería y mariscos", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "pizzeria", "nombre": "Pizzería", "categoria": "alimentos", "requiere_licencia_alcohol": false},
+    {"id": "polleria", "nombre": "Pollería", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "publicidad", "nombre": "Agencia de publicidad", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "recicladora", "nombre": "Recicladora", "categoria": "industrial", "requiere_licencia_alcohol": false},
+    {"id": "refaccionaria", "nombre": "Refaccionaria", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "renta_autos", "nombre": "Renta de automóviles", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "restaurante", "nombre": "Restaurante", "categoria": "alimentos", "requiere_licencia_alcohol": false},
+    {"id": "restaurante_bar", "nombre": "Restaurante bar", "categoria": "alimentos", "requiere_licencia_alcohol": true},
+    {"id": "rosticeria", "nombre": "Rosticería", "categoria": "alimentos", "requiere_licencia_alcohol": false},
+    {"id": "spa", "nombre": "Spa", "categoria": "salud", "requiere_licencia_alcohol": false},
+    {"id": "supermercado", "nombre": "Supermercado", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "taller_electronico", "nombre": "Taller de electrónica", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "taqueria", "nombre": "Taquería", "categoria": "alimentos", "requiere_licencia_alcohol": false},
+    {"id": "taxi", "nombre": "Servicio de taxi", "categoria": "transporte", "requiere_licencia_alcohol": false},
+    {"id": "tienda_ropa", "nombre": "Tienda de ropa", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "tienda_conveniencia", "nombre": "Tienda de conveniencia", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "tintoreria", "nombre": "Tintorería", "categoria": "servicios", "requiere_licencia_alcohol": false},
+    {"id": "tortilleria", "nombre": "Tortillería", "categoria": "alimentos", "requiere_licencia_alcohol": false},
+    {"id": "veterinaria", "nombre": "Veterinaria", "categoria": "salud", "requiere_licencia_alcohol": false},
+    {"id": "vinateria", "nombre": "Vinatería", "categoria": "comercio", "requiere_licencia_alcohol": true},
+    {"id": "vivero", "nombre": "Vivero", "categoria": "comercio", "requiere_licencia_alcohol": false},
+    {"id": "zapateria", "nombre": "Zapatería", "categoria": "comercio", "requiere_licencia_alcohol": false}
+  ]
+}

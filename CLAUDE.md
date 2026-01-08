@@ -272,6 +272,62 @@ All linting checks are enforced in GitHub Actions CI:
 
 Code that fails any check will NOT be merged.
 
+### Pre-commit Checklist (MANDATORY)
+
+**CRITICAL: Run these commands before EVERY commit to avoid CI failures:**
+
+```bash
+# Quick format all (run from repo root)
+(cd packages/python && black catalogmx/) && \
+(cd packages/typescript && npm run format 2>/dev/null || true) && \
+(cd packages/dart && dart format .) && \
+echo "✅ All formatted"
+```
+
+**Full pre-commit validation:**
+
+```bash
+# Python (REQUIRED)
+cd packages/python
+black catalogmx/ && ruff check catalogmx/ && pytest tests/ -x -q
+
+# TypeScript (REQUIRED if modified)
+cd packages/typescript
+npm run lint && npm run format:check && npm run typecheck && npm test
+
+# Dart (REQUIRED)
+cd packages/dart
+dart format . && dart analyze && dart test
+
+# YAML (REQUIRED for workflow changes)
+yamllint -d "{extends: relaxed, rules: {line-length: {max: 200}, truthy: disable}}" .github/workflows/
+```
+
+**One-liner from repo root (formats + lints all platforms):**
+
+```bash
+(cd packages/python && black catalogmx/ && ruff check catalogmx/) && \
+(cd packages/typescript && npm run lint && npm run format:check) && \
+(cd packages/dart && dart format . && dart analyze) && \
+echo "✅ All checks passed"
+```
+
+### Common CI Failures and Fixes
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `black would reformat` | Python not formatted | `black catalogmx/` |
+| `dart format --set-exit-if-changed` | Dart not formatted | `dart format .` |
+| `ruff check` failures | Lint errors | `ruff check --fix catalogmx/` |
+| `yamllint` errors | YAML syntax/trailing spaces | Remove trailing spaces |
+| `npm run lint` failures | ESLint errors | `npm run lint:fix` |
+| `npm run format:check` failures | Prettier errors | `npm run format` |
+| `tsc` type errors | TypeScript errors | Fix type issues manually |
+| `pytest` failures | Python test errors | Run `pytest tests/ -x` to find failing test |
+| `npm test` failures | TypeScript test errors | Run `npm test` to see details |
+| `dart test` failures | Dart test errors | Run `dart test` to see details |
+| Circular import | Module imports in wrong order | Use lazy imports in affected modules |
+
 ---
 
 ## Quality Standards & CI/CD Pipeline

@@ -19,11 +19,17 @@ export { SalariosMinimosCatalog } from './banxico/salarios-minimos-sqlite';
 // IFT (Instituto Federal de Telecomunicaciones)
 export { OperadoresMoviles } from './ift/operadores-moviles';
 
+// CNBV (Comisión Nacional Bancaria y de Valores)
+export { SectoresCNBVCatalog } from './cnbv/sectores';
+export type { SectorCNBV, ReguladorFinanciero } from './cnbv/sectores';
+
 // INEGI
 export { StateCatalog } from './inegi/states';
 export { MunicipiosCatalog } from './inegi/municipios';
 export { MunicipiosCompletoCatalog } from './inegi/municipios-completo';
 export { LocalidadesCatalog } from './inegi/localidades';
+export { SCIANCatalog } from './inegi/scian';
+export type { SectorSCIAN } from './inegi/scian';
 
 // SEPOMEX
 export { CodigosPostales } from './sepomex/codigos-postales';
@@ -86,3 +92,5 @@ export { PlacasFormatosCatalog } from './mexico/placas-formatos';
 export { SalariosMinimos } from './mexico/salarios-minimos';
 export { UMACatalog } from './mexico/uma';
 export { HoyNoCirculaCDMX } from './mexico/hoy-no-circula';
+export { GirosMercantilesCatalog } from './mexico/giros-mercantiles';
+export type { GiroMercantil, CategoriaGiro } from './mexico/giros-mercantiles';

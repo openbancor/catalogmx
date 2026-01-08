@@ -5,8 +5,9 @@ name: Update Dynamic Data (Daily)
 
 on:
   schedule:
-    # Ejecutar diariamente a las 10 AM UTC (4 AM Ciudad de México)
-    - cron: '0 10 * * *'
+    # Ejecutar diariamente a las 6:30 PM UTC (12:30 PM Ciudad de México)
+    # Esta hora garantiza que el tipo de cambio FIX y TIIE del día ya estén publicados
+    - cron: '30 18 * * *'
 
   workflow_dispatch:
     inputs:
