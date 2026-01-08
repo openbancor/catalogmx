@@ -8,7 +8,7 @@ to work with Mexican identification codes without dealing with class constructor
 
 import datetime
 
-from .validators.clabe import CLABEValidator
+from .validators.clabe import CLABEValidator, generate_clabe
 from .validators.curp import CURPGenerator, CURPValidator
 from .validators.nss import NSSValidator
 from .validators.rfc import RFCGeneratorFisicas, RFCGeneratorMorales, RFCValidator

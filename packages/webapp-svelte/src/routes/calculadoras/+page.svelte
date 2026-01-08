@@ -94,9 +94,41 @@
 				'Datos históricos Banxico',
 				'Conversión USD ↔ MXN',
 				'Tipos de cambio diarios',
-				'Gráficas de tendencia'
+				'Comparación entre fechas'
 			],
-			status: 'coming-soon'
+			status: 'available'
+		},
+		{
+			id: 'udi',
+			name: 'UDI',
+			description: 'Unidades de Inversión',
+			longDescription: 'Convierte entre UDIs y pesos mexicanos, calcula rendimientos indexados a inflación',
+			href: '/calculadoras/udi',
+			icon: TrendingUp,
+			color: 'bg-blue-500',
+			features: [
+				'Conversión UDI ↔ MXN',
+				'Valores históricos',
+				'Cálculo de rendimientos',
+				'Datos diarios Banxico'
+			],
+			status: 'available'
+		},
+		{
+			id: 'tasas-interes',
+			name: 'CETES/TIIE',
+			description: 'Tasas de Interés',
+			longDescription: 'Calcula intereses con tasas CETES 28 y TIIE 28, compara rendimientos',
+			href: '/calculadoras/tasas-interes',
+			icon: Percent,
+			color: 'bg-emerald-500',
+			features: [
+				'CETES 28 días',
+				'TIIE 28 días',
+				'Comparación de tasas',
+				'Cálculo de intereses'
+			],
+			status: 'available'
 		}
 	];
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Sparkles, CreditCard, User } from 'lucide-svelte';
+	import { Sparkles, CreditCard, User, Building2 } from 'lucide-svelte';
 
 	const generators = [
 		{
@@ -33,13 +33,29 @@
 				'Decodificación de CURP generada'
 			],
 			status: 'available'
+		},
+		{
+			id: 'clabe',
+			name: 'CLABE',
+			description: 'Clave Bancaria Estandarizada',
+			longDescription: 'Genera CLABE con dígito verificador para transferencias interbancarias',
+			href: '/generadores/clabe',
+			icon: Building2,
+			color: 'bg-purple-500',
+			features: [
+				'Bancos habilitados para SPEI',
+				'Dígito verificador calculado',
+				'Generación de número aleatorio',
+				'Desglose completo de la CLABE'
+			],
+			status: 'available'
 		}
 	];
 </script>
 
 <svelte:head>
 	<title>Generadores - catalogmx</title>
-	<meta name="description" content="Generadores de identificadores oficiales de México: RFC y CURP. Basados en algoritmos oficiales." />
+	<meta name="description" content="Generadores de identificadores oficiales de México: RFC, CURP y CLABE. Basados en algoritmos oficiales." />
 </svelte:head>
 
 <!-- Hero -->
@@ -55,8 +71,8 @@
 				</h1>
 			</div>
 			<p class="text-lg text-slate-600 dark:text-slate-300">
-				Herramientas para generar identificadores oficiales de México como RFC y CURP.
-				Todas basadas en algoritmos oficiales del SAT y RENAPO.
+				Herramientas para generar identificadores oficiales de México como RFC, CURP y CLABE.
+				Todas basadas en algoritmos oficiales del SAT, RENAPO y Banco de México.
 			</p>
 		</div>
 	</div>
@@ -134,7 +150,7 @@
 			</h2>
 			<p class="text-slate-600 dark:text-slate-300 mb-6">
 				Todos los generadores utilizan los algoritmos oficiales documentados por las autoridades:
-				SAT para RFC y RENAPO para CURP. Los resultados son precisos y siguen las reglas oficiales.
+				SAT para RFC, RENAPO para CURP, y Banco de México para CLABE. Los resultados son precisos y siguen las reglas oficiales.
 			</p>
 			<div class="flex flex-wrap justify-center gap-4 text-sm text-slate-500 dark:text-slate-400">
 				<span class="flex items-center gap-2">
@@ -147,7 +163,7 @@
 				</span>
 				<span class="flex items-center gap-2">
 					<span class="w-2 h-2 rounded-full bg-purple-500"></span>
-					Validación de palabras inconvenientes
+					CLABE con dígito verificador
 				</span>
 			</div>
 		</div>
