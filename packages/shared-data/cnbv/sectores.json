@@ -1,0 +1,274 @@
+{
+  "_meta": {
+    "description": "Sectores y tipos de entidades reguladas por la CNBV",
+    "source": "Comisión Nacional Bancaria y de Valores (CNBV)",
+    "url": "https://www.cnbv.gob.mx",
+    "updated": "2026-01-08"
+  },
+  "sectores": [
+    {
+      "id": "banca_multiple",
+      "nombre": "Banca Múltiple",
+      "nombre_corto": "Bancos",
+      "descripcion": "Instituciones de banca múltiple autorizadas para realizar operaciones de captación, crédito y servicios",
+      "ley_aplicable": "Ley de Instituciones de Crédito",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": ["Banxico", "IPAB"],
+      "ejemplos": ["BBVA México", "Banorte", "Santander", "Citibanamex", "HSBC", "Scotiabank"]
+    },
+    {
+      "id": "banca_desarrollo",
+      "nombre": "Banca de Desarrollo",
+      "nombre_corto": "Banca de Desarrollo",
+      "descripcion": "Instituciones de crédito del Estado para fomentar actividades prioritarias",
+      "ley_aplicable": "Leyes Orgánicas de cada institución",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": ["SHCP", "Banxico"],
+      "ejemplos": ["NAFIN", "Bancomext", "Banobras", "SHF", "Banco del Bienestar", "FIRA"]
+    },
+    {
+      "id": "casas_bolsa",
+      "nombre": "Casas de Bolsa",
+      "nombre_corto": "Casas de Bolsa",
+      "descripcion": "Intermediarios autorizados para realizar operaciones con valores en el mercado bursátil",
+      "ley_aplicable": "Ley del Mercado de Valores",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": ["BMV", "Indeval"],
+      "ejemplos": ["GBM Casa de Bolsa", "Actinver", "Vector Casa de Bolsa", "Finamex"]
+    },
+    {
+      "id": "sociedades_inversion",
+      "nombre": "Sociedades de Inversión",
+      "nombre_corto": "Fondos de Inversión",
+      "descripcion": "Vehículos de inversión colectiva que captan recursos del público",
+      "ley_aplicable": "Ley de Fondos de Inversión",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": [],
+      "subtipos": [
+        {
+          "id": "renta_variable",
+          "nombre": "De Renta Variable",
+          "descripcion": "Invierten principalmente en acciones"
+        },
+        {
+          "id": "instrumentos_deuda",
+          "nombre": "En Instrumentos de Deuda",
+          "descripcion": "Invierten en instrumentos de deuda gubernamental y corporativa"
+        },
+        {
+          "id": "capitales",
+          "nombre": "De Capitales",
+          "descripcion": "Invierten en empresas no cotizadas (private equity)"
+        },
+        {
+          "id": "objeto_limitado",
+          "nombre": "De Objeto Limitado",
+          "descripcion": "Invierten en valores específicos"
+        }
+      ],
+      "ejemplos": ["FUNO", "FIBRA UNO", "BlackRock México"]
+    },
+    {
+      "id": "sofomes_er",
+      "nombre": "SOFOM E.R.",
+      "nombre_corto": "SOFOM Reguladas",
+      "descripcion": "Sociedades Financieras de Objeto Múltiple Reguladas (vinculadas a bancos)",
+      "ley_aplicable": "Ley General de Organizaciones y Actividades Auxiliares del Crédito",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": ["CONDUSEF"],
+      "ejemplos": ["Santander Consumo", "BBVA Leasing", "Banorte Arrendadora"]
+    },
+    {
+      "id": "sofomes_enr",
+      "nombre": "SOFOM E.N.R.",
+      "nombre_corto": "SOFOM No Reguladas",
+      "descripcion": "Sociedades Financieras de Objeto Múltiple Entidades No Reguladas",
+      "ley_aplicable": "Ley General de Organizaciones y Actividades Auxiliares del Crédito",
+      "regulador_principal": "CONDUSEF",
+      "supervisores_adicionales": ["UIF"],
+      "nota": "No están reguladas por CNBV pero deben registrarse en CONDUSEF",
+      "ejemplos": ["Credito Real", "Unifin", "Crédito Familiar"]
+    },
+    {
+      "id": "sofipos",
+      "nombre": "SOFIPO",
+      "nombre_corto": "SOFIPO",
+      "descripcion": "Sociedades Financieras Populares - entidades de ahorro y crédito popular",
+      "ley_aplicable": "Ley de Ahorro y Crédito Popular",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": ["FOCOOP"],
+      "caracteristicas": "Pueden captar ahorro del público general",
+      "ejemplos": ["Libertad Servicios Financieros", "Te Creemos", "Caja Popular Mexicana"]
+    },
+    {
+      "id": "socaps",
+      "nombre": "SOCAP",
+      "nombre_corto": "Cooperativas de Ahorro",
+      "descripcion": "Sociedades Cooperativas de Ahorro y Préstamo",
+      "ley_aplicable": "Ley para Regular las Activades de las Sociedades Cooperativas de Ahorro y Préstamo",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": ["FOCOOP"],
+      "caracteristicas": "Solo pueden operar con socios cooperativistas",
+      "ejemplos": ["Caja Popular Mexicana", "Caja Morelia Valladolid"]
+    },
+    {
+      "id": "aseguradoras",
+      "nombre": "Instituciones de Seguros",
+      "nombre_corto": "Aseguradoras",
+      "descripcion": "Compañías de seguros autorizadas para operar en México",
+      "ley_aplicable": "Ley de Instituciones de Seguros y de Fianzas",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": ["CNSF"],
+      "ramos": ["Vida", "Daños", "Accidentes y Enfermedades", "Pensiones"],
+      "ejemplos": ["GNP", "AXA", "Metlife", "Zurich", "Mapfre"]
+    },
+    {
+      "id": "afianzadoras",
+      "nombre": "Instituciones de Fianzas",
+      "nombre_corto": "Afianzadoras",
+      "descripcion": "Compañías que otorgan fianzas para garantizar obligaciones",
+      "ley_aplicable": "Ley de Instituciones de Seguros y de Fianzas",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": ["CNSF"],
+      "tipos_fianza": ["Fidelidad", "Judiciales", "Administrativas", "Crédito"],
+      "ejemplos": ["Afianzadora Insurgentes", "Fianzas Atlas", "ACE Fianzas Monterrey"]
+    },
+    {
+      "id": "almacenes_deposito",
+      "nombre": "Almacenes Generales de Depósito",
+      "nombre_corto": "Almacenes de Depósito",
+      "descripcion": "Instituciones que almacenan mercancías y emiten certificados de depósito",
+      "ley_aplicable": "Ley General de Organizaciones y Actividades Auxiliares del Crédito",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": [],
+      "servicios": ["Almacenamiento", "Certificados de depósito", "Bonos de prenda"],
+      "ejemplos": ["Almacenadora Mercader", "Sur Almacenadora"]
+    },
+    {
+      "id": "uniones_credito",
+      "nombre": "Uniones de Crédito",
+      "nombre_corto": "Uniones de Crédito",
+      "descripcion": "Organizaciones auxiliares de crédito constituidas por socios de un gremio",
+      "ley_aplicable": "Ley de Uniones de Crédito",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": [],
+      "caracteristicas": "Solo pueden operar con sus socios agremiados",
+      "ejemplos": ["Unión de Crédito Agrícola del Valle", "Unión de Crédito Industrial"]
+    },
+    {
+      "id": "casas_cambio",
+      "nombre": "Casas de Cambio",
+      "nombre_corto": "Casas de Cambio",
+      "descripcion": "Sociedades autorizadas para compra-venta de divisas",
+      "ley_aplicable": "Ley General de Organizaciones y Actividades Auxiliares del Crédito",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": ["Banxico", "UIF"],
+      "ejemplos": ["Global Exchange", "Intercam Casa de Cambio"]
+    },
+    {
+      "id": "operadoras_fondos",
+      "nombre": "Operadoras de Fondos de Inversión",
+      "nombre_corto": "Operadoras",
+      "descripcion": "Sociedades que administran fondos de inversión",
+      "ley_aplicable": "Ley de Fondos de Inversión",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": [],
+      "ejemplos": ["Operadora GBM", "BlackRock Asset Management"]
+    },
+    {
+      "id": "distribuidoras_fondos",
+      "nombre": "Distribuidoras de Fondos de Inversión",
+      "nombre_corto": "Distribuidoras",
+      "descripcion": "Sociedades autorizadas para comercializar fondos de inversión",
+      "ley_aplicable": "Ley de Fondos de Inversión",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": [],
+      "ejemplos": ["Fondika", "Flink"]
+    },
+    {
+      "id": "fintech_ifpe",
+      "nombre": "Instituciones de Financiamiento Colectivo",
+      "nombre_corto": "Crowdfunding",
+      "descripcion": "Plataformas de financiamiento colectivo (crowdfunding)",
+      "ley_aplicable": "Ley para Regular las Instituciones de Tecnología Financiera (Ley Fintech)",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": ["Banxico", "CONDUSEF"],
+      "tipos": ["Deuda", "Capital", "Copropiedad/Regalías"],
+      "ejemplos": ["Crowdfunder", "Briq.mx", "Playbusiness", "100 Ladrillos"]
+    },
+    {
+      "id": "fintech_ifondos",
+      "nombre": "Instituciones de Fondos de Pago Electrónico",
+      "nombre_corto": "Wallets / IFPE",
+      "descripcion": "Emisores de fondos de pago electrónico (monederos electrónicos)",
+      "ley_aplicable": "Ley para Regular las Instituciones de Tecnología Financiera (Ley Fintech)",
+      "regulador_principal": "CNBV",
+      "supervisores_adicionales": ["Banxico"],
+      "ejemplos": ["Mercado Pago", "Clip", "Sr. Pago", "Spin by OXXO"]
+    },
+    {
+      "id": "afores",
+      "nombre": "AFORE",
+      "nombre_corto": "AFORE",
+      "descripcion": "Administradoras de Fondos para el Retiro",
+      "ley_aplicable": "Ley de los Sistemas de Ahorro para el Retiro",
+      "regulador_principal": "CONSAR",
+      "supervisores_adicionales": ["CNBV"],
+      "ejemplos": ["Profuturo", "XXI Banorte", "Citibanamex Afore", "Sura"]
+    },
+    {
+      "id": "siefores",
+      "nombre": "SIEFORE",
+      "nombre_corto": "SIEFORE",
+      "descripcion": "Sociedades de Inversión Especializadas en Fondos para el Retiro",
+      "ley_aplicable": "Ley de los Sistemas de Ahorro para el Retiro",
+      "regulador_principal": "CONSAR",
+      "supervisores_adicionales": ["CNBV"],
+      "nota": "Vehículos de inversión de las AFOREs, ahora generacionales"
+    }
+  ],
+  "reguladores": [
+    {
+      "id": "cnbv",
+      "nombre": "Comisión Nacional Bancaria y de Valores",
+      "siglas": "CNBV",
+      "funcion": "Supervisión y regulación de entidades financieras y mercado de valores"
+    },
+    {
+      "id": "banxico",
+      "nombre": "Banco de México",
+      "siglas": "Banxico",
+      "funcion": "Banco central, política monetaria y sistemas de pagos"
+    },
+    {
+      "id": "shcp",
+      "nombre": "Secretaría de Hacienda y Crédito Público",
+      "siglas": "SHCP",
+      "funcion": "Autoridad hacendaria, política financiera"
+    },
+    {
+      "id": "condusef",
+      "nombre": "Comisión Nacional para la Protección y Defensa de los Usuarios de Servicios Financieros",
+      "siglas": "CONDUSEF",
+      "funcion": "Protección al usuario de servicios financieros"
+    },
+    {
+      "id": "consar",
+      "nombre": "Comisión Nacional del Sistema de Ahorro para el Retiro",
+      "siglas": "CONSAR",
+      "funcion": "Regulación del sistema de pensiones"
+    },
+    {
+      "id": "cnsf",
+      "nombre": "Comisión Nacional de Seguros y Fianzas",
+      "siglas": "CNSF",
+      "funcion": "Supervisión de aseguradoras y afianzadoras"
+    },
+    {
+      "id": "ipab",
+      "nombre": "Instituto para la Protección al Ahorro Bancario",
+      "siglas": "IPAB",
+      "funcion": "Seguro de depósitos bancarios"
+    }
+  ]
+}

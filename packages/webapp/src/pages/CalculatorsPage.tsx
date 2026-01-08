@@ -9,6 +9,9 @@ import UDIPage from './UDIPage';
 import ExchangeRatePage from './ExchangeRatePage';
 import InflationPage from './InflationPage';
 import MinimumWagePage from './MinimumWagePage';
+import Modalidad10Page from './Modalidad10Page';
+import Modalidad40Page from './Modalidad40Page';
+import NominaCalculatorPage from './NominaCalculatorPage';
 
 export default function CalculatorsPage() {
   const { t } = useLocale();
@@ -80,6 +83,24 @@ export default function CalculatorsPage() {
             >
               Salario
             </TabsTrigger>
+            <TabsTrigger
+              value="imss-mod10"
+              className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none border border-transparent data-[state=active]:border-primary/20 bg-muted/50 min-w-[90px]"
+            >
+              IMSS Mod.10
+            </TabsTrigger>
+            <TabsTrigger
+              value="imss-mod40"
+              className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none border border-transparent data-[state=active]:border-primary/20 bg-muted/50 min-w-[90px]"
+            >
+              IMSS Mod.40
+            </TabsTrigger>
+            <TabsTrigger
+              value="nomina"
+              className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none border border-transparent data-[state=active]:border-primary/20 bg-muted/50 min-w-[80px]"
+            >
+              Nómina
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -106,6 +127,15 @@ export default function CalculatorsPage() {
         </TabsContent>
         <TabsContent value="salary" className="mt-0 focus-visible:ring-0">
           <MinimumWagePage />
+        </TabsContent>
+        <TabsContent value="imss-mod10" className="mt-0 focus-visible:ring-0">
+          <Modalidad10Page />
+        </TabsContent>
+        <TabsContent value="imss-mod40" className="mt-0 focus-visible:ring-0">
+          <Modalidad40Page />
+        </TabsContent>
+        <TabsContent value="nomina" className="mt-0 focus-visible:ring-0">
+          <NominaCalculatorPage />
         </TabsContent>
       </Tabs>
     </div>
