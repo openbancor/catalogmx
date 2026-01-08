@@ -353,9 +353,9 @@ class TestGenerateClabeRandom:
         assert clabe.startswith("014")
         assert validate_clabe(clabe)
 
-    def test_generate_clabe_random_with_branch_code(self):
-        """Test generating a random CLABE with specific branch code"""
-        clabe = generate_clabe_random(branch_code="180")
+    def test_generate_clabe_random_with_plaza_code(self):
+        """Test generating a random CLABE with specific plaza code"""
+        clabe = generate_clabe_random(plaza_code="180")
         assert len(clabe) == 18
         assert clabe[3:6] == "180"
         assert validate_clabe(clabe)
@@ -370,7 +370,7 @@ class TestGenerateClabeRandom:
     def test_generate_clabe_random_with_all_params(self):
         """Test generating a CLABE with all parameters specified"""
         clabe = generate_clabe_random(
-            bank_code="002", branch_code="010", account_number="07777777777"
+            bank_code="002", plaza_code="010", account_number="07777777777"
         )
         assert clabe == "002010077777777771"
         assert validate_clabe(clabe)

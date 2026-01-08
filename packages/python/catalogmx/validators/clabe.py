@@ -235,7 +235,7 @@ def get_clabe_info(clabe: str | None) -> dict[str, str | None] | None:
 
 def generate_clabe_random(
     bank_code: str | int | None = None,
-    branch_code: str | int | None = None,
+    plaza_code: str | int | None = None,
     account_number: str | int | None = None,
 ) -> str:
     """
@@ -243,7 +243,7 @@ def generate_clabe_random(
     Any parameter not provided will be randomly generated.
 
     :param bank_code: Optional 3-digit bank code (e.g., '012' for BBVA)
-    :param branch_code: Optional 3-digit branch/plaza code
+    :param plaza_code: Optional 3-digit plaza code
     :param account_number: Optional 11-digit account number
     :return: Complete 18-digit CLABE
 
@@ -270,14 +270,14 @@ def generate_clabe_random(
         bank_code = random.choice(common_banks)
     bank_str = str(bank_code).zfill(3)
 
-    # Generate branch code if not provided
-    if branch_code is None:
-        branch_code = random.randint(1, 999)
-    branch_str = str(branch_code).zfill(3)
+    # Generate plaza code if not provided
+    if plaza_code is None:
+        plaza_code = random.randint(1, 999)
+    plaza_str = str(plaza_code).zfill(3)
 
     # Generate account number if not provided
     if account_number is None:
         account_number = random.randint(0, 99999999999)
     account_str = str(account_number).zfill(11)
 
-    return generate_clabe(bank_str, branch_str, account_str)
+    return generate_clabe(bank_str, plaza_str, account_str)
