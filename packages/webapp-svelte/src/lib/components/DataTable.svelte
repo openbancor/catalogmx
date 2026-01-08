@@ -5,11 +5,11 @@
 		getSortedRowModel,
 		getFilteredRowModel,
 		getPaginationRowModel,
+		FlexRender,
 		type ColumnDef,
 		type SortingState,
 		type PaginationState,
-		flexRender,
-	} from '@tanstack/svelte-table';
+	} from '$lib/table';
 	import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-svelte';
 	import { cn } from '$lib/utils';
 
@@ -62,9 +62,9 @@
 		getPaginationRowModel: getPaginationRowModel(),
 	});
 
-	const pageCount = $derived($table.getPageCount());
+	const pageCount = $derived(table.getPageCount());
 	const currentPage = $derived(pagination.pageIndex + 1);
-	const totalRows = $derived($table.getFilteredRowModel().rows.length);
+	const totalRows = $derived(table.getFilteredRowModel().rows.length);
 </script>
 
 <div class="space-y-4">
@@ -87,7 +87,7 @@
 	<div class="overflow-x-auto border border-slate-200 dark:border-slate-700 rounded-lg">
 		<table class="data-table">
 			<thead>
-				{#each $table.getHeaderGroups() as headerGroup}
+				{#each table.getHeaderGroups() as headerGroup}
 					<tr>
 						{#each headerGroup.headers as header}
 							<th
@@ -98,8 +98,9 @@
 							>
 								<div class="flex items-center gap-2">
 									{#if !header.isPlaceholder}
-										<svelte:component
-											this={flexRender(header.column.columnDef.header, header.getContext())}
+										<FlexRender
+											content={header.column.columnDef.header}
+											context={header.getContext()}
 										/>
 									{/if}
 									{#if header.column.getCanSort()}
@@ -118,12 +119,13 @@
 				{/each}
 			</thead>
 			<tbody>
-				{#each $table.getRowModel().rows as row}
+				{#each table.getRowModel().rows as row}
 					<tr>
 						{#each row.getVisibleCells() as cell}
 							<td>
-								<svelte:component
-									this={flexRender(cell.column.columnDef.cell, cell.getContext())}
+								<FlexRender
+									content={cell.column.columnDef.cell}
+									context={cell.getContext()}
 								/>
 							</td>
 						{/each}
@@ -163,15 +165,15 @@
 			<div class="flex items-center gap-1">
 				<button
 					class="btn btn-ghost p-2"
-					onclick={() => $table.setPageIndex(0)}
-					disabled={!$table.getCanPreviousPage()}
+					onclick={() => table.setPageIndex(0)}
+					disabled={!table.getCanPreviousPage()}
 				>
 					<ChevronsLeft class="h-4 w-4" />
 				</button>
 				<button
 					class="btn btn-ghost p-2"
-					onclick={() => $table.previousPage()}
-					disabled={!$table.getCanPreviousPage()}
+					onclick={() => table.previousPage()}
+					disabled={!table.getCanPreviousPage()}
 				>
 					<ChevronLeft class="h-4 w-4" />
 				</button>
@@ -182,15 +184,15 @@
 
 				<button
 					class="btn btn-ghost p-2"
-					onclick={() => $table.nextPage()}
-					disabled={!$table.getCanNextPage()}
+					onclick={() => table.nextPage()}
+					disabled={!table.getCanNextPage()}
 				>
 					<ChevronRight class="h-4 w-4" />
 				</button>
 				<button
 					class="btn btn-ghost p-2"
-					onclick={() => $table.setPageIndex(pageCount - 1)}
-					disabled={!$table.getCanNextPage()}
+					onclick={() => table.setPageIndex(pageCount - 1)}
+					disabled={!table.getCanNextPage()}
 				>
 					<ChevronsRight class="h-4 w-4" />
 				</button>

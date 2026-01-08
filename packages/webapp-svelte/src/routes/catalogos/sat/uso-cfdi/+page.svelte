@@ -1,7 +1,7 @@
 <script lang="ts">
 	import DataTable from '$lib/components/DataTable.svelte';
 	import { ChevronRight, BookOpen, Loader2, AlertCircle } from 'lucide-svelte';
-	import type { ColumnDef } from '@tanstack/svelte-table';
+	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
 
 	interface UsoCFDI {
