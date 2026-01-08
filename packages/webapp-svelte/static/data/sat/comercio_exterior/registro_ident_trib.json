@@ -1,0 +1,17 @@
+[
+  {"code": "01", "descripcion": "Número de identificación fiscal"},
+  {"code": "02", "descripcion": "Número de identificación tributaria"},
+  {"code": "03", "descripcion": "Número de identificación empresarial"},
+  {"code": "04", "descripcion": "Cédula de identificación"},
+  {"code": "05", "descripcion": "CURP"},
+  {"code": "06", "descripcion": "EIN (Employer Identification Number - USA)"},
+  {"code": "07", "descripcion": "ITIN (Individual Taxpayer Identification Number - USA)"},
+  {"code": "08", "descripcion": "NIF (Número de Identificación Fiscal - España)"},
+  {"code": "09", "descripcion": "RUC (Registro Único de Contribuyentes)"},
+  {"code": "10", "descripcion": "RUT (Rol Único Tributario - Chile)"},
+  {"code": "11", "descripcion": "CUIT (Clave Única de Identificación Tributaria - Argentina)"},
+  {"code": "12", "descripcion": "CNPJ (Cadastro Nacional da Pessoa Jurídica - Brasil)"},
+  {"code": "13", "descripcion": "CPF (Cadastro de Pessoas Físicas - Brasil)"},
+  {"code": "14", "descripcion": "Número de pasaporte"},
+  {"code": "99", "descripcion": "Otro"}
+]

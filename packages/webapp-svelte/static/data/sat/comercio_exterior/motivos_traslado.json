@@ -1,0 +1,26 @@
+[
+  {
+    "code": "01",
+    "descripcion": "Envío de mercancías propias"
+  },
+  {
+    "code": "02",
+    "descripcion": "Reubicación de mercancías propias"
+  },
+  {
+    "code": "03",
+    "descripcion": "Envío de mercancías en consignación"
+  },
+  {
+    "code": "04",
+    "descripcion": "Devolución de mercancías"
+  },
+  {
+    "code": "05",
+    "descripcion": "Otros"
+  },
+  {
+    "code": "06",
+    "descripcion": "Traslado de mercancías para transformación"
+  }
+]

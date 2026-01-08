@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Database, CheckCircle, Calculator, ArrowRight, FileText, MapPin, Building2, Mail } from 'lucide-svelte';
+	import { Database, CheckCircle, Calculator, ArrowRight, FileText, MapPin, Building2, Mail, Sparkles, Shield } from 'lucide-svelte';
 
 	const catalogs = [
 		{
@@ -8,9 +8,9 @@
 			color: 'bg-red-500',
 			items: [
 				{ name: 'Productos y Servicios', count: 52000, href: '/catalogos/sat/cfdi' },
-				{ name: 'Claves de Unidad', count: 2800, href: '/catalogos/sat/unidades' },
-				{ name: 'Regímenes Fiscales', count: 25, href: '/catalogos/sat/regimen' },
+				{ name: 'Regímenes Fiscales', count: 25, href: '/catalogos/sat/regimen-fiscal' },
 				{ name: 'Uso de CFDI', count: 22, href: '/catalogos/sat/uso-cfdi' },
+				{ name: 'Nómina', count: 50, href: '/catalogos/sat/nomina' },
 			]
 		},
 		{
@@ -20,7 +20,6 @@
 			items: [
 				{ name: 'Estados', count: 32, href: '/catalogos/inegi/estados' },
 				{ name: 'Municipios', count: 2469, href: '/catalogos/inegi/municipios' },
-				{ name: 'Localidades', count: 304000, href: '/catalogos/inegi/localidades' },
 				{ name: 'SCIAN', count: 1800, href: '/catalogos/inegi/scian' },
 			]
 		},
@@ -31,8 +30,7 @@
 			items: [
 				{ name: 'Instituciones Bancarias', count: 150, href: '/catalogos/banxico/bancos' },
 				{ name: 'Códigos de Plaza', count: 900, href: '/catalogos/banxico/plazas' },
-				{ name: 'Tipo de Cambio', count: 10000, href: '/catalogos/banxico/tipo-cambio' },
-				{ name: 'UDIs', count: 12000, href: '/catalogos/banxico/udis' },
+				{ name: 'Monedas', count: 180, href: '/catalogos/banxico/monedas' },
 			]
 		},
 		{
@@ -40,7 +38,7 @@
 			description: 'Servicio Postal Mexicano',
 			color: 'bg-amber-500',
 			items: [
-				{ name: 'Códigos Postales', count: 145000, href: '/catalogos/sepomex/cp' },
+				{ name: 'Códigos Postales', count: 145000, href: '/catalogos/sepomex/codigos-postales' },
 			]
 		},
 	];
@@ -49,14 +47,21 @@
 		{ name: 'RFC', description: 'Registro Federal de Contribuyentes', icon: FileText, href: '/validadores/rfc' },
 		{ name: 'CURP', description: 'Clave Única de Registro de Población', icon: FileText, href: '/validadores/curp' },
 		{ name: 'CLABE', description: 'Clave Bancaria Estandarizada', icon: Building2, href: '/validadores/clabe' },
-		{ name: 'NSS', description: 'Número de Seguro Social', icon: FileText, href: '/validadores/nss' },
+		{ name: 'NSS', description: 'Número de Seguro Social', icon: Shield, href: '/validadores/nss' },
+	];
+
+	const generators = [
+		{ name: 'RFC', description: 'Generar RFC con homoclave', icon: FileText, href: '/generadores/rfc' },
+		{ name: 'CURP', description: 'Generar CURP completa', icon: FileText, href: '/generadores/curp' },
 	];
 
 	const calculators = [
 		{ name: 'ISR', description: 'Impuesto Sobre la Renta', href: '/calculadoras/isr' },
+		{ name: 'RESICO', description: 'Régimen Simplificado', href: '/calculadoras/resico' },
 		{ name: 'IVA', description: 'Impuesto al Valor Agregado', href: '/calculadoras/iva' },
-		{ name: 'Tipo de Cambio', description: 'USD/MXN histórico', href: '/calculadoras/tipo-cambio' },
-		{ name: 'UDI', description: 'Conversión UDI ↔ MXN', href: '/calculadoras/udi' },
+		{ name: 'IEPS', description: 'Impuesto Especial', href: '/calculadoras/ieps' },
+		{ name: 'IMSS', description: 'Cuotas obrero-patronales', href: '/calculadoras/imss' },
+		{ name: 'Costo Trabajador', description: 'Costo total de nómina', href: '/calculadoras/costo-trabajador' },
 	];
 
 	function formatCount(num: number): string {
@@ -88,8 +93,13 @@
 					<Database class="h-4 w-4" />
 					Explorar catálogos
 				</a>
-				<a href="/api" class="btn btn-secondary">
-					Ver documentación API
+				<a href="/validadores" class="btn btn-secondary">
+					<CheckCircle class="h-4 w-4" />
+					Validadores
+				</a>
+				<a href="/calculadoras" class="btn btn-secondary">
+					<Calculator class="h-4 w-4" />
+					Calculadoras
 				</a>
 			</div>
 		</div>
@@ -181,15 +191,48 @@
 	</div>
 </section>
 
-<!-- Calculators -->
+<!-- Generators -->
 <section class="py-12">
+	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+		<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-2">
+			<Sparkles class="h-6 w-6 text-amber-500" />
+			Generadores
+		</h2>
+
+		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+			{#each generators as gen}
+				<a
+					href={gen.href}
+					class="card p-5 hover:border-brand-300 dark:hover:border-brand-700 transition-colors group"
+				>
+					<div class="flex items-start gap-3">
+						<div class="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+							<svelte:component this={gen.icon} class="h-5 w-5" />
+						</div>
+						<div>
+							<h3 class="font-semibold text-slate-900 dark:text-white group-hover:text-brand-500">
+								{gen.name}
+							</h3>
+							<p class="text-sm text-slate-500 dark:text-slate-400">
+								{gen.description}
+							</p>
+						</div>
+					</div>
+				</a>
+			{/each}
+		</div>
+	</div>
+</section>
+
+<!-- Calculators -->
+<section class="py-12 bg-slate-50 dark:bg-slate-800/50">
 	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 		<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-2">
 			<Calculator class="h-6 w-6 text-purple-500" />
 			Calculadoras
 		</h2>
 
-		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 			{#each calculators as calc}
 				<a
 					href={calc.href}

@@ -1,0 +1,156 @@
+{
+  "metadata": {
+    "catalog": "SAT_Retenciones",
+    "description": "Tasas de retención de ISR e IVA",
+    "source": "Ley del ISR, Ley del IVA",
+    "last_updated": "2025-01-01",
+    "notes": "Retenciones aplicables por diversos conceptos"
+  },
+  "isr_retenciones": [
+    {
+      "concepto": "salarios",
+      "tasa": "segun_tarifa",
+      "descripcion": "Retención según tabla del Art. 96 LISR",
+      "base": "ingresos_gravables_menos_deducciones",
+      "articulo": "Art. 96 LISR"
+    },
+    {
+      "concepto": "asimilados_salarios",
+      "tasa": "segun_tarifa",
+      "descripcion": "Ingresos asimilados a salarios",
+      "base": "ingresos_gravables",
+      "articulo": "Art. 94 LISR"
+    },
+    {
+      "concepto": "honorarios",
+      "tasa": 10.0,
+      "descripcion": "Retención por honorarios a personas físicas",
+      "base": "monto_total_sin_iva",
+      "articulo": "Art. 106 LISR",
+      "vigencia_inicio": "2014-01-01",
+      "vigencia_fin": null
+    },
+    {
+      "concepto": "arrendamiento",
+      "tasa": 10.0,
+      "descripcion": "Retención por arrendamiento de inmuebles",
+      "base": "monto_total_sin_iva",
+      "articulo": "Art. 116 LISR",
+      "vigencia_inicio": "2014-01-01",
+      "vigencia_fin": null
+    },
+    {
+      "concepto": "intereses",
+      "tasa": "variable",
+      "descripcion": "Retención por intereses (0.58% a 20% según tipo)",
+      "base": "monto_intereses",
+      "articulo": "Art. 135 LISR",
+      "tasas_especificas": [
+        {"tipo": "intereses_sistema_financiero", "tasa": 0.58},
+        {"tipo": "intereses_otros", "tasa": 20.0}
+      ]
+    },
+    {
+      "concepto": "premios",
+      "tasa": 1.0,
+      "descripcion": "Retención por premios hasta $600,000",
+      "base": "monto_premio",
+      "articulo": "Art. 163 LISR",
+      "vigencia_inicio": "2014-01-01",
+      "vigencia_fin": null,
+      "nota": "21% para premios mayores a $600,000"
+    },
+    {
+      "concepto": "dividendos",
+      "tasa": 10.0,
+      "descripcion": "Retención por distribución de dividendos",
+      "base": "utilidad_distribuida",
+      "articulo": "Art. 140 LISR",
+      "vigencia_inicio": "2014-01-01",
+      "vigencia_fin": null
+    },
+    {
+      "concepto": "enajenacion_acciones",
+      "tasa": 20.0,
+      "descripcion": "Retención por enajenación de acciones",
+      "base": "ganancia",
+      "articulo": "Art. 129 LISR",
+      "vigencia_inicio": "2014-01-01",
+      "vigencia_fin": null
+    },
+    {
+      "concepto": "fletes",
+      "tasa": 4.0,
+      "descripcion": "Retención por servicios de autotransporte terrestre de carga",
+      "base": "monto_total_sin_iva",
+      "articulo": "Art. 106 LISR",
+      "vigencia_inicio": "2014-01-01",
+      "vigencia_fin": null
+    }
+  ],
+  "iva_retenciones": [
+    {
+      "concepto": "servicios_profesionales",
+      "tasa": 66.67,
+      "descripcion": "Retención de 2/3 partes del IVA trasladado",
+      "base": "iva_trasladado",
+      "articulo": "Art. 1-A LIVA",
+      "vigencia_inicio": "2010-01-01",
+      "vigencia_fin": null,
+      "calculo": "iva_trasladado * 0.6667"
+    },
+    {
+      "concepto": "arrendamiento",
+      "tasa": 66.67,
+      "descripcion": "Retención de 2/3 partes del IVA trasladado",
+      "base": "iva_trasladado",
+      "articulo": "Art. 1-A LIVA",
+      "vigencia_inicio": "2010-01-01",
+      "vigencia_fin": null
+    },
+    {
+      "concepto": "autotransporte_terrestre",
+      "tasa": 100.0,
+      "descripcion": "Retención total del IVA trasladado",
+      "base": "iva_trasladado",
+      "articulo": "Art. 1-A LIVA",
+      "vigencia_inicio": "2010-01-01",
+      "vigencia_fin": null
+    },
+    {
+      "concepto": "servicios_comisionistas",
+      "tasa": 66.67,
+      "descripcion": "Retención de 2/3 partes del IVA trasladado",
+      "base": "iva_trasladado",
+      "articulo": "Art. 1-A LIVA",
+      "vigencia_inicio": "2010-01-01",
+      "vigencia_fin": null
+    }
+  ],
+  "retenciones_definitivas": [
+    {
+      "concepto": "extranjeros_sin_establecimiento",
+      "tasa_isr": 25.0,
+      "descripcion": "Retención definitiva a residentes en el extranjero",
+      "articulo": "Art. 154 LISR"
+    },
+    {
+      "concepto": "regalias_extranjeros",
+      "tasa_isr": 25.0,
+      "descripcion": "Regalías pagadas a residentes en el extranjero",
+      "articulo": "Art. 167 LISR"
+    },
+    {
+      "concepto": "asistencia_tecnica_extranjeros",
+      "tasa_isr": 25.0,
+      "descripcion": "Asistencia técnica a residentes en el extranjero",
+      "articulo": "Art. 167 LISR"
+    },
+    {
+      "concepto": "intereses_extranjeros",
+      "tasa_isr": "4.9_a_40.0",
+      "descripcion": "Intereses a residentes en el extranjero (varía según tipo)",
+      "articulo": "Art. 166 LISR"
+    }
+  ]
+}
