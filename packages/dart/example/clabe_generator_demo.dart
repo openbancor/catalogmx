@@ -67,9 +67,24 @@ void main() {
   // Example 7: Test the algorithm with known examples
   print('7. Test algorithm with known examples:');
   final testCases = [
-    {'bank': '002', 'branch': '010', 'account': '07777777777', 'expected': '002010077777777771'},
-    {'bank': '012', 'branch': '180', 'account': '00123456789', 'expected': '012180001234567899'},
-    {'bank': '014', 'branch': '028', 'account': '00005300537', 'expected': '014028000005300537'},
+    {
+      'bank': '002',
+      'branch': '010',
+      'account': '07777777777',
+      'expected': '002010077777777771'
+    },
+    {
+      'bank': '012',
+      'branch': '180',
+      'account': '00123456789',
+      'expected': '012180001234567899'
+    },
+    {
+      'bank': '014',
+      'branch': '028',
+      'account': '00005300537',
+      'expected': '014028000005300537'
+    },
   ];
 
   for (final test in testCases) {
