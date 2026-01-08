@@ -92,11 +92,7 @@ class GirosMercantilesCatalog:
     def get_by_categoria(cls, categoria: str) -> list[GiroMercantil]:
         """Obtiene giros por categoría."""
         cls._load_data()
-        return (
-            cls._by_categoria.get(categoria, []).copy()
-            if cls._by_categoria
-            else []
-        )
+        return cls._by_categoria.get(categoria, []).copy() if cls._by_categoria else []
 
     @classmethod
     def get_requieren_licencia_alcohol(cls) -> list[GiroMercantil]:

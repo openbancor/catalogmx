@@ -59,11 +59,12 @@ class ISRBracket {
   }
 
   Map<String, dynamic> toJson() => {
-    'limiteInferior': limiteInferior,
-    'limiteSuperior': limiteSuperior == double.infinity ? null : limiteSuperior,
-    'cuotaFija': cuotaFija,
-    'tasa': tasa,
-  };
+        'limiteInferior': limiteInferior,
+        'limiteSuperior':
+            limiteSuperior == double.infinity ? null : limiteSuperior,
+        'cuotaFija': cuotaFija,
+        'tasa': tasa,
+      };
 }
 
 /// Complete ISR calculation result
@@ -95,18 +96,18 @@ class ISRCalculationResult {
   });
 
   Map<String, dynamic> toJson() => {
-    'ingresoGravable': ingresoGravable,
-    'periodo': periodo,
-    'year': year,
-    'ingresoMensualizado': ingresoMensualizado,
-    'bracket': bracket.toJson(),
-    'excedente': excedente,
-    'impuestoMarginal': impuestoMarginal,
-    'isrAntesSubsidio': isrAntesSubsidio,
-    'subsidio': subsidio,
-    'isrFinal': isrFinal,
-    'tasaEfectiva': tasaEfectiva,
-  };
+        'ingresoGravable': ingresoGravable,
+        'periodo': periodo,
+        'year': year,
+        'ingresoMensualizado': ingresoMensualizado,
+        'bracket': bracket.toJson(),
+        'excedente': excedente,
+        'impuestoMarginal': impuestoMarginal,
+        'isrAntesSubsidio': isrAntesSubsidio,
+        'subsidio': subsidio,
+        'isrFinal': isrFinal,
+        'tasaEfectiva': tasaEfectiva,
+      };
 }
 
 /// ISR Calculator class
@@ -196,8 +197,7 @@ class ISRCalculator {
     ISRYear year = ISRYear.year2026,
   }) {
     // For 2026, use period-specific tables directly
-    final usePeriodTables =
-        year == ISRYear.year2026 &&
+    final usePeriodTables = year == ISRYear.year2026 &&
         [
           ISRPeriod.diaria,
           ISRPeriod.semanal,
@@ -238,9 +238,8 @@ class ISRCalculator {
           ? 0.0
           : isrAntesSubsidio - subsidioProrrateado;
 
-      final tasaEfectiva = ingresoGravable > 0
-          ? (isrFinal / ingresoGravable * 100)
-          : 0.0;
+      final tasaEfectiva =
+          ingresoGravable > 0 ? (isrFinal / ingresoGravable * 100) : 0.0;
 
       return ISRCalculationResult(
         ingresoGravable: ingresoGravable,
@@ -285,16 +284,14 @@ class ISRCalculator {
     final subsidio = calculateSubsidy(ingresoMensualizado, year);
 
     // Final ISR (monthly)
-    final isrFinalMensual = isrAntesSubsidio - subsidio < 0
-        ? 0.0
-        : isrAntesSubsidio - subsidio;
+    final isrFinalMensual =
+        isrAntesSubsidio - subsidio < 0 ? 0.0 : isrAntesSubsidio - subsidio;
 
     // Convert back to original period
     final isrPeriodo = isrFinalMensual / factor;
 
-    final tasaEfectiva = ingresoGravable > 0
-        ? (isrPeriodo / ingresoGravable * 100)
-        : 0.0;
+    final tasaEfectiva =
+        ingresoGravable > 0 ? (isrPeriodo / ingresoGravable * 100) : 0.0;
 
     return ISRCalculationResult(
       ingresoGravable: ingresoGravable,

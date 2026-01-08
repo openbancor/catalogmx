@@ -70,16 +70,14 @@ class GirosMercantilesCatalog {
 
       // Load categorias
       final categoriasJson = data['categorias'] as List?;
-      _categorias =
-          categoriasJson
+      _categorias = categoriasJson
               ?.map((e) => CategoriaGiro.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [];
 
       // Load giros
       final girosJson = data['giros'] as List?;
-      _giros =
-          girosJson
+      _giros = girosJson
               ?.map((e) => GiroMercantil.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [];

@@ -106,9 +106,7 @@ class SectoresCNBV:
 
         regulador_upper = regulador.upper()
         return [
-            s
-            for s in cls._sectores
-            if s.get("regulador_principal", "").upper() == regulador_upper
+            s for s in cls._sectores if s.get("regulador_principal", "").upper() == regulador_upper
         ]
 
     @classmethod

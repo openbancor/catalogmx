@@ -36,8 +36,7 @@ class SectorCNBV {
       descripcion: json['descripcion'] as String,
       leyAplicable: json['ley_aplicable'] as String,
       reguladorPrincipal: json['regulador_principal'] as String,
-      supervisoresAdicionales:
-          (json['supervisores_adicionales'] as List?)
+      supervisoresAdicionales: (json['supervisores_adicionales'] as List?)
               ?.map((e) => e as String)
               .toList() ??
           [],
@@ -88,16 +87,14 @@ class SectoresCNBVCatalog {
 
       // Load sectores
       final sectoresJson = data['sectores'] as List?;
-      _sectores =
-          sectoresJson
+      _sectores = sectoresJson
               ?.map((e) => SectorCNBV.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [];
 
       // Load reguladores
       final reguladoresJson = data['reguladores'] as List?;
-      _reguladores =
-          reguladoresJson
+      _reguladores = reguladoresJson
               ?.map(
                 (e) => ReguladorFinanciero.fromJson(e as Map<String, dynamic>),
               )
@@ -172,9 +169,9 @@ class SectoresCNBVCatalog {
     _loadData();
     final siglasUpper = siglas.toUpperCase();
     return _reguladores!.cast<ReguladorFinanciero?>().firstWhere(
-      (r) => r!.siglas.toUpperCase() == siglasUpper,
-      orElse: () => null,
-    );
+          (r) => r!.siglas.toUpperCase() == siglasUpper,
+          orElse: () => null,
+        );
   }
 
   /// Número total de sectores

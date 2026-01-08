@@ -52,8 +52,7 @@ class SCIANCatalog {
 
       // Load sectores
       final sectoresJson = data['sectores'] as List?;
-      _sectores =
-          sectoresJson
+      _sectores = sectoresJson
               ?.map((e) => SectorSCIAN.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [];

@@ -272,6 +272,43 @@ All linting checks are enforced in GitHub Actions CI:
 
 Code that fails any check will NOT be merged.
 
+### Pre-commit Checklist (MANDATORY)
+
+**CRITICAL: Run these commands before EVERY commit to avoid CI failures:**
+
+```bash
+# Quick format all (run from repo root)
+cd packages/python && black catalogmx/ && cd ../..
+cd packages/dart && dart format . && cd ../..
+
+# Or use this one-liner from repo root:
+(cd packages/python && black catalogmx/) && (cd packages/dart && dart format .) && echo "✅ All formatted"
+```
+
+**Full pre-commit validation:**
+
+```bash
+# Python
+cd packages/python
+black catalogmx/ && ruff check catalogmx/
+
+# Dart
+cd packages/dart
+dart format . && dart analyze
+
+# YAML (workflows)
+yamllint -d "{extends: relaxed, rules: {line-length: {max: 200}, truthy: disable}}" .github/workflows/
+```
+
+### Common CI Failures and Fixes
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `black would reformat` | Python not formatted | `black catalogmx/` |
+| `dart format --set-exit-if-changed` | Dart not formatted | `dart format .` |
+| `ruff check` failures | Lint errors | `ruff check --fix catalogmx/` |
+| `yamllint` errors | YAML syntax/trailing spaces | Remove trailing spaces |
+
 ---
 
 ## Quality Standards & CI/CD Pipeline
