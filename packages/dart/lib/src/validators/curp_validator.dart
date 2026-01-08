@@ -454,7 +454,8 @@ class CURPGenerator {
     final differentiator = fechaNacimiento.year < 2000 ? '0' : 'A';
 
     // Position 18: Check digit (calculable)
-    final tempCurp = _generateLetters() +
+    final tempCurp =
+        _generateLetters() +
         _generateDate() +
         sexo.toUpperCase() +
         _getStateCode(estado) +

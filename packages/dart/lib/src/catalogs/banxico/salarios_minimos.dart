@@ -35,8 +35,9 @@ class SalariosMinimosCatalog {
     _loadData();
     if (_data!.isEmpty) return null;
 
-    final fronteraRecords =
-        _data!.where((r) => r['zona'] == 'frontera_norte').toList();
+    final fronteraRecords = _data!
+        .where((r) => r['zona'] == 'frontera_norte')
+        .toList();
     if (fronteraRecords.isEmpty) return null;
 
     fronteraRecords.sort(
@@ -46,8 +47,9 @@ class SalariosMinimosCatalog {
   }
 
   static double? getSalarioActualZona(String zona) {
-    final record =
-        zona == 'frontera_norte' ? getActualFrontera() : getActualGeneral();
+    final record = zona == 'frontera_norte'
+        ? getActualFrontera()
+        : getActualGeneral();
     return record?['salario_minimo'] as double?;
   }
 }

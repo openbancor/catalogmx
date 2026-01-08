@@ -35,8 +35,9 @@ abstract class BaseCatalog<T> {
         if (data.containsKey('items')) {
           final itemsData = data['items'];
           if (itemsData is List) {
-            items =
-                itemsData.map((item) => item as Map<String, dynamic>).toList();
+            items = itemsData
+                .map((item) => item as Map<String, dynamic>)
+                .toList();
           } else {
             items = [data as Map<String, dynamic>];
           }
@@ -74,8 +75,9 @@ abstract class BaseCatalog<T> {
         if (data.containsKey('items')) {
           final itemsData = data['items'];
           if (itemsData is List) {
-            items =
-                itemsData.map((item) => item as Map<String, dynamic>).toList();
+            items = itemsData
+                .map((item) => item as Map<String, dynamic>)
+                .toList();
           } else {
             items = [data as Map<String, dynamic>];
           }

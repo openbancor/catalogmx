@@ -151,7 +151,7 @@ class ConfigAutotransporteCatalog {
     );
     _data = jsonData.isNotEmpty && jsonData.first.containsKey('configuraciones')
         ? (jsonData.first['configuraciones'] as List)
-            .cast<Map<String, dynamic>>()
+              .cast<Map<String, dynamic>>()
         : jsonData;
     _byClave = {for (var item in _data!) item['clave'] as String: item};
   }
@@ -208,8 +208,8 @@ class MaterialPeligrosoCatalog {
         .where(
           (item) =>
               (item['descripcion'] as String? ?? '').toUpperCase().contains(
-                    q,
-                  ) ||
+                q,
+              ) ||
               (item['nombre'] as String? ?? '').toUpperCase().contains(q),
         )
         .toList();

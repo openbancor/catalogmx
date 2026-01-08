@@ -30,15 +30,22 @@ export 'banxico/udis.dart';
 export 'ift/operadores_moviles.dart';
 
 // ============================================================================
+// CNBV CATALOGS
+// ============================================================================
+export 'cnbv/sectores.dart';
+
+// ============================================================================
 // INEGI CATALOGS
 // ============================================================================
 export 'inegi/localidades.dart';
 export 'inegi/municipios.dart';
+export 'inegi/scian.dart';
 export 'inegi/states.dart';
 
 // ============================================================================
 // MEXICO GENERAL CATALOGS
 // ============================================================================
+export 'mexico/giros_mercantiles.dart';
 export 'mexico/hoy_no_circula.dart';
 export 'mexico/placas_formatos.dart';
 export 'mexico/salarios_minimos.dart'; // This is the main SalariosMinimosCatalog
