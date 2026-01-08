@@ -278,25 +278,28 @@ Code that fails any check will NOT be merged.
 
 ```bash
 # Quick format all (run from repo root)
-cd packages/python && black catalogmx/ && cd ../..
-cd packages/dart && dart format . && cd ../..
-
-# Or use this one-liner from repo root:
-(cd packages/python && black catalogmx/) && (cd packages/dart && dart format .) && echo "✅ All formatted"
+(cd packages/python && black catalogmx/) && \
+(cd packages/typescript && npm run format 2>/dev/null || true) && \
+(cd packages/dart && dart format .) && \
+echo "✅ All formatted"
 ```
 
 **Full pre-commit validation:**
 
 ```bash
-# Python
+# Python (REQUIRED)
 cd packages/python
 black catalogmx/ && ruff check catalogmx/
 
-# Dart
+# TypeScript (REQUIRED if modified)
+cd packages/typescript
+npm run lint && npm run format:check && npm run typecheck
+
+# Dart (REQUIRED)
 cd packages/dart
 dart format . && dart analyze
 
-# YAML (workflows)
+# YAML (REQUIRED for workflow changes)
 yamllint -d "{extends: relaxed, rules: {line-length: {max: 200}, truthy: disable}}" .github/workflows/
 ```
 
@@ -308,6 +311,9 @@ yamllint -d "{extends: relaxed, rules: {line-length: {max: 200}, truthy: disable
 | `dart format --set-exit-if-changed` | Dart not formatted | `dart format .` |
 | `ruff check` failures | Lint errors | `ruff check --fix catalogmx/` |
 | `yamllint` errors | YAML syntax/trailing spaces | Remove trailing spaces |
+| `npm run lint` failures | ESLint errors | `npm run lint:fix` |
+| `npm run format:check` failures | Prettier errors | `npm run format` |
+| `tsc` type errors | TypeScript errors | Fix type issues manually |
 
 ---
 
