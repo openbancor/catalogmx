@@ -310,7 +310,10 @@ export function describeClabe(clabe: string): string {
     return `CLABE invalida: ${clabe}`;
   }
 
-  const lines: string[] = [`CLABE: ${formatClabe(clabe)}`, `Estado: ${info.isValid ? 'Valida' : 'Invalida'}`];
+  const lines: string[] = [
+    `CLABE: ${formatClabe(clabe)}`,
+    `Estado: ${info.isValid ? 'Valida' : 'Invalida'}`,
+  ];
 
   if (info.bank) {
     let bankLine = `Banco: ${info.bank.name}`;
