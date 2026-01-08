@@ -28,7 +28,12 @@ from .tipo_cambio_usd_sqlite import TipoCambioUSDCatalog
 # Dynamic catalogs (SQLite-based, auto-updating)
 from .udis_sqlite import UDICatalog
 
+# Aliases for convenience
+Banks = BankCatalog
+Bancos = BankCatalog
+
 __all__ = [
+    # Main classes
     "BankCatalog",
     "CETES28Catalog",
     "CodigosPlazaCatalog",
@@ -39,4 +44,7 @@ __all__ = [
     "TIIE28Catalog",
     "TipoCambioUSDCatalog",
     "UDICatalog",
+    # Aliases
+    "Banks",
+    "Bancos",
 ]

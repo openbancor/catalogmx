@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Modern, user-friendly API for RFC and CURP generation and validation.
+Modern, user-friendly API for RFC, CURP, CLABE, and NSS validation and generation.
 
 This module provides simple functions for common use cases, making it easier
 to work with Mexican identification codes without dealing with class constructors.
@@ -8,7 +8,9 @@ to work with Mexican identification codes without dealing with class constructor
 
 import datetime
 
+from .validators.clabe import CLABEValidator
 from .validators.curp import CURPGenerator, CURPValidator
+from .validators.nss import NSSValidator
 from .validators.rfc import RFCGeneratorFisicas, RFCGeneratorMorales, RFCValidator
 
 # ============================================================================
@@ -306,6 +308,150 @@ def is_valid_rfc(rfc: str) -> bool:
 def is_valid_curp(curp: str) -> bool:
     """Quick CURP validation. Alias for validate_curp()."""
     return validate_curp(curp)
+
+
+# ============================================================================
+# CLABE Helper Functions
+# ============================================================================
+
+
+def validate_clabe(clabe: str) -> bool:
+    """
+    Validate a CLABE (Clave Bancaria Estandarizada) number.
+
+    Args:
+        clabe: CLABE number to validate (18 digits)
+
+    Returns:
+        bool: True if valid, False otherwise
+
+    Example:
+        >>> validate_clabe('002010077777777771')
+        True
+        >>> validate_clabe('INVALID')
+        False
+    """
+    try:
+        validator = CLABEValidator(clabe)
+        return validator.is_valid()
+    except Exception:
+        return False
+
+
+def is_valid_clabe(clabe: str) -> bool:
+    """Quick CLABE validation. Alias for validate_clabe()."""
+    return validate_clabe(clabe)
+
+
+def get_clabe_info(clabe: str) -> dict | None:
+    """
+    Extract information from a CLABE number.
+
+    Args:
+        clabe: CLABE number to analyze
+
+    Returns:
+        dict: Extracted information or None if invalid
+            - bank_code: 3-digit bank code
+            - branch_code: 3-digit branch/plaza code
+            - account_number: 11-digit account number
+            - check_digit: 1-digit check digit
+            - is_valid: True if CLABE is valid
+
+    Example:
+        >>> info = get_clabe_info('002010077777777771')
+        >>> print(info['bank_code'])
+        '002'
+    """
+    try:
+        if not clabe or len(clabe) != 18 or not clabe.isdigit():
+            return None
+
+        validator = CLABEValidator(clabe)
+        is_valid = validator.is_valid()
+
+        return {
+            "bank_code": clabe[:3],
+            "branch_code": clabe[3:6],
+            "account_number": clabe[6:17],
+            "check_digit": clabe[17],
+            "is_valid": is_valid,
+        }
+    except Exception:
+        return None
+
+
+# ============================================================================
+# NSS Helper Functions
+# ============================================================================
+
+
+def validate_nss(nss: str) -> bool:
+    """
+    Validate an NSS (Número de Seguridad Social) number.
+
+    Args:
+        nss: NSS number to validate (11 digits)
+
+    Returns:
+        bool: True if valid, False otherwise
+
+    Example:
+        >>> validate_nss('12345678903')
+        True
+        >>> validate_nss('INVALID')
+        False
+    """
+    try:
+        validator = NSSValidator(nss)
+        return validator.is_valid()
+    except Exception:
+        return False
+
+
+def is_valid_nss(nss: str) -> bool:
+    """Quick NSS validation. Alias for validate_nss()."""
+    return validate_nss(nss)
+
+
+def get_nss_info(nss: str) -> dict | None:
+    """
+    Extract information from an NSS number.
+
+    Args:
+        nss: NSS number to analyze
+
+    Returns:
+        dict: Extracted information or None if invalid
+            - subdelegation: 2-digit subdelegation code
+            - registration_year: 2-digit registration year
+            - birth_year: 2-digit birth year
+            - sequential: 4-digit sequential number
+            - check_digit: 1-digit check digit
+            - is_valid: True if NSS is valid
+
+    Example:
+        >>> info = get_nss_info('12345678903')
+        >>> print(info['subdelegation'])
+        '12'
+    """
+    try:
+        if not nss or len(nss) != 11 or not nss.isdigit():
+            return None
+
+        validator = NSSValidator(nss)
+        is_valid = validator.is_valid()
+
+        return {
+            "subdelegation": nss[:2],
+            "registration_year": nss[2:4],
+            "birth_year": nss[4:6],
+            "sequential": nss[6:10],
+            "check_digit": nss[10],
+            "is_valid": is_valid,
+        }
+    except Exception:
+        return None
 
 
 # ============================================================================
