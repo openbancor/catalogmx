@@ -20,14 +20,32 @@ Examples:
 """
 
 import random
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
-from catalogmx.catalogs.banxico.banks import BankCatalog
-from catalogmx.catalogs.banxico.codigos_plaza import CodigosPlazaCatalog
-from catalogmx.validators.clabe import (
-    generate_clabe,
-    validate_clabe,
-)
+# Lazy imports to avoid circular dependencies
+if TYPE_CHECKING:
+    pass
+
+
+def _get_bank_catalog():
+    """Lazy import of BankCatalog to avoid circular imports."""
+    from catalogmx.catalogs.banxico.banks import BankCatalog
+
+    return BankCatalog
+
+
+def _get_plaza_catalog():
+    """Lazy import of CodigosPlazaCatalog to avoid circular imports."""
+    from catalogmx.catalogs.banxico.codigos_plaza import CodigosPlazaCatalog
+
+    return CodigosPlazaCatalog
+
+
+def _get_clabe_functions():
+    """Lazy import of CLABE functions to avoid circular imports."""
+    from catalogmx.validators.clabe import generate_clabe, validate_clabe
+
+    return generate_clabe, validate_clabe
 
 
 class BankInfo(TypedDict, total=False):
@@ -102,6 +120,11 @@ def decode_clabe(clabe: str) -> DecodedCLABE | None:
     account_number = clabe[6:17]
     check_digit = clabe[17]
 
+    # Lazy imports
+    BankCatalog = _get_bank_catalog()
+    CodigosPlazaCatalog = _get_plaza_catalog()
+    _, validate_clabe = _get_clabe_functions()
+
     # Get bank info
     bank_data = BankCatalog.get_bank_by_code(bank_code)
     bank_info: BankInfo | None = None
@@ -172,6 +195,11 @@ def generate_clabe_random(
         >>> clabe
         '012180123456789010'
     """
+    # Lazy imports
+    BankCatalog = _get_bank_catalog()
+    CodigosPlazaCatalog = _get_plaza_catalog()
+    generate_clabe, _ = _get_clabe_functions()
+
     # Get or generate bank code
     if bank_code is None:
         all_banks = BankCatalog.get_spei_banks()
@@ -246,6 +274,10 @@ def generate_clabe_for_bank(bank_name: str, plaza_name: str | None = None) -> st
         >>> info["bank"]["name"]
         'SANTANDER'
     """
+    # Lazy imports
+    BankCatalog = _get_bank_catalog()
+    CodigosPlazaCatalog = _get_plaza_catalog()
+
     bank = BankCatalog.get_bank_by_name(bank_name)
     if not bank:
         return None
@@ -275,6 +307,7 @@ def get_common_banks() -> list[dict]:
         >>> banks[0]["name"]
         'BANAMEX'
     """
+    BankCatalog = _get_bank_catalog()
     return BankCatalog.get_spei_banks()
 
 
@@ -293,6 +326,7 @@ def get_plaza_suggestions(query: str) -> list[dict]:
         >>> any(p["plaza"] == "Guadalajara" for p in plazas)
         True
     """
+    CodigosPlazaCatalog = _get_plaza_catalog()
     return CodigosPlazaCatalog.search(query)
 
 
