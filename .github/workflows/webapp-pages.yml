@@ -57,7 +57,7 @@ jobs:
         working-directory: packages/shared-data
         run: |
           python build_unified_sqlite.py --output mexico.sqlite3
-          
+
       - name: Close WAL mode for browser compatibility
         run: |
           if command -v sqlite3 &> /dev/null; then
