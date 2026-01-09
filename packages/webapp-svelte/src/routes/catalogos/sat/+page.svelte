@@ -1,55 +1,56 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { ChevronRight, FileText, CreditCard, Building2, Receipt, Truck, Globe, Percent } from 'lucide-svelte';
 
 	const catalogs = [
 		{
 			category: 'CFDI 4.0',
 			items: [
-				{ title: 'Productos y Servicios', description: '52,000+ claves de productos y servicios', href: '/catalogos/sat/cfdi', icon: FileText },
-				{ title: 'Claves de Unidad', description: '2,800+ unidades de medida', href: '/catalogos/sat/unidades', icon: FileText },
-				{ title: 'Regímenes Fiscales', description: '25 tipos de régimen', href: '/catalogos/sat/regimen-fiscal', icon: Building2 },
-				{ title: 'Uso de CFDI', description: '22 claves de uso', href: '/catalogos/sat/uso-cfdi', icon: Receipt },
-				{ title: 'Formas de Pago', description: '18 métodos de pago', href: '/catalogos/sat/forma-pago', icon: CreditCard },
-				{ title: 'Métodos de Pago', description: 'PUE, PPD', href: '/catalogos/sat/metodo-pago', icon: CreditCard },
-				{ title: 'Monedas', description: '180+ divisas', href: '/catalogos/sat/moneda', icon: Globe },
-				{ title: 'Países', description: '250 países', href: '/catalogos/sat/pais', icon: Globe },
-				{ title: 'Tipos de Comprobante', description: '6 tipos', href: '/catalogos/sat/tipo-comprobante', icon: FileText },
+				{ title: 'Productos y Servicios', description: '52,000+ claves de productos y servicios', href: `${base}/catalogos/sat/cfdi`, icon: FileText },
+				{ title: 'Claves de Unidad', description: '2,800+ unidades de medida', href: `${base}/catalogos/sat/unidades`, icon: FileText },
+				{ title: 'Regímenes Fiscales', description: '25 tipos de régimen', href: `${base}/catalogos/sat/regimen-fiscal`, icon: Building2 },
+				{ title: 'Uso de CFDI', description: '22 claves de uso', href: `${base}/catalogos/sat/uso-cfdi`, icon: Receipt },
+				{ title: 'Formas de Pago', description: '18 métodos de pago', href: `${base}/catalogos/sat/forma-pago`, icon: CreditCard },
+				{ title: 'Métodos de Pago', description: 'PUE, PPD', href: `${base}/catalogos/sat/metodo-pago`, icon: CreditCard },
+				{ title: 'Monedas', description: '180+ divisas', href: `${base}/catalogos/sat/moneda`, icon: Globe },
+				{ title: 'Países', description: '250 países', href: `${base}/catalogos/sat/pais`, icon: Globe },
+				{ title: 'Tipos de Comprobante', description: '6 tipos', href: `${base}/catalogos/sat/tipo-comprobante`, icon: FileText },
 			]
 		},
 		{
 			category: 'Nómina 1.2',
 			items: [
-				{ title: 'Catálogos de Nómina', description: 'Todos los catálogos', href: '/catalogos/sat/nomina', icon: FileText },
-				{ title: 'Bancos para Nómina', description: '100+ instituciones', href: '/catalogos/sat/nomina/banco', icon: Building2 },
-				{ title: 'Tipos de Contrato', description: '10 tipos', href: '/catalogos/sat/nomina/tipo-contrato', icon: FileText },
-				{ title: 'Tipos de Régimen', description: '14 regímenes', href: '/catalogos/sat/nomina/tipo-regimen', icon: Building2 },
-				{ title: 'Periodicidad', description: '10 periodos', href: '/catalogos/sat/nomina/periodicidad', icon: FileText },
-				{ title: 'Tipos de Jornada', description: '6 tipos', href: '/catalogos/sat/nomina/tipo-jornada', icon: FileText },
-				{ title: 'Riesgo de Puesto', description: '5 clases', href: '/catalogos/sat/nomina/riesgo-puesto', icon: FileText },
+				{ title: 'Catálogos de Nómina', description: 'Todos los catálogos', href: `${base}/catalogos/sat/nomina`, icon: FileText },
+				{ title: 'Bancos para Nómina', description: '100+ instituciones', href: `${base}/catalogos/sat/nomina/banco`, icon: Building2 },
+				{ title: 'Tipos de Contrato', description: '10 tipos', href: `${base}/catalogos/sat/nomina/tipo-contrato`, icon: FileText },
+				{ title: 'Tipos de Régimen', description: '14 regímenes', href: `${base}/catalogos/sat/nomina/tipo-regimen`, icon: Building2 },
+				{ title: 'Periodicidad', description: '10 periodos', href: `${base}/catalogos/sat/nomina/periodicidad`, icon: FileText },
+				{ title: 'Tipos de Jornada', description: '6 tipos', href: `${base}/catalogos/sat/nomina/tipo-jornada`, icon: FileText },
+				{ title: 'Riesgo de Puesto', description: '5 clases', href: `${base}/catalogos/sat/nomina/riesgo-puesto`, icon: FileText },
 			]
 		},
 		{
 			category: 'Impuestos',
 			items: [
-				{ title: 'Catálogos de Impuestos', description: 'ISR, IVA, IEPS', href: '/catalogos/sat/impuestos', icon: Percent },
-				{ title: 'Tablas ISR', description: 'Tablas mensuales y anuales', href: '/catalogos/sat/impuestos/isr-tablas', icon: Percent },
-				{ title: 'Tasas IVA', description: 'Tasas por tipo de operación', href: '/catalogos/sat/impuestos/iva-tasas', icon: Percent },
+				{ title: 'Catálogos de Impuestos', description: 'ISR, IVA, IEPS', href: `${base}/catalogos/sat/impuestos`, icon: Percent },
+				{ title: 'Tablas ISR', description: 'Tablas mensuales y anuales', href: `${base}/catalogos/sat/impuestos/isr-tablas`, icon: Percent },
+				{ title: 'Tasas IVA', description: 'Tasas por tipo de operación', href: `${base}/catalogos/sat/impuestos/iva-tasas`, icon: Percent },
 			]
 		},
 		{
 			category: 'Comercio Exterior',
 			items: [
-				{ title: 'Catálogos CCE', description: 'Comercio exterior', href: '/catalogos/sat/comercio-exterior', icon: Globe },
-				{ title: 'Incoterms', description: 'Términos internacionales', href: '/catalogos/sat/comercio-exterior/incoterms', icon: Globe },
-				{ title: 'Claves de Pedimento', description: 'Tipos de operación', href: '/catalogos/sat/comercio-exterior/claves-pedimento', icon: FileText },
+				{ title: 'Catálogos CCE', description: 'Comercio exterior', href: `${base}/catalogos/sat/comercio-exterior`, icon: Globe },
+				{ title: 'Incoterms', description: 'Términos internacionales', href: `${base}/catalogos/sat/comercio-exterior/incoterms`, icon: Globe },
+				{ title: 'Claves de Pedimento', description: 'Tipos de operación', href: `${base}/catalogos/sat/comercio-exterior/claves-pedimento`, icon: FileText },
 			]
 		},
 		{
 			category: 'Carta Porte',
 			items: [
-				{ title: 'Catálogos Carta Porte', description: 'Complemento de traslado', href: '/catalogos/sat/carta-porte', icon: Truck },
-				{ title: 'Aeropuertos', description: 'Códigos IATA', href: '/catalogos/sat/carta-porte/aeropuertos', icon: Truck },
-				{ title: 'Carreteras', description: 'Tramos federales', href: '/catalogos/sat/carta-porte/carreteras', icon: Truck },
+				{ title: 'Catálogos Carta Porte', description: 'Complemento de traslado', href: `${base}/catalogos/sat/carta-porte`, icon: Truck },
+				{ title: 'Aeropuertos', description: 'Códigos IATA', href: `${base}/catalogos/sat/carta-porte/aeropuertos`, icon: Truck },
+				{ title: 'Carreteras', description: 'Tramos federales', href: `${base}/catalogos/sat/carta-porte/carreteras`, icon: Truck },
 			]
 		}
 	];
@@ -63,7 +64,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">SAT</span>
 	</nav>

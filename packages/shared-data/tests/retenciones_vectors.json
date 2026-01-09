@@ -1,0 +1,65 @@
+{
+  "isr": [
+    {
+      "base": 10000.0,
+      "concepto": "honorarios",
+      "expected": {
+        "retencion": 1000.0,
+        "tasa": 10.0
+      }
+    },
+    {
+      "base": 8000.0,
+      "concepto": "arrendamiento",
+      "expected": {
+        "retencion": 800.0,
+        "tasa": 10.0
+      }
+    }
+  ],
+  "iva": [
+    {
+      "iva_trasladado": 1600.0,
+      "concepto": "servicios_profesionales",
+      "expected": {
+        "retencion": 1066.72,
+        "tasa": 66.67
+      }
+    },
+    {
+      "iva_trasladado": 800.0,
+      "concepto": "arrendamiento",
+      "expected": {
+        "retencion": 533.36,
+        "tasa": 66.67
+      }
+    }
+  ],
+  "honorarios": [
+    {
+      "monto_sin_iva": 10000.0,
+      "expected": {
+        "retencion": 1000.0,
+        "tasa": 10.0
+      }
+    }
+  ],
+  "arrendamiento": [
+    {
+      "monto_sin_iva": 10000.0,
+      "expected": {
+        "retencion": 1000.0,
+        "tasa": 10.0
+      }
+    }
+  ],
+  "fletes": [
+    {
+      "monto_sin_iva": 10000.0,
+      "expected": {
+        "retencion": 400.0,
+        "tasa": 4.0
+      }
+    }
+  ]
+}

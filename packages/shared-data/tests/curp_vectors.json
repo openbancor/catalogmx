@@ -1,0 +1,47 @@
+[
+  {
+    "nombre": "Luis Fernando",
+    "apellido_paterno": "Barrera",
+    "apellido_materno": "Castro",
+    "fecha": "1989-12-17",
+    "sexo": "H",
+    "estado": "CDMX",
+    "curp": "BACL891217HDFRSS09"
+  },
+  {
+    "nombre": "Maria Fernanda",
+    "apellido_paterno": "Lopez",
+    "apellido_materno": "Hernandez",
+    "fecha": "1992-01-03",
+    "sexo": "M",
+    "estado": "Jalisco",
+    "curp": "LOHF920103MJCPRR03"
+  },
+  {
+    "nombre": "Juan",
+    "apellido_paterno": "Garcia",
+    "apellido_materno": "",
+    "fecha": "1980-07-09",
+    "sexo": "H",
+    "estado": "Nuevo Leon",
+    "curp": "GAXJ800709HNLRXN05"
+  },
+  {
+    "nombre": "Jose Luis",
+    "apellido_paterno": "Ramirez",
+    "apellido_materno": "Diaz",
+    "fecha": "1985-06-20",
+    "sexo": "H",
+    "estado": "Puebla",
+    "curp": "RADL850620HPLMZS05"
+  },
+  {
+    "nombre": "Ana Maria",
+    "apellido_paterno": "Gomez",
+    "apellido_materno": "Lopez",
+    "fecha": "1999-12-31",
+    "sexo": "M",
+    "estado": "Yucatan",
+    "curp": "GOLA991231MYNMPN03"
+  }
+]

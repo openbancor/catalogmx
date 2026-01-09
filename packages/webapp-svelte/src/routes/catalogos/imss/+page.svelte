@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { ChevronRight, FileText, Users, Activity, UserX, Shield, TrendingUp, Calendar } from 'lucide-svelte';
 
 	interface Catalog {
@@ -13,42 +14,42 @@
 		{
 			title: 'Tipos de Movimiento Afiliatorio',
 			description: 'Claves de movimientos para el Sistema Único de Autodeterminación (SUA)',
-			href: '/catalogos/imss/tipos-movimiento',
+			href: `${base}/catalogos/imss/tipos-movimiento`,
 			icon: Activity,
 			count: '4 tipos'
 		},
 		{
 			title: 'Tipos de Trabajador',
 			description: 'Clasificación de trabajadores según su régimen laboral',
-			href: '/catalogos/imss/tipos-trabajador',
+			href: `${base}/catalogos/imss/tipos-trabajador`,
 			icon: Users,
 			count: '4 tipos'
 		},
 		{
 			title: 'Tipos de Incapacidad',
 			description: 'Clasificación de incapacidades y subsidios del IMSS',
-			href: '/catalogos/imss/tipos-incapacidad',
+			href: `${base}/catalogos/imss/tipos-incapacidad`,
 			icon: UserX,
 			count: '3 tipos'
 		},
 		{
 			title: 'Seguros del IMSS',
 			description: 'Ramos de aseguramiento y prestaciones del Instituto',
-			href: '/catalogos/imss/seguros',
+			href: `${base}/catalogos/imss/seguros`,
 			icon: Shield,
 			count: '6 seguros'
 		},
 		{
 			title: 'Tabulador de Pensiones',
 			description: 'Montos mínimos de pensiones y asignaciones familiares',
-			href: '/catalogos/imss/pensiones',
+			href: `${base}/catalogos/imss/pensiones`,
 			icon: TrendingUp,
 			count: '2024-2026'
 		},
 		{
 			title: 'Semanas Cotizadas',
 			description: 'Requisitos de semanas cotizadas para pensiones',
-			href: '/catalogos/imss/semanas-cotizadas',
+			href: `${base}/catalogos/imss/semanas-cotizadas`,
 			icon: Calendar,
 			count: '3 modalidades'
 		}
@@ -63,7 +64,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">IMSS</span>
 	</nav>

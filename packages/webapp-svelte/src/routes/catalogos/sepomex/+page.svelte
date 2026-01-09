@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { ChevronRight, Mail, MapPin } from 'lucide-svelte';
 </script>
 
@@ -10,7 +11,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">SEPOMEX</span>
 	</nav>
@@ -35,7 +36,7 @@
 	<!-- Catalog List -->
 	<div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
 		<a
-			href="/catalogos/sepomex/codigos-postales"
+			href="{base}/catalogos/sepomex/codigos-postales"
 			class="card p-6 hover:shadow-lg transition-shadow"
 		>
 			<div class="flex items-start gap-4">

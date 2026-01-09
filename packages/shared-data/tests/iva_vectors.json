@@ -1,0 +1,56 @@
+{
+  "calcular": [
+    {
+      "base": 1000.0,
+      "tipo_tasa": "general",
+      "fecha": "2024-01-15",
+      "expected": {
+        "iva": 160.0,
+        "total_con_iva": 1160.0,
+        "tasa": 16.0
+      }
+    },
+    {
+      "base": 1000.0,
+      "tipo_tasa": "frontera",
+      "fecha": "2024-01-15",
+      "expected": {
+        "iva": 80.0,
+        "total_con_iva": 1080.0,
+        "tasa": 8.0
+      }
+    },
+    {
+      "base": 500.0,
+      "tipo_tasa": "tasa_cero",
+      "fecha": "2024-01-15",
+      "expected": {
+        "iva": 0.0,
+        "total_con_iva": 500.0,
+        "tasa": 0.0
+      }
+    }
+  ],
+  "calcular_incluido": [
+    {
+      "total_con_iva": 1160.0,
+      "tipo_tasa": "general",
+      "fecha": "2024-01-15",
+      "expected": {
+        "iva": 160.0,
+        "base": 1000.0,
+        "tasa": 16.0
+      }
+    },
+    {
+      "total_con_iva": 1080.0,
+      "tipo_tasa": "frontera",
+      "fecha": "2024-01-15",
+      "expected": {
+        "iva": 80.0,
+        "base": 1000.0,
+        "tasa": 8.0
+      }
+    }
+  ]
+}

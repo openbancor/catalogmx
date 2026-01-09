@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { Calculator, Info, Shield, Users } from 'lucide-svelte';
 	import imssTablesData from '../../../../../shared-data/imss-tables.json';
+	import { IMSSCalculator } from '$lib/catalogmx';
 
 	type TipoCalculo = 'cuotas' | 'modalidad40' | 'modalidad10';
 	type ClaseRiesgo = 1 | 2 | 3 | 4 | 5;
@@ -61,163 +63,71 @@
 	let resultadoMod40 = $state<Modalidad40Result | null>(null);
 	let resultadoMod10 = $state<Modalidad10Result | null>(null);
 
-	// UMA values from data
-	function getUMA(year: Year): number {
-		return imssTablesData.uma[year.toString() as '2024' | '2025' | '2026'].diaria;
-	}
-
 	function calculateCuotas() {
-		const uma = getUMA(year);
+		const uma = IMSSCalculator.getUMA(year).diaria;
 		const salarioMensual = salarioDiario * 30;
-		const cuotas = imssTablesData.cuotas_imss;
-		const primaRiesgo = cuotas.riesgo_trabajo[`clase_${claseRiesgo}` as keyof typeof cuotas.riesgo_trabajo] as number;
+		const result = IMSSCalculator.calcularCuotasObreroPatronales(
+			salarioDiario,
+			30,
+			year,
+			claseRiesgo
+		);
+		const labels: Record<string, string> = {
+			enfermedad_mat_cuota_fija: 'E&M - Cuota fija (UMA)',
+			enfermedad_mat_excedente: 'E&M - Excedente 3 UMA',
+			enfermedad_mat_dinero: 'E&M - Prestaciones en dinero',
+			gastos_medicos_pensionados: 'Gastos médicos pensionados',
+			invalidez_vida: 'Invalidez y vida',
+			retiro: 'Retiro (SAR)',
+			cesantia_vejez: 'Cesantía y vejez',
+			guarderias: 'Guarderías',
+			riesgo_trabajo: `Riesgo de trabajo (Clase ${claseRiesgo})`
+		};
 
-		let cuotasPatron = 0;
-		let cuotasTrabajador = 0;
-		const desglose: CuotasResult['desglose'] = [];
-
-		// Enfermedad y maternidad - Cuota fija (sobre UMA)
-		const cuotaFijaPatron = uma * 30 * cuotas.enfermedad_maternidad.prestaciones_en_especie.patron;
-		cuotasPatron += cuotaFijaPatron;
-		desglose.push({
-			concepto: 'E&M - Cuota fija (UMA)',
-			patron: cuotaFijaPatron,
-			trabajador: 0
-		});
-
-		// Enfermedad y maternidad - Excedente (si salario > 3 UMA)
-		if (salarioDiario > uma * 3) {
-			const excedente = salarioDiario - (uma * 3);
-			const excedentePatron = excedente * 30 * cuotas.enfermedad_maternidad.prestaciones_en_especie_excedente.patron;
-			const excedenteTrab = excedente * 30 * cuotas.enfermedad_maternidad.prestaciones_en_especie_excedente.trabajador;
-			cuotasPatron += excedentePatron;
-			cuotasTrabajador += excedenteTrab;
-			desglose.push({
-				concepto: 'E&M - Excedente 3 UMA',
-				patron: excedentePatron,
-				trabajador: excedenteTrab
-			});
-		}
-
-		// Prestaciones en dinero
-		const dineroPatron = salarioMensual * cuotas.enfermedad_maternidad.prestaciones_en_dinero.patron;
-		const dineroTrab = salarioMensual * cuotas.enfermedad_maternidad.prestaciones_en_dinero.trabajador;
-		cuotasPatron += dineroPatron;
-		cuotasTrabajador += dineroTrab;
-		desglose.push({
-			concepto: 'E&M - Prestaciones en dinero',
-			patron: dineroPatron,
-			trabajador: dineroTrab
-		});
-
-		// Gastos médicos pensionados
-		const gmpPatron = salarioMensual * cuotas.enfermedad_maternidad.gastos_medicos_pensionados.patron;
-		const gmpTrab = salarioMensual * cuotas.enfermedad_maternidad.gastos_medicos_pensionados.trabajador;
-		cuotasPatron += gmpPatron;
-		cuotasTrabajador += gmpTrab;
-		desglose.push({
-			concepto: 'Gastos médicos pensionados',
-			patron: gmpPatron,
-			trabajador: gmpTrab
-		});
-
-		// Invalidez y vida
-		const ivPatron = salarioMensual * cuotas.invalidez_vida.patron;
-		const ivTrab = salarioMensual * cuotas.invalidez_vida.trabajador;
-		cuotasPatron += ivPatron;
-		cuotasTrabajador += ivTrab;
-		desglose.push({
-			concepto: 'Invalidez y vida',
-			patron: ivPatron,
-			trabajador: ivTrab
-		});
-
-		// Retiro
-		const retiroPatron = salarioMensual * cuotas.retiro_cesantia_vejez.retiro.patron;
-		cuotasPatron += retiroPatron;
-		desglose.push({
-			concepto: 'Retiro (SAR)',
-			patron: retiroPatron,
-			trabajador: 0
-		});
-
-		// Cesantía y vejez
-		const cvPatron = salarioMensual * cuotas.retiro_cesantia_vejez.cesantia_vejez.patron;
-		const cvTrab = salarioMensual * cuotas.retiro_cesantia_vejez.cesantia_vejez.trabajador;
-		cuotasPatron += cvPatron;
-		cuotasTrabajador += cvTrab;
-		desglose.push({
-			concepto: 'Cesantía y vejez',
-			patron: cvPatron,
-			trabajador: cvTrab
-		});
-
-		// Guarderías
-		const guarderiasPatron = salarioMensual * cuotas.guarderias_prestaciones_sociales.patron;
-		cuotasPatron += guarderiasPatron;
-		desglose.push({
-			concepto: 'Guarderías',
-			patron: guarderiasPatron,
-			trabajador: 0
-		});
-
-		// Riesgo de trabajo
-		const riesgoPatron = salarioMensual * primaRiesgo;
-		cuotasPatron += riesgoPatron;
-		desglose.push({
-			concepto: `Riesgo de trabajo (Clase ${claseRiesgo})`,
-			patron: riesgoPatron,
-			trabajador: 0
-		});
+		const keys = new Set([
+			...Object.keys(result.cuotas_patron),
+			...Object.keys(result.cuotas_trabajador)
+		]);
+		const desglose: CuotasResult['desglose'] = Array.from(keys).map((key) => ({
+			concepto: labels[key] ?? key.replace(/_/g, ' '),
+			patron: result.cuotas_patron[key] ?? 0,
+			trabajador: result.cuotas_trabajador[key] ?? 0
+		}));
 
 		resultadoCuotas = {
 			salarioDiario,
 			salarioMensual,
 			uma,
-			cuotasPatron,
-			cuotasTrabajador,
-			cuotaTotal: cuotasPatron + cuotasTrabajador,
+			cuotasPatron: result.total_patron,
+			cuotasTrabajador: result.total_trabajador,
+			cuotaTotal: result.total_imss,
 			desglose
 		};
 	}
 
 	function calculateModalidad40() {
-		const uma = getUMA(year);
 		const salarioMensual = salarioDiario * 30;
-		const maxSBC = uma * 25 * 30;
-		const sbcAplicable = Math.min(salarioMensual, maxSBC);
-
-		const cuotaMensual = sbcAplicable * imssTablesData.modalidad_40.cuota_mensual.porcentaje_total;
+		const result = IMSSCalculator.calcularModalidad40(salarioMensual, year);
 
 		resultadoMod40 = {
 			salarioDiario,
-			salarioMensual: sbcAplicable,
-			cuotaMensual,
-			cuotaAnual: cuotaMensual * 12
+			salarioMensual: result.salario_base_cotizacion,
+			cuotaMensual: result.cuota_mensual,
+			cuotaAnual: result.cuota_mensual * 12
 		};
 	}
 
 	function calculateModalidad10() {
-		const uma = getUMA(year);
 		const salarioMensual = salarioDiario * 30;
-		const maxSBC = uma * 25 * 30;
-		const sbcAplicable = Math.min(salarioMensual, maxSBC);
-
-		// Cuota fija (3.3 UMAs mensuales para prestaciones en especie)
-		const cuotaFijaUMA = uma * imssTablesData.modalidad_10.cuota_mensual.cuota_fija_uma_factor * 30;
-
-		// Cuota variable
-		const cuotaVariable = sbcAplicable * imssTablesData.modalidad_10.cuota_mensual.porcentaje_variable;
-
-		const cuotaMensual = cuotaFijaUMA + cuotaVariable;
+		const result = IMSSCalculator.calcularModalidad10(salarioMensual, year);
 
 		resultadoMod10 = {
 			salarioDiario,
-			salarioMensual: sbcAplicable,
-			cuotaFijaUMA,
-			cuotaVariable,
-			cuotaMensual,
-			cuotaAnual: cuotaMensual * 12
+			salarioMensual: result.salario_base_cotizacion,
+			cuotaFijaUMA: result.cuota_fija_uma,
+			cuotaVariable: result.cuota_variable,
+			cuotaMensual: result.cuota_mensual,
+			cuotaAnual: result.cuota_mensual * 12
 		};
 	}
 
@@ -262,7 +172,7 @@
 <section class="py-8 md:py-12 border-b border-slate-200 dark:border-slate-800">
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex items-center gap-2 mb-4">
-			<a href="/calculadoras" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
+			<a href="{base}/calculadoras" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
 				Calculadoras
 			</a>
 			<span class="text-slate-400">/</span>

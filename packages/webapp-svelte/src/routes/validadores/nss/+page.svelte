@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { IdCard, CheckCircle2, XCircle, Info, Building2, Calendar, Hash } from 'lucide-svelte';
 	import { base } from '$app/paths';
+	import { NSSValidator } from '$lib/catalogmx';
 
 	// State
 	let nss = $state('');
@@ -15,36 +16,8 @@
 		errors: string[];
 	} | null>(null);
 
-	// NSS Validation Logic
-	const NSS_LENGTH = 11;
-
-	function calculateCheckDigit(nss10: string): string {
-		let total = 0;
-
-		// Process from right to left
-		for (let i = 0; i < 10; i++) {
-			let digit = parseInt(nss10[9 - i]);
-
-			// Alternate between multiplying by 2 and 1 (starting with 2 for rightmost)
-			if (i % 2 === 0) {
-				digit = digit * 2;
-				// If result > 9, sum its digits
-				if (digit > 9) {
-					digit = Math.floor(digit / 10) + (digit % 10);
-				}
-			}
-
-			total += digit;
-		}
-
-		// Calculate check digit
-		const checkDigit = (10 - (total % 10)) % 10;
-		return checkDigit.toString();
-	}
-
 	function validateNSS(value: string): void {
 		const errors: string[] = [];
-		let isValid = false;
 		let subdelegation: string | null = null;
 		let registrationYear: string | null = null;
 		let birthYear: string | null = null;
@@ -54,65 +27,27 @@
 
 		const nssTrimmed = value.trim();
 
-		// Length validation
-		if (nssTrimmed.length !== NSS_LENGTH) {
-			errors.push(`El NSS debe tener exactamente ${NSS_LENGTH} dígitos`);
-			validationResult = {
-				isValid: false,
-				subdelegation: null,
-				registrationYear: null,
-				birthYear: null,
-				sequential: null,
-				checkDigit: null,
-				checkDigitValid: false,
-				errors
-			};
-			return;
+		if (nssTrimmed.length !== 11) {
+			errors.push('El NSS debe tener exactamente 11 dígitos');
 		}
 
-		// Check if all digits
-		if (!/^\d+$/.test(nssTrimmed)) {
-			errors.push('El NSS debe contener solo dígitos');
-			validationResult = {
-				isValid: false,
-				subdelegation: null,
-				registrationYear: null,
-				birthYear: null,
-				sequential: null,
-				checkDigit: null,
-				checkDigitValid: false,
-				errors
-			};
-			return;
+		const validator = new NSSValidator(nssTrimmed);
+		const isValid = validator.isValid();
+		if (!isValid) {
+			errors.push('El NSS no es válido');
 		}
 
-		// Extract parts
-		subdelegation = nssTrimmed.substring(0, 2);
-		registrationYear = nssTrimmed.substring(2, 4);
-		birthYear = nssTrimmed.substring(4, 6);
-		sequential = nssTrimmed.substring(6, 10);
-		checkDigit = nssTrimmed.substring(10, 11);
-
-		// Validate check digit
-		const expectedCheckDigit = calculateCheckDigit(nssTrimmed.substring(0, 10));
-		checkDigitValid = expectedCheckDigit === checkDigit;
-
-		if (!checkDigitValid) {
-			errors.push(`Dígito de control incorrecto (esperado: ${expectedCheckDigit}, actual: ${checkDigit})`);
+		const components = validator.getComponents();
+		if (components) {
+			subdelegation = components.subdelegation;
+			registrationYear = components.registrationYear;
+			birthYear = components.birthYear;
+			sequential = components.sequential;
+			checkDigit = components.checkDigit;
 		}
 
-		isValid = errors.length === 0;
-
-		validationResult = {
-			isValid,
-			subdelegation,
-			registrationYear,
-			birthYear,
-			sequential,
-			checkDigit,
-			checkDigitValid,
-			errors
-		};
+		checkDigitValid = isValid;
+		validationResult = { isValid, subdelegation, registrationYear, birthYear, sequential, checkDigit, checkDigitValid, errors };
 	}
 
 	// Auto-validate when NSS changes

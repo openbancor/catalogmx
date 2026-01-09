@@ -366,6 +366,23 @@ export class RFCValidator {
   }
 
   /**
+   * Extract RFC date component as a Date (birth or constitution date)
+   */
+  getDate(): Date | null {
+    if (!this.validateGeneralRegex()) return null;
+    const dateStr = this.rfc.slice(this.rfc.length === 13 ? 4 : 3, this.rfc.length === 13 ? 10 : 9);
+    const yearTwo = parseInt(dateStr.slice(0, 2));
+    const month = parseInt(dateStr.slice(2, 4));
+    const day = parseInt(dateStr.slice(4, 6));
+    if (Number.isNaN(yearTwo) || Number.isNaN(month) || Number.isNaN(day)) return null;
+    if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+    const year = yearTwo <= 30 ? 2000 + yearTwo : 1900 + yearTwo;
+    const date = new Date(year, month - 1, day);
+    if (date.getMonth() !== month - 1 || date.getDate() !== day) return null;
+    return date;
+  }
+
+  /**
    * Validate homoclave characters
    */
   validateHomoclave(): boolean {
@@ -452,10 +469,7 @@ export function generateRfcPersonaFisica(input: {
   apellidoMaterno: string;
   fechaNacimiento: Date | string;
 }): string {
-  const fecha =
-    typeof input.fechaNacimiento === 'string'
-      ? new Date(input.fechaNacimiento)
-      : input.fechaNacimiento;
+  const fechaParts = parseDateInput(input.fechaNacimiento);
 
   const nombre = cleanName(input.nombre, EXCLUDED_WORDS_FISICAS);
   const paterno = cleanName(input.apellidoPaterno, EXCLUDED_WORDS_FISICAS);
@@ -497,9 +511,9 @@ export function generateRfcPersonaFisica(input: {
   }
 
   // Format date
-  const year = fecha.getFullYear().toString().slice(-2);
-  const month = (fecha.getMonth() + 1).toString().padStart(2, '0');
-  const day = fecha.getDate().toString().padStart(2, '0');
+  const year = fechaParts.year.toString().slice(-2);
+  const month = fechaParts.month.toString().padStart(2, '0');
+  const day = fechaParts.day.toString().padStart(2, '0');
 
   const rfcBase = iniciales + year + month + day;
   const homoclave = calculateHomoclave(`${paterno} ${materno} ${nombre}`);
@@ -539,10 +553,7 @@ export function generateRfcPersonaMoral(input: {
   razonSocial: string;
   fechaConstitucion: Date | string;
 }): string {
-  const fecha =
-    typeof input.fechaConstitucion === 'string'
-      ? new Date(input.fechaConstitucion)
-      : input.fechaConstitucion;
+  const fechaParts = parseDateInput(input.fechaConstitucion);
 
   let razonSocial = removeAccents(input.razonSocial.toUpperCase().trim());
 
@@ -553,6 +564,7 @@ export function generateRfcPersonaMoral(input: {
   });
 
   const words = razonSocial.split(/\s+/).filter((w) => w.length > 0);
+  const razonSocialClean = words.join(' ');
 
   let iniciales = '';
 
@@ -560,15 +572,10 @@ export function generateRfcPersonaMoral(input: {
     // Single word: first 3 letters
     iniciales = words[0].slice(0, 3);
   } else if (words.length === 2) {
-    // Two words: first letter of each + first vowel of first word
+    // Two words: first letter of first, first two letters of second
     iniciales = words[0].charAt(0);
-    const vowel =
-      words[0]
-        .slice(1)
-        .split('')
-        .find((c) => VOCALES.includes(c)) || 'X';
-    iniciales += vowel;
     iniciales += words[1].charAt(0);
+    iniciales += words[1].charAt(1) || 'X';
   } else {
     // Three or more words: first letter of first 3 words
     iniciales = words[0].charAt(0) + words[1].charAt(0) + words[2].charAt(0);
@@ -578,19 +585,49 @@ export function generateRfcPersonaMoral(input: {
   iniciales = iniciales.padEnd(3, 'X').slice(0, 3);
 
   // Format date
-  const year = fecha.getFullYear().toString().slice(-2);
-  const month = (fecha.getMonth() + 1).toString().padStart(2, '0');
-  const day = fecha.getDate().toString().padStart(2, '0');
+  const year = fechaParts.year.toString().slice(-2);
+  const month = fechaParts.month.toString().padStart(2, '0');
+  const day = fechaParts.day.toString().padStart(2, '0');
 
   const rfcBase = iniciales + year + month + day;
 
-  // Homoclave placeholder (XX)
-  const rfcWithHomoclave = rfcBase + 'XX';
+  const homoclave = calculateHomoclave(razonSocialClean);
+  const rfcWithHomoclave = rfcBase + homoclave;
 
   // Calculate checksum (add placeholder '0' because calculateChecksum expects 12 chars and removes last one)
   const checksum = calculateChecksum(rfcWithHomoclave + '0');
 
   return rfcWithHomoclave + checksum;
+}
+
+function parseDateInput(value: Date | string): { year: number; month: number; day: number } {
+  if (value instanceof Date) {
+    return {
+      year: value.getFullYear(),
+      month: value.getMonth() + 1,
+      day: value.getDate(),
+    };
+  }
+
+  const isoMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (isoMatch) {
+    return {
+      year: Number(isoMatch[1]),
+      month: Number(isoMatch[2]),
+      day: Number(isoMatch[3]),
+    };
+  }
+
+  const dmyMatch = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value);
+  if (dmyMatch) {
+    return {
+      day: Number(dmyMatch[1]),
+      month: Number(dmyMatch[2]),
+      year: Number(dmyMatch[3]),
+    };
+  }
+
+  throw new Error('Fecha inválida. Usa YYYY-MM-DD o DD/MM/YYYY.');
 }
 
 /**

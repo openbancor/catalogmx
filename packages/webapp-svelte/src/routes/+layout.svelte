@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import '../app.css';
 	import { page } from '$app/stores';
 	import { Sun, Moon, Menu, X, Database, CheckCircle, Calculator, Code, Github, Search, Sparkles, Book } from 'lucide-svelte';
@@ -10,11 +11,74 @@
 	let searchQuery = $state('');
 
 	const navItems = [
-		{ href: '/catalogos', label: 'Catálogos', icon: Database },
-		{ href: '/validadores', label: 'Validadores', icon: CheckCircle },
-		{ href: '/generadores', label: 'Generadores', icon: Sparkles },
-		{ href: '/calculadoras', label: 'Calculadoras', icon: Calculator },
-		{ href: '/docs', label: 'Docs', icon: Book },
+		{ href: `${base}/catalogos`, label: 'Catálogos', icon: Database },
+		{ href: `${base}/validadores`, label: 'Validadores', icon: CheckCircle },
+		{ href: `${base}/generadores`, label: 'Generadores', icon: Sparkles },
+		{ href: `${base}/calculadoras`, label: 'Calculadoras', icon: Calculator },
+		{ href: `${base}/docs`, label: 'Docs', icon: Book },
+	];
+
+	const sectionNav = [
+		{
+			root: `${base}/catalogos`,
+			items: [
+				{ label: 'Todos', href: `${base}/catalogos` },
+				{ label: 'SAT', href: `${base}/catalogos#sat` },
+				{ label: 'SAT Nómina', href: `${base}/catalogos#sat-nomina` },
+				{ label: 'INEGI', href: `${base}/catalogos#inegi` },
+				{ label: 'Banxico', href: `${base}/catalogos#banxico` },
+				{ label: 'SEPOMEX', href: `${base}/catalogos#sepomex` },
+				{ label: 'IMSS', href: `${base}/catalogos#imss` },
+				{ label: 'México', href: `${base}/catalogos#mexico` },
+				{ label: 'IFT', href: `${base}/catalogos#ift` },
+				{ label: 'CNBV', href: `${base}/catalogos#cnbv` },
+			],
+		},
+		{
+			root: `${base}/validadores`,
+			items: [
+				{ label: 'Todos', href: `${base}/validadores` },
+				{ label: 'RFC', href: `${base}/validadores/rfc` },
+				{ label: 'CURP', href: `${base}/validadores/curp` },
+				{ label: 'CLABE', href: `${base}/validadores/clabe` },
+				{ label: 'NSS', href: `${base}/validadores/nss` },
+			],
+		},
+		{
+			root: `${base}/generadores`,
+			items: [
+				{ label: 'Todos', href: `${base}/generadores` },
+				{ label: 'RFC', href: `${base}/generadores/rfc` },
+				{ label: 'CURP', href: `${base}/generadores/curp` },
+				{ label: 'CLABE', href: `${base}/generadores/clabe` },
+			],
+		},
+		{
+			root: `${base}/calculadoras`,
+			items: [
+				{ label: 'Todas', href: `${base}/calculadoras` },
+				{ label: 'ISR', href: `${base}/calculadoras/isr` },
+				{ label: 'RESICO', href: `${base}/calculadoras/resico` },
+				{ label: 'IVA', href: `${base}/calculadoras/iva` },
+				{ label: 'IEPS', href: `${base}/calculadoras/ieps` },
+				{ label: 'IMSS', href: `${base}/calculadoras/imss` },
+				{ label: 'Costo', href: `${base}/calculadoras/costo-trabajador` },
+				{ label: 'Tipo cambio', href: `${base}/calculadoras/tipo-cambio` },
+				{ label: 'UDI', href: `${base}/calculadoras/udi` },
+				{ label: 'Tasas', href: `${base}/calculadoras/tasas-interes` },
+			],
+		},
+		{
+			root: `${base}/docs`,
+			items: [
+				{ label: 'Inicio', href: `${base}/docs` },
+				{ label: 'Instalación', href: `${base}/docs#instalacion` },
+				{ label: 'Python', href: `${base}/docs#python` },
+				{ label: 'TypeScript', href: `${base}/docs#typescript` },
+				{ label: 'Dart', href: `${base}/docs#dart` },
+				{ label: 'Recursos', href: `${base}/docs#recursos` },
+			],
+		},
 	];
 
 	function toggleDarkMode() {
@@ -32,6 +96,19 @@
 		return $page.url.pathname.startsWith(href);
 	}
 
+	function isSubActive(href: string): boolean {
+		const [path, hash] = href.split('#');
+		if (!($page.url.pathname === path || $page.url.pathname.startsWith(`${path}/`))) {
+			return false;
+		}
+		if (hash) {
+			return $page.url.pathname === path && $page.url.hash === `#${hash}`;
+		}
+		return $page.url.pathname === path || $page.url.pathname.startsWith(`${path}/`);
+	}
+
+	const activeSection = $derived(() => sectionNav.find(section => $page.url.pathname.startsWith(section.root)));
+
 	$effect(() => {
 		darkMode = document.documentElement.classList.contains('dark');
 	});
@@ -48,7 +125,7 @@
 			<div class="flex h-16 items-center justify-between">
 				<!-- Logo -->
 				<div class="flex items-center gap-8">
-					<a href="/" class="flex items-center gap-2 font-semibold text-lg">
+					<a href="{base}/" class="flex items-center gap-2 font-semibold text-lg">
 						<span class="text-2xl">🇲🇽</span>
 						<span class="text-brand-500">catalog</span><span class="text-slate-900 dark:text-white">mx</span>
 					</a>
@@ -149,6 +226,23 @@
 			</div>
 		{/if}
 	</header>
+
+	{#if activeSection}
+		<div class="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<nav class="flex items-center gap-2 py-2 overflow-x-auto" aria-label="Navegación de sección">
+					{#each activeSection.items as item}
+						<a
+							href={item.href}
+							class="subnav-link {isSubActive(item.href) ? 'subnav-link-active' : ''}"
+						>
+							{item.label}
+						</a>
+					{/each}
+				</nav>
+			</div>
+		</div>
+	{/if}
 
 	<!-- Main content -->
 	<main class="flex-1">

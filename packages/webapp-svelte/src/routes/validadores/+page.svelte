@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { CheckCircle2, CreditCard, User, Building2, IdCard } from 'lucide-svelte';
 
 	const validators = [
@@ -7,7 +8,7 @@
 			name: 'RFC',
 			description: 'Registro Federal de Contribuyentes',
 			longDescription: 'Valida RFC de personas físicas (13 caracteres) y morales (12 caracteres)',
-			href: '/validadores/rfc',
+			href: `${base}/validadores/rfc`,
 			icon: Building2,
 			color: 'bg-blue-500',
 			features: [
@@ -23,7 +24,7 @@
 			name: 'CURP',
 			description: 'Clave Única de Registro de Población',
 			longDescription: 'Valida CURP de 18 caracteres y decodifica información personal',
-			href: '/validadores/curp',
+			href: `${base}/validadores/curp`,
 			icon: User,
 			color: 'bg-purple-500',
 			features: [
@@ -39,7 +40,7 @@
 			name: 'CLABE',
 			description: 'Clave Bancaria Estandarizada',
 			longDescription: 'Valida cuentas CLABE de 18 dígitos y muestra información bancaria',
-			href: '/validadores/clabe',
+			href: `${base}/validadores/clabe`,
 			icon: CreditCard,
 			color: 'bg-green-500',
 			features: [
@@ -55,7 +56,7 @@
 			name: 'NSS / IMSS',
 			description: 'Número de Seguridad Social',
 			longDescription: 'Valida NSS del IMSS de 11 dígitos y decodifica información',
-			href: '/validadores/nss',
+			href: `${base}/validadores/nss`,
 			icon: IdCard,
 			color: 'bg-teal-500',
 			features: [

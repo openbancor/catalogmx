@@ -1,0 +1,74 @@
+{
+  "ad_valorem": [
+    {
+      "base": 1000.0,
+      "tasa": 8.0,
+      "expected": {
+        "ieps": 80.0,
+        "tasa": 8.0
+      }
+    },
+    {
+      "base": 2000.0,
+      "tasa": 30.0,
+      "expected": {
+        "ieps": 600.0,
+        "tasa": 30.0
+      }
+    }
+  ],
+  "cuota_fija": [
+    {
+      "base": 1000.0,
+      "cuota": 50.0,
+      "expected": {
+        "ieps": 50000.0,
+        "tasa": 50.0
+      }
+    },
+    {
+      "base": 500.0,
+      "cuota": 25.0,
+      "expected": {
+        "ieps": 12500.0,
+        "tasa": 25.0
+      }
+    }
+  ],
+  "bebidas_alcoholicas": [
+    {
+      "valor": 1000.0,
+      "grados_alcohol": 14.0,
+      "expected": {
+        "ieps": 265.0,
+        "tasa": 26.5
+      }
+    },
+    {
+      "valor": 1500.0,
+      "grados_alcohol": 35.0,
+      "expected": {
+        "ieps": 795.0,
+        "tasa": 53.0
+      }
+    }
+  ],
+  "cigarros": [
+    {
+      "valor": 500.0,
+      "numero_cigarros": 20,
+      "expected": {
+        "ieps": 810.16,
+        "tasa": 160
+      }
+    },
+    {
+      "valor": 1200.0,
+      "numero_cigarros": 40,
+      "expected": {
+        "ieps": 1940.32,
+        "tasa": 160
+      }
+    }
+  ]
+}

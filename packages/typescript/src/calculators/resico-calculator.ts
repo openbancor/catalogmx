@@ -83,6 +83,10 @@ interface RESICOData {
 export class RESICOCalculator {
   private static _data: RESICOData | null = null;
 
+  static setData(data: RESICOData): void {
+    this._data = data;
+  }
+
   private static loadData(): void {
     if (this._data !== null) return;
 

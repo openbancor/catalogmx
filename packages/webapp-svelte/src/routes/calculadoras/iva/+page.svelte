@@ -1,10 +1,7 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { Calculator, Info, Percent } from 'lucide-svelte';
-
-	// IVA rates
-	const IVA_TASA_GENERAL = 16;
-	const IVA_TASA_CERO = 0;
-	const IVA_RETENCION_FACTOR = 2 / 3; // Retención del 2/3 del IVA
+	import { IVACalculator, RetencionCalculator } from '$lib/catalogmx';
 
 	// State
 	let monto = $state<number>(10000);
@@ -33,35 +30,59 @@
 		{ value: 8, label: '8% (Zona Fronteriza)' }
 	];
 
+	function mapTipoTasa(value: number): 'general' | 'frontera' | 'tasa_cero' {
+		switch (value) {
+			case 16:
+				return 'general';
+			case 8:
+				return 'frontera';
+			case 0:
+				return 'tasa_cero';
+			default:
+				return 'general';
+		}
+	}
+
 	function calculateIVA() {
 		if (!monto || monto <= 0) {
 			resultado = null;
 			return;
 		}
 
+		const tipoTasa = mapTipoTasa(tasa);
+
 		if (tipoCalculo === 'agregar') {
-			const iva = (monto * tasa) / 100;
+			const result = IVACalculator.calcular(monto, tipoTasa);
 			resultado = {
-				subtotal: monto,
-				iva,
-				total: monto + iva
+				subtotal: result.base,
+				iva: result.iva,
+				total: result.total_con_iva
 			};
-		} else if (tipoCalculo === 'desglosar') {
-			const subtotal = monto / (1 + tasa / 100);
-			const iva = monto - subtotal;
+			return;
+		}
+
+		if (tipoCalculo === 'desglosar') {
+			const result = IVACalculator.calcularIncluido(monto, tipoTasa);
 			resultado = {
-				subtotal,
-				iva,
+				subtotal: result.base,
+				iva: result.iva,
 				total: monto
 			};
-		} else if (tipoCalculo === 'retencion') {
-			const iva = (monto * tasa) / 100;
-			const ivaRetenido = iva * IVA_RETENCION_FACTOR;
-			const ivaNeto = iva - ivaRetenido;
+			return;
+		}
+
+		if (tipoCalculo === 'retencion') {
+			const result = IVACalculator.calcular(monto, tipoTasa);
+			const retencion = RetencionCalculator.calcularRetencionIVA(
+				result.iva,
+				'servicios_profesionales'
+			);
+			const ivaRetenido = retencion.retencion;
+			const ivaNeto = result.iva - ivaRetenido;
 			resultado = {
-				subtotal: monto,
-				iva,
-				total: monto + iva,
+				subtotal: result.base,
+				iva: result.iva,
+				total: result.total_con_iva,
 				ivaRetenido,
 				ivaNeto
 			};
@@ -94,7 +115,7 @@
 <section class="py-8 md:py-12 border-b border-slate-200 dark:border-slate-800">
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex items-center gap-2 mb-4">
-			<a href="/calculadoras" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
+			<a href="{base}/calculadoras" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
 				Calculadoras
 			</a>
 			<span class="text-slate-400">/</span>

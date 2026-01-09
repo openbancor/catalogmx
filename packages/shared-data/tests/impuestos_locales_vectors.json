@@ -1,0 +1,26 @@
+{
+  "impuesto_nomina": [
+    {
+      "total_percepciones": 20000.0,
+      "cve_estado": "09",
+      "expected": 600.0
+    },
+    {
+      "total_percepciones": 15000.0,
+      "cve_estado": "01",
+      "expected": 300.0
+    }
+  ],
+  "impuesto_hospedaje": [
+    {
+      "monto_hospedaje": 5000.0,
+      "cve_estado": "14",
+      "expected": 125.0
+    },
+    {
+      "monto_hospedaje": 8000.0,
+      "cve_estado": "01",
+      "expected": 240.0
+    }
+  ]
+}

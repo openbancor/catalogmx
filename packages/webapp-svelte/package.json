@@ -25,6 +25,7 @@
 		"vite": "^7.2.6"
 	},
 	"dependencies": {
+		"catalogmx": "file:../typescript",
 		"@sveltejs/adapter-static": "^3.0.10",
 		"@tailwindcss/postcss": "^4.1.18",
 		"@tanstack/table-core": "^8.21.3",

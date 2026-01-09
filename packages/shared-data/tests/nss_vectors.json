@@ -1,0 +1,23 @@
+[
+  {
+    "subdelegacion": "23",
+    "registro_anio": "19",
+    "nacimiento_anio": "89",
+    "secuencial": "0001",
+    "nss": "23198900013"
+  },
+  {
+    "subdelegacion": "08",
+    "registro_anio": "04",
+    "nacimiento_anio": "75",
+    "secuencial": "1234",
+    "nss": "08047512341"
+  },
+  {
+    "subdelegacion": "01",
+    "registro_anio": "10",
+    "nacimiento_anio": "90",
+    "secuencial": "9999",
+    "nss": "01109099992"
+  }
+]

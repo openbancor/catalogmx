@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { Calculator, Info, TrendingUp } from 'lucide-svelte';
-	import resicoTablesData from '../../../../../shared-data/resico-tables.json';
+	import { RESICOCalculator } from '$lib/catalogmx';
 
 	// Types
 	interface RESICOBracket {
@@ -31,28 +32,10 @@
 	const years = [2024, 2025, 2026] as const;
 
 	// Limits from data
-	const limits = resicoTablesData.limits.personaFisica;
+	const limits = RESICOCalculator.getLimits().personaFisica;
 
 	// Derived brackets for current year/periodo
-	let currentBrackets = $derived(() => {
-		const yearKey = year.toString() as '2024' | '2025' | '2026';
-		return resicoTablesData.brackets[yearKey][periodo] as RESICOBracket[];
-	});
-
-	// Functions
-	function findBracket(income: number, brackets: RESICOBracket[]): RESICOBracket | null {
-		for (const bracket of brackets) {
-			if (income >= bracket.limiteInferior && income <= bracket.limiteSuperior) {
-				return bracket;
-			}
-		}
-		return null;
-	}
-
-	function isEligible(income: number, period: 'mensual' | 'anual'): boolean {
-		const maxIncome = period === 'mensual' ? limits.ingresoMensualMaximo : limits.ingresoAnualMaximo;
-		return income <= maxIncome;
-	}
+	let currentBrackets = $derived(() => RESICOCalculator.getBrackets(year, periodo) as RESICOBracket[]);
 
 	function calculateRESICO() {
 		if (!ingreso || ingreso <= 0) {
@@ -60,40 +43,18 @@
 			return;
 		}
 
-		const yearKey = year.toString() as '2024' | '2025' | '2026';
-		const brackets = resicoTablesData.brackets[yearKey][periodo] as RESICOBracket[];
-
-		const eligible = isEligible(ingreso, periodo);
-
-		if (!eligible) {
+		try {
+			const result = RESICOCalculator.calcular(ingreso, year, periodo);
 			resultado = {
 				ingreso,
-				tasa: 0,
-				isrResico: 0,
-				tasaEfectiva: 0,
-				eligible: false
+				tasa: result.bracket?.tasa ?? 0,
+				isrResico: result.resicoCalculado,
+				tasaEfectiva: result.tasaEfectiva,
+				eligible: result.dentroDeLimite
 			};
-			return;
-		}
-
-		const bracket = findBracket(ingreso, brackets);
-
-		if (!bracket) {
+		} catch {
 			resultado = null;
-			return;
 		}
-
-		const tasa = bracket.tasa;
-		const isrResico = (ingreso * tasa) / 100;
-		const tasaEfectiva = tasa;
-
-		resultado = {
-			ingreso,
-			tasa,
-			isrResico,
-			tasaEfectiva,
-			eligible: true
-		};
 	}
 
 	function formatCurrency(value: number): string {
@@ -130,7 +91,7 @@
 <section class="py-8 md:py-12 border-b border-slate-200 dark:border-slate-800">
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex items-center gap-2 mb-4">
-			<a href="/calculadoras" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
+			<a href="{base}/calculadoras" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
 				Calculadoras
 			</a>
 			<span class="text-slate-400">/</span>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { Sparkles, CreditCard, User, Building2 } from 'lucide-svelte';
 
 	const generators = [
@@ -7,7 +8,7 @@
 			name: 'RFC',
 			description: 'Registro Federal de Contribuyentes',
 			longDescription: 'Genera RFC para personas físicas y morales con homoclave calculada',
-			href: '/generadores/rfc',
+			href: `${base}/generadores/rfc`,
 			icon: CreditCard,
 			color: 'bg-blue-500',
 			features: [
@@ -23,7 +24,7 @@
 			name: 'CURP',
 			description: 'Clave Única de Registro de Población',
 			longDescription: 'Genera CURP basado en datos personales con dígito verificador',
-			href: '/generadores/curp',
+			href: `${base}/generadores/curp`,
 			icon: User,
 			color: 'bg-green-500',
 			features: [
@@ -39,7 +40,7 @@
 			name: 'CLABE',
 			description: 'Clave Bancaria Estandarizada',
 			longDescription: 'Genera CLABE con dígito verificador para transferencias interbancarias',
-			href: '/generadores/clabe',
+			href: `${base}/generadores/clabe`,
 			icon: Building2,
 			color: 'bg-purple-500',
 			features: [

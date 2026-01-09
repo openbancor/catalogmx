@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { ChevronRight, Globe, Ship, DollarSign, MapPin, FileText, AlertCircle, Package, Plane } from 'lucide-svelte';
 
 	interface Catalog {
@@ -13,56 +14,56 @@
 		{
 			title: 'Incoterms',
 			description: 'Términos internacionales de comercio (ICC)',
-			href: '/catalogos/sat/comercio-exterior/incoterms',
+			href: `${base}/catalogos/sat/comercio-exterior/incoterms`,
 			icon: Ship,
 			count: '11 términos'
 		},
 		{
 			title: 'Claves de Pedimento',
 			description: 'Tipos de operaciones aduaneras',
-			href: '/catalogos/sat/comercio-exterior/claves-pedimento',
+			href: `${base}/catalogos/sat/comercio-exterior/claves-pedimento`,
 			icon: FileText,
 			count: '40+ claves'
 		},
 		{
 			title: 'Estados USA/Canadá',
 			description: 'Subdivisiones de Estados Unidos y Canadá',
-			href: '/catalogos/sat/comercio-exterior/estados-usa-canada',
+			href: `${base}/catalogos/sat/comercio-exterior/estados-usa-canada`,
 			icon: MapPin,
 			count: '60+ estados'
 		},
 		{
 			title: 'Monedas',
 			description: 'Códigos ISO 4217 de monedas',
-			href: '/catalogos/sat/comercio-exterior/monedas',
+			href: `${base}/catalogos/sat/comercio-exterior/monedas`,
 			icon: DollarSign,
 			count: '150+ monedas'
 		},
 		{
 			title: 'Países',
 			description: 'Códigos ISO 3166 de países',
-			href: '/catalogos/sat/comercio-exterior/paises',
+			href: `${base}/catalogos/sat/comercio-exterior/paises`,
 			icon: Globe,
 			count: '240+ países'
 		},
 		{
 			title: 'Motivos de Traslado',
 			description: 'Razones para traslado de mercancías',
-			href: '/catalogos/sat/comercio-exterior/motivos-traslado',
+			href: `${base}/catalogos/sat/comercio-exterior/motivos-traslado`,
 			icon: Plane,
 			count: '6 motivos'
 		},
 		{
 			title: 'Registro de Identificación Tributaria',
 			description: 'Tipos de identificación fiscal por país',
-			href: '/catalogos/sat/comercio-exterior/registro-ident-trib',
+			href: `${base}/catalogos/sat/comercio-exterior/registro-ident-trib`,
 			icon: AlertCircle,
 			count: '16 tipos'
 		},
 		{
 			title: 'Unidades de Aduana',
 			description: 'Unidades de medida para comercio exterior',
-			href: '/catalogos/sat/comercio-exterior/unidades-aduana',
+			href: `${base}/catalogos/sat/comercio-exterior/unidades-aduana`,
 			icon: Package,
 			count: '20 unidades'
 		}
@@ -77,9 +78,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat" class="hover:text-brand-500">SAT</a>
+		<a href="{base}/catalogos/sat" class="hover:text-brand-500">SAT</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">Comercio Exterior</span>
 	</nav>

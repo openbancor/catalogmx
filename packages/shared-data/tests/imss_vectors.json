@@ -1,0 +1,62 @@
+{
+  "cuotas_obrero_patronales": [
+    {
+      "salario_diario": 500.0,
+      "dias": 30,
+      "year": 2026,
+      "clase_riesgo": 2,
+      "expected": {
+        "total_imss": 4115.8614,
+        "total_patron": 3740.3418,
+        "total_trabajador": 375.5196
+      }
+    },
+    {
+      "salario_diario": 350.0,
+      "dias": 15,
+      "year": 2025,
+      "clase_riesgo": 1,
+      "expected": {
+        "total_imss": 1624.4562,
+        "total_patron": 1519.4991,
+        "total_trabajador": 104.9571
+      }
+    }
+  ],
+  "modalidad_40": [
+    {
+      "salario_base_cotizacion": 15000.0,
+      "year": 2026,
+      "expected": {
+        "cuota_mensual": 1570.5,
+        "porcentaje_total": 0.1047
+      }
+    },
+    {
+      "salario_base_cotizacion": 12000.0,
+      "year": 2025,
+      "expected": {
+        "cuota_mensual": 1256.4,
+        "porcentaje_total": 0.1047
+      }
+    }
+  ],
+  "modalidad_10": [
+    {
+      "salario_base_cotizacion": 10000.0,
+      "year": 2026,
+      "expected": {
+        "cuota_mensual": 1420.362,
+        "cuota_fija_uma": 373.362
+      }
+    },
+    {
+      "salario_base_cotizacion": 8000.0,
+      "year": 2024,
+      "expected": {
+        "cuota_mensual": 1195.881,
+        "cuota_fija_uma": 358.281
+      }
+    }
+  ]
+}

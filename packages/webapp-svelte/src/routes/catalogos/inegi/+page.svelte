@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { ChevronRight, MapPin, Building, Map, Layers } from 'lucide-svelte';
 
 	const catalogs = [
@@ -8,7 +9,7 @@
 			description: 'Catalogo oficial de entidades federativas con claves INEGI y clasificacion regional',
 			count: 32,
 			icon: MapPin,
-			href: '/catalogos/inegi/estados'
+			href: `${base}/catalogos/inegi/estados`
 		},
 		{
 			id: 'municipios',
@@ -16,7 +17,7 @@
 			description: 'Catalogo de municipios y alcaldias de Mexico',
 			count: 2469,
 			icon: Building,
-			href: '/catalogos/inegi/municipios',
+			href: `${base}/catalogos/inegi/municipios`,
 			disabled: true
 		},
 		{
@@ -25,7 +26,7 @@
 			description: 'Catalogo de poblaciones y colonias',
 			count: 304000,
 			icon: Map,
-			href: '/catalogos/inegi/localidades',
+			href: `${base}/catalogos/inegi/localidades`,
 			disabled: true
 		},
 		{
@@ -34,7 +35,7 @@
 			description: 'Sistema de Clasificacion Industrial de America del Norte',
 			count: 1800,
 			icon: Layers,
-			href: '/catalogos/inegi/scian',
+			href: `${base}/catalogos/inegi/scian`,
 			disabled: true
 		}
 	];
@@ -55,7 +56,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catalogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catalogos</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">INEGI</span>
 	</nav>

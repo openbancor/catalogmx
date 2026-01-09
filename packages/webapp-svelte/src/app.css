@@ -79,6 +79,21 @@
     @apply border-b-2 border-brand-500 dark:border-brand-400;
   }
 
+  .subnav-link {
+    @apply whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-full;
+    @apply text-slate-600 dark:text-slate-300;
+    @apply bg-white dark:bg-slate-800/70;
+    @apply border border-slate-200 dark:border-slate-700;
+    @apply hover:text-brand-500 hover:border-brand-300 dark:hover:border-brand-600;
+    @apply transition-colors;
+  }
+
+  .subnav-link-active {
+    @apply text-brand-600 dark:text-brand-300;
+    @apply border-brand-400 dark:border-brand-600;
+    @apply bg-brand-50 dark:bg-brand-900/20;
+  }
+
   /* Cards */
   .card {
     @apply bg-white dark:bg-slate-800;

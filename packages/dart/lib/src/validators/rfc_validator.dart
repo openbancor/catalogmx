@@ -670,11 +670,11 @@ class RFCGeneratorMoral {
       clave.write(word.length > 1 ? word[1] : 'X');
       clave.write(word.length > 2 ? word[2] : 'X');
     } else if (words.length == 2) {
-      // Two words: First letter + first vowel of first word + first letter of second word
+      // Two words: First letter of first word + first two letters of second word
       clave.write(words[0][0]);
-      final vowel = getFirstVowel(words[0], startIndex: 1);
-      clave.write(vowel ?? 'X');
-      clave.write(words[1][0]);
+      final second = words[1];
+      clave.write(second.isNotEmpty ? second[0] : 'X');
+      clave.write(second.length > 1 ? second[1] : 'X');
     } else {
       // Three or more words: First letter of each of first three words
       clave.write(words[0][0]);

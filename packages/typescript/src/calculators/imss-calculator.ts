@@ -82,6 +82,14 @@ export class IMSSCalculator {
   private static _tablesData: IMSSTablesData | null = null;
   private static _catalogsData: IMSSCatalogsData | null = null;
 
+  static setTablesData(data: IMSSTablesData): void {
+    this._tablesData = data;
+  }
+
+  static setCatalogsData(data: IMSSCatalogsData): void {
+    this._catalogsData = data;
+  }
+
   private static loadTablesData(): void {
     if (this._tablesData !== null) return;
 

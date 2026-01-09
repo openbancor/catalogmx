@@ -1,0 +1,26 @@
+[
+  {
+    "value": "23198900013",
+    "valid": true
+  },
+  {
+    "value": "08047512341",
+    "valid": true
+  },
+  {
+    "value": "01109099992",
+    "valid": true
+  },
+  {
+    "value": "23198900010",
+    "valid": false
+  },
+  {
+    "value": "1234567890",
+    "valid": false
+  },
+  {
+    "value": "ABCDEFGHIJK",
+    "valid": false
+  }
+]

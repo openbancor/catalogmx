@@ -1,0 +1,29 @@
+[
+  {
+    "ingreso": 50000.0,
+    "periodo": "mensual",
+    "year": 2026,
+    "expected": {
+      "resicoCalculado": 550.0,
+      "tasaEfectiva": 1.1
+    }
+  },
+  {
+    "ingreso": 500000.0,
+    "periodo": "anual",
+    "year": 2026,
+    "expected": {
+      "resicoCalculado": 5500.0,
+      "tasaEfectiva": 1.1
+    }
+  },
+  {
+    "ingreso": 150000.0,
+    "periodo": "mensual",
+    "year": 2025,
+    "expected": {
+      "resicoCalculado": 3000.0,
+      "tasaEfectiva": 2.0
+    }
+  }
+]

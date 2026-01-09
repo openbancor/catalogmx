@@ -1,0 +1,60 @@
+[
+  {
+    "type": "fisica",
+    "nombre": "Luis Fernando",
+    "apellido_paterno": "Barrera",
+    "apellido_materno": "Castro",
+    "fecha": "1989-12-17",
+    "rfc": "BACL891217NJ5"
+  },
+  {
+    "type": "fisica",
+    "nombre": "Juan",
+    "apellido_paterno": "Garcia",
+    "apellido_materno": "Lopez",
+    "fecha": "1990-05-15",
+    "rfc": "GALJ900515I74"
+  },
+  {
+    "type": "fisica",
+    "nombre": "Maria Fernanda",
+    "apellido_paterno": "Lopez",
+    "apellido_materno": "Hernandez",
+    "fecha": "1992-01-03",
+    "rfc": "LOHF9201038M7"
+  },
+  {
+    "type": "fisica",
+    "nombre": "Carlos",
+    "apellido_paterno": "Perez",
+    "apellido_materno": "",
+    "fecha": "1980-07-09",
+    "rfc": "PECA800709EX3"
+  },
+  {
+    "type": "moral",
+    "razon_social": "Comercializadora del Norte SA de CV",
+    "fecha": "2001-03-22",
+    "rfc": "CNO010322EY3"
+  },
+  {
+    "type": "moral",
+    "razon_social": "Servicios Integrales y Asociados",
+    "fecha": "1999-11-30",
+    "rfc": "SIA991130BJ7"
+  },
+  {
+    "type": "fisica",
+    "nombre": "Jose Antonio",
+    "apellido_paterno": "Sanchez",
+    "apellido_materno": "Perez",
+    "fecha": "1975-02-08",
+    "rfc": "SAPA750208HR7"
+  },
+  {
+    "type": "moral",
+    "razon_social": "Transportes del Bajio SA de CV",
+    "fecha": "2010-09-30",
+    "rfc": "TBA1009305L2"
+  }
+]

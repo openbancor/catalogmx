@@ -118,25 +118,24 @@ class ISRCalculator {
   static Map<String, dynamic> _loadISRTables() {
     if (_isrTables != null) return _isrTables!;
 
-    // Path to shared JSON file (relative to Dart package root)
-    final jsonPath = '../../shared-data/isr-tables.json';
-    final file = File(jsonPath);
+    final candidates = [
+      '../shared-data/isr-tables.json',
+      '../../shared-data/isr-tables.json',
+      '../../../shared-data/isr-tables.json',
+      'packages/shared-data/isr-tables.json',
+    ];
 
-    if (!file.existsSync()) {
-      // Try alternative path when running from lib/src/calculators
-      final altPath = '../../../shared-data/isr-tables.json';
-      final altFile = File(altPath);
-      if (!altFile.existsSync()) {
-        throw Exception('ISR tables JSON file not found');
+    for (final path in candidates) {
+      final file = File(path);
+      if (!file.existsSync()) {
+        continue;
       }
-      final jsonString = altFile.readAsStringSync();
+      final jsonString = file.readAsStringSync();
       _isrTables = jsonDecode(jsonString) as Map<String, dynamic>;
       return _isrTables!;
     }
 
-    final jsonString = file.readAsStringSync();
-    _isrTables = jsonDecode(jsonString) as Map<String, dynamic>;
-    return _isrTables!;
+    throw Exception('ISR tables JSON file not found');
   }
 
   /// Get ISR tax brackets for a specific year and period

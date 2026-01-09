@@ -170,48 +170,48 @@ class IMSSCalculator {
   static Map<String, dynamic> _loadIMSSTables() {
     if (_imssTables != null) return _imssTables!;
 
-    // Path to shared JSON file (relative to Dart package root)
-    const jsonPath = '../../shared-data/imss-tables.json';
-    final file = File(jsonPath);
+    final candidates = [
+      '../shared-data/imss-tables.json',
+      '../../shared-data/imss-tables.json',
+      '../../../shared-data/imss-tables.json',
+      'packages/shared-data/imss-tables.json',
+    ];
 
-    if (!file.existsSync()) {
-      // Try alternative path when running from lib/src/calculators
-      const altPath = '../../../shared-data/imss-tables.json';
-      final altFile = File(altPath);
-      if (!altFile.existsSync()) {
-        throw Exception('IMSS tables JSON file not found');
+    for (final path in candidates) {
+      final file = File(path);
+      if (!file.existsSync()) {
+        continue;
       }
-      final jsonString = altFile.readAsStringSync();
+      final jsonString = file.readAsStringSync();
       _imssTables = jsonDecode(jsonString) as Map<String, dynamic>;
       return _imssTables!;
     }
 
-    final jsonString = file.readAsStringSync();
-    _imssTables = jsonDecode(jsonString) as Map<String, dynamic>;
-    return _imssTables!;
+    throw Exception('IMSS tables JSON file not found');
   }
 
   /// Load IMSS catalogs from centralized JSON file
   static Map<String, dynamic> _loadIMSSCatalogs() {
     if (_imssCatalogs != null) return _imssCatalogs!;
 
-    const jsonPath = '../../shared-data/imss-catalogs.json';
-    final file = File(jsonPath);
+    final candidates = [
+      '../shared-data/imss-catalogs.json',
+      '../../shared-data/imss-catalogs.json',
+      '../../../shared-data/imss-catalogs.json',
+      'packages/shared-data/imss-catalogs.json',
+    ];
 
-    if (!file.existsSync()) {
-      const altPath = '../../../shared-data/imss-catalogs.json';
-      final altFile = File(altPath);
-      if (!altFile.existsSync()) {
-        throw Exception('IMSS catalogs JSON file not found');
+    for (final path in candidates) {
+      final file = File(path);
+      if (!file.existsSync()) {
+        continue;
       }
-      final jsonString = altFile.readAsStringSync();
+      final jsonString = file.readAsStringSync();
       _imssCatalogs = jsonDecode(jsonString) as Map<String, dynamic>;
       return _imssCatalogs!;
     }
 
-    final jsonString = file.readAsStringSync();
-    _imssCatalogs = jsonDecode(jsonString) as Map<String, dynamic>;
-    return _imssCatalogs!;
+    throw Exception('IMSS catalogs JSON file not found');
   }
 
   /// Get UMA values for a specific year

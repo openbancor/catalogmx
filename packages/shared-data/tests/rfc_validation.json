@@ -1,0 +1,54 @@
+[
+  {
+    "value": "BACL891217NJ5",
+    "valid": true
+  },
+  {
+    "value": "GALJ900515I74",
+    "valid": true
+  },
+  {
+    "value": "LOHF9201038M7",
+    "valid": true
+  },
+  {
+    "value": "PECA800709EX3",
+    "valid": true
+  },
+  {
+    "value": "CNO010322EY3",
+    "valid": true
+  },
+  {
+    "value": "SIA991130BJ7",
+    "valid": true
+  },
+  {
+    "value": "SAPA750208HR7",
+    "valid": true
+  },
+  {
+    "value": "TBA1009305L2",
+    "valid": true
+  },
+  {
+    "value": "BACL891217NJ4",
+    "valid": false
+  },
+  {
+    "value": "XAXX010101000",
+    "valid": true
+  },
+  {
+    "value": "XEXX010101000",
+    "valid": true
+  },
+  {
+    "value": "INVALIDRFC",
+    "valid": false
+  },
+  {
+    "value": "BACL891217N",
+    "valid": false
+  }
+]

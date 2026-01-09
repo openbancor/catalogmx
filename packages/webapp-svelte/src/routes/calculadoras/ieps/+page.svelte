@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { Calculator, Info, Wine, Cigarette, Fuel, Droplet, Cookie } from 'lucide-svelte';
 	import type { ComponentType } from 'svelte';
+	import { IEPSCalculator } from '$lib/catalogmx';
 
 	// TypeScript interfaces
 	interface Subcategoria {
@@ -131,11 +133,48 @@
 		const { tasa, tipo, cuotaFija } = subcategoriaActual;
 
 		if (tipo === 'ad_valorem') {
+			if (subcategoriaActual.id === 'cerveza') {
+				const result = IEPSCalculator.calcularBebidasAlcoholicas(valor, 14);
+				resultado = {
+					base: result.base,
+					tasa: result.tasa,
+					ieps: result.ieps,
+					total: valor + result.ieps,
+					tipo: 'ad_valorem'
+				};
+				return;
+			}
+
+			if (subcategoriaActual.id === 'bebidas_14_20') {
+				const result = IEPSCalculator.calcularBebidasAlcoholicas(valor, 17);
+				resultado = {
+					base: result.base,
+					tasa: result.tasa,
+					ieps: result.ieps,
+					total: valor + result.ieps,
+					tipo: 'ad_valorem'
+				};
+				return;
+			}
+
+			if (subcategoriaActual.id === 'bebidas_mas_20') {
+				const result = IEPSCalculator.calcularBebidasAlcoholicas(valor, 21);
+				resultado = {
+					base: result.base,
+					tasa: result.tasa,
+					ieps: result.ieps,
+					total: valor + result.ieps,
+					tipo: 'ad_valorem'
+				};
+				return;
+			}
+
 			// Cigarros: ad-valorem + cuota fija
 			if (subcategoriaActual.id === 'cigarros' && cuotaFija) {
+				const result = IEPSCalculator.calcularCigarros(valor, cantidad);
 				const iepsAdValorem = (valor * tasa) / 100;
 				const iepsCuotaFija = cantidad * cuotaFija;
-				const iepsTotal = iepsAdValorem + iepsCuotaFija;
+				const iepsTotal = result.ieps;
 
 				resultado = {
 					base: valor,
@@ -151,23 +190,26 @@
 				};
 			} else {
 				// Ad-valorem simple
-				const ieps = (valor * tasa) / 100;
+				const result = IEPSCalculator.calcularAdValorem(valor, tasa);
 				resultado = {
-					base: valor,
-					tasa,
-					ieps,
-					total: valor + ieps,
+					base: result.base,
+					tasa: result.tasa,
+					ieps: result.ieps,
+					total: valor + result.ieps,
 					tipo: 'ad_valorem'
 				};
 			}
 		} else if (tipo === 'cuota_fija') {
-			// Cuota fija por unidad
-			const ieps = cantidad * tasa;
-			resultado = {
-				base: cantidad,
+			const result = IEPSCalculator.calcularCuotaFija(
+				cantidad,
 				tasa,
-				ieps,
-				total: ieps,
+				subcategoriaActual.unidad || 'unidad'
+			);
+			resultado = {
+				base: result.base,
+				tasa: result.tasa,
+				ieps: result.ieps,
+				total: result.ieps,
 				tipo: 'cuota_fija',
 				unidad: subcategoriaActual.unidad,
 				cantidad
@@ -216,7 +258,7 @@
 <section class="py-8 md:py-12 border-b border-slate-200 dark:border-slate-800">
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex items-center gap-2 mb-4">
-			<a href="/calculadoras" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
+			<a href="{base}/calculadoras" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
 				Calculadoras
 			</a>
 			<span class="text-slate-400">/</span>

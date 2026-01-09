@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { Search, Database, ArrowRight } from 'lucide-svelte';
 
 	let searchQuery = $state('');
@@ -115,7 +116,16 @@
 			'México': 'mexico',
 		};
 		const basePath = sourceMap[source] || source.toLowerCase();
-		return `/catalogos/${basePath}/${id}`;
+		return `${base}/catalogos/${basePath}/${id}`;
+	}
+
+	function getSourceAnchor(source: string): string {
+		return source
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '')
+			.toLowerCase()
+			.replace(/\s+/g, '-')
+			.replace(/[^a-z0-9-]/g, '');
 	}
 </script>
 
@@ -156,7 +166,7 @@
 	<!-- Grouped catalogs -->
 	<div class="space-y-10">
 		{#each Object.entries(groupedCatalogs) as [source, catalogs]}
-			<section>
+			<section id={getSourceAnchor(source)}>
 				<div class="flex items-center gap-3 mb-4">
 					<div class="{sourceColors[source]} w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-xs">
 						{source.slice(0, 2)}

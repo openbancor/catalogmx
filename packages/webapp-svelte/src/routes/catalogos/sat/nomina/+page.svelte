@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { ChevronRight, FileText, Briefcase, Users, Calendar, Clock, AlertTriangle, Building2 } from 'lucide-svelte';
 
 	interface Catalog {
@@ -13,42 +14,42 @@
 		{
 			title: 'Bancos',
 			description: 'Catálogo de instituciones bancarias para nómina',
-			href: '/catalogos/sat/nomina/banco',
+			href: `${base}/catalogos/sat/nomina/banco`,
 			icon: Building2,
 			count: '50+ registros'
 		},
 		{
 			title: 'Tipos de Contrato',
 			description: 'Modalidades de contratación laboral',
-			href: '/catalogos/sat/nomina/tipo-contrato',
+			href: `${base}/catalogos/sat/nomina/tipo-contrato`,
 			icon: FileText,
 			count: '10 tipos'
 		},
 		{
 			title: 'Tipos de Régimen',
 			description: 'Regímenes fiscales para empleados',
-			href: '/catalogos/sat/nomina/tipo-regimen',
+			href: `${base}/catalogos/sat/nomina/tipo-regimen`,
 			icon: Briefcase,
 			count: '14 regímenes'
 		},
 		{
 			title: 'Periodicidad de Pago',
 			description: 'Frecuencias de pago de nómina',
-			href: '/catalogos/sat/nomina/periodicidad',
+			href: `${base}/catalogos/sat/nomina/periodicidad`,
 			icon: Calendar,
 			count: '11 opciones'
 		},
 		{
 			title: 'Tipos de Jornada',
 			description: 'Clasificación de jornadas laborales',
-			href: '/catalogos/sat/nomina/tipo-jornada',
+			href: `${base}/catalogos/sat/nomina/tipo-jornada`,
 			icon: Clock,
 			count: '8 tipos'
 		},
 		{
 			title: 'Riesgo de Puesto',
 			description: 'Clases de riesgo laboral (IMSS)',
-			href: '/catalogos/sat/nomina/riesgo-puesto',
+			href: `${base}/catalogos/sat/nomina/riesgo-puesto`,
 			icon: AlertTriangle,
 			count: '5 clases'
 		}
@@ -63,9 +64,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat" class="hover:text-brand-500">SAT</a>
+		<a href="{base}/catalogos/sat" class="hover:text-brand-500">SAT</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">Nómina</span>
 	</nav>
