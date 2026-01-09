@@ -149,7 +149,9 @@ export class ISRCalculator {
     const getBrackets = (key: ISRBracketKey): ISRBracket[] => {
       const data = yearTables[key];
       if (!data) {
-        throw new Error(`No se encontró tabla de ISR para año ${año} y periodicidad ${periodicidad}`);
+        throw new Error(
+          `No se encontró tabla de ISR para año ${año} y periodicidad ${periodicidad}`
+        );
       }
       return data;
     };

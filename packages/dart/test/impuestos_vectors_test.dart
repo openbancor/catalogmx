@@ -34,13 +34,19 @@ void main() {
   test('Impuestos shared vectors', () {
     final ivaFile = File('../shared-data/tests/iva_vectors.json');
     final iepsFile = File('../shared-data/tests/ieps_vectors.json');
-    final retencionesFile = File('../shared-data/tests/retenciones_vectors.json');
-    final localesFile = File('../shared-data/tests/impuestos_locales_vectors.json');
+    final retencionesFile =
+        File('../shared-data/tests/retenciones_vectors.json');
+    final localesFile =
+        File('../shared-data/tests/impuestos_locales_vectors.json');
 
-    final ivaData = jsonDecode(ivaFile.readAsStringSync()) as Map<String, dynamic>;
-    final iepsData = jsonDecode(iepsFile.readAsStringSync()) as Map<String, dynamic>;
-    final retData = jsonDecode(retencionesFile.readAsStringSync()) as Map<String, dynamic>;
-    final localesData = jsonDecode(localesFile.readAsStringSync()) as Map<String, dynamic>;
+    final ivaData =
+        jsonDecode(ivaFile.readAsStringSync()) as Map<String, dynamic>;
+    final iepsData =
+        jsonDecode(iepsFile.readAsStringSync()) as Map<String, dynamic>;
+    final retData =
+        jsonDecode(retencionesFile.readAsStringSync()) as Map<String, dynamic>;
+    final localesData =
+        jsonDecode(localesFile.readAsStringSync()) as Map<String, dynamic>;
 
     for (final raw in ivaData['calcular'] as List<dynamic>) {
       final vector = raw as Map<String, dynamic>;

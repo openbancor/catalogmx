@@ -38,8 +38,10 @@ void main() {
       );
       final expected = vector['expected'] as Map<String, dynamic>;
 
-      expect(_round(result.salarioBrutoMensual), expected['salario_bruto_mensual']);
-      expect(_round(result.cuotasImssPatronales), expected['cuotas_imss_patronales']);
+      expect(_round(result.salarioBrutoMensual),
+          expected['salario_bruto_mensual']);
+      expect(_round(result.cuotasImssPatronales),
+          expected['cuotas_imss_patronales']);
       expect(_round(result.infonavit), expected['infonavit']);
       expect(_round(result.impuestoNomina), expected['impuesto_nomina']);
       expect(_round(result.reservaAguinaldo), expected['reserva_aguinaldo']);
