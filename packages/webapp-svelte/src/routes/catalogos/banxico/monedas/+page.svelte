@@ -164,20 +164,20 @@
 			<h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Filtros</h2>
 			<div class="grid sm:grid-cols-2 gap-4">
 				<div>
-					<label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+					<label for="filtro-estado" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
 						Estado de la moneda
 					</label>
-					<select class="input w-full" bind:value={filterActive}>
+					<select id="filtro-estado" class="input w-full" bind:value={filterActive}>
 						<option value={null}>Todas</option>
 						<option value={1}>Solo activas</option>
 						<option value={0}>Solo inactivas</option>
 					</select>
 				</div>
 				<div>
-					<label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+					<label for="filtro-banxico" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
 						Tipo de cambio Banxico
 					</label>
-					<select class="input w-full" bind:value={filterBanxico}>
+					<select id="filtro-banxico" class="input w-full" bind:value={filterBanxico}>
 						<option value={null}>Todas</option>
 						<option value={1}>Con tipo de cambio</option>
 						<option value={0}>Sin tipo de cambio</option>

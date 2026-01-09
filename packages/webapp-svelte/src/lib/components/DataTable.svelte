@@ -29,8 +29,12 @@
 
 	let sorting = $state<SortingState>([]);
 	let globalFilter = $state('');
-	let paginationPageSize = $state(pageSize);
+	let paginationPageSize = $state(25);
 	let paginationPageIndex = $state(0);
+
+	$effect(() => {
+		paginationPageSize = pageSize;
+	});
 
 	const pagination = $derived<PaginationState>({
 		pageIndex: paginationPageIndex,

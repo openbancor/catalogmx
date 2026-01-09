@@ -28,9 +28,9 @@
 
 		// INEGI
 		{ source: 'INEGI', id: 'estados', name: 'Estados de México', count: 32, description: 'Entidades federativas' },
-		{ source: 'INEGI', id: 'municipios', name: 'Municipios', count: 2469, description: 'Municipios y alcaldías' },
-		{ source: 'INEGI', id: 'localidades', name: 'Localidades', count: 304000, description: 'Poblaciones y colonias' },
-		{ source: 'INEGI', id: 'scian', name: 'SCIAN', count: 1800, description: 'Sistema de Clasificación Industrial de América del Norte' },
+		{ source: 'INEGI', id: 'municipios', name: 'Municipios', count: 2469, description: 'Municipios y alcaldías', disabled: true },
+		{ source: 'INEGI', id: 'localidades', name: 'Localidades', count: 304000, description: 'Poblaciones y colonias', disabled: true },
+		{ source: 'INEGI', id: 'scian', name: 'SCIAN', count: 1800, description: 'Sistema de Clasificación Industrial de América del Norte', disabled: true },
 
 		// Banxico
 		{ source: 'Banxico', id: 'bancos', name: 'Instituciones Bancarias', count: 150, description: 'Bancos y SOFOMES con clave SPEI' },
@@ -181,22 +181,39 @@
 
 				<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					{#each catalogs as catalog}
-						<a
-							href={getCatalogUrl(source, catalog.id)}
-							class="card p-4 hover:border-brand-300 dark:hover:border-brand-600 transition-colors group"
-						>
-							<div class="flex items-start justify-between mb-2">
-								<h3 class="font-medium text-slate-900 dark:text-white group-hover:text-brand-500">
-									{catalog.name}
-								</h3>
-								<span class="text-xs text-slate-400 dark:text-slate-500 tabular-nums bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
-									{formatCount(catalog.count)}
-								</span>
+						{#if catalog.disabled}
+							<div class="card p-4 opacity-50 cursor-not-allowed">
+								<div class="flex items-start justify-between mb-2">
+									<h3 class="font-medium text-slate-900 dark:text-white">
+										{catalog.name}
+									</h3>
+									<span class="text-xs text-slate-400 dark:text-slate-500 tabular-nums bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+										{formatCount(catalog.count)}
+									</span>
+								</div>
+								<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">
+									{catalog.description}
+								</p>
+								<span class="text-xs text-slate-500 dark:text-slate-400">Próximamente</span>
 							</div>
-							<p class="text-sm text-slate-500 dark:text-slate-400">
-								{catalog.description}
-							</p>
-						</a>
+						{:else}
+							<a
+								href={getCatalogUrl(source, catalog.id)}
+								class="card p-4 hover:border-brand-300 dark:hover:border-brand-600 transition-colors group"
+							>
+								<div class="flex items-start justify-between mb-2">
+									<h3 class="font-medium text-slate-900 dark:text-white group-hover:text-brand-500">
+										{catalog.name}
+									</h3>
+									<span class="text-xs text-slate-400 dark:text-slate-500 tabular-nums bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+										{formatCount(catalog.count)}
+									</span>
+								</div>
+								<p class="text-sm text-slate-500 dark:text-slate-400">
+									{catalog.description}
+								</p>
+							</a>
+						{/if}
 					{/each}
 				</div>
 			</section>

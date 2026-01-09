@@ -46,7 +46,7 @@
 		accountNumber = random;
 	}
 
-	function generateClabe() {
+	function generateClabeValue() {
 		// Reset state
 		generatedClabe = '';
 		breakdown = null;
@@ -101,7 +101,7 @@
 	// Auto-generate when inputs change
 	$effect(() => {
 		if (selectedBankCode && branchCode && accountNumber) {
-			generateClabe();
+			generateClabeValue();
 		}
 	});
 </script>

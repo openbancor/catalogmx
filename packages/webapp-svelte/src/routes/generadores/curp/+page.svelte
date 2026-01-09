@@ -216,9 +216,9 @@
 					</div>
 
 					<div>
-						<label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+						<p class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
 							Sexo *
-						</label>
+						</p>
 						<div class="flex gap-4">
 							<label class="flex items-center gap-2 cursor-pointer">
 								<input

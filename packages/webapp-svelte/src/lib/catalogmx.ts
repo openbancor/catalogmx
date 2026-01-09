@@ -9,6 +9,8 @@ import {
   WorkerCostCalculator,
   calcularCostoTotal,
   obtenerDiasVacaciones,
+} from 'catalogmx/calculators';
+import {
   RFCValidator,
   CURPValidator,
   CLABEValidator,
@@ -23,7 +25,7 @@ import {
   generateClabe,
   generateNss,
   calculateClabeCheckDigit,
-} from 'catalogmx';
+} from 'catalogmx/validators';
 
 import isrTablesData from '../../../shared-data/isr-tables.json';
 import resicoTablesData from '../../../shared-data/resico-tables.json';
