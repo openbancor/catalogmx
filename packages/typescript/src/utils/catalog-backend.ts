@@ -90,8 +90,7 @@ export function loadCatalogRows<T>(relativePath: string): T[] {
     return catalogCache.get(normalized) as T[];
   }
 
-  const rows =
-    tryLoadFromSqlite<T>(normalized) ?? extractRecords<T>(loadCatalogJson(normalized));
+  const rows = tryLoadFromSqlite<T>(normalized) ?? extractRecords<T>(loadCatalogJson(normalized));
   catalogCache.set(normalized, rows);
   return rows;
 }
@@ -140,7 +139,9 @@ function extractRecords<T>(data: unknown): T[] {
   if (Array.isArray(obj.items)) return obj.items as T[];
   if (Array.isArray(obj.data)) return obj.data as T[];
 
-  const listFields = Object.entries(obj).filter(([, value]) => Array.isArray(value) && value.length);
+  const listFields = Object.entries(obj).filter(
+    ([, value]) => Array.isArray(value) && value.length
+  );
   if (!listFields.length) return [];
   const [, records] = listFields.reduce((max, current) =>
     (current[1] as unknown[]).length > (max[1] as unknown[]).length ? current : max

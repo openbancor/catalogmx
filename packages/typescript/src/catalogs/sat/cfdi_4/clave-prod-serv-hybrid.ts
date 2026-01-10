@@ -94,7 +94,9 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
    */
   protected ensureMinimalSchema(db: CatalogSqliteDatabase): void {
     const hasTable = db
-      .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='clave_prod_serv' LIMIT 1")
+      .prepare(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='clave_prod_serv' LIMIT 1"
+      )
       .get() as Record<string, unknown> | undefined;
     if (!hasTable) {
       db.exec(
