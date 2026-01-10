@@ -6,26 +6,13 @@
  * Source: Banco de México (BANXICO) / Sistema de Pagos Electrónicos Interbancarios (SPEI)
  */
 
-import { loadCatalogData } from '../../utils/catalog-loader';
+import { loadCatalogObject } from '../../utils/catalog-loader';
 
 export interface CodigoPlaza {
   codigo: string; // 3-digit code
   plaza: string; // City/plaza name
   estado: string; // State name
   cve_entidad: string; // INEGI state code
-}
-
-interface PlazaCatalogData {
-  metadata: {
-    catalog: string;
-    description: string;
-    source: string;
-    last_updated: string;
-    total_codes: number;
-    total_plazas: number;
-    notes: string;
-  };
-  plazas: CodigoPlaza[];
 }
 
 export class CodigosPlazaCatalog {
@@ -50,8 +37,7 @@ export class CodigosPlazaCatalog {
    */
   private static getData(): CodigoPlaza[] {
     if (this._data === null) {
-      const catalogData = loadCatalogData<PlazaCatalogData>('banxico/codigos_plaza.json');
-      const plazas = catalogData.plazas ?? [];
+      const plazas = loadCatalogObject<CodigoPlaza>('banxico/codigos_plaza.json');
       this._data = plazas;
 
       // Build indices

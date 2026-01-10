@@ -2,9 +2,8 @@
  * Catálogo de operadores de telefonía móvil en México (IFT)
  */
 
-import * as path from 'path';
-import * as fs from 'fs';
 import { OperadorMovil } from '../../types';
+import { loadCatalogData } from '../../utils/catalog-loader';
 
 interface OperadoresMovilesData {
   metadata: {
@@ -32,9 +31,7 @@ export class OperadoresMoviles {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(__dirname, '../../../../shared-data/ift/operadores_moviles.json');
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    const jsonData: OperadoresMovilesData = JSON.parse(rawData);
+    const jsonData = loadCatalogData<OperadoresMovilesData>('ift/operadores_moviles.json');
     this._data = jsonData.operadores;
   }
 

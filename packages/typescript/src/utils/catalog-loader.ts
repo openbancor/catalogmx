@@ -1,10 +1,9 @@
 /**
  * Catalog data loader utilities
- * Loads JSON catalog data from shared-data directory
+ * Loads catalog data from JSON or SQLite backends
  */
 
-import * as path from 'path';
-import * as fs from 'fs';
+import { clearCatalogCache, loadCatalogJson, loadCatalogRows } from './catalog-backend';
 
 /**
  * Base class for lazy-loading catalogs
@@ -24,14 +23,7 @@ export abstract class CatalogLoader<T> {
       return CatalogLoader._cache.get(dataPath) as T[];
     }
 
-    // Load from file
-    const fullPath = path.resolve(__dirname, '../../../shared-data', dataPath);
-
-    if (!fs.existsSync(fullPath)) {
-      throw new Error(`Catalog file not found: ${fullPath}`);
-    }
-
-    const data = JSON.parse(fs.readFileSync(fullPath, 'utf-8'));
+    const data = loadCatalogRows<T>(dataPath);
 
     // Cache the data
     CatalogLoader._cache.set(dataPath, data);
@@ -44,34 +36,18 @@ export abstract class CatalogLoader<T> {
    */
   static clearCache(): void {
     this._cache.clear();
+    clearCatalogCache();
   }
 }
 
 // For JSON files that are an array at the root: `[...]`
 export function loadCatalogArray<T>(relativePath: string): T[] {
-  const fullPath = path.resolve(__dirname, '../../../shared-data', relativePath);
-  if (!fs.existsSync(fullPath)) {
-    throw new Error(`Catalog file not found: ${fullPath}`);
-  }
-  return JSON.parse(fs.readFileSync(fullPath, 'utf-8')) as T[];
+  return loadCatalogRows<T>(relativePath);
 }
 
 // For JSON files that are an object with a 'data' property: `{ "data": [...] }`
 export function loadCatalogObject<T>(relativePath: string): T[] {
-  const fullPath = path.resolve(__dirname, '../../../shared-data', relativePath);
-  if (!fs.existsSync(fullPath)) {
-    throw new Error(`Catalog file not found: ${fullPath}`);
-  }
-  const jsonData = JSON.parse(fs.readFileSync(fullPath, 'utf-8'));
-  if (Array.isArray(jsonData)) {
-    return jsonData as T[];
-  }
-  if (jsonData && Array.isArray(jsonData.data)) {
-    return jsonData.data as T[];
-  }
-  throw new Error(
-    `Invalid catalog format: ${fullPath}. Expected an array or { data: [...] } structure.`
-  );
+  return loadCatalogRows<T>(relativePath);
 }
 
 /**
@@ -79,9 +55,5 @@ export function loadCatalogObject<T>(relativePath: string): T[] {
  * Useful when the file exports additional metadata along with the catalog payload.
  */
 export function loadCatalogData<T>(relativePath: string): T {
-  const fullPath = path.resolve(__dirname, '../../../shared-data', relativePath);
-  if (!fs.existsSync(fullPath)) {
-    throw new Error(`Catalog file not found: ${fullPath}`);
-  }
-  return JSON.parse(fs.readFileSync(fullPath, 'utf-8')) as T;
+  return loadCatalogJson<T>(relativePath);
 }

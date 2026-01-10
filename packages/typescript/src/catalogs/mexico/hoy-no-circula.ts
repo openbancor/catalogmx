@@ -1,6 +1,5 @@
-import path from 'path';
-import fs from 'fs';
 import { HoyNoCirculaPrograma } from '../../types';
+import { loadCatalogData } from '../../utils/catalog-loader';
 
 /**
  * Hoy No Circula CDMX Catalog
@@ -12,13 +11,7 @@ export class HoyNoCirculaCDMX {
 
   private static loadData(): void {
     if (this._data !== null) return;
-    // From dist/catalogs/mexico, go up 4 levels to packages dir and then to shared-data
-    const dataPath = path.resolve(
-      __dirname,
-      '../../../../shared-data/mexico/hoy_no_circula_cdmx.json'
-    );
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    this._data = JSON.parse(rawData) as HoyNoCirculaPrograma;
+    this._data = loadCatalogData<HoyNoCirculaPrograma>('mexico/hoy_no_circula_cdmx.json');
   }
 
   static getData(): HoyNoCirculaPrograma {

@@ -26,6 +26,7 @@ import {
   generateNss,
   calculateClabeCheckDigit,
 } from 'catalogmx/validators';
+import { getDatabase } from './db';
 
 import isrTablesData from '../../../shared-data/isr-tables.json';
 import resicoTablesData from '../../../shared-data/resico-tables.json';
@@ -44,6 +45,10 @@ IVACalculator.setData(ivaData);
 IEPSCalculator.setData(iepsData);
 RetencionCalculator.setData(retencionesData);
 ImpuestosLocalesCalculator.setData(impuestosLocalesData);
+
+export async function initCatalogmxSqlite(): Promise<void> {
+  await getDatabase();
+}
 
 export {
   ISRCalculator,

@@ -6,9 +6,8 @@
  * Based on UN/ECE Recommendation 20 and 21
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
 import { ClaveUnidad } from '../../../types';
+import { loadCatalogArray } from '../../../utils/catalog-loader';
 
 export class ClaveUnidadCatalog {
   private static _data: ClaveUnidad[] | null = null;
@@ -17,12 +16,7 @@ export class ClaveUnidadCatalog {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(
-      __dirname,
-      '../../../../../shared-data/sat/cfdi_4.0/clave_unidad.json'
-    );
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    this._data = JSON.parse(rawData) as ClaveUnidad[];
+    this._data = loadCatalogArray<ClaveUnidad>('sat/cfdi_4.0/clave_unidad.json');
 
     // Crear índice por ID
     this._byId = new Map();

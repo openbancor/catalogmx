@@ -18,3 +18,26 @@ export {
 } from './clabe-utils';
 
 export type { BankInfo, PlazaInfo, DecodedCLABE, GenerateClabeOptions } from './clabe-utils';
+
+// Catalog backend utilities
+export * from './catalog-loader';
+export {
+  clearCatalogCache,
+  clearCatalogJsonData,
+  getCatalogSqliteAdapter,
+  hasCatalogJsonData,
+  isNodeRuntime,
+  loadCatalogJson,
+  loadCatalogRows,
+  setCatalogJsonData,
+  setCatalogPreferSqlite,
+  setCatalogSqliteAdapter,
+  tableNameForJsonPath,
+} from './catalog-backend';
+export {
+  createBetterSqliteAdapter,
+  createSqlJsAdapter,
+  type CatalogSqliteDatabase,
+  type CatalogSqliteStatement,
+  type SqliteParam,
+} from './sqlite-adapter';

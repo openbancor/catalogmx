@@ -3,6 +3,7 @@
  * Loads mexico.sqlite3 from GitHub Releases for catalog data
  */
 import initSqlJs, { type Database } from 'sql.js';
+import { createSqlJsAdapter, setCatalogPreferSqlite, setCatalogSqliteAdapter } from 'catalogmx/utils';
 
 // Database singleton
 let db: Database | null = null;
@@ -47,6 +48,8 @@ export async function getDatabase(): Promise<Database> {
 	if (!dbPromise) {
 		dbPromise = initDatabase().then((database) => {
 			db = database;
+			setCatalogSqliteAdapter(createSqlJsAdapter(database));
+			setCatalogPreferSqlite(true);
 			return database;
 		});
 	}
