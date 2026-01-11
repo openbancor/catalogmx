@@ -7,8 +7,7 @@
  * - Sistema Único de Autodeterminación (SUA)
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import { loadCatalogData } from '../utils/catalog-loader';
 
 export type IMSSYear = 2024 | 2025 | 2026;
 export type ZonaSalario = 'general' | 'frontera';
@@ -93,17 +92,13 @@ export class IMSSCalculator {
   private static loadTablesData(): void {
     if (this._tablesData !== null) return;
 
-    const dataPath = path.resolve(__dirname, '../../../shared-data/imss-tables.json');
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    this._tablesData = JSON.parse(rawData) as IMSSTablesData;
+    this._tablesData = loadCatalogData<IMSSTablesData>('imss-tables.json');
   }
 
   private static loadCatalogsData(): void {
     if (this._catalogsData !== null) return;
 
-    const dataPath = path.resolve(__dirname, '../../../shared-data/imss-catalogs.json');
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    this._catalogsData = JSON.parse(rawData) as IMSSCatalogsData;
+    this._catalogsData = loadCatalogData<IMSSCatalogsData>('imss-catalogs.json');
   }
 
   /**

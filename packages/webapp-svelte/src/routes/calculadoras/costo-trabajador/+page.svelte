@@ -6,7 +6,6 @@
 		WorkerCostCalculator,
 		obtenerDiasVacaciones
 	} from '$lib/catalogmx';
-	import impuestosLocalesData from '../../../../../shared-data/sat/impuestos/impuestos_locales.json';
 
 	type Year = 2024 | 2025 | 2026;
 
@@ -19,7 +18,7 @@
 	let estado = $state<string>('09');
 	let diasAguinaldo = $state<number>(15);
 
-	const estados = impuestosLocalesData.impuesto_nomina.map((e) => ({
+	const estados = ImpuestosLocalesCalculator.getAllImpuestosNomina().map((e) => ({
 		value: e.cve_estado,
 		label: e.estado,
 		tasa: e.tasa

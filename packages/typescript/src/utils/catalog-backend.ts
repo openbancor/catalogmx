@@ -59,6 +59,8 @@ export function clearCatalogCache(): void {
 export function hasCatalogJsonData(relativePath: string): boolean {
   const normalized = normalizePath(relativePath);
   if (jsonDataStore.has(normalized)) return true;
+  const sqliteData = tryLoadCatalogJson(normalized);
+  if (sqliteData !== null) return true;
   if (!isNodeRuntime()) return false;
   const fs = getNodeFs();
   const fullPath = resolveSharedDataPath(normalized);
@@ -69,6 +71,10 @@ export function loadCatalogJson<T>(relativePath: string): T {
   const normalized = normalizePath(relativePath);
   if (jsonDataStore.has(normalized)) {
     return jsonDataStore.get(normalized) as T;
+  }
+  const sqliteData = tryLoadCatalogJson(normalized);
+  if (sqliteData !== null) {
+    return sqliteData as T;
   }
   if (!isNodeRuntime()) {
     throw new Error(
@@ -128,6 +134,15 @@ function tableExists(tableName: string): boolean {
     "SELECT 1 AS ok FROM sqlite_master WHERE type='table' AND name=? LIMIT 1"
   );
   return !!stmt.get(tableName);
+}
+
+function tryLoadCatalogJson(relativePath: string): unknown | null {
+  if (!sqliteAdapter) return null;
+  if (!tableExists('catalog_json')) return null;
+  const stmt = sqliteAdapter.prepare('SELECT payload FROM catalog_json WHERE path = ? LIMIT 1');
+  const row = stmt.get(relativePath) as { payload?: string } | undefined;
+  if (!row?.payload) return null;
+  return JSON.parse(row.payload) as unknown;
 }
 
 function extractRecords<T>(data: unknown): T[] {

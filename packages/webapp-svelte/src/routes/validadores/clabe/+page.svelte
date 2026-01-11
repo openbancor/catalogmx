@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { CreditCard, CheckCircle2, XCircle, Info, Building2, MapPin, Hash } from 'lucide-svelte';
 	import { base } from '$app/paths';
-	import banksData from '../../../../../shared-data/banxico/banks.json';
 	import { CLABEValidator } from '$lib/catalogmx';
+	import { loadCatalogRows } from 'catalogmx/utils';
 
 	// State
 	let clabe = $state('');
@@ -16,6 +16,8 @@
 		checkDigitValid: boolean;
 		errors: string[];
 	} | null>(null);
+
+	const banksData = loadCatalogRows<{ code: string; name: string }>('banxico/banks.json');
 
 	function findBank(bankCode: string) {
 		return banksData.find(bank => bank.code === bankCode);

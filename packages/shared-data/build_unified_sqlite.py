@@ -80,6 +80,19 @@ SKIP_JSON_FILES = {
     "banxico/salarios_minimos.json",
 }
 
+# JSON files that should be stored as raw payloads in SQLite for browser usage.
+RAW_JSON_FILES = {
+    "isr-tables.json",
+    "resico-tables.json",
+    "imss-tables.json",
+    "imss-catalogs.json",
+    "sat/impuestos/isr_tablas.json",
+    "sat/impuestos/iva_tasas.json",
+    "sat/impuestos/ieps_tasas.json",
+    "sat/impuestos/retenciones.json",
+    "sat/impuestos/impuestos_locales.json",
+}
+
 
 def quote_ident(name: str) -> str:
     return '"' + name.replace('"', '""') + '"'
@@ -358,14 +371,29 @@ def normalize_value(value: object) -> object:
 
 
 def import_json_catalogs(conn: sqlite3.Connection) -> None:
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS catalog_json (
+            path TEXT PRIMARY KEY,
+            payload TEXT NOT NULL
+        )
+        """
+    )
     for json_path in iter_json_files():
         table_name = table_name_for_json(json_path)
+        rel_str = "/".join(json_path.relative_to(DATA_ROOT).parts)
         with json_path.open("r", encoding="utf-8") as fh:
             try:
                 payload = json.load(fh)
             except json.JSONDecodeError as exc:
                 print(f"[build] WARNING: failed to parse {json_path}: {exc}")
                 continue
+
+        if rel_str in RAW_JSON_FILES:
+            conn.execute(
+                "INSERT OR REPLACE INTO catalog_json (path, payload) VALUES (?, ?)",
+                (rel_str, json.dumps(payload, ensure_ascii=False)),
+            )
 
         special = transform_special_case(json_path, payload)
         records = special if special is not None else ensure_list_of_records(payload)

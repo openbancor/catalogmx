@@ -4,8 +4,6 @@
  * Provee métodos para calcular IVA, IEPS y retenciones según las leyes mexicanas
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
 import {
   IVATasa,
   IEPSCategoria,
@@ -16,6 +14,7 @@ import {
   IEPSCalculationResult,
   RetencionCalculationResult,
 } from '../types';
+import { loadCatalogData } from '../utils/catalog-loader';
 
 interface IVAData {
   metadata: object;
@@ -52,9 +51,7 @@ export class IVACalculator {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(__dirname, '../../../shared-data/sat/impuestos/iva_tasas.json');
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    this._data = JSON.parse(rawData) as IVAData;
+    this._data = loadCatalogData<IVAData>('sat/impuestos/iva_tasas.json');
   }
 
   /**
@@ -170,9 +167,7 @@ export class IEPSCalculator {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(__dirname, '../../../shared-data/sat/impuestos/ieps_tasas.json');
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    this._data = JSON.parse(rawData) as IEPSCategoria[];
+    this._data = loadCatalogData<IEPSCategoria[]>('sat/impuestos/ieps_tasas.json');
   }
 
   /**
@@ -290,9 +285,7 @@ export class RetencionCalculator {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(__dirname, '../../../shared-data/sat/impuestos/retenciones.json');
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    this._data = JSON.parse(rawData) as RetencionesData;
+    this._data = loadCatalogData<RetencionesData>('sat/impuestos/retenciones.json');
   }
 
   /**
@@ -425,12 +418,7 @@ export class ImpuestosLocalesCalculator {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(
-      __dirname,
-      '../../../shared-data/sat/impuestos/impuestos_locales.json'
-    );
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    this._data = JSON.parse(rawData) as ImpuestosLocalesData;
+    this._data = loadCatalogData<ImpuestosLocalesData>('sat/impuestos/impuestos_locales.json');
   }
 
   /**

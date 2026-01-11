@@ -2,7 +2,7 @@
 	import { User, Info, CheckCircle2, AlertCircle } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import { CURPValidator, generateCurp } from '$lib/catalogmx';
-	import statesData from '../../../../../shared-data/inegi/states.json';
+	import { loadCatalogRows } from 'catalogmx/utils';
 
 	// State
 	let nombre = $state('');
@@ -15,6 +15,8 @@
 	let curpGenerado = $state('');
 	let pasos = $state<string[]>([]);
 	let decoded = $state<{ label: string; value: string }[]>([]);
+
+	const statesData = loadCatalogRows<{ code: string; name: string }>('inegi/states.json');
 
 	// Prepare states for select
 	const states = statesData.map((s) => ({

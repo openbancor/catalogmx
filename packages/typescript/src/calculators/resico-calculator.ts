@@ -10,8 +10,7 @@
  * Soporta años: 2024, 2025, 2026
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import { loadCatalogData } from '../utils/catalog-loader';
 
 export type RESICOYear = 2024 | 2025 | 2026;
 export type RESICOPeriod = 'mensual' | 'anual';
@@ -90,9 +89,7 @@ export class RESICOCalculator {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(__dirname, '../../../shared-data/resico-tables.json');
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    this._data = JSON.parse(rawData) as RESICOData;
+    this._data = loadCatalogData<RESICOData>('resico-tables.json');
   }
 
   /**

@@ -5,9 +5,8 @@
  * Incluye subsidio al empleo y tarifas progresivas por año
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
 import { ISRCalculationResult } from '../types';
+import { loadCatalogData } from '../utils/catalog-loader';
 
 interface ISRBracket {
   limiteInferior: number;
@@ -81,9 +80,7 @@ export class ISRCalculator {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(__dirname, '../../../shared-data/isr-tables.json');
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    this._data = JSON.parse(rawData) as ISRData;
+    this._data = loadCatalogData<ISRData>('isr-tables.json');
   }
 
   /**

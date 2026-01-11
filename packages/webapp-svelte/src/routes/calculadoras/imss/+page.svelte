@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import { Calculator, Info, Shield, Users } from 'lucide-svelte';
-	import imssTablesData from '../../../../../shared-data/imss-tables.json';
 	import { IMSSCalculator } from '$lib/catalogmx';
 
 	type TipoCalculo = 'cuotas' | 'modalidad40' | 'modalidad10';
@@ -20,7 +19,7 @@
 		{ value: 'modalidad10', label: 'Modalidad 10 (Independiente)', icon: Shield }
 	] as const;
 
-	const clasesRiesgo = imssTablesData.riesgos_trabajo_clases.map(c => ({
+	const clasesRiesgo = IMSSCalculator.getClasesRiesgoTrabajo().map((c) => ({
 		value: c.clase as ClaseRiesgo,
 		label: `Clase ${c.clase} - ${c.descripcion.replace(`Clase ${c.clase} - `, '')}`,
 		prima: c.prima,
