@@ -329,14 +329,12 @@ export function generateCurp(input: {
   estado: string;
   differentiator?: string;
 }): string {
-  const fecha =
-    typeof input.fechaNacimiento === 'string'
-      ? new Date(input.fechaNacimiento)
-      : input.fechaNacimiento;
+  const fechaParts = parseDateInput(input.fechaNacimiento);
 
   const nombre = cleanNameCurp(input.nombre);
   const paterno = cleanNameCurp(input.apellidoPaterno);
   const materno = cleanNameCurp(input.apellidoMaterno);
+  const nombreIniciales = getNombreIniciales(nombre);
 
   // Get first letter and first vowel of paterno
   let iniciales = paterno.charAt(0);
@@ -351,7 +349,7 @@ export function generateCurp(input: {
   iniciales += materno.charAt(0) || 'X';
 
   // First letter of nombre
-  iniciales += nombre.charAt(0);
+  iniciales += nombreIniciales.charAt(0);
 
   // Handle cacophonic words
   if (CACOPHONIC_WORDS_CURP.includes(iniciales)) {
@@ -359,9 +357,9 @@ export function generateCurp(input: {
   }
 
   // Format date
-  const year = fecha.getFullYear().toString().slice(-2);
-  const month = (fecha.getMonth() + 1).toString().padStart(2, '0');
-  const day = fecha.getDate().toString().padStart(2, '0');
+  const year = fechaParts.year.toString().slice(-2);
+  const month = fechaParts.month.toString().padStart(2, '0');
+  const day = fechaParts.day.toString().padStart(2, '0');
 
   // Gender
   const sexo = input.sexo.toUpperCase();
@@ -372,7 +370,7 @@ export function generateCurp(input: {
   // Internal consonants
   const consonant1 = getFirstConsonant(paterno);
   const consonant2 = getFirstConsonant(materno);
-  const consonant3 = getFirstConsonant(nombre);
+  const consonant3 = getFirstConsonant(nombreIniciales);
 
   // Base CURP (17 characters)
   const curpBase =
@@ -391,6 +389,47 @@ export function generateCurp(input: {
   const checkDigit = calculateCurpCheckDigit(curpBase);
 
   return curpBase + checkDigit;
+}
+
+function getNombreIniciales(nombre: string): string {
+  if (!nombre) return nombre;
+  const words = nombre.split(/\s+/).filter(Boolean);
+  if (words.length > 1) {
+    if (words[0] === 'MARIA' || words[0] === 'JOSE' || words[0] === 'MA' || words[0] === 'J') {
+      return words.slice(1).join(' ') || words[0];
+    }
+  }
+  return nombre;
+}
+
+function parseDateInput(value: Date | string): { year: number; month: number; day: number } {
+  if (value instanceof Date) {
+    return {
+      year: value.getFullYear(),
+      month: value.getMonth() + 1,
+      day: value.getDate(),
+    };
+  }
+
+  const isoMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (isoMatch) {
+    return {
+      year: Number(isoMatch[1]),
+      month: Number(isoMatch[2]),
+      day: Number(isoMatch[3]),
+    };
+  }
+
+  const dmyMatch = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value);
+  if (dmyMatch) {
+    return {
+      day: Number(dmyMatch[1]),
+      month: Number(dmyMatch[2]),
+      year: Number(dmyMatch[3]),
+    };
+  }
+
+  throw new Error('Fecha inválida. Usa YYYY-MM-DD o DD/MM/YYYY.');
 }
 
 /**

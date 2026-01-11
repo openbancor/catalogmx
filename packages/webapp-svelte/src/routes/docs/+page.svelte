@@ -310,7 +310,7 @@ final banks = BanxicoBanks.getAll();`
 	</div>
 
 	<!-- Installation -->
-	<section class="mb-12">
+	<section id="instalacion" class="mb-12">
 		<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
 			<Package class="h-6 w-6 text-green-500" />
 			Instalación
@@ -380,7 +380,7 @@ final banks = BanxicoBanks.getAll();`
 	</section>
 
 	<!-- Python Examples -->
-	<section class="mb-12">
+	<section id="python" class="mb-12">
 		<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
 			<Code class="h-6 w-6 text-blue-500" />
 			Python
@@ -412,7 +412,7 @@ final banks = BanxicoBanks.getAll();`
 	</section>
 
 	<!-- TypeScript Examples -->
-	<section class="mb-12">
+	<section id="typescript" class="mb-12">
 		<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
 			<Code class="h-6 w-6 text-yellow-500" />
 			TypeScript / Node.js
@@ -444,7 +444,7 @@ final banks = BanxicoBanks.getAll();`
 	</section>
 
 	<!-- Dart Examples -->
-	<section class="mb-12">
+	<section id="dart" class="mb-12">
 		<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
 			<Code class="h-6 w-6 text-cyan-500" />
 			Dart / Flutter
@@ -476,7 +476,7 @@ final banks = BanxicoBanks.getAll();`
 	</section>
 
 	<!-- API Reference Links -->
-	<section class="mb-12">
+	<section id="recursos" class="mb-12">
 		<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
 			<Terminal class="h-6 w-6 text-purple-500" />
 			Recursos adicionales

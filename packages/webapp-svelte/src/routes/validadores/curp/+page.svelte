@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { User, CheckCircle2, XCircle, Info, Calendar, MapPin, Users } from 'lucide-svelte';
 	import { base } from '$app/paths';
+	import { CURPValidator } from '$lib/catalogmx';
 
 	// State
 	let curp = $state('');
@@ -11,10 +12,6 @@
 		birthState: string | null;
 		errors: string[];
 	} | null>(null);
-
-	// CURP Validation Logic
-	const CURP_REGEX = /^[A-Z][AEIOUX][A-Z]{2}[0-9]{2}[0-1][0-9][0-3][0-9][MH][A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}[0-9A-Z]{2}$/;
-	const CURP_LENGTH = 18;
 
 	const STATE_CODES: { [key: string]: string } = {
 		'AS': 'Aguascalientes',
@@ -52,61 +49,33 @@
 		'NE': 'Nacido en el Extranjero'
 	};
 
-	function validateDate(year: number, month: number, day: number): boolean {
-		try {
-			if (month < 1 || month > 12) return false;
-			if (day < 1 || day > 31) return false;
-
-			const date = new Date(year, month - 1, day);
-			return date.getMonth() === month - 1 && date.getDate() === day;
-		} catch {
-			return false;
-		}
-	}
-
 	function validateCURP(value: string): void {
 		const errors: string[] = [];
-		let isValid = false;
 		let gender: string | null = null;
 		let birthDate: string | null = null;
 		let birthState: string | null = null;
 
 		const curpUpper = value.toUpperCase().trim();
 
-		// Length validation
-		if (curpUpper.length !== CURP_LENGTH) {
-			errors.push(`La CURP debe tener exactamente ${CURP_LENGTH} caracteres`);
+		if (curpUpper.length !== 18) {
+			errors.push('La CURP debe tener exactamente 18 caracteres');
 			validationResult = { isValid: false, gender: null, birthDate: null, birthState: null, errors };
 			return;
 		}
 
-		// Regex validation
-		if (!CURP_REGEX.test(curpUpper)) {
+		const validator = new CURPValidator(curpUpper);
+		if (!validator.isValid()) {
 			errors.push('El formato de la CURP no es válido');
-			validationResult = { isValid: false, gender: null, birthDate: null, birthState: null, errors };
-			return;
 		}
 
-		// Extract and validate date (positions 4-9: YYMMDD)
-		const yearStr = curpUpper.substring(4, 6);
-		const monthStr = curpUpper.substring(6, 8);
-		const dayStr = curpUpper.substring(8, 10);
-
-		const year = parseInt(yearStr);
-		const month = parseInt(monthStr);
-		const day = parseInt(dayStr);
-
-		// Determine full year (00-30 = 2000s, 31-99 = 1900s)
-		const fullYear = year >= 0 && year <= 30 ? 2000 + year : 1900 + year;
-
-		if (validateDate(fullYear, month, day)) {
-			birthDate = `${fullYear}-${monthStr}-${dayStr}`;
+		const date = validator.getBirthDate();
+		if (date) {
+			birthDate = date.toISOString().slice(0, 10);
 		} else {
 			errors.push('La fecha de nacimiento en la CURP no es válida');
 		}
 
-		// Extract gender (position 10: H=Hombre, M=Mujer)
-		const genderChar = curpUpper[10];
+		const genderChar = validator.getGender();
 		if (genderChar === 'H') {
 			gender = 'Hombre';
 		} else if (genderChar === 'M') {
@@ -115,24 +84,22 @@
 			errors.push('El carácter de género no es válido');
 		}
 
-		// Extract state (positions 11-12)
-		const stateCode = curpUpper.substring(11, 13);
-		if (STATE_CODES[stateCode]) {
+		const stateCode = validator.getStateCode();
+		if (stateCode && STATE_CODES[stateCode]) {
 			birthState = STATE_CODES[stateCode];
-		} else {
+		} else if (stateCode) {
 			birthState = stateCode;
 			errors.push('El código de estado no es reconocido');
+		} else {
+			errors.push('El código de estado no es válido');
 		}
 
-		isValid = errors.length === 0;
+		if (!validator.validateCheckDigit()) {
+			errors.push('El dígito verificador es incorrecto');
+		}
 
-		validationResult = {
-			isValid,
-			gender,
-			birthDate,
-			birthState,
-			errors
-		};
+		const isValid = errors.length === 0;
+		validationResult = { isValid, gender, birthDate, birthState, errors };
 	}
 
 	// Auto-validate when CURP changes

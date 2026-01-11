@@ -8,9 +8,8 @@
  * - Clasificación urbano/rural
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
 import { Localidad } from '../../types';
+import { loadCatalogArray } from '../../utils/catalog-loader';
 
 export class LocalidadesCatalog {
   private static _data: Localidad[] | null = null;
@@ -21,9 +20,7 @@ export class LocalidadesCatalog {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(__dirname, '../../../../shared-data/inegi/localidades.json');
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    this._data = JSON.parse(rawData) as Localidad[];
+    this._data = loadCatalogArray<Localidad>('inegi/localidades.json');
 
     // Crear índices
     this._byCvegeo = new Map();

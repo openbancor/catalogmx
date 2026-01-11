@@ -106,6 +106,9 @@ jobs:
           # Upload additional assets separately (more reliable)
           for f in sqlite/*.db sqlite/*.sqlite3; do
             if [ -f "$f" ]; then
+              if [ "$(basename "$f")" = "mexico.sqlite3" ]; then
+                continue
+              fi
               echo "Uploading $f..."
               gh release upload sqlite-assets "$f" --clobber || true
             fi

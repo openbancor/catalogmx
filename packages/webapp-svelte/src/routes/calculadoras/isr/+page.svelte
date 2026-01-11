@@ -1,25 +1,7 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { Calculator, Info, TrendingUp, Receipt } from 'lucide-svelte';
-	import isrTablesData from '../../../../../shared-data/isr-tables.json';
-
-	// Types
-	interface ISRBracket {
-		limiteInferior: number;
-		limiteSuperior: number | null;
-		cuotaFija: number;
-		tasa: number;
-	}
-
-	interface SubsidyTier {
-		desde: number;
-		hasta: number | null;
-		subsidio: number;
-	}
-
-	interface SubsidyFlat {
-		amount: number;
-		maxIncome: number;
-	}
+	import { ISRCalculator } from '$lib/catalogmx';
 
 	interface CalculationResult {
 		ingresoGravable: number;
@@ -50,123 +32,35 @@
 
 	const years = [2024, 2025, 2026] as const;
 
-	// Functions
-	function findBracket(income: number, brackets: ISRBracket[]): ISRBracket | null {
-		for (const bracket of brackets) {
-			if (income >= bracket.limiteInferior) {
-				if (bracket.limiteSuperior === null || income <= bracket.limiteSuperior) {
-					return bracket;
-				}
-			}
-		}
-		return null;
-	}
-
-	function calculateSubsidy(income: number, year: number, period: string): number {
-		if (!aplicarSubsidio) return 0;
-
-		const subsidyData = isrTablesData.subsidies[year.toString() as '2024' | '2025' | '2026'];
-
-		if (!subsidyData) return 0;
-
-		// For 2024, use tiered system
-		if (subsidyData.type === 'tiered') {
-			// Only monthly subsidy available in 2024
-			if (period !== 'monthly') return 0;
-
-			const tiers = subsidyData.monthly as SubsidyTier[];
-			for (const tier of tiers) {
-				if (income >= tier.desde) {
-					if (tier.hasta === null || income <= tier.hasta) {
-						return tier.subsidio;
-					}
-				}
-			}
-			return 0;
-		}
-
-		// For 2025/2026, use flat system
-		if (subsidyData.type === 'flat') {
-			const flat = subsidyData.monthly as SubsidyFlat;
-
-			// Convert income to monthly equivalent if needed
-			let monthlyIncome = income;
-			switch (period) {
-				case 'daily':
-					monthlyIncome = income * 30;
-					break;
-				case 'weekly':
-					monthlyIncome = income * 4.33;
-					break;
-				case 'biweekly':
-					monthlyIncome = income * 2;
-					break;
-				case 'annual':
-					monthlyIncome = income / 12;
-					break;
-			}
-
-			// Check if income qualifies
-			if (monthlyIncome <= flat.maxIncome) {
-				// Return subsidy proportional to the period
-				switch (period) {
-					case 'daily':
-						return flat.amount / 30;
-					case 'weekly':
-						return flat.amount / 4.33;
-					case 'biweekly':
-						return flat.amount / 2;
-					case 'annual':
-						return flat.amount * 12;
-					default:
-						return flat.amount;
-				}
-			}
-		}
-
-		return 0;
-	}
-
 	function calculateISR() {
 		if (!ingreso || ingreso <= 0) {
 			resultado = null;
 			return;
 		}
-
-		const yearKey = year.toString() as '2024' | '2025' | '2026';
-		const brackets = isrTablesData.brackets[yearKey][periodo] as ISRBracket[];
-
-		const bracket = findBracket(ingreso, brackets);
-
-		if (!bracket) {
-			resultado = null;
-			return;
-		}
-
-		const limiteInferior = bracket.limiteInferior;
-		const excedente = ingreso - limiteInferior;
-		const cuotaFija = bracket.cuotaFija;
-		const tasa = bracket.tasa;
-
-		const impuestoMarginal = (excedente * tasa) / 100;
-		const isrCausado = cuotaFija + impuestoMarginal;
-
-		const subsidioEmpleo = calculateSubsidy(ingreso, year, periodo);
-		const isrRetener = Math.max(0, isrCausado - subsidioEmpleo);
-
-		const tasaEfectiva = (isrRetener / ingreso) * 100;
-
-		resultado = {
-			ingresoGravable: ingreso,
-			limiteInferior,
-			excedente,
-			cuotaFija,
-			impuestoMarginal,
-			isrCausado,
-			subsidioEmpleo,
-			isrRetener,
-			tasaEfectiva
+		const periodMap: Record<typeof periodo, 'diario' | 'semanal' | 'quincenal' | 'mensual' | 'anual'> = {
+			daily: 'diario',
+			weekly: 'semanal',
+			biweekly: 'quincenal',
+			monthly: 'mensual',
+			annual: 'anual'
 		};
+
+		try {
+			const result = ISRCalculator.calcular(ingreso, year, periodMap[periodo], aplicarSubsidio);
+			resultado = {
+				ingresoGravable: result.ingreso_gravable,
+				limiteInferior: result.limite_inferior,
+				excedente: result.excedente,
+				cuotaFija: result.cuota_fija,
+				impuestoMarginal: result.impuesto_marginal,
+				isrCausado: result.isr_causado,
+				subsidioEmpleo: result.subsidio_empleo,
+				isrRetener: result.isr_a_retener,
+				tasaEfectiva: result.tasa_efectiva
+			};
+		} catch {
+			resultado = null;
+		}
 	}
 
 	function formatCurrency(value: number): string {
@@ -203,7 +97,7 @@
 <section class="py-8 md:py-12 border-b border-slate-200 dark:border-slate-800">
 	<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex items-center gap-2 mb-4">
-			<a href="/calculadoras" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
+			<a href="{base}/calculadoras" class="text-sm text-slate-500 dark:text-slate-400 hover:text-brand-500">
 				Calculadoras
 			</a>
 			<span class="text-slate-400">/</span>

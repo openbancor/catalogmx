@@ -45,6 +45,10 @@ interface ImpuestosLocalesData {
 export class IVACalculator {
   private static _data: IVAData | null = null;
 
+  static setData(data: IVAData): void {
+    this._data = data;
+  }
+
   private static loadData(): void {
     if (this._data !== null) return;
 
@@ -158,6 +162,10 @@ export class IVACalculator {
  */
 export class IEPSCalculator {
   private static _data: IEPSCategoria[] | null = null;
+
+  static setData(data: IEPSCategoria[]): void {
+    this._data = data;
+  }
 
   private static loadData(): void {
     if (this._data !== null) return;
@@ -274,6 +282,10 @@ export class IEPSCalculator {
  */
 export class RetencionCalculator {
   private static _data: RetencionesData | null = null;
+
+  static setData(data: RetencionesData): void {
+    this._data = data;
+  }
 
   private static loadData(): void {
     if (this._data !== null) return;
@@ -405,6 +417,10 @@ export class RetencionCalculator {
  */
 export class ImpuestosLocalesCalculator {
   private static _data: ImpuestosLocalesData | null = null;
+
+  static setData(data: ImpuestosLocalesData): void {
+    this._data = data;
+  }
 
   private static loadData(): void {
     if (this._data !== null) return;

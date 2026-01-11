@@ -1,0 +1,35 @@
+[
+  {
+    "ingreso": 15000.0,
+    "periodo": "mensual",
+    "year": 2026,
+    "expected": {
+      "isrFinal": 1402.81872,
+      "subsidio": 0.0,
+      "isrAntesSubsidio": 1402.81872,
+      "tasaEfectiva": 9.352125
+    }
+  },
+  {
+    "ingreso": 25000.0,
+    "periodo": "mensual",
+    "year": 2025,
+    "expected": {
+      "isrFinal": 3672.003008,
+      "subsidio": 0.0,
+      "isrAntesSubsidio": 3672.003008,
+      "tasaEfectiva": 14.688012
+    }
+  },
+  {
+    "ingreso": 10000.0,
+    "periodo": "mensual",
+    "year": 2024,
+    "expected": {
+      "isrFinal": 770.901872,
+      "subsidio": 0,
+      "isrAntesSubsidio": 770.901872,
+      "tasaEfectiva": 7.709019
+    }
+  }
+]

@@ -1,0 +1,146 @@
+[
+  {
+    "expected": {
+      "costo_total_anual": 253310.3016,
+      "costo_total_mensual": 21109.1918,
+      "cuotas_imss_patronales": 3659.1918,
+      "factor_costo": 1.407279,
+      "impuesto_nomina": 450.0,
+      "infonavit": 750.0,
+      "ptu_estimado": 0.0,
+      "reserva_aguinaldo": 625.0,
+      "reserva_prima_vacacional": 125.0,
+      "reserva_vacaciones": 500.0,
+      "salario_bruto_mensual": 15000.0
+    },
+    "input": {
+      "antiguedad_anos": 1,
+      "cve_estado": "09",
+      "dias_aguinaldo": 15,
+      "incluir_ptu": false,
+      "porcentaje_ptu": 10.0,
+      "salario_mensual_bruto": 15000,
+      "year": 2026
+    }
+  },
+  {
+    "expected": {
+      "costo_total_anual": 357219.434933,
+      "costo_total_mensual": 29768.286244,
+      "cuotas_imss_patronales": 4223.8418,
+      "factor_costo": 1.488414,
+      "impuesto_nomina": 600.0,
+      "infonavit": 1000.0,
+      "ptu_estimado": 2000.0,
+      "reserva_aguinaldo": 833.333333,
+      "reserva_prima_vacacional": 222.222222,
+      "reserva_vacaciones": 888.888889,
+      "salario_bruto_mensual": 20000.0
+    },
+    "input": {
+      "antiguedad_anos": 3,
+      "cve_estado": "09",
+      "dias_aguinaldo": 15,
+      "incluir_ptu": true,
+      "porcentaje_ptu": 10.0,
+      "salario_mensual_bruto": 20000,
+      "year": 2026
+    }
+  },
+  {
+    "expected": {
+      "costo_total_anual": 144425.4224,
+      "costo_total_mensual": 12035.451867,
+      "cuotas_imss_patronales": 2808.7852,
+      "factor_costo": 1.504431,
+      "impuesto_nomina": 160.0,
+      "infonavit": 400.0,
+      "ptu_estimado": 0.0,
+      "reserva_aguinaldo": 333.333333,
+      "reserva_prima_vacacional": 66.666667,
+      "reserva_vacaciones": 266.666667,
+      "salario_bruto_mensual": 8000.0
+    },
+    "input": {
+      "antiguedad_anos": 1,
+      "cve_estado": "14",
+      "dias_aguinaldo": 15,
+      "incluir_ptu": false,
+      "porcentaje_ptu": 0.0,
+      "salario_mensual_bruto": 8000,
+      "year": 2024
+    }
+  },
+  {
+    "expected": {
+      "costo_total_anual": 652596.834933,
+      "costo_total_mensual": 54383.069578,
+      "cuotas_imss_patronales": 5917.7918,
+      "factor_costo": 1.553802,
+      "impuesto_nomina": 875.0,
+      "infonavit": 1750.0,
+      "ptu_estimado": 5250.0,
+      "reserva_aguinaldo": 2916.666667,
+      "reserva_prima_vacacional": 534.722222,
+      "reserva_vacaciones": 2138.888889,
+      "salario_bruto_mensual": 35000.0
+    },
+    "input": {
+      "antiguedad_anos": 10,
+      "cve_estado": "23",
+      "dias_aguinaldo": 30,
+      "incluir_ptu": true,
+      "porcentaje_ptu": 15.0,
+      "salario_mensual_bruto": 35000,
+      "year": 2025
+    }
+  },
+  {
+    "expected": {
+      "costo_total_anual": 276909.8583,
+      "costo_total_mensual": 23075.821525,
+      "cuotas_imss_patronales": 3708.034025,
+      "factor_costo": 1.495274,
+      "impuesto_nomina": 462.975,
+      "infonavit": 771.625,
+      "ptu_estimado": 771.625,
+      "reserva_aguinaldo": 857.361111,
+      "reserva_prima_vacacional": 214.340278,
+      "reserva_vacaciones": 857.361111,
+      "salario_bruto_mensual": 15432.5
+    },
+    "input": {
+      "antiguedad_anos": 5,
+      "cve_estado": "09",
+      "dias_aguinaldo": 20,
+      "incluir_ptu": true,
+      "porcentaje_ptu": 5.0,
+      "salario_mensual_bruto": 15432.5,
+      "year": 2026
+    }
+  },
+  {
+    "expected": {
+      "costo_total_anual": 818507.568267,
+      "costo_total_mensual": 68208.964022,
+      "cuotas_imss_patronales": 7611.7418,
+      "factor_costo": 1.364179,
+      "impuesto_nomina": 1500.0,
+      "infonavit": 2500.0,
+      "ptu_estimado": 0.0,
+      "reserva_aguinaldo": 2083.333333,
+      "reserva_prima_vacacional": 902.777778,
+      "reserva_vacaciones": 3611.111111,
+      "salario_bruto_mensual": 50000.0
+    },
+    "input": {
+      "antiguedad_anos": 20,
+      "cve_estado": "09",
+      "dias_aguinaldo": 15,
+      "incluir_ptu": false,
+      "porcentaje_ptu": 10.0,
+      "salario_mensual_bruto": 50000,
+      "year": 2026
+    }
+  }
+]

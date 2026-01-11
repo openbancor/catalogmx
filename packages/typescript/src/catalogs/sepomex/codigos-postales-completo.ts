@@ -6,19 +6,31 @@
  * Consider using pagination or filters when displaying results.
  */
 
-import { loadCatalogArray } from '../../utils/catalog-loader';
 import type { PostalCode } from '../../types';
-import Database from 'better-sqlite3';
-import path from 'path';
-
-const DB_PATH = path.resolve(__dirname, '../../../../shared-data/sqlite/sepomex.db');
+import { loadCatalogArray } from '../../utils/catalog-loader';
+import {
+  getCatalogSqliteAdapter,
+  isNodeRuntime,
+  resolveSharedDataPath,
+} from '../../utils/catalog-backend';
+import { createBetterSqliteAdapter, type CatalogSqliteDatabase } from '../../utils/sqlite-adapter';
 
 export class CodigosPostalesCompletoSQLite {
-  private static _db: Database.Database | null = null;
+  private static _db: CatalogSqliteDatabase | null = null;
 
-  private static getDB(): Database.Database {
+  private static getDB(): CatalogSqliteDatabase {
     if (!this._db) {
-      this._db = new Database(DB_PATH, { readonly: true });
+      const adapter = getCatalogSqliteAdapter();
+      if (adapter) {
+        this._db = adapter;
+      } else {
+        if (!isNodeRuntime()) {
+          throw new Error('SQLite adapter not configured for SEPOMEX catalog');
+        }
+        const betterSqlite3 = getBetterSqlite3();
+        const dbPath = resolveSharedDataPath('sqlite/sepomex.db');
+        this._db = createBetterSqliteAdapter(new betterSqlite3(dbPath, { readonly: true }));
+      }
     }
     return this._db;
   }
@@ -26,7 +38,7 @@ export class CodigosPostalesCompletoSQLite {
   static getByCp(cp: string): PostalCode[] {
     const db = this.getDB();
     const stmt = db.prepare('SELECT * FROM codigos_postales WHERE cp = ?');
-    return stmt.all(cp) as PostalCode[];
+    return stmt.all(cp) as unknown as PostalCode[];
   }
 
   static isValid(cp: string): boolean {
@@ -38,7 +50,7 @@ export class CodigosPostalesCompletoSQLite {
   static getByEstado(estado: string, limit: number = 1000): PostalCode[] {
     const db = this.getDB();
     const stmt = db.prepare('SELECT * FROM codigos_postales WHERE estado = ? LIMIT ?');
-    return stmt.all(estado, limit) as PostalCode[];
+    return stmt.all(estado, limit) as unknown as PostalCode[];
   }
 }
 
@@ -210,4 +222,9 @@ export class CodigosPostalesCompleto {
       municipalities: uniqueMunicipalities.size,
     };
   }
+}
+
+function getBetterSqlite3(): typeof import('better-sqlite3') {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  return require('better-sqlite3');
 }

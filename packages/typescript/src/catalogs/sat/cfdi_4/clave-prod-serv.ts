@@ -8,9 +8,8 @@
  * WARNING: This is a large catalog. Use search and pagination methods.
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
 import { ClaveProdServ } from '../../../types';
+import { loadCatalogArray } from '../../../utils/catalog-loader';
 
 export class ClaveProdServCatalog {
   private static _data: ClaveProdServ[] | null = null;
@@ -19,12 +18,7 @@ export class ClaveProdServCatalog {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(
-      __dirname,
-      '../../../../../shared-data/sat/cfdi_4.0/clave_prod_serv.json'
-    );
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    this._data = JSON.parse(rawData) as ClaveProdServ[];
+    this._data = loadCatalogArray<ClaveProdServ>('sat/cfdi_4.0/clave_prod_serv.json');
 
     // Crear índice por ID
     this._byId = new Map();

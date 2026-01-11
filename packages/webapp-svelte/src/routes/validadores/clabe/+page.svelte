@@ -2,6 +2,7 @@
 	import { CreditCard, CheckCircle2, XCircle, Info, Building2, MapPin, Hash } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import banksData from '../../../../../shared-data/banxico/banks.json';
+	import { CLABEValidator } from '$lib/catalogmx';
 
 	// State
 	let clabe = $state('');
@@ -16,30 +17,12 @@
 		errors: string[];
 	} | null>(null);
 
-	// CLABE Validation Logic
-	const CLABE_LENGTH = 18;
-	const WEIGHTS = [3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7];
-
-	function calculateCheckDigit(clabe17: string): string {
-		let weightedSum = 0;
-
-		for (let i = 0; i < 17; i++) {
-			const digit = parseInt(clabe17[i]);
-			const product = digit * WEIGHTS[i];
-			weightedSum += product % 10;
-		}
-
-		const checkDigit = (10 - (weightedSum % 10)) % 10;
-		return checkDigit.toString();
-	}
-
 	function findBank(bankCode: string) {
 		return banksData.find(bank => bank.code === bankCode);
 	}
 
 	function validateCLABE(value: string): void {
 		const errors: string[] = [];
-		let isValid = false;
 		let bankCode: string | null = null;
 		let bankName: string | null = null;
 		let branchCode: string | null = null;
@@ -49,72 +32,37 @@
 
 		const clabeTrimmed = value.trim();
 
-		// Length validation
-		if (clabeTrimmed.length !== CLABE_LENGTH) {
-			errors.push(`La CLABE debe tener exactamente ${CLABE_LENGTH} dígitos`);
-			validationResult = {
-				isValid: false,
-				bankCode: null,
-				bankName: null,
-				branchCode: null,
-				accountNumber: null,
-				checkDigit: null,
-				checkDigitValid: false,
-				errors
-			};
-			return;
+		if (clabeTrimmed.length !== 18) {
+			errors.push('La CLABE debe tener exactamente 18 dígitos');
 		}
 
-		// Check if all digits
-		if (!/^\d+$/.test(clabeTrimmed)) {
-			errors.push('La CLABE debe contener solo dígitos');
-			validationResult = {
-				isValid: false,
-				bankCode: null,
-				bankName: null,
-				branchCode: null,
-				accountNumber: null,
-				checkDigit: null,
-				checkDigitValid: false,
-				errors
-			};
-			return;
+		const validator = new CLABEValidator(clabeTrimmed);
+		const isValid = validator.isValid();
+		if (!isValid) {
+			errors.push('La CLABE no es válida');
 		}
 
-		// Extract parts
-		bankCode = clabeTrimmed.substring(0, 3);
-		branchCode = clabeTrimmed.substring(3, 6);
-		accountNumber = clabeTrimmed.substring(6, 17);
-		checkDigit = clabeTrimmed.substring(17, 18);
+		const components = validator.getComponents();
+		if (components) {
+			bankCode = components.bankCode;
+			branchCode = components.branchCode;
+			accountNumber = components.accountNumber;
+			checkDigit = components.checkDigit;
 
-		// Find bank
-		const bank = findBank(bankCode);
-		if (bank) {
-			bankName = bank.name;
-		} else {
-			errors.push('Código de banco no reconocido');
+			const bank = findBank(bankCode);
+			if (bank) {
+				bankName = bank.name;
+			} else {
+				errors.push('Código de banco no reconocido');
+			}
 		}
 
-		// Validate check digit
-		const expectedCheckDigit = calculateCheckDigit(clabeTrimmed.substring(0, 17));
-		checkDigitValid = expectedCheckDigit === checkDigit;
-
+		checkDigitValid = isValid;
 		if (!checkDigitValid) {
-			errors.push(`Dígito de control incorrecto (esperado: ${expectedCheckDigit}, actual: ${checkDigit})`);
+			errors.push('Dígito de control incorrecto');
 		}
 
-		isValid = errors.length === 0;
-
-		validationResult = {
-			isValid,
-			bankCode,
-			bankName,
-			branchCode,
-			accountNumber,
-			checkDigit,
-			checkDigitValid,
-			errors
-		};
+		validationResult = { isValid, bankCode, bankName, branchCode, accountNumber, checkDigit, checkDigitValid, errors };
 	}
 
 	// Auto-validate when CLABE changes

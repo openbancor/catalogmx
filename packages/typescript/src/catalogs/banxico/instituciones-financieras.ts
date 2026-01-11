@@ -2,9 +2,8 @@
  * Catálogo de tipos de instituciones financieras en México (Banxico)
  */
 
-import * as path from 'path';
-import * as fs from 'fs';
 import { TipoInstitucionFinanciera } from '../../types';
+import { loadCatalogData } from '../../utils/catalog-loader';
 
 interface InstitucionesFinancierasData {
   metadata: {
@@ -31,12 +30,9 @@ export class InstitucionesFinancieras {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(
-      __dirname,
-      '../../../../shared-data/banxico/instituciones_financieras.json'
+    const jsonData = loadCatalogData<InstitucionesFinancierasData>(
+      'banxico/instituciones_financieras.json'
     );
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    const jsonData: InstitucionesFinancierasData = JSON.parse(rawData);
     this._data = jsonData.tipos_institucion;
   }
 

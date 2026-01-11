@@ -2,9 +2,8 @@
  * Catálogo de monedas y divisas internacionales (Banxico)
  */
 
-import * as path from 'path';
-import * as fs from 'fs';
 import { MonedaDivisa } from '../../types';
+import { loadCatalogData } from '../../utils/catalog-loader';
 
 interface MonedasDivisasData {
   metadata: {
@@ -40,12 +39,7 @@ export class MonedasDivisas {
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(
-      __dirname,
-      '../../../../shared-data/banxico/monedas_divisas.json'
-    );
-    const rawData = fs.readFileSync(dataPath, 'utf-8');
-    const jsonData: MonedasDivisasData = JSON.parse(rawData);
+    const jsonData = loadCatalogData<MonedasDivisasData>('banxico/monedas_divisas.json');
     this._data = jsonData.monedas;
   }
 

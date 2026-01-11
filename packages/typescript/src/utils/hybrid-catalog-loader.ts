@@ -4,9 +4,17 @@
  * This maintains API parity between Python and TypeScript implementations.
  */
 
-import * as path from 'path';
-import * as fs from 'fs';
-import Database from 'better-sqlite3';
+import {
+  getCatalogSqliteAdapter,
+  hasCatalogJsonData,
+  isNodeRuntime,
+  resolveSharedDataPath,
+} from './catalog-backend';
+import {
+  createBetterSqliteAdapter,
+  type CatalogSqliteDatabase,
+  type SqliteParam,
+} from './sqlite-adapter';
 
 export interface HybridLoaderOptions {
   /**
@@ -39,7 +47,7 @@ export interface HybridLoaderOptions {
 }
 
 export abstract class HybridCatalogLoader<T> {
-  protected _db: Database.Database | null = null;
+  protected _db: CatalogSqliteDatabase | null = null;
   protected _data: T[] | null = null;
   protected _usingSqlite: boolean = false;
 
@@ -56,11 +64,12 @@ export abstract class HybridCatalogLoader<T> {
     if (this._data !== null || this._db !== null) return;
 
     const sqlitePath = this.getSqlitePath();
-    const jsonPath = this.getJsonPath();
+    const jsonPath = this.options.jsonPath;
+    const jsonFullPath = this.getJsonPath();
+    const adapter = getCatalogSqliteAdapter();
 
-    // Check if SQLite database exists
-    const hasSqlite = fs.existsSync(sqlitePath);
-    const hasJson = fs.existsSync(jsonPath);
+    const hasSqlite = adapter ? true : isNodeRuntime() ? nodeFsExists(sqlitePath) : false;
+    const hasJson = hasCatalogJsonData(jsonPath);
 
     if (!hasSqlite && !hasJson) {
       throw new Error(
@@ -68,16 +77,13 @@ export abstract class HybridCatalogLoader<T> {
       );
     }
 
-    // Decide which to use
     let useSqlite = false;
 
     if (hasSqlite && hasJson) {
-      // Both exist - check preferences and file sizes
       if (this.options.preferSqlite) {
         useSqlite = true;
-      } else {
-        // Check JSON file size
-        const stats = fs.statSync(jsonPath);
+      } else if (isNodeRuntime() && !adapter) {
+        const stats = nodeFsStat(jsonFullPath);
         const sizeMB = stats.size / 1024 / 1024;
         useSqlite = sizeMB > this.options.sizeThresholdMB!;
       }
@@ -85,9 +91,17 @@ export abstract class HybridCatalogLoader<T> {
       useSqlite = true;
     }
 
-    // Load from chosen source
     if (useSqlite) {
-      this.loadFromSqlite(sqlitePath);
+      if (adapter) {
+        this.loadFromSqlite(adapter);
+      } else {
+        if (!isNodeRuntime()) {
+          throw new Error(`SQLite adapter not configured for ${this.options.catalogName}`);
+        }
+        const betterSqlite3 = getBetterSqlite3();
+        const db = new betterSqlite3(sqlitePath, { readonly: false, fileMustExist: false });
+        this.loadFromSqlite(createBetterSqliteAdapter(db));
+      }
       this._usingSqlite = true;
     } else {
       this.loadFromJson(jsonPath);
@@ -98,16 +112,16 @@ export abstract class HybridCatalogLoader<T> {
   /**
    * Load data from SQLite database
    */
-  protected loadFromSqlite(dbPath: string): void {
+  protected loadFromSqlite(db: CatalogSqliteDatabase): void {
     // Si el DB no existe o está vacío, creamos un fallback mínimo para pruebas.
-    this._db = new Database(dbPath, { readonly: false, fileMustExist: false });
+    this._db = db;
     this.ensureMinimalSchema(this._db);
   }
 
   /**
    * Creates minimal schema/seed when database is missing/empty.
    */
-  protected ensureMinimalSchema(_db: Database.Database): void {
+  protected ensureMinimalSchema(_db: CatalogSqliteDatabase): void {
     // Por defecto no hace nada; las subclases pueden sobreescribir si requieren seed.
   }
 
@@ -120,16 +134,21 @@ export abstract class HybridCatalogLoader<T> {
    * Get full path to SQLite database
    */
   protected getSqlitePath(): string {
-    const sqliteDir = path.resolve(__dirname, '../../../shared-data/sqlite');
     const dbName = this.options.sqlitePath || `${this.options.catalogName}.db`;
-    return path.join(sqliteDir, dbName);
+    if (!isNodeRuntime()) {
+      return `sqlite/${dbName}`;
+    }
+    return resolveSharedDataPath(`sqlite/${dbName}`);
   }
 
   /**
    * Get full path to JSON file
    */
   protected getJsonPath(): string {
-    return path.resolve(__dirname, '../../../shared-data', this.options.jsonPath);
+    if (!isNodeRuntime()) {
+      return this.options.jsonPath;
+    }
+    return resolveSharedDataPath(this.options.jsonPath);
   }
 
   /**
@@ -144,7 +163,7 @@ export abstract class HybridCatalogLoader<T> {
    */
   public close(): void {
     if (this._db) {
-      this._db.close();
+      this._db.close?.();
       this._db = null;
     }
   }
@@ -153,7 +172,7 @@ export abstract class HybridCatalogLoader<T> {
    * Get underlying SQLite database (if using SQLite)
    * Returns null if using JSON backend
    */
-  protected getDb(): Database.Database | null {
+  protected getDb(): CatalogSqliteDatabase | null {
     return this._db;
   }
 
@@ -172,7 +191,7 @@ export abstract class HybridCatalogLoader<T> {
     if (!this._db) {
       throw new Error('SQLite database not initialized');
     }
-    return this._db.prepare(sql).all(...params) as R[];
+    return this._db.prepare(sql).all(...(params as SqliteParam[])) as R[];
   }
 
   /**
@@ -182,7 +201,7 @@ export abstract class HybridCatalogLoader<T> {
     if (!this._db) {
       throw new Error('SQLite database not initialized');
     }
-    return this._db.prepare(sql).get(...params) as R | undefined;
+    return this._db.prepare(sql).get(...(params as SqliteParam[])) as R | undefined;
   }
 
   /**
@@ -199,4 +218,25 @@ export abstract class HybridCatalogLoader<T> {
    * Get total count
    */
   public abstract count(): number;
+}
+
+function getBetterSqlite3(): typeof import('better-sqlite3') {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  return require('better-sqlite3');
+}
+
+function getNodeFs(): typeof import('fs') {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  return require('fs');
+}
+
+function nodeFsExists(value: string): boolean {
+  if (!isNodeRuntime()) return false;
+  const fs = getNodeFs();
+  return fs.existsSync(value);
+}
+
+function nodeFsStat(value: string): import('fs').Stats {
+  const fs = getNodeFs();
+  return fs.statSync(value);
 }

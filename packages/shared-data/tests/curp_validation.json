@@ -1,0 +1,34 @@
+[
+  {
+    "value": "BACL891217HDFRSS09",
+    "valid": true
+  },
+  {
+    "value": "LOHF920103MJCPRR03",
+    "valid": true
+  },
+  {
+    "value": "GAXJ800709HNLRXN05",
+    "valid": true
+  },
+  {
+    "value": "RADL850620HPLMZS05",
+    "valid": true
+  },
+  {
+    "value": "GOLA991231MYNMPN03",
+    "valid": true
+  },
+  {
+    "value": "BACL891217HDFASS09",
+    "valid": false
+  },
+  {
+    "value": "BACL891217HDFRSS0",
+    "valid": false
+  },
+  {
+    "value": "BACL891217HDFRS$00",
+    "valid": false
+  }
+]

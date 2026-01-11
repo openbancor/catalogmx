@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Building2, CheckCircle2, XCircle, Info, Calendar, User } from 'lucide-svelte';
 	import { base } from '$app/paths';
+	import { RFCValidator } from '$lib/catalogmx';
 
 	// State
 	let rfc = $state('');
@@ -12,142 +13,39 @@
 		checksumValid: boolean;
 	} | null>(null);
 
-	// RFC Validation Logic
-	const RFC_REGEX = /^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{2}[0-9A]$/;
-	const GENERIC_RFCS = ['XAXX010101000', 'XEXX010101000'];
-
-	const CHECKSUM_TABLE: { [key: string]: string } = {
-		'0': '00', '1': '01', '2': '02', '3': '03', '4': '04', '5': '05', '6': '06', '7': '07', '8': '08', '9': '09',
-		'A': '10', 'B': '11', 'C': '12', 'D': '13', 'E': '14', 'F': '15', 'G': '16', 'H': '17', 'I': '18', 'J': '19',
-		'K': '20', 'L': '21', 'M': '22', 'N': '23', '&': '24', 'O': '25', 'P': '26', 'Q': '27', 'R': '28', 'S': '29',
-		'T': '30', 'U': '31', 'V': '32', 'W': '33', 'X': '34', 'Y': '35', 'Z': '36', ' ': '37', 'Ñ': '38'
-	};
-
-	function calculateCheckDigit(rfcWithoutChecksum: string): string {
-		let str = rfcWithoutChecksum;
-		if (str.length === 11) {
-			str = ' ' + str;
-		}
-
-		let sum = 0;
-		let position = 13;
-
-		for (const char of str) {
-			const value = parseInt(CHECKSUM_TABLE[char] || '00');
-			sum += value * position;
-			position--;
-		}
-
-		const residual = sum % 11;
-
-		if (residual === 0) {
-			return '0';
-		} else {
-			const result = 11 - residual;
-			if (result === 10) {
-				return 'A';
-			} else {
-				return result.toString();
-			}
-		}
-	}
-
-	function validateDate(dateStr: string): boolean {
-		try {
-			const year = parseInt(dateStr.substring(0, 2));
-			const month = parseInt(dateStr.substring(2, 4));
-			const day = parseInt(dateStr.substring(4, 6));
-
-			if (month < 1 || month > 12) return false;
-			if (day < 1 || day > 31) return false;
-
-			// Full year estimation
-			const fullYear = year >= 0 && year <= 30 ? 2000 + year : 1900 + year;
-
-			// Basic date validation
-			const date = new Date(fullYear, month - 1, day);
-			return date.getMonth() === month - 1 && date.getDate() === day;
-		} catch {
-			return false;
-		}
-	}
-
 	function validateRFC(value: string): void {
 		const errors: string[] = [];
-		let isValid = false;
-		let tipo = '';
-		let fecha: string | null = null;
-		let checksumValid = false;
+		const validator = new RFCValidator(value);
+		const details = validator.getValidationDetails(true);
 
-		const rfcUpper = value.toUpperCase().trim();
-
-		// Length validation
-		if (rfcUpper.length !== 12 && rfcUpper.length !== 13) {
-			errors.push('El RFC debe tener 12 caracteres (persona moral) o 13 caracteres (persona física)');
-			validationResult = { isValid: false, tipo: 'RFC Inválido', fecha: null, errors, checksumValid: false };
-			return;
-		}
-
-		// Regex validation
-		if (!RFC_REGEX.test(rfcUpper)) {
+		if (!details.generalRegex) {
 			errors.push('El formato del RFC no es válido');
-			validationResult = { isValid: false, tipo: 'RFC Inválido', fecha: null, errors, checksumValid: false };
-			return;
+		}
+		if (details.generalRegex && !details.dateFormat) {
+			errors.push('La fecha del RFC no es válida');
+		}
+		if (details.generalRegex && !details.homoclave) {
+			errors.push('La homoclave del RFC no es válida');
+		}
+		if (details.generalRegex && !details.checksum) {
+			errors.push('El dígito verificador es incorrecto');
 		}
 
-		// Check if generic
-		if (GENERIC_RFCS.includes(rfcUpper)) {
-			validationResult = {
-				isValid: true,
-				tipo: 'Genérico',
-				fecha: '2000-01-01',
-				errors: [],
-				checksumValid: true
-			};
-			return;
-		}
+		const type = validator.detectType();
+		const tipo =
+			type === 'fisica'
+				? 'Persona Física'
+				: type === 'moral'
+					? 'Persona Moral'
+					: type === 'generico'
+						? 'Genérico'
+						: 'RFC Inválido';
 
-		// Determine tipo
-		const fourthChar = rfcUpper[3];
-		if (rfcUpper.length === 13 && /[A-ZÑ]/.test(fourthChar)) {
-			tipo = 'Persona Física';
-		} else if (rfcUpper.length === 12 && /[0-9]/.test(fourthChar)) {
-			tipo = 'Persona Moral';
-		} else {
-			errors.push('El cuarto carácter no corresponde al tipo de RFC');
-		}
+		const fecha = validator.getDate()?.toISOString().slice(0, 10) ?? null;
+		const checksumValid = details.checksum ?? false;
+		const isValid = validator.validate(true);
 
-		// Extract and validate date
-		const dateStr = rfcUpper.substring(rfcUpper.length === 13 ? 4 : 3, rfcUpper.length === 13 ? 10 : 9);
-		if (validateDate(dateStr)) {
-			const year = parseInt(dateStr.substring(0, 2));
-			const month = dateStr.substring(2, 4);
-			const day = dateStr.substring(4, 6);
-			const fullYear = year >= 0 && year <= 30 ? 2000 + year : 1900 + year;
-			fecha = `${fullYear}-${month}-${day}`;
-		} else {
-			errors.push('La fecha en el RFC no es válida');
-		}
-
-		// Validate checksum
-		const rfcWithoutChecksum = rfcUpper.substring(0, rfcUpper.length - 1);
-		const expectedChecksum = calculateCheckDigit(rfcWithoutChecksum);
-		const actualChecksum = rfcUpper[rfcUpper.length - 1];
-
-		checksumValid = expectedChecksum === actualChecksum;
-		if (!checksumValid) {
-			errors.push(`Dígito verificador incorrecto (esperado: ${expectedChecksum}, actual: ${actualChecksum})`);
-		}
-
-		isValid = errors.length === 0;
-
-		validationResult = {
-			isValid,
-			tipo: tipo || 'RFC Inválido',
-			fecha,
-			errors,
-			checksumValid
-		};
+		validationResult = { isValid, tipo, fecha, errors, checksumValid };
 	}
 
 	// Auto-validate when RFC changes

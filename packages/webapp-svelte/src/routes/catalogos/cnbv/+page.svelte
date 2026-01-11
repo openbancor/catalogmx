@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { ChevronRight, Building2, Shield, Landmark, Briefcase, CreditCard } from 'lucide-svelte';
 
 	const catalogs = [
 		{
 			title: 'Sectores Financieros',
 			description: 'Clasificación de sectores regulados por la CNBV',
-			href: '/catalogos/cnbv/sectores',
+			href: `${base}/catalogos/cnbv/sectores`,
 			icon: Building2,
 			count: '15 sectores'
 		}
@@ -20,7 +21,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">CNBV</span>
 	</nav>

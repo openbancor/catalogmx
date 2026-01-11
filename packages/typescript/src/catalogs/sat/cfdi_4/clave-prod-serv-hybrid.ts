@@ -7,10 +7,10 @@
  * Maintains API parity with Python implementation.
  */
 
-import * as fs from 'fs';
 import { ClaveProdServ } from '../../../types';
+import { loadCatalogData } from '../../../utils/catalog-loader';
 import { HybridCatalogLoader } from '../../../utils/hybrid-catalog-loader';
-import Database from 'better-sqlite3';
+import type { CatalogSqliteDatabase } from '../../../utils/sqlite-adapter';
 
 class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
   private _byId: Map<string, ClaveProdServ> | null = null;
@@ -30,8 +30,7 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
    * Load from JSON file
    */
   protected loadFromJson(jsonPath: string): void {
-    const rawData = fs.readFileSync(jsonPath, 'utf-8');
-    this._data = JSON.parse(rawData) as ClaveProdServ[];
+    this._data = loadCatalogData<ClaveProdServ[]>(jsonPath);
 
     // Create ID index
     this._byId = new Map();
@@ -93,7 +92,7 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
   /**
    * Seed minimal data if SQLite is empty (for CI/dev without full DB).
    */
-  protected ensureMinimalSchema(db: Database.Database): void {
+  protected ensureMinimalSchema(db: CatalogSqliteDatabase): void {
     const hasTable = db
       .prepare(
         "SELECT name FROM sqlite_master WHERE type='table' AND name='clave_prod_serv' LIMIT 1"
@@ -162,27 +161,10 @@ class ClaveProdServLoader extends HybridCatalogLoader<ClaveProdServ> {
       const insertFts = db.prepare(
         `INSERT INTO clave_prod_serv_fts (clave, descripcion, complemento, palabras_similares) VALUES (@clave, @descripcion, @complemento, @palabras_similares)`
       );
-      const maybeTx = (
-        db as {
-          transaction?: (
-            cb: (rows: Record<string, unknown>[]) => void
-          ) => (rows: Record<string, unknown>[]) => void;
-        }
-      ).transaction;
-      if (maybeTx) {
-        const tx = maybeTx((rows: Record<string, unknown>[]) => {
-          rows.forEach((row: Record<string, unknown>) => {
-            insert.run(row);
-            insertFts.run(row);
-          });
-        });
-        tx(sampleRows);
-      } else {
-        sampleRows.forEach((row) => {
-          insert.run(row);
-          insertFts.run(row);
-        });
-      }
+      sampleRows.forEach((row) => {
+        insert.run?.(row);
+        insertFts.run?.(row);
+      });
     }
     this._seeded = true;
   }

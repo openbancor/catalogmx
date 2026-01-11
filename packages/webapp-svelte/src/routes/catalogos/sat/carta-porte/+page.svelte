@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { ChevronRight, Plane, Ship, Truck, AlertTriangle, Package, FileText, Map } from 'lucide-svelte';
 
 	interface Catalog {
@@ -13,49 +14,49 @@
 		{
 			title: 'Aeropuertos',
 			description: 'Catálogo de aeropuertos nacionales e internacionales',
-			href: '/catalogos/sat/carta-porte/aeropuertos',
+			href: `${base}/catalogos/sat/carta-porte/aeropuertos`,
 			icon: Plane,
 			count: '20+ aeropuertos'
 		},
 		{
 			title: 'Puertos Marítimos',
 			description: 'Puertos marítimos autorizados para comercio exterior',
-			href: '/catalogos/sat/carta-porte/puertos-maritimos',
+			href: `${base}/catalogos/sat/carta-porte/puertos-maritimos`,
 			icon: Ship,
 			count: '25+ puertos'
 		},
 		{
 			title: 'Carreteras',
 			description: 'Principales carreteras federales de cuota y libre',
-			href: '/catalogos/sat/carta-porte/carreteras',
+			href: `${base}/catalogos/sat/carta-porte/carreteras`,
 			icon: Map,
 			count: '20+ carreteras'
 		},
 		{
 			title: 'Configuración Autotransporte',
 			description: 'Tipos de configuración vehicular para transporte de carga',
-			href: '/catalogos/sat/carta-porte/config-autotransporte',
+			href: `${base}/catalogos/sat/carta-porte/config-autotransporte`,
 			icon: Truck,
 			count: '15 configuraciones'
 		},
 		{
 			title: 'Material Peligroso',
 			description: 'Clasificación de materiales peligrosos según normativa',
-			href: '/catalogos/sat/carta-porte/material-peligroso',
+			href: `${base}/catalogos/sat/carta-porte/material-peligroso`,
 			icon: AlertTriangle,
 			count: '24 materiales'
 		},
 		{
 			title: 'Tipo de Embalaje',
 			description: 'Tipos de embalaje según clasificación ONU',
-			href: '/catalogos/sat/carta-porte/tipo-embalaje',
+			href: `${base}/catalogos/sat/carta-porte/tipo-embalaje`,
 			icon: Package,
 			count: '35+ tipos'
 		},
 		{
 			title: 'Tipo de Permiso',
 			description: 'Permisos SCT para autotransporte federal',
-			href: '/catalogos/sat/carta-porte/tipo-permiso',
+			href: `${base}/catalogos/sat/carta-porte/tipo-permiso`,
 			icon: FileText,
 			count: '12 permisos'
 		}
@@ -70,9 +71,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<!-- Breadcrumb -->
 	<nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
-		<a href="/catalogos" class="hover:text-brand-500">Catálogos</a>
+		<a href="{base}/catalogos" class="hover:text-brand-500">Catálogos</a>
 		<ChevronRight class="h-4 w-4" />
-		<a href="/catalogos/sat" class="hover:text-brand-500">SAT</a>
+		<a href="{base}/catalogos/sat" class="hover:text-brand-500">SAT</a>
 		<ChevronRight class="h-4 w-4" />
 		<span class="text-slate-900 dark:text-white">Carta Porte 3.0</span>
 	</nav>

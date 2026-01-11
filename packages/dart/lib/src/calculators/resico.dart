@@ -100,25 +100,24 @@ class RESICOCalculator {
   static Map<String, dynamic> _loadRESICOTables() {
     if (_resicoTables != null) return _resicoTables!;
 
-    // Path to shared JSON file (relative to Dart package root)
-    final jsonPath = '../../shared-data/resico-tables.json';
-    final file = File(jsonPath);
+    final candidates = [
+      '../shared-data/resico-tables.json',
+      '../../shared-data/resico-tables.json',
+      '../../../shared-data/resico-tables.json',
+      'packages/shared-data/resico-tables.json',
+    ];
 
-    if (!file.existsSync()) {
-      // Try alternative path when running from lib/src/calculators
-      final altPath = '../../../shared-data/resico-tables.json';
-      final altFile = File(altPath);
-      if (!altFile.existsSync()) {
-        throw Exception('RESICO tables JSON file not found');
+    for (final path in candidates) {
+      final file = File(path);
+      if (!file.existsSync()) {
+        continue;
       }
-      final jsonString = altFile.readAsStringSync();
+      final jsonString = file.readAsStringSync();
       _resicoTables = jsonDecode(jsonString) as Map<String, dynamic>;
       return _resicoTables!;
     }
 
-    final jsonString = file.readAsStringSync();
-    _resicoTables = jsonDecode(jsonString) as Map<String, dynamic>;
-    return _resicoTables!;
+    throw Exception('RESICO tables JSON file not found');
   }
 
   /// Get RESICO tax brackets for a specific year and period

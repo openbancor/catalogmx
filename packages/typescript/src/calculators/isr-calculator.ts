@@ -7,7 +7,35 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { ISRTabla, SubsidioEmpleo, ISRCalculationResult, ISRTramo } from '../types';
+import { ISRCalculationResult } from '../types';
+
+interface ISRBracket {
+  limiteInferior: number;
+  limiteSuperior: number | null;
+  cuotaFija: number;
+  tasa: number;
+}
+
+interface ISRYearTables {
+  inflationFactor?: number;
+  description?: string;
+  daily?: ISRBracket[];
+  weekly?: ISRBracket[];
+  biweekly?: ISRBracket[];
+  monthly?: ISRBracket[];
+  annual?: ISRBracket[];
+}
+
+interface SubsidyTier {
+  desde: number;
+  hasta: number | null;
+  subsidio: number;
+}
+
+interface ISRSubsidy {
+  type: 'tiered' | 'flat';
+  monthly: SubsidyTier[] | { amount: number; maxIncome: number };
+}
 
 interface ISRData {
   metadata: {
@@ -17,17 +45,43 @@ interface ISRData {
     last_updated: string;
     notes: string;
   };
-  tablas: ISRTabla[];
-  subsidio_empleo: Record<string, SubsidioEmpleo[]>;
+  subsidies: Record<string, ISRSubsidy>;
+  brackets: Record<string, ISRYearTables>;
 }
+
+type ISRBracketKey = 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'annual';
+
+const PERIOD_MAPPING: Record<string, ISRBracketKey> = {
+  diaria: 'daily',
+  diario: 'daily',
+  semanal: 'weekly',
+  quincenal: 'biweekly',
+  mensual: 'monthly',
+  anual: 'annual',
+  decenal: 'monthly',
+};
+
+const PERIOD_FACTORS: Record<string, number> = {
+  diaria: 30.4,
+  diario: 30.4,
+  semanal: 4.33,
+  decenal: 3.0,
+  quincenal: 2.0,
+  mensual: 1.0,
+  anual: 1 / 12,
+};
 
 export class ISRCalculator {
   private static _data: ISRData | null = null;
 
+  static setData(data: ISRData): void {
+    this._data = data;
+  }
+
   private static loadData(): void {
     if (this._data !== null) return;
 
-    const dataPath = path.resolve(__dirname, '../../../shared-data/sat/impuestos/isr_tablas.json');
+    const dataPath = path.resolve(__dirname, '../../../shared-data/isr-tables.json');
     const rawData = fs.readFileSync(dataPath, 'utf-8');
     this._data = JSON.parse(rawData) as ISRData;
   }
@@ -41,9 +95,12 @@ export class ISRCalculator {
   static getTabla(
     año: number,
     periodicidad: 'mensual' | 'anual' | 'quincenal' | 'semanal' | 'diario' = 'mensual'
-  ): ISRTabla | undefined {
+  ): ISRBracket[] | undefined {
     this.loadData();
-    return this._data!.tablas.find((t) => t.año === año && t.periodicidad === periodicidad);
+    const yearTables = this._data!.brackets[año.toString()];
+    if (!yearTables) return undefined;
+    const key = PERIOD_MAPPING[periodicidad];
+    return yearTables[key];
   }
 
   /**
@@ -51,9 +108,9 @@ export class ISRCalculator {
    * @param año - Año fiscal
    * @returns Array de tramos de subsidio
    */
-  static getSubsidioEmpleo(año: number): SubsidioEmpleo[] | undefined {
+  static getSubsidioEmpleo(año: number): ISRSubsidy | undefined {
     this.loadData();
-    return this._data!.subsidio_empleo[año.toString()];
+    return this._data!.subsidies[año.toString()];
   }
 
   /**
@@ -70,54 +127,109 @@ export class ISRCalculator {
     periodicidad: 'mensual' | 'anual' | 'quincenal' | 'semanal' | 'diario' = 'mensual',
     aplicarSubsidio: boolean = false
   ): ISRCalculationResult {
-    const tabla = this.getTabla(año, periodicidad);
-    if (!tabla) {
-      throw new Error(`No se encontró tabla de ISR para año ${año} y periodicidad ${periodicidad}`);
+    this.loadData();
+    const yearStr = año.toString();
+    const usePeriodTables =
+      año === 2026 &&
+      ['diaria', 'diario', 'semanal', 'quincenal', 'mensual', 'anual'].includes(periodicidad);
+
+    const periodKey = PERIOD_MAPPING[periodicidad];
+    const factor = PERIOD_FACTORS[periodicidad];
+
+    const yearTables = this._data!.brackets[yearStr];
+    if (!yearTables) {
+      throw new Error(`No se encontró tabla de ISR para año ${año}`);
     }
 
-    // Encontrar el tramo correspondiente
-    const tramo = this.findTramo(ingreso, tabla.tramos);
-    if (!tramo) {
-      throw new Error(`No se encontró tramo para ingreso ${ingreso}`);
+    const subsidyData = this._data!.subsidies[yearStr];
+    if (!subsidyData) {
+      throw new Error(`No se encontró subsidio para año ${año}`);
     }
 
-    // Calcular excedente del límite inferior
-    const excedente = ingreso - tramo.limite_inferior;
+    const getBrackets = (key: ISRBracketKey): ISRBracket[] => {
+      const data = yearTables[key];
+      if (!data) {
+        throw new Error(
+          `No se encontró tabla de ISR para año ${año} y periodicidad ${periodicidad}`
+        );
+      }
+      return data;
+    };
 
-    // Calcular impuesto sobre el excedente
-    const impuestoMarginal = excedente * (tramo.tasa_excedente / 100);
+    const calculateSubsidy = (monthlyIncome: number): number => {
+      if (!aplicarSubsidio) return 0;
+      if (subsidyData.type === 'flat') {
+        const flat = subsidyData.monthly as { amount: number; maxIncome: number };
+        return monthlyIncome <= flat.maxIncome ? flat.amount : 0;
+      }
 
-    // ISR causado = cuota fija + impuesto marginal
-    const isrCausado = tramo.cuota_fija + impuestoMarginal;
-
-    // Calcular subsidio al empleo si aplica
-    let subsidio = 0;
-    if (aplicarSubsidio && periodicidad === 'mensual') {
-      const subsidios = this.getSubsidioEmpleo(año);
-      if (subsidios) {
-        const tramoSubsidio = this.findTramoSubsidio(ingreso, subsidios);
-        if (tramoSubsidio) {
-          subsidio = tramoSubsidio.subsidio;
+      const tiers = subsidyData.monthly as SubsidyTier[];
+      for (const tier of tiers) {
+        const hasta = tier.hasta ?? Number.POSITIVE_INFINITY;
+        if (monthlyIncome >= tier.desde && monthlyIncome <= hasta) {
+          return tier.subsidio;
         }
       }
+      return 0;
+    };
+
+    const selectBracket = (brackets: ISRBracket[], income: number): ISRBracket => {
+      return (
+        brackets.find((b) => {
+          const limiteSuperior = b.limiteSuperior ?? Number.POSITIVE_INFINITY;
+          return income >= b.limiteInferior && income <= limiteSuperior;
+        }) ?? brackets[brackets.length - 1]
+      );
+    };
+
+    if (usePeriodTables) {
+      const brackets = getBrackets(periodKey);
+      const bracket = selectBracket(brackets, ingreso);
+      const excedente = ingreso - bracket.limiteInferior;
+      const impuestoMarginal = excedente * (bracket.tasa / 100);
+      const isrAntesSubsidio = bracket.cuotaFija + impuestoMarginal;
+
+      const ingresoMensual = ingreso * factor;
+      const subsidioMensual = calculateSubsidy(ingresoMensual);
+      const subsidioProrrateado = subsidioMensual / factor;
+
+      const isrFinal = Math.max(0, isrAntesSubsidio - subsidioProrrateado);
+      const tasaEfectiva = ingreso > 0 ? (isrFinal / ingreso) * 100 : 0;
+
+      return {
+        ingreso_gravable: ingreso,
+        limite_inferior: bracket.limiteInferior,
+        excedente,
+        cuota_fija: bracket.cuotaFija,
+        impuesto_marginal: impuestoMarginal,
+        isr_causado: isrAntesSubsidio,
+        tasa_efectiva: tasaEfectiva,
+        subsidio_empleo: subsidioProrrateado,
+        isr_a_retener: isrFinal,
+      };
     }
 
-    // ISR a retener = ISR causado - subsidio al empleo
-    const isrARetener = Math.max(0, isrCausado - subsidio);
-
-    // Tasa efectiva
-    const tasaEfectiva = ingreso > 0 ? (isrARetener / ingreso) * 100 : 0;
+    const monthlyBrackets = getBrackets('monthly');
+    const ingresoMensualizado = ingreso * factor;
+    const bracket = selectBracket(monthlyBrackets, ingresoMensualizado);
+    const excedente = ingresoMensualizado - bracket.limiteInferior;
+    const impuestoMarginal = excedente * (bracket.tasa / 100);
+    const isrAntesSubsidio = bracket.cuotaFija + impuestoMarginal;
+    const subsidioMensual = calculateSubsidy(ingresoMensualizado);
+    const isrFinalMensual = Math.max(0, isrAntesSubsidio - subsidioMensual);
+    const isrFinal = isrFinalMensual / factor;
+    const tasaEfectiva = ingreso > 0 ? (isrFinal / ingreso) * 100 : 0;
 
     return {
       ingreso_gravable: ingreso,
-      limite_inferior: tramo.limite_inferior,
+      limite_inferior: bracket.limiteInferior,
       excedente,
-      cuota_fija: tramo.cuota_fija,
+      cuota_fija: bracket.cuotaFija,
       impuesto_marginal: impuestoMarginal,
-      isr_causado: isrCausado,
+      isr_causado: isrAntesSubsidio,
       tasa_efectiva: tasaEfectiva,
-      subsidio_empleo: subsidio,
-      isr_a_retener: isrARetener,
+      subsidio_empleo: subsidioMensual,
+      isr_a_retener: isrFinal,
     };
   }
 
@@ -127,28 +239,10 @@ export class ISRCalculator {
    * @param tramos - Tramos de la tabla
    * @returns Tramo correspondiente o undefined
    */
-  private static findTramo(ingreso: number, tramos: ISRTramo[]): ISRTramo | undefined {
+  private static findTramo(ingreso: number, tramos: ISRBracket[]): ISRBracket | undefined {
     return tramos.find((t) => {
-      const dentroDeLimiteInferior = ingreso >= t.limite_inferior;
-      const dentroDeLimiteSuperior = t.limite_superior === null || ingreso <= t.limite_superior;
-      return dentroDeLimiteInferior && dentroDeLimiteSuperior;
-    });
-  }
-
-  /**
-   * Encuentra el tramo de subsidio al empleo correspondiente
-   * @param ingreso - Ingreso a buscar
-   * @param tramos - Tramos de subsidio
-   * @returns Tramo de subsidio o undefined
-   */
-  private static findTramoSubsidio(
-    ingreso: number,
-    tramos: SubsidioEmpleo[]
-  ): SubsidioEmpleo | undefined {
-    return tramos.find((t) => {
-      const dentroDeLimiteInferior = ingreso >= t.limite_inferior;
-      const dentroDeLimiteSuperior = t.limite_superior === null || ingreso <= t.limite_superior;
-      return dentroDeLimiteInferior && dentroDeLimiteSuperior;
+      const limiteSuperior = t.limiteSuperior ?? Number.POSITIVE_INFINITY;
+      return ingreso >= t.limiteInferior && ingreso <= limiteSuperior;
     });
   }
 
@@ -210,21 +304,31 @@ export class ISRCalculator {
       throw new Error(`No se encontró tabla de ISR para año ${año}`);
     }
 
-    const tramo = this.findTramo(ingreso, tabla.tramos);
+    const tramo = this.findTramo(ingreso, tabla);
     if (!tramo) {
       throw new Error(`No se encontró tramo para ingreso ${ingreso}`);
     }
 
-    return tramo.tasa_excedente;
+    return tramo.tasa;
   }
 
   /**
    * Obtiene todas las tablas disponibles
    * @returns Array de tablas ISR
    */
-  static getAllTablas(): ISRTabla[] {
+  static getAllTablas(): Array<{ year: number; periodicidad: string; tramos: ISRBracket[] }> {
     this.loadData();
-    return [...this._data!.tablas];
+    const tablas: Array<{ year: number; periodicidad: string; tramos: ISRBracket[] }> = [];
+    for (const [year, tables] of Object.entries(this._data!.brackets)) {
+      for (const key of Object.keys(PERIOD_MAPPING)) {
+        const periodKey = PERIOD_MAPPING[key];
+        const tramos = tables[periodKey];
+        if (tramos) {
+          tablas.push({ year: Number(year), periodicidad: key, tramos });
+        }
+      }
+    }
+    return tablas;
   }
 
   /**
@@ -233,7 +337,8 @@ export class ISRCalculator {
    */
   static getAñosDisponibles(): number[] {
     this.loadData();
-    const años = new Set(this._data!.tablas.map((t) => t.año));
-    return Array.from(años).sort((a, b) => b - a);
+    return Object.keys(this._data!.brackets)
+      .map((year) => Number(year))
+      .sort((a, b) => b - a);
   }
 }

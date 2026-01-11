@@ -1,0 +1,26 @@
+[
+  {
+    "bank_code": "002",
+    "branch_code": "010",
+    "account_number": "07777777777",
+    "clabe": "002010077777777771"
+  },
+  {
+    "bank_code": "014",
+    "branch_code": "180",
+    "account_number": "12345678901",
+    "clabe": "014180123456789014"
+  },
+  {
+    "bank_code": "002",
+    "branch_code": "001",
+    "account_number": "00012345678",
+    "clabe": "002001000123456787"
+  },
+  {
+    "bank_code": "072",
+    "branch_code": "500",
+    "account_number": "98765432109",
+    "clabe": "072500987654321090"
+  }
+]

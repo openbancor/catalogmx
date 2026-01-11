@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { Calculator, TrendingUp, Percent, DollarSign, Receipt, Shield, Users } from 'lucide-svelte';
 
 	const calculators = [
@@ -7,7 +8,7 @@
 			name: 'ISR',
 			description: 'Impuesto Sobre la Renta',
 			longDescription: 'Calcula el ISR con las tarifas oficiales 2024-2026 y subsidio al empleo',
-			href: '/calculadoras/isr',
+			href: `${base}/calculadoras/isr`,
 			icon: Receipt,
 			color: 'bg-red-500',
 			features: [
@@ -23,7 +24,7 @@
 			name: 'RESICO',
 			description: 'Régimen Simplificado de Confianza',
 			longDescription: 'Calcula impuestos bajo el Régimen Simplificado de Confianza para personas físicas',
-			href: '/calculadoras/resico',
+			href: `${base}/calculadoras/resico`,
 			icon: TrendingUp,
 			color: 'bg-blue-500',
 			features: [
@@ -39,7 +40,7 @@
 			name: 'IVA',
 			description: 'Impuesto al Valor Agregado',
 			longDescription: 'Calcula IVA (16%), IVA retenido y desglose de impuestos',
-			href: '/calculadoras/iva',
+			href: `${base}/calculadoras/iva`,
 			icon: Percent,
 			color: 'bg-green-500',
 			features: [
@@ -51,11 +52,27 @@
 			status: 'available'
 		},
 		{
+			id: 'ieps',
+			name: 'IEPS',
+			description: 'Impuesto Especial',
+			longDescription: 'Calcula IEPS ad-valorem, cuotas fijas y tasas por categoría',
+			href: `${base}/calculadoras/ieps`,
+			icon: Percent,
+			color: 'bg-amber-500',
+			features: [
+				'IEPS ad-valorem',
+				'Cuotas fijas',
+				'Bebidas alcohólicas',
+				'Cigarros y tabacos'
+			],
+			status: 'available'
+		},
+		{
 			id: 'imss',
 			name: 'IMSS',
 			description: 'Cuotas de Seguro Social',
 			longDescription: 'Calcula cuotas IMSS obrero-patronales, Modalidad 40 y Modalidad 10',
-			href: '/calculadoras/imss',
+			href: `${base}/calculadoras/imss`,
 			icon: Shield,
 			color: 'bg-teal-500',
 			features: [
@@ -71,7 +88,7 @@
 			name: 'Costo Total Trabajador',
 			description: 'Costo real para el empleador',
 			longDescription: 'Calcula el costo total de un trabajador incluyendo prestaciones y cargas sociales',
-			href: '/calculadoras/costo-trabajador',
+			href: `${base}/calculadoras/costo-trabajador`,
 			icon: Users,
 			color: 'bg-orange-500',
 			features: [
@@ -87,7 +104,7 @@
 			name: 'Tipo de Cambio',
 			description: 'Conversión USD/MXN histórica',
 			longDescription: 'Convierte entre pesos mexicanos y dólares con tipos de cambio históricos',
-			href: '/calculadoras/tipo-cambio',
+			href: `${base}/calculadoras/tipo-cambio`,
 			icon: DollarSign,
 			color: 'bg-purple-500',
 			features: [
@@ -103,7 +120,7 @@
 			name: 'UDI',
 			description: 'Unidades de Inversión',
 			longDescription: 'Convierte entre UDIs y pesos mexicanos, calcula rendimientos indexados a inflación',
-			href: '/calculadoras/udi',
+			href: `${base}/calculadoras/udi`,
 			icon: TrendingUp,
 			color: 'bg-blue-500',
 			features: [
@@ -119,7 +136,7 @@
 			name: 'CETES/TIIE',
 			description: 'Tasas de Interés',
 			longDescription: 'Calcula intereses con tasas CETES 28 y TIIE 28, compara rendimientos',
-			href: '/calculadoras/tasas-interes',
+			href: `${base}/calculadoras/tasas-interes`,
 			icon: Percent,
 			color: 'bg-emerald-500',
 			features: [

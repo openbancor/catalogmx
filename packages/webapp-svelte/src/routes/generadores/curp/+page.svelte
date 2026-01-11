@@ -1,34 +1,8 @@
 <script lang="ts">
-	import { User, Info, Calendar, MapPin, CheckCircle2, AlertCircle } from 'lucide-svelte';
+	import { User, Info, CheckCircle2, AlertCircle } from 'lucide-svelte';
 	import { base } from '$app/paths';
+	import { CURPValidator, generateCurp } from '$lib/catalogmx';
 	import statesData from '../../../../../shared-data/inegi/states.json';
-
-	// Helper function to remove accents
-	function removeAccents(str: string): string {
-		const accents: Record<string, string> = {
-			'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u',
-			'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U',
-			'ü': 'u', 'Ü': 'U', 'ñ': 'n', 'Ñ': 'N'
-		};
-		return str.split('').map(char => accents[char] || char).join('');
-	}
-
-	// Constants
-	const EXCLUDED_WORDS = ['DE', 'LA', 'LAS', 'MC', 'VON', 'DEL', 'LOS', 'Y', 'MAC', 'VAN', 'MI'];
-	const CACOPHONIC_WORDS = [
-		'BACA', 'BAKA', 'BUEI', 'BUEY', 'CACA', 'CACO', 'CAGA', 'CAGO', 'CAKA',
-		'KAKO', 'COGE', 'COGI', 'COJA', 'COJE', 'COJI', 'COJO', 'COLA', 'CULO',
-		'FALO', 'FETO', 'GETA', 'GUEI', 'GUEY', 'JETA', 'JOTO', 'KACA', 'KACO',
-		'KAGA', 'KAGO', 'KOGE', 'KOGI', 'KOJA', 'KOJE', 'KOJI', 'KOJO', 'KOLA',
-		'KULO', 'LILO', 'LOCA', 'LOCO', 'LOKA', 'LOKO', 'MAME', 'MAMO', 'MEAR',
-		'MEAS', 'MEON', 'MIAR', 'MION', 'MOCO', 'MOKO', 'MULA', 'MULO', 'NACA',
-		'NACO', 'PEDA', 'PEDO', 'PENE', 'PIPI', 'PITO', 'POPO', 'PUTA', 'PUTO',
-		'QULO', 'RATA', 'ROBA', 'ROBE', 'ROBO', 'RUIN', 'SENO', 'TETA', 'VACA',
-		'VAGA', 'VAGO', 'VAKA', 'VUEI', 'VUEY', 'WUEI', 'WUEY'
-	];
-	const VOCALES = 'AEIOU';
-	const CONSONANTES = 'BCDFGHJKLMNPQRSTVWXYZ';
-	const ALLOWED_CHARS = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
 
 	// State
 	let nombre = $state('');
@@ -40,187 +14,41 @@
 
 	let curpGenerado = $state('');
 	let pasos = $state<string[]>([]);
-	let decoded = $state<{label: string, value: string}[]>([]);
+	let decoded = $state<{ label: string; value: string }[]>([]);
 
 	// Prepare states for select
-	const states = statesData.map(s => ({
+	const states = statesData.map((s) => ({
 		code: s.code,
 		name: s.name
 	}));
 
-	// Helper functions
-	function cleanName(name: string): string {
-		if (!name) return '';
-
-		const upper = name.toUpperCase().trim();
-		const words = upper.split(/\s+/).filter(w => !EXCLUDED_WORDS.includes(w));
-		const joined = words.join(' ');
-
-		let result = '';
-		for (const char of joined) {
-			if (ALLOWED_CHARS.includes(char) || char === ' ') {
-				result += char;
-			} else {
-				const cleaned = removeAccents(char);
-				if (ALLOWED_CHARS.includes(cleaned)) {
-					result += cleaned;
-				}
-			}
-		}
-
-		return result.trim();
+	function parseIsoDate(value: string): { year: number; month: number; day: number } | null {
+		const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+		if (!match) return null;
+		return {
+			year: Number(match[1]),
+			month: Number(match[2]),
+			day: Number(match[3])
+		};
 	}
 
-	function getFirstConsonant(word: string): string {
-		if (!word || word.length <= 1) return 'X';
-
-		for (let i = 1; i < word.length; i++) {
-			if (CONSONANTES.includes(word[i])) {
-				return word[i];
-			}
-		}
-		return 'X';
-	}
-
-	function generateLetters(): string {
-		const paterno = cleanName(apellidoPaterno);
-		const materno = cleanName(apellidoMaterno);
-		const nombreClean = cleanName(nombre);
-
-		if (!paterno || !nombreClean) {
-			throw new Error('Apellido paterno y nombre son requeridos');
-		}
-
-		const parts: string[] = [];
-
-		// First letter of paterno
-		parts.push(paterno[0]);
-
-		// First vowel of paterno (after first letter)
-		let vowelFound = false;
-		for (let i = 1; i < paterno.length; i++) {
-			if (VOCALES.includes(paterno[i])) {
-				parts.push(paterno[i]);
-				vowelFound = true;
-				break;
-			}
-		}
-		if (!vowelFound) parts.push('X');
-
-		// First letter of materno or X
-		if (materno) {
-			parts.push(materno[0]);
-		} else {
-			parts.push('X');
-		}
-
-		// First letter of nombre (skip JOSE/MARIA if compound)
-		const nombreWords = nombreClean.split(' ');
-		let nombreToUse = nombreClean;
-		if (nombreWords.length > 1) {
-			if (nombreWords[0] === 'MARIA' || nombreWords[0] === 'JOSE' ||
-			    nombreWords[0] === 'MA' || nombreWords[0] === 'MA.' ||
-			    nombreWords[0] === 'J' || nombreWords[0] === 'J.') {
-				nombreToUse = nombreWords.slice(1).join(' ');
-			}
-		}
-		parts.push(nombreToUse[0]);
-
-		let clave = parts.join('');
-
-		// Check for cacophonic words
-		if (CACOPHONIC_WORDS.includes(clave)) {
-			clave = clave[0] + 'X' + clave.substring(2);
-		}
-
-		return clave;
-	}
-
-	function generateDate(): string {
-		const date = new Date(fechaNacimiento);
-		const yy = date.getFullYear().toString().substring(2);
-		const mm = (date.getMonth() + 1).toString().padStart(2, '0');
+	function formatDate(date: Date | null): string {
+		if (!date) return 'Fecha no disponible';
 		const dd = date.getDate().toString().padStart(2, '0');
-		return yy + mm + dd;
+		const mm = (date.getMonth() + 1).toString().padStart(2, '0');
+		const yyyy = date.getFullYear();
+		return `${dd}/${mm}/${yyyy}`;
 	}
 
-	function getStateCode(): string {
-		const state = states.find(s => s.code === estadoNacimiento);
-		return state ? state.code : 'NE';
-	}
-
-	function generateConsonants(): string {
-		const paterno = cleanName(apellidoPaterno);
-		const materno = cleanName(apellidoMaterno);
-		const nombreClean = cleanName(nombre);
-
-		const nombreWords = nombreClean.split(' ');
-		let nombreToUse = nombreClean;
-		if (nombreWords.length > 1) {
-			if (nombreWords[0] === 'MARIA' || nombreWords[0] === 'JOSE' ||
-			    nombreWords[0] === 'MA' || nombreWords[0] === 'MA.' ||
-			    nombreWords[0] === 'J' || nombreWords[0] === 'J.') {
-				nombreToUse = nombreWords.slice(1).join(' ');
-			}
+	function getDifferentiator(dateValue: string): string {
+		const parts = parseIsoDate(dateValue);
+		if (!parts) {
+			throw new Error('Fecha inválida');
 		}
-
-		const consonants: string[] = [];
-		consonants.push(getFirstConsonant(paterno));
-		consonants.push(materno ? getFirstConsonant(materno) : 'X');
-		consonants.push(getFirstConsonant(nombreToUse));
-
-		return consonants.join('');
+		return parts.year < 2000 ? '0' : 'A';
 	}
 
-	function calculateCheckDigit(curp17: string): string {
-		const dictionary = '0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
-
-		let suma = 0;
-		for (let i = 0; i < 17; i++) {
-			const charValue = dictionary.indexOf(curp17[i]);
-			suma += charValue * (18 - i);
-		}
-
-		let digito = 10 - (suma % 10);
-		if (digito === 10) digito = 0;
-
-		return digito.toString();
-	}
-
-	function generateHomoclave(): string {
-		const date = new Date(fechaNacimiento);
-		const year = date.getFullYear();
-
-		// Differentiator: 0 for before 2000, A for after
-		const differentiator = year < 2000 ? '0' : 'A';
-
-		// Build temp CURP (17 characters)
-		const tempCurp =
-			generateLetters() +
-			generateDate() +
-			sexo +
-			getStateCode() +
-			generateConsonants() +
-			differentiator;
-
-		// Calculate check digit
-		const checkDigit = calculateCheckDigit(tempCurp);
-
-		return differentiator + checkDigit;
-	}
-
-	function decodeCURP(curp: string) {
-		decoded = [
-			{ label: 'Primeras 4 letras', value: curp.substring(0, 4) + ' (Apellidos y nombre)' },
-			{ label: 'Fecha de nacimiento', value: curp.substring(4, 10) + ' (AAMMDD)' },
-			{ label: 'Sexo', value: curp[10] + (curp[10] === 'H' ? ' (Hombre)' : ' (Mujer)') },
-			{ label: 'Estado', value: curp.substring(11, 13) + ' (' + states.find(s => s.code === curp.substring(11, 13))?.name + ')' },
-			{ label: 'Consonantes internas', value: curp.substring(13, 16) },
-			{ label: 'Homoclave', value: curp.substring(16, 18) }
-		];
-	}
-
-	function generateCURP() {
+	function generateCURP(): void {
 		pasos = [];
 		curpGenerado = '';
 		decoded = [];
@@ -231,28 +59,44 @@
 				return;
 			}
 
-			const letters = generateLetters();
-			pasos.push(`1. Letras del nombre: ${letters}`);
+			const stateName = states.find((s) => s.code === estadoNacimiento)?.name;
+			if (!stateName) {
+				pasos.push('❌ Estado inválido');
+				return;
+			}
 
-			const dateStr = generateDate();
-			pasos.push(`2. Fecha de nacimiento: ${dateStr}`);
+			const differentiator = getDifferentiator(fechaNacimiento);
+			curpGenerado = generateCurp({
+				nombre,
+				apellidoPaterno,
+				apellidoMaterno,
+				fechaNacimiento,
+				sexo,
+				estado: stateName,
+				differentiator
+			});
 
-			pasos.push(`3. Sexo: ${sexo}`);
+			const validator = new CURPValidator(curpGenerado);
+			const birthDate = validator.getBirthDate();
+			const gender = validator.getGender();
+			const genderLabel = gender === 'H' ? 'Hombre' : gender === 'M' ? 'Mujer' : 'No disponible';
+			const stateCode = validator.getStateCode();
+			const stateLabel = states.find((s) => s.code === stateCode)?.name || 'Desconocido';
 
-			const stateCode = getStateCode();
-			const stateName = states.find(s => s.code === stateCode)?.name || 'Desconocido';
-			pasos.push(`4. Estado: ${stateCode} (${stateName})`);
-
-			const consonants = generateConsonants();
-			pasos.push(`5. Consonantes internas: ${consonants}`);
-
-			const homoclave = generateHomoclave();
-			pasos.push(`6. Homoclave: ${homoclave}`);
-
-			curpGenerado = letters + dateStr + sexo + stateCode + consonants + homoclave;
 			pasos.push(`✅ CURP generada: ${curpGenerado}`);
+			pasos.push(`Fecha en CURP: ${formatDate(birthDate)}`);
+			pasos.push(`Sexo: ${genderLabel}`);
+			pasos.push(`Estado: ${stateCode ?? 'NE'} (${stateLabel})`);
+			pasos.push(`Dígito verificador: ${validator.validateCheckDigit() ? 'OK' : 'Error'}`);
 
-			decodeCURP(curpGenerado);
+			decoded = [
+				{ label: 'Primeras 4 letras', value: `${curpGenerado.substring(0, 4)} (Apellidos y nombre)` },
+				{ label: 'Fecha de nacimiento', value: `${curpGenerado.substring(4, 10)} (AAMMDD)` },
+				{ label: 'Sexo', value: `${curpGenerado[10]} (${genderLabel})` },
+				{ label: 'Estado', value: `${curpGenerado.substring(11, 13)} (${stateLabel})` },
+				{ label: 'Consonantes internas', value: curpGenerado.substring(13, 16) },
+				{ label: 'Homoclave', value: curpGenerado.substring(16, 18) }
+			];
 		} catch (error) {
 			if (error instanceof Error) {
 				pasos.push(`❌ Error: ${error.message}`);
@@ -372,9 +216,9 @@
 					</div>
 
 					<div>
-						<label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+						<p class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
 							Sexo *
-						</label>
+						</p>
 						<div class="flex gap-4">
 							<label class="flex items-center gap-2 cursor-pointer">
 								<input

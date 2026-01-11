@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import { query } from '$lib/db';
 	import { base } from '$app/paths';
+	import { calculateClabeCheckDigit, generateClabe, validateClabe } from '$lib/catalogmx';
 
 	type Bank = {
 		code: string;
@@ -28,9 +29,6 @@
 	} | null>(null);
 	let copySuccess = $state(false);
 
-	// CLABE constants
-	const WEIGHTS = [3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7];
-
 	// Load banks on mount
 	onMount(async () => {
 		try {
@@ -42,39 +40,13 @@
 		}
 	});
 
-	// CLABE generation functions
-	function calculateCheckDigit(clabe17: string): string {
-		if (clabe17.length !== 17) return '';
-		if (!/^\d+$/.test(clabe17)) return '';
-
-		// Calculate weighted sum
-		let weightedSum = 0;
-		for (let i = 0; i < 17; i++) {
-			const digit = parseInt(clabe17[i]);
-			const product = digit * WEIGHTS[i];
-			weightedSum += product % 10;
-		}
-
-		// Calculate check digit
-		const checkDigit = (10 - (weightedSum % 10)) % 10;
-		return checkDigit.toString();
-	}
-
-	function validateClabe(clabe: string): boolean {
-		if (clabe.length !== 18) return false;
-		if (!/^\d+$/.test(clabe)) return false;
-
-		const calculated = calculateCheckDigit(clabe.substring(0, 17));
-		return calculated === clabe[17];
-	}
-
 	function generateRandomAccountNumber() {
 		// Generate random 11-digit account number
 		const random = Math.floor(Math.random() * 100000000000).toString().padStart(11, '0');
 		accountNumber = random;
 	}
 
-	function generateClabe() {
+	function generateClabeValue() {
 		// Reset state
 		generatedClabe = '';
 		breakdown = null;
@@ -96,11 +68,8 @@
 		}
 
 		// Generate CLABE
-		const clabe17 = bankCodePadded + branchCodePadded + accountNumberPadded;
-		const checkDigit = calculateCheckDigit(clabe17);
-		const clabe = clabe17 + checkDigit;
-
-		// Validate
+		const clabe = generateClabe(bankCodePadded, branchCodePadded, accountNumberPadded);
+		const checkDigit = calculateClabeCheckDigit(clabe.substring(0, 17));
 		isValid = validateClabe(clabe);
 
 		if (isValid) {
@@ -132,7 +101,7 @@
 	// Auto-generate when inputs change
 	$effect(() => {
 		if (selectedBankCode && branchCode && accountNumber) {
-			generateClabe();
+			generateClabeValue();
 		}
 	});
 </script>

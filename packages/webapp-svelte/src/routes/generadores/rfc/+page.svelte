@@ -1,68 +1,7 @@
 <script lang="ts">
-	import { CreditCard, Info, User, Building2, Calendar, AlertCircle, CheckCircle2 } from 'lucide-svelte';
+	import { CreditCard, Info, User, Building2, AlertCircle, CheckCircle2 } from 'lucide-svelte';
 	import { base } from '$app/paths';
-
-	// Helper function to remove accents
-	function removeAccents(str: string): string {
-		const accents: Record<string, string> = {
-			'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u',
-			'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U',
-			'ü': 'u', 'Ü': 'U', 'ñ': 'n', 'Ñ': 'N'
-		};
-		return str.split('').map(char => accents[char] || char).join('');
-	}
-
-	// Constants
-	const EXCLUDED_WORDS_FISICA = ['DE', 'LA', 'LAS', 'MC', 'VON', 'DEL', 'LOS', 'Y', 'MAC', 'VAN', 'MI'];
-	const EXCLUDED_WORDS_MORAL = [
-		'EL', 'LA', 'DE', 'LOS', 'LAS', 'Y', 'DEL', 'MI',
-		'COMPAÑIA', 'COMPAÑÍA', 'CIA', 'CIA.', 'SOCIEDAD', 'SOC', 'SOC.',
-		'COOPERATIVA', 'COOP', 'COOP.', 'S.A.', 'SA', 'S.A', 'S. A.', 'S. A',
-		'S.A.B.', 'SAB', 'S.A.B', 'S. A. B.', 'S. A. B', 'S. DE R.L.',
-		'S DE RL', 'SRL', 'S.R.L.', 'S. R. L.', 'S. EN C.', 'S EN C',
-		'S.C.', 'SC', 'S. EN C. POR A.', 'S EN C POR A', 'S. EN N.C.',
-		'S EN NC', 'A.C.', 'AC', 'A. C.', 'A. EN P.', 'A EN P', 'S.C.L.',
-		'SCL', 'S.N.C.', 'SNC', 'C.V.', 'CV', 'C. V.', 'SA DE CV',
-		'S.A. DE C.V.', 'SA DE CV MI', 'S.A. DE C.V. MI', 'S.A.B. DE C.V.',
-		'SAB DE CV', 'S.A.B DE C.V', 'SRL DE CV', 'S.R.L. DE C.V.',
-		'SRL DE CV MI', 'SRL MI', 'THE', 'OF', 'COMPANY', 'AND', 'CO', 'CO.',
-		'MC', 'VON', 'MAC', 'VAN', 'PARA', 'POR', 'AL', 'E', 'EN', 'CON', 'SUS', 'A'
-	];
-	const CACOPHONIC_WORDS = [
-		'BUEI', 'BUEY', 'CACA', 'CACO', 'CAGA', 'CAGO', 'CAKA', 'COGE', 'COJA',
-		'COJE', 'COJI', 'COJO', 'CULO', 'FETO', 'GUEY', 'JOTO', 'KACA', 'KACO',
-		'KAGA', 'KAGO', 'KOGE', 'KOJO', 'KAKA', 'KULO', 'MAME', 'MAMO', 'MEAR',
-		'MEON', 'MION', 'MOCO', 'MULA', 'PEDA', 'PEDO', 'PENE', 'PUTA', 'PUTO',
-		'QULO', 'RATA', 'RUIN'
-	];
-	const VOCALES = 'AEIOU';
-	const ALLOWED_CHARS = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ&';
-
-	const CHECKSUM_TABLE: Record<string, string> = {
-		'0': '00', '1': '01', '2': '02', '3': '03', '4': '04', '5': '05',
-		'6': '06', '7': '07', '8': '08', '9': '09', 'A': '10', 'B': '11',
-		'C': '12', 'D': '13', 'E': '14', 'F': '15', 'G': '16', 'H': '17',
-		'I': '18', 'J': '19', 'K': '20', 'L': '21', 'M': '22', 'N': '23',
-		'&': '24', 'O': '25', 'P': '26', 'Q': '27', 'R': '28', 'S': '29',
-		'T': '30', 'U': '31', 'V': '32', 'W': '33', 'X': '34', 'Y': '35',
-		'Z': '36', ' ': '37', 'Ñ': '38'
-	};
-
-	const QUOTIENT_TABLE: Record<string, string> = {
-		' ': '00', '0': '00', '1': '01', '2': '02', '3': '03', '4': '04',
-		'5': '05', '6': '06', '7': '07', '8': '08', '9': '09', '&': '10',
-		'A': '11', 'B': '12', 'C': '13', 'D': '14', 'E': '15', 'F': '16',
-		'G': '17', 'H': '18', 'I': '19', 'J': '21', 'K': '22', 'L': '23',
-		'M': '24', 'N': '25', 'O': '26', 'P': '27', 'Q': '28', 'R': '29',
-		'S': '32', 'T': '33', 'U': '34', 'V': '35', 'W': '36', 'X': '37',
-		'Y': '38', 'Z': '39', 'Ñ': '40'
-	};
-
-	const HOMOCLAVE_TABLE = [
-		'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
-		'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T',
-		'U', 'V', 'W', 'X', 'Y', 'Z'
-	];
+	import { generateRfcPersonaFisica, generateRfcPersonaMoral, RFCValidator } from '$lib/catalogmx';
 
 	type PersonType = 'fisica' | 'moral';
 
@@ -82,243 +21,70 @@
 	let rfcGenerado = $state('');
 	let pasos = $state<string[]>([]);
 
-	// Helper functions
-	function cleanName(name: string, excludedWords: string[]): string {
-		if (!name) return '';
-
-		const upper = name.toUpperCase().trim();
-		const words = upper.split(/\s+/).filter(w => !excludedWords.includes(w));
-		const joined = words.join(' ');
-
-		let result = '';
-		for (const char of joined) {
-			if (ALLOWED_CHARS.includes(char) || char === ' ') {
-				result += char;
-			} else {
-				const cleaned = removeAccents(char);
-				if (ALLOWED_CHARS.includes(cleaned)) {
-					result += cleaned;
-				}
-			}
-		}
-
-		return result.trim();
-	}
-
-	function calculateChecksum(rfc12: string): string {
-		let rfcPadded = rfc12;
-		if (rfcPadded.length === 11) {
-			rfcPadded = ' ' + rfcPadded;
-		}
-
-		let suma = 0;
-		let index = 13;
-
-		for (const char of rfcPadded) {
-			const value = parseInt(CHECKSUM_TABLE[char] || '00');
-			suma += value * index;
-			index--;
-		}
-
-		const residual = suma % 11;
-
-		if (residual === 0) return '0';
-		const checkDigit = 11 - residual;
-		return checkDigit === 10 ? 'A' : checkDigit.toString();
-	}
-
-	function calculateHomoclave(nombreCompleto: string): string {
-		let cadena = '0';
-
-		for (const char of nombreCompleto) {
-			if (QUOTIENT_TABLE[char]) {
-				cadena += QUOTIENT_TABLE[char];
-			}
-		}
-
-		let suma = 0;
-		for (let i = 0; i < cadena.length - 1; i++) {
-			const pair = parseInt(cadena.substring(i, i + 2));
-			const nextDigit = parseInt(cadena[i + 1]);
-			suma += pair * nextDigit;
-		}
-
-		suma = suma % 1000;
-		const first = Math.floor(suma / 34);
-		const second = suma % 34;
-
-		return HOMOCLAVE_TABLE[first] + HOMOCLAVE_TABLE[second];
-	}
-
-	function generateLettersFisica(): string {
-		const paterno = cleanName(apellidoPaterno, EXCLUDED_WORDS_FISICA);
-		const materno = cleanName(apellidoMaterno, EXCLUDED_WORDS_FISICA);
-		const nombreClean = cleanName(nombre, EXCLUDED_WORDS_FISICA);
-
-		if (!paterno || !nombreClean) {
-			throw new Error('Apellido paterno y nombre son requeridos');
-		}
-
-		const parts: string[] = [];
-
-		// First letter of paterno
-		parts.push(paterno[0]);
-
-		// First vowel of paterno (after first letter)
-		let vowelFound = false;
-		for (let i = 1; i < paterno.length; i++) {
-			if (VOCALES.includes(paterno[i])) {
-				parts.push(paterno[i]);
-				vowelFound = true;
-				break;
-			}
-		}
-		if (!vowelFound) parts.push('X');
-
-		// First letter of materno or X
-		if (materno) {
-			parts.push(materno[0]);
-		} else {
-			parts.push('X');
-		}
-
-		// First letter of nombre (skip JOSE/MARIA if compound)
-		const nombreWords = nombreClean.split(' ');
-		let nombreToUse = nombreClean;
-		if (nombreWords.length > 1 && (nombreWords[0] === 'MARIA' || nombreWords[0] === 'JOSE')) {
-			nombreToUse = nombreWords.slice(1).join(' ');
-		}
-		parts.push(nombreToUse[0]);
-
-		let clave = parts.join('');
-
-		// Check for cacophonic words
-		if (CACOPHONIC_WORDS.includes(clave)) {
-			clave = clave.substring(0, 3) + 'X';
-		}
-
-		return clave;
-	}
-
-	function generateLettersMoral(): string {
-		let razon = razonSocial.toUpperCase().trim();
-
-		// Remove excluded words
-		for (const excluded of EXCLUDED_WORDS_MORAL.sort((a, b) => b.length - a.length)) {
-			razon = razon.replace(new RegExp(`\\b${excluded}\\b`, 'g'), ' ');
-		}
-
-		// Clean special characters
-		const allowedForProcessing = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .ÑÁÉÍÓÚÜñáéíóúü';
-		let razonLimpia = '';
-		for (const char of razon) {
-			if (allowedForProcessing.includes(char)) {
-				razonLimpia += char;
-			} else {
-				razonLimpia += ' ';
-			}
-		}
-
-		// Replace Ñ with X
-		razonLimpia = razonLimpia.replace(/Ñ/g, 'X').replace(/ñ/g, 'X');
-
-		// Clean and get words
-		const words = razonLimpia.split(/\s+/).filter(w => w.length > 0);
-
-		// Clean accents
-		const finalWords = words.map(w => removeAccents(w).toUpperCase()).filter(w => w.length > 0);
-
-		if (finalWords.length === 0) {
-			throw new Error('Razón social inválida');
-		}
-
-		const clave: string[] = [];
-
-		if (finalWords.length === 1) {
-			// Single word: first 3 letters
-			const word = finalWords[0];
-			clave.push(word[0] || 'X');
-			clave.push(word[1] || 'X');
-			clave.push(word[2] || 'X');
-		} else if (finalWords.length === 2) {
-			// Two words: first letter of first, first two letters of second
-			clave.push(finalWords[0][0]);
-			clave.push(finalWords[1][0]);
-			clave.push(finalWords[1][1] || 'X');
-		} else {
-			// Three or more: first letter of each of first 3
-			clave.push(finalWords[0][0]);
-			clave.push(finalWords[1][0]);
-			clave.push(finalWords[2][0]);
-		}
-
-		let result = clave.join('');
-
-		// Check for cacophonic words
-		if (CACOPHONIC_WORDS.includes(result)) {
-			result = result.substring(0, 2) + 'X';
-		}
-
-		return result;
-	}
-
-	function generateDate(fecha: string): string {
-		const date = new Date(fecha);
-		const yy = date.getFullYear().toString().substring(2);
-		const mm = (date.getMonth() + 1).toString().padStart(2, '0');
+	function formatDate(date: Date | null): string {
+		if (!date) return 'Fecha no disponible';
 		const dd = date.getDate().toString().padStart(2, '0');
-		return yy + mm + dd;
+		const mm = (date.getMonth() + 1).toString().padStart(2, '0');
+		const yyyy = date.getFullYear();
+		return `${dd}/${mm}/${yyyy}`;
 	}
 
-	function generateRFC() {
+	function getTypeLabel(type: 'fisica' | 'moral' | 'generico' | 'invalido'): string {
+		switch (type) {
+			case 'fisica':
+				return 'Persona Física';
+			case 'moral':
+				return 'Persona Moral';
+			case 'generico':
+				return 'RFC Genérico';
+			default:
+				return 'RFC Inválido';
+		}
+	}
+
+	function generateRFC(): void {
 		pasos = [];
 		rfcGenerado = '';
 
 		try {
-			let letters = '';
-			let dateStr = '';
-			let nombreCompleto = '';
-
 			if (personType === 'fisica') {
 				if (!nombre || !apellidoPaterno || !fechaNacimiento) {
 					pasos.push('❌ Por favor completa todos los campos requeridos');
 					return;
 				}
 
-				letters = generateLettersFisica();
-				pasos.push(`1. Letras del nombre: ${letters}`);
-
-				dateStr = generateDate(fechaNacimiento);
-				pasos.push(`2. Fecha de nacimiento: ${dateStr}`);
-
-				const paterno = cleanName(apellidoPaterno, EXCLUDED_WORDS_FISICA);
-				const materno = cleanName(apellidoMaterno, EXCLUDED_WORDS_FISICA);
-				const nombreClean = cleanName(nombre, EXCLUDED_WORDS_FISICA);
-				nombreCompleto = [paterno, materno, nombreClean].filter(Boolean).join(' ');
+				rfcGenerado = generateRfcPersonaFisica({
+					nombre,
+					apellidoPaterno,
+					apellidoMaterno,
+					fechaNacimiento
+				});
 			} else {
 				if (!razonSocial || !fechaConstitucion) {
 					pasos.push('❌ Por favor completa todos los campos requeridos');
 					return;
 				}
 
-				letters = generateLettersMoral();
-				pasos.push(`1. Letras de la razón social: ${letters}`);
-
-				dateStr = generateDate(fechaConstitucion);
-				pasos.push(`2. Fecha de constitución: ${dateStr}`);
-
-				nombreCompleto = razonSocial.toUpperCase().trim();
+				rfcGenerado = generateRfcPersonaMoral({
+					razonSocial,
+					fechaConstitucion
+				});
 			}
 
-			const homoclave = calculateHomoclave(nombreCompleto);
-			pasos.push(`3. Homoclave: ${homoclave}`);
+			const validator = new RFCValidator(rfcGenerado);
+			const details = validator.getValidationDetails();
+			const type = validator.detectType();
+			const date = validator.getDate();
 
-			const rfc12 = letters + dateStr + homoclave;
-			const checksum = calculateChecksum(rfc12);
-			pasos.push(`4. Dígito verificador: ${checksum}`);
-
-			rfcGenerado = rfc12 + checksum;
 			pasos.push(`✅ RFC generado: ${rfcGenerado}`);
+			pasos.push(`Tipo: ${getTypeLabel(type)}`);
+			pasos.push(`Fecha en RFC: ${formatDate(date)}`);
+			pasos.push(`Formato: ${details.generalRegex ? 'OK' : 'Error'}`);
+			pasos.push(`Fecha válida: ${details.dateFormat ? 'OK' : 'Error'}`);
+			pasos.push(`Homoclave: ${details.homoclave ? 'OK' : 'Error'}`);
+			if ('checksum' in details) {
+				pasos.push(`Dígito verificador: ${details.checksum ? 'OK' : 'Error'}`);
+			}
 		} catch (error) {
 			if (error instanceof Error) {
 				pasos.push(`❌ Error: ${error.message}`);

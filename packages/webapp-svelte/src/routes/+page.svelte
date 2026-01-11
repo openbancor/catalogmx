@@ -330,7 +330,7 @@
 				>
 					<div class="flex items-start gap-3">
 						<div class="p-2 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
-							<svelte:component this={validator.icon} class="h-5 w-5" />
+							<validator.icon class="h-5 w-5" />
 						</div>
 						<div>
 							<h3 class="font-semibold text-slate-900 dark:text-white group-hover:text-brand-500">
@@ -363,7 +363,7 @@
 				>
 					<div class="flex items-start gap-3">
 						<div class="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
-							<svelte:component this={gen.icon} class="h-5 w-5" />
+							<gen.icon class="h-5 w-5" />
 						</div>
 						<div>
 							<h3 class="font-semibold text-slate-900 dark:text-white group-hover:text-brand-500">
