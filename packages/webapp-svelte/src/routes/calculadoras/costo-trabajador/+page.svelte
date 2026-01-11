@@ -2,6 +2,8 @@
 	import { base } from '$app/paths';
 	import { Calculator, Info, Users, Wallet, TrendingDown } from 'lucide-svelte';
 	import {
+		IMSSCalculator,
+		ISRCalculator,
 		ImpuestosLocalesCalculator,
 		WorkerCostCalculator,
 		obtenerDiasVacaciones
@@ -41,12 +43,20 @@
 	}
 
 	let resultado = $state<CostoResult | null>(null);
+	interface NetoResult {
+		salario_neto_mensual: number;
+		imss_trabajador: number;
+		isr_retenido: number;
+	}
+
+	let neto = $state<NetoResult | null>(null);
 	let tasaISN = $state<number | null>(null);
 	let diasVacaciones = $state<number>(0);
 
 	function calculateCostoPatronal() {
 		if (!salarioMensual || salarioMensual <= 0) {
 			resultado = null;
+			neto = null;
 			tasaISN = null;
 			return;
 		}
@@ -65,8 +75,28 @@
 				porcentaje_ptu: porcentajePTU,
 				year
 			});
+
+			const salarioDiario = salarioMensual / 30;
+			const cuotasIMSS = IMSSCalculator.calcularCuotasObreroPatronales(
+				salarioDiario,
+				30,
+				year,
+				1
+			);
+			const isr = ISRCalculator.calcular(salarioMensual, year, 'mensual', true);
+			const salarioNeto = Math.max(
+				0,
+				salarioMensual - cuotasIMSS.total_trabajador - isr.isr_a_retener
+			);
+
+			neto = {
+				salario_neto_mensual: salarioNeto,
+				imss_trabajador: cuotasIMSS.total_trabajador,
+				isr_retenido: isr.isr_a_retener
+			};
 		} catch {
 			resultado = null;
+			neto = null;
 		}
 	}
 
@@ -265,13 +295,24 @@
 							Costo total del trabajador
 						</h2>
 
-						<div class="grid gap-4 sm:grid-cols-3">
+						<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 							<div class="p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-lg border border-orange-200 dark:border-orange-800">
 								<div class="text-sm font-medium text-orange-700 dark:text-orange-300 mb-1">
 									Costo mensual
 								</div>
 								<div class="text-2xl font-bold text-orange-900 dark:text-orange-100 tabular-nums">
 									{formatCurrency(resultado.costo_total_mensual)}
+								</div>
+							</div>
+							<div class="p-4 bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 rounded-lg border border-emerald-200 dark:border-emerald-800">
+								<div class="text-sm font-medium text-emerald-700 dark:text-emerald-300 mb-1">
+									Salario neto estimado
+								</div>
+								<div class="text-2xl font-bold text-emerald-900 dark:text-emerald-100 tabular-nums">
+									{formatCurrency(neto?.salario_neto_mensual ?? 0)}
+								</div>
+								<div class="text-xs text-emerald-600 dark:text-emerald-400">
+									después de IMSS e ISR
 								</div>
 							</div>
 							<div class="p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg border border-green-200 dark:border-green-800">
@@ -312,6 +353,31 @@
 									<span class="font-medium text-slate-900 dark:text-slate-100 tabular-nums">
 										{formatCurrency(resultado.salario_bruto_mensual)}
 									</span>
+								</div>
+							</div>
+
+							<!-- Deducciones del trabajador -->
+							<div>
+								<h4 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Deducciones del trabajador</h4>
+								<div class="space-y-1 text-sm">
+									<div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+										<span class="text-slate-600 dark:text-slate-400">IMSS trabajador</span>
+										<span class="font-medium text-slate-900 dark:text-slate-100 tabular-nums">
+											{formatCurrency(neto?.imss_trabajador ?? 0)}
+										</span>
+									</div>
+									<div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+										<span class="text-slate-600 dark:text-slate-400">ISR retenido</span>
+										<span class="font-medium text-slate-900 dark:text-slate-100 tabular-nums">
+											{formatCurrency(neto?.isr_retenido ?? 0)}
+										</span>
+									</div>
+									<div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+										<span class="text-slate-600 dark:text-slate-400">Salario neto estimado</span>
+										<span class="font-medium text-slate-900 dark:text-slate-100 tabular-nums">
+											{formatCurrency(neto?.salario_neto_mensual ?? 0)}
+										</span>
+									</div>
 								</div>
 							</div>
 
