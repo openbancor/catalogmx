@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { Building2, Info, Hash, CheckCircle2, Copy, Shuffle } from 'lucide-svelte';
-	import { onMount } from 'svelte';
-	import { query } from '$lib/db';
+	import { Building2, Info, Hash, CheckCircle2, Copy, Shuffle, MapPin } from 'lucide-svelte';
+	import { loadCatalogRows } from 'catalogmx/utils';
 	import { base } from '$app/paths';
 	import { calculateClabeCheckDigit, generateClabe, validateClabe } from '$lib/catalogmx';
 
@@ -13,9 +12,18 @@
 		spei: number;
 	};
 
+	type Plaza = {
+		codigo: string;
+		plaza: string;
+		estado: string;
+		cve_entidad: string;
+	};
+
 	// State
 	let banks = $state<Bank[]>([]);
+	let plazas = $state<Plaza[]>([]);
 	let selectedBankCode = $state('');
+	let selectedPlazaKey = $state('');
 	let branchCode = $state('');
 	let accountNumber = $state('');
 	let generatedClabe = $state('');
@@ -24,21 +32,27 @@
 		bankCode: string;
 		bankName: string;
 		branchCode: string;
+		plazaName: string | null;
+		plazaEstado: string | null;
 		accountNumber: string;
 		checkDigit: string;
 	} | null>(null);
 	let copySuccess = $state(false);
 
-	// Load banks on mount
-	onMount(async () => {
-		try {
-			// Load banks from SQLite - filter only SPEI-enabled banks
-			const data = await query<Bank>('SELECT code, name, full_name, rfc, spei FROM banxico_banks WHERE spei = 1 ORDER BY code');
-			banks = data;
-		} catch (error) {
-			console.error('Error loading banks:', error);
-		}
-	});
+	const allBanks = loadCatalogRows<Bank>('banxico/banks.json');
+	const allPlazas = loadCatalogRows<Plaza>('banxico/codigos_plaza.json');
+	banks = allBanks.filter((bank) => bank.spei === 1).sort((a, b) => a.code.localeCompare(b.code));
+	plazas = allPlazas;
+
+	const plazaOptions = $derived(
+		plazas.map((plaza) => ({
+			key: `${plaza.codigo}-${plaza.cve_entidad}`,
+			code: plaza.codigo,
+			label: `${plaza.codigo} - ${plaza.plaza} (${plaza.estado})`,
+			plaza: plaza.plaza,
+			estado: plaza.estado,
+		}))
+	);
 
 	function generateRandomAccountNumber() {
 		// Generate random 11-digit account number
@@ -76,15 +90,19 @@
 			generatedClabe = clabe;
 
 			// Find bank name
-			const bank = banks.find(b => b.code === bankCodePadded);
+		const bank = banks.find((b) => b.code === bankCodePadded);
+		const plazaMatches = plazas.filter((plaza) => plaza.codigo === branchCodePadded);
+		const plazaInfo = plazaMatches[0];
 
-			breakdown = {
-				bankCode: bankCodePadded,
-				bankName: bank ? bank.name : 'Desconocido',
-				branchCode: branchCodePadded,
-				accountNumber: accountNumberPadded,
-				checkDigit
-			};
+		breakdown = {
+			bankCode: bankCodePadded,
+			bankName: bank ? bank.name : 'Desconocido',
+			branchCode: branchCodePadded,
+			plazaName: plazaInfo?.plaza ?? null,
+			plazaEstado: plazaInfo?.estado ?? null,
+			accountNumber: accountNumberPadded,
+			checkDigit
+		};
 		}
 	}
 
@@ -102,6 +120,16 @@
 	$effect(() => {
 		if (selectedBankCode && branchCode && accountNumber) {
 			generateClabeValue();
+		}
+	});
+
+	$effect(() => {
+		if (!selectedPlazaKey) {
+			return;
+		}
+		const selected = plazaOptions.find((option) => option.key === selectedPlazaKey);
+		if (selected) {
+			branchCode = selected.code;
 		}
 	});
 </script>
@@ -185,6 +213,20 @@
 						<label for="branch" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
 							Codigo de Sucursal/Plaza *
 						</label>
+						<div class="mb-3">
+							<label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">
+								Plaza sugerida (opcional)
+							</label>
+							<select
+								bind:value={selectedPlazaKey}
+								class="input text-sm"
+							>
+								<option value="">Selecciona una plaza...</option>
+								{#each plazaOptions as plaza}
+									<option value={plaza.key}>{plaza.label}</option>
+								{/each}
+							</select>
+						</div>
 						<input
 							id="branch"
 							type="text"
@@ -283,9 +325,19 @@
 								<!-- Branch -->
 								<div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
 									<span class="text-sm text-slate-600 dark:text-slate-400">Sucursal/Plaza</span>
-									<span class="text-sm font-mono font-semibold text-slate-900 dark:text-white">
-										{breakdown.branchCode}
-									</span>
+									<div class="text-right">
+										<span class="text-sm font-mono font-semibold text-slate-900 dark:text-white">
+											{breakdown.branchCode}
+										</span>
+										{#if breakdown.plazaName}
+											<div class="text-xs text-slate-500 dark:text-slate-400">
+												{breakdown.plazaName}
+												{#if breakdown.plazaEstado}
+													<span> · {breakdown.plazaEstado}</span>
+												{/if}
+											</div>
+										{/if}
+									</div>
 								</div>
 
 								<!-- Account -->

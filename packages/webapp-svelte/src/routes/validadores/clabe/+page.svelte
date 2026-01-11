@@ -11,16 +11,27 @@
 		bankCode: string | null;
 		bankName: string | null;
 		branchCode: string | null;
+		plazaName: string | null;
+		plazaEstado: string | null;
+		plazaMatches: number;
 		accountNumber: string | null;
 		checkDigit: string | null;
 		checkDigitValid: boolean;
 		errors: string[];
 	} | null>(null);
 
-	const banksData = loadCatalogRows<{ code: string; name: string }>('banxico/banks.json');
+	type Bank = { code: string; name: string };
+	type Plaza = { codigo: string; plaza: string; estado: string; cve_entidad: string };
+
+	const banksData = loadCatalogRows<Bank>('banxico/banks.json');
+	const plazasData = loadCatalogRows<Plaza>('banxico/codigos_plaza.json');
 
 	function findBank(bankCode: string) {
 		return banksData.find(bank => bank.code === bankCode);
+	}
+
+	function findPlazas(branchCode: string) {
+		return plazasData.filter(plaza => plaza.codigo === branchCode);
 	}
 
 	function validateCLABE(value: string): void {
@@ -28,6 +39,9 @@
 		let bankCode: string | null = null;
 		let bankName: string | null = null;
 		let branchCode: string | null = null;
+		let plazaName: string | null = null;
+		let plazaEstado: string | null = null;
+		let plazaMatches = 0;
 		let accountNumber: string | null = null;
 		let checkDigit: string | null = null;
 		let checkDigitValid = false;
@@ -57,6 +71,15 @@
 			} else {
 				errors.push('Código de banco no reconocido');
 			}
+
+			const plazas = findPlazas(branchCode);
+			plazaMatches = plazas.length;
+			if (plazas.length) {
+				plazaName = plazas[0].plaza;
+				plazaEstado = plazas[0].estado;
+			} else {
+				errors.push('Código de plaza no reconocido');
+			}
 		}
 
 		checkDigitValid = isValid;
@@ -64,7 +87,19 @@
 			errors.push('Dígito de control incorrecto');
 		}
 
-		validationResult = { isValid, bankCode, bankName, branchCode, accountNumber, checkDigit, checkDigitValid, errors };
+		validationResult = {
+			isValid,
+			bankCode,
+			bankName,
+			branchCode,
+			plazaName,
+			plazaEstado,
+			plazaMatches,
+			accountNumber,
+			checkDigit,
+			checkDigitValid,
+			errors
+		};
 	}
 
 	// Auto-validate when CLABE changes
@@ -213,6 +248,17 @@
 												<div class="font-medium text-slate-900 dark:text-slate-100 font-mono">
 													{validationResult.branchCode}
 												</div>
+												{#if validationResult.plazaName}
+													<div class="text-xs text-slate-500 dark:text-slate-400">
+														{validationResult.plazaName}
+														{#if validationResult.plazaEstado}
+															<span> · {validationResult.plazaEstado}</span>
+														{/if}
+														{#if validationResult.plazaMatches > 1}
+															<span> · {validationResult.plazaMatches} plazas</span>
+														{/if}
+													</div>
+												{/if}
 											</div>
 										</div>
 									{/if}
