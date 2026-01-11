@@ -3,14 +3,20 @@
  * Loads mexico.sqlite3 from GitHub Releases for catalog data
  */
 import initSqlJs, { type Database } from 'sql.js';
+import { base } from '$app/paths';
 import { createSqlJsAdapter, setCatalogPreferSqlite, setCatalogSqliteAdapter } from 'catalogmx/utils';
 
 // Database singleton
 let db: Database | null = null;
 let dbPromise: Promise<Database> | null = null;
 
-// GitHub release URL for SQLite database
-const DB_URL = 'https://github.com/openbancor/catalogmx/releases/download/sqlite-assets/mexico.sqlite3';
+const DB_URL_FALLBACK =
+	'https://github.com/openbancor/catalogmx/releases/download/sqlite-assets/mexico.sqlite3';
+
+function getDatabaseUrls(): string[] {
+	const urls = [`${base}/data/mexico.sqlite3`, `${base}/mexico.sqlite3`];
+	return urls.map((url) => url.replace(/\/{2,}/g, '/')).concat(DB_URL_FALLBACK);
+}
 
 /**
  * Initialize sql.js and load the database
@@ -23,11 +29,27 @@ async function initDatabase(): Promise<Database> {
 	});
 
 	// Fetch the database file
-	console.log('Fetching database from:', DB_URL);
-	const response = await fetch(DB_URL);
+	const candidates = getDatabaseUrls();
+	let response: Response | null = null;
+	let lastError: Error | null = null;
 
-	if (!response.ok) {
-		throw new Error(`Failed to fetch database: ${response.status} ${response.statusText}`);
+	for (const url of candidates) {
+		try {
+			console.log('Fetching database from:', url);
+			const result = await fetch(url);
+			if (!result.ok) {
+				lastError = new Error(`Failed to fetch database: ${result.status} ${result.statusText}`);
+				continue;
+			}
+			response = result;
+			break;
+		} catch (err) {
+			lastError = err instanceof Error ? err : new Error('Failed to fetch database');
+		}
+	}
+
+	if (!response) {
+		throw lastError ?? new Error('Failed to fetch database');
 	}
 
 	const buffer = await response.arrayBuffer();
@@ -46,12 +68,17 @@ export async function getDatabase(): Promise<Database> {
 	}
 
 	if (!dbPromise) {
-		dbPromise = initDatabase().then((database) => {
-			db = database;
-			setCatalogSqliteAdapter(createSqlJsAdapter(database));
-			setCatalogPreferSqlite(true);
-			return database;
-		});
+		dbPromise = initDatabase()
+			.then((database) => {
+				db = database;
+				setCatalogSqliteAdapter(createSqlJsAdapter(database));
+				setCatalogPreferSqlite(true);
+				return database;
+			})
+			.catch((err) => {
+				dbPromise = null;
+				throw err;
+			});
 	}
 
 	return dbPromise;

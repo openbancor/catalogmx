@@ -68,6 +68,11 @@ jobs:
             echo "⚠️  WARNING: sqlite3 CLI not found"
           fi
 
+      - name: Copy SQLite database into webapp static assets
+        run: |
+          mkdir -p packages/webapp-svelte/static/data
+          cp packages/shared-data/mexico.sqlite3 packages/webapp-svelte/static/data/mexico.sqlite3
+
       - name: Install dependencies
         working-directory: packages/webapp-svelte
         run: npm ci
