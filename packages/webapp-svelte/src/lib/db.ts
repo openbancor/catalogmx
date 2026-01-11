@@ -15,7 +15,11 @@ const DB_URL_FALLBACK =
 
 function getDatabaseUrls(): string[] {
 	const urls = [`${base}/data/mexico.sqlite3`, `${base}/mexico.sqlite3`];
-	return urls.map((url) => url.replace(/\/{2,}/g, '/')).concat(DB_URL_FALLBACK);
+	const normalized = urls.map((url) => url.replace(/\/{2,}/g, '/'));
+	if (!base) {
+		return normalized.concat(DB_URL_FALLBACK);
+	}
+	return normalized;
 }
 
 /**
