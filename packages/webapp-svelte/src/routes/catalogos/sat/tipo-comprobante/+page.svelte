@@ -7,41 +7,25 @@
 	import { base } from '$app/paths';
 
 	interface TipoComprobante {
-		valor: string;
-		descripcion?: string;
+		code: string;
+		description: string;
 	}
 
 	let data = $state<TipoComprobante[]>([]);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 
-	// Add descriptions for the known values
-	const tipoComprobanteDescriptions: Record<string, string> = {
-		'I': 'Ingreso',
-		'E': 'Egreso',
-		'T': 'Traslado',
-		'N': 'Nomina',
-		'P': 'Pago'
-	};
-
-	const enrichedData = $derived(
-		data.map(item => ({
-			...item,
-			descripcion: tipoComprobanteDescriptions[item.valor] || item.valor
-		}))
-	);
-
 	const columns: ColumnDef<TipoComprobante, unknown>[] = [
 		{
-			accessorKey: 'valor',
+			accessorKey: 'code',
 			header: 'Clave',
 			cell: ({ getValue }) => {
-				const valor = getValue() as string;
-				return valor;
+				const code = getValue() as string;
+				return code;
 			},
 		},
 		{
-			accessorKey: 'descripcion',
+			accessorKey: 'description',
 			header: 'Descripcion',
 			cell: ({ getValue }) => getValue() as string,
 		},
@@ -53,7 +37,7 @@
 			error = null;
 
 			// Load tipo comprobante data from SQLite
-			const result = await query<TipoComprobante>('SELECT * FROM sat_cfdi_4_0_tipo_comprobante ORDER BY valor');
+			const result = await query<TipoComprobante>('SELECT * FROM sat_cfdi_4_0_tipo_comprobante ORDER BY code');
 			data = result;
 
 		} catch (e) {
@@ -143,7 +127,7 @@
 	{:else}
 		<!-- Data table -->
 		<DataTable
-			data={enrichedData}
+			{data}
 			{columns}
 			searchPlaceholder="Buscar por clave o descripcion..."
 		/>

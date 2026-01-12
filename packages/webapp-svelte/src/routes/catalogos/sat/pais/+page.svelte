@@ -7,7 +7,10 @@
 	import { base } from '$app/paths';
 
 	interface Pais {
-		valor: string;
+		codigo: string;
+		nombre: string | null;
+		iso2: string | null;
+		requiere_subdivision: number | null;
 	}
 
 	let data = $state<Pais[]>([]);
@@ -16,11 +19,30 @@
 
 	const columns: ColumnDef<Pais, unknown>[] = [
 		{
-			accessorKey: 'valor',
+			accessorKey: 'codigo',
 			header: 'Codigo ISO',
 			cell: ({ getValue }) => {
-				const valor = getValue() as string;
-				return valor;
+				const codigo = getValue() as string;
+				return codigo;
+			},
+		},
+		{
+			accessorKey: 'nombre',
+			header: 'Pais',
+			cell: ({ getValue }) => (getValue() as string) || '-',
+		},
+		{
+			accessorKey: 'iso2',
+			header: 'ISO2',
+			cell: ({ getValue }) => (getValue() as string) || '-',
+		},
+		{
+			accessorKey: 'requiere_subdivision',
+			header: 'Subdivision',
+			cell: ({ getValue }) => {
+				const value = getValue() as number | null;
+				if (value === null) return '-';
+				return value === 1 ? 'Si' : 'No';
 			},
 		},
 	];
@@ -31,7 +53,16 @@
 			error = null;
 
 			// Load pais data from SQLite
-			const result = await query<Pais>('SELECT * FROM sat_cfdi_4_0_c_pais ORDER BY valor');
+			const result = await query<Pais>(
+				`SELECT c.valor AS codigo,
+				        p.nombre AS nombre,
+				        p.iso2 AS iso2,
+				        p.requiere_subdivision AS requiere_subdivision
+				 FROM sat_cfdi_4_0_c_pais c
+				 LEFT JOIN sat_comercio_exterior_paises p
+				   ON p.codigo = c.valor
+				 ORDER BY c.valor`
+			);
 			data = result;
 
 		} catch (e) {
@@ -123,7 +154,7 @@
 		<DataTable
 			{data}
 			{columns}
-			searchPlaceholder="Buscar codigo de pais (MEX, USA, CAN...)..."
+			searchPlaceholder="Buscar codigo o nombre de pais..."
 		/>
 	{/if}
 

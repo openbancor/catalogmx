@@ -7,7 +7,10 @@
 	import { base } from '$app/paths';
 
 	interface Moneda {
-		valor: string;
+		codigo: string;
+		nombre: string | null;
+		pais: string | null;
+		decimales: number | null;
 	}
 
 	let data = $state<Moneda[]>([]);
@@ -16,11 +19,29 @@
 
 	const columns: ColumnDef<Moneda, unknown>[] = [
 		{
-			accessorKey: 'valor',
+			accessorKey: 'codigo',
 			header: 'Codigo ISO',
 			cell: ({ getValue }) => {
-				const valor = getValue() as string;
-				return valor;
+				const codigo = getValue() as string;
+				return codigo;
+			},
+		},
+		{
+			accessorKey: 'nombre',
+			header: 'Moneda',
+			cell: ({ getValue }) => (getValue() as string) || '-',
+		},
+		{
+			accessorKey: 'pais',
+			header: 'Pais',
+			cell: ({ getValue }) => (getValue() as string) || '-',
+		},
+		{
+			accessorKey: 'decimales',
+			header: 'Decimales',
+			cell: ({ getValue }) => {
+				const decimales = getValue() as number | null;
+				return decimales === null ? '-' : decimales.toString();
 			},
 		},
 	];
@@ -31,7 +52,16 @@
 			error = null;
 
 			// Load moneda data from SQLite
-			const result = await query<Moneda>('SELECT * FROM sat_cfdi_4_0_c_moneda ORDER BY valor');
+			const result = await query<Moneda>(
+				`SELECT c.valor AS codigo,
+				        m.nombre AS nombre,
+				        m.pais AS pais,
+				        m.decimales AS decimales
+				 FROM sat_cfdi_4_0_c_moneda c
+				 LEFT JOIN sat_comercio_exterior_monedas m
+				   ON m.codigo = c.valor
+				 ORDER BY c.valor`
+			);
 			data = result;
 
 		} catch (e) {
@@ -123,7 +153,7 @@
 		<DataTable
 			{data}
 			{columns}
-			searchPlaceholder="Buscar codigo de moneda (MXN, USD, EUR...)..."
+			searchPlaceholder="Buscar codigo o nombre de moneda..."
 		/>
 	{/if}
 

@@ -7,20 +7,43 @@
 	import { base } from '$app/paths';
 
 	interface UsoCFDI {
-		valor: string;
+		applies_to: string;
+		code: string;
+		description: string;
+		fisica: number;
+		moral: number;
 	}
 
 	let data = $state<UsoCFDI[]>([]);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 
+	function formatAplicable(fisica: number, moral: number): string {
+		if (fisica && moral) return 'Fisica y Moral';
+		if (fisica) return 'Fisica';
+		if (moral) return 'Moral';
+		return 'No aplica';
+	}
+
 	const columns: ColumnDef<UsoCFDI, unknown>[] = [
 		{
-			accessorKey: 'valor',
+			accessorKey: 'code',
 			header: 'Clave',
 			cell: ({ getValue }) => {
-				const valor = getValue() as string;
-				return valor;
+				const code = getValue() as string;
+				return code;
+			},
+		},
+		{
+			accessorKey: 'description',
+			header: 'Descripcion',
+			cell: ({ getValue }) => getValue() as string,
+		},
+		{
+			header: 'Aplica a',
+			cell: ({ row }) => {
+				const { fisica, moral } = row.original;
+				return formatAplicable(fisica, moral);
 			},
 		},
 	];
@@ -31,7 +54,7 @@
 			error = null;
 
 			// Load uso CFDI data from SQLite
-			const result = await query<UsoCFDI>('SELECT * FROM sat_cfdi_4_0_uso_cfdi ORDER BY valor');
+			const result = await query<UsoCFDI>('SELECT * FROM sat_cfdi_4_0_uso_cfdi ORDER BY code');
 			data = result;
 
 		} catch (e) {
@@ -123,7 +146,7 @@
 		<DataTable
 			{data}
 			{columns}
-			searchPlaceholder="Buscar por clave..."
+			searchPlaceholder="Buscar por clave o descripcion..."
 		/>
 	{/if}
 

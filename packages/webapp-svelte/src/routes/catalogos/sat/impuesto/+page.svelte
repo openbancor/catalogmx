@@ -7,41 +7,45 @@
 	import { base } from '$app/paths';
 
 	interface Impuesto {
-		valor: string;
-		descripcion?: string;
+		code: string;
+		description: string;
+		name: string;
+		retention: number;
+		transfer: number;
 	}
 
 	let data = $state<Impuesto[]>([]);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 
-	// Add descriptions for the known values
-	const impuestoDescriptions: Record<string, string> = {
-		'001': 'ISR - Impuesto Sobre la Renta',
-		'002': 'IVA - Impuesto al Valor Agregado',
-		'003': 'IEPS - Impuesto Especial sobre Produccion y Servicios'
-	};
-
-	const enrichedData = $derived(
-		data.map(item => ({
-			...item,
-			descripcion: impuestoDescriptions[item.valor] || item.valor
-		}))
-	);
-
 	const columns: ColumnDef<Impuesto, unknown>[] = [
 		{
-			accessorKey: 'valor',
+			accessorKey: 'code',
 			header: 'Clave',
 			cell: ({ getValue }) => {
-				const valor = getValue() as string;
-				return valor;
+				const code = getValue() as string;
+				return code;
 			},
 		},
 		{
-			accessorKey: 'descripcion',
+			accessorKey: 'name',
+			header: 'Impuesto',
+			cell: ({ getValue }) => getValue() as string,
+		},
+		{
+			accessorKey: 'description',
 			header: 'Descripcion',
 			cell: ({ getValue }) => getValue() as string,
+		},
+		{
+			accessorKey: 'retention',
+			header: 'Retencion',
+			cell: ({ getValue }) => ((getValue() as number) === 1 ? 'Si' : 'No'),
+		},
+		{
+			accessorKey: 'transfer',
+			header: 'Traslado',
+			cell: ({ getValue }) => ((getValue() as number) === 1 ? 'Si' : 'No'),
 		},
 	];
 
@@ -51,7 +55,7 @@
 			error = null;
 
 			// Load impuesto data from SQLite
-			const result = await query<Impuesto>('SELECT * FROM sat_cfdi_4_0_impuesto ORDER BY valor');
+			const result = await query<Impuesto>('SELECT * FROM sat_cfdi_4_0_impuesto ORDER BY code');
 			data = result;
 
 		} catch (e) {
@@ -141,7 +145,7 @@
 	{:else}
 		<!-- Data table -->
 		<DataTable
-			data={enrichedData}
+			{data}
 			{columns}
 			searchPlaceholder="Buscar por clave o descripcion..."
 		/>

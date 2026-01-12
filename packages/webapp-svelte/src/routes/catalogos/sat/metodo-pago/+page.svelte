@@ -7,38 +7,25 @@
 	import { base } from '$app/paths';
 
 	interface MetodoPago {
-		valor: string;
-		descripcion?: string;
+		code: string;
+		description: string;
 	}
 
 	let data = $state<MetodoPago[]>([]);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 
-	// Add descriptions for the known values
-	const metodoPagoDescriptions: Record<string, string> = {
-		'PUE': 'Pago en una sola exhibicion',
-		'PPD': 'Pago en parcialidades o diferido'
-	};
-
-	const enrichedData = $derived(
-		data.map(item => ({
-			...item,
-			descripcion: metodoPagoDescriptions[item.valor] || item.valor
-		}))
-	);
-
 	const columns: ColumnDef<MetodoPago, unknown>[] = [
 		{
-			accessorKey: 'valor',
+			accessorKey: 'code',
 			header: 'Clave',
 			cell: ({ getValue }) => {
-				const valor = getValue() as string;
-				return valor;
+				const code = getValue() as string;
+				return code;
 			},
 		},
 		{
-			accessorKey: 'descripcion',
+			accessorKey: 'description',
 			header: 'Descripcion',
 			cell: ({ getValue }) => getValue() as string,
 		},
@@ -50,7 +37,7 @@
 			error = null;
 
 			// Load metodo pago data from SQLite
-			const result = await query<MetodoPago>('SELECT * FROM sat_cfdi_4_0_metodo_pago ORDER BY valor');
+			const result = await query<MetodoPago>('SELECT * FROM sat_cfdi_4_0_metodo_pago ORDER BY code');
 			data = result;
 
 		} catch (e) {
@@ -140,7 +127,7 @@
 	{:else}
 		<!-- Data table -->
 		<DataTable
-			data={enrichedData}
+			{data}
 			{columns}
 			searchPlaceholder="Buscar por clave o descripcion..."
 		/>

@@ -7,8 +7,8 @@
 	import { base } from '$app/paths';
 
 	interface FormaPago {
-		valor: string;
-		descripcion: string;
+		code: string;
+		description: string;
 	}
 
 	let data = $state<FormaPago[]>([]);
@@ -17,15 +17,15 @@
 
 	const columns: ColumnDef<FormaPago, unknown>[] = [
 		{
-			accessorKey: 'valor',
+			accessorKey: 'code',
 			header: 'Clave',
 			cell: ({ getValue }) => {
-				const valor = getValue() as string;
-				return valor;
+				const code = getValue() as string;
+				return code;
 			},
 		},
 		{
-			accessorKey: 'descripcion',
+			accessorKey: 'description',
 			header: 'Descripcion',
 			cell: ({ getValue }) => getValue() as string,
 		},
@@ -37,7 +37,7 @@
 			error = null;
 
 			// Load forma pago data from SQLite
-			const result = await query<FormaPago>('SELECT * FROM sat_cfdi_4_0_forma_pago ORDER BY valor');
+			const result = await query<FormaPago>('SELECT * FROM sat_cfdi_4_0_forma_pago ORDER BY code');
 			data = result;
 
 		} catch (e) {
