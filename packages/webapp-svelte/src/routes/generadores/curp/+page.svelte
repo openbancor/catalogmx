@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { User, Info, CheckCircle2, AlertCircle } from 'lucide-svelte';
 	import { base } from '$app/paths';
+	import { onMount } from 'svelte';
 	import { CURPValidator, generateCurp } from '$lib/catalogmx';
-	import { loadCatalogRows } from 'catalogmx/utils';
+	import { query } from '$lib/db';
 
 	// State
 	let nombre = $state('');
@@ -16,13 +17,21 @@
 	let pasos = $state<string[]>([]);
 	let decoded = $state<{ label: string; value: string }[]>([]);
 
-	const statesData = loadCatalogRows<{ code: string; name: string }>('inegi/states.json');
+	let states = $state<{ code: string; name: string }[]>([]);
+	let statesReady = $state(false);
+	let statesError = $state<string | null>(null);
 
-	// Prepare states for select
-	const states = statesData.map((s) => ({
-		code: s.code,
-		name: s.name
-	}));
+	onMount(async () => {
+		try {
+			states = await query<{ code: string; name: string }>(
+				'SELECT code, name FROM inegi_states ORDER BY name'
+			);
+		} catch (error) {
+			statesError = error instanceof Error ? error.message : 'Error loading states';
+		} finally {
+			statesReady = true;
+		}
+	});
 
 	function parseIsoDate(value: string): { year: number; month: number; day: number } | null {
 		const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
@@ -108,7 +117,7 @@
 
 	// Auto-generate when inputs change
 	$effect(() => {
-		if (nombre && apellidoPaterno && fechaNacimiento && estadoNacimiento) {
+		if (statesReady && nombre && apellidoPaterno && fechaNacimiento && estadoNacimiento) {
 			generateCURP();
 		}
 	});
@@ -164,6 +173,12 @@
 					<User class="h-5 w-5 text-brand-500" />
 					Datos personales
 				</h2>
+
+				{#if statesError}
+					<div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
+						No se pudieron cargar los estados: {statesError}
+					</div>
+				{/if}
 
 				<div class="space-y-5">
 					<div>

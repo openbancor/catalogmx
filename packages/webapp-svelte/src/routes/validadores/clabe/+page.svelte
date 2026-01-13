@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { CreditCard, CheckCircle2, XCircle, Info, Building2, MapPin, Hash } from 'lucide-svelte';
 	import { base } from '$app/paths';
+	import { onMount } from 'svelte';
 	import { CLABEValidator } from '$lib/catalogmx';
-	import { loadCatalogRows } from 'catalogmx/utils';
+	import { query } from '$lib/db';
 
 	// State
 	let clabe = $state('');
@@ -23,8 +24,25 @@
 	type Bank = { code: string; name: string };
 	type Plaza = { codigo: string; plaza: string; estado: string; cve_entidad: string };
 
-	const banksData = loadCatalogRows<Bank>('banxico/banks.json');
-	const plazasData = loadCatalogRows<Plaza>('banxico/codigos_plaza.json');
+	let banksData: Bank[] = [];
+	let plazasData: Plaza[] = [];
+	let catalogsReady = $state(false);
+	let catalogsError = $state<string | null>(null);
+
+	onMount(async () => {
+		try {
+			const [banks, plazas] = await Promise.all([
+				query<Bank>('SELECT code, name FROM banxico_banks ORDER BY code'),
+				query<Plaza>('SELECT codigo, plaza, estado, cve_entidad FROM banxico_codigos_plaza ORDER BY codigo')
+			]);
+			banksData = banks;
+			plazasData = plazas;
+		} catch (error) {
+			catalogsError = error instanceof Error ? error.message : 'Error loading catalogs';
+		} finally {
+			catalogsReady = true;
+		}
+	});
 
 	function findBank(bankCode: string) {
 		return banksData.find(bank => bank.code === bankCode);
@@ -104,7 +122,7 @@
 
 	// Auto-validate when CLABE changes
 	$effect(() => {
-		if (clabe.trim()) {
+		if (clabe.trim() && catalogsReady) {
 			validateCLABE(clabe);
 		} else {
 			validationResult = null;
@@ -201,6 +219,12 @@
 					<CheckCircle2 class="h-5 w-5 text-green-500" />
 					Resultado de validación
 				</h2>
+
+				{#if catalogsError}
+					<div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
+						No se pudieron cargar los catálogos necesarios: {catalogsError}
+					</div>
+				{/if}
 
 				{#if validationResult}
 					<div class="space-y-4">

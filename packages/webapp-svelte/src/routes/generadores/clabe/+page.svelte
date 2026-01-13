@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { Building2, Info, Hash, CheckCircle2, Copy, Shuffle, MapPin } from 'lucide-svelte';
-	import { loadCatalogRows } from 'catalogmx/utils';
+	import { onMount } from 'svelte';
 	import { base } from '$app/paths';
 	import { calculateClabeCheckDigit, generateClabe, validateClabe } from '$lib/catalogmx';
+	import { query } from '$lib/db';
 
 	type Bank = {
 		code: string;
@@ -39,10 +40,23 @@
 	} | null>(null);
 	let copySuccess = $state(false);
 
-	const allBanks = loadCatalogRows<Bank>('banxico/banks.json');
-	const allPlazas = loadCatalogRows<Plaza>('banxico/codigos_plaza.json');
-	banks = allBanks.filter((bank) => bank.spei === 1).sort((a, b) => a.code.localeCompare(b.code));
-	plazas = allPlazas;
+	let catalogsReady = $state(false);
+	let catalogsError = $state<string | null>(null);
+
+	onMount(async () => {
+		try {
+			const [allBanks, allPlazas] = await Promise.all([
+				query<Bank>('SELECT code, name, full_name, rfc, spei FROM banxico_banks ORDER BY code'),
+				query<Plaza>('SELECT codigo, plaza, estado, cve_entidad FROM banxico_codigos_plaza ORDER BY codigo')
+			]);
+			banks = allBanks.filter((bank) => bank.spei === 1).sort((a, b) => a.code.localeCompare(b.code));
+			plazas = allPlazas;
+		} catch (error) {
+			catalogsError = error instanceof Error ? error.message : 'Error loading catalogs';
+		} finally {
+			catalogsReady = true;
+		}
+	});
 
 	const plazaOptions = $derived(
 		plazas.map((plaza) => ({
@@ -65,6 +79,10 @@
 		generatedClabe = '';
 		breakdown = null;
 		isValid = false;
+
+		if (!catalogsReady) {
+			return;
+		}
 
 		// Validate inputs
 		if (!selectedBankCode || !branchCode || !accountNumber) {
@@ -118,7 +136,7 @@
 
 	// Auto-generate when inputs change
 	$effect(() => {
-		if (selectedBankCode && branchCode && accountNumber) {
+		if (catalogsReady && selectedBankCode && branchCode && accountNumber) {
 			generateClabeValue();
 		}
 	});
@@ -184,6 +202,12 @@
 					<Hash class="h-5 w-5 text-brand-500" />
 					Datos de la cuenta
 				</h2>
+
+				{#if catalogsError}
+					<div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
+						No se pudieron cargar los catálogos necesarios: {catalogsError}
+					</div>
+				{/if}
 
 				<div class="space-y-5">
 					<!-- Bank selector -->

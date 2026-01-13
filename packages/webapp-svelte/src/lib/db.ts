@@ -1,17 +1,40 @@
 /**
- * SQLite database service using sql.js
- * Loads mexico.sqlite3 from GitHub Releases for catalog data
+ * SQLite database service using sql.js-httpvfs.
+ * Streams only needed pages via HTTP range requests.
  */
-import initSqlJs, { type Database } from 'sql.js';
+import { createDbWorker } from 'sql.js-httpvfs';
 import { base } from '$app/paths';
-import { createSqlJsAdapter, setCatalogPreferSqlite, setCatalogSqliteAdapter } from 'catalogmx/utils';
+
+type SqliteParam = string | number | null;
+
+type SqliteStatement = {
+	bind: (params?: SqliteParam[]) => Promise<boolean>;
+	step: () => Promise<boolean>;
+	getAsObject: (params?: Record<string, unknown>) => Promise<Record<string, unknown>>;
+	free: () => Promise<boolean>;
+	reset: () => Promise<void>;
+};
+
+type SqliteDatabase = {
+	exec: (sql: string) => Promise<{ columns: string[]; values: unknown[][] }[]>;
+	prepare: (sql: string) => Promise<SqliteStatement>;
+};
+
+type SqliteWorker = {
+	db: SqliteDatabase;
+	worker: { bytesRead: number | Promise<number> };
+	configs: unknown[];
+};
 
 // Database singleton
-let db: Database | null = null;
-let dbPromise: Promise<Database> | null = null;
+let dbWorker: SqliteWorker | null = null;
+let dbPromise: Promise<SqliteWorker> | null = null;
 
 const DB_URL_FALLBACK =
 	'https://github.com/openbancor/catalogmx/releases/download/sqlite-assets/mexico.sqlite3';
+
+const WORKER_URL = new URL('sql.js-httpvfs/dist/sqlite.worker.js', import.meta.url);
+const WASM_URL = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
 
 function getDatabaseUrls(): string[] {
 	const urls = [`${base}/data/mexico.sqlite3`, `${base}/mexico.sqlite3`];
@@ -22,62 +45,66 @@ function getDatabaseUrls(): string[] {
 	return normalized;
 }
 
-/**
- * Initialize sql.js and load the database
- */
-async function initDatabase(): Promise<Database> {
-	// Initialize sql.js with WASM
-	const SQL = await initSqlJs({
-		// Use CDN for WASM file
-		locateFile: (file: string) => `https://sql.js.org/dist/${file}`,
-	});
+async function probeDatabaseUrl(url: string): Promise<boolean> {
+	try {
+		const head = await fetch(url, { method: 'HEAD' });
+		if (head.ok) return true;
+		if (head.status !== 405) return false;
+		const range = await fetch(url, { headers: { Range: 'bytes=0-0' } });
+		return range.ok;
+	} catch {
+		return false;
+	}
+}
 
-	// Fetch the database file
+async function resolveDatabaseUrl(): Promise<string> {
 	const candidates = getDatabaseUrls();
-	let response: Response | null = null;
 	let lastError: Error | null = null;
 
 	for (const url of candidates) {
-		try {
-			console.log('Fetching database from:', url);
-			const result = await fetch(url);
-			if (!result.ok) {
-				lastError = new Error(`Failed to fetch database: ${result.status} ${result.statusText}`);
-				continue;
+		const ok = await probeDatabaseUrl(url);
+		if (ok) return url;
+		lastError = new Error(`Failed to reach database: ${url}`);
+	}
+
+	throw lastError ?? new Error('Failed to fetch database');
+}
+
+/**
+ * Initialize sql.js-httpvfs worker and attach database.
+ */
+async function initDatabase(): Promise<SqliteWorker> {
+	const url = await resolveDatabaseUrl();
+	console.log('Opening database via httpvfs:', url);
+	return createDbWorker(
+		[
+			{
+				from: 'inline',
+				config: {
+					serverMode: 'full',
+					requestChunkSize: 4096,
+					url
+				}
 			}
-			response = result;
-			break;
-		} catch (err) {
-			lastError = err instanceof Error ? err : new Error('Failed to fetch database');
-		}
-	}
-
-	if (!response) {
-		throw lastError ?? new Error('Failed to fetch database');
-	}
-
-	const buffer = await response.arrayBuffer();
-	console.log('Database loaded:', (buffer.byteLength / 1024 / 1024).toFixed(2), 'MB');
-
-	// Create database from buffer
-	return new SQL.Database(new Uint8Array(buffer));
+		],
+		WORKER_URL.toString(),
+		WASM_URL.toString()
+	) as Promise<SqliteWorker>;
 }
 
 /**
  * Get database instance (lazy loaded, singleton)
  */
-export async function getDatabase(): Promise<Database> {
-	if (db) {
-		return db;
+export async function getDatabase(): Promise<SqliteDatabase> {
+	if (dbWorker) {
+		return dbWorker.db;
 	}
 
 	if (!dbPromise) {
 		dbPromise = initDatabase()
-			.then((database) => {
-				db = database;
-				setCatalogSqliteAdapter(createSqlJsAdapter(database));
-				setCatalogPreferSqlite(true);
-				return database;
+			.then((worker) => {
+				dbWorker = worker;
+				return worker;
 			})
 			.catch((err) => {
 				dbPromise = null;
@@ -85,7 +112,8 @@ export async function getDatabase(): Promise<Database> {
 			});
 	}
 
-	return dbPromise;
+	const worker = await dbPromise;
+	return worker.db;
 }
 
 /**
@@ -93,18 +121,20 @@ export async function getDatabase(): Promise<Database> {
  */
 export async function query<T = Record<string, unknown>>(
 	sql: string,
-	params: (string | number | null)[] = []
+	params: SqliteParam[] = []
 ): Promise<T[]> {
 	const database = await getDatabase();
-	const stmt = database.prepare(sql);
-	stmt.bind(params);
+	const stmt = await database.prepare(sql);
+	if (params.length) {
+		await stmt.bind(params);
+	}
 
 	const results: T[] = [];
-	while (stmt.step()) {
-		const row = stmt.getAsObject() as T;
+	while (await stmt.step()) {
+		const row = (await stmt.getAsObject()) as T;
 		results.push(row);
 	}
-	stmt.free();
+	await stmt.free();
 
 	return results;
 }
@@ -114,7 +144,7 @@ export async function query<T = Record<string, unknown>>(
  */
 export async function queryOne<T = Record<string, unknown>>(
 	sql: string,
-	params: (string | number | null)[] = []
+	params: SqliteParam[] = []
 ): Promise<T | null> {
 	const results = await query<T>(sql, params);
 	return results[0] || null;
@@ -126,7 +156,7 @@ export async function queryOne<T = Record<string, unknown>>(
 export async function count(
 	table: string,
 	where?: string,
-	params: (string | number | null)[] = []
+	params: SqliteParam[] = []
 ): Promise<number> {
 	const sql = where
 		? `SELECT COUNT(*) as count FROM ${table} WHERE ${where}`
@@ -146,7 +176,7 @@ export async function paginate<T = Record<string, unknown>>(
 		pageSize?: number;
 		orderBy?: string;
 		where?: string;
-		params?: (string | number | null)[];
+		params?: SqliteParam[];
 	} = {}
 ): Promise<{ data: T[]; total: number; page: number; pageSize: number; totalPages: number }> {
 	const { page = 1, pageSize = 25, orderBy, where, params = [] } = options;
