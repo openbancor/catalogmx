@@ -238,10 +238,11 @@
 							Codigo de Sucursal/Plaza *
 						</label>
 						<div class="mb-3">
-							<label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">
+							<label for="plaza" class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">
 								Plaza sugerida (opcional)
 							</label>
 							<select
+								id="plaza"
 								bind:value={selectedPlazaKey}
 								class="input text-sm"
 							>
