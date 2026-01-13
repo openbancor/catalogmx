@@ -29,7 +29,7 @@
 
 			// Load inflation data from SQLite
 			const results = await query<InflacionRecord>(
-				'SELECT fecha, valor FROM banxico_inflacion ORDER BY fecha DESC LIMIT 500'
+				'SELECT fecha, inflacion_anual as valor FROM banxico_inflacion ORDER BY fecha DESC LIMIT 500'
 			);
 			data = results;
 		} catch (e) {
