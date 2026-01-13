@@ -3,6 +3,7 @@ declare module 'sql.js-httpvfs' {
     serverMode: 'full' | 'chunked';
     requestChunkSize: number;
     url: string;
+    databaseLengthBytes?: number;
     cacheBust?: string;
   }
 

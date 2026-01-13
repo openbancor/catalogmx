@@ -70,11 +70,45 @@ async function resolveDatabaseUrl(): Promise<string> {
 	throw lastError ?? new Error('Failed to fetch database');
 }
 
+function parseContentRange(value: string | null): number | null {
+	if (!value) return null;
+	const match = /\/(\d+)\s*$/.exec(value);
+	if (!match) return null;
+	return Number(match[1]);
+}
+
+async function getDatabaseLength(url: string): Promise<number> {
+	try {
+		const rangeResponse = await fetch(url, { headers: { Range: 'bytes=0-0' } });
+		if (rangeResponse.ok) {
+			const total = parseContentRange(rangeResponse.headers.get('Content-Range'));
+			if (total) return total;
+		}
+	} catch {
+		// Fall through to HEAD check.
+	}
+
+	const head = await fetch(url, { method: 'HEAD' });
+	if (!head.ok) {
+		throw new Error(`Failed to probe database length: ${head.status} ${head.statusText}`);
+	}
+	const encoding = head.headers.get('Content-Encoding');
+	if (encoding && encoding !== 'identity') {
+		throw new Error('Database server returned encoded length; cannot determine size safely.');
+	}
+	const length = head.headers.get('Content-Length');
+	if (!length) {
+		throw new Error('Database length not available from server headers.');
+	}
+	return Number(length);
+}
+
 /**
  * Initialize sql.js-httpvfs worker and attach database.
  */
 async function initDatabase(): Promise<SqliteWorker> {
 	const url = await resolveDatabaseUrl();
+	const databaseLengthBytes = await getDatabaseLength(url);
 	console.log('Opening database via httpvfs:', url);
 	return createDbWorker(
 		[
@@ -83,7 +117,8 @@ async function initDatabase(): Promise<SqliteWorker> {
 				config: {
 					serverMode: 'full',
 					requestChunkSize: 4096,
-					url
+					url,
+					databaseLengthBytes
 				}
 			}
 		],
