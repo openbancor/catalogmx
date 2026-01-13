@@ -35,8 +35,8 @@
 
 			// Load TIIE and CETES data (28-day rates)
 			const [tiie, cetes] = await Promise.all([
-				query<TIIERecord>('SELECT fecha, valor, plazo FROM banxico_tiie WHERE plazo = 28 ORDER BY fecha DESC LIMIT 500'),
-				query<CETESRecord>('SELECT fecha, valor, plazo FROM banxico_cetes WHERE plazo = 28 ORDER BY fecha DESC LIMIT 500')
+				query<TIIERecord>('SELECT fecha, tasa as valor, plazo FROM banxico_tiie WHERE plazo = 28 ORDER BY fecha DESC LIMIT 500'),
+				query<CETESRecord>('SELECT fecha, tasa as valor, plazo FROM banxico_cetes WHERE plazo = 28 ORDER BY fecha DESC LIMIT 500')
 			]);
 
 			tiieData = tiie;

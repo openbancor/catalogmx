@@ -50,8 +50,8 @@
 		try {
 			// Load CETES and TIIE rates from SQLite
 			const [cetes, tiie] = await Promise.all([
-				query<TasaRate>('SELECT fecha, valor FROM banxico_cetes WHERE plazo = 28 ORDER BY fecha DESC'),
-				query<TasaRate>('SELECT fecha, valor FROM banxico_tiie WHERE plazo = 28 ORDER BY fecha DESC')
+				query<TasaRate>('SELECT fecha, tasa as valor FROM banxico_cetes WHERE plazo = 28 ORDER BY fecha DESC'),
+				query<TasaRate>('SELECT fecha, tasa as valor FROM banxico_tiie WHERE plazo = 28 ORDER BY fecha DESC')
 			]);
 
 			cetesRates = cetes;

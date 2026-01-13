@@ -22,8 +22,8 @@
 			const [latestUdi, latestTipoCambio, latestTiie, latestCetes] = await Promise.all([
 				queryOne<UDIRecord>('SELECT fecha, valor FROM banxico_udis ORDER BY fecha DESC LIMIT 1'),
 				queryOne<TipoCambioRecord>('SELECT fecha, tipo_cambio FROM banxico_tipo_cambio ORDER BY fecha DESC LIMIT 1'),
-				queryOne<TIIERecord>('SELECT fecha, valor FROM banxico_tiie WHERE plazo = 28 ORDER BY fecha DESC LIMIT 1'),
-				queryOne<CETESRecord>('SELECT fecha, valor FROM banxico_cetes WHERE plazo = 28 ORDER BY fecha DESC LIMIT 1')
+				queryOne<TIIERecord>('SELECT fecha, tasa as valor FROM banxico_tiie WHERE plazo = 28 ORDER BY fecha DESC LIMIT 1'),
+				queryOne<CETESRecord>('SELECT fecha, tasa as valor FROM banxico_cetes WHERE plazo = 28 ORDER BY fecha DESC LIMIT 1')
 			]);
 
 			if (latestUdi) {
