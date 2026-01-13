@@ -3,7 +3,6 @@
  * Streams only needed pages via HTTP range requests.
  */
 import { createDbWorker } from 'sql.js-httpvfs';
-import { base } from '$app/paths';
 
 type SqliteParam = string | number | null;
 
@@ -30,19 +29,14 @@ type SqliteWorker = {
 let dbWorker: SqliteWorker | null = null;
 let dbPromise: Promise<SqliteWorker> | null = null;
 
-const DB_URL_FALLBACK =
+const DB_URL =
 	'https://github.com/openbancor/catalogmx/releases/download/sqlite-assets/mexico.sqlite3';
 
 const WORKER_URL = new URL('sql.js-httpvfs/dist/sqlite.worker.js', import.meta.url);
 const WASM_URL = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
 
 function getDatabaseUrls(): string[] {
-	const urls = [`${base}/data/mexico.sqlite3`, `${base}/mexico.sqlite3`];
-	const normalized = urls.map((url) => url.replace(/\/{2,}/g, '/'));
-	if (!base) {
-		return normalized.concat(DB_URL_FALLBACK);
-	}
-	return normalized;
+	return [DB_URL];
 }
 
 async function probeDatabaseUrl(url: string): Promise<boolean> {

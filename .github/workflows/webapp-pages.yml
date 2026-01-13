@@ -31,48 +31,6 @@ jobs:
           cache: npm
           cache-dependency-path: packages/webapp-svelte/package-lock.json
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Download latest dynamic data from releases
-        working-directory: packages/shared-data
-        run: |
-          echo "📥 Downloading latest mexico_dynamic.sqlite3 from releases..."
-
-          # Try to get latest release with mexico_dynamic.sqlite3
-          RELEASE_URL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases | \
-            jq -r '[.[] | select(.assets[].name == "mexico_dynamic.sqlite3")] | first | .assets[] | select(.name == "mexico_dynamic.sqlite3") | .browser_download_url')
-
-          if [ -n "$RELEASE_URL" ]; then
-            curl -L -o mexico_dynamic.sqlite3 "$RELEASE_URL"
-            echo "✅ Downloaded mexico_dynamic.sqlite3 from releases"
-          else
-            echo "⚠️ No dynamic data release found, building from scratch..."
-            python scripts/json_to_sqlite_dynamic.py
-          fi
-
-      - name: Build unified SQLite database
-        working-directory: packages/shared-data
-        run: |
-          python build_unified_sqlite.py --output mexico.sqlite3
-
-      - name: Close WAL mode for browser compatibility
-        run: |
-          if command -v sqlite3 &> /dev/null; then
-            sqlite3 packages/shared-data/mexico.sqlite3 "PRAGMA wal_checkpoint(TRUNCATE); PRAGMA journal_mode=DELETE; VACUUM;"
-            rm -f packages/shared-data/mexico.sqlite3-shm packages/shared-data/mexico.sqlite3-wal
-            echo "✓ WAL closed successfully"
-          else
-            echo "⚠️  WARNING: sqlite3 CLI not found"
-          fi
-
-      - name: Copy SQLite database into webapp static assets
-        run: |
-          mkdir -p packages/webapp-svelte/static/data
-          cp packages/shared-data/mexico.sqlite3 packages/webapp-svelte/static/data/mexico.sqlite3
-
       - name: Install dependencies
         working-directory: packages/webapp-svelte
         run: npm ci
