@@ -35,5 +35,8 @@
 		"sql.js-httpvfs": "^0.8.12",
 		"tailwind-merge": "^3.4.0",
 		"tailwind-variants": "^3.2.2"
+	},
+	"overrides": {
+		"cookie": "^0.7.0"
 	}
 }
