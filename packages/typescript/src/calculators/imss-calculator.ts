@@ -49,6 +49,81 @@ export interface Modalidad10Result {
   componentes: Record<string, number>;
 }
 
+type CuotaBase = {
+  descripcion: string;
+  patron: number;
+  trabajador?: number;
+  base: string;
+  limite_inferior_uma?: number;
+  limite_superior_uma?: number;
+};
+
+type CuotaEnfermedadMaternidad = {
+  prestaciones_en_especie: CuotaBase;
+  prestaciones_en_especie_excedente: CuotaBase;
+  prestaciones_en_dinero: CuotaBase;
+  gastos_medicos_pensionados: CuotaBase;
+};
+
+type CuotaRiesgoTrabajo = Record<`clase_${ClaseRiesgo}`, number>;
+
+type CuotasIMSS = {
+  enfermedad_maternidad: CuotaEnfermedadMaternidad;
+  invalidez_vida: {
+    patron: number;
+    trabajador: number;
+  };
+  retiro_cesantia_vejez: {
+    retiro: { patron: number };
+    cesantia_vejez: { patron: number; trabajador: number };
+  };
+  guarderias_prestaciones_sociales: {
+    patron: number;
+  };
+  riesgo_trabajo: CuotaRiesgoTrabajo;
+};
+
+type ModalidadLimitesSalario = {
+  minimo_uma: number;
+  maximo_uma: number;
+};
+
+type Modalidad40Data = {
+  descripcion: string;
+  requisitos: Record<string, number | string | boolean>;
+  cuota_mensual: {
+    formula: string;
+    porcentaje_total: number;
+    componentes: Record<string, number>;
+  };
+  limites_salario: ModalidadLimitesSalario;
+};
+
+type Modalidad10Data = {
+  descripcion: string;
+  requisitos: Record<string, number | string | boolean>;
+  cuota_mensual: {
+    formula: string;
+    porcentaje_variable: number;
+    cuota_fija_uma_factor: number;
+    componentes: Record<string, number | string>;
+  };
+  limites_salario: ModalidadLimitesSalario;
+  beneficios: string[];
+};
+
+type TopesCotizacion = {
+  salario_base_minimo: number;
+  salario_base_maximo: number;
+};
+
+type RiesgoTrabajoClase = {
+  clase: ClaseRiesgo;
+  prima: number;
+  descripcion: string;
+  ejemplos: string[];
+};
+
 interface IMSSTablesData {
   _meta: {
     description: string;
@@ -58,11 +133,11 @@ interface IMSSTablesData {
   };
   uma: Record<string, UMAInfo>;
   salario_minimo: Record<string, Record<ZonaSalario, number>>;
-  cuotas_imss: any;
-  modalidad_40: any;
-  modalidad_10: any;
-  topes_cotizacion: any;
-  riesgos_trabajo_clases: any[];
+  cuotas_imss: CuotasIMSS;
+  modalidad_40: Modalidad40Data;
+  modalidad_10: Modalidad10Data;
+  topes_cotizacion: TopesCotizacion;
+  riesgos_trabajo_clases: RiesgoTrabajoClase[];
 }
 
 interface IMSSCatalogsData {
@@ -71,10 +146,10 @@ interface IMSSCatalogsData {
     source: string;
     updated: string;
   };
-  tipos_movimiento_afiliatorio: any[];
-  tipos_trabajador: any[];
-  tipos_incapacidad: any[];
-  seguros_imss: any[];
+  tipos_movimiento_afiliatorio: Array<Record<string, unknown>>;
+  tipos_trabajador: Array<Record<string, unknown>>;
+  tipos_incapacidad: Array<Record<string, unknown>>;
+  seguros_imss: Array<Record<string, unknown>>;
 }
 
 export class IMSSCalculator {
@@ -331,7 +406,7 @@ export class IMSSCalculator {
    * Obtiene todos los catálogos de tipos de trabajador del IMSS
    * @returns Array de tipos de trabajador
    */
-  static getTiposTrabajador(): any[] {
+  static getTiposTrabajador(): Array<Record<string, unknown>> {
     this.loadCatalogsData();
     return [...this._catalogsData!.tipos_trabajador];
   }
@@ -340,7 +415,7 @@ export class IMSSCalculator {
    * Obtiene todos los catálogos de seguros del IMSS
    * @returns Array de seguros IMSS
    */
-  static getSegurosIMSS(): any[] {
+  static getSegurosIMSS(): Array<Record<string, unknown>> {
     this.loadCatalogsData();
     return [...this._catalogsData!.seguros_imss];
   }
@@ -349,7 +424,7 @@ export class IMSSCalculator {
    * Obtiene las clases de riesgo de trabajo disponibles
    * @returns Array de clases de riesgo con sus primas
    */
-  static getClasesRiesgoTrabajo(): any[] {
+  static getClasesRiesgoTrabajo(): RiesgoTrabajoClase[] {
     this.loadTablesData();
     return [...this._tablesData!.riesgos_trabajo_clases];
   }
