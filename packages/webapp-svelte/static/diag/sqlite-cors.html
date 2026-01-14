@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>SQLite CORS/Range Probe</title>
+		<style>
+			body {
+				font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+				margin: 24px;
+				color: #0f172a;
+			}
+			h1 {
+				font-size: 20px;
+				margin-bottom: 8px;
+			}
+			p {
+				margin: 6px 0 16px;
+				color: #475569;
+			}
+			section {
+				margin-top: 16px;
+				padding: 12px;
+				border: 1px solid #e2e8f0;
+				border-radius: 8px;
+			}
+			code {
+				font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+				font-size: 12px;
+				background: #f8fafc;
+				padding: 2px 4px;
+				border-radius: 4px;
+			}
+			.result {
+				white-space: pre-wrap;
+				font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+				font-size: 12px;
+				background: #f1f5f9;
+				padding: 8px;
+				border-radius: 6px;
+				margin-top: 8px;
+			}
+			.bad {
+				color: #b91c1c;
+			}
+			.good {
+				color: #0f766e;
+			}
+			.row {
+				display: flex;
+				gap: 8px;
+				margin-top: 8px;
+			}
+			input {
+				flex: 1;
+				padding: 8px;
+				border: 1px solid #cbd5f5;
+				border-radius: 6px;
+			}
+			button {
+				padding: 8px 12px;
+				border: 0;
+				border-radius: 6px;
+				background: #0f766e;
+				color: #fff;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>SQLite CORS / Range Probe</h1>
+		<p>Prueba CORS y soporte de Range con HEAD + GET bytes=0-0.</p>
+
+		<section>
+			<strong>URLs sugeridas</strong>
+			<ul>
+				<li><code id="url-release"></code></li>
+				<li><code id="url-raw"></code></li>
+				<li><code id="url-pages"></code></li>
+			</ul>
+		</section>
+
+		<section>
+			<strong>Probar URL</strong>
+			<div class="row">
+				<input id="customUrl" type="text" placeholder="Pega un URL..." />
+				<button id="run">Probar</button>
+			</div>
+			<div id="output" class="result"></div>
+		</section>
+
+		<script>
+			const urls = [
+				'https://github.com/openbancor/catalogmx/releases/download/sqlite-assets/mexico.sqlite3',
+				'https://raw.githubusercontent.com/openbancor/catalogmx/master/packages/shared-data/mexico.sqlite3',
+				'https://openbancor.github.io/catalogmx/data/mexico.sqlite3'
+			];
+
+			document.getElementById('url-release').textContent = urls[0];
+			document.getElementById('url-raw').textContent = urls[1];
+			document.getElementById('url-pages').textContent = urls[2];
+
+			const output = document.getElementById('output');
+			const input = document.getElementById('customUrl');
+			input.value = urls[0];
+
+			function headerMap(headers) {
+				const pick = [
+					'accept-ranges',
+					'content-range',
+					'content-length',
+					'content-encoding',
+					'access-control-allow-origin',
+					'access-control-expose-headers',
+					'etag',
+					'last-modified'
+				];
+				return pick.map((key) => `${key}: ${headers.get(key) ?? '(null)'}`).join('\n');
+			}
+
+			async function probe(url) {
+				const lines = [];
+				lines.push(`URL: ${url}`);
+
+				try {
+					const head = await fetch(url, { method: 'HEAD' });
+					lines.push(`HEAD status: ${head.status} ${head.statusText}`);
+					lines.push(headerMap(head.headers));
+				} catch (err) {
+					lines.push(`HEAD error: ${err}`);
+				}
+
+				try {
+					const range = await fetch(url, { headers: { Range: 'bytes=0-0' } });
+					lines.push(`RANGE status: ${range.status} ${range.statusText}`);
+					lines.push(headerMap(range.headers));
+					const buf = await range.arrayBuffer();
+					lines.push(`RANGE bytes: ${buf.byteLength}`);
+				} catch (err) {
+					lines.push(`RANGE error: ${err}`);
+				}
+
+				output.textContent = lines.join('\n');
+			}
+
+			document.getElementById('run').addEventListener('click', () => {
+				const url = input.value.trim();
+				if (url) probe(url);
+			});
+
+			probe(input.value);
+		</script>
+	</body>
+</html>
