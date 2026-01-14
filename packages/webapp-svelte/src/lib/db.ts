@@ -71,12 +71,26 @@ function parseContentRange(value: string | null): number | null {
 	return Number(match[1]);
 }
 
-async function getDatabaseLength(url: string): Promise<number> {
+type DatabaseMeta = {
+	length: number;
+	cacheBust?: string;
+};
+
+function sanitizeCacheBust(value: string | null): string | undefined {
+	if (!value) return undefined;
+	return value.replace(/[^a-zA-Z0-9._-]/g, '');
+}
+
+async function getDatabaseMeta(url: string): Promise<DatabaseMeta> {
 	try {
 		const rangeResponse = await fetch(url, { headers: { Range: 'bytes=0-0' } });
 		if (rangeResponse.ok) {
 			const total = parseContentRange(rangeResponse.headers.get('Content-Range'));
-			if (total) return total;
+			if (total) {
+				const etag = sanitizeCacheBust(rangeResponse.headers.get('ETag'));
+				const modified = sanitizeCacheBust(rangeResponse.headers.get('Last-Modified'));
+				return { length: total, cacheBust: etag ?? modified };
+			}
 		}
 	} catch {
 		// Fall through to HEAD check.
@@ -94,7 +108,9 @@ async function getDatabaseLength(url: string): Promise<number> {
 	if (!length) {
 		throw new Error('Database length not available from server headers.');
 	}
-	return Number(length);
+	const etag = sanitizeCacheBust(head.headers.get('ETag'));
+	const modified = sanitizeCacheBust(head.headers.get('Last-Modified'));
+	return { length: Number(length), cacheBust: etag ?? modified };
 }
 
 /**
@@ -102,8 +118,8 @@ async function getDatabaseLength(url: string): Promise<number> {
  */
 async function initDatabase(): Promise<SqliteWorker> {
 	const url = await resolveDatabaseUrl();
-	const databaseLengthBytes = await getDatabaseLength(url);
-	console.log('Opening database via httpvfs:', url);
+	const meta = await getDatabaseMeta(url);
+	console.log('Opening database via httpvfs (release):', url);
 	return createDbWorker(
 		[
 			{
@@ -112,7 +128,8 @@ async function initDatabase(): Promise<SqliteWorker> {
 					serverMode: 'full',
 					requestChunkSize: 4096,
 					url,
-					databaseLengthBytes
+					databaseLengthBytes: meta.length,
+					cacheBust: meta.cacheBust
 				}
 			}
 		],
