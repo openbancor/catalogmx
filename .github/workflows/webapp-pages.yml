@@ -7,6 +7,10 @@ on:
       - "packages/webapp-svelte/**"
       - "packages/shared-data/**"
       - ".github/workflows/webapp-pages.yml"
+  workflow_run:
+    workflows: ["Build and Publish SQLite Assets"]
+    types: [completed]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -19,10 +23,13 @@ concurrency:
 
 jobs:
   build:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -30,6 +37,30 @@ jobs:
           node-version: 20
           cache: npm
           cache-dependency-path: packages/webapp-svelte/package-lock.json
+
+      - name: Download latest SQLite release asset
+        run: |
+          echo "📥 Downloading mexico.sqlite3 from releases..."
+          RELEASE_URL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases | \
+            jq -r '[.[] | select(.assets[].name == "mexico.sqlite3")] | first | .assets[] | select(.name == "mexico.sqlite3") | .browser_download_url')
+
+          if [ -z "$RELEASE_URL" ] || [ "$RELEASE_URL" = "null" ]; then
+            echo "❌ No mexico.sqlite3 release asset found"
+            exit 1
+          fi
+
+          mkdir -p packages/webapp-svelte/static/data
+          curl -L -o packages/webapp-svelte/static/data/mexico.sqlite3 "$RELEASE_URL"
+          echo "✅ Downloaded mexico.sqlite3 from releases"
+
+      - name: Export SQLite metadata
+        run: |
+          DB_PATH="packages/webapp-svelte/static/data/mexico.sqlite3"
+          DB_LENGTH=$(stat -c %s "$DB_PATH")
+          DB_HASH=$(sha256sum "$DB_PATH" | awk '{print $1}')
+          echo "VITE_SQLITE_LENGTH=$DB_LENGTH" >> "$GITHUB_ENV"
+          echo "VITE_SQLITE_HASH=$DB_HASH" >> "$GITHUB_ENV"
+          echo "✅ SQLite metadata exported"
 
       - name: Install dependencies
         working-directory: packages/webapp-svelte

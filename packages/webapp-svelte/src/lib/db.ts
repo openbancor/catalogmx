@@ -29,40 +29,12 @@ type SqliteWorker = {
 let dbWorker: SqliteWorker | null = null;
 let dbPromise: Promise<SqliteWorker> | null = null;
 
-const DB_URL =
-	'https://github.com/openbancor/catalogmx/releases/download/sqlite-assets/mexico.sqlite3';
+const DB_URL = `${import.meta.env.BASE_URL}data/mexico.sqlite3`;
+const BUILD_DB_LENGTH = Number(import.meta.env.VITE_SQLITE_LENGTH || 0);
+const BUILD_DB_CACHE_BUST = sanitizeCacheBust(import.meta.env.VITE_SQLITE_HASH ?? null);
 
 const WORKER_URL = new URL('sql.js-httpvfs/dist/sqlite.worker.js', import.meta.url);
 const WASM_URL = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
-
-function getDatabaseUrls(): string[] {
-	return [DB_URL];
-}
-
-async function probeDatabaseUrl(url: string): Promise<boolean> {
-	try {
-		const head = await fetch(url, { method: 'HEAD' });
-		if (head.ok) return true;
-		if (head.status !== 405) return false;
-		const range = await fetch(url, { headers: { Range: 'bytes=0-0' } });
-		return range.ok;
-	} catch {
-		return false;
-	}
-}
-
-async function resolveDatabaseUrl(): Promise<string> {
-	const candidates = getDatabaseUrls();
-	let lastError: Error | null = null;
-
-	for (const url of candidates) {
-		const ok = await probeDatabaseUrl(url);
-		if (ok) return url;
-		lastError = new Error(`Failed to reach database: ${url}`);
-	}
-
-	throw lastError ?? new Error('Failed to fetch database');
-}
 
 function parseContentRange(value: string | null): number | null {
 	if (!value) return null;
@@ -117,9 +89,12 @@ async function getDatabaseMeta(url: string): Promise<DatabaseMeta> {
  * Initialize sql.js-httpvfs worker and attach database.
  */
 async function initDatabase(): Promise<SqliteWorker> {
-	const url = await resolveDatabaseUrl();
-	const meta = await getDatabaseMeta(url);
-	console.log('Opening database via httpvfs (release):', url);
+	const url = DB_URL;
+	const meta =
+		BUILD_DB_LENGTH > 0
+			? { length: BUILD_DB_LENGTH, cacheBust: BUILD_DB_CACHE_BUST }
+			: await getDatabaseMeta(url);
+	console.log('Opening database via httpvfs:', url);
 	return createDbWorker(
 		[
 			{
