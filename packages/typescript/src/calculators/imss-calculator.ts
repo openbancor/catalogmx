@@ -52,7 +52,7 @@ export interface Modalidad10Result {
 type CuotaBase = {
   descripcion: string;
   patron: number;
-  trabajador?: number;
+  trabajador: number;
   base: string;
   limite_inferior_uma?: number;
   limite_superior_uma?: number;
