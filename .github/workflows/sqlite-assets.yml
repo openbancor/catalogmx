@@ -6,6 +6,9 @@ on:
     paths:
       - "packages/shared-data/**"
       - ".github/workflows/sqlite-assets.yml"
+  workflow_run:
+    workflows: ["Update Dynamic Data (Daily)"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -13,16 +16,33 @@ permissions:
 
 jobs:
   build-and-publish:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Download latest dynamic SQLite release asset
+        run: |
+          echo "📥 Downloading mexico_dynamic.sqlite3 from releases..."
+          RELEASE_URL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | \
+            jq -r '.assets[] | select(.name == "mexico_dynamic.sqlite3") | .browser_download_url')
+
+          if [ -z "$RELEASE_URL" ] || [ "$RELEASE_URL" = "null" ]; then
+            echo "❌ No mexico_dynamic.sqlite3 asset found in latest release"
+            exit 1
+          fi
+
+          curl -L -o packages/shared-data/mexico_dynamic.sqlite3 "$RELEASE_URL"
+          echo "✅ Downloaded mexico_dynamic.sqlite3 from latest release"
 
       - name: Build unified SQLite database
         working-directory: packages/shared-data
