@@ -53,6 +53,36 @@ jobs:
           curl -L -o packages/webapp-svelte/static/data/mexico.sqlite3 "$RELEASE_URL"
           echo "✅ Downloaded mexico.sqlite3 from releases"
 
+      - name: Split SQLite into chunks
+        run: |
+          DB_PATH="packages/webapp-svelte/static/data/mexico.sqlite3"
+          CHUNK_SIZE=1048576
+          SUFFIX_LENGTH=4
+          python - <<'PY'
+          import os
+          from pathlib import Path
+
+          db_path = Path(os.environ["DB_PATH"])
+          chunk_size = int(os.environ["CHUNK_SIZE"])
+          suffix_length = int(os.environ["SUFFIX_LENGTH"])
+
+          count = 0
+          with db_path.open("rb") as handle:
+            while True:
+              chunk = handle.read(chunk_size)
+              if not chunk:
+                break
+              out_path = Path(f"{db_path}.{count:0{suffix_length}d}")
+              out_path.write_bytes(chunk)
+              count += 1
+
+          print(f"✅ Wrote {count} chunks to {db_path}.0000..")
+          PY
+        env:
+          DB_PATH: packages/webapp-svelte/static/data/mexico.sqlite3
+          CHUNK_SIZE: 1048576
+          SUFFIX_LENGTH: 4
+
       - name: Export SQLite metadata
         run: |
           DB_PATH="packages/webapp-svelte/static/data/mexico.sqlite3"
@@ -60,6 +90,8 @@ jobs:
           DB_HASH=$(sha256sum "$DB_PATH" | awk '{print $1}')
           echo "VITE_SQLITE_LENGTH=$DB_LENGTH" >> "$GITHUB_ENV"
           echo "VITE_SQLITE_HASH=$DB_HASH" >> "$GITHUB_ENV"
+          echo "VITE_SQLITE_CHUNK_SIZE=1048576" >> "$GITHUB_ENV"
+          echo "VITE_SQLITE_SUFFIX_LENGTH=4" >> "$GITHUB_ENV"
           echo "✅ SQLite metadata exported"
 
       - name: Install dependencies

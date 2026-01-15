@@ -32,8 +32,11 @@ let dbPromise: Promise<SqliteWorker> | null = null;
 
 const BASE_PATH = base.endsWith('/') ? base.slice(0, -1) : base;
 const DB_URL = `${BASE_PATH}/data/mexico.sqlite3`;
+const DB_URL_PREFIX = `${BASE_PATH}/data/mexico.sqlite3.`;
 const BUILD_DB_LENGTH = Number(import.meta.env.VITE_SQLITE_LENGTH || 0);
 const BUILD_DB_CACHE_BUST = sanitizeCacheBust(import.meta.env.VITE_SQLITE_HASH ?? null);
+const SERVER_CHUNK_SIZE = Number(import.meta.env.VITE_SQLITE_CHUNK_SIZE || 1048576);
+const SERVER_SUFFIX_LENGTH = Number(import.meta.env.VITE_SQLITE_SUFFIX_LENGTH || 4);
 
 const WORKER_URL = new URL('sql.js-httpvfs/dist/sqlite.worker.js', import.meta.url);
 const WASM_URL = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
@@ -96,7 +99,29 @@ async function initDatabase(): Promise<SqliteWorker> {
 		BUILD_DB_LENGTH > 0
 			? { length: BUILD_DB_LENGTH, cacheBust: BUILD_DB_CACHE_BUST }
 			: await getDatabaseMeta(url);
-	console.log('Opening database via httpvfs:', url);
+	if (BUILD_DB_LENGTH > 0) {
+		console.log('Opening database via httpvfs (chunked):', url);
+		return createDbWorker(
+			[
+				{
+					from: 'inline',
+					config: {
+						serverMode: 'chunked',
+						requestChunkSize: 4096,
+						serverChunkSize: SERVER_CHUNK_SIZE,
+						urlPrefix: DB_URL_PREFIX,
+						suffixLength: SERVER_SUFFIX_LENGTH,
+						databaseLengthBytes: meta.length,
+						cacheBust: meta.cacheBust
+					}
+				}
+			],
+			WORKER_URL.toString(),
+			WASM_URL.toString()
+		) as Promise<SqliteWorker>;
+	}
+
+	console.log('Opening database via httpvfs (full):', url);
 	return createDbWorker(
 		[
 			{
