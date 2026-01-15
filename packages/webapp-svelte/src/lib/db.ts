@@ -2,6 +2,7 @@
  * SQLite database service using sql.js-httpvfs.
  * Streams only needed pages via HTTP range requests.
  */
+import { base } from '$app/paths';
 import { createDbWorker } from 'sql.js-httpvfs';
 
 type SqliteParam = string | number | null;
@@ -29,7 +30,8 @@ type SqliteWorker = {
 let dbWorker: SqliteWorker | null = null;
 let dbPromise: Promise<SqliteWorker> | null = null;
 
-const DB_URL = `${import.meta.env.BASE_URL}data/mexico.sqlite3`;
+const BASE_PATH = base.endsWith('/') ? base.slice(0, -1) : base;
+const DB_URL = `${BASE_PATH}/data/mexico.sqlite3`;
 const BUILD_DB_LENGTH = Number(import.meta.env.VITE_SQLITE_LENGTH || 0);
 const BUILD_DB_CACHE_BUST = sanitizeCacheBust(import.meta.env.VITE_SQLITE_HASH ?? null);
 
