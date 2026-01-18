@@ -70,6 +70,14 @@ cp "${ROOT_DIR}/packages/shared-data/banxico"/*.json "${ROOT_DIR}/packages/webap
   echo "⚠️  Warning: Failed to copy some Banxico JSON files, continuing..."
 }
 
+step "Sync mexico.sqlite3 to webapp-svelte static assets"
+WEBAPP_SVELTE_DATA="${ROOT_DIR}/packages/webapp-svelte/static/data"
+if [ -d "$WEBAPP_SVELTE_DATA" ]; then
+  cp "${ROOT_DIR}/packages/shared-data/mexico.sqlite3" "${WEBAPP_SVELTE_DATA}/mexico.sqlite3"
+else
+  echo "⚠️  Warning: webapp-svelte static/data not found, skipping..."
+fi
+
 step "Close WAL mode for browser compatibility (SQLite WASM / sql.js)"
 MEXICO_DB="${ROOT_DIR}/packages/shared-data/mexico.sqlite3"
 if [ -f "$MEXICO_DB" ]; then
