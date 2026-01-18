@@ -38,7 +38,6 @@ const BUILD_DB_LENGTH = Number(import.meta.env.VITE_SQLITE_LENGTH || 0);
 const BUILD_DB_CACHE_BUST = sanitizeCacheBust(import.meta.env.VITE_SQLITE_HASH ?? null);
 const SERVER_CHUNK_SIZE = Number(import.meta.env.VITE_SQLITE_CHUNK_SIZE || 1048576);
 const SERVER_SUFFIX_LENGTH = Number(import.meta.env.VITE_SQLITE_SUFFIX_LENGTH || 4);
-const FORCE_FULL = String(import.meta.env.VITE_SQLITE_FORCE_FULL || '') === '1';
 
 const WORKER_URL = new URL('sql.js-httpvfs/dist/sqlite.worker.js', import.meta.url);
 const WASM_URL = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
@@ -129,7 +128,8 @@ async function initDatabase(): Promise<SqliteWorker> {
 async function initDatabaseFromMeta(meta: DatabaseMeta): Promise<SqliteWorker> {
 	const url = DB_URL;
 
-	if (BUILD_DB_LENGTH > 0 && !FORCE_FULL) {
+	const useChunked = meta.length > 0;
+	if (useChunked) {
 		console.log('Opening database via httpvfs (chunked):', url);
 		return createDbWorker(
 			[

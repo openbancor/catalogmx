@@ -92,7 +92,6 @@ jobs:
           echo "VITE_SQLITE_HASH=$DB_HASH" >> "$GITHUB_ENV"
           echo "VITE_SQLITE_CHUNK_SIZE=1048576" >> "$GITHUB_ENV"
           echo "VITE_SQLITE_SUFFIX_LENGTH=4" >> "$GITHUB_ENV"
-          echo "VITE_SQLITE_FORCE_FULL=1" >> "$GITHUB_ENV"
           cat > packages/webapp-svelte/static/data/mexico.sqlite3.meta.json << EOF
           {"length": $DB_LENGTH, "cacheBust": "$DB_HASH"}
           EOF
