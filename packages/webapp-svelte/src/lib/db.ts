@@ -109,10 +109,26 @@ async function getDatabaseMeta(url: string): Promise<DatabaseMeta> {
  */
 async function initDatabase(): Promise<SqliteWorker> {
 	const url = DB_URL;
-	const meta =
+	const envMeta =
 		BUILD_DB_LENGTH > 0
 			? { length: BUILD_DB_LENGTH, cacheBust: BUILD_DB_CACHE_BUST }
-			: (await getBuildMeta()) ?? (await getDatabaseMeta(url));
+			: null;
+	const fileMeta = await getBuildMeta();
+	const meta = envMeta ?? fileMeta;
+
+	if (!meta) {
+		if (import.meta.env.DEV) {
+			console.warn('SQLite metadata missing; falling back to HTTP headers.');
+			return initDatabaseFromMeta(await getDatabaseMeta(url));
+		}
+		throw new Error('SQLite metadata missing. Ensure mexico.sqlite3.meta.json is deployed.');
+	}
+	return initDatabaseFromMeta(meta);
+}
+
+async function initDatabaseFromMeta(meta: DatabaseMeta): Promise<SqliteWorker> {
+	const url = DB_URL;
+
 	if (BUILD_DB_LENGTH > 0 && !FORCE_FULL) {
 		console.log('Opening database via httpvfs (chunked):', url);
 		return createDbWorker(
