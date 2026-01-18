@@ -335,6 +335,33 @@ def normalize_clave_prod_serv_schema(conn: sqlite3.Connection) -> None:
     print("[build] Normalized clave_prod_serv schema to snake_case")
 
 
+def create_legacy_views(conn: sqlite3.Connection) -> None:
+    """Create compatibility views for legacy table/column names."""
+    table_exists = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='clave_prod_serv'"
+    ).fetchone()
+    if not table_exists:
+        return
+
+    conn.execute("DROP VIEW IF EXISTS c_ClaveProdServ")
+    conn.execute(
+        """
+        CREATE VIEW c_ClaveProdServ AS
+        SELECT
+            clave AS c_ClaveProdServ,
+            descripcion AS Descripcion,
+            incluye_iva AS IncluirIVAtrasladado,
+            incluye_ieps AS IncluirIEPStrasladado,
+            complemento AS ComplementoQueDebeIncluir,
+            fecha_inicio_vigencia AS FechaInicioVigencia,
+            fecha_fin_vigencia AS FechaFinVigencia,
+            estimulo_franja_fronteriza AS EstimuloFranjaFronteriza,
+            palabras_similares AS PalabrasSimilares
+        FROM clave_prod_serv
+        """
+    )
+
+
 def infer_column_types(records: List[dict], columns: Sequence[str]) -> dict[str, str]:
     def infer(values: Iterable[object]) -> str:
         column_type = "TEXT"
@@ -472,6 +499,7 @@ def create_fts_indexes(conn: sqlite3.Connection) -> None:
 def finalize_database(conn: sqlite3.Connection) -> None:
     create_indexes(conn)
     create_fts_indexes(conn)
+    create_legacy_views(conn)
     conn.commit()
     conn.execute("ANALYZE;")
     
