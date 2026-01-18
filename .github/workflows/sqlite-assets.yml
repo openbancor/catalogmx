@@ -91,12 +91,6 @@ jobs:
         run: |
           cd packages/shared-data
 
-          # Delete existing release and tag if exists
-          gh release delete sqlite-assets --yes --cleanup-tag 2>/dev/null || true
-
-          # Wait for GitHub to process deletion
-          sleep 5
-
           # Create release notes file
           cat > release_notes.md << 'EOF'
           # Unified SQLite Databases for catalogmx
@@ -122,12 +116,22 @@ jobs:
           echo "Files to upload:"
           ls -lh mexico.sqlite3 sqlite/*.db sqlite/*.sqlite3 2>/dev/null || true
 
-          # Create new release with assets
-          gh release create sqlite-assets \
-            --repo "${GITHUB_REPOSITORY}" \
-            --title "SQLite Assets (Auto-updated)" \
-            --notes-file release_notes.md \
-            mexico.sqlite3
+          # Create or update release with assets
+          if gh release view sqlite-assets --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            echo "🔁 sqlite-assets release exists, updating assets..."
+            gh release edit sqlite-assets \
+              --repo "${GITHUB_REPOSITORY}" \
+              --title "SQLite Assets (Auto-updated)" \
+              --notes-file release_notes.md
+            gh release upload sqlite-assets mexico.sqlite3 --repo "${GITHUB_REPOSITORY}" --clobber
+          else
+            echo "🆕 Creating sqlite-assets release..."
+            gh release create sqlite-assets \
+              --repo "${GITHUB_REPOSITORY}" \
+              --title "SQLite Assets (Auto-updated)" \
+              --notes-file release_notes.md \
+              mexico.sqlite3
+          fi
 
           # Upload additional assets separately (more reliable)
           for f in sqlite/*.db sqlite/*.sqlite3; do
@@ -136,7 +140,7 @@ jobs:
                 continue
               fi
               echo "Uploading $f..."
-              gh release upload sqlite-assets "$f" --clobber || true
+              gh release upload sqlite-assets "$f" --repo "${GITHUB_REPOSITORY}" --clobber || true
             fi
           done
 
