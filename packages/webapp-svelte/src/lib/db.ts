@@ -4,6 +4,7 @@
  */
 import { base } from '$app/paths';
 import { createDbWorker } from 'sql.js-httpvfs';
+import sqlWasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
 
 type SqliteParam = string | number | null;
 
@@ -20,6 +21,25 @@ type SqliteDatabase = {
 	prepare: (sql: string) => Promise<SqliteStatement>;
 };
 
+type SqlJsStatement = {
+	bind: (params?: SqliteParam[]) => void;
+	step: () => boolean;
+	getAsObject: () => Record<string, unknown>;
+	free: () => void;
+};
+
+type SqlJsDatabase = {
+	exec: (sql: string) => { columns: string[]; values: unknown[][] }[];
+	prepare: (sql: string) => SqlJsStatement;
+	close: () => void;
+};
+
+type SqlJsStatic = {
+	Database: new (data?: ArrayLike<number> | null) => SqlJsDatabase;
+};
+
+type InitSqlJsFn = (config?: { locateFile?: (file: string) => string }) => Promise<SqlJsStatic>;
+
 type SqliteWorker = {
 	db: SqliteDatabase;
 	worker: { bytesRead: number | Promise<number> };
@@ -29,6 +49,9 @@ type SqliteWorker = {
 // Database singleton
 let dbWorker: SqliteWorker | null = null;
 let dbPromise: Promise<SqliteWorker> | null = null;
+let sqlJsDb: SqlJsDatabase | null = null;
+let sqlJsPromise: Promise<SqlJsDatabase> | null = null;
+let forceSqlJs = false;
 
 const BASE_PATH = base.endsWith('/') ? base.slice(0, -1) : base;
 const DB_URL = `${BASE_PATH}/data/mexico.sqlite3`;
@@ -170,6 +193,43 @@ async function initDatabaseFromMeta(meta: DatabaseMeta): Promise<SqliteWorker> {
 	) as Promise<SqliteWorker>;
 }
 
+async function initSqlJsDatabase(): Promise<SqlJsDatabase> {
+	const baseUrl = BASE_PATH ? `${BASE_PATH}` : '';
+	const response = await fetch(`${baseUrl}/data/mexico.sqlite3`);
+	if (!response.ok) {
+		throw new Error(`Failed to load mexico.sqlite3: ${response.status} ${response.statusText}`);
+	}
+	const buffer = await response.arrayBuffer();
+	if (buffer.byteLength === 0) {
+		throw new Error('mexico.sqlite3 is empty or corrupt.');
+	}
+
+	const module = await import('sql.js/dist/sql-wasm.js');
+	const initSqlJs =
+		(module as { default?: InitSqlJsFn }).default ??
+		((module as unknown) as InitSqlJsFn);
+
+	if (typeof initSqlJs !== 'function') {
+		throw new Error('Failed to load sql.js initializer.');
+	}
+
+	const sql = await initSqlJs({
+		locateFile: (file: string) => (file === 'sql-wasm.wasm' ? sqlWasmUrl : file),
+	});
+	return new sql.Database(new Uint8Array(buffer));
+}
+
+async function getSqlJsDatabase(): Promise<SqlJsDatabase> {
+	if (sqlJsDb) return sqlJsDb;
+	if (!sqlJsPromise) {
+		sqlJsPromise = initSqlJsDatabase().then((db) => {
+			sqlJsDb = db;
+			return db;
+		});
+	}
+	return sqlJsPromise;
+}
+
 /**
  * Get database instance (lazy loaded, singleton)
  */
@@ -194,12 +254,19 @@ export async function getDatabase(): Promise<SqliteDatabase> {
 	return worker.db;
 }
 
-/**
- * Execute a query and return results as array of objects
- */
-export async function query<T = Record<string, unknown>>(
+function shouldFallback(error: unknown): boolean {
+	if (!(error instanceof Error)) return false;
+	const message = error.message.toLowerCase();
+	return (
+		message.includes('doxhr failed') ||
+		message.includes('length of the file not known') ||
+		message.includes('sqlite metadata missing')
+	);
+}
+
+async function queryHttpvfs<T = Record<string, unknown>>(
 	sql: string,
-	params: SqliteParam[] = []
+	params: SqliteParam[]
 ): Promise<T[]> {
 	const database = await getDatabase();
 	const stmt = await database.prepare(sql);
@@ -213,8 +280,44 @@ export async function query<T = Record<string, unknown>>(
 		results.push(row);
 	}
 	await stmt.free();
-
 	return results;
+}
+
+async function querySqlJs<T = Record<string, unknown>>(
+	sql: string,
+	params: SqliteParam[]
+): Promise<T[]> {
+	const db = await getSqlJsDatabase();
+	const stmt = db.prepare(sql);
+	if (params.length) {
+		stmt.bind(params);
+	}
+
+	const results: T[] = [];
+	while (stmt.step()) {
+		results.push(stmt.getAsObject() as T);
+	}
+	stmt.free();
+	return results;
+}
+
+/**
+ * Execute a query and return results as array of objects
+ */
+export async function query<T = Record<string, unknown>>(
+	sql: string,
+	params: SqliteParam[] = []
+): Promise<T[]> {
+	if (!forceSqlJs) {
+		try {
+			return await queryHttpvfs<T>(sql, params);
+		} catch (error) {
+			if (!shouldFallback(error)) throw error;
+			console.warn('httpvfs failed, falling back to sql.js:', error);
+			forceSqlJs = true;
+		}
+	}
+	return querySqlJs<T>(sql, params);
 }
 
 /**

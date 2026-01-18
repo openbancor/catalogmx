@@ -32,6 +32,7 @@
 		"catalogmx": "file:../typescript",
 		"clsx": "^2.1.1",
 		"lucide-svelte": "^0.562.0",
+		"sql.js": "^1.13.0",
 		"sql.js-httpvfs": "^0.8.12",
 		"tailwind-merge": "^3.4.0",
 		"tailwind-variants": "^3.2.2"
