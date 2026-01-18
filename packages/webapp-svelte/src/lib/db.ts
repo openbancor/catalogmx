@@ -33,6 +33,7 @@ let dbPromise: Promise<SqliteWorker> | null = null;
 const BASE_PATH = base.endsWith('/') ? base.slice(0, -1) : base;
 const DB_URL = `${BASE_PATH}/data/mexico.sqlite3`;
 const DB_URL_PREFIX = `${BASE_PATH}/data/mexico.sqlite3.`;
+const META_URL = `${BASE_PATH}/data/mexico.sqlite3.meta.json`;
 const BUILD_DB_LENGTH = Number(import.meta.env.VITE_SQLITE_LENGTH || 0);
 const BUILD_DB_CACHE_BUST = sanitizeCacheBust(import.meta.env.VITE_SQLITE_HASH ?? null);
 const SERVER_CHUNK_SIZE = Number(import.meta.env.VITE_SQLITE_CHUNK_SIZE || 1048576);
@@ -57,6 +58,18 @@ type DatabaseMeta = {
 function sanitizeCacheBust(value: string | null): string | undefined {
 	if (!value) return undefined;
 	return value.replace(/[^a-zA-Z0-9._-]/g, '');
+}
+
+async function getBuildMeta(): Promise<DatabaseMeta | null> {
+	try {
+		const response = await fetch(META_URL, { cache: 'no-store' });
+		if (!response.ok) return null;
+		const data = (await response.json()) as { length?: number; cacheBust?: string };
+		if (!data.length) return null;
+		return { length: data.length, cacheBust: sanitizeCacheBust(data.cacheBust ?? null) };
+	} catch {
+		return null;
+	}
 }
 
 async function getDatabaseMeta(url: string): Promise<DatabaseMeta> {
@@ -99,7 +112,7 @@ async function initDatabase(): Promise<SqliteWorker> {
 	const meta =
 		BUILD_DB_LENGTH > 0
 			? { length: BUILD_DB_LENGTH, cacheBust: BUILD_DB_CACHE_BUST }
-			: await getDatabaseMeta(url);
+			: (await getBuildMeta()) ?? (await getDatabaseMeta(url));
 	if (BUILD_DB_LENGTH > 0 && !FORCE_FULL) {
 		console.log('Opening database via httpvfs (chunked):', url);
 		return createDbWorker(
