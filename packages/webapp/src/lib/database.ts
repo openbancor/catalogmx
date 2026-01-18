@@ -22,6 +22,7 @@ interface SqlJsStatic {
 }
 
 import sqlWasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
+import { getBaseUrl } from '@/lib/base-url';
 
 type InitSqlJsFn = (config?: { locateFile?: (file: string) => string }) => Promise<SqlJsStatic>;
 
@@ -68,8 +69,7 @@ async function initSQL(): Promise<SqlJsStatic> {
 export async function loadDatabase(name: string): Promise<SqlJsDatabase> {
   const trimmedName = name.trim();
   const normalizedKey = trimmedName.replace(/\.(db|sqlite3?|sqlite)$/i, '');
-  const baseUrl = (import.meta as any).env?.BASE_URL || '/';
-  const base = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  const base = getBaseUrl();
 
   if (databases.has(normalizedKey)) {
     return databases.get(normalizedKey)!;
@@ -488,7 +488,8 @@ export async function queryJsonArrayTable<T extends Record<string, unknown>>(
   } = {}
 ): Promise<PaginatedResult<T>> {
   // Load JSON file directly from public/data directory
-  const response = await fetch(`/data/${jsonPath}`);
+  const base = getBaseUrl();
+  const response = await fetch(`${base}/data/${jsonPath}`);
   if (!response.ok) {
     throw new Error(`Failed to load JSON file: ${jsonPath}`);
   }

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Calculator, DollarSign, Calendar } from 'lucide-react';
+import { getBaseUrl } from '@/lib/base-url';
 
 interface SalaryRecord {
   fecha: string;
@@ -29,7 +30,8 @@ export default function MinimumWagePage() {
   useEffect(() => {
     const loadSalaryData = async () => {
       try {
-        const response = await fetch('/data/banxico/salarios_minimos.json');
+        const base = getBaseUrl();
+        const response = await fetch(`${base}/data/banxico/salarios_minimos.json`);
         const data: SalaryRecord[] = await response.json();
         setAllSalaries(data);
 

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRightLeft, Calculator, TrendingUp } from 'lucide-react';
+import { getBaseUrl } from '@/lib/base-url';
 
 interface ExchangeRate {
   fecha: string;
@@ -23,7 +24,8 @@ export default function ExchangeRatePage() {
   useEffect(() => {
     const loadCurrentRate = async () => {
       try {
-        const response = await fetch('/data/banxico/tipo_cambio_usd.json');
+        const base = getBaseUrl();
+        const response = await fetch(`${base}/data/banxico/tipo_cambio_usd.json`);
         const data: ExchangeRate[] = await response.json();
 
         // Get the most recent rate

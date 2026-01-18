@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { getBaseUrl } from '@/lib/base-url';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,7 +28,8 @@ export default function InflationPage() {
   useEffect(() => {
     const loadInflationData = async () => {
       try {
-        const response = await fetch('/data/banxico/inflacion_anual.json');
+        const base = getBaseUrl();
+        const response = await fetch(`${base}/data/banxico/inflacion_anual.json`);
         const data: InflationRecord[] = await response.json();
         setInflationData(data);
 
