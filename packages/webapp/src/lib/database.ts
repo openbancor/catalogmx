@@ -401,15 +401,15 @@ export interface Localidad {
 }
 
 export interface ProductoServicio {
-  id: string;
+  clave: string;
   descripcion: string;
-  incluirIVATrasladado: string;
-  incluirIEPSTrasladado: string;
-  complementoQueDebeIncluir: string;
-  fechaInicioVigencia: string;
-  fechaFinVigencia: string;
-  estimuloFranjaFronteriza: string;
-  palabrasSimilares: string;
+  incluye_iva: number | null;
+  incluye_ieps: number | null;
+  complemento: string | null;
+  fecha_inicio_vigencia: string | null;
+  fecha_fin_vigencia: string | null;
+  estimulo_franja_fronteriza: string | null;
+  palabras_similares: string | null;
 }
 
 export async function searchPostalCodes(
@@ -449,8 +449,8 @@ export async function searchProductos(
     page,
     pageSize,
     search,
-    searchColumns: ['id', 'descripcion', 'palabrasSimilares'],
-    orderBy: 'id'
+    searchColumns: ['clave', 'descripcion', 'palabras_similares'],
+    orderBy: 'clave'
   });
 }
 
