@@ -33,8 +33,14 @@ jobs:
       - name: Download latest dynamic SQLite release asset
         run: |
           echo "📥 Downloading mexico_dynamic.sqlite3 from releases..."
-          RELEASE_URL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | \
+          RELEASE_URL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/tags/latest | \
             jq -r '.assets[] | select(.name == "mexico_dynamic.sqlite3") | .browser_download_url')
+
+          if [ -z "$RELEASE_URL" ] || [ "$RELEASE_URL" = "null" ]; then
+            echo "⚠️  Not found in tag 'latest', falling back to releases/latest..."
+            RELEASE_URL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | \
+              jq -r '.assets[] | select(.name == "mexico_dynamic.sqlite3") | .browser_download_url')
+          fi
 
           if [ -z "$RELEASE_URL" ] || [ "$RELEASE_URL" = "null" ]; then
             echo "❌ No mexico_dynamic.sqlite3 asset found in latest release"
