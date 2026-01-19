@@ -60,6 +60,16 @@
 		return str.replace(/'/g, "''");
 	}
 
+	function removeAccents(str: string): string {
+		// Normalize and remove accents
+		return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+	}
+
+	// SQL expression to normalize a column (remove accents)
+	function sqlNormalize(column: string): string {
+		return `REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(${column}),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'),'ü','u'),'ñ','n'),'Á','a'),'É','e'),'Í','i'),'Ó','o'),'Ú','u')`;
+	}
+
 	async function loadData() {
 		try {
 			loading = true;
@@ -69,15 +79,19 @@
 			const offsetNum = Number((currentPage - 1) * pageSize);
 
 			if (searchTerm.trim()) {
-				// Search mode - use inline values to avoid sql.js-httpvfs parameter issues
-				const searchEscaped = escapeSQL(searchTerm.toLowerCase());
-				const searchPattern = `%${searchEscaped}%`;
+				// Search mode - normalize to remove accents for accent-insensitive search
+				const searchNormalized = removeAccents(escapeSQL(searchTerm.toLowerCase()));
+				const searchPattern = `%${searchNormalized}%`;
+
+				// SQL expressions for normalized columns
+				const normClave = sqlNormalize('c_ClaveProdServ');
+				const normDesc = sqlNormalize('Descripcion');
 
 				// Get count for search
 				const countResult = await query<{ count: number }>(
 					`SELECT COUNT(*) as count FROM c_ClaveProdServ
-					 WHERE LOWER(c_ClaveProdServ) LIKE '${searchPattern}'
-					    OR LOWER(Descripcion) LIKE '${searchPattern}'`
+					 WHERE ${normClave} LIKE '${searchPattern}'
+					    OR ${normDesc} LIKE '${searchPattern}'`
 				);
 				totalCount = countResult[0]?.count || 0;
 
@@ -85,8 +99,8 @@
 				data = await query<ClaveProdServ>(
 					`SELECT c_ClaveProdServ, Descripcion, IncluirIVAtrasladado, IncluirIEPStrasladado
 					 FROM c_ClaveProdServ
-					 WHERE LOWER(c_ClaveProdServ) LIKE '${searchPattern}'
-					    OR LOWER(Descripcion) LIKE '${searchPattern}'
+					 WHERE ${normClave} LIKE '${searchPattern}'
+					    OR ${normDesc} LIKE '${searchPattern}'
 					 ORDER BY c_ClaveProdServ
 					 LIMIT ${limitNum} OFFSET ${offsetNum}`
 				);
