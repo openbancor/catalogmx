@@ -51,21 +51,51 @@ jobs:
           curl -L -o packages/webapp-svelte/static/data/mexico.sqlite3 "$RELEASE_URL"
           echo "✅ Downloaded mexico.sqlite3"
 
+      - name: Split SQLite into chunks
+        run: |
+          DB_PATH="packages/webapp-svelte/static/data/mexico.sqlite3"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          db_path = Path(os.environ.get("DB_PATH", "packages/webapp-svelte/static/data/mexico.sqlite3"))
+          chunk_size = 1048576  # 1MB chunks
+          suffix_length = 4
+
+          count = 0
+          with db_path.open("rb") as handle:
+              while True:
+                  chunk = handle.read(chunk_size)
+                  if not chunk:
+                      break
+                  out_path = Path(f"{db_path}.{count:0{suffix_length}d}")
+                  out_path.write_bytes(chunk)
+                  count += 1
+
+          print(f"✅ Created {count} chunks from {db_path}")
+          PY
+        env:
+          DB_PATH: packages/webapp-svelte/static/data/mexico.sqlite3
+
       - name: Generate SQLite metadata
         run: |
           DB_PATH="packages/webapp-svelte/static/data/mexico.sqlite3"
           DB_LENGTH=$(stat -c %s "$DB_PATH")
           DB_HASH=$(sha256sum "$DB_PATH" | awk '{print $1}')
 
-          # Export for Vite build
+          # Export for Vite build (chunked mode)
           echo "VITE_SQLITE_LENGTH=$DB_LENGTH" >> "$GITHUB_ENV"
           echo "VITE_SQLITE_HASH=$DB_HASH" >> "$GITHUB_ENV"
-          echo "VITE_SQLITE_MODE=full" >> "$GITHUB_ENV"
+          echo "VITE_SQLITE_CHUNK_SIZE=1048576" >> "$GITHUB_ENV"
+          echo "VITE_SQLITE_SUFFIX_LENGTH=4" >> "$GITHUB_ENV"
 
           # Create metadata file
           cat > packages/webapp-svelte/static/data/mexico.sqlite3.meta.json << EOF
           {"length": $DB_LENGTH, "cacheBust": "$DB_HASH"}
           EOF
+
+          # Remove original large file (keep only chunks)
+          rm "$DB_PATH"
 
           echo "✅ SQLite metadata: $DB_LENGTH bytes, hash: ${DB_HASH:0:12}..."
 
@@ -84,4 +114,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy packages/webapp-svelte/build --project-name=catalogmx
+          command: pages deploy packages/webapp-svelte/build --project-name=catalogmx --commit-dirty=true
