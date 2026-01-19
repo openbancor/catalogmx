@@ -61,6 +61,8 @@ const BUILD_DB_LENGTH = Number(import.meta.env.VITE_SQLITE_LENGTH || 0);
 const BUILD_DB_CACHE_BUST = sanitizeCacheBust(import.meta.env.VITE_SQLITE_HASH ?? null);
 const SERVER_CHUNK_SIZE = Number(import.meta.env.VITE_SQLITE_CHUNK_SIZE || 1048576);
 const SERVER_SUFFIX_LENGTH = Number(import.meta.env.VITE_SQLITE_SUFFIX_LENGTH || 4);
+// Use 'full' for single file with Range requests (Cloudflare), 'chunked' for split files (GitHub Pages)
+const SQLITE_MODE = (import.meta.env.VITE_SQLITE_MODE as string) || 'chunked';
 
 const WORKER_URL = new URL('sql.js-httpvfs/dist/sqlite.worker.js', import.meta.url);
 const WASM_URL = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
@@ -151,19 +153,18 @@ async function initDatabase(): Promise<SqliteWorker> {
 async function initDatabaseFromMeta(meta: DatabaseMeta): Promise<SqliteWorker> {
 	const url = DB_URL;
 
-	const useChunked = meta.length > 0;
-	if (useChunked) {
-		console.log('Opening database via httpvfs (chunked):', url);
+	// Use 'full' mode for single file with Range requests (Cloudflare)
+	// Use 'chunked' mode for split files (GitHub Pages)
+	if (SQLITE_MODE === 'full') {
+		console.log('Opening database via httpvfs (full - single file):', url);
 		return createDbWorker(
 			[
 				{
 					from: 'inline',
 					config: {
-						serverMode: 'chunked',
+						serverMode: 'full',
 						requestChunkSize: 4096,
-						serverChunkSize: SERVER_CHUNK_SIZE,
-						urlPrefix: DB_URL_PREFIX,
-						suffixLength: SERVER_SUFFIX_LENGTH,
+						url,
 						databaseLengthBytes: meta.length,
 						cacheBust: meta.cacheBust
 					}
@@ -174,15 +175,17 @@ async function initDatabaseFromMeta(meta: DatabaseMeta): Promise<SqliteWorker> {
 		) as Promise<SqliteWorker>;
 	}
 
-	console.log('Opening database via httpvfs (full):', url);
+	console.log('Opening database via httpvfs (chunked):', url);
 	return createDbWorker(
 		[
 			{
 				from: 'inline',
 				config: {
-					serverMode: 'full',
+					serverMode: 'chunked',
 					requestChunkSize: 4096,
-					url,
+					serverChunkSize: SERVER_CHUNK_SIZE,
+					urlPrefix: DB_URL_PREFIX,
+					suffixLength: SERVER_SUFFIX_LENGTH,
 					databaseLengthBytes: meta.length,
 					cacheBust: meta.cacheBust
 				}

@@ -1,4 +1,4 @@
-name: Deploy Webapp to GitHub Pages
+name: Deploy to Cloudflare Pages
 
 on:
   push:
@@ -6,25 +6,23 @@ on:
     paths:
       - "packages/webapp-svelte/**"
       - "packages/shared-data/**"
-      - ".github/workflows/webapp-pages.yml"
+      - ".github/workflows/cloudflare-pages.yml"
   workflow_run:
     workflows: ["Build and Publish SQLite Assets"]
     types: [completed]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
-  group: "pages-webapp"
+  group: "cloudflare-pages"
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,7 +36,7 @@ jobs:
           cache: npm
           cache-dependency-path: packages/webapp-svelte/package-lock.json
 
-      - name: Download latest SQLite release asset
+      - name: Download SQLite from releases
         run: |
           echo "📥 Downloading mexico.sqlite3 from releases..."
           RELEASE_URL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases | \
@@ -51,51 +49,25 @@ jobs:
 
           mkdir -p packages/webapp-svelte/static/data
           curl -L -o packages/webapp-svelte/static/data/mexico.sqlite3 "$RELEASE_URL"
-          echo "✅ Downloaded mexico.sqlite3 from releases"
+          echo "✅ Downloaded mexico.sqlite3"
 
-      - name: Split SQLite into chunks
-        run: |
-          DB_PATH="packages/webapp-svelte/static/data/mexico.sqlite3"
-          CHUNK_SIZE=1048576
-          SUFFIX_LENGTH=4
-          python - <<'PY'
-          import os
-          from pathlib import Path
-
-          db_path = Path(os.environ["DB_PATH"])
-          chunk_size = int(os.environ["CHUNK_SIZE"])
-          suffix_length = int(os.environ["SUFFIX_LENGTH"])
-
-          count = 0
-          with db_path.open("rb") as handle:
-            while True:
-              chunk = handle.read(chunk_size)
-              if not chunk:
-                break
-              out_path = Path(f"{db_path}.{count:0{suffix_length}d}")
-              out_path.write_bytes(chunk)
-              count += 1
-
-          print(f"✅ Wrote {count} chunks to {db_path}.0000..")
-          PY
-        env:
-          DB_PATH: packages/webapp-svelte/static/data/mexico.sqlite3
-          CHUNK_SIZE: 1048576
-          SUFFIX_LENGTH: 4
-
-      - name: Export SQLite metadata
+      - name: Generate SQLite metadata
         run: |
           DB_PATH="packages/webapp-svelte/static/data/mexico.sqlite3"
           DB_LENGTH=$(stat -c %s "$DB_PATH")
           DB_HASH=$(sha256sum "$DB_PATH" | awk '{print $1}')
+
+          # Export for Vite build
           echo "VITE_SQLITE_LENGTH=$DB_LENGTH" >> "$GITHUB_ENV"
           echo "VITE_SQLITE_HASH=$DB_HASH" >> "$GITHUB_ENV"
-          echo "VITE_SQLITE_CHUNK_SIZE=1048576" >> "$GITHUB_ENV"
-          echo "VITE_SQLITE_SUFFIX_LENGTH=4" >> "$GITHUB_ENV"
+          echo "VITE_SQLITE_MODE=full" >> "$GITHUB_ENV"
+
+          # Create metadata file
           cat > packages/webapp-svelte/static/data/mexico.sqlite3.meta.json << EOF
           {"length": $DB_LENGTH, "cacheBust": "$DB_HASH"}
           EOF
-          echo "✅ SQLite metadata exported"
+
+          echo "✅ SQLite metadata: $DB_LENGTH bytes, hash: ${DB_HASH:0:12}..."
 
       - name: Install dependencies
         working-directory: packages/webapp-svelte
@@ -105,20 +77,11 @@ jobs:
         working-directory: packages/webapp-svelte
         run: npm run build
         env:
-          DEPLOY_TARGET: github-pages
+          DEPLOY_TARGET: cloudflare-pages
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
         with:
-          path: packages/webapp-svelte/build
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy packages/webapp-svelte/build --project-name=catalogmx

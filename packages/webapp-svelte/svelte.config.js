@@ -18,8 +18,8 @@ const config = {
 			strict: false, // Allow missing pages during prerender
 		}),
 		paths: {
-			// For GitHub Pages subdirectory deployment
-			base: process.env.NODE_ENV === 'production' ? '/catalogmx' : '',
+			// GitHub Pages needs /catalogmx base, Cloudflare Pages uses root
+			base: process.env.DEPLOY_TARGET === 'github-pages' ? '/catalogmx' : '',
 		},
 		prerender: {
 			handleHttpError: ({ path, referrer, message }) => {
