@@ -54,15 +54,17 @@ let sqlJsPromise: Promise<SqlJsDatabase> | null = null;
 let forceSqlJs = false;
 
 const BASE_PATH = base.endsWith('/') ? base.slice(0, -1) : base;
-const DB_URL = `${BASE_PATH}/data/mexico.sqlite3`;
-const DB_URL_PREFIX = `${BASE_PATH}/data/mexico.sqlite3.`;
-const META_URL = `${BASE_PATH}/data/mexico.sqlite3.meta.json`;
+// R2 URL for SQLite data (supports Range requests)
+const DATA_BASE_URL = import.meta.env.VITE_DATA_BASE_URL as string || `${BASE_PATH}/data`;
+const DB_URL = `${DATA_BASE_URL}/mexico.sqlite3`;
+const DB_URL_PREFIX = `${DATA_BASE_URL}/mexico.sqlite3.`;
+const META_URL = `${DATA_BASE_URL}/mexico.sqlite3.meta.json`;
 const BUILD_DB_LENGTH = Number(import.meta.env.VITE_SQLITE_LENGTH || 0);
 const BUILD_DB_CACHE_BUST = sanitizeCacheBust(import.meta.env.VITE_SQLITE_HASH ?? null);
 const SERVER_CHUNK_SIZE = Number(import.meta.env.VITE_SQLITE_CHUNK_SIZE || 1048576);
 const SERVER_SUFFIX_LENGTH = Number(import.meta.env.VITE_SQLITE_SUFFIX_LENGTH || 4);
-// Use 'full' for single file with Range requests (Cloudflare), 'chunked' for split files (GitHub Pages)
-const SQLITE_MODE = (import.meta.env.VITE_SQLITE_MODE as string) || 'chunked';
+// Use 'full' for single file with Range requests (R2/Cloudflare), 'chunked' for split files (GitHub Pages)
+const SQLITE_MODE = (import.meta.env.VITE_SQLITE_MODE as string) || 'full';
 
 const WORKER_URL = new URL('sql.js-httpvfs/dist/sqlite.worker.js', import.meta.url);
 const WASM_URL = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
