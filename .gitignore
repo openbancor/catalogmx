@@ -78,3 +78,8 @@ docs/_build
 
 # Temporary download files
 tmp/
+
+# Local tool state
+.claude/
+.wrangler/
+node_modules/
