@@ -6,7 +6,8 @@
 		{
 			category: 'CFDI 4.0',
 			items: [
-				{ title: 'Productos y Servicios', description: '52,000+ claves de productos y servicios', href: `${base}/catalogos/sat/cfdi`, icon: FileText },
+				{ title: 'Catalogos CFDI 4.0', description: 'Todos los catalogos para CFDI', href: `${base}/catalogos/sat/cfdi`, icon: FileText },
+				{ title: 'Productos y Servicios', description: '52,000+ claves de productos y servicios', href: `${base}/catalogos/sat/cfdi/productos-servicios`, icon: FileText },
 				{ title: 'Claves de Unidad', description: '2,800+ unidades de medida', href: `${base}/catalogos/sat/unidades`, icon: FileText },
 				{ title: 'Regímenes Fiscales', description: '25 tipos de régimen', href: `${base}/catalogos/sat/regimen-fiscal`, icon: Building2 },
 				{ title: 'Uso de CFDI', description: '22 claves de uso', href: `${base}/catalogos/sat/uso-cfdi`, icon: Receipt },

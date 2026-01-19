@@ -1,86 +1,84 @@
 <script lang="ts">
 	import { base } from '$app/paths';
-	import DataTable from '$lib/components/DataTable.svelte';
-	import { ChevronRight, Download, Copy, Check, Loader2, AlertCircle } from 'lucide-svelte';
-	import type { ColumnDef } from '$lib/table';
-	import { onMount } from 'svelte';
-	import { query, count } from '$lib/db';
+	import { ChevronRight, FileText, Package, Ruler, CreditCard, Receipt, Globe, Building2, FileCode } from 'lucide-svelte';
 
-	interface ClaveProdServ {
-		c_ClaveProdServ: string;
-		Descripcion: string;
-		IncluirIVAtrasladado: number;
-		IncluirIEPStrasladado: number;
-	}
-
-	let data = $state<ClaveProdServ[]>([]);
-	let loading = $state(true);
-	let error = $state<string | null>(null);
-	let totalCount = $state(0);
-	let ivaCount = $state(0);
-	let iepsCount = $state(0);
-
-	const columns: ColumnDef<ClaveProdServ, unknown>[] = [
+	const catalogs = [
 		{
-			accessorKey: 'c_ClaveProdServ',
-			header: 'Clave',
-			cell: ({ getValue }) => getValue() as string,
+			title: 'Productos y Servicios',
+			description: '52,000+ claves de productos y servicios (c_ClaveProdServ)',
+			href: `${base}/catalogos/sat/cfdi/productos-servicios`,
+			icon: Package,
+			count: '52,514'
 		},
 		{
-			accessorKey: 'Descripcion',
-			header: 'Descripcion',
+			title: 'Claves de Unidad',
+			description: '2,800+ unidades de medida (c_ClaveUnidad)',
+			href: `${base}/catalogos/sat/unidades`,
+			icon: Ruler,
+			count: '2,856'
 		},
 		{
-			accessorKey: 'IncluirIVAtrasladado',
-			header: 'IVA',
-			cell: ({ getValue }) => (getValue() as number) === 1 ? '✓' : '-',
+			title: 'Regimenes Fiscales',
+			description: '25 tipos de regimen fiscal (c_RegimenFiscal)',
+			href: `${base}/catalogos/sat/regimen-fiscal`,
+			icon: Building2,
+			count: '25'
 		},
 		{
-			accessorKey: 'IncluirIEPStrasladado',
-			header: 'IEPS',
-			cell: ({ getValue }) => (getValue() as number) === 1 ? '✓' : '-',
+			title: 'Uso de CFDI',
+			description: '22 claves de uso de comprobante (c_UsoCFDI)',
+			href: `${base}/catalogos/sat/uso-cfdi`,
+			icon: Receipt,
+			count: '22'
+		},
+		{
+			title: 'Formas de Pago',
+			description: '18 metodos de pago disponibles (c_FormaPago)',
+			href: `${base}/catalogos/sat/forma-pago`,
+			icon: CreditCard,
+			count: '18'
+		},
+		{
+			title: 'Metodos de Pago',
+			description: 'PUE y PPD (c_MetodoPago)',
+			href: `${base}/catalogos/sat/metodo-pago`,
+			icon: CreditCard,
+			count: '2'
+		},
+		{
+			title: 'Monedas',
+			description: '180+ divisas internacionales (c_Moneda)',
+			href: `${base}/catalogos/sat/moneda`,
+			icon: Globe,
+			count: '180+'
+		},
+		{
+			title: 'Paises',
+			description: '250 paises (c_Pais)',
+			href: `${base}/catalogos/sat/pais`,
+			icon: Globe,
+			count: '250'
+		},
+		{
+			title: 'Tipos de Comprobante',
+			description: '6 tipos de comprobante (c_TipoDeComprobante)',
+			href: `${base}/catalogos/sat/tipo-comprobante`,
+			icon: FileCode,
+			count: '6'
+		},
+		{
+			title: 'Impuesto',
+			description: 'Tipos de impuesto (c_Impuesto)',
+			href: `${base}/catalogos/sat/impuesto`,
+			icon: FileText,
+			count: '3'
 		},
 	];
-
-	let copied = $state(false);
-
-	async function copyToClipboard(text: string) {
-		await navigator.clipboard.writeText(text);
-		copied = true;
-		setTimeout(() => copied = false, 2000);
-	}
-
-	async function loadData() {
-		try {
-			loading = true;
-			error = null;
-
-			// Load initial data (first 100 rows for performance)
-			data = await query<ClaveProdServ>(
-				'SELECT c_ClaveProdServ, Descripcion, IncluirIVAtrasladado, IncluirIEPStrasladado FROM c_ClaveProdServ LIMIT 100'
-			);
-
-			// Get counts
-			totalCount = await count('c_ClaveProdServ');
-			ivaCount = await count('c_ClaveProdServ', 'IncluirIVAtrasladado = 1');
-			iepsCount = await count('c_ClaveProdServ', 'IncluirIEPStrasladado = 1');
-
-		} catch (e) {
-			error = e instanceof Error ? e.message : 'Error loading data';
-			console.error('Error loading CFDI data:', e);
-		} finally {
-			loading = false;
-		}
-	}
-
-	onMount(() => {
-		loadData();
-	});
 </script>
 
 <svelte:head>
-	<title>Productos y Servicios (c_ClaveProdServ) - catalogmx</title>
-	<meta name="description" content="Catalogo de claves de productos y servicios del SAT para CFDI 4.0. Mas de 52,000 claves." />
+	<title>Catalogos CFDI 4.0 - catalogmx</title>
+	<meta name="description" content="Catalogos oficiales del SAT para CFDI 4.0: productos, unidades, regimenes fiscales, formas de pago y mas." />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -95,101 +93,67 @@
 
 	<!-- Header -->
 	<div class="mb-8">
-		<div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+		<div class="flex items-start gap-4">
+			<div class="bg-red-100 dark:bg-red-900/30 p-3 rounded-lg">
+				<FileText class="h-6 w-6 text-red-600 dark:text-red-400" />
+			</div>
 			<div>
 				<h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-					Productos y Servicios
+					Catalogos CFDI 4.0
 				</h1>
 				<p class="text-slate-600 dark:text-slate-300">
-					Catalogo c_ClaveProdServ del SAT para CFDI 4.0
+					Catalogos oficiales del SAT para la emision de Comprobantes Fiscales Digitales por Internet version 4.0
 				</p>
 			</div>
-			<div class="flex gap-2">
-				<button class="btn btn-secondary">
-					<Download class="h-4 w-4" />
-					Exportar CSV
-				</button>
-				<button
-					class="btn btn-secondary"
-					onclick={() => copyToClipboard('SELECT * FROM c_ClaveProdServ LIMIT 100')}
-				>
-					{#if copied}
-						<Check class="h-4 w-4 text-green-500" />
-					{:else}
-						<Copy class="h-4 w-4" />
-					{/if}
-					SQL
-				</button>
-			</div>
 		</div>
 	</div>
 
-	<!-- Info cards -->
-	<div class="grid gap-4 sm:grid-cols-3 mb-8">
-		<div class="card p-4">
-			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Total registros</p>
-			<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
-				{#if loading}
-					<span class="animate-pulse">--</span>
-				{:else}
-					{totalCount.toLocaleString('es-MX')}
-				{/if}
-			</p>
-		</div>
-		<div class="card p-4">
-			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Con IVA</p>
-			<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
-				{#if loading}
-					<span class="animate-pulse">--</span>
-				{:else}
-					{ivaCount.toLocaleString('es-MX')}
-				{/if}
-			</p>
-		</div>
-		<div class="card p-4">
-			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Con IEPS</p>
-			<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
-				{#if loading}
-					<span class="animate-pulse">--</span>
-				{:else}
-					{iepsCount.toLocaleString('es-MX')}
-				{/if}
-			</p>
-		</div>
-	</div>
-
-	<!-- Loading state -->
-	{#if loading}
-		<div class="flex items-center justify-center py-16">
-			<Loader2 class="h-8 w-8 text-brand-500 animate-spin" />
-			<span class="ml-3 text-slate-600 dark:text-slate-400">Cargando catalogo...</span>
-		</div>
-	{:else if error}
-		<div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-			<div class="flex items-start gap-3">
-				<AlertCircle class="h-5 w-5 text-red-500 mt-0.5" />
-				<div>
-					<p class="font-medium text-red-800 dark:text-red-200">Error al cargar datos</p>
-					<p class="text-sm text-red-600 dark:text-red-300 mt-1">{error}</p>
-					<button onclick={loadData} class="btn btn-secondary mt-3 text-sm">
-						Reintentar
-					</button>
+	<!-- Catalog grid -->
+	<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-8">
+		{#each catalogs as catalog}
+			<a
+				href={catalog.href}
+				class="card p-5 hover:border-brand-300 dark:hover:border-brand-600 transition-colors group"
+			>
+				<div class="flex items-start gap-4">
+					<div class="bg-red-100 dark:bg-red-900/30 p-2.5 rounded-lg group-hover:bg-red-200 dark:group-hover:bg-red-800/40 transition-colors">
+						<svelte:component this={catalog.icon} class="h-5 w-5 text-red-600 dark:text-red-400" />
+					</div>
+					<div class="flex-1 min-w-0">
+						<div class="flex items-start justify-between gap-2">
+							<h3 class="font-semibold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">
+								{catalog.title}
+							</h3>
+							<span class="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+								{catalog.count}
+							</span>
+						</div>
+						<p class="text-sm text-slate-500 dark:text-slate-400 mt-1.5">
+							{catalog.description}
+						</p>
+					</div>
 				</div>
-			</div>
-		</div>
-	{:else}
-		<!-- Data table -->
-		<DataTable
-			{data}
-			{columns}
-			searchPlaceholder="Buscar por clave o descripcion..."
-		/>
+			</a>
+		{/each}
+	</div>
 
-		{#if totalCount > 100}
-			<p class="text-sm text-slate-500 dark:text-slate-400 mt-4 text-center">
-				Mostrando primeros 100 de {totalCount.toLocaleString('es-MX')} registros.
-				Usa el buscador para encontrar registros especificos.
-			</p>
-		{/if}
-	{/if}
+	<!-- Info box -->
+	<div class="card p-6">
+		<h2 class="font-semibold text-slate-900 dark:text-white mb-2">Sobre CFDI 4.0</h2>
+		<p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
+			La version 4.0 del CFDI es obligatoria desde el 1 de enero de 2022. Incluye cambios importantes
+			como la obligatoriedad del nombre y domicilio fiscal del receptor, el regimen fiscal y el codigo postal.
+		</p>
+		<div class="flex flex-wrap gap-2">
+			<span class="px-2.5 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+				Vigente
+			</span>
+			<span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+				Version 4.0
+			</span>
+			<span class="px-2.5 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300">
+				Obligatorio desde 01/01/2022
+			</span>
+		</div>
+	</div>
 </div>

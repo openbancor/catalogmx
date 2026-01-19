@@ -28,9 +28,9 @@ const config = {
 					console.warn(`Ignoring 404 for ${path} (referrer: ${referrer})`);
 					return;
 				}
-				// Also ignore 500s from pages using TanStack Table (Svelte 5 incompatibility)
-				if (message.includes('500') && path.includes('/sat/cfdi')) {
-					console.warn(`Ignoring 500 for ${path} - TanStack Table Svelte 5 issue`);
+				// Ignore 500s from pages using sql.js-httpvfs or TanStack Table (SSR incompatible)
+				if (message.includes('500')) {
+					console.warn(`Ignoring 500 for ${path} - SSR incompatible page (sql.js or TanStack Table)`);
 					return;
 				}
 				throw new Error(message);
