@@ -60,44 +60,38 @@
 			loading = true;
 			error = null;
 
-			const offset = (currentPage - 1) * pageSize;
+			const limitNum = Number(pageSize);
+			const offsetNum = Number((currentPage - 1) * pageSize);
 
 			if (searchTerm.trim()) {
 				// Search mode
 				const searchLower = searchTerm.toLowerCase();
-				const whereClause = `LOWER(c_ClaveProdServ) LIKE ? OR LOWER(Descripcion) LIKE ?`;
-				const searchParams = [`%${searchLower}%`, `%${searchLower}%`];
+				const searchPattern = `%${searchLower}%`;
 
 				// Get count for search
 				const countResult = await query<{ count: number }>(
-					`SELECT COUNT(*) as count FROM c_ClaveProdServ WHERE ${whereClause}`,
-					searchParams
+					`SELECT COUNT(*) as count FROM c_ClaveProdServ WHERE LOWER(c_ClaveProdServ) LIKE ? OR LOWER(Descripcion) LIKE ?`,
+					[searchPattern, searchPattern]
 				);
 				totalCount = countResult[0]?.count || 0;
 
-				// Get data for search
+				// Get data for search - use inline LIMIT/OFFSET to avoid type issues
 				data = await query<ClaveProdServ>(
 					`SELECT c_ClaveProdServ, Descripcion, IncluirIVAtrasladado, IncluirIEPStrasladado
 					 FROM c_ClaveProdServ
-					 WHERE ${whereClause}
+					 WHERE LOWER(c_ClaveProdServ) LIKE ? OR LOWER(Descripcion) LIKE ?
 					 ORDER BY c_ClaveProdServ
-					 LIMIT ? OFFSET ?`,
-					[...searchParams, pageSize, offset]
+					 LIMIT ${limitNum} OFFSET ${offsetNum}`,
+					[searchPattern, searchPattern]
 				);
 			} else {
-				// Normal mode with pagination
+				// Normal mode with pagination - use inline LIMIT/OFFSET
 				data = await query<ClaveProdServ>(
 					`SELECT c_ClaveProdServ, Descripcion, IncluirIVAtrasladado, IncluirIEPStrasladado
 					 FROM c_ClaveProdServ
 					 ORDER BY c_ClaveProdServ
-					 LIMIT ? OFFSET ?`,
-					[pageSize, offset]
+					 LIMIT ${limitNum} OFFSET ${offsetNum}`
 				);
-
-				// Get total count only once (without search)
-				if (currentPage === 1 && !searchTerm) {
-					totalCount = await count('c_ClaveProdServ');
-				}
 			}
 
 		} catch (e) {
