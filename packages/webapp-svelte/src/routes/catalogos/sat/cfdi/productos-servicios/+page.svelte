@@ -17,8 +17,8 @@
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 	let totalCount = $state(0);
-	let ivaCount = $state(0);
-	let iepsCount = $state(0);
+	let sectorCount = $state(0);
+	let familyCount = $state(0);
 
 	// Pagination state
 	let currentPage = $state(1);
@@ -34,16 +34,6 @@
 		{
 			accessorKey: 'Descripcion',
 			header: 'Descripcion',
-		},
-		{
-			accessorKey: 'IncluirIVAtrasladado',
-			header: 'IVA',
-			cell: ({ getValue }) => (getValue() as number) === 1 ? '✓' : '-',
-		},
-		{
-			accessorKey: 'IncluirIEPStrasladado',
-			header: 'IEPS',
-			cell: ({ getValue }) => (getValue() as number) === 1 ? '✓' : '-',
 		},
 	];
 
@@ -97,7 +87,7 @@
 
 				// Get data for search
 				data = await query<ClaveProdServ>(
-					`SELECT c_ClaveProdServ, Descripcion, IncluirIVAtrasladado, IncluirIEPStrasladado
+					`SELECT c_ClaveProdServ, Descripcion
 					 FROM c_ClaveProdServ
 					 WHERE ${normClave} LIKE '${searchPattern}'
 					    OR ${normDesc} LIKE '${searchPattern}'
@@ -107,7 +97,7 @@
 			} else {
 				// Normal mode with pagination
 				data = await query<ClaveProdServ>(
-					`SELECT c_ClaveProdServ, Descripcion, IncluirIVAtrasladado, IncluirIEPStrasladado
+					`SELECT c_ClaveProdServ, Descripcion
 					 FROM c_ClaveProdServ
 					 ORDER BY c_ClaveProdServ
 					 LIMIT ${limitNum} OFFSET ${offsetNum}`
@@ -124,10 +114,17 @@
 
 	async function loadCounts() {
 		try {
-			const total = await count('c_ClaveProdServ');
-			totalCount = total;
-			ivaCount = await count('c_ClaveProdServ', 'IncluirIVAtrasladado = 1');
-			iepsCount = await count('c_ClaveProdServ', 'IncluirIEPStrasladado = 1');
+			totalCount = await count('c_ClaveProdServ');
+			// Count distinct sectors (first 2 digits of code)
+			const sectorResult = await query<{ cnt: number }>(
+				`SELECT COUNT(DISTINCT substr(c_ClaveProdServ, 1, 2)) as cnt FROM c_ClaveProdServ`
+			);
+			sectorCount = sectorResult[0]?.cnt || 0;
+			// Count distinct families (first 6 digits of code)
+			const familyResult = await query<{ cnt: number }>(
+				`SELECT COUNT(DISTINCT substr(c_ClaveProdServ, 1, 6)) as cnt FROM c_ClaveProdServ`
+			);
+			familyCount = familyResult[0]?.cnt || 0;
 		} catch (e) {
 			console.error('Error loading counts:', e);
 		}
@@ -207,9 +204,9 @@
 	<!-- Info cards -->
 	<div class="grid gap-4 sm:grid-cols-3 mb-8">
 		<div class="card p-4">
-			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Total registros</p>
+			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Total productos</p>
 			<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
-				{#if ivaCount === 0 && iepsCount === 0}
+				{#if totalCount === 0}
 					<span class="animate-pulse">--</span>
 				{:else}
 					{totalCount.toLocaleString('es-MX')}
@@ -217,24 +214,26 @@
 			</p>
 		</div>
 		<div class="card p-4">
-			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Con IVA</p>
+			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Sectores</p>
 			<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
-				{#if ivaCount === 0 && iepsCount === 0}
+				{#if totalCount === 0}
 					<span class="animate-pulse">--</span>
 				{:else}
-					{ivaCount.toLocaleString('es-MX')}
+					{sectorCount.toLocaleString('es-MX')}
 				{/if}
 			</p>
+			<p class="text-xs text-slate-400 mt-1">Primeros 2 digitos</p>
 		</div>
 		<div class="card p-4">
-			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Con IEPS</p>
+			<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Familias</p>
 			<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
-				{#if ivaCount === 0 && iepsCount === 0}
+				{#if totalCount === 0}
 					<span class="animate-pulse">--</span>
 				{:else}
-					{iepsCount.toLocaleString('es-MX')}
+					{familyCount.toLocaleString('es-MX')}
 				{/if}
 			</p>
+			<p class="text-xs text-slate-400 mt-1">Primeros 6 dígitos</p>
 		</div>
 	</div>
 
