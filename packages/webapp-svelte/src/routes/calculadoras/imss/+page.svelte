@@ -196,7 +196,7 @@
 			<Info class="h-5 w-5 text-teal-600 dark:text-teal-400 mt-0.5 flex-shrink-0" />
 			<div class="text-sm text-teal-900 dark:text-teal-300">
 				<p class="font-medium mb-1">Cuotas IMSS {year}</p>
-				<p>UMA {year}: {formatCurrency(getUMA(year))} diarios. Tope de cotización: 25 UMAs.</p>
+				<p>UMA {year}: {formatCurrency(IMSSCalculator.getUMA(year).diaria)} diarios. Tope de cotización: 25 UMAs.</p>
 			</div>
 		</div>
 	</div>
