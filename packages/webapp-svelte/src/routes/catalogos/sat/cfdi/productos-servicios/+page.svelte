@@ -4,7 +4,7 @@
 	import { ChevronRight, Download, Copy, Check, Loader2, AlertCircle } from 'lucide-svelte';
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
-	import { query, count, search } from '$lib/db';
+	import { query, count } from '$lib/db';
 
 	interface ClaveProdServ {
 		c_ClaveProdServ: string;
@@ -55,6 +55,11 @@
 		setTimeout(() => copied = false, 2000);
 	}
 
+	function escapeSQL(str: string): string {
+		// Escape single quotes for SQL
+		return str.replace(/'/g, "''");
+	}
+
 	async function loadData() {
 		try {
 			loading = true;
@@ -64,28 +69,29 @@
 			const offsetNum = Number((currentPage - 1) * pageSize);
 
 			if (searchTerm.trim()) {
-				// Search mode
-				const searchLower = searchTerm.toLowerCase();
-				const searchPattern = `%${searchLower}%`;
+				// Search mode - use inline values to avoid sql.js-httpvfs parameter issues
+				const searchEscaped = escapeSQL(searchTerm.toLowerCase());
+				const searchPattern = `%${searchEscaped}%`;
 
 				// Get count for search
 				const countResult = await query<{ count: number }>(
-					`SELECT COUNT(*) as count FROM c_ClaveProdServ WHERE LOWER(c_ClaveProdServ) LIKE ? OR LOWER(Descripcion) LIKE ?`,
-					[searchPattern, searchPattern]
+					`SELECT COUNT(*) as count FROM c_ClaveProdServ
+					 WHERE LOWER(c_ClaveProdServ) LIKE '${searchPattern}'
+					    OR LOWER(Descripcion) LIKE '${searchPattern}'`
 				);
 				totalCount = countResult[0]?.count || 0;
 
-				// Get data for search - use inline LIMIT/OFFSET to avoid type issues
+				// Get data for search
 				data = await query<ClaveProdServ>(
 					`SELECT c_ClaveProdServ, Descripcion, IncluirIVAtrasladado, IncluirIEPStrasladado
 					 FROM c_ClaveProdServ
-					 WHERE LOWER(c_ClaveProdServ) LIKE ? OR LOWER(Descripcion) LIKE ?
+					 WHERE LOWER(c_ClaveProdServ) LIKE '${searchPattern}'
+					    OR LOWER(Descripcion) LIKE '${searchPattern}'
 					 ORDER BY c_ClaveProdServ
-					 LIMIT ${limitNum} OFFSET ${offsetNum}`,
-					[searchPattern, searchPattern]
+					 LIMIT ${limitNum} OFFSET ${offsetNum}`
 				);
 			} else {
-				// Normal mode with pagination - use inline LIMIT/OFFSET
+				// Normal mode with pagination
 				data = await query<ClaveProdServ>(
 					`SELECT c_ClaveProdServ, Descripcion, IncluirIVAtrasladado, IncluirIEPStrasladado
 					 FROM c_ClaveProdServ
