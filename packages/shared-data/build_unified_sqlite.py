@@ -137,15 +137,79 @@ def create_database(path: Path) -> sqlite3.Connection:
     if path.exists():
         path.unlink()
     conn = sqlite3.connect(str(path))
+    # Use DELETE mode to avoid WAL propagation issues with ATTACH
     pragmas = [
-        "PRAGMA journal_mode=WAL;",
-        "PRAGMA synchronous=OFF;",
+        "PRAGMA journal_mode=DELETE;",
+        "PRAGMA synchronous=NORMAL;",
         "PRAGMA foreign_keys=OFF;",
         "PRAGMA temp_store=MEMORY;",
     ]
     for pragma in pragmas:
         conn.execute(pragma)
     return conn
+
+
+def copy_tables_with_separate_connection(
+    dest_conn: sqlite3.Connection, db_path: Path, table_specs: list
+) -> None:
+    """Copy tables using a separate read-only connection to avoid corruption."""
+    # Open source database read-only
+    src_conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    src_conn.row_factory = sqlite3.Row
+
+    try:
+        for table_spec in table_specs:
+            src_table = table_spec["source"]
+            dest_table = table_spec.get("target", src_table)
+            where_clause = table_spec.get("where", "")
+
+            # Check if table exists
+            table_check = src_conn.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",
+                (src_table,),
+            ).fetchone()
+            if not table_check:
+                print(f"[build] WARNING: {db_path.name} does not contain table '{src_table}'. Skipped.")
+                continue
+
+            # Get schema
+            schema_row = src_conn.execute(
+                "SELECT sql FROM sqlite_master WHERE type='table' AND name=?",
+                (src_table,),
+            ).fetchone()
+            if not schema_row or not schema_row[0]:
+                print(f"[build] WARNING: could not read schema for {src_table} in {db_path}")
+                continue
+
+            # Create table in destination
+            dest_conn.execute(f"DROP TABLE IF EXISTS {quote_ident(dest_table)}")
+            create_sql = rewrite_create_sql(schema_row[0], src_table, dest_table)
+            dest_conn.execute(create_sql)
+
+            # Read data from source
+            select_query = f"SELECT * FROM {quote_ident(src_table)}"
+            if where_clause:
+                select_query += f" WHERE {where_clause}"
+
+            rows = src_conn.execute(select_query).fetchall()
+            if not rows:
+                print(f"[build] WARNING: {src_table} in {db_path.name} has no data.")
+                continue
+
+            # Get column names
+            col_names = [desc[0] for desc in src_conn.execute(select_query).description]
+            placeholders = ",".join(["?"] * len(col_names))
+            col_list = ",".join(quote_ident(c) for c in col_names)
+
+            insert_sql = f"INSERT INTO {quote_ident(dest_table)} ({col_list}) VALUES ({placeholders})"
+            dest_conn.executemany(insert_sql, [tuple(row) for row in rows])
+
+            filter_msg = f" (filtered: {where_clause})" if where_clause else ""
+            print(f"[build] Imported {dest_table} ({len(rows):,} rows) from {db_path.name}{filter_msg}")
+
+        dest_conn.commit()
+    finally:
+        src_conn.close()
 
 
 def attach_and_copy_tables(conn: sqlite3.Connection) -> None:
@@ -155,57 +219,8 @@ def attach_and_copy_tables(conn: sqlite3.Connection) -> None:
             print(f"[build] WARNING: skipped missing {db_path}")
             continue
 
-        attach_name = f"src_{idx}"
-        conn.execute(f"ATTACH DATABASE {quote_literal(str(db_path))} AS {attach_name}")
-        for table_spec in source["tables"]:
-            src_table = table_spec["source"]
-            dest_table = table_spec.get("target", src_table)
-
-            table_present = conn.execute(
-                f"SELECT 1 FROM {attach_name}.sqlite_master WHERE type='table' AND name=?",
-                (src_table,),
-            ).fetchone()
-            if not table_present:
-                print(f"[build] WARNING: {db_path.name} does not contain table '{src_table}'. Skipped.")
-                continue
-
-            schema_row = conn.execute(
-                f"SELECT sql FROM {attach_name}.sqlite_master "
-                "WHERE type='table' AND name=?",
-                (src_table,),
-            ).fetchone()
-            if not schema_row or not schema_row[0]:
-                print(f"[build] WARNING: could not read schema for {src_table} in {db_path}")
-                continue
-
-            conn.execute(f"DROP TABLE IF EXISTS {quote_ident(dest_table)}")
-            create_sql = rewrite_create_sql(schema_row[0], src_table, dest_table)
-            conn.execute(create_sql)
-            try:
-                # Build INSERT query with optional WHERE clause
-                where_clause = table_spec.get("where", "")
-                insert_query = (
-                    f"INSERT INTO {quote_ident(dest_table)} "
-                    f"SELECT * FROM {attach_name}.{quote_ident(src_table)}"
-                )
-                if where_clause:
-                    insert_query += f" WHERE {where_clause}"
-
-                conn.execute(insert_query)
-            except sqlite3.Error as exc:
-                print(f"[build] WARNING: failed to copy {src_table} from {db_path.name}: {exc}")
-                conn.execute(f"DROP TABLE IF EXISTS {quote_ident(dest_table)}")
-                continue
-
-            count = conn.execute(
-                f"SELECT COUNT(*) FROM {quote_ident(dest_table)}"
-            ).fetchone()[0]
-            filter_msg = f" (filtered: {where_clause})" if where_clause else ""
-            print(f"[build] Imported {dest_table} ({count:,} rows) from {db_path.name}{filter_msg}")
-
-        # Commit before detaching to avoid "database is locked" errors
-        conn.commit()
-        conn.execute(f"DETACH DATABASE {attach_name}")
+        # Use separate connection method to avoid corrupting source databases
+        copy_tables_with_separate_connection(conn, db_path, source["tables"])
 
 
 def quote_literal(value: str) -> str:

@@ -49,9 +49,16 @@ def create_database(path: Path) -> sqlite3.Connection:
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         path.unlink()
+    # Also remove any WAL files from previous runs
+    for ext in ["-wal", "-shm"]:
+        wal_path = path.with_suffix(path.suffix + ext)
+        if wal_path.exists():
+            wal_path.unlink()
     conn = sqlite3.connect(str(path))
+    # Use DELETE mode from the start for browser compatibility
+    # WAL mode can cause issues when VACUUM is run
     pragmas = [
-        "PRAGMA journal_mode=WAL;",
+        "PRAGMA journal_mode=DELETE;",
         "PRAGMA synchronous=OFF;",
         "PRAGMA foreign_keys=ON;",
         "PRAGMA temp_store=MEMORY;",
@@ -356,12 +363,11 @@ def create_views(conn: sqlite3.Connection) -> None:
 
 def finalize_database(conn: sqlite3.Connection) -> None:
     """Finalize database for production use."""
+    conn.commit()  # Ensure all data is committed
     conn.execute("ANALYZE;")
-    # Close WAL mode for browser compatibility
-    print("[geo] Closing WAL mode for browser compatibility...")
-    conn.execute("PRAGMA wal_checkpoint(TRUNCATE);")
-    conn.execute("PRAGMA journal_mode=DELETE;")
-    conn.execute("VACUUM;")
+    conn.commit()
+    # Note: VACUUM can corrupt database in some SQLite versions, skip it
+    print("[geo] Database finalized")
 
 
 def main() -> None:
