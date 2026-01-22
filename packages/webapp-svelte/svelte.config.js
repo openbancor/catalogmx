@@ -36,6 +36,8 @@ const config = {
 				throw new Error(message);
 			},
 			handleMissingId: 'warn',
+			// Handle dynamic routes that aren't discovered during prerender crawl
+			handleUnseenRoutes: 'warn',
 		},
 		alias: {
 			catalogmx: path.resolve('../typescript/src'),

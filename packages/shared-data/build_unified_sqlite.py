@@ -26,6 +26,15 @@ SQLITE_SOURCES = [
             {"source": "salarios_minimos", "target": "banxico_salarios_minimos"},
         ],
     },
+    {
+        "path": DATA_ROOT / "sqlite" / "geo_mexico.db",
+        "tables": [
+            {"source": "geo_estados", "target": "geo_estados"},
+            {"source": "geo_municipios", "target": "geo_municipios"},
+            {"source": "geo_zonas_metropolitanas", "target": "geo_zonas_metropolitanas"},
+            {"source": "geo_municipio_zm", "target": "geo_municipio_zm"},
+        ],
+    },
 ]
 
 INDEX_DEFINITIONS: dict[str, list[Sequence[str]]] = {
@@ -42,6 +51,20 @@ INDEX_DEFINITIONS: dict[str, list[Sequence[str]]] = {
     "clave_prod_serv": [
         ("idx_clave_prod_serv_clave", ("clave",)),
         ("idx_clave_prod_serv_desc", ("descripcion",)),
+    ],
+    "geo_estados": [
+        ("idx_geo_estados_slug", ("nombre_slug",)),
+    ],
+    "geo_municipios": [
+        ("idx_geo_municipios_estado", ("cve_entidad",)),
+        ("idx_geo_municipios_slug", ("nombre_slug",)),
+        ("idx_geo_municipios_estado_slug", ("estado_slug", "nombre_slug")),
+    ],
+    "geo_zonas_metropolitanas": [
+        ("idx_geo_zm_slug", ("nombre_slug",)),
+    ],
+    "geo_municipio_zm": [
+        ("idx_geo_mzm_zm", ("zm_id",)),
     ],
 }
 
