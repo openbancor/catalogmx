@@ -1259,8 +1259,9 @@ CURP: ${personaMoral.representante.curp}
 									/>
 								</div>
 								<div>
-									<label class="text-sm text-slate-600 dark:text-slate-400">Sexo</label>
+									<label for="pf-sexo" class="text-sm text-slate-600 dark:text-slate-400">Sexo</label>
 									<select
+										id="pf-sexo"
 										class="input mt-1"
 										value={personaFisica.sexo}
 										onchange={(e) => updatePersonaFisica('sexo', e.currentTarget.value as 'H' | 'M')}
@@ -1391,7 +1392,7 @@ CURP: ${personaMoral.representante.curp}
 						</h3>
 						<div class="grid gap-4 sm:grid-cols-2">
 							<div>
-								<label class="text-sm text-slate-600 dark:text-slate-400 flex items-center justify-between">
+								<label for="pf-telefono" class="text-sm text-slate-600 dark:text-slate-400 flex items-center justify-between">
 									Teléfono (10 dígitos)
 									<span class="text-xs text-slate-400">
 										{personaFisica.telefono.length === 10
@@ -1401,6 +1402,7 @@ CURP: ${personaMoral.representante.curp}
 								</label>
 								<div class="flex gap-2 mt-1">
 									<input
+										id="pf-telefono"
 										type="tel"
 										class="input font-mono flex-1"
 										value={personaFisica.telefono}
@@ -1492,8 +1494,9 @@ CURP: ${personaMoral.representante.curp}
 								/>
 							</div>
 							<div>
-								<label class="text-sm text-slate-600 dark:text-slate-400">Tipo de Sociedad</label>
+								<label for="pm-tipo-sociedad" class="text-sm text-slate-600 dark:text-slate-400">Tipo de Sociedad</label>
 								<select
+									id="pm-tipo-sociedad"
 									class="input mt-1"
 									value={personaMoral.tipoSociedad}
 									onchange={(e) => {
@@ -1553,8 +1556,9 @@ CURP: ${personaMoral.representante.curp}
 								</div>
 							</div>
 							<div>
-								<label class="text-sm text-slate-600 dark:text-slate-400">Giro</label>
+								<label for="pm-giro" class="text-sm text-slate-600 dark:text-slate-400">Giro</label>
 								<select
+									id="pm-giro"
 									class="input mt-1"
 									value={personaMoral.giro}
 									onchange={(e) => updatePersonaMoral('giro', e.currentTarget.value)}
@@ -1634,7 +1638,7 @@ CURP: ${personaMoral.representante.curp}
 						</h3>
 						<div class="space-y-4">
 							<div>
-								<label class="text-sm text-slate-600 dark:text-slate-400 flex items-center justify-between">
+								<label for="pm-telefono" class="text-sm text-slate-600 dark:text-slate-400 flex items-center justify-between">
 									Teléfono (10 dígitos)
 									<span class="text-xs text-slate-400">
 										{personaMoral.telefono.length === 10
@@ -1644,6 +1648,7 @@ CURP: ${personaMoral.representante.curp}
 								</label>
 								<div class="flex gap-2 mt-1">
 									<input
+										id="pm-telefono"
 										type="tel"
 										class="input font-mono flex-1"
 										value={personaMoral.telefono}
@@ -1773,8 +1778,9 @@ CURP: ${personaMoral.representante.curp}
 									/>
 								</div>
 								<div>
-									<label class="text-sm text-slate-600 dark:text-slate-400">Sexo</label>
+									<label for="rep-sexo" class="text-sm text-slate-600 dark:text-slate-400">Sexo</label>
 									<select
+										id="rep-sexo"
 										class="input mt-1"
 										value={personaMoral.representante.sexo}
 										onchange={(e) => updateRepresentante('sexo', e.currentTarget.value as 'H' | 'M')}
@@ -1784,8 +1790,9 @@ CURP: ${personaMoral.representante.curp}
 									</select>
 								</div>
 								<div>
-									<label class="text-sm text-slate-600 dark:text-slate-400">Estado de nacimiento</label>
+									<label for="rep-estado" class="text-sm text-slate-600 dark:text-slate-400">Estado de nacimiento</label>
 									<select
+										id="rep-estado"
 										class="input mt-1"
 										value={personaMoral.representante.estadoNacimiento}
 										onchange={(e) => {

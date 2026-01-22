@@ -1,2 +1,4 @@
+// Disable SSR since this page uses @faker-js/faker for client-side random data generation
 export const ssr = false;
-export const prerender = false;
+// Enable prerender so the page skeleton is included in static builds
+export const prerender = true;
