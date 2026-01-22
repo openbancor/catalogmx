@@ -28,9 +28,12 @@
 
 		// INEGI
 		{ source: 'INEGI', id: 'estados', name: 'Estados de México', count: 32, description: 'Entidades federativas' },
-		{ source: 'INEGI', id: 'municipios', name: 'Municipios', count: 2469, description: 'Municipios y alcaldías', disabled: true },
+		{ source: 'INEGI', id: 'municipios', name: 'Municipios', count: 2469, description: 'Municipios y alcaldías' },
 		{ source: 'INEGI', id: 'localidades', name: 'Localidades', count: 304000, description: 'Poblaciones y colonias', disabled: true },
-		{ source: 'INEGI', id: 'scian', name: 'SCIAN', count: 1800, description: 'Sistema de Clasificación Industrial de América del Norte', disabled: true },
+		{ source: 'INEGI', id: 'scian', name: 'SCIAN', count: 1800, description: 'Sistema de Clasificación Industrial de América del Norte' },
+
+		// CONAPO
+		{ source: 'CONAPO', id: 'zonas-metropolitanas', name: 'Zonas Metropolitanas', count: 92, description: 'Zonas metropolitanas de México 2020' },
 
 		// Banxico
 		{ source: 'Banxico', id: 'bancos', name: 'Instituciones Bancarias', count: 150, description: 'Bancos y SOFOMES con clave SPEI' },
@@ -46,7 +49,8 @@
 		{ source: 'SEPOMEX', id: 'codigos-postales', name: 'Códigos Postales', count: 145000, description: 'Códigos postales con colonias, municipios y estados' },
 
 		// IFT
-		{ source: 'IFT', id: 'operadores', name: 'Operadores Telefónicos', count: 50, description: 'Claves de operadores de telefonía (LADA)' },
+		{ source: 'IFT', id: 'ladas', name: 'Códigos LADA', count: 402, description: 'Códigos de larga distancia por municipio' },
+		{ source: 'IFT', id: 'operadores', name: 'Operadores PNN', count: 200, description: 'Operadores del Plan Nacional de Numeración' },
 
 		// IMSS
 		{ source: 'IMSS', id: 'tipos-movimiento', name: 'Tipos de Movimiento Afiliatorio', count: 4, description: 'Claves de movimientos para el SUA' },
@@ -69,6 +73,7 @@
 		'SAT': 'bg-red-500',
 		'SAT Nómina': 'bg-red-600',
 		'INEGI': 'bg-blue-500',
+		'CONAPO': 'bg-indigo-500',
 		'Banxico': 'bg-green-600',
 		'SEPOMEX': 'bg-amber-500',
 		'IFT': 'bg-cyan-500',
@@ -108,6 +113,7 @@
 			'SAT': 'sat',
 			'SAT Nómina': 'sat',
 			'INEGI': 'inegi',
+			'CONAPO': 'conapo',
 			'Banxico': 'banxico',
 			'SEPOMEX': 'sepomex',
 			'IFT': 'ift',
