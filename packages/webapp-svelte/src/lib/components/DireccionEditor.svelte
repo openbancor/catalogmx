@@ -105,6 +105,20 @@
 				`SELECT asentamiento, municipio, estado FROM codigos_postales WHERE cp = '${cp}' ORDER BY asentamiento`
 			);
 			colonias = results;
+
+			// If current colonia is not in the list, select the first one
+			if (results.length > 0) {
+				const currentColoniaExists = results.some(c => c.asentamiento === direccion.colonia);
+				if (!currentColoniaExists) {
+					const { asentamiento, municipio, estado } = results[0];
+					onchange({
+						...direccion,
+						colonia: asentamiento,
+						municipio,
+						estado
+					});
+				}
+			}
 		} catch (error) {
 			console.error('Error loading colonias:', error);
 		}
@@ -160,11 +174,10 @@
 				<div class="relative mt-1">
 					<select
 						class="input w-full appearance-none pr-8"
-						value={direccion.colonia}
 						onchange={(e) => selectColonia(e.currentTarget.value)}
 					>
 						{#each colonias as colonia}
-							<option value={colonia.asentamiento}>{colonia.asentamiento}</option>
+							<option value={colonia.asentamiento} selected={colonia.asentamiento === direccion.colonia}>{colonia.asentamiento}</option>
 						{/each}
 					</select>
 					<ChevronDown class="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />

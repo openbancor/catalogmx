@@ -1270,11 +1270,10 @@ CURP: ${personaMoral.representante.curp}
 									<select
 										id="pf-sexo"
 										class="input mt-1"
-										value={personaFisica.sexo}
 										onchange={(e) => updatePersonaFisica('sexo', e.currentTarget.value as 'H' | 'M')}
 									>
-										<option value="H">Masculino</option>
-										<option value="M">Femenino</option>
+										<option value="H" selected={personaFisica.sexo === 'H'}>Masculino</option>
+										<option value="M" selected={personaFisica.sexo === 'M'}>Femenino</option>
 									</select>
 								</div>
 							</div>
@@ -1287,7 +1286,6 @@ CURP: ${personaMoral.representante.curp}
 								</label>
 								<select
 									class="input mt-1"
-									value={personaFisica.estadoNacimiento}
 									onchange={(e) => {
 										const selectedState = states.find(s => s.code === e.currentTarget.value);
 										if (selectedState) {
@@ -1301,7 +1299,7 @@ CURP: ${personaMoral.representante.curp}
 									}}
 								>
 									{#each states as state}
-										<option value={state.code}>{state.name}</option>
+										<option value={state.code} selected={state.code === personaFisica.estadoNacimiento}>{state.name}</option>
 									{/each}
 								</select>
 							</div>
@@ -1505,7 +1503,6 @@ CURP: ${personaMoral.representante.curp}
 								<select
 									id="pm-tipo-sociedad"
 									class="input mt-1"
-									value={personaMoral.tipoSociedad}
 									onchange={(e) => {
 										const selected = tiposSociedad.find(t => t.code === e.currentTarget.value);
 										if (selected) {
@@ -1520,7 +1517,7 @@ CURP: ${personaMoral.representante.curp}
 									}}
 								>
 									{#each tiposSociedad as tipo}
-										<option value={tipo.code} title={tipo.full}>{tipo.name} - {tipo.full}</option>
+										<option value={tipo.code} title={tipo.full} selected={tipo.code === personaMoral.tipoSociedad}>{tipo.name} - {tipo.full}</option>
 									{/each}
 								</select>
 							</div>
@@ -1567,11 +1564,10 @@ CURP: ${personaMoral.representante.curp}
 								<select
 									id="pm-giro"
 									class="input mt-1"
-									value={personaMoral.giro}
 									onchange={(e) => updatePersonaMoral('giro', e.currentTarget.value)}
 								>
-									{#each girosComerciales as giro}
-										<option value={giro}>{giro}</option>
+									{#each girosComerciales as giroOption}
+										<option value={giroOption} selected={giroOption === personaMoral.giro}>{giroOption}</option>
 									{/each}
 								</select>
 							</div>
@@ -1789,11 +1785,10 @@ CURP: ${personaMoral.representante.curp}
 									<select
 										id="rep-sexo"
 										class="input mt-1"
-										value={personaMoral.representante.sexo}
 										onchange={(e) => updateRepresentante('sexo', e.currentTarget.value as 'H' | 'M')}
 									>
-										<option value="H">Masculino</option>
-										<option value="M">Femenino</option>
+										<option value="H" selected={personaMoral.representante.sexo === 'H'}>Masculino</option>
+										<option value="M" selected={personaMoral.representante.sexo === 'M'}>Femenino</option>
 									</select>
 								</div>
 								<div>
@@ -1801,7 +1796,6 @@ CURP: ${personaMoral.representante.curp}
 									<select
 										id="rep-estado"
 										class="input mt-1"
-										value={personaMoral.representante.estadoNacimiento}
 										onchange={(e) => {
 											const selectedState = states.find(s => s.code === e.currentTarget.value);
 											if (selectedState) {
@@ -1818,7 +1812,7 @@ CURP: ${personaMoral.representante.curp}
 										}}
 									>
 										{#each states as state}
-											<option value={state.code}>{state.name}</option>
+											<option value={state.code} selected={state.code === personaMoral.representante.estadoNacimiento}>{state.name}</option>
 										{/each}
 									</select>
 								</div>
