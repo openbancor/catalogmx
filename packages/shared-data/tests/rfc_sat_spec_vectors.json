@@ -1,0 +1,625 @@
+{
+  "description": "Test vectors from SAT official algorithm specification (IFAI 0610100135506)",
+  "source": "https://www.mariovaldez.net/files/IFAI%200610100135506%20065%20Algoritmo%20para%20generar%20el%20RFC%20con%20homoclave%20para%20personas%20fisicas%20y%20morales.pdf",
+  "personas_morales": {
+    "regla_1_tres_o_mas_palabras": [
+      {
+        "razon_social": "Sonora Industrial Azucarera",
+        "fecha": "1982-11-29",
+        "rfc_base": "SIA821129",
+        "descripcion": "Tres primeras letras de las tres primeras palabras"
+      },
+      {
+        "razon_social": "Herrajes, Cortinas y Maquinaria",
+        "fecha": "1984-11-22",
+        "rfc_base": "HCM841122",
+        "descripcion": "Excluye conjunción 'y'"
+      },
+      {
+        "razon_social": "Articulos de piel y Baules",
+        "fecha": "1979-12-15",
+        "rfc_base": "APB791215",
+        "descripcion": "Excluye preposición 'de' y conjunción 'y'"
+      }
+    ],
+    "regla_2_fecha_constitucion": [
+      {
+        "razon_social": "Tecnologia y Equipo contra Incendios",
+        "fecha": "1983-03-05",
+        "rfc_base": "TEC830305",
+        "descripcion": "Formato AAMMDD"
+      },
+      {
+        "razon_social": "Internacional Turistica Falcon",
+        "fecha": "1985-01-28",
+        "rfc_base": "ITF850128",
+        "descripcion": "Formato AAMMDD"
+      },
+      {
+        "razon_social": "Articulos de Caza y Pesca",
+        "fecha": "1986-02-15",
+        "rfc_base": "ACP860215",
+        "descripcion": "Formato AAMMDD"
+      }
+    ],
+    "regla_3_letras_compuestas": [
+      {
+        "razon_social": "Champion Mexicana de Bujias",
+        "fecha": "1983-07-02",
+        "rfc_base": "CMB830702",
+        "descripcion": "CH -> C"
+      },
+      {
+        "razon_social": "Casa Chavez de maquinaria",
+        "fecha": "1980-06-20",
+        "rfc_base": "CCM800620",
+        "descripcion": "CH -> C"
+      },
+      {
+        "razon_social": "Articulos de Piel y Chamarras",
+        "fecha": "1981-02-02",
+        "rfc_base": "APC810202",
+        "descripcion": "CH -> C"
+      },
+      {
+        "razon_social": "Llantas, Camaras y Refacciones",
+        "fecha": "1985-10-15",
+        "rfc_base": "LCR851015",
+        "descripcion": "LL -> L"
+      },
+      {
+        "razon_social": "Candados, Llaves y Cerraduras",
+        "fecha": "1983-08-20",
+        "rfc_base": "CLC830820",
+        "descripcion": "LL -> L"
+      },
+      {
+        "razon_social": "Luis Molina Llorantes y Cia.",
+        "fecha": "1986-09-11",
+        "rfc_base": "LML860911",
+        "descripcion": "LL -> L, excluye Cia."
+      }
+    ],
+    "regla_4_iniciales_como_palabras": [
+      {
+        "razon_social": "F.A.Z.",
+        "fecha": "1987-04-20",
+        "rfc_base": "FAZ870420",
+        "descripcion": "Iniciales F, A, Z como palabras separadas"
+      },
+      {
+        "razon_social": "U.S. Ruber Mexicana",
+        "fecha": "1986-02-01",
+        "rfc_base": "USR860201",
+        "descripcion": "Iniciales U, S como palabras separadas"
+      },
+      {
+        "razon_social": "H. Prieto y Martinez",
+        "fecha": "1984-12-21",
+        "rfc_base": "HPM841221",
+        "descripcion": "Inicial H como palabra"
+      }
+    ],
+    "regla_5_abreviaturas_sociedad": [
+      {
+        "razon_social": "Guantes Industriales Guadalupe, S. en C.",
+        "fecha": "1984-12-15",
+        "rfc_base": "GIG841215",
+        "descripcion": "Excluye S. en C."
+      },
+      {
+        "razon_social": "Construcciones Metalicas Mexicanas, S.A.",
+        "fecha": "1983-01-20",
+        "rfc_base": "CMM830120",
+        "descripcion": "Excluye S.A."
+      },
+      {
+        "razon_social": "Fundicion de Precision Eutectic, S. de R.L.",
+        "fecha": "1986-11-25",
+        "rfc_base": "FPE861125",
+        "descripcion": "Excluye S. de R.L., excluye 'de'"
+      }
+    ],
+    "regla_6_dos_palabras": [
+      {
+        "razon_social": "Fonograbaciones Cinelandia",
+        "fecha": "1984-10-19",
+        "rfc_base": "FCI841019",
+        "descripcion": "Inicial primera + dos primeras de segunda"
+      },
+      {
+        "razon_social": "Aceros Ecatepec",
+        "fecha": "1989-01-30",
+        "rfc_base": "AEC890130",
+        "descripcion": "Inicial primera + dos primeras de segunda"
+      },
+      {
+        "razon_social": "Distribuidora Ges",
+        "fecha": "1985-06-28",
+        "rfc_base": "DGE850628",
+        "descripcion": "Inicial primera + dos primeras de segunda"
+      }
+    ],
+    "regla_7_una_sola_palabra": [
+      {
+        "razon_social": "Arsuyama",
+        "fecha": "1982-11-29",
+        "rfc_base": "ARS821129",
+        "descripcion": "Tres primeras letras"
+      },
+      {
+        "razon_social": "Calidra",
+        "fecha": "1985-09-20",
+        "rfc_base": "CAL850920",
+        "descripcion": "Tres primeras letras"
+      },
+      {
+        "razon_social": "Electrolisis",
+        "fecha": "1984-08-21",
+        "rfc_base": "ELE840821",
+        "descripcion": "Tres primeras letras"
+      }
+    ],
+    "regla_8_menos_de_tres_letras": [
+      {
+        "razon_social": "Al",
+        "fecha": "1983-01-01",
+        "rfc_base": "ALX830101",
+        "descripcion": "Suple con X"
+      },
+      {
+        "razon_social": "Z",
+        "fecha": "1986-01-10",
+        "rfc_base": "ZXX860110",
+        "descripcion": "Suple con XX"
+      }
+    ],
+    "regla_9_articulos_preposiciones": [
+      {
+        "razon_social": "El abastecedor Ferretero",
+        "fecha": "1984-05-10",
+        "rfc_base": "AFE840510",
+        "descripcion": "Excluye 'El'"
+      },
+      {
+        "razon_social": "Cigarros la Tabacalera Mexicana",
+        "fecha": "1986-09-01",
+        "rfc_base": "CTM860901",
+        "descripcion": "Excluye 'la'"
+      },
+      {
+        "razon_social": "Los Viajes Internacionales de Marco Polo",
+        "fecha": "1982-12-25",
+        "rfc_base": "VIM821225",
+        "descripcion": "Excluye 'Los', 'de'"
+      },
+      {
+        "razon_social": "Articulos y Accesorios para Automoviles",
+        "fecha": "1980-05-21",
+        "rfc_base": "AAA800521",
+        "descripcion": "Excluye 'y', 'para'"
+      },
+      {
+        "razon_social": "Productos de la Industria del Papel",
+        "fecha": "1981-12-31",
+        "rfc_base": "PIP811231",
+        "descripcion": "Excluye 'de', 'la', 'del'"
+      }
+    ],
+    "regla_10_numeros": [
+      {
+        "razon_social": "El 12",
+        "fecha": "1980-10-29",
+        "rfc_base": "DOC801029",
+        "descripcion": "12 -> DOCE, excluye 'El'"
+      },
+      {
+        "razon_social": "El 2 de Enero",
+        "fecha": "1984-01-01",
+        "rfc_base": "DEN840101",
+        "descripcion": "2 -> DOS, excluye 'El', 'de'"
+      },
+      {
+        "razon_social": "El 505",
+        "fecha": "1985-12-15",
+        "rfc_base": "QCI851215",
+        "descripcion": "505 -> QUINIENTOS CINCO, excluye 'El'"
+      },
+      {
+        "razon_social": "Editorial Siglo XXI",
+        "fecha": "1983-11-14",
+        "rfc_base": "ESV831114",
+        "descripcion": "XXI -> VEINTIUNO (romano)"
+      }
+    ],
+    "regla_11_compania_sociedad": [
+      {
+        "razon_social": "Compania Periodistica Nacional",
+        "fecha": "1986-11-21",
+        "rfc_base": "PNA861121",
+        "descripcion": "Excluye 'Compañía'"
+      },
+      {
+        "razon_social": "Cia. De Articulos Electricos",
+        "fecha": "1985-01-10",
+        "rfc_base": "AEL850110",
+        "descripcion": "Excluye 'Cía.', 'De'"
+      },
+      {
+        "razon_social": "Cia. Nal. De Subsistencias Mexicanas",
+        "fecha": "1984-10-11",
+        "rfc_base": "NSM841011",
+        "descripcion": "Excluye 'Cía.', 'Nal.', 'De'"
+      },
+      {
+        "razon_social": "Pimienta Hnos. y Cia.",
+        "fecha": "1983-02-28",
+        "rfc_base": "PHN830228",
+        "descripcion": "Excluye 'Hnos.', 'y', 'Cía.'"
+      },
+      {
+        "razon_social": "Sociedad Cooperativa de Produccion Agricola de Michoacan",
+        "fecha": "1986-10-16",
+        "rfc_base": "CPA861016",
+        "descripcion": "Excluye 'Sociedad', 'Cooperativa', 'de'"
+      },
+      {
+        "razon_social": "Sociedad de Consumo Agricola del Sur",
+        "fecha": "1982-11-10",
+        "rfc_base": "CAS821110",
+        "descripcion": "Excluye 'Sociedad', 'de', 'del'"
+      },
+      {
+        "razon_social": "Sociedad de Produccion Rural de Sonora",
+        "fecha": "1980-01-01",
+        "rfc_base": "PRS800101",
+        "descripcion": "Excluye 'Sociedad', 'de'"
+      }
+    ],
+    "regla_12_caracteres_especiales": [
+      {
+        "razon_social": "LA S@NDIA",
+        "fecha": "1986-11-21",
+        "rfc_base": "SND861121",
+        "descripcion": "@ es excluido, 'LA' excluido"
+      },
+      {
+        "razon_social": "LA @",
+        "fecha": "1986-01-20",
+        "rfc_base": "ARR860120",
+        "descripcion": "@ -> ARROBA"
+      },
+      {
+        "razon_social": "LA @ DEL %",
+        "fecha": "1983-01-20",
+        "rfc_base": "APO830120",
+        "descripcion": "@ -> ARROBA, % -> PORCIENTO"
+      },
+      {
+        "razon_social": "@ COMER.COM",
+        "fecha": "1980-02-10",
+        "rfc_base": "ACO800210",
+        "descripcion": "@ -> ARROBA, . excluido"
+      },
+      {
+        "razon_social": "LAS ( BLANCAS )",
+        "fecha": "1970-02-02",
+        "rfc_base": "ABL700202",
+        "descripcion": "( ) excluidos, 'LAS' excluido"
+      },
+      {
+        "razon_social": "EL # DEL TEJADO",
+        "fecha": "2001-02-02",
+        "rfc_base": "NTE010202",
+        "descripcion": "# -> NUMERO, regla 6: N + TE"
+      },
+      {
+        "razon_social": "LA / DEL SUR",
+        "fecha": "2001-01-02",
+        "rfc_base": "DSU010102",
+        "descripcion": "/ excluido, 'LA', 'DEL' excluidos"
+      },
+      {
+        "razon_social": "EL C@FE.NET",
+        "fecha": "2003-02-10",
+        "rfc_base": "CFE030210",
+        "descripcion": "@ y . excluidos, 'EL' excluido"
+      }
+    ]
+  },
+  "personas_fisicas": {
+    "regla_1_formacion_basica": [
+      {
+        "nombre": "Juan",
+        "apellido_paterno": "Barrios",
+        "apellido_materno": "Fernandez",
+        "fecha": "1970-12-13",
+        "rfc_base": "BAFJ701213",
+        "descripcion": "Primera letra + primera vocal paterno + inicial materno + inicial nombre"
+      },
+      {
+        "nombre": "Eva",
+        "apellido_paterno": "Iriarte",
+        "apellido_materno": "Mendez",
+        "fecha": "1969-11-17",
+        "rfc_base": "IIME691117",
+        "descripcion": "Primera letra + primera vocal paterno + inicial materno + inicial nombre"
+      }
+    ],
+    "regla_2_fecha_nacimiento": [
+      {
+        "nombre": "Juan",
+        "apellido_paterno": "Barrios",
+        "apellido_materno": "Fernandez",
+        "fecha": "2007-04-01",
+        "rfc_base": "BAFJ070401",
+        "descripcion": "Formato AAMMDD"
+      },
+      {
+        "nombre": "Francisco",
+        "apellido_paterno": "Ortiz",
+        "apellido_materno": "Perez",
+        "fecha": "1929-02-05",
+        "rfc_base": "OIPF290205",
+        "descripcion": "Formato AAMMDD"
+      },
+      {
+        "nombre": "Manuel",
+        "apellido_paterno": "Martinez",
+        "apellido_materno": "Hernandez",
+        "fecha": "1957-01-02",
+        "rfc_base": "MAHM570102",
+        "descripcion": "Formato AAMMDD"
+      },
+      {
+        "nombre": "Gabriel",
+        "apellido_paterno": "Courturier",
+        "apellido_materno": "Moreno",
+        "fecha": "1960-07-03",
+        "rfc_base": "COMG600703",
+        "descripcion": "Formato AAMMDD"
+      }
+    ],
+    "regla_3_letras_compuestas": [
+      {
+        "nombre": "Manuel",
+        "apellido_paterno": "Chavez",
+        "apellido_materno": "Gonzalez",
+        "fecha": "1924-06-18",
+        "rfc_base": "CAGM240618",
+        "descripcion": "CH -> C"
+      },
+      {
+        "nombre": "Felipe",
+        "apellido_paterno": "Camargo",
+        "apellido_materno": "Llamas",
+        "fecha": "1945-02-28",
+        "rfc_base": "CALF450228",
+        "descripcion": "LL -> L"
+      },
+      {
+        "nombre": "Charles",
+        "apellido_paterno": "Kennedy",
+        "apellido_materno": "Truman",
+        "fecha": "1951-10-12",
+        "rfc_base": "KETC511012",
+        "descripcion": "CH -> C en nombre"
+      }
+    ],
+    "regla_4_apellido_paterno_corto": [
+      {
+        "nombre": "Alvaro",
+        "apellido_paterno": "de la O",
+        "apellido_materno": "Lozano",
+        "fecha": "1940-12-01",
+        "rfc_base": "OLAL401201",
+        "descripcion": "Paterno una letra: inicial paterno + inicial materno + dos primeras nombre"
+      },
+      {
+        "nombre": "Ernesto",
+        "apellido_paterno": "Ek",
+        "apellido_materno": "Rivera",
+        "fecha": "2007-11-20",
+        "rfc_base": "ERER071120",
+        "descripcion": "Paterno dos letras: inicial paterno + inicial materno + dos primeras nombre"
+      }
+    ],
+    "regla_5_apellidos_compuestos": [
+      {
+        "nombre": "Dolores",
+        "apellido_paterno": "San Martin",
+        "apellido_materno": "Davalos",
+        "fecha": "1918-08-12",
+        "rfc_base": "SADD180812",
+        "descripcion": "Se toma primera palabra del compuesto"
+      },
+      {
+        "nombre": "Mario",
+        "apellido_paterno": "Sanchez de la Barquera",
+        "apellido_materno": "Gomez",
+        "fecha": "1919-02-24",
+        "rfc_base": "SAGM190224",
+        "descripcion": "Se toma primera palabra del compuesto"
+      },
+      {
+        "nombre": "Antonio",
+        "apellido_paterno": "Jimenez Ponce",
+        "apellido_materno": "de Leon",
+        "fecha": "1917-08-08",
+        "rfc_base": "JIPA170808",
+        "descripcion": "Se toma primera palabra del compuesto"
+      }
+    ],
+    "regla_6_nombres_maria_jose": [
+      {
+        "nombre": "Luz Maria",
+        "apellido_paterno": "Fernandez",
+        "apellido_materno": "Juarez",
+        "fecha": "1920-02-05",
+        "rfc_base": "FEJL200205",
+        "descripcion": "Maria es primer nombre, se usa inicial del segundo"
+      },
+      {
+        "nombre": "Jose Antonio",
+        "apellido_paterno": "Camargo",
+        "apellido_materno": "Hernandez",
+        "fecha": "1921-12-18",
+        "rfc_base": "CAHA211218",
+        "descripcion": "Jose es primer nombre, se usa inicial del segundo"
+      },
+      {
+        "nombre": "Maria Luisa",
+        "apellido_paterno": "Ramirez",
+        "apellido_materno": "Sanchez",
+        "fecha": "1925-11-12",
+        "rfc_base": "RASL251112",
+        "descripcion": "Maria es primer nombre, se usa inicial del segundo"
+      }
+    ],
+    "regla_7_un_solo_apellido": [
+      {
+        "nombre": "Juan",
+        "apellido_paterno": "Martinez",
+        "apellido_materno": "",
+        "fecha": "1942-01-16",
+        "rfc_base": "MAJU420116",
+        "descripcion": "Dos primeras apellido + dos primeras nombre"
+      },
+      {
+        "nombre": "Gerarda",
+        "apellido_paterno": "Zafra",
+        "apellido_materno": "",
+        "fecha": "1925-11-15",
+        "rfc_base": "ZAGE251115",
+        "descripcion": "Dos primeras apellido + dos primeras nombre"
+      }
+    ],
+    "regla_8_articulos_preposiciones": [
+      {
+        "nombre": "Carmen",
+        "apellido_paterno": "de la Pena",
+        "apellido_materno": "Ramirez",
+        "fecha": "1963-12-01",
+        "rfc_base": "PERC631201",
+        "descripcion": "Excluye 'de', 'la'"
+      },
+      {
+        "nombre": "Mario",
+        "apellido_paterno": "Sanchez de los Cobos",
+        "apellido_materno": "",
+        "fecha": "1970-11-10",
+        "rfc_base": "SACM701110",
+        "descripcion": "Excluye 'de', 'los'"
+      },
+      {
+        "nombre": "Roberto",
+        "apellido_paterno": "Gonzalez y Duran",
+        "apellido_materno": "",
+        "fecha": "1960-01-01",
+        "rfc_base": "GODR600101",
+        "descripcion": "Excluye 'y'"
+      },
+      {
+        "nombre": "Juan",
+        "apellido_paterno": "del Valle",
+        "apellido_materno": "Martinez",
+        "fecha": "1969-10-01",
+        "rfc_base": "VAMJ691001",
+        "descripcion": "Excluye 'del'"
+      }
+    ],
+    "regla_10_caracteres_especiales": [
+      {
+        "nombre": "Roberto",
+        "apellido_paterno": "O'farril",
+        "apellido_materno": "Carballo",
+        "fecha": "1966-11-21",
+        "rfc_base": "OACR661121",
+        "descripcion": "Apostrofe excluido"
+      },
+      {
+        "nombre": "Ruben",
+        "apellido_paterno": "D'angelo",
+        "apellido_materno": "Fargo",
+        "fecha": "1971-01-08",
+        "rfc_base": "DAFR710108",
+        "descripcion": "Apostrofe excluido"
+      },
+      {
+        "nombre": "Luz Ma.",
+        "apellido_paterno": "Fernandez",
+        "apellido_materno": "Juarez",
+        "fecha": "1983-01-20",
+        "rfc_base": "FEJL830120",
+        "descripcion": "Punto excluido, Ma. -> Maria"
+      }
+    ]
+  },
+  "ejemplo_completo_con_homoclave": {
+    "descripcion": "Ejemplo completo del documento SAT con homoclave y dígito verificador",
+    "nombre": "Emma",
+    "apellido_paterno": "Gomez",
+    "apellido_materno": "Diaz",
+    "fecha": "1956-12-31",
+    "rfc_completo": "GODE561231GR8",
+    "rfc_base": "GODE561231",
+    "homoclave": "GR",
+    "digito_verificador": "8",
+    "calculo_homoclave": {
+      "nombre_expandido": "GOMEZ DIAZ EMMA",
+      "valores": "017 26 24 15 39 00 14 19 11 39 00 15 24 24 11",
+      "suma_total": 2535,
+      "ultimas_3_cifras": 535,
+      "cociente": 15,
+      "residuo": 25,
+      "homoclave_cociente": "G",
+      "homoclave_residuo": "R"
+    },
+    "calculo_digito_verificador": {
+      "suma_ponderada": 1026,
+      "residuo_mod_11": 3,
+      "digito": 8
+    }
+  },
+  "palabras_inconvenientes": [
+    {"original": "BUEI", "corregido": "BUEX"},
+    {"original": "BUEY", "corregido": "BUEX"},
+    {"original": "CACA", "corregido": "CACX"},
+    {"original": "CACO", "corregido": "CACX"},
+    {"original": "CAGA", "corregido": "CAGX"},
+    {"original": "CAGO", "corregido": "CAGX"},
+    {"original": "COGE", "corregido": "COGX"},
+    {"original": "COJA", "corregido": "COJX"},
+    {"original": "COJE", "corregido": "COJX"},
+    {"original": "COJI", "corregido": "COJX"},
+    {"original": "COJO", "corregido": "COJX"},
+    {"original": "CULO", "corregido": "CULX"},
+    {"original": "FETO", "corregido": "FETX"},
+    {"original": "GUEY", "corregido": "GUEX"},
+    {"original": "JOTO", "corregido": "JOTX"},
+    {"original": "KACA", "corregido": "KACX"},
+    {"original": "KACO", "corregido": "KACX"},
+    {"original": "KAGA", "corregido": "KAGX"},
+    {"original": "KAGO", "corregido": "KAGX"},
+    {"original": "KOGE", "corregido": "KOGX"},
+    {"original": "KOJO", "corregido": "KOJX"},
+    {"original": "KAKA", "corregido": "KAKX"},
+    {"original": "KULO", "corregido": "KULX"},
+    {"original": "MAME", "corregido": "MAMX"},
+    {"original": "MAMO", "corregido": "MAMX"},
+    {"original": "MEAR", "corregido": "MEAX"},
+    {"original": "MEAS", "corregido": "MEAX"},
+    {"original": "MEON", "corregido": "MEOX"},
+    {"original": "MION", "corregido": "MIOX"},
+    {"original": "MOCO", "corregido": "MOCX"},
+    {"original": "MULA", "corregido": "MULX"},
+    {"original": "PEDA", "corregido": "PEDX"},
+    {"original": "PEDO", "corregido": "PEDX"},
+    {"original": "PENE", "corregido": "PENX"},
+    {"original": "PUTA", "corregido": "PUTX"},
+    {"original": "PUTO", "corregido": "PUTX"},
+    {"original": "QULO", "corregido": "QULX"},
+    {"original": "RATA", "corregido": "RATX"},
+    {"original": "RUIN", "corregido": "RUIX"}
+  ]
+}

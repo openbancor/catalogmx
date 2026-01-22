@@ -402,52 +402,76 @@ class RFCGeneratorFisica {
 
     // Get nombre iniciales (skip JOSE/MARIA if compound)
     String nombreIniciales = nombreClean;
-    final nombreParts = nombreClean.split(' ');
+    final nombreParts =
+        nombreClean.split(' ').where((p) => p.isNotEmpty).toList();
     if (nombreParts.length > 1) {
       if (nombreParts[0] == 'MARIA' || nombreParts[0] == 'JOSE') {
         nombreIniciales = nombreParts.sublist(1).join(' ');
+        if (nombreIniciales.isEmpty) nombreIniciales = nombreParts[0];
       }
     }
 
-    final clave = StringBuffer();
-    bool extraLetter = false;
+    // Get parts of compound surnames
+    final paternoParts =
+        paternoClean.split(' ').where((p) => p.isNotEmpty).toList();
+    final maternoParts =
+        maternoClean.split(' ').where((p) => p.isNotEmpty).toList();
 
-    // First letter of paterno
-    clave.write(paternoClean[0]);
+    final paternoFirst = paternoParts.isNotEmpty ? paternoParts[0] : '';
+    final nombreSafe = nombreIniciales.isNotEmpty ? nombreIniciales : 'X';
 
-    // First vowel of paterno (after first letter)
-    final vowel = getFirstVowel(paternoClean, startIndex: 1);
-    if (vowel != null) {
-      clave.write(vowel);
-    } else {
-      extraLetter = true;
+    // Check if materno originally had prepositions
+    final originalMaternoUpper = apellidoMaterno.toUpperCase().trim();
+    final maternoHadPrepositions = originalMaternoUpper.startsWith('DE ') ||
+        originalMaternoUpper.startsWith('DEL ') ||
+        originalMaternoUpper.startsWith('LA ') ||
+        originalMaternoUpper.startsWith('LOS ') ||
+        originalMaternoUpper.startsWith('LAS ');
+
+    // Determine effective materno: use second word of paterno if materno was preposition-based or empty
+    String effectiveMaternoFirst =
+        maternoParts.isNotEmpty ? maternoParts[0] : '';
+    if (paternoParts.length >= 2 &&
+        (maternoHadPrepositions || effectiveMaternoFirst.isEmpty)) {
+      effectiveMaternoFirst = paternoParts.length >= 2 ? paternoParts[1] : '';
     }
 
-    // First letter of materno or handle extra letter
-    if (maternoClean.isNotEmpty) {
-      clave.write(maternoClean[0]);
-    } else {
-      if (extraLetter) {
-        clave.write(paternoClean.length > 1 ? paternoClean[1] : 'X');
-      } else {
-        extraLetter = true;
-      }
-    }
+    String iniciales = '';
 
-    // First letter of nombre
-    clave.write(nombreIniciales[0]);
-    if (extraLetter && nombreIniciales.length > 1) {
-      clave.write(nombreIniciales[1]);
+    // Regla 4: Apellido paterno de 1-2 letras
+    if (paternoFirst.isNotEmpty &&
+        paternoFirst.length <= 2 &&
+        effectiveMaternoFirst.isNotEmpty) {
+      iniciales = paternoFirst.isNotEmpty ? paternoFirst[0] : 'X';
+      iniciales +=
+          effectiveMaternoFirst.isNotEmpty ? effectiveMaternoFirst[0] : 'X';
+      iniciales += nombreSafe.isNotEmpty ? nombreSafe[0] : 'X';
+      iniciales += nombreSafe.length > 1 ? nombreSafe[1] : 'X';
     }
-
-    var result = clave.toString();
+    // Regla 7: Un solo apellido (sin materno)
+    else if (effectiveMaternoFirst.isEmpty) {
+      final apellido = paternoFirst.isNotEmpty ? paternoFirst : 'X';
+      iniciales = apellido.isNotEmpty ? apellido[0] : 'X';
+      iniciales += apellido.length > 1 ? apellido[1] : 'X';
+      iniciales += nombreSafe.isNotEmpty ? nombreSafe[0] : 'X';
+      iniciales += nombreSafe.length > 1 ? nombreSafe[1] : 'X';
+    }
+    // Regla 1: Formación básica
+    else {
+      iniciales = paternoFirst.isNotEmpty ? paternoFirst[0] : 'X';
+      final vowel = getFirstVowel(paternoFirst, startIndex: 1);
+      iniciales += vowel ?? 'X';
+      iniciales +=
+          effectiveMaternoFirst.isNotEmpty ? effectiveMaternoFirst[0] : 'X';
+      iniciales += nombreSafe.isNotEmpty ? nombreSafe[0] : 'X';
+    }
 
     // Check for cacophonic words
-    if (RFCValidator._cacophonic.contains(result)) {
-      result = result.substring(0, result.length - 1) + 'X';
+    if (RFCValidator._cacophonic.contains(iniciales)) {
+      iniciales = iniciales.substring(0, iniciales.length - 1) + 'X';
     }
 
-    return result;
+    return iniciales;
   }
 
   String _generateDate() {
@@ -485,6 +509,157 @@ class RFCGeneratorFisica {
   }
 }
 
+/// Number conversion tables
+const Map<String, String> _numerosTexto = {
+  '0': 'CERO',
+  '1': 'UNO',
+  '2': 'DOS',
+  '3': 'TRES',
+  '4': 'CUATRO',
+  '5': 'CINCO',
+  '6': 'SEIS',
+  '7': 'SIETE',
+  '8': 'OCHO',
+  '9': 'NUEVE',
+  '10': 'DIEZ',
+  '11': 'ONCE',
+  '12': 'DOCE',
+  '13': 'TRECE',
+  '14': 'CATORCE',
+  '15': 'QUINCE',
+  '16': 'DIECISEIS',
+  '17': 'DIECISIETE',
+  '18': 'DIECIOCHO',
+  '19': 'DIECINUEVE',
+  '20': 'VEINTE',
+  '21': 'VEINTIUNO',
+  '22': 'VEINTIDOS',
+  '23': 'VEINTITRES',
+  '24': 'VEINTICUATRO',
+  '25': 'VEINTICINCO',
+  '26': 'VEINTISEIS',
+  '27': 'VEINTISIETE',
+  '28': 'VEINTIOCHO',
+  '29': 'VEINTINUEVE',
+  '30': 'TREINTA',
+  '40': 'CUARENTA',
+  '50': 'CINCUENTA',
+  '60': 'SESENTA',
+  '70': 'SETENTA',
+  '80': 'OCHENTA',
+  '90': 'NOVENTA',
+  '100': 'CIEN',
+  '200': 'DOSCIENTOS',
+  '300': 'TRESCIENTOS',
+  '400': 'CUATROCIENTOS',
+  '500': 'QUINIENTOS',
+  '600': 'SEISCIENTOS',
+  '700': 'SETECIENTOS',
+  '800': 'OCHOCIENTOS',
+  '900': 'NOVECIENTOS',
+};
+
+const Map<String, int> _numerosRomanos = {
+  'I': 1,
+  'II': 2,
+  'III': 3,
+  'IV': 4,
+  'V': 5,
+  'VI': 6,
+  'VII': 7,
+  'VIII': 8,
+  'IX': 9,
+  'X': 10,
+  'XI': 11,
+  'XII': 12,
+  'XIII': 13,
+  'XIV': 14,
+  'XV': 15,
+  'XVI': 16,
+  'XVII': 17,
+  'XVIII': 18,
+  'XIX': 19,
+  'XX': 20,
+  'XXI': 21,
+  'XXII': 22,
+  'XXIII': 23,
+  'XXIV': 24,
+  'XXV': 25,
+  'XXVI': 26,
+  'XXVII': 27,
+  'XXVIII': 28,
+  'XXIX': 29,
+  'XXX': 30,
+};
+
+const Map<String, String> _specialCharWords = {
+  '@': 'ARROBA',
+  '%': 'PORCIENTO',
+  '#': 'NUMERO',
+  '(': 'ABRE',
+  '/': 'DIAGONAL',
+};
+
+/// Convert Arabic number to text (supports 0-100000)
+String _convertArabigoATexto(int num) {
+  if (num < 0) return num.toString();
+  if (_numerosTexto.containsKey(num.toString())) {
+    return _numerosTexto[num.toString()]!;
+  }
+  if (num == 100000) return 'CIEN MIL';
+
+  final parts = <String>[];
+
+  if (num >= 1000) {
+    final thousands = num ~/ 1000;
+    if (thousands == 1) {
+      parts.add('MIL');
+    } else {
+      parts.add(_convertArabigoATexto(thousands));
+      parts.add('MIL');
+    }
+    num = num % 1000;
+  }
+
+  if (num >= 100) {
+    final hundreds = (num ~/ 100) * 100;
+    if (_numerosTexto.containsKey(hundreds.toString())) {
+      parts.add(_numerosTexto[hundreds.toString()]!);
+    }
+    num = num % 100;
+  }
+
+  if (num > 0) {
+    if (_numerosTexto.containsKey(num.toString())) {
+      parts.add(_numerosTexto[num.toString()]!);
+    } else if (num >= 30) {
+      final tens = (num ~/ 10) * 10;
+      final units = num % 10;
+      if (_numerosTexto.containsKey(tens.toString())) {
+        parts.add(_numerosTexto[tens.toString()]!);
+      }
+      if (units > 0 && _numerosTexto.containsKey(units.toString())) {
+        parts.add(_numerosTexto[units.toString()]!);
+      }
+    }
+  }
+
+  return parts.isNotEmpty ? parts.join(' ') : num.toString();
+}
+
+/// Convert number (Arabic or Roman) to text
+String _convertirNumeroATexto(String numero) {
+  final upper = numero.trim().toUpperCase();
+  if (_numerosRomanos.containsKey(upper)) {
+    return _convertArabigoATexto(_numerosRomanos[upper]!);
+  }
+  final num = int.tryParse(upper);
+  if (num != null && num >= 0) {
+    return _convertArabigoATexto(num);
+  }
+  return numero;
+}
+
 /// RFC Generator for Persona Moral (Company)
 class RFCGeneratorMoral {
   RFCGeneratorMoral({
@@ -506,14 +681,13 @@ class RFCGeneratorMoral {
     'MI',
     'COMPAÑIA',
     'COMPAÑÍA',
+    'COMPANIA', // without accent
     'CIA',
     'CIA.',
     'SOCIEDAD',
     'SOC',
     'SOC.',
-    'COOPERATIVA',
-    'COOP',
-    'COOP.',
+    // Note: COOPERATIVA is NOT excluded according to SAT spec
     'S.A.',
     'SA',
     'S.A',
@@ -551,6 +725,15 @@ class RFCGeneratorMoral {
     'C. V.',
     'SA DE CV',
     'S.A. DE C.V.',
+    'SA DE CV MI',
+    'S.A. DE C.V. MI',
+    'S.A.B. DE C.V.',
+    'SAB DE CV',
+    'S.A.B DE C.V',
+    'SRL DE CV',
+    'S.R.L. DE C.V.',
+    'SRL DE CV MI',
+    'SRL MI',
     'THE',
     'OF',
     'COMPANY',
@@ -615,8 +798,25 @@ class RFCGeneratorMoral {
   String _cleanRazonSocial() {
     var razon = razonSocial.toUpperCase().trim();
 
-    // Remove excluded words
-    for (final excluded in _excludedWords) {
+    // Step 0: Handle special characters - different treatment for standalone vs embedded
+    for (final entry in _specialCharWords.entries) {
+      final char = entry.key;
+      final word = entry.value;
+      // Replace standalone special chars with their word equivalents
+      razon = razon.replaceAllMapped(
+        RegExp('(^|\\s)${RegExp.escape(char)}(\\s|\$)'),
+        (m) => '${m.group(1)}$word${m.group(2)}',
+      );
+    }
+    // Remove special characters embedded inside words
+    for (final char in _specialCharWords.keys) {
+      razon = razon.replaceAll(char, '');
+    }
+
+    // Step 1: First pass - remove excluded words with punctuation patterns
+    final sortedExcluded = List<String>.from(_excludedWords)
+      ..sort((a, b) => b.length.compareTo(a.length));
+    for (final excluded in sortedExcluded) {
       razon = razon.replaceAll(' $excluded ', ' ');
       razon = razon.replaceAll(' $excluded,', ' ');
       razon = razon.replaceAll(' $excluded.', ' ');
@@ -626,28 +826,122 @@ class RFCGeneratorMoral {
       if (razon.endsWith(' $excluded')) {
         razon = razon.substring(0, razon.length - excluded.length - 1);
       }
-    }
-
-    // Replace Ñ with X
-    razon = razon.replaceAll('Ñ', 'X').replaceAll('ñ', 'X');
-
-    // Keep only allowed characters and spaces
-    final result = StringBuffer();
-    for (var i = 0; i < razon.length; i++) {
-      final char = razon[i];
-      if (_allowedChars.contains(char) || char == ' ') {
-        result.write(char);
-      } else {
-        final cleaned = removeDiacritics(char);
-        if (_allowedChars.contains(cleaned)) {
-          result.write(cleaned);
-        } else if (char == ' ') {
-          result.write(' ');
-        }
+      if (razon.endsWith(',$excluded')) {
+        razon = razon.substring(0, razon.length - excluded.length - 1);
       }
     }
 
-    return result.toString().trim();
+    // Step 2: Remove special characters except spaces, letters, numbers, dots, and &
+    const allowedForProcessing =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .ÑÁÉÍÓÚÜñáéíóúü&';
+    final sanitized = StringBuffer();
+    for (var i = 0; i < razon.length; i++) {
+      final char = razon[i];
+      if (allowedForProcessing.contains(char)) {
+        sanitized.write(char);
+      } else {
+        sanitized.write(' ');
+      }
+    }
+    razon = sanitized.toString();
+
+    // Step 3: Substitute Ñ with X
+    razon = razon.replaceAll('Ñ', 'X').replaceAll('ñ', 'X');
+
+    // Step 4: Handle initials (F.A.Z. → F A Z) and convert numbers
+    final wordsTemp = <String>[];
+    final isInitial = <bool>[];
+
+    for (final word in razon.split(RegExp(r'\s+'))) {
+      final trimmed = word.trim();
+      if (trimmed.isEmpty) continue;
+
+      // Detect initials pattern
+      if (trimmed.contains('.') && trimmed.length <= 15) {
+        final parts =
+            trimmed.split('.').where((c) => c.trim().isNotEmpty).toList();
+        if (parts.isNotEmpty &&
+            parts.every((p) =>
+                p.length <= 2 &&
+                RegExp(r'^[A-Z]+$', caseSensitive: false).hasMatch(p))) {
+          for (final part in parts) {
+            wordsTemp.add(part.toUpperCase());
+            isInitial.add(true);
+          }
+          continue;
+        }
+      }
+      // Remove trailing dots from normal words
+      final cleanWord = trimmed.replaceAll(RegExp(r'\.+$'), '');
+      if (cleanWord.isNotEmpty) {
+        wordsTemp.add(cleanWord);
+        isInitial.add(false);
+      }
+    }
+
+    // Step 5: Convert numbers to text (Arabic and Roman)
+    final wordsConverted = <String>[];
+    final isInitialConverted = <bool>[];
+
+    for (var i = 0; i < wordsTemp.length; i++) {
+      final word = wordsTemp[i];
+      final isInit = isInitial[i];
+      // Check if it's a number
+      if (RegExp(r'^\d+$').hasMatch(word) ||
+          _numerosRomanos.containsKey(word)) {
+        wordsConverted.add(_convertirNumeroATexto(word));
+      } else {
+        wordsConverted.add(word);
+      }
+      isInitialConverted.add(isInit);
+    }
+
+    // Step 6: Second pass - Remove excluded words (but keep initials)
+    final filteredWords = <String>[];
+    for (var i = 0; i < wordsConverted.length; i++) {
+      final word = wordsConverted[i].trim().toUpperCase();
+      if (word.isEmpty) continue;
+      if (isInitialConverted[i]) {
+        filteredWords.add(word);
+      } else if (!_excludedWords.contains(word)) {
+        filteredWords.add(word);
+      }
+    }
+
+    // If ALL words were excluded, keep the original words
+    final wordsToUse = filteredWords.isEmpty
+        ? wordsConverted.map((w) => w.toUpperCase()).toList()
+        : filteredWords;
+
+    // Step 7: Clean remaining special characters and accents
+    final result = StringBuffer();
+    for (final char in wordsToUse.join(' ').split('')) {
+      if (_allowedChars.contains(char)) {
+        result.write(char);
+      } else if (char == ' ') {
+        result.write(' ');
+      } else {
+        final decoded = removeDiacritics(char);
+        if (_allowedChars.contains(decoded.toUpperCase())) {
+          result.write(decoded.toUpperCase());
+        }
+      }
+    }
+    final resultStr = result.toString().trim().toUpperCase();
+
+    // Step 8: Handle consonant compounds (CH → C, LL → L)
+    final wordsFinal = <String>[];
+    for (final word in resultStr.split(RegExp(r'\s+'))) {
+      var processedWord = word;
+      if (word.startsWith('CH')) {
+        processedWord = 'C${word.substring(2)}';
+      } else if (word.startsWith('LL')) {
+        processedWord = 'L${word.substring(2)}';
+      }
+      wordsFinal.add(processedWord);
+    }
+
+    return wordsFinal.join(' ');
   }
 
   String _generateLetters() {

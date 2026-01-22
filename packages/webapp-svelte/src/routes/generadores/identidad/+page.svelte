@@ -19,11 +19,11 @@
 		generateNss
 	} from '$lib/catalogmx';
 	import { query } from '$lib/db';
-	import type { Faker } from '@faker-js/faker';
 	import DireccionEditor from '$lib/components/DireccionEditor.svelte';
 
-	// Faker is loaded dynamically to avoid SSR issues
-	let faker: Faker;
+	// Faker is loaded dynamically to avoid SSR issues - using any to avoid type import
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	let faker: any;
 	import DatosBancarios from '$lib/components/DatosBancarios.svelte';
 	import RegimenesEditor from '$lib/components/RegimenesEditor.svelte';
 

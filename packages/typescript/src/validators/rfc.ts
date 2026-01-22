@@ -2,6 +2,12 @@
  * RFC (Registro Federal de Contribuyentes) Validator and Generator
  * Mexican Tax ID Code validation and generation for both natural persons (Persona Física)
  * and legal entities (Persona Moral)
+ *
+ * Algorithm Reference:
+ * https://www.mariovaldez.net/files/IFAI%200610100135506%20065%20Algoritmo%20para%20generar%20el%20RFC%20con%20homoclave%20para%20personas%20fisicas%20y%20morales.pdf
+ *
+ * Note: The algorithm generates a theoretical homoclave based on SAT rules.
+ * The actual homoclave assigned by SAT may differ to ensure uniqueness.
  */
 
 const CACOPHONIC_WORDS = [
@@ -71,14 +77,16 @@ const EXCLUDED_WORDS_MORALES = [
   'MI',
   'COMPAÑIA',
   'COMPAÑÍA',
+  'COMPANIA', // without accent
   'CIA',
   'CIA.',
   'SOCIEDAD',
   'SOC',
   'SOC.',
-  'COOPERATIVA',
-  'COOP',
-  'COOP.',
+  // Note: COOPERATIVA is NOT excluded according to SAT spec
+  // The regla 11 only excludes: Compañía, Cía., Sociedad, Soc.
+  // Note: HNOS (Hermanos) and NAL (Nacional) are NOT excluded - they form part of the RFC
+  // Only abbreviations for society types are excluded
   'S.A.',
   'SA',
   'S.A',
@@ -269,9 +277,186 @@ const HOMOCLAVE_ASSIGN_TABLE = [
 const VOCALES = 'AEIOUÁÉÍÓÚ';
 // const CONSONANTES = 'BCDFGHJKLMNÑPQRSTVWXYZ'; // Reserved for future use
 
+// Number conversion tables (Arabic and Roman to text) - SAT specification
+const NUMEROS_TEXTO: Record<string, string> = {
+  '0': 'CERO',
+  '1': 'UNO',
+  '2': 'DOS',
+  '3': 'TRES',
+  '4': 'CUATRO',
+  '5': 'CINCO',
+  '6': 'SEIS',
+  '7': 'SIETE',
+  '8': 'OCHO',
+  '9': 'NUEVE',
+  '10': 'DIEZ',
+  '11': 'ONCE',
+  '12': 'DOCE',
+  '13': 'TRECE',
+  '14': 'CATORCE',
+  '15': 'QUINCE',
+  '16': 'DIECISEIS',
+  '17': 'DIECISIETE',
+  '18': 'DIECIOCHO',
+  '19': 'DIECINUEVE',
+  '20': 'VEINTE',
+  '21': 'VEINTIUNO',
+  '22': 'VEINTIDOS',
+  '23': 'VEINTITRES',
+  '24': 'VEINTICUATRO',
+  '25': 'VEINTICINCO',
+  '26': 'VEINTISEIS',
+  '27': 'VEINTISIETE',
+  '28': 'VEINTIOCHO',
+  '29': 'VEINTINUEVE',
+  '30': 'TREINTA',
+  '40': 'CUARENTA',
+  '50': 'CINCUENTA',
+  '60': 'SESENTA',
+  '70': 'SETENTA',
+  '80': 'OCHENTA',
+  '90': 'NOVENTA',
+  '100': 'CIEN',
+  '200': 'DOSCIENTOS',
+  '300': 'TRESCIENTOS',
+  '400': 'CUATROCIENTOS',
+  '500': 'QUINIENTOS',
+  '600': 'SEISCIENTOS',
+  '700': 'SETECIENTOS',
+  '800': 'OCHOCIENTOS',
+  '900': 'NOVECIENTOS',
+};
+
+const NUMEROS_ROMANOS: Record<string, number> = {
+  I: 1,
+  II: 2,
+  III: 3,
+  IV: 4,
+  V: 5,
+  VI: 6,
+  VII: 7,
+  VIII: 8,
+  IX: 9,
+  X: 10,
+  XI: 11,
+  XII: 12,
+  XIII: 13,
+  XIV: 14,
+  XV: 15,
+  XVI: 16,
+  XVII: 17,
+  XVIII: 18,
+  XIX: 19,
+  XX: 20,
+  XXI: 21,
+  XXII: 22,
+  XXIII: 23,
+  XXIV: 24,
+  XXV: 25,
+  XXVI: 26,
+  XXVII: 27,
+  XXVIII: 28,
+  XXIX: 29,
+  XXX: 30,
+};
+
+const ALLOWED_CHARS = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ&';
+
+/**
+ * Convert number (Arabic or Roman) to text according to SAT specification
+ * Handles compound numbers like 505 → QUINIENTOS CINCO
+ */
+function convertirNumeroATexto(numero: string): string {
+  const upper = numero.trim().toUpperCase();
+
+  // Try as Roman numeral
+  if (upper in NUMEROS_ROMANOS) {
+    const arabigo = NUMEROS_ROMANOS[upper];
+    return convertArabigoATexto(arabigo);
+  }
+
+  // Try as Arabic numeral
+  const num = parseInt(upper, 10);
+  if (!isNaN(num) && num >= 0) {
+    return convertArabigoATexto(num);
+  }
+
+  return numero; // Return original if cannot convert
+}
+
+/**
+ * Convert an Arabic number to text (supports 0-100000)
+ * Examples:
+ * - 12 → DOCE
+ * - 505 → QUINIENTOS CINCO
+ * - 9520 → NUEVE MIL QUINIENTOS VEINTE
+ * - 100000 → CIEN MIL
+ */
+function convertArabigoATexto(num: number): string {
+  if (num < 0) return num.toString();
+
+  // Direct lookup for simple numbers
+  if (num.toString() in NUMEROS_TEXTO) {
+    return NUMEROS_TEXTO[num.toString()];
+  }
+
+  // Handle compound numbers
+  const parts: string[] = [];
+
+  // Handle 100000 specifically (CIEN MIL)
+  if (num === 100000) {
+    return 'CIEN MIL';
+  }
+
+  // Thousands (1000-99999)
+  if (num >= 1000) {
+    const thousands = Math.floor(num / 1000);
+    if (thousands === 1) {
+      parts.push('MIL');
+    } else {
+      // Convert the thousands part recursively
+      const thousandsText = convertArabigoATexto(thousands);
+      parts.push(thousandsText);
+      parts.push('MIL');
+    }
+    num = num % 1000;
+  }
+
+  // Hundreds (100-999)
+  if (num >= 100) {
+    const hundreds = Math.floor(num / 100) * 100;
+    if (hundreds.toString() in NUMEROS_TEXTO) {
+      parts.push(NUMEROS_TEXTO[hundreds.toString()]);
+    }
+    num = num % 100;
+  }
+
+  // Tens and units (1-99)
+  if (num > 0) {
+    if (num.toString() in NUMEROS_TEXTO) {
+      parts.push(NUMEROS_TEXTO[num.toString()]);
+    } else if (num >= 30) {
+      // 31-99 (except 30, 40, 50, etc.)
+      const tens = Math.floor(num / 10) * 10;
+      const units = num % 10;
+      if (tens.toString() in NUMEROS_TEXTO) {
+        parts.push(NUMEROS_TEXTO[tens.toString()]);
+      }
+      if (units > 0 && units.toString() in NUMEROS_TEXTO) {
+        parts.push(NUMEROS_TEXTO[units.toString()]);
+      }
+    }
+  }
+
+  return parts.length > 0 ? parts.join(' ') : num.toString();
+}
+
 function cleanName(value: string, excluded: string[]): string {
   const upper = removeAccents(value.toUpperCase());
-  const sanitized = upper.replace(/[^A-ZÑ&\s]/g, ' ');
+  // Remove apostrophes without adding space (O'farril -> OFARRIL)
+  const noApostrophe = upper.replace(/'/g, '');
+  // Replace other special characters with space
+  const sanitized = noApostrophe.replace(/[^A-ZÑ&\s]/g, ' ');
   const parts = sanitized.split(/\s+/).filter((p) => p.length > 0 && !excluded.includes(p));
   return parts.join(' ');
 }
@@ -482,27 +667,60 @@ export function generateRfcPersonaFisica(input: {
     nombreIniciales = nombreParts.slice(1).join(' ') || nombreParts[0];
   }
 
-  const paternoSafe = paterno || 'X';
-  let iniciales = paternoSafe.charAt(0);
-  const paternoVowel =
-    paternoSafe
-      .slice(1)
-      .split('')
-      .find((c) => VOCALES.includes(c)) || 'X';
-  let extraLetter = false;
-  iniciales += paternoVowel;
+  // Get the first word of each compound name (for compound surnames)
+  const paternoParts = paterno.split(' ').filter(Boolean);
+  const maternoParts = materno.split(' ').filter(Boolean);
 
-  const maternoSafe = materno || '';
-  if (maternoSafe) {
-    iniciales += maternoSafe.charAt(0);
-  } else {
-    extraLetter = true;
+  const paternoFirst = paternoParts[0] || '';
+  const nombreSafe = nombreIniciales || 'X';
+
+  // Check if materno originally had prepositions (de, del, la, los, etc.)
+  // If so, and paterno has 2+ words, use second word of paterno as effective materno
+  const originalMaternoUpper = input.apellidoMaterno.toUpperCase().trim();
+  const maternoHadPrepositions =
+    originalMaternoUpper.startsWith('DE ') ||
+    originalMaternoUpper.startsWith('DEL ') ||
+    originalMaternoUpper.startsWith('LA ') ||
+    originalMaternoUpper.startsWith('LOS ') ||
+    originalMaternoUpper.startsWith('LAS ');
+
+  // Determine effective materno: use second word of paterno if materno was preposition-based or empty
+  let effectiveMaternoFirst = maternoParts[0] || '';
+  if (paternoParts.length >= 2 && (maternoHadPrepositions || !effectiveMaternoFirst)) {
+    effectiveMaternoFirst = paternoParts[1] || '';
   }
 
-  const nombreSafe = nombreIniciales || 'X';
-  iniciales += nombreSafe.charAt(0);
-  if (extraLetter && nombreSafe.length > 1) {
-    iniciales += nombreSafe.charAt(1);
+  let iniciales = '';
+
+  // Regla 4: Apellido paterno de 1-2 letras
+  // Se usa: inicial paterno + inicial materno + dos primeras del nombre
+  if (paternoFirst.length > 0 && paternoFirst.length <= 2 && effectiveMaternoFirst.length > 0) {
+    iniciales = paternoFirst.charAt(0);
+    iniciales += effectiveMaternoFirst.charAt(0);
+    iniciales += nombreSafe.charAt(0) || 'X';
+    iniciales += nombreSafe.charAt(1) || 'X';
+  }
+  // Regla 7: Un solo apellido (sin materno)
+  // Se usa: dos primeras del apellido + dos primeras del nombre
+  else if (!effectiveMaternoFirst) {
+    const apellido = paternoFirst || 'X';
+    iniciales = apellido.charAt(0) || 'X';
+    iniciales += apellido.charAt(1) || 'X';
+    iniciales += nombreSafe.charAt(0) || 'X';
+    iniciales += nombreSafe.charAt(1) || 'X';
+  }
+  // Regla 1: Formación básica (paterno con 3+ letras y con materno)
+  // Se usa: primera letra + primera vocal interior paterno + inicial materno + inicial nombre
+  else {
+    iniciales = paternoFirst.charAt(0);
+    const paternoVowel =
+      paternoFirst
+        .slice(1)
+        .split('')
+        .find((c) => VOCALES.includes(c)) || 'X';
+    iniciales += paternoVowel;
+    iniciales += effectiveMaternoFirst.charAt(0);
+    iniciales += nombreSafe.charAt(0);
   }
 
   // Handle cacophonic words
@@ -546,8 +764,186 @@ function calculateHomoclave(fullName: string): string {
   return (HOMOCLAVE_ASSIGN_TABLE[idx1] ?? '0') + (HOMOCLAVE_ASSIGN_TABLE[idx2] ?? '0');
 }
 
+// Special character to word conversions according to SAT specification
+// These only apply when the character is standalone (surrounded by spaces/boundaries)
+const SPECIAL_CHAR_WORDS: Record<string, string> = {
+  '@': 'ARROBA',
+  '%': 'PORCIENTO',
+  '#': 'NUMERO',
+  '(': 'ABRE',
+  '/': 'DIAGONAL',
+};
+
+/**
+ * Clean company name according to SAT official rules for Persona Moral
+ * Following the complete algorithm from Python implementation
+ *
+ * Special character handling rules (SAT specification):
+ * - Standalone special chars (@ % #) → converted to words (ARROBA, PORCIENTO, NUMERO)
+ * - Special chars inside words (S@NDIA, C@FE) → removed entirely
+ */
+function cleanRazonSocialForRfc(razonSocial: string): string {
+  let razon = razonSocial.toUpperCase().trim();
+
+  // Step 0: Handle special characters - different treatment for standalone vs embedded
+  // First, mark standalone special characters by surrounding with unique markers
+  // A special char is standalone if it's surrounded by spaces or at string boundaries
+  for (const [char, word] of Object.entries(SPECIAL_CHAR_WORDS)) {
+    const escaped = escapeRegex(char);
+    // Replace standalone special chars with their word equivalents
+    // Pattern: start or space, then char, then space or end
+    razon = razon.replace(new RegExp(`(^|\\s)${escaped}(\\s|$)`, 'g'), `$1${word}$2`);
+  }
+
+  // Remove special characters that are embedded inside words (not standalone)
+  for (const char of Object.keys(SPECIAL_CHAR_WORDS)) {
+    razon = razon.replace(new RegExp(escapeRegex(char), 'g'), '');
+  }
+
+  // Step 1: First pass - remove excluded words with punctuation patterns
+  // Process longer words first to avoid partial matches (e.g., S.A.B. before S.A.)
+  const sortedExcluded = [...EXCLUDED_WORDS_MORALES].sort((a, b) => b.length - a.length);
+  for (const excluded of sortedExcluded) {
+    // Try exact match with spaces
+    razon = razon.replace(new RegExp(` ${escapeRegex(excluded)} `, 'g'), ' ');
+    razon = razon.replace(new RegExp(` ${escapeRegex(excluded)},`, 'g'), ' ');
+    razon = razon.replace(new RegExp(` ${escapeRegex(excluded)}\\.`, 'g'), ' ');
+    // Try at beginning
+    if (razon.startsWith(excluded + ' ')) {
+      razon = razon.slice(excluded.length + 1);
+    }
+    // Try at end
+    if (razon.endsWith(' ' + excluded)) {
+      razon = razon.slice(0, -excluded.length - 1);
+    }
+    if (razon.endsWith(',' + excluded)) {
+      razon = razon.slice(0, -excluded.length - 1);
+    }
+  }
+
+  // Step 2: Remove special characters except spaces, letters, numbers, dots, and &
+  // The & character is valid in RFC and represents "y" (and)
+  // Characters to remove according to SAT: !, $, ", -, /, +, (, ), etc.
+  const allowedForProcessing = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .ÑÁÉÍÓÚÜñáéíóúü&';
+  razon = razon
+    .split('')
+    .map((c) => (allowedForProcessing.includes(c) ? c : ' '))
+    .join('');
+
+  // Step 3: Substitute Ñ with X
+  razon = razon.replace(/Ñ/g, 'X').replace(/ñ/g, 'X');
+
+  // Step 4: Handle initials (F.A.Z. → F A Z)
+  // Track which words are initials to keep them even if they match excluded words
+  const wordsTemp: string[] = [];
+  const isInitial: boolean[] = [];
+
+  for (const word of razon.split(/\s+/)) {
+    const trimmed = word.trim();
+    if (!trimmed) continue;
+
+    // Detect initials pattern: letter.letter.letter or similar
+    if (trimmed.includes('.') && trimmed.length <= 15) {
+      const parts = trimmed.split('.').filter((c) => c.trim());
+      // If all parts are 1-2 characters and alphabetic, they are initials
+      if (parts.length > 0 && parts.every((p) => p.length <= 2 && /^[A-Z]+$/i.test(p))) {
+        for (const part of parts) {
+          wordsTemp.push(part.toUpperCase());
+          isInitial.push(true);
+        }
+        continue;
+      }
+    }
+    // Remove trailing dots from normal words
+    const cleanWord = trimmed.replace(/\.+$/, '');
+    if (cleanWord) {
+      wordsTemp.push(cleanWord);
+      isInitial.push(false);
+    }
+  }
+
+  // Step 5: Convert numbers to text (Arabic and Roman)
+  const wordsConverted: string[] = [];
+  const isInitialConverted: boolean[] = [];
+
+  for (let i = 0; i < wordsTemp.length; i++) {
+    const word = wordsTemp[i];
+    const isInit = isInitial[i];
+    // Check if it's a number (Arabic or Roman)
+    if (/^\d+$/.test(word) || word in NUMEROS_ROMANOS) {
+      wordsConverted.push(convertirNumeroATexto(word));
+    } else {
+      wordsConverted.push(word);
+    }
+    isInitialConverted.push(isInit);
+  }
+
+  // Step 6: Second pass - Remove excluded words (but keep initials)
+  // First, try filtering out excluded words
+  const filteredWords: string[] = [];
+  for (let i = 0; i < wordsConverted.length; i++) {
+    const word = wordsConverted[i].trim().toUpperCase();
+    if (!word) continue;
+    // Keep initials even if they match excluded words
+    if (isInitialConverted[i]) {
+      filteredWords.push(word);
+    } else if (!EXCLUDED_WORDS_MORALES.includes(word)) {
+      filteredWords.push(word);
+    }
+  }
+
+  // If ALL words were excluded, keep the original words (the company name itself)
+  // This handles cases like "Al" where "AL" is an excluded word but is the actual name
+  const wordsToUse =
+    filteredWords.length === 0 ? wordsConverted.map((w) => w.toUpperCase()) : filteredWords;
+
+  // Step 7: Clean remaining special characters and accents
+  let result = '';
+  for (const char of wordsToUse.join(' ')) {
+    if (ALLOWED_CHARS.includes(char)) {
+      result += char;
+    } else if (char === ' ') {
+      result += ' ';
+    } else {
+      // Use accent removal for accented characters
+      const decoded = removeAccents(char);
+      if (ALLOWED_CHARS.includes(decoded.toUpperCase())) {
+        result += decoded.toUpperCase();
+      }
+    }
+  }
+  result = result.trim().toUpperCase();
+
+  // Step 8: Handle consonant compounds (CH → C, LL → L) at the beginning of words
+  const wordsFinal: string[] = [];
+  for (const word of result.split(/\s+/)) {
+    let processedWord = word;
+    if (word.startsWith('CH')) {
+      processedWord = 'C' + word.slice(2);
+    } else if (word.startsWith('LL')) {
+      processedWord = 'L' + word.slice(2);
+    }
+    wordsFinal.push(processedWord);
+  }
+
+  return wordsFinal.join(' ');
+}
+
+/**
+ * Escape special regex characters
+ */
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 /**
  * Generate RFC for Persona Moral (legal entity)
+ * Uses complete SAT algorithm including:
+ * - Excluded words removal with punctuation patterns
+ * - Ñ → X substitution
+ * - Initials handling (F.A.Z. → F A Z)
+ * - Number conversion (Arabic and Roman to text)
+ * - Consonant compounds (CH → C, LL → L)
  */
 export function generateRfcPersonaMoral(input: {
   razonSocial: string;
@@ -555,34 +951,32 @@ export function generateRfcPersonaMoral(input: {
 }): string {
   const fechaParts = parseDateInput(input.fechaConstitucion);
 
-  let razonSocial = removeAccents(input.razonSocial.toUpperCase().trim());
+  const razonSocialClean = cleanRazonSocialForRfc(input.razonSocial);
+  const words = razonSocialClean.split(/\s+/).filter((w) => w.length > 0);
 
-  // Remove excluded words
-  EXCLUDED_WORDS_MORALES.forEach((word) => {
-    const regex = new RegExp(`\\b${word}\\b`, 'g');
-    razonSocial = razonSocial.replace(regex, ' ');
-  });
-
-  const words = razonSocial.split(/\s+/).filter((w) => w.length > 0);
-  const razonSocialClean = words.join(' ');
+  if (words.length === 0) {
+    throw new Error('Razón social vacía después de limpiar');
+  }
 
   let iniciales = '';
 
   if (words.length === 1) {
-    // Single word: first 3 letters
-    iniciales = words[0].slice(0, 3);
+    // Single word: first 3 letters (pad with X if needed)
+    const word = words[0];
+    iniciales = (word[0] || 'X') + (word[1] || 'X') + (word[2] || 'X');
   } else if (words.length === 2) {
-    // Two words: first letter of first, first two letters of second
-    iniciales = words[0].charAt(0);
-    iniciales += words[1].charAt(0);
-    iniciales += words[1].charAt(1) || 'X';
+    // Two words: first letter of first word, first two letters of second word
+    // According to SAT: "se toma la inicial de la primera y las dos primeras letras de la segunda"
+    iniciales = words[0][0] + words[1][0] + (words[1][1] || 'X');
   } else {
-    // Three or more words: first letter of first 3 words
-    iniciales = words[0].charAt(0) + words[1].charAt(0) + words[2].charAt(0);
+    // Three or more words: first letter of each of the first three words
+    iniciales = words[0][0] + words[1][0] + words[2][0];
   }
 
-  // Pad if necessary
-  iniciales = iniciales.padEnd(3, 'X').slice(0, 3);
+  // Check for cacophonic words
+  if (CACOPHONIC_WORDS.includes(iniciales)) {
+    iniciales = iniciales.slice(0, 2) + 'X';
+  }
 
   // Format date
   const year = fechaParts.year.toString().slice(-2);
@@ -591,13 +985,42 @@ export function generateRfcPersonaMoral(input: {
 
   const rfcBase = iniciales + year + month + day;
 
-  const homoclave = calculateHomoclave(razonSocialClean);
+  // Calculate homoclave using the cleaned name
+  const homoclave = calculateHomoclaveMoral(razonSocialClean);
   const rfcWithHomoclave = rfcBase + homoclave;
 
-  // Calculate checksum (add placeholder '0' because calculateChecksum expects 12 chars and removes last one)
+  // Calculate checksum
   const checksum = calculateChecksum(rfcWithHomoclave + '0');
 
   return rfcWithHomoclave + checksum;
+}
+
+/**
+ * Calculate homoclave specifically for Persona Moral
+ * Uses the cleaned razón social
+ */
+function calculateHomoclaveMoral(cleanedName: string): string {
+  const parts: string[] = ['0'];
+  for (const char of cleanedName) {
+    if (char in HOMOCLAVE_TABLE) {
+      parts.push(HOMOCLAVE_TABLE[char]);
+    } else if (char === ' ') {
+      parts.push(HOMOCLAVE_TABLE[' ']);
+    }
+  }
+  const cadena = parts.join('');
+  let suma = 0;
+  for (let i = 0; i < cadena.length - 1; i++) {
+    const current = parseInt(cadena.slice(i, i + 2), 10);
+    const next = parseInt(cadena[i + 1], 10);
+    if (Number.isFinite(current) && Number.isFinite(next)) {
+      suma += current * next;
+    }
+  }
+  const modulo = suma % 1000;
+  const idx1 = Math.floor(modulo / 34);
+  const idx2 = modulo % 34;
+  return (HOMOCLAVE_ASSIGN_TABLE[idx1] ?? '0') + (HOMOCLAVE_ASSIGN_TABLE[idx2] ?? '0');
 }
 
 function parseDateInput(value: Date | string): { year: number; month: number; day: number } {

@@ -13,9 +13,9 @@
 		municipio: string;
 		estado: string;
 		ciudad: string;
-		cp_oficina: string;
 		codigo_estado: string;
 		codigo_municipio: string;
+		zona: string;
 	}
 
 	let data = $state<CodigoPostal[]>([]);
@@ -99,7 +99,7 @@
 
 				// Get data for search
 				data = await query<CodigoPostal>(
-					`SELECT cp, asentamiento, tipo_asentamiento, municipio, estado, ciudad, cp_oficina, codigo_estado, codigo_municipio
+					`SELECT cp, asentamiento, tipo_asentamiento, municipio, estado, ciudad, codigo_estado, codigo_municipio, zona
 					 FROM codigos_postales
 					 WHERE ${normCp} LIKE '${searchPattern}'
 					    OR ${normAsentamiento} LIKE '${searchPattern}'
@@ -111,7 +111,7 @@
 			} else {
 				// Normal mode with pagination
 				data = await query<CodigoPostal>(
-					`SELECT cp, asentamiento, tipo_asentamiento, municipio, estado, ciudad, cp_oficina, codigo_estado, codigo_municipio
+					`SELECT cp, asentamiento, tipo_asentamiento, municipio, estado, ciudad, codigo_estado, codigo_municipio, zona
 					 FROM codigos_postales
 					 ORDER BY cp
 					 LIMIT ${limitNum} OFFSET ${offsetNum}`

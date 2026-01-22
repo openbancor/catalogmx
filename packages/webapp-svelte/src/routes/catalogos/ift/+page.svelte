@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { base } from '$app/paths';
-	import { ChevronRight, Radio, Phone } from 'lucide-svelte';
+	import { ChevronRight, Radio, Phone, MapPin } from 'lucide-svelte';
 </script>
 
 <svelte:head>
 	<title>IFT - Instituto Federal de Telecomunicaciones - catalogmx</title>
-	<meta name="description" content="Catálogos del Instituto Federal de Telecomunicaciones (IFT) - Operadores móviles de México." />
+	<meta name="description" content="Catalogos del Instituto Federal de Telecomunicaciones (IFT) - Codigos LADA, operadores moviles de Mexico y plan de numeracion nacional." />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -36,6 +36,25 @@
 	<!-- Catalog List -->
 	<div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
 		<a
+			href="{base}/catalogos/ift/ladas"
+			class="card p-6 hover:shadow-lg transition-shadow"
+		>
+			<div class="flex items-start gap-4">
+				<div class="bg-blue-100 dark:bg-blue-900/30 p-2 rounded">
+					<MapPin class="h-5 w-5 text-blue-600 dark:text-blue-400" />
+				</div>
+				<div class="flex-1">
+					<h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-1">
+						Codigos LADA
+					</h3>
+					<p class="text-sm text-slate-600 dark:text-slate-400">
+						402 prefijos telefonicos de Mexico con ciudad, estado y region
+					</p>
+				</div>
+				<ChevronRight class="h-5 w-5 text-slate-400 flex-shrink-0" />
+			</div>
+		</a>
+		<a
 			href="{base}/catalogos/ift/operadores"
 			class="card p-6 hover:shadow-lg transition-shadow"
 		>
@@ -45,10 +64,10 @@
 				</div>
 				<div class="flex-1">
 					<h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-1">
-						Operadores Móviles
+						Operadores Moviles
 					</h3>
 					<p class="text-sm text-slate-600 dark:text-slate-400">
-						Catálogo de operadores de telefonía móvil en México (OMR y OMV)
+						Catalogo de operadores de telefonia movil en Mexico (OMR y OMV)
 					</p>
 				</div>
 				<ChevronRight class="h-5 w-5 text-slate-400 flex-shrink-0" />

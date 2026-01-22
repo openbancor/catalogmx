@@ -92,15 +92,28 @@
 		}
 	}
 
-	// Auto-generate when inputs change
+	// Track previous values to avoid infinite loops
+	let prevInputs = $state('');
+
+	// Auto-generate when inputs change (with deduplication)
 	$effect(() => {
-		if (personType === 'fisica') {
-			if (nombre && apellidoPaterno && fechaNacimiento) {
-				generateRFC();
-			}
-		} else {
-			if (razonSocial && fechaConstitucion) {
-				generateRFC();
+		const currentInputs =
+			personType === 'fisica'
+				? `${personType}|${nombre}|${apellidoPaterno}|${apellidoMaterno}|${fechaNacimiento}`
+				: `${personType}|${razonSocial}|${fechaConstitucion}`;
+
+		// Only regenerate if inputs actually changed
+		if (currentInputs !== prevInputs) {
+			prevInputs = currentInputs;
+
+			if (personType === 'fisica') {
+				if (nombre && apellidoPaterno && fechaNacimiento) {
+					generateRFC();
+				}
+			} else {
+				if (razonSocial && fechaConstitucion) {
+					generateRFC();
+				}
 			}
 		}
 	});

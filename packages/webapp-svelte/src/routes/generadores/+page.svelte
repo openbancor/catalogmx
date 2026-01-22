@@ -1,8 +1,24 @@
 <script lang="ts">
 	import { base } from '$app/paths';
-	import { Sparkles, CreditCard, User, Building2 } from 'lucide-svelte';
+	import { Sparkles, CreditCard, User, Building2, Users } from 'lucide-svelte';
 
 	const generators = [
+		{
+			id: 'identidad',
+			name: 'Identidades',
+			description: 'Identidades completas de prueba',
+			longDescription: 'Genera identidades mexicanas completas con todos los datos consistentes para testing',
+			href: `${base}/generadores/identidad`,
+			icon: Users,
+			color: 'bg-purple-500',
+			features: [
+				'Persona física con RFC, CURP, NSS, CLABE',
+				'Persona moral con representante legal',
+				'CP y colonias del catálogo SEPOMEX',
+				'Datos consistentes entre sí'
+			],
+			status: 'available'
+		},
 		{
 			id: 'rfc',
 			name: 'RFC',

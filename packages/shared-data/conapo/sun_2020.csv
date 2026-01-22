@@ -1,0 +1,454 @@
+cve_cd,nom_cd,pob_2020
+9.01,Ciudad de México,20729864
+14.01,Guadalajara,4957649
+19.01,Monterrey,4936214
+21.01,Puebla,2696312
+2.01,Tijuana,1976927
+15.01,Toluca,1890068
+11.01,León,1623950
+8.01,Ciudad Juárez,1501551
+22.01,Querétaro,1347326
+24.01,San Luis Potosí,1198372
+5.01,Torreón,1185286
+31.01,Mérida,1166196
+1.01,Aguascalientes,1000160
+5.02,Saltillo,993975
+8.02,Chihuahua,945804
+23.01,Cancún,915254
+26.01,Hermosillo,858929
+2.02,Mexicali,854186
+17.01,Cuernavaca,847568
+16.01,Morelia,829909
+25.01,Culiacán,820966
+28.01,Tampico,807851
+30.01,Veracruz,778048
+28.02,Reynosa,691557
+12.01,Acapulco,675669
+7.01,Tuxtla Gutiérrez,658419
+20.01,Oaxaca,647380
+10.01,Durango,623992
+30.02,Xalapa,550239
+13.01,Pachuca,529360
+29.01,Tlaxcala,518910
+28.03,Matamoros,510739
+11.02,Irapuato,469441
+25.02,Mazatlán,451115
+27.01,Villahermosa,443223
+18.01,Tepic,430296
+28.04,Nuevo Laredo,423830
+11.03,Celaya,416025
+14.02,Puerto Vallarta,397141
+26.02,Ciudad Obregón,380138
+2.03,Ensenada,369992
+30.03,Coatzacoalcos,344060
+30.04,Orizaba,341714
+5.03,Monclova,339725
+3.01,Los Cabos,338979
+28.05,Ciudad Victoria,332100
+16.02,Uruapan,330322
+21.02,Tehuacán,324703
+6.01,Colima,322330
+32.01,Zacatecas,317816
+25.03,Los Mochis,308989
+23.02,Playa del Carmen,304942
+21.03,San Martín Texmelucan,293311
+26.03,Nogales,261137
+3.02,La Paz,259416
+4.01,Campeche,258594
+30.05,Minatitlán,254765
+12.02,Chilpancingo,244365
+30.06,Córdoba,243560
+30.07,Poza Rica,241558
+16.03,Zamora,240032
+19.02,García,234698
+7.02,Tapachula,232124
+17.02,Cuautla,228179
+22.02,San Juan del Río,222695
+4.02,Ciudad del Carmen,191238
+13.02,Tulancingo,189513
+7.03,San Cristóbal de las Casas,189084
+11.04,Salamanca,188179
+5.04,Piedras Negras,179209
+26.04,San Luis Río Colorado,176685
+23.03,Chetumal,174579
+6.02,Manzanillo,172159
+16.04,Lázaro Cárdenas,164856
+5.05,Acuña,160225
+26.05,Guaymas,156139
+32.02,Fresnillo,149336
+11.05,San Francisco del Rincón,140991
+24.02,Ciudad Valles,136351
+11.06,Guanajuato,136004
+8.03,Cuauhtémoc,135586
+8.04,Delicias,134977
+12.03,Iguala,132854
+26.06,Navojoa,120926
+14.03,Lagos de Moreno,119404
+30.08,Túxpam,118115
+8.05,Hidalgo del Parral,113843
+7.04,Comitán,113479
+6.03,Tecomán,112874
+14.04,Ciudad Guzmán,111975
+28.06,Río Bravo,111314
+20.02,Tuxtepec,107204
+20.03,Juchitán,104021
+11.07,Silao,102959
+16.05,Apatzingán,102362
+5.06,Sabinas,101701
+14.05,Ocotlán,100877
+14.06,Tepatitlán,98842
+21.04,Atlixco,98347
+21.05,Teziutlán,96824
+16.06,La Piedad,96099
+24.03,Rioverde,94433
+11.08,Moroleón-Uriangato,94066
+16.07,Zitácuaro,93926
+26.07,Agua Prieta,91029
+15.02,Apaxco,87356
+24.04,Matehuala,86686
+25.04,Guasave,85615
+12.04,Zihuatanejo,84566
+23.04,Cozumel,84519
+27.02,Cárdenas,84311
+30.09,Martínez de la Torre,84194
+2.04,Tecate,81059
+28.07,Mante,79515
+20.04,Salina Cruz,76660
+30.1,Acayucan,75488
+11.09,San Miguel de Allende,75312
+11.1,Valle de Santiago,72663
+30.11,San Andrés Tuxtla,72314
+16.08,Ciudad Hidalgo,71528
+21.06,Ajalpan,70920
+19.03,Linares,70378
+16.09,Sahuayo,70042
+11.11,Cortazar,69371
+29.02,Huamantla,67768
+26.08,Caborca,67604
+11.12,Dolores Hidalgo,67101
+25.05,Guamúchil,65215
+16.1,Pátzcuaro,64339
+13.03,Tula,63370
+21.07,Izúcar de Matamoros,63227
+21.08,Acatzingo,62376
+26.09,Puerto Peñasco,62301
+8.06,Nuevo Casas Grandes,62038
+21.09,Huauchinango,61945
+11.13,San Luis de la Paz,61503
+16.11,Los Reyes,61452
+21.1,Tepeaca,60152
+15.03,Ozumba,59853
+14.07,Arandas,59648
+12.05,Tlapa,59580
+20.05,Tehuantepec,58251
+14.08,San Juan de los Lagos,57728
+31.02,Progreso,57292
+11.14,Acámbaro,56597
+31.03,Valladolid,56494
+20.06,Huajuapan,56163
+30.12,Coatepec,55720
+30.13,Papantla,55452
+16.12,Zacapu,55287
+19.04,Montemorelos,54467
+17.03,Zacatepec,53127
+17.04,Tlaquiltenango,52669
+31.04,Tizimín,52593
+14.09,Autlán,52019
+7.05,Palenque,51797
+15.04,Tenancingo,51100
+28.08,Valle Hermoso,51062
+12.06,Taxco,50399
+17.05,Yautepec,50089
+5.07,San Pedro,49490
+7.06,Cintalapa,49201
+13.04,Actopan,48613
+13.05,Huejutla,48174
+13.06,Ciudad Sahagún,48105
+21.11,Zacatlán,48043
+7.07,Ocosingo,47688
+14.1,La Barca,47223
+27.03,Comalcalco,47136
+30.14,Tierra Blanca,47035
+30.15,Cosamaloapan,47000
+30.16,Las Choapas,46909
+13.07,Tepeji del Río,46478
+32.03,Jerez,46132
+13.08,Mixquiahuala,45431
+11.15,Salvatierra,44784
+11.16,Juventino Rosas,43998
+3.03,Ciudad Constitución,43805
+11.17,Pénjamo,43249
+7.08,Ocozocoautla,43247
+21.12,Tecamachalco,43139
+13.09,Tezontepec,42670
+30.17,Perote,42451
+14.11,Chapala,42407
+8.07,Ciudad Camargo,42019
+30.18,Pánuco,41588
+21.13,Xicotepec,41455
+13.1,Ixmiquilpan,41350
+14.12,Tala,40906
+20.07,Puerto Escondido,40535
+26.1,Miguel Alemán,39474
+16.13,Maravatío,39425
+5.08,Múzquiz,38992
+11.18,Comonfort,38219
+32.04,Víctor Rosales,38193
+27.04,Paraíso,38141
+26.11,Cananea,38113
+7.09,Tonalá,38087
+27.05,Macuspana,37947
+14.13,Ameca,37871
+29.03,Calpulalpan,37704
+7.1,Villaflores,37546
+30.19,Agua Dulce,37464
+30.2,Jalacingo,37238
+7.11,Berriozábal,36084
+15.05,Ixtlahuaca,35949
+30.21,Tlapacoyan,35893
+4.03,Champotón,35799
+15.06,Amecameca,35740
+27.06,Ocuiltzapotlán,35686
+16.14,Yurécuaro,35599
+1.02,Rincón de Romos,35378
+26.12,Huatabampo,35286
+21.14,Palmarito Tochapan,35274
+31.05,Ticul,35183
+8.08,Jiménez,35087
+32.05,Río Grande,35050
+22.03,Tequisquiapan,34955
+27.07,Tenosique,34946
+19.05,Ciénega de Flores,34939
+5.09,Parras de la Fuente,34798
+11.19,Apaseo el Grande,33947
+25.06,Escuinapa,33924
+12.07,Chilapa,33783
+20.08,Pinotepa Nacional,33726
+19.06,Sabinas Hidalgo,33522
+25.07,Benito Juárez,33496
+30.22,Huatusco,33402
+23.05,Tulum,33374
+27.08,Playas del Rosario,33361
+14.14,Zapotlanejo,33284
+30.23,Tantoyuca,33226
+30.24,Álamo,32972
+11.2,San Felipe,32831
+5.1,Francisco I. Madero,32704
+11.21,Apaseo el Alto,32456
+16.15,Puruándiro,32333
+16.16,Nueva Italia,32328
+7.12,Huixtla,32109
+1.03,Pabellón de Arteaga,32035
+11.22,Villagrán,31790
+20.09,Loma Bonita,31469
+4.04,Escárcega,31375
+14.15,Tequila,31115
+15.07,Tejupilco,30967
+11.23,San José Iturbide,30807
+25.08,Navolato,30796
+23.06,Felipe Carrillo Puerto,30754
+16.17,Tacámbaro,30519
+14.16,Tuxpan,30471
+26.13,Magdalena de Kino,30429
+30.25,Misantla,30232
+10.02,Santiago Papasquiaro,30063
+13.11,Zacualtipán,29472
+30.26,Xico,29323
+32.06,Loreto,29251
+20.1,Miahuatlán,29130
+12.08,Ciudad Altamirano,29084
+27.09,Teapa,29068
+7.13,Reforma,29018
+11.24,Abasolo,29002
+19.07,Allende,28843
+13.12,Apan,28792
+14.17,Atotonilco el Alto,28678
+30.27,Catemaco,28655
+31.06,Tekax,28461
+31.07,Hunucmá,28412
+25.09,Costa Rica,28239
+28.09,San Fernando,28215
+14.18,Sayula,28145
+16.18,Santa Clara del Cobre,28052
+12.09,Zumpango,27944
+14.19,Encarnación de Díaz,27833
+7.14,Motozintla,27815
+12.1,Ometepec,27607
+15.08,San Pedro de los Baños,27468
+14.2,Zapotiltic,27260
+2.05,Lázaro Cárdenas,27258
+27.1,Huimanguillo,27182
+30.28,José Cardel,27078
+5.11,Nava,26963
+18.02,Tuxpan,26771
+15.09,Atlacomulco,26753
+10.03,El Salto,26678
+25.1,Juan José Ríos,26664
+15.1,Ixtapan de la Sal,26347
+31.08,Oxkutzcab,26175
+21.15,Chignahuapan,26130
+31.09,Motul,26081
+20.11,Ixtepec,26015
+14.21,San Miguel el Alto,25925
+11.25,Yuriria,25845
+15.11,Tequixquiac,25697
+30.29,Isla,25608
+12.11,Atoyac de Álvarez,25586
+18.03,Ixtlán,25477
+21.16,Ciudad Serdán,25468
+7.15,Arriaga,25366
+25.11,Gabriel Leyva Solano,25157
+12.12,Teloloapan,25148
+32.07,Sombrerete,25068
+12.13,Tixtla,24920
+14.22,Jalostotitlán,24890
+12.14,Técpan de Galeana,24829
+11.26,Romita,24757
+16.19,Jiquilpan,24662
+14.23,Teocaltiche,24580
+24.05,Ebano,24454
+7.16,Las Margaritas,24326
+24.06,Tamazunchale,24258
+15.12,Valle de Bravo,24167
+20.12,Crucecita,24089
+17.06,Xoxocotla,24073
+14.24,Jocotepec,24051
+30.3,Altotonga,23943
+13.13,Paseos de la Pradera,23867
+16.2,Huetamo,23836
+5.12,San Buenaventura,23413
+17.07,Puente de Ixtla,23389
+12.15,Petatlán,23363
+8.09,Meoqui,23140
+27.11,Frontera,23024
+28.1,Miguel Alemán,23006
+18.04,Santiago Ixcuintla,22886
+23.07,Puerto Aventuras,22878
+14.25,El Grullo,22738
+8.1,Aldama,22568
+12.16,Arcelia,22534
+27.12,Emiliano Zapata,22469
+30.31,Naranjos,22454
+20.13,Ocotlán,22449
+32.08,Ojocaliente,22295
+21.17,Nuevo Necaxa,22136
+8.11,Ojinaga,22066
+17.08,Jonacatepec,22027
+20.14,Tlacolula,21790
+11.27,Jaral del Progreso,21756
+7.17,Frontera Comalapa,21727
+22.04,Pedro Escobedo,21727
+31.1,Peto,21456
+5.13,Allende,21376
+30.32,Cerro Azul,21318
+16.21,Paracho,21215
+7.18,Las Rosas,21194
+1.04,Calvillo,21049
+27.13,Cunduacán,21003
+30.33,Alvarado,20797
+14.26,Zacoalco,20345
+18.05,Bucerías,20330
+18.06,Compostela,20322
+20.15,Matías Romero,20163
+7.19,Teopisca,20044
+18.07,Acaponeta,19976
+25.12,La Cruz,19742
+21.18,San Salvador el Seco,19648
+7.2,Suchiapa,19571
+15.13,San Nicolás Guadalupe,19426
+21.19,Acatlan,19341
+7.21,Mapastepec,19271
+23.08,Puerto Morelos,19205
+16.22,Zinapécuaro,19189
+15.14,Temascalcingo,19168
+14.27,Tamazula,19113
+7.22,Cacahoatán,19108
+17.09,Yecapixtla,19104
+17.1,Axochiapan,19085
+2.06,Guadalupe Victoria,19081
+7.23,Yajalón,18926
+20.16,Tlaxiaco,18915
+1.05,San Francisco de los Romo,18799
+14.28,Cihuatlán,18787
+7.24,Escuintla,18716
+21.2,Zacapoaxtla,18703
+10.04,Guadalupe Victoria,18696
+7.25,Venustiano Carranza,18695
+21.21,Rafael Lara Grajales,18659
+14.29,Jamay,18607
+24.07,Salinas de Hidalgo,18586
+20.17,Telixtlahuaca,18546
+2.07,Vicente Guerrero,18308
+12.17,Ayutla,18224
+7.26,Pijijiapan,18219
+19.08,Salinas Victoria,18192
+16.23,Tangancícuaro,18187
+21.22,Ciudad de Libres,18110
+16.24,Ario de Rosales,18097
+29.04,Tlaxco,17978
+10.05,Vicente Guerrero,17967
+32.09,Tlaltenango,17882
+30.34,Zaragoza,17867
+31.11,Izamal,17841
+14.3,Cajititlán,17818
+15.15,Juchitepec,17736
+30.35,Lerdo de Tejada,17727
+14.31,Poncitlán,17716
+16.25,Peribán,17652
+5.14,Palaú,17594
+21.23,Atencingo,17551
+12.18,Huitzuco,17550
+31.12,Chemax,17502
+7.27,Ciudad Hidalgo,17485
+11.28,San Juan de la Vega,17417
+8.12,Guachochi,17410
+13.14,Tetepango,17399
+16.26,Tepalcatepec,17293
+2.08,San Felipe,17143
+30.36,Miguel Alemán,17108
+25.13,El Rosario,17097
+32.1,Trancoso,17021
+14.32,Ahualulco,17000
+25.14,Villa Unión,16934
+14.33,Magdalena,16873
+16.27,Cherán,16841
+32.11,Nochistlán,16814
+22.05,Ezequiel Montes,16795
+30.37,Tres Valles,16758
+27.14,Jalpa,16679
+24.08,Tamuín,16582
+14.34,Cocula,16550
+19.09,Anáhuac,16414
+30.38,Coscomatepec,16364
+18.08,La Peñita de Jaltemba,16360
+14.35,Tizapán el Alto,16324
+3.04,Loreto,16311
+11.29,Manuel Doblado,16092
+19.1,Hidalgo,16057
+4.05,Calkiní,15949
+20.18,Nochixtlán,15851
+16.28,Nahuatzen,15819
+30.39,Santiago Tuxtla,15733
+24.09,Cerritos,15692
+14.36,Capilla de Guadalupe,15640
+14.37,Villa Hidalgo,15594
+14.38,Los Ruiseñores,15519
+22.06,Cadereyta de Montes,15512
+30.4,Juan Rodríguez Clara,15512
+14.39,El Arenal,15419
+30.41,Filomeno Mata,15417
+20.19,Río Grande,15373
+24.1,Cárdenas,15341
+7.28,San Fernando,15310
+11.3,Cuerámaro,15305
+30.42,Tihuatlán,15305
+7.29,Huehuetán,15296
+32.12,Jalpa,15291
+14.4,Los Freseros,15279
+16.29,Quiroga,15249
+7.3,Pichucalco,15244
+14.41,Colotlán,15129
+30.43,Sayula,15116
+8.13,Ascensión,15054
+32.13,Juan Aldama,15045
+7.31,Acala,15001

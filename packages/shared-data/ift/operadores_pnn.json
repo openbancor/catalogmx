@@ -1,0 +1,1802 @@
+{
+  "metadata": {
+    "catalog": "IFT_Operadores_Telefonicos",
+    "description": "Operadores de telefonía fija y móvil en México",
+    "source": "Plan de Numeración Nacional - IFT",
+    "last_updated": "2026-01-21",
+    "total_operadores": 137
+  },
+  "operadores": [
+    {
+      "razon_social": "AT&T COMERCIALIZACION MOVIL, S. DE R.L. DE C.V.",
+      "marca_comercial": "AT&T",
+      "tipo": [
+        "fijo",
+        "movil"
+      ],
+      "bloques_fijo": 6,
+      "bloques_movil": 51757,
+      "numeros_fijo": 7000,
+      "numeros_movil": 441341000,
+      "total_bloques": 51763,
+      "total_numeros": 441348000
+    },
+    {
+      "razon_social": "RADIOMOVIL DIPSA, S.A. DE C.V.",
+      "marca_comercial": "Telcel",
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 33019,
+      "numeros_fijo": 0,
+      "numeros_movil": 221576000,
+      "total_bloques": 33019,
+      "total_numeros": 221576000
+    },
+    {
+      "razon_social": "PEGASO PCS, S.A. DE C.V.",
+      "marca_comercial": "Movistar",
+      "tipo": [
+        "fijo",
+        "movil"
+      ],
+      "bloques_fijo": 598,
+      "bloques_movil": 11134,
+      "numeros_fijo": 5434000,
+      "numeros_movil": 97998000,
+      "total_bloques": 11732,
+      "total_numeros": 103432000
+    },
+    {
+      "razon_social": "ALTÁN REDES, S.A.P.I. DE C.V.",
+      "marca_comercial": "Altán (Red Compartida)",
+      "tipo": [
+        "fijo",
+        "movil"
+      ],
+      "bloques_fijo": 633,
+      "bloques_movil": 11412,
+      "numeros_fijo": 3053000,
+      "numeros_movil": 96689000,
+      "total_bloques": 12045,
+      "total_numeros": 99742000
+    },
+    {
+      "razon_social": "TELEFONOS DE MEXICO, S.A.B. DE C.V.",
+      "marca_comercial": "Telmex",
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 35640,
+      "bloques_movil": 0,
+      "numeros_fijo": 44785810,
+      "numeros_movil": 0,
+      "total_bloques": 35640,
+      "total_numeros": 44785810
+    },
+    {
+      "razon_social": "TOTAL PLAY TELECOMUNICACIONES, S.A.P.I. DE C.V.",
+      "marca_comercial": "Totalplay",
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 2005,
+      "bloques_movil": 0,
+      "numeros_fijo": 14078000,
+      "numeros_movil": 0,
+      "total_bloques": 2005,
+      "total_numeros": 14078000
+    },
+    {
+      "razon_social": "MEGA CABLE, S.A. DE C.V.",
+      "marca_comercial": "Megacable",
+      "tipo": [
+        "fijo",
+        "movil"
+      ],
+      "bloques_fijo": 1690,
+      "bloques_movil": 882,
+      "numeros_fijo": 10873000,
+      "numeros_movil": 1242000,
+      "total_bloques": 2572,
+      "total_numeros": 12115000
+    },
+    {
+      "razon_social": "OPERBES, S.A. DE C.V. (ANTES BESTPHONE, S.A. DE C.V.)",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 1542,
+      "bloques_movil": 0,
+      "numeros_fijo": 11387000,
+      "numeros_movil": 0,
+      "total_bloques": 1542,
+      "total_numeros": 11387000
+    },
+    {
+      "razon_social": "CABLEMAS TELECOMUNICACIONES, S.A. DE C.V.",
+      "marca_comercial": "Izzi (Cablevisión)",
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 2149,
+      "bloques_movil": 0,
+      "numeros_fijo": 10795000,
+      "numeros_movil": 0,
+      "total_bloques": 2149,
+      "total_numeros": 10795000
+    },
+    {
+      "razon_social": "AXTEL, S.A.B. DE C.V.",
+      "marca_comercial": "Axtel",
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 796,
+      "bloques_movil": 0,
+      "numeros_fijo": 7802000,
+      "numeros_movil": 0,
+      "total_bloques": 796,
+      "total_numeros": 7802000
+    },
+    {
+      "razon_social": "FREEDOMPOP MÉXICO, S.A. DE C.V.",
+      "marca_comercial": "FreedomPop",
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 1756,
+      "numeros_fijo": 0,
+      "numeros_movil": 5747000,
+      "total_bloques": 1756,
+      "total_numeros": 5747000
+    },
+    {
+      "razon_social": "AXTEL, S.A.B. DE C.V. (ANTES ALESTRA)",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 487,
+      "bloques_movil": 0,
+      "numeros_fijo": 4062000,
+      "numeros_movil": 0,
+      "total_bloques": 487,
+      "total_numeros": 4062000
+    },
+    {
+      "razon_social": "OXIO MOBILE, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 623,
+      "numeros_fijo": 0,
+      "numeros_movil": 3995000,
+      "total_bloques": 623,
+      "total_numeros": 3995000
+    },
+    {
+      "razon_social": "ROBOT COMUNICACIONES, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 1814,
+      "bloques_movil": 0,
+      "numeros_fijo": 3482000,
+      "numeros_movil": 0,
+      "total_bloques": 1814,
+      "total_numeros": 3482000
+    },
+    {
+      "razon_social": "SPARKTELECOMM, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 559,
+      "bloques_movil": 0,
+      "numeros_fijo": 3202000,
+      "numeros_movil": 0,
+      "total_bloques": 559,
+      "total_numeros": 3202000
+    },
+    {
+      "razon_social": "IP MATRIX, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 479,
+      "bloques_movil": 0,
+      "numeros_fijo": 2556000,
+      "numeros_movil": 0,
+      "total_bloques": 479,
+      "total_numeros": 2556000
+    },
+    {
+      "razon_social": "TELEVISION INTERNACIONAL, S.A. DE C.V.",
+      "marca_comercial": "Sky",
+      "tipo": [
+        "fijo",
+        "movil"
+      ],
+      "bloques_fijo": 190,
+      "bloques_movil": 598,
+      "numeros_fijo": 703000,
+      "numeros_movil": 1668000,
+      "total_bloques": 788,
+      "total_numeros": 2371000
+    },
+    {
+      "razon_social": "MEGACABLE COMUNICACIONES DE MEXICO, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 954,
+      "bloques_movil": 0,
+      "numeros_fijo": 2240000,
+      "numeros_movil": 0,
+      "total_bloques": 954,
+      "total_numeros": 2240000
+    },
+    {
+      "razon_social": "OPENIP COMUNICACIONES, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 1161,
+      "bloques_movil": 0,
+      "numeros_fijo": 2167000,
+      "numeros_movil": 0,
+      "total_bloques": 1161,
+      "total_numeros": 2167000
+    },
+    {
+      "razon_social": "CENTERNEXT CLOUD SERVICES, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 1750,
+      "bloques_movil": 0,
+      "numeros_fijo": 2131000,
+      "numeros_movil": 0,
+      "total_bloques": 1750,
+      "total_numeros": 2131000
+    },
+    {
+      "razon_social": "DIRECTO TELECOM, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 1609,
+      "bloques_movil": 0,
+      "numeros_fijo": 2079000,
+      "numeros_movil": 0,
+      "total_bloques": 1609,
+      "total_numeros": 2079000
+    },
+    {
+      "razon_social": "TELEFONOS DEL NOROESTE, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 659,
+      "bloques_movil": 0,
+      "numeros_fijo": 1574290,
+      "numeros_movil": 0,
+      "total_bloques": 659,
+      "total_numeros": 1574290
+    },
+    {
+      "razon_social": "KUBO CEL, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 200,
+      "numeros_fijo": 0,
+      "numeros_movil": 1258000,
+      "total_bloques": 200,
+      "total_numeros": 1258000
+    },
+    {
+      "razon_social": "TELECOMUNICACIONES 360, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 494,
+      "numeros_fijo": 0,
+      "numeros_movil": 1255000,
+      "total_bloques": 494,
+      "total_numeros": 1255000
+    },
+    {
+      "razon_social": "INBTEL, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 1033,
+      "bloques_movil": 0,
+      "numeros_fijo": 1054000,
+      "numeros_movil": 0,
+      "total_bloques": 1033,
+      "total_numeros": 1054000
+    },
+    {
+      "razon_social": "CELMAX MÓVIL, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 476,
+      "numeros_fijo": 0,
+      "numeros_movil": 892000,
+      "total_bloques": 476,
+      "total_numeros": 892000
+    },
+    {
+      "razon_social": "AXTEL, S.A.B. DE C.V. (ANTES AVANTEL, S. DE R.L. DE C.V.)",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 183,
+      "bloques_movil": 0,
+      "numeros_fijo": 879000,
+      "numeros_movil": 0,
+      "total_bloques": 183,
+      "total_numeros": 879000
+    },
+    {
+      "razon_social": "COORDINADORA DE CARRIER’S, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 225,
+      "bloques_movil": 0,
+      "numeros_fijo": 842000,
+      "numeros_movil": 0,
+      "total_bloques": 225,
+      "total_numeros": 842000
+    },
+    {
+      "razon_social": "VIRGIN MOBILE MÉXICO, S. DE R.L. DE C.V.",
+      "marca_comercial": "Virgin Mobile",
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 603,
+      "numeros_fijo": 0,
+      "numeros_movil": 745000,
+      "total_bloques": 603,
+      "total_numeros": 745000
+    },
+    {
+      "razon_social": "AT&T COMUNICACIONES DIGITALES, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 72,
+      "numeros_fijo": 0,
+      "numeros_movil": 720000,
+      "total_bloques": 72,
+      "total_numeros": 720000
+    },
+    {
+      "razon_social": "PROTEL I-NEXT, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 70,
+      "bloques_movil": 0,
+      "numeros_fijo": 700000,
+      "numeros_movil": 0,
+      "total_bloques": 70,
+      "total_numeros": 700000
+    },
+    {
+      "razon_social": "TV REY DE OCCIDENTE, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 410,
+      "bloques_movil": 0,
+      "numeros_fijo": 618000,
+      "numeros_movil": 0,
+      "total_bloques": 410,
+      "total_numeros": 618000
+    },
+    {
+      "razon_social": "UC TELECOMUNICACIONES, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 509,
+      "bloques_movil": 0,
+      "numeros_fijo": 544000,
+      "numeros_movil": 0,
+      "total_bloques": 509,
+      "total_numeros": 544000
+    },
+    {
+      "razon_social": "INTER CONEXIÓN Y SERVICIOS AVANZADOS DE ALTA TECNOLOGÍA, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 183,
+      "bloques_movil": 0,
+      "numeros_fijo": 532000,
+      "numeros_movil": 0,
+      "total_bloques": 183,
+      "total_numeros": 532000
+    },
+    {
+      "razon_social": "ALESTRA SERVICIOS MÓVILES, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 65,
+      "numeros_fijo": 0,
+      "numeros_movil": 530000,
+      "total_bloques": 65,
+      "total_numeros": 530000
+    },
+    {
+      "razon_social": "TELIGENTIA, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 501,
+      "bloques_movil": 0,
+      "numeros_fijo": 516000,
+      "numeros_movil": 0,
+      "total_bloques": 501,
+      "total_numeros": 516000
+    },
+    {
+      "razon_social": "SERVICIOS TRONCALIZADOS, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 439,
+      "numeros_fijo": 0,
+      "numeros_movil": 485000,
+      "total_bloques": 439,
+      "total_numeros": 485000
+    },
+    {
+      "razon_social": "LAYER7, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 475,
+      "bloques_movil": 0,
+      "numeros_fijo": 481000,
+      "numeros_movil": 0,
+      "total_bloques": 475,
+      "total_numeros": 481000
+    },
+    {
+      "razon_social": "AJTEL COMUNICACIONES, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 415,
+      "bloques_movil": 0,
+      "numeros_fijo": 415000,
+      "numeros_movil": 0,
+      "total_bloques": 415,
+      "total_numeros": 415000
+    },
+    {
+      "razon_social": "TACTIC TEL, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 169,
+      "bloques_movil": 0,
+      "numeros_fijo": 414000,
+      "numeros_movil": 0,
+      "total_bloques": 169,
+      "total_numeros": 414000
+    },
+    {
+      "razon_social": "COEFICIENTE COMUNICACIONES, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 354,
+      "bloques_movil": 0,
+      "numeros_fijo": 354000,
+      "numeros_movil": 0,
+      "total_bloques": 354,
+      "total_numeros": 354000
+    },
+    {
+      "razon_social": "QUICKLY PHONE, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 72,
+      "numeros_fijo": 0,
+      "numeros_movil": 347000,
+      "total_bloques": 72,
+      "total_numeros": 347000
+    },
+    {
+      "razon_social": "VINOC, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo",
+        "movil"
+      ],
+      "bloques_fijo": 227,
+      "bloques_movil": 39,
+      "numeros_fijo": 242000,
+      "numeros_movil": 40000,
+      "total_bloques": 266,
+      "total_numeros": 282000
+    },
+    {
+      "razon_social": "IBO CELL, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 133,
+      "numeros_fijo": 0,
+      "numeros_movil": 267000,
+      "total_bloques": 133,
+      "total_numeros": 267000
+    },
+    {
+      "razon_social": "TELECOMMERCE ACCES SERVICE, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 216,
+      "bloques_movil": 0,
+      "numeros_fijo": 264000,
+      "numeros_movil": 0,
+      "total_bloques": 216,
+      "total_numeros": 264000
+    },
+    {
+      "razon_social": "VALOR AGREGADO DIGITAL, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo",
+        "movil"
+      ],
+      "bloques_fijo": 104,
+      "bloques_movil": 59,
+      "numeros_fijo": 104000,
+      "numeros_movil": 144000,
+      "total_bloques": 163,
+      "total_numeros": 248000
+    },
+    {
+      "razon_social": "ALTCEL, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 214,
+      "numeros_fijo": 0,
+      "numeros_movil": 242000,
+      "total_bloques": 214,
+      "total_numeros": 242000
+    },
+    {
+      "razon_social": "CORPORACIÓN NOVAVISIÓN, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 115,
+      "numeros_fijo": 0,
+      "numeros_movil": 236000,
+      "total_bloques": 115,
+      "total_numeros": 236000
+    },
+    {
+      "razon_social": "CONVERGIA DE MEXICO, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 213,
+      "bloques_movil": 0,
+      "numeros_fijo": 235000,
+      "numeros_movil": 0,
+      "total_bloques": 213,
+      "total_numeros": 235000
+    },
+    {
+      "razon_social": "TELECOMMERCE INFRAESTRUCTURA TELECOM HOLDING, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 225,
+      "bloques_movil": 0,
+      "numeros_fijo": 226000,
+      "numeros_movil": 0,
+      "total_bloques": 225,
+      "total_numeros": 226000
+    },
+    {
+      "razon_social": "TALENTO NET, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 105,
+      "numeros_fijo": 0,
+      "numeros_movil": 214000,
+      "total_bloques": 105,
+      "total_numeros": 214000
+    },
+    {
+      "razon_social": "JAPIFON, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 149,
+      "bloques_movil": 0,
+      "numeros_fijo": 188000,
+      "numeros_movil": 0,
+      "total_bloques": 149,
+      "total_numeros": 188000
+    },
+    {
+      "razon_social": "CLEARCOM COMUNICACIONES, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 153,
+      "bloques_movil": 0,
+      "numeros_fijo": 185000,
+      "numeros_movil": 0,
+      "total_bloques": 153,
+      "total_numeros": 185000
+    },
+    {
+      "razon_social": "AGREGADORA DE INTELIGENCIA  EN NEGOCIOS TECNOLOGICOS, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 119,
+      "numeros_fijo": 0,
+      "numeros_movil": 173000,
+      "total_bloques": 119,
+      "total_numeros": 173000
+    },
+    {
+      "razon_social": "YONDER MEDIA MOBILE MÉXICO, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 129,
+      "numeros_fijo": 0,
+      "numeros_movil": 157000,
+      "total_bloques": 129,
+      "total_numeros": 157000
+    },
+    {
+      "razon_social": "ABIX TELECOMUNICACIONES, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo",
+        "movil"
+      ],
+      "bloques_fijo": 3,
+      "bloques_movil": 122,
+      "numeros_fijo": 3000,
+      "numeros_movil": 134000,
+      "total_bloques": 125,
+      "total_numeros": 137000
+    },
+    {
+      "razon_social": "MBT MÓVIL, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 126,
+      "bloques_movil": 0,
+      "numeros_fijo": 126000,
+      "numeros_movil": 0,
+      "total_bloques": 126,
+      "total_numeros": 126000
+    },
+    {
+      "razon_social": "CONNECT TELECOM, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 108,
+      "bloques_movil": 0,
+      "numeros_fijo": 121000,
+      "numeros_movil": 0,
+      "total_bloques": 108,
+      "total_numeros": 121000
+    },
+    {
+      "razon_social": "IENTC, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo",
+        "movil"
+      ],
+      "bloques_fijo": 51,
+      "bloques_movil": 36,
+      "numeros_fijo": 73000,
+      "numeros_movil": 47000,
+      "total_bloques": 87,
+      "total_numeros": 120000
+    },
+    {
+      "razon_social": "SERVNET MEXICO, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 84,
+      "bloques_movil": 0,
+      "numeros_fijo": 119000,
+      "numeros_movil": 0,
+      "total_bloques": 84,
+      "total_numeros": 119000
+    },
+    {
+      "razon_social": "NGX NETWORKS, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 112,
+      "bloques_movil": 0,
+      "numeros_fijo": 112000,
+      "numeros_movil": 0,
+      "total_bloques": 112,
+      "total_numeros": 112000
+    },
+    {
+      "razon_social": "COMUNICALO DE MEXICO, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 99,
+      "bloques_movil": 0,
+      "numeros_fijo": 99000,
+      "numeros_movil": 0,
+      "total_bloques": 99,
+      "total_numeros": 99000
+    },
+    {
+      "razon_social": "FLYNODE DE MÉXICO, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 98,
+      "bloques_movil": 0,
+      "numeros_fijo": 98000,
+      "numeros_movil": 0,
+      "total_bloques": 98,
+      "total_numeros": 98000
+    },
+    {
+      "razon_social": "ARDO DE MÉXICO, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 94,
+      "bloques_movil": 0,
+      "numeros_fijo": 94000,
+      "numeros_movil": 0,
+      "total_bloques": 94,
+      "total_numeros": 94000
+    },
+    {
+      "razon_social": "DIALOGA GROUP TELECOM, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 88,
+      "bloques_movil": 0,
+      "numeros_fijo": 92000,
+      "numeros_movil": 0,
+      "total_bloques": 88,
+      "total_numeros": 92000
+    },
+    {
+      "razon_social": "ESMERO SOLUTIONS MEXICO, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 41,
+      "numeros_fijo": 0,
+      "numeros_movil": 77000,
+      "total_bloques": 41,
+      "total_numeros": 77000
+    },
+    {
+      "razon_social": "NEUROTECH DE LA LAGUNA, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 77,
+      "bloques_movil": 0,
+      "numeros_fijo": 77000,
+      "numeros_movil": 0,
+      "total_bloques": 77,
+      "total_numeros": 77000
+    },
+    {
+      "razon_social": "NEUS MOBILE, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 21,
+      "numeros_fijo": 0,
+      "numeros_movil": 73000,
+      "total_bloques": 21,
+      "total_numeros": 73000
+    },
+    {
+      "razon_social": "VPN DE MEXICO, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 7,
+      "bloques_movil": 0,
+      "numeros_fijo": 70000,
+      "numeros_movil": 0,
+      "total_bloques": 7,
+      "total_numeros": 70000
+    },
+    {
+      "razon_social": "PLINTRON MÉXICO, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 18,
+      "numeros_fijo": 0,
+      "numeros_movil": 66000,
+      "total_bloques": 18,
+      "total_numeros": 66000
+    },
+    {
+      "razon_social": "STARSATEL, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 45,
+      "bloques_movil": 0,
+      "numeros_fijo": 61000,
+      "numeros_movil": 0,
+      "total_bloques": 45,
+      "total_numeros": 61000
+    },
+    {
+      "razon_social": "SPEKTRA TELECOM, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo",
+        "movil"
+      ],
+      "bloques_fijo": 8,
+      "bloques_movil": 53,
+      "numeros_fijo": 8000,
+      "numeros_movil": 53000,
+      "total_bloques": 61,
+      "total_numeros": 61000
+    },
+    {
+      "razon_social": "COMERCIALIZADORA GIRNET, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 54,
+      "bloques_movil": 0,
+      "numeros_fijo": 54000,
+      "numeros_movil": 0,
+      "total_bloques": 54,
+      "total_numeros": 54000
+    },
+    {
+      "razon_social": "EL PODER DE INTERNET, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "VOZTELECOM LATINOAMERICA, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "SERVICE TRENDS, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "ENTRETENIMIENTO Y TELECOMUNICACIONES, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "PROCOM SERVICIOS INTELIGENTES, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "INFORMÁTICA ARQUISYSTEMS, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "JORGE BASURTO HERNÁNDEZ",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "ADMINISTRADORA DE SERVICIOS DE INTERNET SANDUR, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "FOREVERFLOW, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "KARLA ALICIA BARRIOS GUZMÁN",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "ASAL COMUNICACIONES, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "ANYNESS, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "SERVICIO DE TELECABLE DE HUEJUTLA, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "DIGITAL COMUNICATIONS DE MÉXICO, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "SICLU TELECOM, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "TELECO NETWORKS, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "CYBERTECH HERO DE MÉXICO, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "TELECOMMERCE SERVICIOS ADMINISTRADOS Y TELECOM, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "GAZETI, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "TELECO NETWORK, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 53,
+      "bloques_movil": 0,
+      "numeros_fijo": 53000,
+      "numeros_movil": 0,
+      "total_bloques": 53,
+      "total_numeros": 53000
+    },
+    {
+      "razon_social": "MEXICO RED DE TELECOMUNICACIONES, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 24,
+      "bloques_movil": 0,
+      "numeros_fijo": 52000,
+      "numeros_movil": 0,
+      "total_bloques": 24,
+      "total_numeros": 52000
+    },
+    {
+      "razon_social": "TV WEB Y MAS, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 9,
+      "bloques_movil": 0,
+      "numeros_fijo": 48000,
+      "numeros_movil": 0,
+      "total_bloques": 9,
+      "total_numeros": 48000
+    },
+    {
+      "razon_social": "ALLCER INNOVACIÓN Y TECNOLOGÍA, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 40,
+      "numeros_fijo": 0,
+      "numeros_movil": 40000,
+      "total_bloques": 40,
+      "total_numeros": 40000
+    },
+    {
+      "razon_social": "OPERBES, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 32,
+      "numeros_fijo": 0,
+      "numeros_movil": 38000,
+      "total_bloques": 32,
+      "total_numeros": 38000
+    },
+    {
+      "razon_social": "DIGYNETWORKS SOLUCIONES Y REDES, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 38,
+      "bloques_movil": 0,
+      "numeros_fijo": 38000,
+      "numeros_movil": 0,
+      "total_bloques": 38,
+      "total_numeros": 38000
+    },
+    {
+      "razon_social": "IMPULSORA BALDER, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 35,
+      "bloques_movil": 0,
+      "numeros_fijo": 35000,
+      "numeros_movil": 0,
+      "total_bloques": 35,
+      "total_numeros": 35000
+    },
+    {
+      "razon_social": "OME TEL, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 30,
+      "numeros_fijo": 0,
+      "numeros_movil": 34000,
+      "total_bloques": 30,
+      "total_numeros": 34000
+    },
+    {
+      "razon_social": "GRUPO HIDALGUENSE DE DESARROLLO, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 27,
+      "bloques_movil": 0,
+      "numeros_fijo": 28000,
+      "numeros_movil": 0,
+      "total_bloques": 27,
+      "total_numeros": 28000
+    },
+    {
+      "razon_social": "LANTOINTERNET, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 6,
+      "bloques_movil": 0,
+      "numeros_fijo": 26000,
+      "numeros_movil": 0,
+      "total_bloques": 6,
+      "total_numeros": 26000
+    },
+    {
+      "razon_social": "KIWI NETWORKS, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 12,
+      "bloques_movil": 0,
+      "numeros_fijo": 24000,
+      "numeros_movil": 0,
+      "total_bloques": 12,
+      "total_numeros": 24000
+    },
+    {
+      "razon_social": "DIGINOVTEC, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 14,
+      "bloques_movil": 0,
+      "numeros_fijo": 20000,
+      "numeros_movil": 0,
+      "total_bloques": 14,
+      "total_numeros": 20000
+    },
+    {
+      "razon_social": "INTERNET POR FIBRA, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 2,
+      "bloques_movil": 0,
+      "numeros_fijo": 20000,
+      "numeros_movil": 0,
+      "total_bloques": 2,
+      "total_numeros": 20000
+    },
+    {
+      "razon_social": "CABLEVISION, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 2,
+      "bloques_movil": 0,
+      "numeros_fijo": 20000,
+      "numeros_movil": 0,
+      "total_bloques": 2,
+      "total_numeros": 20000
+    },
+    {
+      "razon_social": "CABLETAMPS, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 3,
+      "bloques_movil": 0,
+      "numeros_fijo": 20000,
+      "numeros_movil": 0,
+      "total_bloques": 3,
+      "total_numeros": 20000
+    },
+    {
+      "razon_social": "IDT TELECOM MÉXICO, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 7,
+      "bloques_movil": 0,
+      "numeros_fijo": 19000,
+      "numeros_movil": 0,
+      "total_bloques": 7,
+      "total_numeros": 19000
+    },
+    {
+      "razon_social": "SERVICIOS DE INFRAESTRUCTURA DE RADIOCOMUNICACIÓN Y REDES PRIVADAS DE DATOS HYPERNET",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 18,
+      "bloques_movil": 0,
+      "numeros_fijo": 18000,
+      "numeros_movil": 0,
+      "total_bloques": 18,
+      "total_numeros": 18000
+    },
+    {
+      "razon_social": "TELECOMM ATLAS, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 17,
+      "bloques_movil": 0,
+      "numeros_fijo": 18000,
+      "numeros_movil": 0,
+      "total_bloques": 17,
+      "total_numeros": 18000
+    },
+    {
+      "razon_social": "QUALTEL, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 10,
+      "bloques_movil": 0,
+      "numeros_fijo": 18000,
+      "numeros_movil": 0,
+      "total_bloques": 10,
+      "total_numeros": 18000
+    },
+    {
+      "razon_social": "VIASAT TECNOLOGÍA, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 12,
+      "numeros_fijo": 0,
+      "numeros_movil": 15000,
+      "total_bloques": 12,
+      "total_numeros": 15000
+    },
+    {
+      "razon_social": "RLM TSAAY, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 12,
+      "bloques_movil": 0,
+      "numeros_fijo": 15000,
+      "numeros_movil": 0,
+      "total_bloques": 12,
+      "total_numeros": 15000
+    },
+    {
+      "razon_social": "MIGUEL ANGEL GONZALEZ DOBARGANES",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 12,
+      "bloques_movil": 0,
+      "numeros_fijo": 14000,
+      "numeros_movil": 0,
+      "total_bloques": 12,
+      "total_numeros": 14000
+    },
+    {
+      "razon_social": "EJA TELECOMM, S. DE R.L.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 7,
+      "bloques_movil": 0,
+      "numeros_fijo": 14000,
+      "numeros_movil": 0,
+      "total_bloques": 7,
+      "total_numeros": 14000
+    },
+    {
+      "razon_social": "GURUCOMM, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 10,
+      "bloques_movil": 0,
+      "numeros_fijo": 10000,
+      "numeros_movil": 0,
+      "total_bloques": 10,
+      "total_numeros": 10000
+    },
+    {
+      "razon_social": "ALEJANDRO PÉREZ MACÍAS",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 10,
+      "bloques_movil": 0,
+      "numeros_fijo": 10000,
+      "numeros_movil": 0,
+      "total_bloques": 10,
+      "total_numeros": 10000
+    },
+    {
+      "razon_social": "ORANGE BUSINESS SERVICES MÉXICO, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 10,
+      "bloques_movil": 0,
+      "numeros_fijo": 10000,
+      "numeros_movil": 0,
+      "total_bloques": 10,
+      "total_numeros": 10000
+    },
+    {
+      "razon_social": "SERVICIOS CELULARES MULTIPAIS, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 10,
+      "bloques_movil": 0,
+      "numeros_fijo": 10000,
+      "numeros_movil": 0,
+      "total_bloques": 10,
+      "total_numeros": 10000
+    },
+    {
+      "razon_social": "TV CABLE DE ORIENTE, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 2,
+      "bloques_movil": 0,
+      "numeros_fijo": 10000,
+      "numeros_movil": 0,
+      "total_bloques": 2,
+      "total_numeros": 10000
+    },
+    {
+      "razon_social": "WAL-MART INNOVACIÓN, S. DE R.L. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 3,
+      "numeros_fijo": 0,
+      "numeros_movil": 9000,
+      "total_bloques": 3,
+      "total_numeros": 9000
+    },
+    {
+      "razon_social": "TELE QUANTUM SOLUTIONS, S.A.S. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 9,
+      "bloques_movil": 0,
+      "numeros_fijo": 9000,
+      "numeros_movil": 0,
+      "total_bloques": 9,
+      "total_numeros": 9000
+    },
+    {
+      "razon_social": "DFSOFT, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 8,
+      "numeros_fijo": 0,
+      "numeros_movil": 8000,
+      "total_bloques": 8,
+      "total_numeros": 8000
+    },
+    {
+      "razon_social": "VIVA TELECOMUNICACIONES, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 8,
+      "bloques_movil": 0,
+      "numeros_fijo": 8000,
+      "numeros_movil": 0,
+      "total_bloques": 8,
+      "total_numeros": 8000
+    },
+    {
+      "razon_social": "NEXT TELEKOM, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 6,
+      "numeros_fijo": 0,
+      "numeros_movil": 7000,
+      "total_bloques": 6,
+      "total_numeros": 7000
+    },
+    {
+      "razon_social": "TELE FACIL MEXICO, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 3,
+      "bloques_movil": 0,
+      "numeros_fijo": 7000,
+      "numeros_movil": 0,
+      "total_bloques": 3,
+      "total_numeros": 7000
+    },
+    {
+      "razon_social": "MARTHA NOEMI ÁVILA URBINA",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 5,
+      "bloques_movil": 0,
+      "numeros_fijo": 5000,
+      "numeros_movil": 0,
+      "total_bloques": 5,
+      "total_numeros": 5000
+    },
+    {
+      "razon_social": "EII TELECOM, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 4,
+      "bloques_movil": 0,
+      "numeros_fijo": 4000,
+      "numeros_movil": 0,
+      "total_bloques": 4,
+      "total_numeros": 4000
+    },
+    {
+      "razon_social": "BUENAS NOTICIAS, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 4,
+      "bloques_movil": 0,
+      "numeros_fijo": 4000,
+      "numeros_movil": 0,
+      "total_bloques": 4,
+      "total_numeros": 4000
+    },
+    {
+      "razon_social": "VAMRA COMUNICACIONES, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 3,
+      "bloques_movil": 0,
+      "numeros_fijo": 3000,
+      "numeros_movil": 0,
+      "total_bloques": 3,
+      "total_numeros": 3000
+    },
+    {
+      "razon_social": "TV CABLE DE ORIENTE, S.A. DE C.V. (ANTES TELE AZTECA, S.A. DE C.V.)",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 1,
+      "bloques_movil": 0,
+      "numeros_fijo": 3000,
+      "numeros_movil": 0,
+      "total_bloques": 1,
+      "total_numeros": 3000
+    },
+    {
+      "razon_social": "IGNACIO SÁNCHEZ GUTIÉRREZ",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 3,
+      "bloques_movil": 0,
+      "numeros_fijo": 3000,
+      "numeros_movil": 0,
+      "total_bloques": 3,
+      "total_numeros": 3000
+    },
+    {
+      "razon_social": "SIERRA MADRE INTERNET, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 1,
+      "bloques_movil": 0,
+      "numeros_fijo": 3000,
+      "numeros_movil": 0,
+      "total_bloques": 1,
+      "total_numeros": 3000
+    },
+    {
+      "razon_social": "CTI CALL, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 1,
+      "numeros_fijo": 0,
+      "numeros_movil": 2000,
+      "total_bloques": 1,
+      "total_numeros": 2000
+    },
+    {
+      "razon_social": "ALTATA TELECOMUNICACIONES DE MEXICO, S.A.P.I. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 2,
+      "bloques_movil": 0,
+      "numeros_fijo": 2000,
+      "numeros_movil": 0,
+      "total_bloques": 2,
+      "total_numeros": 2000
+    },
+    {
+      "razon_social": "MEGANET TELECOMUNICACIONES, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "fijo"
+      ],
+      "bloques_fijo": 1,
+      "bloques_movil": 0,
+      "numeros_fijo": 1000,
+      "numeros_movil": 0,
+      "total_bloques": 1,
+      "total_numeros": 1000
+    },
+    {
+      "razon_social": "HIP CRICKET DE MÉXICO, S.A. DE C.V.",
+      "marca_comercial": null,
+      "tipo": [
+        "movil"
+      ],
+      "bloques_fijo": 0,
+      "bloques_movil": 1,
+      "numeros_fijo": 0,
+      "numeros_movil": 1000,
+      "total_bloques": 1,
+      "total_numeros": 1000
+    }
+  ]
+}

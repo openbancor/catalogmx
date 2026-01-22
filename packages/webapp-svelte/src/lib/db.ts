@@ -3,7 +3,20 @@
  * Streams only needed pages via HTTP range requests.
  */
 import { base } from '$app/paths';
-import { createDbWorker } from 'sql.js-httpvfs';
+// Dynamic import to handle CommonJS/ESM interop
+type CreateDbWorkerFn = typeof import('sql.js-httpvfs').createDbWorker;
+let createDbWorkerFn: CreateDbWorkerFn | null = null;
+
+async function getCreateDbWorker(): Promise<CreateDbWorkerFn> {
+	if (createDbWorkerFn) return createDbWorkerFn;
+	const mod = await import('sql.js-httpvfs');
+	// Handle both ESM (mod.createDbWorker) and CommonJS wrapped as default (mod.default.createDbWorker)
+	createDbWorkerFn = mod.createDbWorker ?? (mod as unknown as { default: { createDbWorker: CreateDbWorkerFn } }).default?.createDbWorker;
+	if (!createDbWorkerFn) {
+		throw new Error('Failed to load createDbWorker from sql.js-httpvfs');
+	}
+	return createDbWorkerFn;
+}
 import sqlWasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
 
 type SqliteParam = string | number | null;
@@ -157,6 +170,8 @@ async function initDatabaseFromMeta(meta: DatabaseMeta): Promise<SqliteWorker> {
 
 	// Use 'full' mode for single file with Range requests (Cloudflare)
 	// Use 'chunked' mode for split files (GitHub Pages)
+	const createDbWorker = await getCreateDbWorker();
+
 	if (SQLITE_MODE === 'full') {
 		console.log('Opening database via httpvfs (full - single file):', url);
 		return createDbWorker(

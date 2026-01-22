@@ -411,14 +411,13 @@ class RFCGeneratorUtils(RFCGeneral):
         "MI",
         "COMPAÑIA",
         "COMPAÑÍA",
+        "COMPANIA",  # Without accent
         "CIA",
         "CIA.",
         "SOCIEDAD",
         "SOC",
         "SOC.",
-        "COOPERATIVA",
-        "COOP",
-        "COOP.",
+        # Note: COOPERATIVA is NOT excluded according to SAT spec
         "S.A.",
         "SA",
         "S.A",
@@ -510,6 +509,31 @@ class RFCGeneratorUtils(RFCGeneral):
         "18": "DIECIOCHO",
         "19": "DIECINUEVE",
         "20": "VEINTE",
+        "21": "VEINTIUNO",
+        "22": "VEINTIDOS",
+        "23": "VEINTITRES",
+        "24": "VEINTICUATRO",
+        "25": "VEINTICINCO",
+        "26": "VEINTISEIS",
+        "27": "VEINTISIETE",
+        "28": "VEINTIOCHO",
+        "29": "VEINTINUEVE",
+        "30": "TREINTA",
+        "40": "CUARENTA",
+        "50": "CINCUENTA",
+        "60": "SESENTA",
+        "70": "SETENTA",
+        "80": "OCHENTA",
+        "90": "NOVENTA",
+        "100": "CIEN",
+        "200": "DOSCIENTOS",
+        "300": "TRESCIENTOS",
+        "400": "CUATROCIENTOS",
+        "500": "QUINIENTOS",
+        "600": "SEISCIENTOS",
+        "700": "SETECIENTOS",
+        "800": "OCHOCIENTOS",
+        "900": "NOVECIENTOS",
     }
 
     # Tabla de números romanos a arábigos
@@ -534,7 +558,60 @@ class RFCGeneratorUtils(RFCGeneral):
         "XVIII": 18,
         "XIX": 19,
         "XX": 20,
+        "XXI": 21,
+        "XXII": 22,
+        "XXIII": 23,
+        "XXIV": 24,
+        "XXV": 25,
+        "XXVI": 26,
+        "XXVII": 27,
+        "XXVIII": 28,
+        "XXIX": 29,
+        "XXX": 30,
     }
+
+    @classmethod
+    def _convert_arabigo_a_texto(cls, num: int) -> str:
+        """Convert an Arabic number to text (supports 0-100000)"""
+        if num < 0:
+            return str(num)
+        if str(num) in cls.numeros_texto:
+            return cls.numeros_texto[str(num)]
+        if num == 100000:
+            return "CIEN MIL"
+
+        parts = []
+
+        # Thousands (1000-99999)
+        if num >= 1000:
+            thousands = num // 1000
+            if thousands == 1:
+                parts.append("MIL")
+            else:
+                parts.append(cls._convert_arabigo_a_texto(thousands))
+                parts.append("MIL")
+            num = num % 1000
+
+        # Hundreds (100-999)
+        if num >= 100:
+            hundreds = (num // 100) * 100
+            if str(hundreds) in cls.numeros_texto:
+                parts.append(cls.numeros_texto[str(hundreds)])
+            num = num % 100
+
+        # Tens and units (1-99)
+        if num > 0:
+            if str(num) in cls.numeros_texto:
+                parts.append(cls.numeros_texto[str(num)])
+            elif num >= 30:
+                tens = (num // 10) * 10
+                units = num % 10
+                if str(tens) in cls.numeros_texto:
+                    parts.append(cls.numeros_texto[str(tens)])
+                if units > 0 and str(units) in cls.numeros_texto:
+                    parts.append(cls.numeros_texto[str(units)])
+
+        return " ".join(parts) if parts else str(num)
 
     @classmethod
     def convertir_numero_a_texto(cls, numero_str: str) -> str:
@@ -543,19 +620,14 @@ class RFCGeneratorUtils(RFCGeneral):
 
         # Intentar como número romano
         if numero_str in cls.numeros_romanos:
-            numero_arabigo = str(cls.numeros_romanos[numero_str])
-            if numero_arabigo in cls.numeros_texto:
-                return cls.numeros_texto[numero_arabigo]
+            arabigo = cls.numeros_romanos[numero_str]
+            return cls._convert_arabigo_a_texto(arabigo)
 
         # Intentar como número arábigo
-        if numero_str in cls.numeros_texto:
-            return cls.numeros_texto[numero_str]
-
-        # Si no está en la tabla, intentar convertir dígitos
         try:
             num = int(numero_str)
-            if 0 <= num <= 20:
-                return cls.numeros_texto[str(num)]
+            if num >= 0:
+                return cls._convert_arabigo_a_texto(num)
         except ValueError:
             pass
 
@@ -563,18 +635,25 @@ class RFCGeneratorUtils(RFCGeneral):
 
     @classmethod
     def clean_name(cls, nombre: str) -> str:
-        return (
-            "".join(
-                char if char in cls.allowed_chars else unidecode.unidecode(char)
-                for char in " ".join(
-                    elem for elem in nombre.split(" ") if elem not in cls.excluded_words_fisicas
-                )
-                .strip()
-                .upper()
-            )
-            .strip()
-            .upper()
+        # Remove apostrophes without adding space (O'farril -> OFARRIL)
+        nombre = nombre.replace("'", "")
+        # Remove dots
+        nombre = nombre.replace(".", " ")
+        # Process and filter excluded words
+        cleaned = " ".join(
+            elem for elem in nombre.split() if elem.upper() not in cls.excluded_words_fisicas
         )
+        # Convert each character: preserve allowed chars, use unidecode for others
+        result = []
+        for char in cleaned.upper():
+            if char in cls.allowed_chars or char == " ":
+                result.append(char)
+            else:
+                # Convert non-allowed characters via unidecode
+                decoded = unidecode.unidecode(char).upper()
+                result.append("".join(c for c in decoded if c in cls.allowed_chars or c == " "))
+        final = "".join(result)
+        return final.strip()
 
     @staticmethod
     def name_adapter(name: str, non_strict: bool = False) -> str:
@@ -647,27 +726,55 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
         return self.dob.strftime("%y%m%d")
 
     def generate_letters(self) -> str:
-        extra_letter = False
-        parts: list[str] = []
-        parts.append(self.paterno_calculo[0])
-        second_value = list(
-            filter(lambda x: x >= 0, map(self.paterno_calculo[1:].find, self.vocales))
+        # Get parts of compound surnames
+        paterno_parts = [p for p in self.paterno_calculo.split() if p]
+        materno_parts = [p for p in self.materno_calculo.split() if p]
+
+        paterno_first = paterno_parts[0] if paterno_parts else ""
+        nombre_safe = self.nombre_iniciales if self.nombre_iniciales else "X"
+
+        # Check if materno originally had prepositions (de, del, la, los, las)
+        original_materno_upper = self.materno.upper().strip()
+        materno_had_prepositions = (
+            original_materno_upper.startswith("DE ")
+            or original_materno_upper.startswith("DEL ")
+            or original_materno_upper.startswith("LA ")
+            or original_materno_upper.startswith("LOS ")
+            or original_materno_upper.startswith("LAS ")
         )
-        if len(second_value) > 0:
-            parts.append(self.paterno_calculo[min(second_value) + 1])
+
+        # Determine effective materno: use second word of paterno if materno was preposition-based or empty
+        effective_materno_first = materno_parts[0] if materno_parts else ""
+        if len(paterno_parts) >= 2 and (materno_had_prepositions or not effective_materno_first):
+            effective_materno_first = paterno_parts[1] if len(paterno_parts) >= 2 else ""
+
+        clave = ""
+
+        # Regla 4: Apellido paterno de 1-2 letras
+        if paterno_first and len(paterno_first) <= 2 and effective_materno_first:
+            clave = paterno_first[0] if paterno_first else "X"
+            clave += effective_materno_first[0] if effective_materno_first else "X"
+            clave += nombre_safe[0] if nombre_safe else "X"
+            clave += nombre_safe[1] if len(nombre_safe) > 1 else "X"
+        # Regla 7: Un solo apellido (sin materno)
+        elif not effective_materno_first:
+            apellido = paterno_first if paterno_first else "X"
+            clave = apellido[0] if apellido else "X"
+            clave += apellido[1] if len(apellido) > 1 else "X"
+            clave += nombre_safe[0] if nombre_safe else "X"
+            clave += nombre_safe[1] if len(nombre_safe) > 1 else "X"
+        # Regla 1: Formación básica
         else:
-            extra_letter = True
-        if self.materno_calculo:
-            parts.append(self.materno_calculo[0])
-        else:
-            if extra_letter:
-                parts.append(self.paterno_calculo[1])
+            clave = paterno_first[0] if paterno_first else "X"
+            # Find first vowel after first letter
+            second_value = list(filter(lambda x: x >= 0, map(paterno_first[1:].find, self.vocales)))
+            if second_value:
+                clave += paterno_first[min(second_value) + 1]
             else:
-                extra_letter = True
-        parts.append(self.nombre_iniciales[0])
-        if extra_letter and len(self.nombre_iniciales) > 1:
-            parts.append(self.nombre_iniciales[1])
-        clave = "".join(parts)
+                clave += "X"
+            clave += effective_materno_first[0] if effective_materno_first else "X"
+            clave += nombre_safe[0] if nombre_safe else "X"
+
         if clave in self.cacophonic_words:
             clave = clave[:-1] + "X"
         return clave
@@ -788,6 +895,16 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         """Generate date portion in YYMMDD format"""
         return self.fecha.strftime("%y%m%d")
 
+    # Special character to word conversions according to SAT specification
+    # These only apply when the character is standalone (surrounded by spaces/boundaries)
+    special_char_words = {
+        "@": "ARROBA",
+        "%": "PORCIENTO",
+        "#": "NUMERO",
+        "(": "ABRE",
+        "/": "DIAGONAL",
+    }
+
     @property
     def razon_social_calculo(self) -> str:
         """
@@ -799,7 +916,20 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
         - Convert numbers (arabic and roman) to text
         - Handle consonant compounds (CH → C, LL → L)
         """
+        import re
+
         razon = self.razon_social.upper().strip()
+
+        # Step 0: Handle special characters - different treatment for standalone vs embedded
+        # Standalone special chars get converted to words, embedded ones are removed
+        for char, word in self.special_char_words.items():
+            # Replace standalone special chars with their word equivalents
+            escaped = re.escape(char)
+            razon = re.sub(rf"(^|\s){escaped}(\s|$)", rf"\1{word}\2", razon)
+
+        # Remove special characters that are embedded inside words (not standalone)
+        for char in self.special_char_words.keys():
+            razon = razon.replace(char, "")
 
         # Step 1: First pass - remove excluded words with punctuation patterns
         # This handles cases like "S.A.", "S. A.", etc.
@@ -877,8 +1007,12 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
             elif word_clean not in self.excluded_words_morales:
                 filtered_words.append(word_clean)
 
+        # If ALL words were excluded, keep the original words (the company name itself)
+        # This handles cases like "Al" where "AL" is an excluded word but is the actual name
+        words_to_use = filtered_words if filtered_words else [w.upper() for w in words_converted]
+
         # Step 7: Clean remaining special characters and accents
-        cleaned = " ".join(filtered_words)
+        cleaned = " ".join(words_to_use)
         result = ""
         for char in cleaned:
             if char in self.allowed_chars:

@@ -41,6 +41,7 @@
 			root: `${base}/validadores`,
 			items: [
 				{ label: 'Todos', href: `${base}/validadores` },
+				{ label: 'Identidad', href: `${base}/validadores/identidad` },
 				{ label: 'RFC', href: `${base}/validadores/rfc` },
 				{ label: 'CURP', href: `${base}/validadores/curp` },
 				{ label: 'CLABE', href: `${base}/validadores/clabe` },
@@ -51,6 +52,7 @@
 			root: `${base}/generadores`,
 			items: [
 				{ label: 'Todos', href: `${base}/generadores` },
+				{ label: 'Identidad', href: `${base}/generadores/identidad` },
 				{ label: 'RFC', href: `${base}/generadores/rfc` },
 				{ label: 'CURP', href: `${base}/generadores/curp` },
 				{ label: 'CLABE', href: `${base}/generadores/clabe` },

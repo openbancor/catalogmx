@@ -39,7 +39,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter Variable', 'Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        mono: ['IBM Plex Mono', 'Fira Code', 'monospace'],
       },
       fontSize: {
         'xs': ['0.8125rem', { lineHeight: '1.25rem' }],   // 13px
