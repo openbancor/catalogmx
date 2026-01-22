@@ -19,8 +19,11 @@
 		generateNss
 	} from '$lib/catalogmx';
 	import { query } from '$lib/db';
-	import { fakerES_MX as faker } from '@faker-js/faker';
+	import type { Faker } from '@faker-js/faker';
 	import DireccionEditor from '$lib/components/DireccionEditor.svelte';
+
+	// Faker is loaded dynamically to avoid SSR issues
+	let faker: Faker;
 	import DatosBancarios from '$lib/components/DatosBancarios.svelte';
 	import RegimenesEditor from '$lib/components/RegimenesEditor.svelte';
 
@@ -162,6 +165,10 @@
 
 	onMount(async () => {
 		try {
+			// Dynamically import faker to avoid SSR issues
+			const fakerModule = await import('@faker-js/faker');
+			faker = fakerModule.fakerES_MX;
+
 			const [statesData, banksData, plazasData, regimenesData, ladasData] = await Promise.all([
 				query<{ code: string; name: string }>('SELECT code, name FROM inegi_states ORDER BY name'),
 				query<{ code: string; name: string; full_name: string }>('SELECT code, name, full_name FROM banxico_banks WHERE spei = 1 ORDER BY name'),
