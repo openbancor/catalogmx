@@ -23,13 +23,18 @@
 			loading = true;
 			error = null;
 
-			// Get total count first
-			const countResult = await queryOne<{ cnt: number }>('SELECT COUNT(*) as cnt FROM banxico_udis');
+			// Get today's date in YYYY-MM-DD format for filtering
+			const today = new Date().toISOString().split('T')[0];
+
+			// Get total count (only dates up to today - Banxico publishes future dates)
+			const countResult = await queryOne<{ cnt: number }>(
+				`SELECT COUNT(*) as cnt FROM banxico_udis WHERE fecha <= '${today}'`
+			);
 			totalRecords = countResult?.cnt ?? 0;
 
-			// Load UDI data from SQLite
+			// Load UDI data from SQLite (only dates up to today)
 			const results = await query<UDIRecord>(
-				'SELECT fecha, valor FROM banxico_udis ORDER BY fecha DESC LIMIT 500'
+				`SELECT fecha, valor FROM banxico_udis WHERE fecha <= '${today}' ORDER BY fecha DESC LIMIT 500`
 			);
 			data = results;
 		} catch (e) {
@@ -52,9 +57,9 @@
 
 	async function loadMore() {
 		const offset = data.length;
+		const today = new Date().toISOString().split('T')[0];
 		const moreData = await query<UDIRecord>(
-			'SELECT fecha, valor FROM banxico_udis ORDER BY fecha DESC LIMIT 500 OFFSET ?',
-			[offset]
+			`SELECT fecha, valor FROM banxico_udis WHERE fecha <= '${today}' ORDER BY fecha DESC LIMIT 500 OFFSET ${offset}`
 		);
 		data = [...data, ...moreData];
 		displayLimit += 30;

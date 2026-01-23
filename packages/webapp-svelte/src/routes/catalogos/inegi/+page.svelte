@@ -17,17 +17,15 @@
 			description: 'Catalogo de municipios y alcaldias de Mexico',
 			count: 2469,
 			icon: Building,
-			href: `${base}/catalogos/inegi/municipios`,
-			disabled: true
+			href: `${base}/catalogos/inegi/municipios`
 		},
 		{
 			id: 'localidades',
 			name: 'Localidades',
-			description: 'Catalogo de poblaciones y colonias',
-			count: 304000,
+			description: 'Localidades urbanas y rurales con datos de poblacion',
+			count: 10635,
 			icon: Map,
-			href: `${base}/catalogos/inegi/localidades`,
-			disabled: true
+			href: `${base}/catalogos/inegi/localidades`
 		},
 		{
 			id: 'scian',
@@ -35,8 +33,7 @@
 			description: 'Sistema de Clasificacion Industrial de America del Norte',
 			count: 1800,
 			icon: Layers,
-			href: `${base}/catalogos/inegi/scian`,
-			disabled: true
+			href: `${base}/catalogos/inegi/scian`
 		}
 	];
 

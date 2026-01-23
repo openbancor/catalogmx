@@ -29,7 +29,7 @@
 		// INEGI
 		{ source: 'INEGI', id: 'estados', name: 'Estados de México', count: 32, description: 'Entidades federativas' },
 		{ source: 'INEGI', id: 'municipios', name: 'Municipios', count: 2469, description: 'Municipios y alcaldías' },
-		{ source: 'INEGI', id: 'localidades', name: 'Localidades', count: 304000, description: 'Poblaciones y colonias', disabled: true },
+		{ source: 'INEGI', id: 'localidades', name: 'Localidades', count: 10635, description: 'Localidades urbanas y rurales con datos de poblacion' },
 		{ source: 'INEGI', id: 'scian', name: 'SCIAN', count: 1800, description: 'Sistema de Clasificación Industrial de América del Norte' },
 
 		// CONAPO
