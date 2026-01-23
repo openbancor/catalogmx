@@ -5,7 +5,6 @@ on:
     branches: [main, master]
     paths:
       - "packages/webapp-svelte/**"
-      - "packages/shared-data/**"
       - ".github/workflows/webapp-pages.yml"
   workflow_run:
     workflows: ["Build and Publish SQLite Assets"]
@@ -20,6 +19,10 @@ permissions:
 concurrency:
   group: "pages-webapp"
   cancel-in-progress: true
+
+env:
+  # Use Cloudflare R2 for SQLite data (supports Range requests)
+  R2_PUBLIC_URL: https://pub-dddf4b79a8b04229b8931ea97e2243f3.r2.dev
 
 jobs:
   build:
@@ -38,65 +41,6 @@ jobs:
           cache: npm
           cache-dependency-path: packages/webapp-svelte/package-lock.json
 
-      - name: Download latest SQLite release asset
-        run: |
-          echo "📥 Downloading mexico.sqlite3 from releases..."
-          RELEASE_URL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases | \
-            jq -r '[.[] | select(.assets[].name == "mexico.sqlite3")] | first | .assets[] | select(.name == "mexico.sqlite3") | .browser_download_url')
-
-          if [ -z "$RELEASE_URL" ] || [ "$RELEASE_URL" = "null" ]; then
-            echo "❌ No mexico.sqlite3 release asset found"
-            exit 1
-          fi
-
-          mkdir -p packages/webapp-svelte/static/data
-          curl -L -o packages/webapp-svelte/static/data/mexico.sqlite3 "$RELEASE_URL"
-          echo "✅ Downloaded mexico.sqlite3 from releases"
-
-      - name: Split SQLite into chunks
-        run: |
-          DB_PATH="packages/webapp-svelte/static/data/mexico.sqlite3"
-          CHUNK_SIZE=1048576
-          SUFFIX_LENGTH=4
-          python - <<'PY'
-          import os
-          from pathlib import Path
-
-          db_path = Path(os.environ["DB_PATH"])
-          chunk_size = int(os.environ["CHUNK_SIZE"])
-          suffix_length = int(os.environ["SUFFIX_LENGTH"])
-
-          count = 0
-          with db_path.open("rb") as handle:
-            while True:
-              chunk = handle.read(chunk_size)
-              if not chunk:
-                break
-              out_path = Path(f"{db_path}.{count:0{suffix_length}d}")
-              out_path.write_bytes(chunk)
-              count += 1
-
-          print(f"✅ Wrote {count} chunks to {db_path}.0000..")
-          PY
-        env:
-          DB_PATH: packages/webapp-svelte/static/data/mexico.sqlite3
-          CHUNK_SIZE: 1048576
-          SUFFIX_LENGTH: 4
-
-      - name: Export SQLite metadata
-        run: |
-          DB_PATH="packages/webapp-svelte/static/data/mexico.sqlite3"
-          DB_LENGTH=$(stat -c %s "$DB_PATH")
-          DB_HASH=$(sha256sum "$DB_PATH" | awk '{print $1}')
-          echo "VITE_SQLITE_LENGTH=$DB_LENGTH" >> "$GITHUB_ENV"
-          echo "VITE_SQLITE_HASH=$DB_HASH" >> "$GITHUB_ENV"
-          echo "VITE_SQLITE_CHUNK_SIZE=1048576" >> "$GITHUB_ENV"
-          echo "VITE_SQLITE_SUFFIX_LENGTH=4" >> "$GITHUB_ENV"
-          cat > packages/webapp-svelte/static/data/mexico.sqlite3.meta.json << EOF
-          {"length": $DB_LENGTH, "cacheBust": "$DB_HASH"}
-          EOF
-          echo "✅ SQLite metadata exported"
-
       - name: Install dependencies
         working-directory: packages/webapp-svelte
         run: npm ci
@@ -106,6 +50,8 @@ jobs:
         run: npm run build
         env:
           DEPLOY_TARGET: github-pages
+          VITE_DATA_BASE_URL: ${{ env.R2_PUBLIC_URL }}
+          VITE_SQLITE_MODE: full
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
