@@ -26,7 +26,7 @@ Complete guide for publishing **catalogmx** to PyPI, NPM, and pub.dev.
 |----------|-----------|-------------|-----------------|
 | Python | PyPI | https://pypi.org/project/catalogmx/ | 0.3.0 |
 | TypeScript | NPM | https://www.npmjs.com/package/catalogmx | 0.3.0 |
-| Dart/Flutter | pub.dev | https://pub.dev/packages/catalogmx | 0.4.0 |
+| Dart/Flutter | pub.dev | https://pub.dev/packages/catalogmx | 0.3.0 |
 
 **Important**: All three packages must maintain version parity and identical APIs.
 

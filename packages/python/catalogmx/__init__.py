@@ -105,11 +105,18 @@ from catalogmx.validators.rfc import (
 )
 
 # =============================================================================
+# Generators (identity generation with Faker - optional dependency)
+# =============================================================================
+# Note: Requires faker package - install with: pip install catalogmx[generators]
+# from catalogmx.generators import generate_identity, generate_persona_fisica, generate_persona_moral
+
+# =============================================================================
 # Submodules (import as needed)
 # =============================================================================
 # Catalogs: from catalogmx import catalogs
 # Calculators: from catalogmx import calculators
 # Validators: from catalogmx import validators
+# Generators: from catalogmx.generators import generate_identity
 
 __all__ = [
     # Version

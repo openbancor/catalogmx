@@ -168,13 +168,13 @@ class TestGenerateClabeForBank:
     """Tests for generate_clabe_for_bank function."""
 
     def test_generate_for_bbva(self):
-        """Test generating CLABE for BBVA."""
-        clabe = generate_clabe_for_bank("BBVA")
+        """Test generating CLABE for BBVA MEXICO."""
+        clabe = generate_clabe_for_bank("BBVA MEXICO")
         assert clabe is not None
         assert len(clabe) == 18
         decoded = decode_clabe(clabe)
         assert decoded is not None
-        assert decoded["bank"]["name"] == "BBVA"
+        assert decoded["bank"]["name"] == "BBVA MEXICO"
 
     def test_generate_for_banamex(self):
         """Test generating CLABE for BANAMEX."""
@@ -190,13 +190,13 @@ class TestGenerateClabeForBank:
 
     def test_generate_with_plaza(self):
         """Test generating CLABE for bank with plaza."""
-        clabe = generate_clabe_for_bank("BBVA", "Ciudad de Mexico")
+        clabe = generate_clabe_for_bank("BBVA MEXICO", "Ciudad de Mexico")
         if clabe:  # Plaza may or may not be found
             assert len(clabe) == 18
 
     def test_generate_with_invalid_plaza(self):
         """Test generating CLABE for bank with invalid plaza."""
-        clabe = generate_clabe_for_bank("BBVA", "Ciudad Inexistente")
+        clabe = generate_clabe_for_bank("BBVA MEXICO", "Ciudad Inexistente")
         # Should still generate, just without specific plaza
         assert clabe is not None
         assert len(clabe) == 18

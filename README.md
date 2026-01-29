@@ -114,7 +114,7 @@ dart pub add catalogmx
 **Manual (pubspec.yaml):**
 ```yaml
 dependencies:
-  catalogmx: ^0.4.0
+  catalogmx: ^0.3.0
 ```
 
 **Development:**
@@ -761,7 +761,7 @@ open packages/python/htmlcov/index.html
 
 ## Roadmap
 
-### Current Version: 0.4.0 (Production Ready)
+### Current Version: 0.3.0 (Production Ready)
 
 **Delivered:**
 - 58 official catalogs with 470K+ records
@@ -848,4 +848,4 @@ BSD 2-Clause License. See [LICENSE](LICENSE) for details.
 
 ---
 
-**catalogmx v0.4.0** | **Python + TypeScript + Dart** | **1,206 Tests** | **93.78% Coverage** | **Production Ready** | **BSD-2-Clause**
+**catalogmx v0.3.0** | **Python + TypeScript + Dart** | **1,206 Tests** | **93.78% Coverage** | **Production Ready** | **BSD-2-Clause**

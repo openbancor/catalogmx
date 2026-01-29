@@ -57,6 +57,7 @@ export 'src/calculators/costo_trabajador.dart';
 
 export 'src/catalogs/inegi/states.dart';
 export 'src/catalogs/inegi/municipios.dart';
+export 'src/catalogs/inegi/municipios_completo.dart';
 export 'src/catalogs/inegi/localidades.dart';
 
 // ============================================================================
@@ -64,6 +65,7 @@ export 'src/catalogs/inegi/localidades.dart';
 // ============================================================================
 
 export 'src/catalogs/sepomex/codigos_postales.dart';
+export 'src/catalogs/sepomex/codigos_postales_completo.dart';
 
 // ============================================================================
 // CATALOGS - BANXICO (Banco de México)
@@ -86,6 +88,7 @@ export 'src/catalogs/banxico/udis.dart';
 // ============================================================================
 
 export 'src/catalogs/ift/operadores_moviles.dart';
+export 'src/catalogs/ift/codigos_lada.dart';
 
 // ============================================================================
 // CATALOGS - MEXICO (General Mexican Catalogs)
@@ -122,6 +125,12 @@ export 'src/catalogs/sat/nomina_all.dart';
 export 'src/catalogs/sat/cfdi_catalogs.dart';
 // Note: all_catalogs.dart is not exported to avoid ambiguous exports
 // All catalogs are already exported individually from their respective modules
+
+// ============================================================================
+// GENERATORS
+// ============================================================================
+
+export 'src/generators/identity.dart';
 
 // ============================================================================
 // UTILITIES

@@ -58,12 +58,16 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+generators = [
+    "faker>=19.0.0"  # Required for identity generation
+]
 dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
     "black>=23.0.0",
     "ruff>=0.1.0",
-    "mypy>=1.7.0"
+    "mypy>=1.7.0",
+    "faker>=19.0.0"
 ]
 docs = [
     "sphinx>=7.0.0",
@@ -71,7 +75,7 @@ docs = [
     "sphinx-autodoc-typehints>=1.25.0"
 ]
 all = [
-    "catalogmx[dev,docs]"
+    "catalogmx[dev,docs,generators]"
 ]
 
 [project.urls]
