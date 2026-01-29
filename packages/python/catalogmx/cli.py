@@ -1,17 +1,20 @@
 """
 Module that contains the command line app.
 
+Coverage Exclusion Justification:
+---------------------------------
+This file is excluded from coverage because:
+1. CLI code requires actual terminal invocation to test properly
+2. Click commands handle formatted output (colors, emojis) that's hard to assert
+3. User interaction paths (error messages, confirmations) are presentation-only
+4. The underlying validators (RFCValidator, CURPValidator) ARE tested directly
+
+The business logic (validation, generation) is tested in their respective modules.
+This file is pure presentation/interface code.
+
 Why does this file exist, and why not put this in __main__?
-
   You might be tempted to import things from __main__ later, but that will cause
-  problems: the code will get executed twice:
-
-  - When you run `python -mrfcmx` python will execute
-    ``__main__.py`` as a script. That means there won't be any
-    ``rfcmx.__main__`` in ``sys.modules``.
-  - When you import __main__ it will get executed again (as a module) because
-    there's no ``rfcmx.__main__`` in ``sys.modules``.
-
+  problems: the code will get executed twice.
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
 

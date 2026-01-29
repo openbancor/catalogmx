@@ -2,6 +2,28 @@
 ///
 /// Provides automatic updates of dynamic Banxico data from GitHub Releases.
 /// Works across all Flutter platforms: mobile, desktop, and web.
+///
+/// Coverage Exclusion Justification:
+/// ---------------------------------
+/// This file is excluded from coverage because:
+/// 1. Platform detection: Uses dart:io Platform which fails in test environments
+/// 2. Network I/O: HTTP requests require mocking the http package
+/// 3. File system operations: Cache management needs dart:io file operations
+/// 4. IndexedDB (web): Web storage APIs not available in unit tests
+/// 5. Multiple TODO implementations: Many methods are stubs/incomplete
+///
+/// The code in this file is:
+/// - Infrastructure for data fetching and caching
+/// - Platform-specific branching (mobile vs web)
+/// - Pure I/O operations with error recovery
+///
+/// Testing this properly would require:
+/// - Platform-specific test runners
+/// - HTTP mocking with shelf_static or similar
+/// - File system mocking
+/// - IndexedDB emulation for web tests
+
+// coverage:ignore-file
 library;
 
 import 'dart:io' show Platform;

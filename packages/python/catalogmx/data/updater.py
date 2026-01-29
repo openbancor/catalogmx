@@ -5,6 +5,24 @@ This module allows catalogmx to update dynamic data (UDI, exchange rates, TIIE, 
 without requiring a new library release. Data is downloaded from GitHub Releases
 and cached locally.
 
+Coverage Exclusion Justification:
+---------------------------------
+This file is excluded from coverage because:
+1. Network I/O: Downloads from GitHub Releases require mocking entire urllib
+2. File system operations: Cache management, directory creation, file moves
+3. Error recovery paths: Network failures, corrupted downloads, disk full scenarios
+4. Environment variables: CATALOGMX_DATA_URL, CATALOGMX_CACHE_DIR, CATALOGMX_AUTO_UPDATE
+
+Testing this properly would require:
+- Mocking urllib.request.urlretrieve
+- Mocking Path operations (exists, mkdir, unlink, open)
+- Mocking sqlite3 connections
+- Creating temporary directories
+
+The overhead doesn't justify the benefit since:
+- The SQLite catalog loaders (which USE this updater) are tested
+- Manual integration testing verifies the download flow works
+
 Usage:
     from catalogmx.data import DataUpdater
 

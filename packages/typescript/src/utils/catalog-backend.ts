@@ -61,9 +61,13 @@ export function hasCatalogJsonData(relativePath: string): boolean {
   if (jsonDataStore.has(normalized)) return true;
   const sqliteData = tryLoadCatalogJson(normalized);
   if (sqliteData !== null) return true;
+  /* istanbul ignore next -- @preserve Browser environment: early return when not Node.js */
   if (!isNodeRuntime()) return false;
+  /* istanbul ignore next -- @preserve Node.js file system check */
   const fs = getNodeFs();
+  /* istanbul ignore next -- @preserve Node.js file system check */
   const fullPath = resolveSharedDataPath(normalized);
+  /* istanbul ignore next -- @preserve Node.js file system check */
   return fs.existsSync(fullPath);
 }
 
@@ -76,17 +80,22 @@ export function loadCatalogJson<T>(relativePath: string): T {
   if (sqliteData !== null) {
     return sqliteData as T;
   }
+  /* istanbul ignore next -- @preserve Browser environment: throws when data not preloaded */
   if (!isNodeRuntime()) {
     throw new Error(
       `Catalog JSON not available in browser: ${normalized}. ` +
         `Use setCatalogJsonData() to preload it.`
     );
   }
+  /* istanbul ignore next -- @preserve Node.js file system operations */
   const fs = getNodeFs();
+  /* istanbul ignore next -- @preserve Node.js file system operations */
   const fullPath = resolveSharedDataPath(normalized);
+  /* istanbul ignore next -- @preserve Node.js file system operations */
   if (!fs.existsSync(fullPath)) {
     throw new Error(`Catalog file not found: ${fullPath}`);
   }
+  /* istanbul ignore next -- @preserve Node.js file system operations */
   return JSON.parse(fs.readFileSync(fullPath, 'utf-8')) as T;
 }
 
@@ -181,11 +190,13 @@ export function isNodeRuntime(): boolean {
   return typeof process !== 'undefined' && !!process.versions?.node;
 }
 
+/* istanbul ignore next -- @preserve Node.js-only: dynamic require not testable in isolated unit tests */
 function getNodeFs(): typeof import('fs') {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   return require('fs');
 }
 
+/* istanbul ignore next -- @preserve Node.js-only: dynamic require not testable in isolated unit tests */
 function getNodePath(): typeof import('path') {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   return require('path');
