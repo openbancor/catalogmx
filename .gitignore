@@ -84,3 +84,7 @@ tmp/
 .wrangler/
 node_modules/
 packages/dart/coverage/
+
+# Local files
+.playwright-mcp/
+mexico.sqlite3
