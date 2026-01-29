@@ -129,10 +129,10 @@ def demo_tiie():
         print(f"\n✓ TIIE 28 días del {fecha}:")
         print(f"  Tasa: {tiie_fecha['tasa']:.4f}%")
 
-    # 3. Promedio mensual
-    promedio = TIIECatalog.get_promedio_mes(2024, 6, plazo=28)
+    # 3. Promedio anual
+    promedio = TIIECatalog.get_promedio_anual(2024, plazo=28)
     if promedio:
-        print(f"\n✓ TIIE 28 días promedio junio 2024: {promedio:.4f}%")
+        print(f"\n✓ TIIE 28 días promedio 2024: {promedio:.4f}%")
 
     # 4. Datos de un año
     tiies_2024 = TIIECatalog.get_por_anio(2024, plazo=28)
@@ -189,10 +189,13 @@ def demo_inflacion():
     # 1. Inflación actual
     inflacion = get_inflacion_actual()
     print(f"\n✓ Inflación actual:")
-    print(f"  Anual: {inflacion['inflacion_anual']:.2f}%")
-    print(f"  Mensual: {inflacion['inflacion_mensual']:.2f}%")
-    print(f"  INPC: {inflacion['inpc']:.4f}")
-    print(f"  Fecha: {inflacion['fecha']}")
+    if inflacion.get('inflacion_anual') is not None:
+        print(f"  Anual: {inflacion['inflacion_anual']:.2f}%")
+    if inflacion.get('inflacion_mensual') is not None:
+        print(f"  Mensual: {inflacion['inflacion_mensual']:.2f}%")
+    if inflacion.get('inpc') is not None:
+        print(f"  INPC: {inflacion['inpc']:.4f}")
+    print(f"  Fecha: {inflacion.get('fecha', 'N/A')}")
 
     # 2. Solo inflación anual
     inf_anual = get_inflacion_anual_actual()
@@ -202,8 +205,10 @@ def demo_inflacion():
     inf_mes = InflacionCatalog.get_por_mes(2024, 6)
     if inf_mes:
         print(f"\n✓ Inflación junio 2024:")
-        print(f"  Anual: {inf_mes['inflacion_anual']:.2f}%")
-        print(f"  Mensual: {inf_mes['inflacion_mensual']:.2f}%")
+        if inf_mes.get('inflacion_anual') is not None:
+            print(f"  Anual: {inf_mes['inflacion_anual']:.2f}%")
+        if inf_mes.get('inflacion_mensual') is not None:
+            print(f"  Mensual: {inf_mes['inflacion_mensual']:.2f}%")
 
     # 4. Promedio anual
     promedio = InflacionCatalog.get_promedio_anual(2024)
@@ -211,7 +216,7 @@ def demo_inflacion():
         print(f"\n✓ Inflación promedio 2024: {promedio:.2f}%")
 
     # 5. Inflación acumulada
-    acumulada = InflacionCatalog.calcular_inflacion_acumulada(2024, 1, 2024, 12)
+    acumulada = InflacionCatalog.calcular_inflacion_acumulada("2024-01-01", "2024-12-01")
     if acumulada:
         print(f"✓ Inflación acumulada 2024: {acumulada:.2f}%")
 
