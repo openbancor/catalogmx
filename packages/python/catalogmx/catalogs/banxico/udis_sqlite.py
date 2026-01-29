@@ -196,15 +196,13 @@ class UDICatalog:
         db = sqlite3.connect(cls._get_db_path())
         db.row_factory = sqlite3.Row
 
-        cursor = db.execute(
-            """
+        cursor = db.execute("""
             SELECT fecha, valor, anio, mes, tipo, moneda, notas
             FROM udis
             WHERE tipo IN ('diario', 'oficial_banxico')
             ORDER BY fecha DESC
             LIMIT 1
-            """
-        )
+            """)
         row = cursor.fetchone()
         db.close()
 

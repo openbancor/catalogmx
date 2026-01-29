@@ -55,13 +55,11 @@ class InflacionCatalog:
         """
         db = sqlite3.connect(cls._get_db_path())
         db.row_factory = sqlite3.Row
-        cursor = db.execute(
-            """
+        cursor = db.execute("""
             SELECT fecha, anio, mes, inpc, inflacion_mensual, inflacion_anual
             FROM inflacion
             ORDER BY fecha
-            """
-        )
+            """)
         results = [cls._row_to_dict(row) for row in cursor.fetchall()]
         db.close()
         return results
@@ -131,14 +129,12 @@ class InflacionCatalog:
         db = sqlite3.connect(cls._get_db_path())
         db.row_factory = sqlite3.Row
 
-        cursor = db.execute(
-            """
+        cursor = db.execute("""
             SELECT fecha, anio, mes, inpc, inflacion_mensual, inflacion_anual
             FROM inflacion
             ORDER BY fecha DESC
             LIMIT 1
-            """
-        )
+            """)
         row = cursor.fetchone()
         db.close()
 

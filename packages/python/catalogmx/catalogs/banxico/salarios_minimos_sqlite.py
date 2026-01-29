@@ -51,13 +51,11 @@ class SalariosMinimosCatalog:
         """
         db = sqlite3.connect(cls._get_db_path())
         db.row_factory = sqlite3.Row
-        cursor = db.execute(
-            """
+        cursor = db.execute("""
             SELECT fecha, zona, salario_diario, anio, mes
             FROM salarios_minimos
             ORDER BY fecha, zona
-            """
-        )
+            """)
         results = [cls._row_to_dict(row) for row in cursor.fetchall()]
         db.close()
         return results

@@ -49,8 +49,7 @@ def _get_faker() -> Faker:
     """Get a Faker instance with Mexican locale."""
     if Faker is None:
         raise ImportError(
-            "Faker is required for identity generation. "
-            "Install it with: pip install faker"
+            "Faker is required for identity generation. " "Install it with: pip install faker"
         )
     return Faker("es_MX")
 
@@ -113,7 +112,10 @@ REGIMENES_PERSONA_FISICA = [
     {"code": "606", "name": "Arrendamiento"},
     {"code": "612", "name": "Personas Físicas con Actividades Empresariales y Profesionales"},
     {"code": "621", "name": "Incorporación Fiscal"},
-    {"code": "625", "name": "Régimen de las Actividades Empresariales con ingresos a través de Plataformas Tecnológicas"},
+    {
+        "code": "625",
+        "name": "Régimen de las Actividades Empresariales con ingresos a través de Plataformas Tecnológicas",
+    },
     {"code": "626", "name": "Régimen Simplificado de Confianza"},
 ]
 
@@ -166,8 +168,10 @@ class PersonaFisica:
     def edad(self) -> int:
         """Age in years."""
         today = date.today()
-        return today.year - self.fecha_nacimiento.year - (
-            (today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day)
+        return (
+            today.year
+            - self.fecha_nacimiento.year
+            - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
         )
 
     def to_dict(self) -> dict:
@@ -330,7 +334,7 @@ class IdentityGenerator:
         if estado:
             estado_info = next(
                 (e for e in ESTADOS_MEXICO if e["name"].upper() == estado.upper()),
-                random.choice(ESTADOS_MEXICO)
+                random.choice(ESTADOS_MEXICO),
             )
         else:
             estado_info = random.choice(ESTADOS_MEXICO)
@@ -490,9 +494,7 @@ class IdentityGenerator:
         persona.municipio = self.faker.city()
         persona.estado = random.choice(ESTADOS_MEXICO)["name"].title()
 
-    def _add_contact(
-        self, persona: PersonaFisica, nombre: str, apellido: str
-    ) -> None:
+    def _add_contact(self, persona: PersonaFisica, nombre: str, apellido: str) -> None:
         """Add contact information to persona física."""
         persona.telefono = self._generate_phone()
 
@@ -508,6 +510,7 @@ class IdentityGenerator:
         email_user = random.choice(email_styles)
         # Normalize email (remove accents)
         import unicodedata
+
         email_user = unicodedata.normalize("NFD", email_user)
         email_user = "".join(c for c in email_user if unicodedata.category(c) != "Mn")
 

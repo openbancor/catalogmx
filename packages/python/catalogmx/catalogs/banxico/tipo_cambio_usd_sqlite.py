@@ -50,14 +50,12 @@ class TipoCambioUSDCatalog:
         """
         db = sqlite3.connect(cls._get_db_path())
         db.row_factory = sqlite3.Row
-        cursor = db.execute(
-            """
+        cursor = db.execute("""
             SELECT fecha, tipo_cambio, anio, mes, fuente, moneda_origen, moneda_destino
             FROM tipo_cambio
             WHERE fuente = 'FIX'
             ORDER BY fecha
-            """
-        )
+            """)
         results = [cls._row_to_dict(row) for row in cursor.fetchall()]
         db.close()
         return results
@@ -123,15 +121,13 @@ class TipoCambioUSDCatalog:
         db = sqlite3.connect(cls._get_db_path())
         db.row_factory = sqlite3.Row
 
-        cursor = db.execute(
-            """
+        cursor = db.execute("""
             SELECT fecha, tipo_cambio, anio, mes, fuente, moneda_origen, moneda_destino
             FROM tipo_cambio
             WHERE fuente = 'FIX'
             ORDER BY fecha DESC
             LIMIT 1
-            """
-        )
+            """)
         row = cursor.fetchone()
         db.close()
 

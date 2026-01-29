@@ -104,8 +104,7 @@ class ClaveProdServCatalog:
     def _ensure_schema(cls, conn: sqlite3.Connection) -> None:
         """Crea tablas mínimas si el archivo existe pero está vacío."""
         cursor = conn.cursor()
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS clave_prod_serv (
                 clave TEXT PRIMARY KEY,
                 descripcion TEXT,
@@ -116,10 +115,8 @@ class ClaveProdServCatalog:
                 fecha_inicio_vigencia TEXT,
                 fecha_fin_vigencia TEXT
             )
-            """
-        )
-        cursor.execute(
-            """
+            """)
+        cursor.execute("""
             CREATE VIRTUAL TABLE IF NOT EXISTS clave_prod_serv_fts USING fts5(
                 clave,
                 descripcion,
@@ -128,8 +125,7 @@ class ClaveProdServCatalog:
                 content='clave_prod_serv',
                 content_rowid='rowid'
             )
-            """
-        )
+            """)
         cursor.execute("SELECT COUNT(*) FROM clave_prod_serv")
         (count,) = cursor.fetchone()
         if count == 0:

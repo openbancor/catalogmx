@@ -149,16 +149,14 @@ class CodigosPostalesSQLite:
     def _ensure_schema(cls, conn):
         """Crea tablas mínimas si el archivo existe pero está vacío."""
         cursor = conn.cursor()
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS codigos_postales (
                 cp TEXT,
                 asentamiento TEXT,
                 municipio TEXT,
                 estado TEXT
             )
-            """
-        )
+            """)
         cursor.execute("SELECT COUNT(*) FROM codigos_postales")
         (count,) = cursor.fetchone()
         if count == 0:
