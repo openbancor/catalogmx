@@ -35,6 +35,7 @@ export class TIIE28Catalog {
   /**
    * Convert SQL row to TIIE object
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- sql.js row type
   private static rowToTIIE(row: any[]): TIIE28Record {
     return {
       fecha: row[0] as string,

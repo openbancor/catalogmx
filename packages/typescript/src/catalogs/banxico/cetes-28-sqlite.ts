@@ -36,6 +36,7 @@ export class CETES28Catalog {
   /**
    * Convert SQL row to CETES object
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- sql.js row type
   private static rowToCETES(row: any[]): CETES28Record {
     return {
       fecha: row[0] as string,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- sql.js types require any */
 /**
  * Type declarations for sql.js
  * See: https://github.com/sql-js/sql.js

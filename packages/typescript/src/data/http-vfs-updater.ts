@@ -26,7 +26,9 @@ const DEFAULT_CONFIG: Required<HttpVfsConfig> = {
  */
 export class HttpVfsUpdater {
   private config: Required<HttpVfsConfig>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- sql.js types not available
   private sqljs: any = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- sql.js Database instance
   private db: any = null;
 
   constructor(config: HttpVfsConfig = {}) {
@@ -36,6 +38,7 @@ export class HttpVfsUpdater {
   /**
    * Initialize sql.js library
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- sql.js module type
   private async initSqlJs(): Promise<any> {
     if (this.sqljs) return this.sqljs;
 
@@ -117,6 +120,7 @@ export class HttpVfsUpdater {
   /**
    * Open database with HTTP VFS
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- sql.js Database type
   async openDatabase(): Promise<any> {
     if (this.db) return this.db;
 
@@ -145,10 +149,12 @@ export class HttpVfsUpdater {
    * Instead of querying all data, query only recent updates
    * using a metadata table that tracks changes.
    */
+  /* eslint-disable @typescript-eslint/no-explicit-any -- sql.js row values */
   async queryRecentChanges(
     table: string,
     sinceDate: string
   ): Promise<{ columns: string[]; values: any[][] }> {
+    /* eslint-enable @typescript-eslint/no-explicit-any */
     const db = await this.openDatabase();
 
     // Query using updated_at column to get only recent changes
@@ -173,6 +179,7 @@ export class HttpVfsUpdater {
   /**
    * Query database with custom SQL
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- sql.js params and row values
   async query(sql: string, params: any[] = []): Promise<{ columns: string[]; values: any[][] }> {
     const db = await this.openDatabase();
     const result = db.exec(sql, params);
@@ -264,6 +271,7 @@ export class IncrementalDataQuery {
   /**
    * Get only new/updated records since last sync
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic record type
   async getUpdates(table: string): Promise<any[]> {
     const sinceDate = this.lastSyncDate || '1970-01-01';
 
@@ -271,6 +279,7 @@ export class IncrementalDataQuery {
 
     // Convert to objects
     const records = result.values.map((row) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic record
       const obj: Record<string, any> = {};
       result.columns.forEach((col, i) => {
         obj[col] = row[i];
@@ -289,6 +298,7 @@ export class IncrementalDataQuery {
   /**
    * Merge updates with local cache
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- generic data arrays
   async syncTable(table: string, localData: any[]): Promise<any[]> {
     const updates = await this.getUpdates(table);
 
@@ -337,11 +347,13 @@ export function getHttpVfsUpdater(config?: HttpVfsConfig): HttpVfsUpdater {
 }
 
 // Convenience functions
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- sql.js params and results
 export async function queryRemote(sql: string, params: any[] = []): Promise<any[]> {
   const updater = getHttpVfsUpdater();
   const result = await updater.query(sql, params);
 
   return result.values.map((row) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic record
     const obj: Record<string, any> = {};
     result.columns.forEach((col, i) => {
       obj[col] = row[i];

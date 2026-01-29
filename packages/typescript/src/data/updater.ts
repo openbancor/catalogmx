@@ -105,8 +105,8 @@ class NodeDataUpdater {
       const file = await fs.open(tempPath, 'w');
 
       await new Promise<void>((resolve, reject) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         https
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Node.js http.IncomingMessage
           .get(this.config.dataUrl, (response: any) => {
             if (response.statusCode !== 200) {
               reject(new Error(`HTTP ${response.statusCode}`));

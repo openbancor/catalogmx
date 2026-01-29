@@ -36,6 +36,7 @@ export class TipoCambioUSDCatalog {
   /**
    * Convert SQL row to TipoCambio object
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- sql.js row type
   private static rowToTipoCambio(row: any[]): TipoCambioRecord {
     return {
       fecha: row[0] as string,

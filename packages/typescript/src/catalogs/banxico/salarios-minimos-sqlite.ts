@@ -37,6 +37,7 @@ export class SalariosMinimosCatalog {
   /**
    * Convert SQL row to SalarioMinimo object
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- sql.js row type
   private static rowToSalario(row: any[]): SalarioMinimoRecord {
     return {
       fecha: row[0] as string,

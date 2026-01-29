@@ -47,13 +47,14 @@ export class UDICatalog {
   /**
    * Convert SQL row to UDI object
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- sql.js row type
   private static rowToUDI(row: any[]): UDI {
     return {
       fecha: row[0] as string,
       valor: row[1] as number,
       año: row[2] as number,
       mes: row[3] as number,
-      tipo: row[4] as any,
+      tipo: row[4] as UDI['tipo'],
       moneda: row[5] as string,
       notas: row[6] as string | null,
     };
