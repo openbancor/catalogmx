@@ -1,4 +1,5 @@
 #!/usr/bin/env dart
+
 /// Tipo de Cambio App - Dart
 ///
 /// Consulta y convierte USD/MXN usando los catálogos de Banxico.
@@ -36,7 +37,8 @@ void showActual() {
   final fecha = actual['fecha'] as String;
 
   print('  📅 Fecha:        $fecha');
-  print('  💱 Tipo cambio:  \$${formatCurrency(tc, decimals: 4)} MXN por 1 USD');
+  print(
+      '  💱 Tipo cambio:  \$${formatCurrency(tc, decimals: 4)} MXN por 1 USD');
   print('');
   print('  Ejemplos de conversión:');
   print('    \$1 USD     = \$${formatCurrency(tc)} MXN');
@@ -75,10 +77,12 @@ void convertir(double cantidad, String direccion) {
 
   if (direccion == 'usd_mxn') {
     final resultado = cantidad * tc;
-    print('  💵 \$${formatCurrency(cantidad)} USD = \$${formatCurrency(resultado)} MXN');
+    print(
+        '  💵 \$${formatCurrency(cantidad)} USD = \$${formatCurrency(resultado)} MXN');
   } else {
     final resultado = cantidad / tc;
-    print('  🇲🇽 \$${formatCurrency(cantidad)} MXN = \$${formatCurrency(resultado)} USD');
+    print(
+        '  🇲🇽 \$${formatCurrency(cantidad)} MXN = \$${formatCurrency(resultado)} USD');
   }
   print('     (Tipo de cambio: ${formatCurrency(tc, decimals: 4)})');
 }
@@ -111,7 +115,8 @@ void showEstadisticas() {
   print('  Mínimo:    \$${formatCurrency(minimo, decimals: 4)}');
   print('  Máximo:    \$${formatCurrency(maximo, decimals: 4)}');
   print('  Promedio:  \$${formatCurrency(promedio, decimals: 4)}');
-  print('  Variación: ${variacion >= 0 ? '+' : ''}${formatCurrency(variacion)}%');
+  print(
+      '  Variación: ${variacion >= 0 ? '+' : ''}${formatCurrency(variacion)}%');
 }
 
 void main(List<String> args) {

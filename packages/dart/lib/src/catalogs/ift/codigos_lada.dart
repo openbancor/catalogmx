@@ -66,8 +66,9 @@ class CodigosLADACatalog {
     final ciudadUpper = ciudad.toUpperCase();
     return _data!
         .where(
-          (item) =>
-              (item['ciudad'] as String? ?? '').toUpperCase().contains(ciudadUpper),
+          (item) => (item['ciudad'] as String? ?? '')
+              .toUpperCase()
+              .contains(ciudadUpper),
         )
         .toList();
   }
@@ -78,8 +79,9 @@ class CodigosLADACatalog {
     final estadoUpper = estado.toUpperCase();
     return _data!
         .where(
-          (item) =>
-              (item['estado'] as String? ?? '').toUpperCase().contains(estadoUpper),
+          (item) => (item['estado'] as String? ?? '')
+              .toUpperCase()
+              .contains(estadoUpper),
         )
         .toList();
   }

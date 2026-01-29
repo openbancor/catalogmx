@@ -1,4 +1,5 @@
 #!/usr/bin/env dart
+
 /// Validators App - Dart
 ///
 /// Demuestra los validadores de RFC, CURP, CLABE y NSS.
@@ -207,6 +208,7 @@ void main(List<String> args) {
       print('    dart run example/validators_app.dart curp');
       print('    dart run example/validators_app.dart clabe');
       print('    dart run example/validators_app.dart nss');
-      print('    dart run example/validators_app.dart validar GALO850320HJCRPN07');
+      print(
+          '    dart run example/validators_app.dart validar GALO850320HJCRPN07');
   }
 }
