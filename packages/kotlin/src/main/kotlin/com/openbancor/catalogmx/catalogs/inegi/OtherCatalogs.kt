@@ -58,7 +58,7 @@ object InegiLocalidades {
         val conn = BaseCatalog.getSqliteConnection() ?: return emptyList()
         return try {
             val normalized = TextUtils.normalize(query).lowercase()
-            val sql = "SELECT * FROM $SQLITE_TABLE WHERE LOWER(nom_loc) LIKE ? LIMIT ?"
+            val sql = "SELECT * FROM $SQLITE_TABLE WHERE LOWER(nom_localidad) LIKE ? LIMIT ?"
             conn.prepareStatement(sql).use { stmt ->
                 stmt.setString(1, "%$normalized%")
                 stmt.setInt(2, limit)

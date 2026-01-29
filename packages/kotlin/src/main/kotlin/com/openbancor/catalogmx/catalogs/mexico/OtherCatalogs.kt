@@ -140,8 +140,8 @@ object PalabrasCacofonicas {
 
     fun isCacophonic(word: String): Boolean {
         val upper = word.uppercase()
-        return ensureLoaded().any { it["palabra"] == upper }
+        return ensureLoaded().any { (it["palabra"] ?: it["value"]) == upper }
     }
 
-    fun getWords(): List<String> = ensureLoaded().mapNotNull { it["palabra"] as? String }
+    fun getWords(): List<String> = ensureLoaded().mapNotNull { (it["palabra"] ?: it["value"]) as? String }
 }

@@ -48,7 +48,7 @@ object FormaPagoCatalog : CodeLookup {
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
 
     override fun getByCode(code: String): Map<String, Any?>? =
-        ensureLoaded().find { it["clave"] == code }
+        ensureLoaded().find { it["clave"] == code || it["valor"] == code }
 
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 }
@@ -94,7 +94,7 @@ object MetodoPagoCatalog : CodeLookup {
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
 
     override fun getByCode(code: String): Map<String, Any?>? =
-        ensureLoaded().find { it["clave"] == code }
+        ensureLoaded().find { it["clave"] == code || it["valor"] == code }
 
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 }
@@ -148,7 +148,7 @@ object UsoCfdiCatalog : CodeLookup {
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
 
     override fun getByCode(code: String): Map<String, Any?>? =
-        ensureLoaded().find { it["clave"] == code }
+        ensureLoaded().find { it["clave"] == code || it["valor"] == code }
 
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 
@@ -203,7 +203,7 @@ object TipoComprobanteCatalog : CodeLookup {
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
 
     override fun getByCode(code: String): Map<String, Any?>? =
-        ensureLoaded().find { it["clave"] == code }
+        ensureLoaded().find { it["clave"] == code || it["valor"] == code }
 
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 }
@@ -251,7 +251,7 @@ object MonedaCatalog : CodeLookup {
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
 
     override fun getByCode(code: String): Map<String, Any?>? =
-        ensureLoaded().find { it["clave"] == code }
+        ensureLoaded().find { it["clave"] == code || it["valor"] == code }
 
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 }
@@ -298,7 +298,7 @@ object ImpuestoCatalog : CodeLookup {
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
 
     override fun getByCode(code: String): Map<String, Any?>? =
-        ensureLoaded().find { it["clave"] == code }
+        ensureLoaded().find { it["clave"] == code || it["valor"] == code }
 
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 }
@@ -346,7 +346,7 @@ object ObjetoImpCatalog : CodeLookup {
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
 
     override fun getByCode(code: String): Map<String, Any?>? =
-        ensureLoaded().find { it["clave"] == code }
+        ensureLoaded().find { it["clave"] == code || it["valor"] == code }
 
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 }
@@ -394,7 +394,7 @@ object ExportacionCatalog : CodeLookup {
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
 
     override fun getByCode(code: String): Map<String, Any?>? =
-        ensureLoaded().find { it["clave"] == code }
+        ensureLoaded().find { it["clave"] == code || it["valor"] == code }
 
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 }

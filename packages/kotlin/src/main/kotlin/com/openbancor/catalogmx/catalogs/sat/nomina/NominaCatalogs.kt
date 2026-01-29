@@ -65,7 +65,7 @@ object NominaPeriodicidadPagoCatalog : CodeLookup {
 
     fun reload() { cachedData = null; dataSource = "none" }
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
-    override fun getByCode(code: String): Map<String, Any?>? = ensureLoaded().find { it["clave"] == code }
+    override fun getByCode(code: String): Map<String, Any?>? = ensureLoaded().find { it["clave"] == code || it["code"] == code }
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 }
 
@@ -100,7 +100,7 @@ object NominaRiesgoPuestoCatalog : CodeLookup {
 
     fun reload() { cachedData = null; dataSource = "none" }
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
-    override fun getByCode(code: String): Map<String, Any?>? = ensureLoaded().find { it["clave"] == code }
+    override fun getByCode(code: String): Map<String, Any?>? = ensureLoaded().find { it["clave"] == code || it["code"] == code }
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 }
 
@@ -140,7 +140,7 @@ object NominaTipoContratoCatalog : CodeLookup {
 
     fun reload() { cachedData = null; dataSource = "none" }
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
-    override fun getByCode(code: String): Map<String, Any?>? = ensureLoaded().find { it["clave"] == code }
+    override fun getByCode(code: String): Map<String, Any?>? = ensureLoaded().find { it["clave"] == code || it["code"] == code }
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 }
 
@@ -178,7 +178,7 @@ object NominaTipoJornadaCatalog : CodeLookup {
 
     fun reload() { cachedData = null; dataSource = "none" }
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
-    override fun getByCode(code: String): Map<String, Any?>? = ensureLoaded().find { it["clave"] == code }
+    override fun getByCode(code: String): Map<String, Any?>? = ensureLoaded().find { it["clave"] == code || it["code"] == code }
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 }
 
@@ -209,7 +209,7 @@ object NominaTipoNominaCatalog : CodeLookup {
 
     fun reload() { cachedData = null; dataSource = "none" }
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
-    override fun getByCode(code: String): Map<String, Any?>? = ensureLoaded().find { it["clave"] == code }
+    override fun getByCode(code: String): Map<String, Any?>? = ensureLoaded().find { it["clave"] == code || it["code"] == code }
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 }
 
@@ -251,6 +251,6 @@ object NominaTipoRegimenCatalog : CodeLookup {
 
     fun reload() { cachedData = null; dataSource = "none" }
     fun getAll(): List<Map<String, Any?>> = ensureLoaded()
-    override fun getByCode(code: String): Map<String, Any?>? = ensureLoaded().find { it["clave"] == code }
+    override fun getByCode(code: String): Map<String, Any?>? = ensureLoaded().find { it["clave"] == code || it["code"] == code }
     override fun isValidCode(code: String): Boolean = getByCode(code) != null
 }
