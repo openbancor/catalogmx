@@ -7,21 +7,140 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import java.io.File
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.ResultSet
 
 /**
  * Base class for all catalogs with lazy loading support
  *
- * Provides common functionality for loading JSON data from shared-data directory.
+ * Provides common functionality for loading data from:
+ * 1. SQLite database (if configured)
+ * 2. JSON files from shared-data directory
+ * 3. Embedded data (fallback)
  */
 object BaseCatalog {
     private val cache = mutableMapOf<String, List<Map<String, Any?>>>()
+    private val sqliteCache = mutableMapOf<String, List<Map<String, Any?>>>()
 
     /**
      * Path to shared-data directory (relative to package root)
      */
     var sharedDataPath: String = "../../shared-data"
 
+    /**
+     * Path to SQLite database file (optional)
+     * Set this to use SQLite instead of JSON files
+     */
+    var sqlitePath: String? = null
+
+    /**
+     * Active SQLite connection (lazy initialized)
+     */
+    private var sqliteConnection: Connection? = null
+
     private val json = Json { ignoreUnknownKeys = true }
+
+    /**
+     * Gets or creates SQLite connection
+     */
+    @JvmStatic
+    fun getSqliteConnection(): Connection? {
+        val path = sqlitePath ?: return null
+
+        sqliteConnection?.let {
+            if (!it.isClosed) return it
+        }
+
+        return try {
+            val file = File(path)
+            if (!file.exists()) return null
+            DriverManager.getConnection("jdbc:sqlite:$path").also {
+                sqliteConnection = it
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    /**
+     * Loads data from SQLite table
+     */
+    @JvmStatic
+    fun loadFromSqlite(tableName: String): List<Map<String, Any?>> {
+        sqliteCache[tableName]?.let { return it }
+
+        val conn = getSqliteConnection() ?: return emptyList()
+
+        return try {
+            val stmt = conn.createStatement()
+            val rs = stmt.executeQuery("SELECT * FROM $tableName")
+            val results = resultSetToList(rs)
+            rs.close()
+            stmt.close()
+            sqliteCache[tableName] = results
+            results
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    /**
+     * Checks if a SQLite table exists
+     */
+    @JvmStatic
+    fun tableExists(tableName: String): Boolean {
+        val conn = getSqliteConnection() ?: return false
+
+        return try {
+            val stmt = conn.createStatement()
+            val rs = stmt.executeQuery(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='$tableName'"
+            )
+            val exists = rs.next()
+            rs.close()
+            stmt.close()
+            exists
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    /**
+     * Converts ResultSet to List of Maps
+     */
+    private fun resultSetToList(rs: ResultSet): List<Map<String, Any?>> {
+        val results = mutableListOf<Map<String, Any?>>()
+        val metaData = rs.metaData
+        val columnCount = metaData.columnCount
+
+        while (rs.next()) {
+            val row = mutableMapOf<String, Any?>()
+            for (i in 1..columnCount) {
+                val columnName = metaData.getColumnName(i)
+                row[columnName] = rs.getObject(i)
+            }
+            results.add(row)
+        }
+        return results
+    }
+
+    /**
+     * Closes SQLite connection
+     */
+    @JvmStatic
+    fun closeSqliteConnection() {
+        sqliteConnection?.close()
+        sqliteConnection = null
+    }
+
+    /**
+     * Clears SQLite cache
+     */
+    @JvmStatic
+    fun clearSqliteCache() {
+        sqliteCache.clear()
+    }
 
     /**
      * Loads JSON data from file path with caching

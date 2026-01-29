@@ -45,6 +45,17 @@ object BanxicoBanks : CodeLookup, NameSearch {
     private var byCode: Map<String, Map<String, Any?>>? = null
     private var byName: Map<String, Map<String, Any?>>? = null
 
+    /**
+     * Data source for the current loaded data
+     */
+    var dataSource: String = "none"
+        private set
+
+    /**
+     * SQLite table name for banks data
+     */
+    const val SQLITE_TABLE = "banxico_banks"
+
     // Embedded common banks for standalone usage
     private val embeddedBanks = listOf(
         mapOf("code" to "002", "name" to "BANAMEX", "full_name" to "Banco Nacional de México", "spei" to true),
@@ -76,9 +87,37 @@ object BanxicoBanks : CodeLookup, NameSearch {
     private fun loadData() {
         if (data != null) return
 
-        // Try to load from shared-data first
-        val loadedData = BaseCatalog.loadJsonData("banxico/banks.json")
-        data = if (loadedData.isNotEmpty()) loadedData else embeddedBanks
+        // Priority: SQLite > JSON > Embedded
+        val loadedData = when {
+            // 1. Try SQLite if configured
+            BaseCatalog.tableExists(SQLITE_TABLE) -> {
+                val sqliteData = BaseCatalog.loadFromSqlite(SQLITE_TABLE)
+                if (sqliteData.isNotEmpty()) {
+                    dataSource = "sqlite"
+                    // Normalize column names (SQLite uses spei as INTEGER)
+                    sqliteData.map { row ->
+                        row.mapValues { (key, value) ->
+                            if (key == "spei") (value as? Number)?.toInt() == 1 || value == true
+                            else value
+                        }
+                    }
+                } else null
+            }
+            else -> null
+        } ?: run {
+            // 2. Try JSON from shared-data
+            val jsonData = BaseCatalog.loadJsonData("banxico/banks.json")
+            if (jsonData.isNotEmpty()) {
+                dataSource = "json"
+                jsonData
+            } else {
+                // 3. Fall back to embedded
+                dataSource = "embedded"
+                embeddedBanks
+            }
+        }
+
+        data = loadedData
 
         // Build indices
         byCode = mutableMapOf<String, Map<String, Any?>>().apply {
@@ -94,6 +133,18 @@ object BanxicoBanks : CodeLookup, NameSearch {
                 put(name, bank)
             }
         }
+    }
+
+    /**
+     * Reloads data (clears cache and reloads)
+     */
+    @JvmStatic
+    fun reload() {
+        data = null
+        byCode = null
+        byName = null
+        dataSource = "none"
+        BaseCatalog.clearSqliteCache()
     }
 
     /**

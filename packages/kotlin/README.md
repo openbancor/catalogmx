@@ -150,6 +150,55 @@ println(company["rfc"])       // Valid 12-char RFC
 println(company["clabe"])     // Valid CLABE
 ```
 
+### Data Updates (Dynamic Data)
+
+```kotlin
+import com.openbancor.catalogmx.*
+import com.openbancor.catalogmx.data.DataUpdater
+import com.openbancor.catalogmx.data.DataUpdaterConfig
+
+// Download latest economic indicators (TIIE, exchange rates, etc.)
+val success = updateDynamicData()
+
+// Or with custom configuration
+val config = DataUpdaterConfig(
+    cacheDir = ".my-cache",
+    maxAgeHours = 48,
+    autoUpdate = true
+)
+val updater = getDataUpdater(config)
+
+// Check cache status
+println(updater.getCacheStats())
+
+// Force update
+updater.downloadLatest(force = true)
+```
+
+### SQLite Catalog Data (Advanced)
+
+```kotlin
+import com.openbancor.catalogmx.*
+import com.openbancor.catalogmx.catalogs.banxico.BanxicoBanks
+
+// Configure to use local SQLite database for complete catalog data
+configureSqlite("/path/to/mexico.sqlite3")
+
+// Now catalogs will use SQLite data (100+ banks instead of 24 embedded)
+val banks = BanxicoBanks.getAll()
+println("Loaded ${banks.size} banks from ${BanxicoBanks.dataSource}")
+```
+
+## Data Sources
+
+The library supports multiple data sources with automatic fallback:
+
+| Priority | Source | Description |
+|----------|--------|-------------|
+| 1 | SQLite | Complete data from `mexico.sqlite3` (if configured) |
+| 2 | JSON | Data from `shared-data/` directory |
+| 3 | Embedded | Minimal built-in data (always available) |
+
 ## Requirements
 
 - JDK 11 or higher

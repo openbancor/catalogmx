@@ -29,15 +29,50 @@ import com.openbancor.catalogmx.validators.*
 import com.openbancor.catalogmx.generators.*
 // Re-export catalogs
 import com.openbancor.catalogmx.catalogs.banxico.*
+import com.openbancor.catalogmx.catalogs.base.BaseCatalog
 import com.openbancor.catalogmx.catalogs.inegi.*
 import com.openbancor.catalogmx.catalogs.sat.cfdi.*
 // Re-export calculators
 import com.openbancor.catalogmx.calculators.*
+// Re-export data updater
+import com.openbancor.catalogmx.data.DataUpdater
+import com.openbancor.catalogmx.data.DataUpdaterConfig
 
 /**
  * Library version
  */
 const val CATALOGMX_VERSION = "0.4.0"
+
+// ============================================================================
+// Data Configuration
+// ============================================================================
+
+/**
+ * Configures the library to use a SQLite database for catalog data
+ *
+ * @param sqlitePath Path to the SQLite database file (mexico.sqlite3)
+ */
+fun configureSqlite(sqlitePath: String) {
+    BaseCatalog.sqlitePath = sqlitePath
+    // Reload catalogs to use new data source
+    BanxicoBanks.reload()
+}
+
+/**
+ * Gets the DataUpdater singleton for managing dynamic data downloads
+ *
+ * @param config Optional configuration for the updater
+ * @return DataUpdater instance
+ */
+fun getDataUpdater(config: DataUpdaterConfig? = null): DataUpdater = DataUpdater.getInstance(config)
+
+/**
+ * Downloads the latest dynamic data (economic indicators)
+ *
+ * @param force Force download even if cache is valid
+ * @return true if download was successful
+ */
+fun updateDynamicData(force: Boolean = false): Boolean = DataUpdater.update(force)
 
 // ============================================================================
 // Validator convenience functions
