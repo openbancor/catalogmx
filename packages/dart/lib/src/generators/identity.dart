@@ -359,12 +359,24 @@ class IdentityGenerator {
 
   DateTime _randomDate(int minAge, int maxAge) {
     final now = DateTime.now();
-    final minYear = now.year - maxAge;
-    final maxYear = now.year - minAge;
-    final year = minYear + _random.nextInt(maxYear - minYear + 1);
-    final month = 1 + _random.nextInt(12);
-    final day = 1 + _random.nextInt(28);
-    return DateTime(year, month, day);
+    // Generate date and verify the calculated age is within bounds
+    // This accounts for birthdays that haven't occurred yet this year
+    for (var attempts = 0; attempts < 100; attempts++) {
+      final minYear =
+          now.year - maxAge - 1; // -1 to account for birthday not yet passed
+      final maxYear = now.year - minAge;
+      final year = minYear + _random.nextInt(maxYear - minYear + 1);
+      final month = 1 + _random.nextInt(12);
+      final day = 1 + _random.nextInt(28);
+      final date = DateTime(year, month, day);
+      final age = _calculateAge(date);
+      if (age >= minAge && age <= maxAge) {
+        return date;
+      }
+    }
+    // Fallback: return a date that guarantees age is within bounds
+    final safeYear = now.year - minAge - 1;
+    return DateTime(safeYear, now.month, now.day);
   }
 
   int _calculateAge(DateTime birthDate) {
