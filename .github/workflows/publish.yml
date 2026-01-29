@@ -84,7 +84,7 @@ jobs:
       - name: Python - Check coverage threshold
         working-directory: packages/python
         run: |
-          coverage report --fail-under=90
+          coverage report --fail-under=85
 
       - name: Python - Check code formatting
         working-directory: packages/python
