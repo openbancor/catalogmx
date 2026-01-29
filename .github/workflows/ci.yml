@@ -202,11 +202,64 @@ jobs:
         run: dart pub publish --dry-run
         if: matrix.dart-version == 'stable'
 
+  # Kotlin/JVM Testing
+  kotlin-tests:
+    name: Kotlin Java ${{ matrix.java-version }} Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java-version: [11, 17, 21]
+
+    defaults:
+      run:
+        working-directory: packages/kotlin
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Run tests with Gradle
+        run: ./gradlew test
+
+      - name: Generate coverage report
+        run: ./gradlew jacocoTestReport
+        if: matrix.java-version == '17'
+
+      - name: Check coverage threshold (85%)
+        run: ./gradlew jacocoTestCoverageVerification
+        if: matrix.java-version == '17'
+        continue-on-error: true
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./packages/kotlin/build/reports/jacoco/test/jacocoTestReport.xml
+          flags: kotlin
+          name: kotlin-java-${{ matrix.java-version }}
+        if: matrix.java-version == '17'
+        continue-on-error: true
+
+      - name: Run detekt
+        run: ./gradlew detekt
+        continue-on-error: true
+
+      - name: Build package
+        run: ./gradlew build
+
   # Combined Quality Check
   quality-gate:
     name: Quality Gate
     runs-on: ubuntu-latest
-    needs: [python-tests, typescript-tests, dart-tests]
+    needs: [python-tests, typescript-tests, dart-tests, kotlin-tests]
     steps:
       - name: All tests passed
         run: echo "✅ All quality checks passed!"

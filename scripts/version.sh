@@ -13,6 +13,7 @@
 #   - packages/python/pyproject.toml
 #   - packages/typescript/package.json
 #   - packages/dart/pubspec.yaml
+#   - packages/kotlin/build.gradle.kts
 
 set -e
 
@@ -32,6 +33,7 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 PYTHON_FILE="$PROJECT_ROOT/packages/python/pyproject.toml"
 TS_FILE="$PROJECT_ROOT/packages/typescript/package.json"
 DART_FILE="$PROJECT_ROOT/packages/dart/pubspec.yaml"
+KOTLIN_FILE="$PROJECT_ROOT/packages/kotlin/build.gradle.kts"
 
 # Get current versions
 get_python_version() {
@@ -44,6 +46,10 @@ get_ts_version() {
 
 get_dart_version() {
     grep '^version:' "$DART_FILE" | awk '{print $2}'
+}
+
+get_kotlin_version() {
+    grep '^version = ' "$KOTLIN_FILE" | sed 's/version = "\(.*\)"/\1/'
 }
 
 # Parse version components
@@ -103,21 +109,29 @@ update_dart() {
     sed -i '' "s/^version: .*/version: $version/" "$DART_FILE"
 }
 
+# Update Kotlin version
+update_kotlin() {
+    local version="$1"
+    sed -i '' "s/^version = \".*\"/version = \"$version\"/" "$KOTLIN_FILE"
+}
+
 # Show current versions
 show_versions() {
     local py_ver=$(get_python_version)
     local ts_ver=$(get_ts_version)
     local dart_ver=$(get_dart_version)
+    local kotlin_ver=$(get_kotlin_version)
 
     echo -e "${CYAN}📦 catalogmx versions${NC}"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo -e "  Python:     ${BLUE}$py_ver${NC}"
     echo -e "  TypeScript: ${BLUE}$ts_ver${NC}"
     echo -e "  Dart:       ${BLUE}$dart_ver${NC}"
+    echo -e "  Kotlin:     ${BLUE}$kotlin_ver${NC}"
     echo ""
 
     # Check consistency
-    if [ "$py_ver" = "$ts_ver" ] && [ "$ts_ver" = "$dart_ver" ]; then
+    if [ "$py_ver" = "$ts_ver" ] && [ "$ts_ver" = "$dart_ver" ] && [ "$dart_ver" = "$kotlin_ver" ]; then
         echo -e "${GREEN}✓ All versions are in sync${NC}"
         return 0
     else
@@ -131,8 +145,9 @@ check_versions() {
     local py_ver=$(get_python_version)
     local ts_ver=$(get_ts_version)
     local dart_ver=$(get_dart_version)
+    local kotlin_ver=$(get_kotlin_version)
 
-    if [ "$py_ver" = "$ts_ver" ] && [ "$ts_ver" = "$dart_ver" ]; then
+    if [ "$py_ver" = "$ts_ver" ] && [ "$ts_ver" = "$dart_ver" ] && [ "$dart_ver" = "$kotlin_ver" ]; then
         echo -e "${GREEN}✓ All versions are in sync: $py_ver${NC}"
         exit 0
     else
@@ -140,6 +155,7 @@ check_versions() {
         echo "  Python:     $py_ver"
         echo "  TypeScript: $ts_ver"
         echo "  Dart:       $dart_ver"
+        echo "  Kotlin:     $kotlin_ver"
         exit 1
     fi
 }
@@ -164,6 +180,10 @@ update_all() {
     update_dart "$new_version"
     echo -e "${GREEN}✓${NC}"
 
+    echo -n "  Updating Kotlin...     "
+    update_kotlin "$new_version"
+    echo -e "${GREEN}✓${NC}"
+
     echo ""
     echo -e "${GREEN}✓ All packages updated to $new_version${NC}"
     echo ""
@@ -171,6 +191,7 @@ update_all() {
     echo "  - packages/python/pyproject.toml"
     echo "  - packages/typescript/package.json"
     echo "  - packages/dart/pubspec.yaml"
+    echo "  - packages/kotlin/build.gradle.kts"
     echo ""
     echo -e "${YELLOW}Next steps:${NC}"
     echo "  1. Review changes: git diff"

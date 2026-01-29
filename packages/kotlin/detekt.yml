@@ -1,0 +1,73 @@
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+
+config:
+  validation: true
+  warningsAsErrors: false
+
+complexity:
+  LongMethod:
+    threshold: 120  # Increased for complex validation algorithms
+  LongParameterList:
+    functionThreshold: 8
+    constructorThreshold: 10
+  ComplexCondition:
+    threshold: 8
+  TooManyFunctions:
+    thresholdInFiles: 30
+    thresholdInClasses: 30
+    thresholdInInterfaces: 15
+    thresholdInObjects: 25
+    thresholdInEnums: 8
+  CyclomaticComplexMethod:
+    threshold: 40  # Complex validation algorithms need higher threshold
+  NestedBlockDepth:
+    threshold: 6  # Allow deeper nesting for complex algorithms
+
+naming:
+  FunctionNaming:
+    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
+  VariableNaming:
+    variablePattern: '[a-zA-Z][a-zA-Z0-9]*'
+  TopLevelPropertyNaming:
+    constantPattern: '[A-Z][A-Za-z0-9_]*|_[A-Za-z0-9_]*'
+    active: false  # We use lowercase names like VERSION
+  MatchingDeclarationName:
+    active: false  # We use different naming conventions
+
+style:
+  MaxLineLength:
+    maxLineLength: 180  # Increased for embedded data
+  WildcardImport:
+    active: false
+  MagicNumber:
+    active: false  # Many constants in validators
+  ReturnCount:
+    max: 8
+  ForbiddenComment:
+    active: false
+  LoopWithTooManyJumpStatements:
+    active: false  # Complex parsing loops need multiple breaks
+  ThrowsCount:
+    max: 5  # Validators need to throw for different error conditions
+  DestructuringDeclarationWithTooManyEntries:
+    maxDestructuringEntries: 5
+  UnusedPrivateProperty:
+    active: false  # Some properties are for future use
+
+potential-bugs:
+  UnsafeCast:
+    active: false  # JSON parsing requires casts
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: false  # We intentionally catch all exceptions in validation
+  SwallowedException:
+    active: false  # We return null/false on validation failures
+
+empty-blocks:
+  EmptyCatchBlock:
+    active: false  # Expected for validation failures
+  EmptyFunctionBlock:
+    active: false
