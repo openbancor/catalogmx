@@ -201,34 +201,50 @@ resultados = CodigosPostales.search('Roma')`
 			title: 'Validadores y Generadores',
 			description: 'Validar y generar identificadores mexicanos',
 			code: `import {
-  validateRFC, validateCURP, validateCLABE, validateNSS,
-  generateRFC, generateCURP, generateClabe
+  validateRfc, validateCurp, validateClabe, validateNss,
+  generateRfcFisica, generateRfcMoral, generateCurp, generateClabe
 } from 'catalogmx';
 
 // Validar RFC
-const isValidRfc = validateRFC('GODE561231GR8'); // true
+const isValidRfc = validateRfc('GODE561231GR8'); // true
 
 // Validar CURP
-const isValidCurp = validateCURP('GORS561231HVZNNL00'); // true
+const isValidCurp = validateCurp('GORS561231HVZNNL00'); // true
 
 // Validar CLABE
-const isValidClabe = validateCLABE('002010077777777771'); // true
+const isValidClabe = validateClabe('002010077777777771'); // true
 
-// Generar RFC
-const rfc = generateRFC({
+// Generar RFC persona física
+const rfc = generateRfcFisica({
   nombre: 'Juan',
   apellidoPaterno: 'García',
   apellidoMaterno: 'López',
   fechaNacimiento: new Date(1990, 4, 15)
 });
 
-// Generar CLABE
+// Generar RFC persona moral
+const rfcMoral = generateRfcMoral({
+  razonSocial: 'Tecnologías Avanzadas SA',
+  fechaConstitucion: new Date(2020, 0, 15)
+});
+
+// Generar CURP
+const curp = generateCurp({
+  nombre: 'María',
+  apellidoPaterno: 'Hernández',
+  apellidoMaterno: 'López',
+  fechaNacimiento: new Date(1985, 2, 20),
+  sexo: 'M',
+  estado: 'Jalisco'
+});
+
+// Generar CLABE con dígito verificador
 const clabe = generateClabe('002', '010', '07777777777');
 console.log(clabe); // 002010077777777771`
 		},
 		{
-			title: 'Calculadoras',
-			description: 'Calcular impuestos y cuotas',
+			title: 'Calculadoras Fiscales',
+			description: 'Calcular ISR, RESICO, IMSS y costo del trabajador',
 			code: `import { calculateISR, calculateRESICO, calculateIMSS } from 'catalogmx';
 
 // Calcular ISR
@@ -238,6 +254,7 @@ const isr = calculateISR({
   periodo: 'mensual'
 });
 console.log(\`ISR: $\${isr.isrFinal.toFixed(2)}\`);
+console.log(\`Tasa efectiva: \${(isr.tasaEfectiva * 100).toFixed(2)}%\`);
 
 // Calcular RESICO
 const resico = calculateRESICO({
@@ -245,22 +262,121 @@ const resico = calculateRESICO({
   year: 2025,
   periodo: 'mensual'
 });
+console.log(\`RESICO: $\${resico.resicoCalculado.toFixed(2)}\`);
 
-// Calcular IMSS
+// Calcular cuotas IMSS
 const imss = calculateIMSS({
   salarioDiario: 500,
   dias: 30,
   year: 2025,
   zona: 'general',
   claseRiesgo: 3
-});`
+});
+console.log(\`Cuota patronal: $\${imss.totalPatron.toFixed(2)}\`);
+console.log(\`Cuota trabajador: $\${imss.totalTrabajador.toFixed(2)}\`);`
+		},
+		{
+			title: 'Catálogos SAT',
+			description: 'CFDI 4.0, nómina, carta porte, comercio exterior',
+			code: `import {
+  RegimenFiscalCatalog,
+  UsoCfdiCatalog,
+  FormaPagoCatalog,
+  MetodoPagoCatalog,
+  ClaveProdServCatalog
+} from 'catalogmx';
+
+// Obtener régimen fiscal
+const regimen = RegimenFiscalCatalog.getByCode('605');
+console.log(regimen?.descripcion); // Sueldos y Salarios
+
+// Validar régimen
+const isValid = RegimenFiscalCatalog.isValidCode('605'); // true
+
+// Listar todos los regímenes para persona física
+const regimenes = RegimenFiscalCatalog.getAll();
+const pf = regimenes.filter(r => r.fisica);
+
+// Uso de CFDI
+const uso = UsoCfdiCatalog.getByCode('G01');
+console.log(uso?.descripcion); // Adquisición de mercancías
+
+// Forma de pago
+const forma = FormaPagoCatalog.getByCode('03');
+console.log(forma?.descripcion); // Transferencia electrónica
+
+// Buscar productos/servicios
+const productos = ClaveProdServCatalog.search('software');`
+		},
+		{
+			title: 'Catálogos Banxico',
+			description: 'Bancos, tipo de cambio, UDI, TIIE, CETES',
+			code: `import {
+  BanksCatalog,
+  TipoCambioUsdCatalog,
+  UdisCatalog,
+  TiieCatalog
+} from 'catalogmx';
+
+// Obtener banco por código
+const bank = BanksCatalog.getByCode('002');
+console.log(bank?.nombre_corto); // BANAMEX
+
+// Listar bancos con SPEI
+const banks = BanksCatalog.getAll();
+const spei = banks.filter(b => b.spei_participante);
+
+// Tipo de cambio actual
+const tc = TipoCambioUsdCatalog.getActual();
+console.log(\`USD/MXN: $\${tc?.tipo_cambio.toFixed(4)}\`);
+
+// Tipo de cambio histórico
+const tcHist = TipoCambioUsdCatalog.getByFecha('2024-06-15');
+
+// UDI actual
+const udi = UdisCatalog.getActual();
+console.log(\`UDI: $\${udi?.valor.toFixed(6)}\`);
+
+// TIIE 28 días
+const tiie = TiieCatalog.getActual(28);
+console.log(\`TIIE 28: \${tiie?.tasa.toFixed(4)}%\`);`
+		},
+		{
+			title: 'Catálogos INEGI y SEPOMEX',
+			description: 'Estados, municipios, códigos postales',
+			code: `import {
+  StatesCatalog,
+  MunicipiosCatalog,
+  CodigosPostalesCatalog
+} from 'catalogmx';
+
+// Obtener todos los estados
+const states = StatesCatalog.getAll();
+console.log(\`Total estados: \${states.length}\`); // 32
+
+// Obtener estado por código
+const cdmx = StatesCatalog.getByCode('09');
+console.log(cdmx?.nombre); // Ciudad de México
+
+// Municipios de un estado
+const municipios = MunicipiosCatalog.getByState('14'); // Jalisco
+console.log(\`Municipios en Jalisco: \${municipios.length}\`);
+
+// Buscar código postal
+const colonias = CodigosPostalesCatalog.getByCp('06600');
+for (const col of colonias) {
+  console.log(\`\${col.asentamiento}, \${col.municipio}\`);
+}
+
+// Buscar por nombre de colonia
+const roma = CodigosPostalesCatalog.search('Roma');`
 		}
 	];
 
 	const dartExamples = [
 		{
-			title: 'Validadores y Generadores',
-			description: 'Uso en Flutter/Dart',
+			title: 'Validadores',
+			description: 'Validar RFC, CURP, CLABE y NSS',
 			code: `import 'package:catalogmx/catalogmx.dart';
 
 // Validar RFC
@@ -272,6 +388,39 @@ final isValidCurp = validateCURP('GORS561231HVZNNL00'); // true
 // Validar CLABE
 final isValidClabe = validateCLABE('002010077777777771'); // true
 
+// Validar NSS
+final isValidNss = validateNSS('12345678903'); // true`
+		},
+		{
+			title: 'Generadores',
+			description: 'Generar RFC, CURP, CLABE y NSS',
+			code: `import 'package:catalogmx/catalogmx.dart';
+
+// Generar RFC persona física
+final rfc = generateRFC(
+  nombre: 'Juan',
+  apellidoPaterno: 'García',
+  apellidoMaterno: 'López',
+  fechaNacimiento: DateTime(1990, 5, 15),
+);
+print(rfc); // GALJ900515XXX
+
+// Generar RFC persona moral
+final rfcMoral = generateRFCMoral(
+  razonSocial: 'Tecnologías Avanzadas SA',
+  fechaConstitucion: DateTime(2020, 1, 15),
+);
+
+// Generar CURP
+final curp = generateCURP(
+  nombre: 'María',
+  apellidoPaterno: 'Hernández',
+  apellidoMaterno: 'López',
+  fechaNacimiento: DateTime(1985, 3, 20),
+  sexo: 'M',
+  estado: 'Jalisco',
+);
+
 // Generar CLABE
 final clabe = generateCLABE(
   bankCode: '002',
@@ -280,9 +429,77 @@ final clabe = generateCLABE(
 );
 print(clabe); // 002010077777777771
 
-// Acceder a catálogos
-final states = INEGIStates.getAll();
-final banks = BanxicoBanks.getAll();`
+// Generar NSS
+final nss = generateNSS(
+  subdelegacion: 45,
+  anioRegistro: 90,
+  anioNacimiento: 85,
+  secuencial: 1234,
+);`
+		},
+		{
+			title: 'Calculadoras Fiscales',
+			description: 'ISR, RESICO, IMSS, IVA',
+			code: `import 'package:catalogmx/catalogmx.dart';
+
+// Calcular ISR
+final isr = IsrCalculator.calcular(
+  ingresoGravable: 50000,
+  year: 2025,
+  periodo: Periodo.mensual,
+);
+print('ISR: \${isr.isrFinal.toStringAsFixed(2)}');
+print('Tasa efectiva: \${(isr.tasaEfectiva * 100).toStringAsFixed(2)}%');
+
+// Calcular RESICO
+final resico = ResicoCalculator.calcular(
+  ingreso: 100000,
+  year: 2025,
+  periodo: Periodo.mensual,
+);
+
+// Calcular cuotas IMSS
+final imss = ImssCalculator.calcularCuotas(
+  salarioDiario: 500,
+  dias: 30,
+  year: 2025,
+  zona: Zona.general,
+  claseRiesgo: 3,
+);
+print('Cuota patronal: \${imss.totalPatron.toStringAsFixed(2)}');`
+		},
+		{
+			title: 'Catálogos',
+			description: 'SAT, Banxico, INEGI, SEPOMEX',
+			code: `import 'package:catalogmx/catalogmx.dart';
+
+// Estados de México
+final states = InegStates.getAll();
+final cdmx = InegStates.getByCode('09');
+print(cdmx?['nombre']); // Ciudad de México
+
+// Bancos
+final banks = BanxicoBanks.getAll();
+final banamex = BanxicoBanks.getByCode('002');
+print(banamex?['nombre_corto']); // BANAMEX
+
+// Códigos postales
+final colonias = SepomexCodigosPostales.getByCp('06600');
+for (final col in colonias) {
+  print('\${col['asentamiento']}, \${col['municipio']}');
+}
+
+// Catálogos SAT
+final regimen = SatRegimenFiscal.getByCode('605');
+print(regimen?['descripcion']); // Sueldos y Salarios
+
+// Tipo de cambio
+final tc = TipoCambioUsdCatalog.getActual();
+print('USD/MXN: \${tc?['tipo_cambio']}');
+
+// UDI
+final udi = UdisCatalog.getActual();
+print('UDI: \${udi?['valor']}');`
 		}
 	];
 </script>
