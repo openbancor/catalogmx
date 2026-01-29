@@ -83,3 +83,4 @@ tmp/
 .claude/
 .wrangler/
 node_modules/
+packages/dart/coverage/
