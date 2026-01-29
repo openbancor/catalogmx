@@ -107,9 +107,9 @@ class SqliteCatalogTest {
 
     @Test
     fun `BanxicoBanks should load from SQLite when configured`() {
-        // Configure to use test SQLite database
-        val testDb = File("../../shared-data/mexico.sqlite3")
-        
+        // Configure to use test SQLite database - relative to packages/kotlin
+        val testDb = File("../shared-data/mexico.sqlite3")
+
         if (testDb.exists()) {
             BaseCatalog.sqlitePath = testDb.absolutePath
             BanxicoBanks.reload()

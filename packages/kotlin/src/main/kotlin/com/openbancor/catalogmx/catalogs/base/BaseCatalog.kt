@@ -86,6 +86,29 @@ object BaseCatalog {
     }
 
     /**
+     * Query SQLite table with WHERE clause (no caching, for large tables)
+     */
+    @JvmStatic
+    fun queryFromSqlite(tableName: String, whereClause: String, vararg params: Any): List<Map<String, Any?>> {
+        val conn = getSqliteConnection() ?: return emptyList()
+
+        return try {
+            val sql = "SELECT * FROM $tableName WHERE $whereClause"
+            val stmt = conn.prepareStatement(sql)
+            params.forEachIndexed { index, param ->
+                stmt.setObject(index + 1, param)
+            }
+            val rs = stmt.executeQuery()
+            val results = resultSetToList(rs)
+            rs.close()
+            stmt.close()
+            results
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    /**
      * Checks if a SQLite table exists
      */
     @JvmStatic

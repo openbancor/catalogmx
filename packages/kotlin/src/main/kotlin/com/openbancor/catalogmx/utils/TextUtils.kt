@@ -39,6 +39,14 @@ object TextUtils {
         removeDiacritics(text.uppercase().trim())
 
     /**
+     * Normalizes text for search (lowercase, no accents, trim)
+     * Alias for search operations that need case-insensitive matching
+     */
+    @JvmStatic
+    fun normalize(text: String): String =
+        removeDiacritics(text.lowercase().trim())
+
+    /**
      * Cleans a name by removing excluded words and keeping only allowed characters
      */
     @JvmStatic
