@@ -1,7 +1,8 @@
 """Catálogo de Tasa o Cuota (SAT)"""
 
 import json
-from pathlib import Path
+
+from catalogmx.utils.shared_data import get_shared_data_path
 
 
 class TasaOCuota:
@@ -11,13 +12,7 @@ class TasaOCuota:
     def _load_data(cls):
         if cls._data is None:
             # Path: tasa_o_cuota.py -> cfdi_4 -> sat -> catalogs -> catalogmx -> python -> packages
-            path = (
-                Path(__file__).parent.parent.parent.parent.parent.parent
-                / "shared-data"
-                / "sat"
-                / "cfdi_4.0"
-                / "c_TasaOCuota.json"
-            )
+            path = get_shared_data_path("sat", "cfdi_4.0", "c_TasaOCuota.json")
             with open(path, encoding="utf-8") as f:
                 json_data = json.load(f)
                 # This catalog has a more complex structure, let's index by a combination of fields

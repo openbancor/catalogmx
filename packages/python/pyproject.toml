@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "catalogmx"
-version = "0.4.0"
+version = "0.5.0"
 description = "Comprehensive Mexican data validators and official catalogs library - 170K+ records"
 readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.10"
@@ -101,7 +101,8 @@ exclude = ["tests*"]
 catalogmx = [
     "py.typed",
     "data/*.sqlite3",
-    "data/*.db"
+    "data/*.db",
+    "shared-data/**"
 ]
 
 [tool.black]

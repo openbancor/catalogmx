@@ -50,7 +50,7 @@ dart pub add catalogmx
 
 # Or manually add to pubspec.yaml:
 # dependencies:
-#   catalogmx: ^0.3.0
+#   catalogmx: ^0.5.0
 ```
 
 ---
@@ -81,13 +81,13 @@ dart pub add catalogmx
 
 ## Version Information
 
-Current version across all packages: **0.3.0**
+Current version across all packages: **0.5.0**
 
 | Package | Version | Min Runtime |
 |---------|---------|-------------|
-| Python | 0.3.0 | Python 3.10+ |
-| TypeScript | 0.3.0 | Node.js 18+ |
-| Dart | 0.3.0 | Dart 3.0+ / Flutter 3.10+ |
+| Python | 0.5.0 | Python 3.10+ |
+| TypeScript | 0.5.0 | Node.js 18+ |
+| Dart | 0.5.0 | Dart 3.0+ / Flutter 3.10+ |
 
 ---
 

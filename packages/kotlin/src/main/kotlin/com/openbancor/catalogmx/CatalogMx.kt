@@ -31,7 +31,12 @@ import com.openbancor.catalogmx.generators.*
 import com.openbancor.catalogmx.catalogs.banxico.*
 import com.openbancor.catalogmx.catalogs.base.BaseCatalog
 import com.openbancor.catalogmx.catalogs.inegi.*
+import com.openbancor.catalogmx.catalogs.sat.contabilidad_electronica.*
 import com.openbancor.catalogmx.catalogs.sat.cfdi.*
+import com.openbancor.catalogmx.cfdi.CfdiBuilder
+import com.openbancor.catalogmx.cfdi.CfdiResources
+import com.openbancor.catalogmx.cfdi.CfdiValidation
+import com.openbancor.catalogmx.cfdi.CfdiSigning
 // Re-export calculators
 import com.openbancor.catalogmx.calculators.*
 // Re-export data updater
@@ -41,7 +46,7 @@ import com.openbancor.catalogmx.data.DataUpdaterConfig
 /**
  * Library version
  */
-const val CATALOGMX_VERSION = "0.4.0"
+const val CATALOGMX_VERSION = "0.5.0"
 
 // ============================================================================
 // Data Configuration
@@ -247,3 +252,36 @@ fun generatePersonaMoral(
     minYears = minYears,
     maxYears = maxYears
 ).toMap()
+
+// ============================================================================
+// CFDI helpers
+// ============================================================================
+
+fun buildUnsignedCfdiXml(input: com.openbancor.catalogmx.cfdi.CfdiComprobanteInput): String =
+    CfdiBuilder.buildUnsignedXml(input)
+
+fun generateCadenaOriginalCfdi(
+    xml: String,
+    xslt: String
+): com.openbancor.catalogmx.cfdi.CadenaOriginalResult =
+    CfdiValidation.generateCadenaOriginal(xml, xslt)
+
+fun validateCfdiXsd(
+    xml: String,
+    xsd: String
+): com.openbancor.catalogmx.cfdi.XsdValidationResult =
+    CfdiValidation.validateXsd(xml, xsd)
+
+fun getCfdi40XsdPath(): String = CfdiResources.cfdi40Xsd()
+
+fun getCadenaOriginal40XsltPath(): String = CfdiResources.cadenaOriginal40Xslt()
+
+fun signCadenaOriginalCfdi(cadena: String, privateKeyPem: String): String =
+    CfdiSigning.signCadenaOriginal(cadena, privateKeyPem)
+
+fun applySelloToCfdiXml(
+    xml: String,
+    sello: String,
+    certificado: String? = null,
+    noCertificado: String? = null,
+): String = CfdiSigning.applySelloToXml(xml, sello, certificado, noCertificado)

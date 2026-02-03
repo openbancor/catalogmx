@@ -4,13 +4,13 @@
 
 This roadmap outlines the strategic development plan for catalogmx, an enterprise-grade Mexican data validation and catalog library. The roadmap prioritizes features that deliver maximum business value while maintaining code quality and regulatory compliance.
 
-**Current Status**: Version 0.3.0 (Production Ready)  
+**Current Status**: Version 0.5.0 (Production Ready)  
 **Coverage**: 93.78% with 926 passing tests  
-**Next Release**: Version 0.4.0 (Q1 2025)
+**Next Release**: Version 0.6.0 (2026)
 
 ---
 
-## Version 0.3.0 - Current Release (Production)
+## Version 0.5.0 - Current Release (Production)
 
 ### Delivered Capabilities
 
@@ -42,7 +42,7 @@ This roadmap outlines the strategic development plan for catalogmx, an enterpris
 
 ---
 
-## Version 0.4.0 - Q1 2025 (Performance & Integration)
+## Version 0.6.0 - 2026 (Performance & Integration)
 
 ### Objectives
 
@@ -166,7 +166,7 @@ cps = CPLocalityLinker.get_cps_for_locality("090150001")
 
 ---
 
-## Version 0.5.0 - Q2-Q3 2025 (Expansion)
+## Version 0.7.0 - 2027 (Expansion)
 
 ### Strategic Initiatives
 
@@ -313,7 +313,7 @@ cps = CPLocalityLinker.get_cps_for_locality("090150001")
 
 ## Implementation Priorities
 
-### High Priority (Version 0.4.0)
+### High Priority (Version 0.6.0)
 
 | Feature | Business Impact | Technical Complexity | Timeline |
 |---------|----------------|---------------------|----------|
@@ -323,7 +323,7 @@ cps = CPLocalityLinker.get_cps_for_locality("090150001")
 | REST API Examples | High | Low | 2 weeks |
 | Missing SAT Catalogs | Medium | Low | 2-3 weeks |
 
-### Medium Priority (Version 0.5.0)
+### Medium Priority (Version 0.7.0)
 
 | Feature | Business Impact | Technical Complexity | Timeline |
 |---------|----------------|---------------------|----------|
@@ -346,7 +346,7 @@ cps = CPLocalityLinker.get_cps_for_locality("090150001")
 
 ## Success Metrics
 
-### Version 0.4.0 Goals
+### Version 0.6.0 Goals
 
 - **Performance**: Query time <10ms for 95% of operations
 - **Coverage**: Maintain >90% test coverage
@@ -354,7 +354,7 @@ cps = CPLocalityLinker.get_cps_for_locality("090150001")
 - **Geocoding**: 100% of postal codes with coordinates
 - **Documentation**: 5+ integration examples
 
-### Version 0.5.0 Goals
+### Version 0.7.0 Goals
 
 - **Catalogs**: Add 10+ new government catalogs
 - **Validators**: Add 3+ new validators
@@ -376,12 +376,12 @@ cps = CPLocalityLinker.get_cps_for_locality("090150001")
 
 ### Resource Requirements
 
-**Version 0.4.0:**
+**Version 0.6.0:**
 - Development time: 12-16 weeks
 - External API costs: $100-500 (geocoding)
 - Testing resources: Automated CI/CD
 
-**Version 0.5.0:**
+**Version 0.7.0:**
 - Development time: 20-24 weeks
 - Data acquisition: Government sources (free)
 - Infrastructure: Increased storage for historical data
@@ -405,7 +405,7 @@ See [CONTRIBUTING.rst](CONTRIBUTING.rst) for contribution guidelines.
 
 ## Changelog
 
-### Version 0.3.0 (Current)
+### Version 0.5.0 (Current)
 - 58 official catalogs implemented
 - 93.78% test coverage achieved
 - Modern packaging (pyproject.toml)
@@ -429,8 +429,8 @@ See [CONTRIBUTING.rst](CONTRIBUTING.rst) for contribution guidelines.
 ---
 
 **Last Updated**: November 2024  
-**Current Version**: 0.3.0  
-**Next Release**: 0.4.0 (Q1 2025)
+**Current Version**: 0.5.0  
+**Next Release**: 0.6.0 (2026)
 
 ---
 

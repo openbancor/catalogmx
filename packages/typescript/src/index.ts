@@ -19,5 +19,8 @@ export * from './catalogs';
 // Export tax calculators
 export * from './calculators';
 
+// Export CFDI helpers
+export * from './cfdi';
+
 // Export utilities
 export * from './utils';

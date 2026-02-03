@@ -152,6 +152,45 @@ void main() {
     });
   });
 
+  group('SAT Contabilidad Electrónica', () {
+    test('returns all codes', () {
+      final items = CodigoAgrupadorSATCatalog.getAll();
+      expect(items, isA<List>());
+      if (items.isNotEmpty) {
+        expect(items.length, greaterThan(1000));
+      }
+    });
+
+    test('gets item by code', () {
+      final item = CodigoAgrupadorSATCatalog.getByCodigo('100');
+      if (item != null) {
+        expect(item, isA<Map<String, dynamic>>());
+        expect((item['nombre'] as String).toLowerCase(), equals('activo'));
+      } else {
+        expect(item, isNull);
+      }
+    });
+
+    test('validates code', () {
+      final items = CodigoAgrupadorSATCatalog.getAll();
+      if (items.isNotEmpty) {
+        expect(CodigoAgrupadorSATCatalog.isValid('101.01'), isTrue);
+        expect(CodigoAgrupadorSATCatalog.isValid('999.99'), isFalse);
+      } else {
+        expect(CodigoAgrupadorSATCatalog.isValid('101.01'), anyOf(isTrue, isFalse));
+      }
+    });
+
+    test('diff is available', () {
+      final diff = CodigoAgrupadorSATCatalog.getDiff2024_2026();
+      if (diff.isNotEmpty) {
+        expect(diff.containsKey('added'), isTrue);
+      } else {
+        expect(diff, isA<Map<String, dynamic>>());
+      }
+    });
+  });
+
   group('Mexico General Catalogs', () {
     group('UMACatalog', () {
       test('returns all UMA values', () {

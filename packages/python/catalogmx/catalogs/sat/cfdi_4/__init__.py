@@ -13,10 +13,12 @@ Catálogos incluidos:
 - c_ObjetoImp: Objeto de impuesto
 - c_ClaveUnidad: Claves de unidad de medida (~2,400 unidades)
 - c_ClaveProdServ: Claves de productos y servicios (~52,000 códigos - SQLite)
+- c_CodigoPostal: Códigos postales (~32,000 CPs únicos - SQLite/SEPOMEX)
 """
 
 from .clave_prod_serv import ClaveProdServCatalog
 from .clave_unidad import ClaveUnidadCatalog
+from .codigo_postal import CodigoPostalCatalog
 from .exportacion import ExportacionCatalog
 from .forma_pago import FormaPagoCatalog
 from .impuesto import ImpuestoCatalog
@@ -39,4 +41,5 @@ __all__ = [
     "ObjetoImpCatalog",
     "ClaveUnidadCatalog",
     "ClaveProdServCatalog",
+    "CodigoPostalCatalog",
 ]

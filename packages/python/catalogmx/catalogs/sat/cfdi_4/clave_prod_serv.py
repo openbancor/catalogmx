@@ -68,14 +68,9 @@ class ClaveProdServCatalog:
     def _get_db_path(cls) -> Path:
         """Obtiene la ruta a la base de datos SQLite"""
         if cls._db_path is None:
-            # Path: catalogmx/packages/python/catalogmx/catalogs/sat/cfdi_4/clave_prod_serv.py
-            # Target: catalogmx/packages/shared-data/sqlite/clave_prod_serv.db
-            cls._db_path = (
-                Path(__file__).parent.parent.parent.parent.parent.parent
-                / "shared-data"
-                / "sqlite"
-                / "clave_prod_serv.db"
-            )
+            from catalogmx.utils.shared_data import get_shared_data_path
+
+            cls._db_path = get_shared_data_path("sqlite", "clave_prod_serv.db")
         return cls._db_path
 
     @classmethod

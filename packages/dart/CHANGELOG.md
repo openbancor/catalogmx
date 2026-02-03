@@ -78,6 +78,12 @@ This release achieves **100% catalog parity** with Python and TypeScript version
 
 ### Total Records
 - **470,000+ total records** across all catalogs
+
+## [0.5.0] - 2026-02-03
+
+### Added
+- SAT Contabilidad Electrónica (Anexo 24) código agrupador catalog (2024/2026 + diff)
+- SQLite-backed catalog support for contabilidad electrónica tables
 - Same data as Python/TypeScript versions
 - Zero dependencies on external APIs (100% offline)
 

@@ -111,6 +111,9 @@ export 'src/catalogs/sat/cfdi/regimen_fiscal.dart';
 export 'src/catalogs/sat/cfdi/tipo_comprobante.dart';
 export 'src/catalogs/sat/cfdi_all.dart';
 
+// SAT Contabilidad Electrónica (Anexo 24)
+export 'src/catalogs/sat/contabilidad_electronica.dart';
+
 // SAT Carta Porte Catalogs (7+ catalogs)
 export 'src/catalogs/sat/aeropuertos.dart';
 export 'src/catalogs/sat/carta_porte_all.dart';
@@ -141,6 +144,17 @@ export 'src/utils/date_utils.dart';
 export 'src/utils/catalog_helper.dart';
 export 'src/utils/clabe_utils.dart';
 export 'src/catalogs/base_catalog.dart';
+
+// ============================================================================
+// CFDI Helpers
+// ============================================================================
+
+export 'src/cfdi/cfdi_builder.dart';
+export 'src/cfdi/cfdi_resources.dart';
+export 'src/cfdi/cfdi_validation.dart';
+export 'src/cfdi/cfdi_signing.dart';
+export 'src/cfdi/cfdi_pac.dart';
+export 'src/cfdi/cfdi_platform_channel.dart';
 
 // ============================================================================
 // CATALOGS - CNBV (Comisión Nacional Bancaria y de Valores)

@@ -1,0 +1,14 @@
+{
+  "metadata": {
+    "catalog": "c_CodigoPostal",
+    "description": "Catálogo de códigos postales del SAT para CFDI 4.0. Mapea códigos postales a estado y municipio. Usado en LugarExpedicion y DomicilioFiscalReceptor.",
+    "source": "SAT / SEPOMEX",
+    "notes": "Los datos completos (~32,000 códigos postales únicos, 157K+ asentamientos) están en la base de datos SQLite sepomex.db. Este JSON contiene solo metadatos de referencia.",
+    "sqlite_db": "sepomex.db",
+    "sqlite_table": "codigos_postales",
+    "total_unique_cp": 31928,
+    "total_asentamientos": 157000,
+    "format": "5 dígitos numéricos (00000-99999)",
+    "used_in": ["Comprobante.LugarExpedicion", "Receptor.DomicilioFiscalReceptor", "ACuentaTerceros.DomicilioFiscalACuentaTerceros"]
+  }
+}

@@ -1,0 +1,5302 @@
+{
+  "_meta": {
+    "catalog": "sat_codigo_agrupador",
+    "version": "2024-01-22",
+    "document": "Anexo 24 RMF 2024",
+    "source_pdf": "https://www.sat.gob.mx/minisitio/NormatividadRMFyRGCE/documentos2024/rmf/anexos/Anexo_24_RMF2024-22012024.pdf",
+    "extracted_on": "2026-02-03",
+    "items": 1058
+  },
+  "items": [
+    {
+      "nivel": null,
+      "codigo": "100",
+      "nombre": "Activo"
+    },
+    {
+      "nivel": null,
+      "codigo": "100.01",
+      "nombre": "Activo a corto plazo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "101",
+      "nombre": "Caja"
+    },
+    {
+      "nivel": 2,
+      "codigo": "101.01",
+      "nombre": "Caja y efectivo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "102",
+      "nombre": "Bancos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "102.01",
+      "nombre": "Bancos nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "102.02",
+      "nombre": "Bancos extranjeros"
+    },
+    {
+      "nivel": 1,
+      "codigo": "103",
+      "nombre": "Inversiones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "103.01",
+      "nombre": "Inversiones temporales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "103.02",
+      "nombre": "Inversiones en fideicomisos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "103.03",
+      "nombre": "Otras inversiones"
+    },
+    {
+      "nivel": 1,
+      "codigo": "104",
+      "nombre": "Otros instrumentos financieros"
+    },
+    {
+      "nivel": 2,
+      "codigo": "104.01",
+      "nombre": "Otros instrumentos financieros"
+    },
+    {
+      "nivel": 1,
+      "codigo": "105",
+      "nombre": "Clientes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "105.01",
+      "nombre": "Clientes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "105.02",
+      "nombre": "Clientes extranjeros"
+    },
+    {
+      "nivel": 2,
+      "codigo": "105.03",
+      "nombre": "Clientes nacionales parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "105.04",
+      "nombre": "Clientes extranjeros parte relacionada"
+    },
+    {
+      "nivel": 1,
+      "codigo": "106",
+      "nombre": "Cuentas y documentos por cobrar a corto plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "106.01",
+      "nombre": "Cuentas y documentos por cobrar a corto plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "106.02",
+      "nombre": "Cuentas y documentos por cobrar a corto plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "106.03",
+      "nombre": "Cuentas y documentos por cobrar a corto plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "106.04",
+      "nombre": "Cuentas y documentos por cobrar a corto plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "106.05",
+      "nombre": "Intereses por cobrar a corto plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "106.06",
+      "nombre": "Intereses por cobrar a corto plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "106.07",
+      "nombre": "Intereses por cobrar a corto plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "106.08",
+      "nombre": "Intereses por cobrar a corto plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "106.09",
+      "nombre": "Otras cuentas y documentos por cobrar a corto plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "106.10",
+      "nombre": "Otras cuentas y documentos por cobrar a corto plazo parte relacionada"
+    },
+    {
+      "nivel": 1,
+      "codigo": "107",
+      "nombre": "Deudores diversos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "107.01",
+      "nombre": "Funcionarios y empleados"
+    },
+    {
+      "nivel": 2,
+      "codigo": "107.02",
+      "nombre": "Socios y accionistas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "107.03",
+      "nombre": "Partes relacionadas nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "107.04",
+      "nombre": "Partes relacionadas extranjeros"
+    },
+    {
+      "nivel": 2,
+      "codigo": "107.05",
+      "nombre": "Otros deudores diversos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "108",
+      "nombre": "Estimación de cuentas incobrables"
+    },
+    {
+      "nivel": 2,
+      "codigo": "108.01",
+      "nombre": "Estimación de cuentas incobrables nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "108.02",
+      "nombre": "Estimación de cuentas incobrables extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "108.03",
+      "nombre": "Estimación de cuentas incobrables nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "108.04",
+      "nombre": "Estimación de cuentas incobrables extranjero parte relacionada"
+    },
+    {
+      "nivel": 1,
+      "codigo": "109",
+      "nombre": "Pagos anticipados"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.01",
+      "nombre": "Seguros y fianzas pagados por anticipado nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.02",
+      "nombre": "Seguros y fianzas pagados por anticipado extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.03",
+      "nombre": "Seguros y fianzas pagados por anticipado nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.04",
+      "nombre": "Seguros y fianzas pagados por anticipado extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.05",
+      "nombre": "Rentas pagados por anticipado nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.06",
+      "nombre": "Rentas pagados por anticipado extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.07",
+      "nombre": "Rentas pagados por anticipado nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.08",
+      "nombre": "Rentas pagados por anticipado extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.09",
+      "nombre": "Intereses pagados por anticipado nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.10",
+      "nombre": "Intereses pagados por anticipado extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.11",
+      "nombre": "Intereses pagados por anticipado nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.12",
+      "nombre": "Intereses pagados por anticipado extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.13",
+      "nombre": "Factoraje financiero pagados por anticipado nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.14",
+      "nombre": "Factoraje financiero pagados por anticipado extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.15",
+      "nombre": "Factoraje financiero pagados por anticipado nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.16",
+      "nombre": "Factoraje financiero pagados por anticipado extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.17",
+      "nombre": "Arrendamiento financiero pagados por anticipado nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.18",
+      "nombre": "Arrendamiento financiero pagados por anticipado extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.19",
+      "nombre": "Arrendamiento financiero pagados por anticipado nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.20",
+      "nombre": "Arrendamiento financiero pagados por anticipado extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.21",
+      "nombre": "Pérdida por deterioro de pagos anticipados"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.22",
+      "nombre": "Derechos fiduciarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "109.23",
+      "nombre": "Otros pagos anticipados"
+    },
+    {
+      "nivel": 1,
+      "codigo": "110",
+      "nombre": "Subsidio al empleo por aplicar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "110.01",
+      "nombre": "Subsidio al empleo por aplicar"
+    },
+    {
+      "nivel": 1,
+      "codigo": "111",
+      "nombre": "Crédito al diésel por acreditar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "111.01",
+      "nombre": "Crédito al diésel por acreditar"
+    },
+    {
+      "nivel": 1,
+      "codigo": "112",
+      "nombre": "Otros estímulos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "112.01",
+      "nombre": "Otros estímulos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "113",
+      "nombre": "Impuestos a favor"
+    },
+    {
+      "nivel": 2,
+      "codigo": "113.01",
+      "nombre": "IVA a favor"
+    },
+    {
+      "nivel": 2,
+      "codigo": "113.02",
+      "nombre": "ISR a favor"
+    },
+    {
+      "nivel": 2,
+      "codigo": "113.03",
+      "nombre": "IETU a favor"
+    },
+    {
+      "nivel": 2,
+      "codigo": "113.04",
+      "nombre": "IDE a favor"
+    },
+    {
+      "nivel": 2,
+      "codigo": "113.05",
+      "nombre": "IA a favor"
+    },
+    {
+      "nivel": 2,
+      "codigo": "113.06",
+      "nombre": "Subsidio al empleo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "113.07",
+      "nombre": "Pago de lo indebido"
+    },
+    {
+      "nivel": 2,
+      "codigo": "113.08",
+      "nombre": "Otros impuestos a favor"
+    },
+    {
+      "nivel": 1,
+      "codigo": "114",
+      "nombre": "Pagos provisionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "114.01",
+      "nombre": "Pagos provisionales de ISR"
+    },
+    {
+      "nivel": 1,
+      "codigo": "115",
+      "nombre": "Inventario"
+    },
+    {
+      "nivel": 2,
+      "codigo": "115.01",
+      "nombre": "Inventario"
+    },
+    {
+      "nivel": 2,
+      "codigo": "115.02",
+      "nombre": "Materia prima y materiales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "115.03",
+      "nombre": "Producción en proceso"
+    },
+    {
+      "nivel": 2,
+      "codigo": "115.04",
+      "nombre": "Productos terminados"
+    },
+    {
+      "nivel": 2,
+      "codigo": "115.05",
+      "nombre": "Mercancías en tránsito"
+    },
+    {
+      "nivel": 2,
+      "codigo": "115.06",
+      "nombre": "Mercancías en poder de terceros"
+    },
+    {
+      "nivel": 2,
+      "codigo": "115.07",
+      "nombre": "Otros"
+    },
+    {
+      "nivel": 1,
+      "codigo": "116",
+      "nombre": "Estimación de inventarios obsoletos y de lento movimiento"
+    },
+    {
+      "nivel": 2,
+      "codigo": "116.01",
+      "nombre": "Estimación de inventarios obsoletos y de lento movimiento"
+    },
+    {
+      "nivel": 1,
+      "codigo": "117",
+      "nombre": "Obras en proceso de inmuebles"
+    },
+    {
+      "nivel": 2,
+      "codigo": "117.01",
+      "nombre": "Obras en proceso de inmuebles"
+    },
+    {
+      "nivel": 1,
+      "codigo": "118",
+      "nombre": "Impuestos acreditables pagados"
+    },
+    {
+      "nivel": 2,
+      "codigo": "118.01",
+      "nombre": "IVA acreditable pagado"
+    },
+    {
+      "nivel": 2,
+      "codigo": "118.02",
+      "nombre": "IVA acreditable de importación pagado"
+    },
+    {
+      "nivel": 2,
+      "codigo": "118.03",
+      "nombre": "IEPS acreditable pagado"
+    },
+    {
+      "nivel": 2,
+      "codigo": "118.04",
+      "nombre": "IEPS pagado en importación"
+    },
+    {
+      "nivel": 1,
+      "codigo": "119",
+      "nombre": "Impuestos acreditables por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "119.01",
+      "nombre": "IVA pendiente de pago"
+    },
+    {
+      "nivel": 2,
+      "codigo": "119.02",
+      "nombre": "IVA de importación pendiente de pago"
+    },
+    {
+      "nivel": 2,
+      "codigo": "119.03",
+      "nombre": "IEPS pendiente de pago"
+    },
+    {
+      "nivel": 2,
+      "codigo": "119.04",
+      "nombre": "IEPS pendiente de pago en importación"
+    },
+    {
+      "nivel": 1,
+      "codigo": "120",
+      "nombre": "Anticipo a proveedores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "120.01",
+      "nombre": "Anticipo a proveedores nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "120.02",
+      "nombre": "Anticipo a proveedores extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "120.03",
+      "nombre": "Anticipo a proveedores nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "120.04",
+      "nombre": "Anticipo a proveedores extranjero parte relacionada"
+    },
+    {
+      "nivel": 1,
+      "codigo": "121",
+      "nombre": "Otros activos a corto plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "121.01",
+      "nombre": "Otros activos a corto plazo"
+    },
+    {
+      "nivel": null,
+      "codigo": "100.02",
+      "nombre": "Activo a largo plazo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "151",
+      "nombre": "Terrenos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "151.01",
+      "nombre": "Terrenos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "152",
+      "nombre": "Edificios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "152.01",
+      "nombre": "Edificios"
+    },
+    {
+      "nivel": 1,
+      "codigo": "153",
+      "nombre": "Maquinaria y equipo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "153.01",
+      "nombre": "Maquinaria y equipo Automóviles,     autobuses,      camiones   de   carga,   tractocamiones,   montacargas    y remolques"
+    },
+    {
+      "nivel": 2,
+      "codigo": "154.01",
+      "nombre": "Automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 1,
+      "codigo": "155",
+      "nombre": "Mobiliario y equipo de oficina"
+    },
+    {
+      "nivel": 2,
+      "codigo": "155.01",
+      "nombre": "Mobiliario y equipo de oficina"
+    },
+    {
+      "nivel": 1,
+      "codigo": "156",
+      "nombre": "Equipo de cómputo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "156.01",
+      "nombre": "Equipo de cómputo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "157",
+      "nombre": "Equipo de comunicación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "157.01",
+      "nombre": "Equipo de comunicación"
+    },
+    {
+      "nivel": 1,
+      "codigo": "158",
+      "nombre": "Activos biológicos, vegetales y semovientes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "158.01",
+      "nombre": "Activos biológicos, vegetales y semovientes"
+    },
+    {
+      "nivel": 1,
+      "codigo": "159",
+      "nombre": "Obras en proceso de activos fijos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "159.01",
+      "nombre": "Obras en proceso de activos fijos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "160",
+      "nombre": "Otros activos fijos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "160.01",
+      "nombre": "Otros activos fijos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "161",
+      "nombre": "Ferrocarriles"
+    },
+    {
+      "nivel": 2,
+      "codigo": "161.01",
+      "nombre": "Ferrocarriles"
+    },
+    {
+      "nivel": 1,
+      "codigo": "162",
+      "nombre": "Embarcaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "162.01",
+      "nombre": "Embarcaciones"
+    },
+    {
+      "nivel": 1,
+      "codigo": "163",
+      "nombre": "Aviones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "163.01",
+      "nombre": "Aviones"
+    },
+    {
+      "nivel": 1,
+      "codigo": "164",
+      "nombre": "Troqueles, moldes, matrices y herramental"
+    },
+    {
+      "nivel": 2,
+      "codigo": "164.01",
+      "nombre": "Troqueles, moldes, matrices y herramental"
+    },
+    {
+      "nivel": 1,
+      "codigo": "165",
+      "nombre": "Equipo de comunicaciones telefónicas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "165.01",
+      "nombre": "Equipo de comunicaciones telefónicas"
+    },
+    {
+      "nivel": 1,
+      "codigo": "166",
+      "nombre": "Equipo de comunicación satelital"
+    },
+    {
+      "nivel": 2,
+      "codigo": "166.01",
+      "nombre": "Equipo de comunicación satelital"
+    },
+    {
+      "nivel": 1,
+      "codigo": "167",
+      "nombre": "Equipo de adaptaciones para personas con capacidades diferentes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "167.01",
+      "nombre": "Equipo de adaptaciones para personas con capacidades diferentes Maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente Maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 1,
+      "codigo": "169",
+      "nombre": "Otra maquinaria y equipo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "169.01",
+      "nombre": "Otra maquinaria y equipo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "170",
+      "nombre": "Adaptaciones y mejoras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "170.01",
+      "nombre": "Adaptaciones y mejoras"
+    },
+    {
+      "nivel": 1,
+      "codigo": "171",
+      "nombre": "Depreciación acumulada de activos fijos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.01",
+      "nombre": "Depreciación acumulada de edificios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.02",
+      "nombre": "Depreciación acumulada de maquinaria y equipo Depreciación acumulada de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.04",
+      "nombre": "Depreciación acumulada de mobiliario y equipo de oficina"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.05",
+      "nombre": "Depreciación acumulada de equipo de cómputo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.06",
+      "nombre": "Depreciación acumulada de equipo de comunicación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.07",
+      "nombre": "Depreciación acumulada de activos biológicos, vegetales y semovientes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.08",
+      "nombre": "Depreciación acumulada de otros activos fijos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.09",
+      "nombre": "Depreciación acumulada de ferrocarriles"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.10",
+      "nombre": "Depreciación acumulada de embarcaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.11",
+      "nombre": "Depreciación acumulada de aviones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.12",
+      "nombre": "Depreciación acumulada de troqueles, moldes, matrices y herramental"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.13",
+      "nombre": "Depreciación acumulada de equipo de comunicaciones telefónicas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.14",
+      "nombre": "Depreciación acumulada de equipo de comunicación satelital Depreciación acumulada de equipo de adaptaciones para personas con capacidades diferentes Depreciación acumulada de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.17",
+      "nombre": "Depreciación acumulada de adaptaciones y mejoras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.18",
+      "nombre": "Depreciación acumulada de otra maquinaria y equipo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "172",
+      "nombre": "Pérdida por deterioro acumulado de activos fijos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.01",
+      "nombre": "Pérdida por deterioro acumulado de edificios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.02",
+      "nombre": "Pérdida por deterioro acumulado de maquinaria y equipo Pérdida por deterioro acumulado de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.04",
+      "nombre": "Pérdida por deterioro acumulado de mobiliario y equipo de oficina"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.05",
+      "nombre": "Pérdida por deterioro acumulado de equipo de cómputo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.06",
+      "nombre": "Pérdida por deterioro acumulado de equipo de comunicación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.07",
+      "nombre": "Pérdida por deterioro acumulado de activos biológicos, vegetales y semovientes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.08",
+      "nombre": "Pérdida por deterioro acumulado de otros activos fijos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.09",
+      "nombre": "Pérdida por deterioro acumulado de ferrocarriles"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.10",
+      "nombre": "Pérdida por deterioro acumulado de embarcaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.11",
+      "nombre": "Pérdida por deterioro acumulado de aviones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.12",
+      "nombre": "Pérdida por deterioro acumulado de troqueles, moldes, matrices y herramental"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.13",
+      "nombre": "Pérdida por deterioro acumulado de equipo de comunicaciones telefónicas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.14",
+      "nombre": "Pérdida por deterioro acumulado de equipo de comunicación satelital Pérdida por deterioro acumulado de equipo de adaptaciones para personas con capacidades diferentes Pérdida por deterioro acumulado de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.17",
+      "nombre": "Pérdida por deterioro acumulado de adaptaciones y mejoras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.18",
+      "nombre": "Pérdida por deterioro acumulado de otra maquinaria y equipo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "173",
+      "nombre": "Gastos diferidos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "173.01",
+      "nombre": "Gastos diferidos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "174",
+      "nombre": "Gastos pre operativos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "174.01",
+      "nombre": "Gastos pre operativos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "175",
+      "nombre": "Regalías, asistencia técnica y otros gastos diferidos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "175.01",
+      "nombre": "Regalías, asistencia técnica y otros gastos diferidos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "176",
+      "nombre": "Activos intangibles"
+    },
+    {
+      "nivel": 2,
+      "codigo": "176.01",
+      "nombre": "Activos intangibles"
+    },
+    {
+      "nivel": 1,
+      "codigo": "177",
+      "nombre": "Gastos de organización"
+    },
+    {
+      "nivel": 2,
+      "codigo": "177.01",
+      "nombre": "Gastos de organización"
+    },
+    {
+      "nivel": 1,
+      "codigo": "178",
+      "nombre": "Investigación y desarrollo de mercado"
+    },
+    {
+      "nivel": 2,
+      "codigo": "178.01",
+      "nombre": "Investigación y desarrollo de mercado"
+    },
+    {
+      "nivel": 1,
+      "codigo": "179",
+      "nombre": "Marcas y patentes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "179.01",
+      "nombre": "Marcas y patentes"
+    },
+    {
+      "nivel": 1,
+      "codigo": "180",
+      "nombre": "Crédito mercantil"
+    },
+    {
+      "nivel": 2,
+      "codigo": "180.01",
+      "nombre": "Crédito mercantil"
+    },
+    {
+      "nivel": 1,
+      "codigo": "181",
+      "nombre": "Gastos de instalación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "181.01",
+      "nombre": "Gastos de instalación"
+    },
+    {
+      "nivel": 1,
+      "codigo": "182",
+      "nombre": "Otros activos diferidos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "182.01",
+      "nombre": "Otros activos diferidos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "183",
+      "nombre": "Amortización acumulada de activos diferidos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "183.01",
+      "nombre": "Amortización acumulada de gastos diferidos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "183.02",
+      "nombre": "Amortización acumulada de gastos pre operativos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "183.03",
+      "nombre": "Amortización acumulada de regalías, asistencia técnica y otros gastos diferidos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "183.04",
+      "nombre": "Amortización acumulada de activos intangibles"
+    },
+    {
+      "nivel": 2,
+      "codigo": "183.05",
+      "nombre": "Amortización acumulada de gastos de organización"
+    },
+    {
+      "nivel": 2,
+      "codigo": "183.06",
+      "nombre": "Amortización acumulada de investigación y desarrollo de mercado"
+    },
+    {
+      "nivel": 2,
+      "codigo": "183.07",
+      "nombre": "Amortización acumulada de marcas y patentes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "183.08",
+      "nombre": "Amortización acumulada de crédito mercantil"
+    },
+    {
+      "nivel": 2,
+      "codigo": "183.09",
+      "nombre": "Amortización acumulada de gastos de instalación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "183.10",
+      "nombre": "Amortización acumulada de otros activos diferidos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "184",
+      "nombre": "Depósitos en garantía"
+    },
+    {
+      "nivel": 2,
+      "codigo": "184.01",
+      "nombre": "Depósitos de fianzas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "184.02",
+      "nombre": "Depósitos de arrendamiento de bienes inmuebles"
+    },
+    {
+      "nivel": 2,
+      "codigo": "184.03",
+      "nombre": "Otros depósitos en garantía"
+    },
+    {
+      "nivel": 1,
+      "codigo": "185",
+      "nombre": "Impuestos diferidos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "185.01",
+      "nombre": "Impuestos diferidos ISR"
+    },
+    {
+      "nivel": 1,
+      "codigo": "186",
+      "nombre": "Cuentas y documentos por cobrar a largo plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "186.01",
+      "nombre": "Cuentas y documentos por cobrar a largo plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "186.02",
+      "nombre": "Cuentas y documentos por cobrar a largo plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "186.03",
+      "nombre": "Cuentas y documentos por cobrar a largo plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "186.04",
+      "nombre": "Cuentas y documentos por cobrar a largo plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "186.05",
+      "nombre": "Intereses por cobrar a largo plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "186.06",
+      "nombre": "Intereses por cobrar a largo plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "186.07",
+      "nombre": "Intereses por cobrar a largo plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "186.08",
+      "nombre": "Intereses por cobrar a largo plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "186.09",
+      "nombre": "Otras cuentas y documentos por cobrar a largo plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "186.10",
+      "nombre": "Otras cuentas y documentos por cobrar a largo plazo parte relacionada"
+    },
+    {
+      "nivel": 1,
+      "codigo": "187",
+      "nombre": "Participación de los trabajadores en las utilidades diferidas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "187.01",
+      "nombre": "Participación de los trabajadores en las utilidades diferidas"
+    },
+    {
+      "nivel": 1,
+      "codigo": "188",
+      "nombre": "Inversiones permanentes en acciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "188.01",
+      "nombre": "Inversiones a largo plazo en subsidiarias"
+    },
+    {
+      "nivel": 2,
+      "codigo": "188.02",
+      "nombre": "Inversiones a largo plazo en asociadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "188.03",
+      "nombre": "Otras inversiones permanentes en acciones"
+    },
+    {
+      "nivel": 1,
+      "codigo": "189",
+      "nombre": "Estimación por deterioro de inversiones permanentes en acciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "189.01",
+      "nombre": "Estimación por deterioro de inversiones permanentes en acciones"
+    },
+    {
+      "nivel": 1,
+      "codigo": "190",
+      "nombre": "Otros instrumentos financieros"
+    },
+    {
+      "nivel": 2,
+      "codigo": "190.01",
+      "nombre": "Otros instrumentos financieros"
+    },
+    {
+      "nivel": 1,
+      "codigo": "191",
+      "nombre": "Otros activos a largo plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "191.01",
+      "nombre": "Otros activos a largo plazo"
+    },
+    {
+      "nivel": null,
+      "codigo": "200",
+      "nombre": "Pasivo"
+    },
+    {
+      "nivel": null,
+      "codigo": "200.01",
+      "nombre": "Pasivo a corto plazo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "201",
+      "nombre": "Proveedores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "201.01",
+      "nombre": "Proveedores nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "201.02",
+      "nombre": "Proveedores extranjeros"
+    },
+    {
+      "nivel": 2,
+      "codigo": "201.03",
+      "nombre": "Proveedores nacionales parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "201.04",
+      "nombre": "Proveedores extranjeros parte relacionada"
+    },
+    {
+      "nivel": 1,
+      "codigo": "202",
+      "nombre": "Cuentas por pagar a corto plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "202.01",
+      "nombre": "Documentos por pagar bancario y financiero nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "202.02",
+      "nombre": "Documentos por pagar bancario y financiero extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "202.03",
+      "nombre": "Documentos y cuentas por pagar a corto plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "202.04",
+      "nombre": "Documentos y cuentas por pagar a corto plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "202.05",
+      "nombre": "Documentos y cuentas por pagar a corto plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "202.06",
+      "nombre": "Documentos y cuentas por pagar a corto plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "202.07",
+      "nombre": "Intereses por pagar a corto plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "202.08",
+      "nombre": "Intereses por pagar a corto plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "202.09",
+      "nombre": "Intereses por pagar a corto plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "202.10",
+      "nombre": "Intereses por pagar a corto plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "202.11",
+      "nombre": "Dividendo por pagar nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "202.12",
+      "nombre": "Dividendo por pagar extranjero"
+    },
+    {
+      "nivel": 1,
+      "codigo": "203",
+      "nombre": "Cobros anticipados a corto plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.01",
+      "nombre": "Rentas cobradas por anticipado a corto plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.02",
+      "nombre": "Rentas cobradas por anticipado a corto plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.03",
+      "nombre": "Rentas cobradas por anticipado a corto plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.04",
+      "nombre": "Rentas cobradas por anticipado a corto plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.05",
+      "nombre": "Intereses cobrados por anticipado a corto plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.06",
+      "nombre": "Intereses cobrados por anticipado a corto plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.07",
+      "nombre": "Intereses cobrados por anticipado a corto plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.08",
+      "nombre": "Intereses cobrados por anticipado a corto plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.09",
+      "nombre": "Factoraje financiero cobrados por anticipado a corto plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.10",
+      "nombre": "Factoraje financiero cobrados por anticipado a corto plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.11",
+      "nombre": "Factoraje financiero cobrados por anticipado a corto plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.12",
+      "nombre": "Factoraje financiero cobrados por anticipado a corto plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.13",
+      "nombre": "Arrendamiento financiero cobrados por anticipado a corto plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.14",
+      "nombre": "Arrendamiento financiero cobrados por anticipado a corto plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.15",
+      "nombre": "Arrendamiento financiero cobrados por anticipado a corto plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.16",
+      "nombre": "Arrendamiento financiero cobrados por anticipado a corto plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.17",
+      "nombre": "Derechos fiduciarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "203.18",
+      "nombre": "Otros cobros anticipados"
+    },
+    {
+      "nivel": 1,
+      "codigo": "204",
+      "nombre": "Instrumentos financieros a corto plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "204.01",
+      "nombre": "Instrumentos financieros a corto plazo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "205",
+      "nombre": "Acreedores diversos a corto plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "205.01",
+      "nombre": "Socios, accionistas o representante legal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "205.02",
+      "nombre": "Acreedores diversos a corto plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "205.03",
+      "nombre": "Acreedores diversos a corto plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "205.04",
+      "nombre": "Acreedores diversos a corto plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "205.05",
+      "nombre": "Acreedores diversos a corto plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "205.06",
+      "nombre": "Otros acreedores diversos a corto plazo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "206",
+      "nombre": "Anticipo de cliente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "206.01",
+      "nombre": "Anticipo de cliente nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "206.02",
+      "nombre": "Anticipo de cliente extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "206.03",
+      "nombre": "Anticipo de cliente nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "206.04",
+      "nombre": "Anticipo de cliente extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "206.05",
+      "nombre": "Otros anticipos de clientes"
+    },
+    {
+      "nivel": 1,
+      "codigo": "207",
+      "nombre": "Impuestos trasladados"
+    },
+    {
+      "nivel": 2,
+      "codigo": "207.01",
+      "nombre": "IVA trasladado"
+    },
+    {
+      "nivel": 2,
+      "codigo": "207.02",
+      "nombre": "IEPS trasladado"
+    },
+    {
+      "nivel": 1,
+      "codigo": "208",
+      "nombre": "Impuestos trasladados cobrados"
+    },
+    {
+      "nivel": 2,
+      "codigo": "208.01",
+      "nombre": "IVA trasladado cobrado"
+    },
+    {
+      "nivel": 2,
+      "codigo": "208.02",
+      "nombre": "IEPS trasladado cobrado"
+    },
+    {
+      "nivel": 1,
+      "codigo": "209",
+      "nombre": "Impuestos trasladados no cobrados"
+    },
+    {
+      "nivel": 2,
+      "codigo": "209.01",
+      "nombre": "IVA trasladado no cobrado"
+    },
+    {
+      "nivel": 2,
+      "codigo": "209.02",
+      "nombre": "IEPS trasladado no cobrado"
+    },
+    {
+      "nivel": 1,
+      "codigo": "210",
+      "nombre": "Provisión de sueldos y salarios por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "210.01",
+      "nombre": "Provisión de sueldos y salarios por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "210.02",
+      "nombre": "Provisión de vacaciones por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "210.03",
+      "nombre": "Provisión de aguinaldo por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "210.04",
+      "nombre": "Provisión de fondo de ahorro por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "210.05",
+      "nombre": "Provisión de asimilados a salarios por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "210.06",
+      "nombre": "Provisión de anticipos o remanentes por distribuir"
+    },
+    {
+      "nivel": 2,
+      "codigo": "210.07",
+      "nombre": "Provisión de otros sueldos y salarios por pagar"
+    },
+    {
+      "nivel": 1,
+      "codigo": "211",
+      "nombre": "Provisión de contribuciones de seguridad social por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "211.01",
+      "nombre": "Provisión de IMSS patronal por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "211.02",
+      "nombre": "Provisión de SAR por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "211.03",
+      "nombre": "Provisión de INFONAVIT por pagar"
+    },
+    {
+      "nivel": 1,
+      "codigo": "212",
+      "nombre": "Provisión de impuesto estatal sobre nómina por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "212.01",
+      "nombre": "Provisión de impuesto estatal sobre nómina por pagar"
+    },
+    {
+      "nivel": 1,
+      "codigo": "213",
+      "nombre": "Impuestos y derechos por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "213.01",
+      "nombre": "IVA por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "213.02",
+      "nombre": "IEPS por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "213.03",
+      "nombre": "ISR por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "213.04",
+      "nombre": "Impuesto estatal sobre nómina por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "213.05",
+      "nombre": "Impuesto estatal y municipal por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "213.06",
+      "nombre": "Derechos por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "213.07",
+      "nombre": "Otros impuestos por pagar"
+    },
+    {
+      "nivel": 1,
+      "codigo": "214",
+      "nombre": "Dividendos por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "214.01",
+      "nombre": "Dividendos por pagar"
+    },
+    {
+      "nivel": 1,
+      "codigo": "215",
+      "nombre": "PTU por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "215.01",
+      "nombre": "PTU por pagar"
+    },
+    {
+      "nivel": 2,
+      "codigo": "215.02",
+      "nombre": "PTU por pagar de ejercicios anteriores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "215.03",
+      "nombre": "Provisión de PTU por pagar"
+    },
+    {
+      "nivel": 1,
+      "codigo": "216",
+      "nombre": "Impuestos retenidos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "216.01",
+      "nombre": "Impuestos retenidos de ISR por sueldos y salarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "216.02",
+      "nombre": "Impuestos retenidos de ISR por asimilados a salarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "216.03",
+      "nombre": "Impuestos retenidos de ISR por arrendamiento"
+    },
+    {
+      "nivel": 2,
+      "codigo": "216.04",
+      "nombre": "Impuestos retenidos de ISR por servicios profesionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "216.05",
+      "nombre": "Impuestos retenidos de ISR por dividendos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "216.06",
+      "nombre": "Impuestos retenidos de ISR por intereses"
+    },
+    {
+      "nivel": 2,
+      "codigo": "216.07",
+      "nombre": "Impuestos retenidos de ISR por pagos al extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "216.08",
+      "nombre": "Impuestos retenidos de ISR por venta de acciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "216.09",
+      "nombre": "Impuestos retenidos de ISR por venta de partes sociales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "216.10",
+      "nombre": "Impuestos retenidos de IVA"
+    },
+    {
+      "nivel": 2,
+      "codigo": "216.11",
+      "nombre": "Retenciones de IMSS a los trabajadores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "216.12",
+      "nombre": "Otras impuestos retenidos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "217",
+      "nombre": "Pagos realizados por cuenta de terceros"
+    },
+    {
+      "nivel": 2,
+      "codigo": "217.01",
+      "nombre": "Pagos realizados por cuenta de terceros"
+    },
+    {
+      "nivel": 1,
+      "codigo": "218",
+      "nombre": "Otros pasivos a corto plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "218.01",
+      "nombre": "Otros pasivos a corto plazo"
+    },
+    {
+      "nivel": null,
+      "codigo": "200.02",
+      "nombre": "Pasivo a largo plazo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "251",
+      "nombre": "Acreedores diversos a largo plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "251.01",
+      "nombre": "Socios, accionistas o representante legal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "251.02",
+      "nombre": "Acreedores diversos a largo plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "251.03",
+      "nombre": "Acreedores diversos a largo plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "251.04",
+      "nombre": "Acreedores diversos a largo plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "251.05",
+      "nombre": "Acreedores diversos a largo plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "251.06",
+      "nombre": "Otros acreedores diversos a largo plazo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "252",
+      "nombre": "Cuentas por pagar a largo plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.01",
+      "nombre": "Documentos bancarios y financieros por pagar a largo plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.02",
+      "nombre": "Documentos bancarios y financieros por pagar a largo plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.03",
+      "nombre": "Documentos y cuentas por pagar a largo plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.04",
+      "nombre": "Documentos y cuentas por pagar a largo plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.05",
+      "nombre": "Documentos y cuentas por pagar a largo plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.06",
+      "nombre": "Documentos y cuentas por pagar a largo plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.07",
+      "nombre": "Hipotecas por pagar a largo plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.08",
+      "nombre": "Hipotecas por pagar a largo plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.09",
+      "nombre": "Hipotecas por pagar a largo plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.10",
+      "nombre": "Hipotecas por pagar a largo plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.11",
+      "nombre": "Intereses por pagar a largo plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.12",
+      "nombre": "Intereses por pagar a largo plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.13",
+      "nombre": "Intereses por pagar a largo plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.14",
+      "nombre": "Intereses por pagar a largo plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.15",
+      "nombre": "Dividendos por pagar nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.16",
+      "nombre": "Dividendos por pagar extranjeros"
+    },
+    {
+      "nivel": 2,
+      "codigo": "252.17",
+      "nombre": "Otras cuentas y documentos por pagar a largo plazo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "253",
+      "nombre": "Cobros anticipados a largo plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.01",
+      "nombre": "Rentas cobradas por anticipado a largo plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.02",
+      "nombre": "Rentas cobradas por anticipado a largo plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.03",
+      "nombre": "Rentas cobradas por anticipado a largo plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.04",
+      "nombre": "Rentas cobradas por anticipado a largo plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.05",
+      "nombre": "Intereses cobrados por anticipado a largo plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.06",
+      "nombre": "Intereses cobrados por anticipado a largo plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.07",
+      "nombre": "Intereses cobrados por anticipado a largo plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.08",
+      "nombre": "Intereses cobrados por anticipado a largo plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.09",
+      "nombre": "Factoraje financiero cobrados por anticipado a largo plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.10",
+      "nombre": "Factoraje financiero cobrados por anticipado a largo plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.11",
+      "nombre": "Factoraje financiero cobrados por anticipado a largo plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.12",
+      "nombre": "Factoraje financiero cobrados por anticipado a largo plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.13",
+      "nombre": "Arrendamiento financiero cobrados por anticipado a largo plazo nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.14",
+      "nombre": "Arrendamiento financiero cobrados por anticipado a largo plazo extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.15",
+      "nombre": "Arrendamiento financiero cobrados por anticipado a largo plazo nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.16",
+      "nombre": "Arrendamiento financiero cobrados por anticipado a largo plazo extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.17",
+      "nombre": "Derechos fiduciarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "253.18",
+      "nombre": "Otros cobros anticipados"
+    },
+    {
+      "nivel": 1,
+      "codigo": "254",
+      "nombre": "Instrumentos financieros a largo plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "254.01",
+      "nombre": "Instrumentos financieros a largo plazo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "255",
+      "nombre": "Pasivos por beneficios a los empleados a largo plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "255.01",
+      "nombre": "Pasivos por beneficios a los empleados a largo plazo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "256",
+      "nombre": "Otros pasivos a largo plazo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "256.01",
+      "nombre": "Otros pasivos a largo plazo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "257",
+      "nombre": "Participación de los trabajadores en las utilidades diferida"
+    },
+    {
+      "nivel": 2,
+      "codigo": "257.01",
+      "nombre": "Participación de los trabajadores en las utilidades diferida"
+    },
+    {
+      "nivel": 1,
+      "codigo": "258",
+      "nombre": "Obligaciones contraídas de fideicomisos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "258.01",
+      "nombre": "Obligaciones contraídas de fideicomisos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "259",
+      "nombre": "Impuestos diferidos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "259.01",
+      "nombre": "ISR diferido"
+    },
+    {
+      "nivel": 2,
+      "codigo": "259.02",
+      "nombre": "ISR por dividendo diferido"
+    },
+    {
+      "nivel": 2,
+      "codigo": "259.03",
+      "nombre": "Otros impuestos diferidos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "260",
+      "nombre": "Pasivos diferidos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "260.01",
+      "nombre": "Pasivos diferidos"
+    },
+    {
+      "nivel": null,
+      "codigo": "300",
+      "nombre": "Capital contable"
+    },
+    {
+      "nivel": 1,
+      "codigo": "301",
+      "nombre": "Capital social"
+    },
+    {
+      "nivel": 2,
+      "codigo": "301.01",
+      "nombre": "Capital fijo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "301.02",
+      "nombre": "Capital variable"
+    },
+    {
+      "nivel": 2,
+      "codigo": "301.03",
+      "nombre": "Aportaciones para futuros aumentos de capital"
+    },
+    {
+      "nivel": 2,
+      "codigo": "301.04",
+      "nombre": "Prima en suscripción de acciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "301.05",
+      "nombre": "Prima en suscripción de partes sociales"
+    },
+    {
+      "nivel": 1,
+      "codigo": "302",
+      "nombre": "Patrimonio"
+    },
+    {
+      "nivel": 2,
+      "codigo": "302.01",
+      "nombre": "Patrimonio"
+    },
+    {
+      "nivel": 2,
+      "codigo": "302.02",
+      "nombre": "Aportación patrimonial"
+    },
+    {
+      "nivel": 2,
+      "codigo": "302.03",
+      "nombre": "Déficit o remanente del ejercicio"
+    },
+    {
+      "nivel": 1,
+      "codigo": "303",
+      "nombre": "Reserva legal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "303.01",
+      "nombre": "Reserva legal"
+    },
+    {
+      "nivel": 1,
+      "codigo": "304",
+      "nombre": "Resultado de ejercicios anteriores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "304.01",
+      "nombre": "Utilidad de ejercicios anteriores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "304.02",
+      "nombre": "Pérdida de ejercicios anteriores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "304.03",
+      "nombre": "Resultado integral de ejercicios anteriores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "304.04",
+      "nombre": "Déficit o remanente de ejercicio anteriores"
+    },
+    {
+      "nivel": 1,
+      "codigo": "305",
+      "nombre": "Resultado del ejercicio"
+    },
+    {
+      "nivel": 2,
+      "codigo": "305.01",
+      "nombre": "Utilidad del ejercicio"
+    },
+    {
+      "nivel": 2,
+      "codigo": "305.02",
+      "nombre": "Pérdida del ejercicio"
+    },
+    {
+      "nivel": 2,
+      "codigo": "305.03",
+      "nombre": "Resultado integral"
+    },
+    {
+      "nivel": 1,
+      "codigo": "306",
+      "nombre": "Otras cuentas de capital"
+    },
+    {
+      "nivel": 2,
+      "codigo": "306.01",
+      "nombre": "Otras cuentas de capital"
+    },
+    {
+      "nivel": null,
+      "codigo": "400",
+      "nombre": "Ingresos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "401",
+      "nombre": "Ingresos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.01",
+      "nombre": "Ventas y/o servicios gravados a la tasa general"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.02",
+      "nombre": "Ventas y/o servicios gravados a la tasa general de contado"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.03",
+      "nombre": "Ventas y/o servicios gravados a la tasa general a crédito"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.04",
+      "nombre": "Ventas y/o servicios gravados al 0%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.05",
+      "nombre": "Ventas y/o servicios gravados al 0% de contado"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.06",
+      "nombre": "Ventas y/o servicios gravados al 0% a crédito"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.07",
+      "nombre": "Ventas y/o servicios exentos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.08",
+      "nombre": "Ventas y/o servicios exentos de contado"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.09",
+      "nombre": "Ventas y/o servicios exentos a crédito"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.10",
+      "nombre": "Ventas y/o servicios gravados a la tasa general nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.11",
+      "nombre": "Ventas y/o servicios gravados a la tasa general extranjeros partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.12",
+      "nombre": "Ventas y/o servicios gravados al 0% nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.13",
+      "nombre": "Ventas y/o servicios gravados al 0% extranjeros partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.14",
+      "nombre": "Ventas y/o servicios exentos nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.15",
+      "nombre": "Ventas y/o servicios exentos extranjeros partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.16",
+      "nombre": "Ingresos por servicios administrativos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.17",
+      "nombre": "Ingresos por servicios administrativos nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.18",
+      "nombre": "Ingresos por servicios administrativos extranjeros partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.19",
+      "nombre": "Ingresos por servicios profesionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.20",
+      "nombre": "Ingresos por servicios profesionales nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.21",
+      "nombre": "Ingresos por servicios profesionales extranjeros partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.22",
+      "nombre": "Ingresos por arrendamiento"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.23",
+      "nombre": "Ingresos por arrendamiento nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.24",
+      "nombre": "Ingresos por arrendamiento extranjeros partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.25",
+      "nombre": "Ingresos por exportación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.26",
+      "nombre": "Ingresos por comisiones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.27",
+      "nombre": "Ingresos por maquila"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.28",
+      "nombre": "Ingresos por coordinados"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.29",
+      "nombre": "Ingresos por regalías"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.30",
+      "nombre": "Ingresos por asistencia técnica"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.31",
+      "nombre": "Ingresos por donativos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.32",
+      "nombre": "Ingresos por intereses (actividad propia)"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.33",
+      "nombre": "Ingresos de copropiedad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.34",
+      "nombre": "Ingresos por fideicomisos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.35",
+      "nombre": "Ingresos por factoraje financiero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.36",
+      "nombre": "Ingresos por arrendamiento financiero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.37",
+      "nombre": "Ingresos de extranjeros con establecimiento en el país"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.38",
+      "nombre": "Otros ingresos propios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.39",
+      "nombre": "Ventas y/o servicios gravados realizados en zona fronteriza norte"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.40",
+      "nombre": "Ventas y/o servicios gravados realizados en zona fronteriza norte de contado"
+    },
+    {
+      "nivel": 2,
+      "codigo": "401.41",
+      "nombre": "Ventas y/o servicios gravados realizados en zona fronteriza norte a crédito"
+    },
+    {
+      "nivel": 1,
+      "codigo": "402",
+      "nombre": "Devoluciones, descuentos o bonificaciones sobre ingresos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "402.01",
+      "nombre": "Devoluciones, descuentos o bonificaciones sobre ventas y/o servicios a la tasa general"
+    },
+    {
+      "nivel": null,
+      "codigo": "402.02",
+      "nombre": "Devoluciones, descuentos o bonificaciones sobre ventas y/o servicios al 0%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "402.03",
+      "nombre": "Devoluciones, descuentos o bonificaciones sobre ventas y/o servicios exentos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "402.04",
+      "nombre": "Devoluciones, descuentos o bonificaciones de otros ingresos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "402.05",
+      "nombre": "Devoluciones, descuentos o bonificaciones sobre ventas y/o servicios en zona fronteriza norte"
+    },
+    {
+      "nivel": 1,
+      "codigo": "403",
+      "nombre": "Otros ingresos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "403.01",
+      "nombre": "Otros Ingresos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "403.02",
+      "nombre": "Otros ingresos nacionales parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "403.03",
+      "nombre": "Otros ingresos extranjeros parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "403.04",
+      "nombre": "Ingresos por operaciones discontinuas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "403.05",
+      "nombre": "Ingresos por condonación de adeudo"
+    },
+    {
+      "nivel": null,
+      "codigo": "500",
+      "nombre": "Costos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "501",
+      "nombre": "Costo de venta y/o servicio"
+    },
+    {
+      "nivel": 2,
+      "codigo": "501.01",
+      "nombre": "Costo de venta"
+    },
+    {
+      "nivel": 2,
+      "codigo": "501.02",
+      "nombre": "Costo de servicios (Mano de obra)"
+    },
+    {
+      "nivel": 2,
+      "codigo": "501.03",
+      "nombre": "Materia prima directa utilizada para la producción"
+    },
+    {
+      "nivel": 2,
+      "codigo": "501.04",
+      "nombre": "Materia prima consumida en el proceso productivo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "501.05",
+      "nombre": "Mano de obra directa consumida"
+    },
+    {
+      "nivel": 2,
+      "codigo": "501.06",
+      "nombre": "Mano de obra directa"
+    },
+    {
+      "nivel": 2,
+      "codigo": "501.07",
+      "nombre": "Cargos indirectos de producción"
+    },
+    {
+      "nivel": 2,
+      "codigo": "501.08",
+      "nombre": "Otros conceptos de costo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "502",
+      "nombre": "Compras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "502.01",
+      "nombre": "Compras nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "502.02",
+      "nombre": "Compras nacionales parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "502.03",
+      "nombre": "Compras de Importación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "502.04",
+      "nombre": "Compras de Importación partes relacionadas"
+    },
+    {
+      "nivel": 1,
+      "codigo": "503",
+      "nombre": "Devoluciones, descuentos o bonificaciones sobre compras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "503.01",
+      "nombre": "Devoluciones, descuentos o bonificaciones sobre compras"
+    },
+    {
+      "nivel": 1,
+      "codigo": "504",
+      "nombre": "Otras cuentas de costos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.01",
+      "nombre": "Gastos indirectos de fabricación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.02",
+      "nombre": "Gastos indirectos de fabricación de partes relacionadas nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.03",
+      "nombre": "Gastos indirectos de fabricación de partes relacionadas extranjeras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.04",
+      "nombre": "Otras cuentas de costos incurridos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.05",
+      "nombre": "Otras cuentas de costos incurridos con partes relacionadas nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.06",
+      "nombre": "Otras cuentas de costos incurridos con partes relacionadas extranjeras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.07",
+      "nombre": "Depreciación de edificios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.08",
+      "nombre": "Depreciación de maquinaria y equipo Depreciación de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.10",
+      "nombre": "Depreciación de mobiliario y equipo de oficina"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.11",
+      "nombre": "Depreciación de equipo de cómputo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.12",
+      "nombre": "Depreciación de equipo de comunicación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.13",
+      "nombre": "Depreciación de activos biológicos, vegetales y semovientes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.14",
+      "nombre": "Depreciación de otros activos fijos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.15",
+      "nombre": "Depreciación de ferrocarriles"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.16",
+      "nombre": "Depreciación de embarcaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.17",
+      "nombre": "Depreciación de aviones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.18",
+      "nombre": "Depreciación de troqueles, moldes, matrices y herramental"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.19",
+      "nombre": "Depreciación de equipo de comunicaciones telefónicas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.20",
+      "nombre": "Depreciación de equipo de comunicación satelital"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.21",
+      "nombre": "Depreciación de equipo de adaptaciones para personas con capacidades diferentes Depreciación de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.23",
+      "nombre": "Depreciación de adaptaciones y mejoras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.24",
+      "nombre": "Depreciación de otra maquinaria y equipo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.25",
+      "nombre": "Otras cuentas de costos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "505",
+      "nombre": "Costo de activo fijo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "505.01",
+      "nombre": "Costo por venta de activo fijo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "505.02",
+      "nombre": "Costo por baja de activo fijo"
+    },
+    {
+      "nivel": null,
+      "codigo": "600",
+      "nombre": "Gastos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "601",
+      "nombre": "Gastos generales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.01",
+      "nombre": "Sueldos y salarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.02",
+      "nombre": "Compensaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.03",
+      "nombre": "Tiempos extras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.04",
+      "nombre": "Premios de asistencia"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.05",
+      "nombre": "Premios de puntualidad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.06",
+      "nombre": "Vacaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.07",
+      "nombre": "Prima vacacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.08",
+      "nombre": "Prima dominical"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.09",
+      "nombre": "Días festivos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.10",
+      "nombre": "Gratificaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.11",
+      "nombre": "Primas de antigüedad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.12",
+      "nombre": "Aguinaldo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.13",
+      "nombre": "Indemnizaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.14",
+      "nombre": "Destajo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.15",
+      "nombre": "Despensa"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.16",
+      "nombre": "Transporte"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.17",
+      "nombre": "Servicio médico"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.18",
+      "nombre": "Ayuda en gastos funerarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.19",
+      "nombre": "Fondo de ahorro"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.20",
+      "nombre": "Cuotas sindicales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.21",
+      "nombre": "PTU"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.22",
+      "nombre": "Estímulo al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.23",
+      "nombre": "Previsión social"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.24",
+      "nombre": "Aportaciones para el plan de jubilación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.25",
+      "nombre": "Otras prestaciones al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.26",
+      "nombre": "Cuotas al IMSS"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.27",
+      "nombre": "Aportaciones al INFONAVIT"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.28",
+      "nombre": "Aportaciones al SAR"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.29",
+      "nombre": "Impuesto estatal sobre nóminas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.30",
+      "nombre": "Otras aportaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.31",
+      "nombre": "Asimilados a salarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.32",
+      "nombre": "Servicios administrativos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.33",
+      "nombre": "Servicios administrativos partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.34",
+      "nombre": "Honorarios a personas físicas residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.35",
+      "nombre": "Honorarios a personas físicas residentes nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.36",
+      "nombre": "Honorarios a personas físicas residentes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.37",
+      "nombre": "Honorarios a personas físicas residentes del extranjero partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.38",
+      "nombre": "Honorarios a personas morales residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.39",
+      "nombre": "Honorarios a personas morales residentes nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.40",
+      "nombre": "Honorarios a personas morales residentes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.41",
+      "nombre": "Honorarios a personas morales residentes del extranjero partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.42",
+      "nombre": "Honorarios aduanales personas físicas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.43",
+      "nombre": "Honorarios aduanales personas morales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.44",
+      "nombre": "Honorarios al consejo de administración"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.45",
+      "nombre": "Arrendamiento a personas físicas residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.46",
+      "nombre": "Arrendamiento a personas morales residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.47",
+      "nombre": "Arrendamiento a residentes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.48",
+      "nombre": "Combustibles y lubricantes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.49",
+      "nombre": "Viáticos y gastos de viaje"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.50",
+      "nombre": "Teléfono, internet"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.51",
+      "nombre": "Agua"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.52",
+      "nombre": "Energía eléctrica"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.53",
+      "nombre": "Vigilancia y seguridad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.54",
+      "nombre": "Limpieza"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.55",
+      "nombre": "Papelería y artículos de oficina"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.56",
+      "nombre": "Mantenimiento y conservación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.57",
+      "nombre": "Seguros y fianzas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.58",
+      "nombre": "Otros impuestos y derechos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.59",
+      "nombre": "Recargos fiscales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.60",
+      "nombre": "Cuotas y suscripciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.61",
+      "nombre": "Propaganda y publicidad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.62",
+      "nombre": "Capacitación al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.63",
+      "nombre": "Donativos y ayudas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.64",
+      "nombre": "Asistencia técnica"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.65",
+      "nombre": "Regalías sujetas a otros porcentajes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.66",
+      "nombre": "Regalías sujetas al 5%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.67",
+      "nombre": "Regalías sujetas al 10%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.68",
+      "nombre": "Regalías sujetas al 15%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.69",
+      "nombre": "Regalías sujetas al 25%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.70",
+      "nombre": "Regalías sujetas al 30%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.71",
+      "nombre": "Regalías sin retención"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.72",
+      "nombre": "Fletes y acarreos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.73",
+      "nombre": "Gastos de importación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.74",
+      "nombre": "Comisiones sobre ventas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.75",
+      "nombre": "Comisiones por tarjetas de crédito"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.76",
+      "nombre": "Patentes y marcas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.77",
+      "nombre": "Uniformes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.78",
+      "nombre": "Prediales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.79",
+      "nombre": "Gastos generales de urbanización"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.80",
+      "nombre": "Gastos generales de construcción"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.81",
+      "nombre": "Fletes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.82",
+      "nombre": "Recolección de bienes del sector agropecuario y/o ganadero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.83",
+      "nombre": "Gastos no deducibles (sin requisitos fiscales)"
+    },
+    {
+      "nivel": 2,
+      "codigo": "601.84",
+      "nombre": "Otros gastos generales"
+    },
+    {
+      "nivel": 1,
+      "codigo": "602",
+      "nombre": "Gastos de venta"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.01",
+      "nombre": "Sueldos y salarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.02",
+      "nombre": "Compensaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.03",
+      "nombre": "Tiempos extras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.04",
+      "nombre": "Premios de asistencia"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.05",
+      "nombre": "Premios de puntualidad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.06",
+      "nombre": "Vacaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.07",
+      "nombre": "Prima vacacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.08",
+      "nombre": "Prima dominical"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.09",
+      "nombre": "Días festivos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.10",
+      "nombre": "Gratificaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.11",
+      "nombre": "Primas de antigüedad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.12",
+      "nombre": "Aguinaldo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.13",
+      "nombre": "Indemnizaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.14",
+      "nombre": "Destajo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.15",
+      "nombre": "Despensa"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.16",
+      "nombre": "Transporte"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.17",
+      "nombre": "Servicio médico"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.18",
+      "nombre": "Ayuda en gastos funerarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.19",
+      "nombre": "Fondo de ahorro"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.20",
+      "nombre": "Cuotas sindicales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.21",
+      "nombre": "PTU"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.22",
+      "nombre": "Estímulo al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.23",
+      "nombre": "Previsión social"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.24",
+      "nombre": "Aportaciones para el plan de jubilación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.25",
+      "nombre": "Otras prestaciones al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.26",
+      "nombre": "Cuotas al IMSS"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.27",
+      "nombre": "Aportaciones al INFONAVIT"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.28",
+      "nombre": "Aportaciones al SAR"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.29",
+      "nombre": "Impuesto estatal sobre nóminas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.30",
+      "nombre": "Otras aportaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.31",
+      "nombre": "Asimilados a salarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.32",
+      "nombre": "Servicios administrativos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.33",
+      "nombre": "Servicios administrativos partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.34",
+      "nombre": "Honorarios a personas físicas residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.35",
+      "nombre": "Honorarios a personas físicas residentes nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.36",
+      "nombre": "Honorarios a personas físicas residentes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.37",
+      "nombre": "Honorarios a personas físicas residentes del extranjero partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.38",
+      "nombre": "Honorarios a personas morales residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.39",
+      "nombre": "Honorarios a personas morales residentes nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.40",
+      "nombre": "Honorarios a personas morales residentes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.41",
+      "nombre": "Honorarios a personas morales residentes del extranjero partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.42",
+      "nombre": "Honorarios aduanales personas físicas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.43",
+      "nombre": "Honorarios aduanales personas morales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.44",
+      "nombre": "Honorarios al consejo de administración"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.45",
+      "nombre": "Arrendamiento a personas físicas residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.46",
+      "nombre": "Arrendamiento a personas morales residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.47",
+      "nombre": "Arrendamiento a residentes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.48",
+      "nombre": "Combustibles y lubricantes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.49",
+      "nombre": "Viáticos y gastos de viaje"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.50",
+      "nombre": "Teléfono, internet"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.51",
+      "nombre": "Agua"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.52",
+      "nombre": "Energía eléctrica"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.53",
+      "nombre": "Vigilancia y seguridad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.54",
+      "nombre": "Limpieza"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.55",
+      "nombre": "Papelería y artículos de oficina"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.56",
+      "nombre": "Mantenimiento y conservación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.57",
+      "nombre": "Seguros y fianzas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.58",
+      "nombre": "Otros impuestos y derechos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.59",
+      "nombre": "Recargos fiscales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.60",
+      "nombre": "Cuotas y suscripciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.61",
+      "nombre": "Propaganda y publicidad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.62",
+      "nombre": "Capacitación al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.63",
+      "nombre": "Donativos y ayudas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.64",
+      "nombre": "Asistencia técnica"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.65",
+      "nombre": "Regalías sujetas a otros porcentajes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.66",
+      "nombre": "Regalías sujetas al 5%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.67",
+      "nombre": "Regalías sujetas al 10%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.68",
+      "nombre": "Regalías sujetas al 15%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.69",
+      "nombre": "Regalías sujetas al 25%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.70",
+      "nombre": "Regalías sujetas al 30%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.71",
+      "nombre": "Regalías sin retención"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.72",
+      "nombre": "Fletes y acarreos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.73",
+      "nombre": "Gastos de importación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.74",
+      "nombre": "Comisiones sobre ventas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.75",
+      "nombre": "Comisiones por tarjetas de crédito"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.76",
+      "nombre": "Patentes y marcas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.77",
+      "nombre": "Uniformes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.78",
+      "nombre": "Prediales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.79",
+      "nombre": "Gastos de venta de urbanización"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.80",
+      "nombre": "Gastos de venta de construcción"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.81",
+      "nombre": "Fletes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.82",
+      "nombre": "Recolección de bienes del sector agropecuario y/o ganadero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.83",
+      "nombre": "Gastos no deducibles (sin requisitos fiscales)"
+    },
+    {
+      "nivel": 2,
+      "codigo": "602.84",
+      "nombre": "Otros gastos de venta"
+    },
+    {
+      "nivel": 1,
+      "codigo": "603",
+      "nombre": "Gastos de administración"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.01",
+      "nombre": "Sueldos y salarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.02",
+      "nombre": "Compensaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.03",
+      "nombre": "Tiempos extras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.04",
+      "nombre": "Premios de asistencia"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.05",
+      "nombre": "Premios de puntualidad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.06",
+      "nombre": "Vacaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.07",
+      "nombre": "Prima vacacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.08",
+      "nombre": "Prima dominical"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.09",
+      "nombre": "Días festivos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.10",
+      "nombre": "Gratificaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.11",
+      "nombre": "Primas de antigüedad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.12",
+      "nombre": "Aguinaldo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.13",
+      "nombre": "Indemnizaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.14",
+      "nombre": "Destajo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.15",
+      "nombre": "Despensa"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.16",
+      "nombre": "Transporte"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.17",
+      "nombre": "Servicio médico"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.18",
+      "nombre": "Ayuda en gastos funerarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.19",
+      "nombre": "Fondo de ahorro"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.20",
+      "nombre": "Cuotas sindicales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.21",
+      "nombre": "PTU"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.22",
+      "nombre": "Estímulo al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.23",
+      "nombre": "Previsión social"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.24",
+      "nombre": "Aportaciones para el plan de jubilación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.25",
+      "nombre": "Otras prestaciones al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.26",
+      "nombre": "Cuotas al IMSS"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.27",
+      "nombre": "Aportaciones al INFONAVIT"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.28",
+      "nombre": "Aportaciones al SAR"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.29",
+      "nombre": "Impuesto estatal sobre nóminas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.30",
+      "nombre": "Otras aportaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.31",
+      "nombre": "Asimilados a salarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.32",
+      "nombre": "Servicios administrativos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.33",
+      "nombre": "Servicios administrativos partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.34",
+      "nombre": "Honorarios a personas físicas residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.35",
+      "nombre": "Honorarios a personas físicas residentes nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.36",
+      "nombre": "Honorarios a personas físicas residentes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.37",
+      "nombre": "Honorarios a personas físicas residentes del extranjero partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.38",
+      "nombre": "Honorarios a personas morales residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.39",
+      "nombre": "Honorarios a personas morales residentes nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.40",
+      "nombre": "Honorarios a personas morales residentes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.41",
+      "nombre": "Honorarios a personas morales residentes del extranjero partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.42",
+      "nombre": "Honorarios aduanales personas físicas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.43",
+      "nombre": "Honorarios aduanales personas morales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.44",
+      "nombre": "Honorarios al consejo de administración"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.45",
+      "nombre": "Arrendamiento a personas físicas residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.46",
+      "nombre": "Arrendamiento a personas morales residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.47",
+      "nombre": "Arrendamiento a residentes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.48",
+      "nombre": "Combustibles y lubricantes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.49",
+      "nombre": "Viáticos y gastos de viaje"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.50",
+      "nombre": "Teléfono, internet"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.51",
+      "nombre": "Agua"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.52",
+      "nombre": "Energía eléctrica"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.53",
+      "nombre": "Vigilancia y seguridad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.54",
+      "nombre": "Limpieza"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.55",
+      "nombre": "Papelería y artículos de oficina"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.56",
+      "nombre": "Mantenimiento y conservación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.57",
+      "nombre": "Seguros y fianzas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.58",
+      "nombre": "Otros impuestos y derechos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.59",
+      "nombre": "Recargos fiscales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.60",
+      "nombre": "Cuotas y suscripciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.61",
+      "nombre": "Propaganda y publicidad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.62",
+      "nombre": "Capacitación al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.63",
+      "nombre": "Donativos y ayudas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.64",
+      "nombre": "Asistencia técnica"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.65",
+      "nombre": "Regalías sujetas a otros porcentajes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.66",
+      "nombre": "Regalías sujetas al 5%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.67",
+      "nombre": "Regalías sujetas al 10%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.68",
+      "nombre": "Regalías sujetas al 15%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.69",
+      "nombre": "Regalías sujetas al 25%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.70",
+      "nombre": "Regalías sujetas al 30%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.71",
+      "nombre": "Regalías sin retención"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.72",
+      "nombre": "Fletes y acarreos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.73",
+      "nombre": "Gastos de importación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.74",
+      "nombre": "Patentes y marcas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.75",
+      "nombre": "Uniformes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.76",
+      "nombre": "Prediales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.77",
+      "nombre": "Gastos de administración de urbanización"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.78",
+      "nombre": "Gastos de administración de construcción"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.79",
+      "nombre": "Fletes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.80",
+      "nombre": "Recolección de bienes del sector agropecuario y/o ganadero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.81",
+      "nombre": "Gastos no deducibles (sin requisitos fiscales)"
+    },
+    {
+      "nivel": 2,
+      "codigo": "603.82",
+      "nombre": "Otros gastos de administración"
+    },
+    {
+      "nivel": 1,
+      "codigo": "604",
+      "nombre": "Gastos de fabricación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.01",
+      "nombre": "Sueldos y salarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.02",
+      "nombre": "Compensaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.03",
+      "nombre": "Tiempos extras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.04",
+      "nombre": "Premios de asistencia"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.05",
+      "nombre": "Premios de puntualidad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.06",
+      "nombre": "Vacaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.07",
+      "nombre": "Prima vacacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.08",
+      "nombre": "Prima dominical"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.09",
+      "nombre": "Días festivos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.10",
+      "nombre": "Gratificaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.11",
+      "nombre": "Primas de antigüedad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.12",
+      "nombre": "Aguinaldo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.13",
+      "nombre": "Indemnizaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.14",
+      "nombre": "Destajo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.15",
+      "nombre": "Despensa"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.16",
+      "nombre": "Transporte"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.17",
+      "nombre": "Servicio médico"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.18",
+      "nombre": "Ayuda en gastos funerarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.19",
+      "nombre": "Fondo de ahorro"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.20",
+      "nombre": "Cuotas sindicales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.21",
+      "nombre": "PTU"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.22",
+      "nombre": "Estímulo al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.23",
+      "nombre": "Previsión social"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.24",
+      "nombre": "Aportaciones para el plan de jubilación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.25",
+      "nombre": "Otras prestaciones al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.26",
+      "nombre": "Cuotas al IMSS"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.27",
+      "nombre": "Aportaciones al INFONAVIT"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.28",
+      "nombre": "Aportaciones al SAR"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.29",
+      "nombre": "Impuesto estatal sobre nóminas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.30",
+      "nombre": "Otras aportaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.31",
+      "nombre": "Asimilados a salarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.32",
+      "nombre": "Servicios administrativos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.33",
+      "nombre": "Servicios administrativos partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.34",
+      "nombre": "Honorarios a personas físicas residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.35",
+      "nombre": "Honorarios a personas físicas residentes nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.36",
+      "nombre": "Honorarios a personas físicas residentes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.37",
+      "nombre": "Honorarios a personas físicas residentes del extranjero partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.38",
+      "nombre": "Honorarios a personas morales residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.39",
+      "nombre": "Honorarios a personas morales residentes nacionales partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.40",
+      "nombre": "Honorarios a personas morales residentes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.41",
+      "nombre": "Honorarios a personas morales residentes del extranjero partes relacionadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.42",
+      "nombre": "Honorarios aduanales personas físicas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.43",
+      "nombre": "Honorarios aduanales personas morales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.44",
+      "nombre": "Honorarios al consejo de administración"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.45",
+      "nombre": "Arrendamiento a personas físicas residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.46",
+      "nombre": "Arrendamiento a personas morales residentes nacionales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.47",
+      "nombre": "Arrendamiento a residentes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.48",
+      "nombre": "Combustibles y lubricantes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.49",
+      "nombre": "Viáticos y gastos de viaje"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.50",
+      "nombre": "Teléfono, internet"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.51",
+      "nombre": "Agua"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.52",
+      "nombre": "Energía eléctrica"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.53",
+      "nombre": "Vigilancia y seguridad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.54",
+      "nombre": "Limpieza"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.55",
+      "nombre": "Papelería y artículos de oficina"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.56",
+      "nombre": "Mantenimiento y conservación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.57",
+      "nombre": "Seguros y fianzas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.58",
+      "nombre": "Otros impuestos y derechos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.59",
+      "nombre": "Recargos fiscales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.60",
+      "nombre": "Cuotas y suscripciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.61",
+      "nombre": "Propaganda y publicidad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.62",
+      "nombre": "Capacitación al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.63",
+      "nombre": "Donativos y ayudas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.64",
+      "nombre": "Asistencia técnica"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.65",
+      "nombre": "Regalías sujetas a otros porcentajes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.66",
+      "nombre": "Regalías sujetas al 5%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.67",
+      "nombre": "Regalías sujetas al 10%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.68",
+      "nombre": "Regalías sujetas al 15%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.69",
+      "nombre": "Regalías sujetas al 25%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.70",
+      "nombre": "Regalías sujetas al 30%"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.71",
+      "nombre": "Regalías sin retención"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.72",
+      "nombre": "Fletes y acarreos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.73",
+      "nombre": "Gastos de importación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.74",
+      "nombre": "Patentes y marcas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.75",
+      "nombre": "Uniformes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.76",
+      "nombre": "Prediales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.77",
+      "nombre": "Gastos de fabricación de urbanización"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.78",
+      "nombre": "Gastos de fabricación de construcción"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.79",
+      "nombre": "Fletes del extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.80",
+      "nombre": "Recolección de bienes del sector agropecuario y/o ganadero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.81",
+      "nombre": "Gastos no deducibles (sin requisitos fiscales)"
+    },
+    {
+      "nivel": 2,
+      "codigo": "604.82",
+      "nombre": "Otros gastos de fabricación"
+    },
+    {
+      "nivel": 1,
+      "codigo": "605",
+      "nombre": "Mano de obra directa"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.01",
+      "nombre": "Mano de obra"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.02",
+      "nombre": "Sueldos y Salarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.03",
+      "nombre": "Compensaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.04",
+      "nombre": "Tiempos extras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.05",
+      "nombre": "Premios de asistencia"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.06",
+      "nombre": "Premios de puntualidad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.07",
+      "nombre": "Vacaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.08",
+      "nombre": "Prima vacacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.09",
+      "nombre": "Prima dominical"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.10",
+      "nombre": "Días festivos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.11",
+      "nombre": "Gratificaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.12",
+      "nombre": "Primas de antigüedad"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.13",
+      "nombre": "Aguinaldo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.14",
+      "nombre": "Indemnizaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.15",
+      "nombre": "Destajo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.16",
+      "nombre": "Despensa"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.17",
+      "nombre": "Transporte"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.18",
+      "nombre": "Servicio médico"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.19",
+      "nombre": "Ayuda en gastos funerarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.20",
+      "nombre": "Fondo de ahorro"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.21",
+      "nombre": "Cuotas sindicales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.22",
+      "nombre": "PTU"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.23",
+      "nombre": "Estímulo al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.24",
+      "nombre": "Previsión social"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.25",
+      "nombre": "Aportaciones para el plan de jubilación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.26",
+      "nombre": "Otras prestaciones al personal"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.27",
+      "nombre": "Asimilados a salarios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.28",
+      "nombre": "Cuotas al IMSS"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.29",
+      "nombre": "Aportaciones al INFONAVIT"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.30",
+      "nombre": "Aportaciones al SAR"
+    },
+    {
+      "nivel": 2,
+      "codigo": "605.31",
+      "nombre": "Otros costos de mano de obra directa"
+    },
+    {
+      "nivel": 1,
+      "codigo": "606",
+      "nombre": "Facilidades administrativas fiscales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "606.01",
+      "nombre": "Facilidades administrativas fiscales"
+    },
+    {
+      "nivel": 1,
+      "codigo": "607",
+      "nombre": "Participación de los trabajadores en las utilidades"
+    },
+    {
+      "nivel": 2,
+      "codigo": "607.01",
+      "nombre": "Participación de los trabajadores en las utilidades"
+    },
+    {
+      "nivel": 1,
+      "codigo": "608",
+      "nombre": "Participación en resultados de subsidiarias"
+    },
+    {
+      "nivel": 2,
+      "codigo": "608.01",
+      "nombre": "Participación en resultados de subsidiarias"
+    },
+    {
+      "nivel": 1,
+      "codigo": "609",
+      "nombre": "Participación en resultados de asociadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "609.01",
+      "nombre": "Participación en resultados de asociadas"
+    },
+    {
+      "nivel": 1,
+      "codigo": "610",
+      "nombre": "Participación de los trabajadores en las utilidades diferida"
+    },
+    {
+      "nivel": 2,
+      "codigo": "610.01",
+      "nombre": "Participación de los trabajadores en las utilidades diferida"
+    },
+    {
+      "nivel": 1,
+      "codigo": "611",
+      "nombre": "Impuesto Sobre la renta"
+    },
+    {
+      "nivel": 2,
+      "codigo": "611.01",
+      "nombre": "Impuesto Sobre la renta"
+    },
+    {
+      "nivel": 2,
+      "codigo": "611.02",
+      "nombre": "Impuesto Sobre la renta por remanente distribuible"
+    },
+    {
+      "nivel": 1,
+      "codigo": "612",
+      "nombre": "Gastos no deducibles para CUFIN"
+    },
+    {
+      "nivel": 2,
+      "codigo": "612.01",
+      "nombre": "Gastos no deducibles para CUFIN"
+    },
+    {
+      "nivel": 1,
+      "codigo": "613",
+      "nombre": "Depreciación contable"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.01",
+      "nombre": "Depreciación de edificios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.02",
+      "nombre": "Depreciación de maquinaria y equipo Depreciación de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.04",
+      "nombre": "Depreciación de mobiliario y equipo de oficina"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.05",
+      "nombre": "Depreciación de equipo de cómputo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.06",
+      "nombre": "Depreciación de equipo de comunicación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.07",
+      "nombre": "Depreciación de activos biológicos, vegetales y semovientes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.08",
+      "nombre": "Depreciación de otros activos fijos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.09",
+      "nombre": "Depreciación de ferrocarriles"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.10",
+      "nombre": "Depreciación de embarcaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.11",
+      "nombre": "Depreciación de aviones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.12",
+      "nombre": "Depreciación de troqueles, moldes, matrices y herramental"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.13",
+      "nombre": "Depreciación de equipo de comunicaciones telefónicas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.14",
+      "nombre": "Depreciación de equipo de comunicación satelital"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.15",
+      "nombre": "Depreciación de equipo de adaptaciones para personas con capacidades diferentes Depreciación de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.17",
+      "nombre": "Depreciación de adaptaciones y mejoras"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.18",
+      "nombre": "Depreciación de otra maquinaria y equipo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "614",
+      "nombre": "Amortización contable"
+    },
+    {
+      "nivel": 2,
+      "codigo": "614.01",
+      "nombre": "Amortización de gastos diferidos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "614.02",
+      "nombre": "Amortización de gastos pre operativos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "614.03",
+      "nombre": "Amortización de regalías, asistencia técnica y otros gastos diferidos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "614.04",
+      "nombre": "Amortización de activos intangibles"
+    },
+    {
+      "nivel": 2,
+      "codigo": "614.05",
+      "nombre": "Amortización de gastos de organización"
+    },
+    {
+      "nivel": 2,
+      "codigo": "614.06",
+      "nombre": "Amortización de investigación y desarrollo de mercado"
+    },
+    {
+      "nivel": 2,
+      "codigo": "614.07",
+      "nombre": "Amortización de marcas y patentes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "614.08",
+      "nombre": "Amortización de crédito mercantil"
+    },
+    {
+      "nivel": 2,
+      "codigo": "614.09",
+      "nombre": "Amortización de gastos de instalación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "614.10",
+      "nombre": "Amortización de otros activos diferidos"
+    },
+    {
+      "nivel": null,
+      "codigo": "700",
+      "nombre": "Resultado integral de financiamiento"
+    },
+    {
+      "nivel": 1,
+      "codigo": "701",
+      "nombre": "Gastos financieros"
+    },
+    {
+      "nivel": 2,
+      "codigo": "701.01",
+      "nombre": "Pérdida cambiaria"
+    },
+    {
+      "nivel": 2,
+      "codigo": "701.02",
+      "nombre": "Pérdida cambiaria nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "701.03",
+      "nombre": "Pérdida cambiaria extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "701.04",
+      "nombre": "Intereses a cargo bancario nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "701.05",
+      "nombre": "Intereses a cargo bancario extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "701.06",
+      "nombre": "Intereses a cargo de personas físicas nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "701.07",
+      "nombre": "Intereses a cargo de personas físicas extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "701.08",
+      "nombre": "Intereses a cargo de personas morales nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "701.09",
+      "nombre": "Intereses a cargo de personas morales extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "701.10",
+      "nombre": "Comisiones bancarias"
+    },
+    {
+      "nivel": 2,
+      "codigo": "701.11",
+      "nombre": "Otros gastos financieros"
+    },
+    {
+      "nivel": 1,
+      "codigo": "702",
+      "nombre": "Productos financieros"
+    },
+    {
+      "nivel": 2,
+      "codigo": "702.01",
+      "nombre": "Utilidad cambiaria"
+    },
+    {
+      "nivel": 2,
+      "codigo": "702.02",
+      "nombre": "Utilidad cambiaria nacional parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "702.03",
+      "nombre": "Utilidad cambiaria extranjero parte relacionada"
+    },
+    {
+      "nivel": 2,
+      "codigo": "702.04",
+      "nombre": "Intereses a favor bancarios nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "702.05",
+      "nombre": "Intereses a favor bancarios extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "702.06",
+      "nombre": "Intereses a favor de personas físicas nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "702.07",
+      "nombre": "Intereses a favor de personas físicas extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "702.08",
+      "nombre": "Intereses a favor de personas morales nacional"
+    },
+    {
+      "nivel": 2,
+      "codigo": "702.09",
+      "nombre": "Intereses a favor de personas morales extranjero"
+    },
+    {
+      "nivel": 2,
+      "codigo": "702.10",
+      "nombre": "Otros productos financieros"
+    },
+    {
+      "nivel": 1,
+      "codigo": "703",
+      "nombre": "Otros gastos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.01",
+      "nombre": "Pérdida en venta y/o baja de terrenos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.02",
+      "nombre": "Pérdida en venta y/o baja de edificios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.03",
+      "nombre": "Pérdida en venta y/o baja de maquinaria y equipo Pérdida en venta y/o baja de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.05",
+      "nombre": "Pérdida en venta y/o baja de mobiliario y equipo de oficina"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.06",
+      "nombre": "Pérdida en venta y/o baja de equipo de cómputo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.07",
+      "nombre": "Pérdida en venta y/o baja de equipo de comunicación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.08",
+      "nombre": "Pérdida en venta y/o baja de activos biológicos, vegetales y semovientes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.09",
+      "nombre": "Pérdida en venta y/o baja de otros activos fijos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.10",
+      "nombre": "Pérdida en venta y/o baja de ferrocarriles"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.11",
+      "nombre": "Pérdida en venta y/o baja de embarcaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.12",
+      "nombre": "Pérdida en venta y/o baja de aviones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.13",
+      "nombre": "Pérdida en venta y/o baja de troqueles, moldes, matrices y herramental"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.14",
+      "nombre": "Pérdida en venta y/o baja de equipo de comunicaciones telefónicas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.15",
+      "nombre": "Pérdida en venta y/o baja de equipo de comunicación satelital Pérdida en venta y/o baja de equipo de adaptaciones para personas con capacidades diferentes Pérdida en venta y/o baja de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.18",
+      "nombre": "Pérdida en venta y/o baja de otra maquinaria y equipo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.19",
+      "nombre": "Pérdida por enajenación de acciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.20",
+      "nombre": "Pérdida por enajenación de partes sociales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.21",
+      "nombre": "Otros gastos"
+    },
+    {
+      "nivel": 1,
+      "codigo": "704",
+      "nombre": "Otros productos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.01",
+      "nombre": "Ganancia en venta y/o baja de terrenos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.02",
+      "nombre": "Ganancia en venta y/o baja de edificios"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.03",
+      "nombre": "Ganancia en venta y/o baja de maquinaria y equipo Ganancia en venta y/o baja de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.05",
+      "nombre": "Ganancia en venta y/o baja de mobiliario y equipo de oficina"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.06",
+      "nombre": "Ganancia en venta y/o baja de equipo de cómputo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.07",
+      "nombre": "Ganancia en venta y/o baja de equipo de comunicación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.08",
+      "nombre": "Ganancia en venta y/o baja de activos biológicos, vegetales y semovientes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.09",
+      "nombre": "Ganancia en venta y/o baja de otros activos fijos"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.10",
+      "nombre": "Ganancia en venta y/o baja de ferrocarriles"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.11",
+      "nombre": "Ganancia en venta y/o baja de embarcaciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.12",
+      "nombre": "Ganancia en venta y/o baja de aviones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.13",
+      "nombre": "Ganancia en venta y/o baja de troqueles, moldes, matrices y herramental"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.14",
+      "nombre": "Ganancia en venta y/o baja de equipo de comunicaciones telefónicas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.15",
+      "nombre": "Ganancia en venta y/o baja de equipo de comunicación satelital Ganancia en venta y/o baja de equipo de adaptaciones para personas con capacidades diferentes Ganancia en venta de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.18",
+      "nombre": "Ganancia en venta y/o baja de otra maquinaria y equipo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.19",
+      "nombre": "Ganancia por enajenación de acciones"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.20",
+      "nombre": "Ganancia por enajenación de partes sociales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.21",
+      "nombre": "Ingresos por estímulos fiscales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.22",
+      "nombre": "Ingresos por condonación de adeudo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.23",
+      "nombre": "Otros productos"
+    },
+    {
+      "nivel": null,
+      "codigo": "800",
+      "nombre": "Cuentas de orden"
+    },
+    {
+      "nivel": 1,
+      "codigo": "801",
+      "nombre": "UFIN del ejercicio"
+    },
+    {
+      "nivel": 2,
+      "codigo": "801.01",
+      "nombre": "UFIN"
+    },
+    {
+      "nivel": 2,
+      "codigo": "801.02",
+      "nombre": "Contra cuenta UFIN"
+    },
+    {
+      "nivel": 1,
+      "codigo": "802",
+      "nombre": "CUFIN del ejercicio"
+    },
+    {
+      "nivel": 2,
+      "codigo": "802.01",
+      "nombre": "CUFIN"
+    },
+    {
+      "nivel": 2,
+      "codigo": "802.02",
+      "nombre": "Contra cuenta CUFIN"
+    },
+    {
+      "nivel": 1,
+      "codigo": "803",
+      "nombre": "CUFIN de ejercicios anteriores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "803.01",
+      "nombre": "CUFIN de ejercicios anteriores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "803.02",
+      "nombre": "Contra cuenta CUFIN de ejercicios anteriores"
+    },
+    {
+      "nivel": 1,
+      "codigo": "804",
+      "nombre": "CUFINRE del ejercicio"
+    },
+    {
+      "nivel": 2,
+      "codigo": "804.01",
+      "nombre": "CUFINRE"
+    },
+    {
+      "nivel": 2,
+      "codigo": "804.02",
+      "nombre": "Contra cuenta CUFINRE"
+    },
+    {
+      "nivel": 1,
+      "codigo": "805",
+      "nombre": "CUFINRE de ejercicios anteriores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "805.01",
+      "nombre": "CUFINRE de ejercicios anteriores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "805.02",
+      "nombre": "Contra cuenta CUFINRE de ejercicios anteriores"
+    },
+    {
+      "nivel": 1,
+      "codigo": "806",
+      "nombre": "CUCA del ejercicio"
+    },
+    {
+      "nivel": 2,
+      "codigo": "806.01",
+      "nombre": "CUCA"
+    },
+    {
+      "nivel": 2,
+      "codigo": "806.02",
+      "nombre": "Contra cuenta CUCA"
+    },
+    {
+      "nivel": 1,
+      "codigo": "807",
+      "nombre": "CUCA de ejercicios anteriores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "807.01",
+      "nombre": "CUCA de ejercicios anteriores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "807.02",
+      "nombre": "Contra cuenta CUCA de ejercicios anteriores"
+    },
+    {
+      "nivel": 1,
+      "codigo": "808",
+      "nombre": "Ajuste anual por inflación acumulable"
+    },
+    {
+      "nivel": 2,
+      "codigo": "808.01",
+      "nombre": "Ajuste anual por inflación acumulable"
+    },
+    {
+      "nivel": 2,
+      "codigo": "808.02",
+      "nombre": "Acumulación del ajuste anual inflacionario"
+    },
+    {
+      "nivel": 1,
+      "codigo": "809",
+      "nombre": "Ajuste anual por inflación deducible"
+    },
+    {
+      "nivel": 2,
+      "codigo": "809.01",
+      "nombre": "Ajuste anual por inflación deducible"
+    },
+    {
+      "nivel": 2,
+      "codigo": "809.02",
+      "nombre": "Deducción del ajuste anual inflacionario"
+    },
+    {
+      "nivel": 1,
+      "codigo": "810",
+      "nombre": "Deducción de inversión"
+    },
+    {
+      "nivel": 2,
+      "codigo": "810.01",
+      "nombre": "Deducción de inversión"
+    },
+    {
+      "nivel": 2,
+      "codigo": "810.02",
+      "nombre": "Contra cuenta deducción de inversiones"
+    },
+    {
+      "nivel": 1,
+      "codigo": "811",
+      "nombre": "Utilidad o pérdida fiscal en venta y/o baja de activo fijo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "811.01",
+      "nombre": "Utilidad o pérdida fiscal en venta y/o baja de activo fijo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "811.02",
+      "nombre": "Contra cuenta utilidad o pérdida fiscal en venta y/o baja de activo fijo"
+    },
+    {
+      "nivel": 1,
+      "codigo": "812",
+      "nombre": "Utilidad o pérdida fiscal en venta acciones o partes sociales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "812.01",
+      "nombre": "Utilidad o pérdida fiscal en venta acciones o partes sociales"
+    },
+    {
+      "nivel": 2,
+      "codigo": "812.02",
+      "nombre": "Contra cuenta utilidad o pérdida fiscal en venta acciones o partes sociales"
+    },
+    {
+      "nivel": 1,
+      "codigo": "813",
+      "nombre": "Pérdidas fiscales pendientes de amortizar actualizadas de ejercicios anteriores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "813.01",
+      "nombre": "Pérdidas fiscales pendientes de amortizar actualizadas de ejercicios anteriores"
+    },
+    {
+      "nivel": 2,
+      "codigo": "813.02",
+      "nombre": "Actualización de pérdidas fiscales pendientes de amortizar de ejercicios anteriores"
+    },
+    {
+      "nivel": 1,
+      "codigo": "814",
+      "nombre": "Mercancías recibidas en consignación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "814.01",
+      "nombre": "Mercancías recibidas en consignación"
+    },
+    {
+      "nivel": 2,
+      "codigo": "814.02",
+      "nombre": "Consignación de mercancías recibidas Crédito fiscal de IVA e IEPS por la importación de mercancías para empresas certificadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "815.01",
+      "nombre": "Crédito fiscal de IVA e IEPS por la importación de mercancías"
+    },
+    {
+      "nivel": 2,
+      "codigo": "815.02",
+      "nombre": "Importación de mercancías con aplicación de crédito fiscal de IVA e IEPS Crédito fiscal de IVA e IEPS por la importación de activos fijos para empresas certificadas"
+    },
+    {
+      "nivel": 2,
+      "codigo": "816.01",
+      "nombre": "Crédito fiscal de IVA e IEPS por la importación de activo fijo"
+    },
+    {
+      "nivel": 2,
+      "codigo": "816.02",
+      "nombre": "Importación de activo fijo con aplicación de crédito fiscal de IVA e IEPS"
+    },
+    {
+      "nivel": 1,
+      "codigo": "899",
+      "nombre": "Otras cuentas de orden"
+    },
+    {
+      "nivel": 2,
+      "codigo": "899.01",
+      "nombre": "Otras cuentas de orden"
+    },
+    {
+      "nivel": 2,
+      "codigo": "899.02",
+      "nombre": "Contra cuenta otras cuentas de orden n* = Se deberá indicar el nivel en el que se encuentra la cuenta o subcuenta en el catálogo del"
+    }
+  ]
+}

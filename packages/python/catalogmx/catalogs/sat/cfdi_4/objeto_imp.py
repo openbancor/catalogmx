@@ -1,7 +1,8 @@
 """Catálogo c_ObjetoImp"""
 
 import json
-from pathlib import Path
+
+from catalogmx.utils.shared_data import get_shared_data_path
 
 
 class ObjetoImpCatalog:
@@ -14,13 +15,7 @@ class ObjetoImpCatalog:
     def _load_data(cls) -> None:
         """Carga los datos del catálogo si aún no han sido cargados"""
         if cls._data is None:
-            path = (
-                Path(__file__).parent.parent.parent.parent.parent.parent
-                / "shared-data"
-                / "sat"
-                / "cfdi_4.0"
-                / "objeto_imp.json"
-            )
+            path = get_shared_data_path("sat", "cfdi_4.0", "objeto_imp.json")
             with open(path, encoding="utf-8") as f:
                 data = json.load(f)
                 # Handle both list and dict formats

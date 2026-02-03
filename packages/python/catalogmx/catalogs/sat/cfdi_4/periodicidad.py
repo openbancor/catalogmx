@@ -2,7 +2,7 @@
 
 import json
 
-from ....helpers import get_project_root
+from catalogmx.utils.shared_data import get_shared_data_path
 
 
 class Periodicidad:
@@ -11,8 +11,7 @@ class Periodicidad:
     @classmethod
     def _load_data(cls):
         if cls._data is None:
-            root = get_project_root()
-            path = root / "packages" / "shared-data" / "sat" / "cfdi_4.0" / "c_Periodicidad.json"
+            path = get_shared_data_path("sat", "cfdi_4.0", "c_Periodicidad.json")
             with open(path, encoding="utf-8") as f:
                 json_data = json.load(f)
                 cls._data = {item["valor"]: item for item in json_data["data"]}

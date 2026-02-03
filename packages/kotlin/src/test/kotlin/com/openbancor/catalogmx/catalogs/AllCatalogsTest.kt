@@ -252,6 +252,13 @@ class AllCatalogsTest {
     // ==================== SAT CFDI 4.0 ====================
 
     @Test
+    fun `CodigoAgrupadorSatCatalog should load data`() {
+        val data = com.openbancor.catalogmx.catalogs.sat.contabilidad_electronica.CodigoAgrupadorSatCatalog.getAll()
+        assertTrue(data.isNotEmpty(), "Should have SAT código agrupador")
+        assertTrue(data.size > 1000, "Should have 1000+ entries")
+    }
+
+    @Test
     fun `RegimenFiscalCatalog should load data`() {
         val data = RegimenFiscalCatalog.getAll()
         assertTrue(data.isNotEmpty(), "Should have fiscal regimes")

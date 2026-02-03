@@ -161,6 +161,13 @@ export interface CatalogItem {
   [key: string]: string | number | boolean | null | undefined;
 }
 
+// SAT Contabilidad Electrónica (Anexo 24)
+export interface CodigoAgrupadorSAT {
+  codigo: string;
+  nombre: string;
+  nivel: number | null;
+}
+
 // SAT Comercio Exterior types
 export interface Incoterm {
   code: string;
@@ -661,4 +668,53 @@ export interface HoyNoCirculaPrograma {
     periodicidad: string;
     periodos: HoyNoCirculaPeriodoVerificacion[];
   };
+}
+
+// CFDI builder types
+export interface CfdiEmisor {
+  rfc: string;
+  nombre: string;
+  regimenFiscal: string;
+}
+
+export interface CfdiReceptor {
+  rfc: string;
+  nombre: string;
+  usoCfdi: string;
+  regimenFiscalReceptor: string;
+  domicilioFiscalReceptor: string;
+}
+
+export interface CfdiConcepto {
+  claveProdServ: string;
+  cantidad: string;
+  claveUnidad: string;
+  descripcion: string;
+  valorUnitario: string;
+  importe: string;
+  objetoImp?: string;
+  noIdentificacion?: string;
+  unidad?: string;
+  descuento?: string;
+}
+
+export interface CfdiComprobanteInput {
+  version?: string;
+  serie?: string;
+  folio?: string;
+  fecha?: string;
+  moneda: string;
+  tipoDeComprobante: string;
+  lugarExpedicion: string;
+  subTotal: string;
+  total: string;
+  exportacion?: string;
+  metodoPago?: string;
+  formaPago?: string;
+  noCertificado?: string;
+  certificado?: string;
+  sello?: string;
+  emisor: CfdiEmisor;
+  receptor: CfdiReceptor;
+  conceptos: CfdiConcepto[];
 }

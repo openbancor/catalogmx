@@ -44,6 +44,18 @@ async function preloadCatalogJson(): Promise<void> {
     { key: 'sat/impuestos/ieps_tasas.json', path: 'sat/impuestos/ieps_tasas.json' },
     { key: 'sat/impuestos/retenciones.json', path: 'sat/impuestos/retenciones.json' },
     { key: 'sat/impuestos/impuestos_locales.json', path: 'sat/impuestos/impuestos_locales.json' },
+    {
+      key: 'sat/contabilidad_electronica/codigo_agrupador_2024.json',
+      path: 'sat/contabilidad_electronica/codigo_agrupador_2024.json'
+    },
+    {
+      key: 'sat/contabilidad_electronica/codigo_agrupador_2026.json',
+      path: 'sat/contabilidad_electronica/codigo_agrupador_2026.json'
+    },
+    {
+      key: 'sat/contabilidad_electronica/codigo_agrupador_diff_2024_2026.json',
+      path: 'sat/contabilidad_electronica/codigo_agrupador_diff_2024_2026.json'
+    },
   ];
 
   const prefix = base ? `${base}/` : '/';

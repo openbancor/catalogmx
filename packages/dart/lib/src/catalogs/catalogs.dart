@@ -63,6 +63,11 @@ export 'sat/cfdi/tipo_comprobante.dart';
 export 'sat/cfdi_all.dart';
 
 // ============================================================================
+// SAT CATALOGS - CONTABILIDAD ELECTRÓNICA
+// ============================================================================
+export 'sat/contabilidad_electronica.dart';
+
+// ============================================================================
 // SAT CATALOGS - CARTA PORTE
 // ============================================================================
 export 'sat/aeropuertos.dart';

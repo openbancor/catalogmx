@@ -7,7 +7,8 @@ recomendaciones 20 y 21 de UN/ECE.
 """
 
 import json
-from pathlib import Path
+
+from catalogmx.utils.shared_data import get_shared_data_path
 from typing import TypedDict
 
 
@@ -62,13 +63,7 @@ class ClaveUnidadCatalog:
 
         # Path: catalogmx/packages/python/catalogmx/catalogs/sat/cfdi_4/clave_unidad.py
         # Target: catalogmx/packages/shared-data/sat/cfdi_4.0/clave_unidad.json
-        data_path = (
-            Path(__file__).parent.parent.parent.parent.parent.parent
-            / "shared-data"
-            / "sat"
-            / "cfdi_4.0"
-            / "clave_unidad.json"
-        )
+        data_path = get_shared_data_path("sat", "cfdi_4.0", "clave_unidad.json")
 
         with open(data_path, encoding="utf-8") as f:
             cls._data = json.load(f)

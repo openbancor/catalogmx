@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { base } from '$app/paths';
-	import { ChevronRight, FileText, CreditCard, Building2, Receipt, Truck, Globe, Percent } from 'lucide-svelte';
+	import { ChevronRight, FileText, CreditCard, Building2, Receipt, Truck, Globe, Percent, Layers } from 'lucide-svelte';
 
 	const catalogs = [
 		{
@@ -16,6 +16,17 @@
 				{ title: 'Monedas', description: '180+ divisas', href: `${base}/catalogos/sat/moneda`, icon: Globe },
 				{ title: 'Países', description: '250 países', href: `${base}/catalogos/sat/pais`, icon: Globe },
 				{ title: 'Tipos de Comprobante', description: '6 tipos', href: `${base}/catalogos/sat/tipo-comprobante`, icon: FileText },
+			]
+		},
+		{
+			category: 'Contabilidad Electrónica',
+			items: [
+				{
+					title: 'Código Agrupador SAT',
+					description: 'Catálogo de cuentas (Anexo 24)',
+					href: `${base}/catalogos/sat/contabilidad-electronica`,
+					icon: Layers
+				},
 			]
 		},
 		{

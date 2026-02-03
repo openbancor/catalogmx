@@ -283,7 +283,7 @@ def validar_datos_cfdi(codigo_rfc, regimen_fiscal, uso_cfdi, forma_pago):
 
 ## Roadmap
 
-### Versión 0.3.0 (Actual - Noviembre 2025)
+### Versión 0.5.0 (Actual - Febrero 2026)
 
 **Completado**:
 - Códigos postales SEPOMEX completos (157,252 registros)
@@ -293,8 +293,10 @@ def validar_datos_cfdi(codigo_rfc, regimen_fiscal, uso_cfdi, forma_pago):
 - Datos de población y vivienda (Censo 2020)
 - Clasificación urbano/rural
 - Documentación bilingüe
+- Implementación SQLite para catálogos grandes
+- Catálogos SAT de contabilidad electrónica (Código Agrupador)
 
-### Versión 0.4.0 (Planeado - Q1 2025)
+### Versión 0.6.0 (Planeado - 2026)
 
 **Planeado**:
 - Implementación SQLite para catálogos grandes
@@ -304,7 +306,7 @@ def validar_datos_cfdi(codigo_rfc, regimen_fiscal, uso_cfdi, forma_pago):
 - Ejemplos de servidor REST API
 - Ejemplos de API GraphQL
 
-### Versión 0.5.0 (Futuro - Q2-Q3 2025)
+### Versión 0.7.0 (Futuro - 2027)
 
 **Planeado**:
 - Validadores adicionales (ISAN, placas vehiculares, MRZ)
@@ -321,7 +323,7 @@ def validar_datos_cfdi(codigo_rfc, regimen_fiscal, uso_cfdi, forma_pago):
 
 ## Estrategia SQLite
 
-Para catálogos con >10,000 registros, se proporcionará opción SQLite en v0.4.0:
+Para catálogos con >10,000 registros, se proporciona opción SQLite desde v0.5.0:
 
 **Beneficios**:
 - 30-40% menor tamaño de archivo
@@ -330,7 +332,7 @@ Para catálogos con >10,000 registros, se proporcionará opción SQLite en v0.4.
 - Consultas complejas sin cargar todo el conjunto de datos
 - Eficiente en memoria
 
-**Implementación Planeada** (v0.4.0):
+**Implementación Disponible** (v0.5.0):
 
 | Catálogo | Tamaño JSON | Tamaño SQLite | Ganancia de Performance |
 |---------|-------------|---------------|------------------------|
@@ -345,10 +347,10 @@ Para catálogos con >10,000 registros, se proporcionará opción SQLite en v0.4.
 
 | Catálogo | Frecuencia | Fuente | Auto-actualización |
 |---------|-----------|--------|-------------------|
-| SEPOMEX | Mensual | correosdemexico.gob.mx | Planeado (v0.4.0) |
+| SEPOMEX | Mensual | correosdemexico.gob.mx | Planeado (v0.6.0) |
 | INEGI | Anual | inegi.org.mx | Manual |
-| SAT CFDI | Trimestral | sat.gob.mx | Planeado (v0.4.0) |
-| Banxico | Trimestral | banxico.org.mx | Planeado (v0.4.0) |
+| SAT CFDI | Trimestral | sat.gob.mx | Planeado (v0.6.0) |
+| Banxico | Trimestral | banxico.org.mx | Planeado (v0.6.0) |
 
 ### Proceso Actual
 
@@ -362,7 +364,7 @@ python scripts/process_sepomex_file.py
 python scripts/process_inegi_municipios.py
 ```
 
-**Actualizaciones automáticas planeadas para v0.4.0**
+**Actualizaciones automáticas planeadas para v0.6.0**
 
 ---
 
@@ -489,4 +491,4 @@ Bancos:              110
 
 ---
 
-**catalogmx** v0.3.0 | Noviembre 2025 | Hecho para la comunidad de desarrolladores mexicanos
+**catalogmx** v0.5.0 | Febrero 2026 | Hecho para la comunidad de desarrolladores mexicanos

@@ -1,0 +1,333 @@
+{
+  "_meta": {
+    "catalog": "sat_codigo_agrupador_diff",
+    "from_version": "2024-01-22",
+    "to_version": "2026-01-13",
+    "source_pdf_2024": "https://www.sat.gob.mx/minisitio/NormatividadRMFyRGCE/documentos2024/rmf/anexos/Anexo_24_RMF2024-22012024.pdf",
+    "source_pdf_2026": "https://www.sat.gob.mx/minisitio/NormatividadRMFyRGCE/documentos2026/rmf/anexos/Anexo_24_RMF2026-13012026.pdf",
+    "generated_on": "2026-02-03",
+    "counts": {
+      "added": 21,
+      "removed": 0,
+      "changed": 16
+    }
+  },
+  "added": [
+    {
+      "nivel": 1,
+      "codigo": "154",
+      "nombre": "Automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 1,
+      "codigo": "168",
+      "nombre": "Maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "168.01",
+      "nombre": "Maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.03",
+      "nombre": "Depreciación acumulada de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.15",
+      "nombre": "Depreciación acumulada de equipo de adaptaciones para personas con capacidades diferentes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "171.16",
+      "nombre": "Depreciación acumulada de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.03",
+      "nombre": "Pérdida por deterioro acumulado de             automóviles,   autobuses,   camiones   de   carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.15",
+      "nombre": "Pérdida por deterioro acumulado de equipo de adaptaciones para personas con capacidades diferentes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "172.16",
+      "nombre": "Pérdida por deterioro acumulado de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.09",
+      "nombre": "Depreciación de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 2,
+      "codigo": "504.22",
+      "nombre": "Depreciación de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.03",
+      "nombre": "Depreciación de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 2,
+      "codigo": "613.16",
+      "nombre": "Depreciación de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.04",
+      "nombre": "Pérdida en venta y/o baja de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.16",
+      "nombre": "Pérdida en venta y/o baja de equipo de adaptaciones para personas con capacidades diferentes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "703.17",
+      "nombre": "Pérdida en venta y/o baja de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.04",
+      "nombre": "Ganancia en venta y/o baja de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.16",
+      "nombre": "Ganancia en venta y/o baja de equipo de adaptaciones para personas con capacidades diferentes"
+    },
+    {
+      "nivel": 2,
+      "codigo": "704.17",
+      "nombre": "Ganancia en venta de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+    },
+    {
+      "nivel": 1,
+      "codigo": "815",
+      "nombre": "Crédito fiscal de IVA e IEPS por la importación de mercancías para empresas certificadas"
+    },
+    {
+      "nivel": 1,
+      "codigo": "816",
+      "nombre": "Crédito fiscal de IVA e IEPS por la importación de activos fijos para empresas certificadas"
+    }
+  ],
+  "removed": [],
+  "changed": [
+    {
+      "codigo": "153.01",
+      "before": {
+        "nivel": 2,
+        "codigo": "153.01",
+        "nombre": "Maquinaria y equipo Automóviles,     autobuses,      camiones   de   carga,   tractocamiones,   montacargas    y remolques"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "153.01",
+        "nombre": "Maquinaria y equipo"
+      }
+    },
+    {
+      "codigo": "167.01",
+      "before": {
+        "nivel": 2,
+        "codigo": "167.01",
+        "nombre": "Equipo de adaptaciones para personas con capacidades diferentes Maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente Maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "167.01",
+        "nombre": "Equipo de adaptaciones para personas con capacidades diferentes"
+      }
+    },
+    {
+      "codigo": "171.02",
+      "before": {
+        "nivel": 2,
+        "codigo": "171.02",
+        "nombre": "Depreciación acumulada de maquinaria y equipo Depreciación acumulada de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "171.02",
+        "nombre": "Depreciación acumulada de maquinaria y equipo"
+      }
+    },
+    {
+      "codigo": "171.14",
+      "before": {
+        "nivel": 2,
+        "codigo": "171.14",
+        "nombre": "Depreciación acumulada de equipo de comunicación satelital Depreciación acumulada de equipo de adaptaciones para personas con capacidades diferentes Depreciación acumulada de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "171.14",
+        "nombre": "Depreciación acumulada de equipo de comunicación satelital"
+      }
+    },
+    {
+      "codigo": "172.02",
+      "before": {
+        "nivel": 2,
+        "codigo": "172.02",
+        "nombre": "Pérdida por deterioro acumulado de maquinaria y equipo Pérdida por deterioro acumulado de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "172.02",
+        "nombre": "Pérdida por deterioro acumulado de maquinaria y equipo"
+      }
+    },
+    {
+      "codigo": "172.14",
+      "before": {
+        "nivel": 2,
+        "codigo": "172.14",
+        "nombre": "Pérdida por deterioro acumulado de equipo de comunicación satelital Pérdida por deterioro acumulado de equipo de adaptaciones para personas con capacidades diferentes Pérdida por deterioro acumulado de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "172.14",
+        "nombre": "Pérdida por deterioro acumulado de equipo de comunicación satelital"
+      }
+    },
+    {
+      "codigo": "504.08",
+      "before": {
+        "nivel": 2,
+        "codigo": "504.08",
+        "nombre": "Depreciación de maquinaria y equipo Depreciación de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "504.08",
+        "nombre": "Depreciación de maquinaria y equipo"
+      }
+    },
+    {
+      "codigo": "504.21",
+      "before": {
+        "nivel": 2,
+        "codigo": "504.21",
+        "nombre": "Depreciación de equipo de adaptaciones para personas con capacidades diferentes Depreciación de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "504.21",
+        "nombre": "Depreciación de equipo de adaptaciones para personas con capacidades diferentes"
+      }
+    },
+    {
+      "codigo": "613.02",
+      "before": {
+        "nivel": 2,
+        "codigo": "613.02",
+        "nombre": "Depreciación de maquinaria y equipo Depreciación de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "613.02",
+        "nombre": "Depreciación de maquinaria y equipo"
+      }
+    },
+    {
+      "codigo": "613.15",
+      "before": {
+        "nivel": 2,
+        "codigo": "613.15",
+        "nombre": "Depreciación de equipo de adaptaciones para personas con capacidades diferentes Depreciación de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "613.15",
+        "nombre": "Depreciación de equipo de adaptaciones para personas con capacidades diferentes"
+      }
+    },
+    {
+      "codigo": "703.03",
+      "before": {
+        "nivel": 2,
+        "codigo": "703.03",
+        "nombre": "Pérdida en venta y/o baja de maquinaria y equipo Pérdida en venta y/o baja de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "703.03",
+        "nombre": "Pérdida en venta y/o baja de maquinaria y equipo"
+      }
+    },
+    {
+      "codigo": "703.15",
+      "before": {
+        "nivel": 2,
+        "codigo": "703.15",
+        "nombre": "Pérdida en venta y/o baja de equipo de comunicación satelital Pérdida en venta y/o baja de equipo de adaptaciones para personas con capacidades diferentes Pérdida en venta y/o baja de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "703.15",
+        "nombre": "Pérdida en venta y/o baja de equipo de comunicación satelital"
+      }
+    },
+    {
+      "codigo": "704.03",
+      "before": {
+        "nivel": 2,
+        "codigo": "704.03",
+        "nombre": "Ganancia en venta y/o baja de maquinaria y equipo Ganancia en venta y/o baja de automóviles, autobuses, camiones de carga, tractocamiones, montacargas y remolques"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "704.03",
+        "nombre": "Ganancia en venta y/o baja de maquinaria y equipo"
+      }
+    },
+    {
+      "codigo": "704.15",
+      "before": {
+        "nivel": 2,
+        "codigo": "704.15",
+        "nombre": "Ganancia en venta y/o baja de equipo de comunicación satelital Ganancia en venta y/o baja de equipo de adaptaciones para personas con capacidades diferentes Ganancia en venta de maquinaria y equipo de generación de energía de fuentes renovables o de sistemas de cogeneración de electricidad eficiente"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "704.15",
+        "nombre": "Ganancia en venta y/o baja de equipo de comunicación satelital"
+      }
+    },
+    {
+      "codigo": "814.02",
+      "before": {
+        "nivel": 2,
+        "codigo": "814.02",
+        "nombre": "Consignación de mercancías recibidas Crédito fiscal de IVA e IEPS por la importación de mercancías para empresas certificadas"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "814.02",
+        "nombre": "Consignación de mercancías recibidas"
+      }
+    },
+    {
+      "codigo": "815.02",
+      "before": {
+        "nivel": 2,
+        "codigo": "815.02",
+        "nombre": "Importación de mercancías con aplicación de crédito fiscal de IVA e IEPS Crédito fiscal de IVA e IEPS por la importación de activos fijos para empresas certificadas"
+      },
+      "after": {
+        "nivel": 2,
+        "codigo": "815.02",
+        "nombre": "Importación de mercancías con aplicación de crédito fiscal de IVA e IEPS"
+      }
+    }
+  ]
+}

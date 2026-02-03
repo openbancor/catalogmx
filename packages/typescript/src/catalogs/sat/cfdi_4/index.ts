@@ -13,3 +13,4 @@ export { TipoRelacionCatalog } from './tipo-relacion';
 export { ObjetoImpCatalog } from './objeto-imp';
 export { ClaveUnidadCatalog } from './clave-unidad';
 export { ClaveProdServCatalog } from './clave-prod-serv';
+export { CodigoPostalCatalog } from './codigo-postal';
