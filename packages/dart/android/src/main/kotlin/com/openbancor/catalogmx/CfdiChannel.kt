@@ -1,4 +1,4 @@
-package com.openbancor.catalogmx.flutter
+package com.openbancor.catalogmx
 
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel

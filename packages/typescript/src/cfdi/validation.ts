@@ -44,8 +44,16 @@ export async function validateCfdiXsd(
     throw new Error('XSD validation is only supported in Node.js');
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const libxml = require('libxmljs2');
+  let libxml: any;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    libxml = require('libxmljs2');
+  } catch (error: any) {
+    const message = error?.message?.includes('Cannot find module')
+      ? 'libxmljs2 is not installed. Install optional dependency libxmljs2 for XSD validation.'
+      : String(error?.message || error);
+    throw new Error(message);
+  }
   const xmlDoc = libxml.parseXml(xml);
   const xsdDoc = libxml.parseXml(xsd);
   const valid = xmlDoc.validate(xsdDoc);

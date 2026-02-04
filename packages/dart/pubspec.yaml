@@ -8,12 +8,16 @@ documentation: https://github.com/openbancor/catalogmx#readme
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=1.10.0'
 
 dependencies:
   # For accent removal (like unidecode in Python)
   diacritic: ^0.1.5
   # For HTTP requests in data updater
   http: ^1.1.0
+  # Flutter platform channels (CFDI validation/signing on device)
+  flutter:
+    sdk: flutter
   # For XML parsing (CFDI helpers)
   xml: ^6.5.0
 
@@ -30,6 +34,15 @@ platforms:
   macos:
   web:
   windows:
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.openbancor.catalogmx
+        pluginClass: CatalogmxPlugin
+      ios:
+        pluginClass: CatalogmxPlugin
 
 topics:
   - mexico

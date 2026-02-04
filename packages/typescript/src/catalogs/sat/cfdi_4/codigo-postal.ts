@@ -10,7 +10,7 @@
  * For browser environments, use setCatalogJsonData() to pre-load data.
  */
 
-import { loadCatalogRows } from '../../../utils/catalog-loader';
+import { loadCatalogArray } from '../../../utils/catalog-loader';
 
 export interface CodigoPostalInfo {
   cp: string;
@@ -34,10 +34,10 @@ export class CodigoPostalCatalog {
     if (!this._data) {
       // Try loading from shared data; in browser, this requires pre-loaded data
       try {
-        this._data = loadCatalogRows<CodigoPostalInfo>('sepomex/codigos_postales_completo.json');
+        this._data = loadCatalogArray<CodigoPostalInfo>('sepomex/codigos_postales_completo.json');
       } catch {
         // Fallback to summary file
-        this._data = loadCatalogRows<CodigoPostalInfo>('sepomex/codigos_postales.json');
+        this._data = loadCatalogArray<CodigoPostalInfo>('sepomex/codigos_postales.json');
       }
     }
     return this._data;
