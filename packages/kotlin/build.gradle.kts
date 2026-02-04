@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.openbancor"
-version = "0.5.0"
+version = "0.5.1"
 description = "Mexican financial and government catalog data library for Kotlin/JVM"
 
 repositories {

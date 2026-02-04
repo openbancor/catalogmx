@@ -79,6 +79,12 @@ This release achieves **100% catalog parity** with Python and TypeScript version
 ### Total Records
 - **470,000+ total records** across all catalogs
 
+## [0.5.1] - 2026-02-04
+
+### Fixed
+- Flutter plugin packaging with native MethodChannel registration
+- iOS CFDI native handler for XSD validation and signing
+
 ## [0.5.0] - 2026-02-03
 
 ### Added

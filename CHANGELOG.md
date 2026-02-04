@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-02-04
+
+### Fixed
+- Flutter plugin packaging and native channel registration
+- iOS CFDI validation/signing native handler
+- Optional libxml dependency handling for TypeScript XSD validation
+- WASM assets inclusion for webapp XSD validation
+
 ## [0.5.0] - 2026-02-03
 
 ### Added
@@ -72,7 +80,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - RFC, CURP, CLABE, NSS validators
 - Basic catalog infrastructure
 
-[Unreleased]: https://github.com/openbancor/catalogmx/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/openbancor/catalogmx/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/openbancor/catalogmx/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/openbancor/catalogmx/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/openbancor/catalogmx/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/openbancor/catalogmx/compare/v0.2.0...v0.3.0

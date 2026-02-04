@@ -1,6 +1,6 @@
 {
   "name": "catalogmx",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Comprehensive Mexican Data Validators and Official Catalogs - 170,505+ records including complete SEPOMEX, INEGI municipalities and localities with GPS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
