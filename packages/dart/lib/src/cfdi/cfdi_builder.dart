@@ -99,7 +99,8 @@ class CfdiComprobanteInput {
 
 class CfdiBuilder {
   static String buildUnsignedXml(CfdiComprobanteInput data) {
-    final fecha = data.fecha ?? DateTime.now().toIso8601String().substring(0, 19);
+    final fecha =
+        data.fecha ?? DateTime.now().toIso8601String().substring(0, 19);
 
     String attr(String name, String? value) {
       if (value == null || value.isEmpty) return '';

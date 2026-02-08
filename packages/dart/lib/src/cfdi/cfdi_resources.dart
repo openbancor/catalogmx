@@ -12,7 +12,8 @@ class CfdiResourceLocator {
   }
 
   String cfdi40Xsd() {
-    return satUrlToLocalPath('http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd');
+    return satUrlToLocalPath(
+        'http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd');
   }
 
   String cadenaOriginal40Xslt() {

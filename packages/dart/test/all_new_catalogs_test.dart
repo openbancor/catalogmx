@@ -177,7 +177,8 @@ void main() {
         expect(CodigoAgrupadorSATCatalog.isValid('101.01'), isTrue);
         expect(CodigoAgrupadorSATCatalog.isValid('999.99'), isFalse);
       } else {
-        expect(CodigoAgrupadorSATCatalog.isValid('101.01'), anyOf(isTrue, isFalse));
+        expect(CodigoAgrupadorSATCatalog.isValid('101.01'),
+            anyOf(isTrue, isFalse));
       }
     });
 

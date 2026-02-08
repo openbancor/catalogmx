@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 import pytest
@@ -17,6 +16,12 @@ def test_shared_data_default_package_location(monkeypatch):
     monkeypatch.delenv("CATALOGMX_SHARED_DATA", raising=False)
     root = sd.get_shared_data_root()
     expected = Path(sd.__file__).resolve().parents[1] / "shared-data"
+    if not expected.exists():
+        for parent in Path(sd.__file__).resolve().parents:
+            repo_candidate = parent / "packages" / "shared-data"
+            if repo_candidate.exists():
+                expected = repo_candidate
+                break
     assert root == expected
     assert root.exists()
 

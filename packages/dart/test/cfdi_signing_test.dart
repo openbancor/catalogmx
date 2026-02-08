@@ -3,7 +3,8 @@ import 'package:test/test.dart';
 
 void main() {
   test('applySelloToXml injects attributes', () {
-    const xml = '<cfdi:Comprobante Version="4.0"><cfdi:Emisor /></cfdi:Comprobante>';
+    const xml =
+        '<cfdi:Comprobante Version="4.0"><cfdi:Emisor /></cfdi:Comprobante>';
     final signed = CfdiSigning.applySelloToXml(
       xml: xml,
       sello: 'abc123',
