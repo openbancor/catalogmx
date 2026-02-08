@@ -4,6 +4,21 @@
 	import { onMount } from 'svelte';
 	import { CLABEValidator } from '$lib/catalogmx';
 	import { query } from '$lib/db';
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/validadores/clabe`;
+	const clabeJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'WebPage',
+		name: 'Validador CLABE',
+		url: canonicalUrl,
+		description: 'Valida CLABE de 18 dígitos y decodifica banco/plaza para transferencias SPEI en México.',
+		mainEntity: {
+			'@type': 'SoftwareApplication',
+			name: 'Validador CLABE catalogmx',
+			applicationCategory: 'FinanceApplication',
+			operatingSystem: 'Web'
+		}
+	};
 
 	// State
 	let clabe = $state('');
@@ -133,6 +148,16 @@
 <svelte:head>
 	<title>Validador CLABE - catalogmx</title>
 	<meta name="description" content="Valida CLABE (Clave Bancaria Estandarizada). Verifica formato, dígito de control y decodifica banco, plaza y cuenta." />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Validador CLABE (18 dígitos) - catalogmx" />
+	<meta property="og:description" content="Valida CLABE, verifica dígito de control y decodifica banco/plaza." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Validador CLABE - catalogmx" />
+	<meta name="twitter:description" content="Validación CLABE para SPEI con reglas oficiales de México." />
+	<script type="application/ld+json">{JSON.stringify(clabeJsonLd)}</script>
 </svelte:head>
 
 <!-- Hero -->
@@ -209,6 +234,13 @@
 							<li>• 11 dígitos: Número de cuenta</li>
 							<li>• 1 dígito: Dígito de control</li>
 						</ul>
+					</div>
+
+					<div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+						<p class="text-sm text-blue-800 dark:text-blue-300">
+							<strong>Compatibilidad:</strong> La validación algorítmica de CLABE funciona sin catálogos
+							externos. La decodificación de banco/plaza requiere cargar catálogos Banxico.
+						</p>
 					</div>
 				</div>
 			</div>

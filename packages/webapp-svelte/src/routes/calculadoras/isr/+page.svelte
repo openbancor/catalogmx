@@ -54,7 +54,7 @@
 				cuotaFija: result.cuota_fija,
 				impuestoMarginal: result.impuesto_marginal,
 				isrCausado: result.isr_causado,
-				subsidioEmpleo: result.subsidio_empleo,
+				subsidioEmpleo: result.subsidio_empleo ?? 0,
 				isrRetener: result.isr_a_retener,
 				tasaEfectiva: result.tasa_efectiva
 			};

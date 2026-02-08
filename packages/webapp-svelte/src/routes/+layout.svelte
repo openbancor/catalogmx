@@ -112,7 +112,7 @@
 		return $page.url.pathname === path || $page.url.pathname.startsWith(`${path}/`);
 	}
 
-	const activeSection = $derived(() => sectionNav.find(section => $page.url.pathname.startsWith(section.root)));
+	const activeSection = $derived(sectionNav.find(section => $page.url.pathname.startsWith(section.root)));
 
 	$effect(() => {
 		darkMode = document.documentElement.classList.contains('dark');

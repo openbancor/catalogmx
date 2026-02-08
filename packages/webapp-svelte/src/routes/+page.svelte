@@ -4,6 +4,26 @@
 	import { base } from '$app/paths';
 	import { queryOne } from '$lib/db';
 
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/`;
+	const packageLinks = [
+		{ label: 'PyPI', href: 'https://pypi.org/project/catalogmx/' },
+		{ label: 'npm', href: 'https://www.npmjs.com/package/catalogmx' },
+		{ label: 'pub.dev', href: 'https://pub.dev/packages/catalogmx' }
+	];
+	const homeJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		name: 'catalogmx',
+		url: SITE_URL,
+		description: 'Catálogos oficiales de México y validadores de RFC, CURP, CLABE y NSS.',
+		potentialAction: {
+			'@type': 'SearchAction',
+			target: `${SITE_URL}/catalogos`,
+			'query-input': 'required name=query'
+		}
+	};
+
 	// Live data state
 	let udiData = $state<{ value: number; date: string } | null>(null);
 	let exchangeData = $state<{ rate: number; date: string } | null>(null);
@@ -127,6 +147,17 @@
 <svelte:head>
 	<title>catalogmx - Catálogos Oficiales de México</title>
 	<meta name="description" content="Catálogos oficiales de México: SAT, INEGI, Banxico, SEPOMEX. Más de 470,000 registros. Validadores de RFC, CURP, CLABE. Calculadoras fiscales." />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="catalogmx - Catálogos Oficiales de México" />
+	<meta property="og:description" content="Validadores de RFC, CURP, CLABE y NSS, más catálogos oficiales de SAT, INEGI, Banxico y SEPOMEX." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta property="og:site_name" content="catalogmx" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="catalogmx - Catálogos Oficiales de México" />
+	<meta name="twitter:description" content="Validadores de RFC, CURP, CLABE y NSS con catálogos oficiales de México." />
+	<script type="application/ld+json">{JSON.stringify(homeJsonLd)}</script>
 </svelte:head>
 
 <!-- Hero -->
@@ -148,6 +179,10 @@
 				<a href="{base}/validadores" class="btn btn-secondary">
 					<CheckCircle class="h-4 w-4" />
 					Validadores
+				</a>
+				<a href="{base}/validadores/clabe" class="btn btn-secondary">
+					<Building2 class="h-4 w-4" />
+					Validador CLABE
 				</a>
 				<a href="{base}/calculadoras" class="btn btn-secondary">
 					<Calculator class="h-4 w-4" />
@@ -428,6 +463,19 @@
 					<br />
 					<span class="text-green-400">npm install</span> <span class="text-white">catalogmx</span>
 				</div>
+			</div>
+
+			<div class="mt-6 flex flex-wrap gap-3">
+				{#each packageLinks as pkg}
+					<a
+						href={pkg.href}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:border-brand-400 hover:text-white transition-colors"
+					>
+						Ver paquete en {pkg.label}
+					</a>
+				{/each}
 			</div>
 		</div>
 	</div>

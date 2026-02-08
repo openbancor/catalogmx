@@ -47,6 +47,7 @@
 		salarioMensual: number;
 		cuotaMensual: number;
 		cuotaAnual: number;
+		porcentajeTotal: number;
 	}
 
 	interface Modalidad10Result {
@@ -112,7 +113,8 @@
 			salarioDiario,
 			salarioMensual: result.salario_base_cotizacion,
 			cuotaMensual: result.cuota_mensual,
-			cuotaAnual: result.cuota_mensual * 12
+			cuotaAnual: result.cuota_mensual * 12,
+			porcentajeTotal: result.porcentaje_total
 		};
 	}
 
@@ -405,7 +407,7 @@
 							<div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
 								<span class="text-slate-600 dark:text-slate-400">Tasa total</span>
 								<span class="font-medium text-slate-900 dark:text-slate-100 tabular-nums">
-									{(imssTablesData.modalidad_40.cuota_mensual.porcentaje_total * 100).toFixed(2)}%
+									{(resultadoMod40.porcentajeTotal * 100).toFixed(2)}%
 								</span>
 							</div>
 						</div>

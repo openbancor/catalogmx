@@ -2,7 +2,17 @@
 	import { base } from '$app/paths';
 	import { ChevronRight, Calculator, FileText, TrendingUp, Percent, Receipt } from 'lucide-svelte';
 
-	const catalogs = [
+	type CatalogColor = 'blue' | 'green' | 'orange' | 'purple' | 'red';
+	interface ImpuestoCatalog {
+		id: string;
+		title: string;
+		description: string;
+		icon: typeof Calculator;
+		count: string;
+		color: CatalogColor;
+	}
+
+	const catalogs: ImpuestoCatalog[] = [
 		{
 			id: 'isr-tablas',
 			title: 'Tablas de ISR',
@@ -45,7 +55,7 @@
 		}
 	];
 
-	const colorClasses = {
+	const colorClasses: Record<CatalogColor, { bg: string; icon: string; badge: string }> = {
 		blue: {
 			bg: 'bg-blue-100 dark:bg-blue-900/30',
 			icon: 'text-blue-600 dark:text-blue-400',

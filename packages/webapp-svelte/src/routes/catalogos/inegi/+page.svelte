@@ -2,7 +2,17 @@
 	import { base } from '$app/paths';
 	import { ChevronRight, MapPin, Building, Map, Layers } from 'lucide-svelte';
 
-	const catalogs = [
+	interface InegiCatalog {
+		id: string;
+		name: string;
+		description: string;
+		count: number;
+		icon: typeof MapPin;
+		href: string;
+		disabled?: boolean;
+	}
+
+	const catalogs: InegiCatalog[] = [
 		{
 			id: 'estados',
 			name: 'Estados de Mexico',

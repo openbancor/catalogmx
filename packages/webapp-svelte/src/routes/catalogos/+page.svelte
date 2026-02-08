@@ -4,7 +4,16 @@
 
 	let searchQuery = $state('');
 
-	const allCatalogs = [
+	interface CatalogItem {
+		source: string;
+		id: string;
+		name: string;
+		count: number;
+		description: string;
+		disabled?: boolean;
+	}
+
+	const allCatalogs: CatalogItem[] = [
 		// SAT CFDI 4.0
 		{ source: 'SAT', id: 'cfdi', name: 'Productos y Servicios (c_ClaveProdServ)', count: 52000, description: 'Claves de productos y servicios para CFDI 4.0' },
 		{ source: 'SAT', id: 'unidades', name: 'Claves de Unidad (c_ClaveUnidad)', count: 2800, description: 'Unidades de medida para facturación' },
@@ -93,11 +102,11 @@
 	);
 
 	const groupedCatalogs = $derived(
-		filteredCatalogs.reduce((acc, catalog) => {
+		filteredCatalogs.reduce<Record<string, CatalogItem[]>>((acc, catalog) => {
 			if (!acc[catalog.source]) acc[catalog.source] = [];
 			acc[catalog.source].push(catalog);
 			return acc;
-		}, {} as Record<string, typeof allCatalogs>)
+		}, {})
 	);
 
 	function formatCount(num: number): string {

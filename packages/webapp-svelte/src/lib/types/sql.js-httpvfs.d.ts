@@ -2,7 +2,10 @@ declare module 'sql.js-httpvfs' {
   export interface SqliteHttpVfsConfigInline {
     serverMode: 'full' | 'chunked';
     requestChunkSize: number;
-    url: string;
+    url?: string;
+    urlPrefix?: string;
+    serverChunkSize?: number;
+    suffixLength?: number;
     databaseLengthBytes?: number;
     cacheBust?: string;
   }

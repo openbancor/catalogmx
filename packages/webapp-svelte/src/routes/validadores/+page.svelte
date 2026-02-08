@@ -1,6 +1,24 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import { CheckCircle2, CreditCard, User, Building2, IdCard } from 'lucide-svelte';
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/validadores`;
+	const validatorsJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		name: 'Validadores de catalogmx',
+		url: canonicalUrl,
+		description: 'Validadores de RFC, CURP, CLABE y NSS para México.',
+		mainEntity: {
+			'@type': 'ItemList',
+			itemListElement: [
+				{ '@type': 'ListItem', position: 1, name: 'Validador RFC', url: `${SITE_URL}/validadores/rfc` },
+				{ '@type': 'ListItem', position: 2, name: 'Validador CURP', url: `${SITE_URL}/validadores/curp` },
+				{ '@type': 'ListItem', position: 3, name: 'Validador CLABE', url: `${SITE_URL}/validadores/clabe` },
+				{ '@type': 'ListItem', position: 4, name: 'Validador NSS', url: `${SITE_URL}/validadores/nss` }
+			]
+		}
+	};
 
 	const validators = [
 		{
@@ -73,6 +91,16 @@
 <svelte:head>
 	<title>Validadores - catalogmx</title>
 	<meta name="description" content="Validadores de identificadores mexicanos: RFC, CURP, CLABE, NSS. Validación en tiempo real con decodificación de información." />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Validadores RFC, CURP, CLABE y NSS - catalogmx" />
+	<meta property="og:description" content="Valida identificadores mexicanos en línea: RFC, CURP, CLABE y NSS." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Validadores RFC, CURP, CLABE y NSS - catalogmx" />
+	<meta name="twitter:description" content="Valida RFC, CURP, CLABE y NSS con reglas oficiales." />
+	<script type="application/ld+json">{JSON.stringify(validatorsJsonLd)}</script>
 </svelte:head>
 
 <!-- Hero -->

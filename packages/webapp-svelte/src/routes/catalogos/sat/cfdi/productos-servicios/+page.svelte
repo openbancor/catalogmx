@@ -74,12 +74,12 @@
 				const searchPattern = `%${searchNormalized}%`;
 
 				// SQL expressions for normalized columns
-				const normClave = sqlNormalize('c_ClaveProdServ');
-				const normDesc = sqlNormalize('Descripcion');
+				const normClave = sqlNormalize('clave');
+				const normDesc = sqlNormalize('descripcion');
 
 				// Get count for search
 				const countResult = await query<{ count: number }>(
-					`SELECT COUNT(*) as count FROM c_ClaveProdServ
+					`SELECT COUNT(*) as count FROM clave_prod_serv
 					 WHERE ${normClave} LIKE '${searchPattern}'
 					    OR ${normDesc} LIKE '${searchPattern}'`
 				);
@@ -87,19 +87,19 @@
 
 				// Get data for search
 				data = await query<ClaveProdServ>(
-					`SELECT c_ClaveProdServ, Descripcion
-					 FROM c_ClaveProdServ
+					`SELECT clave AS c_ClaveProdServ, descripcion AS Descripcion
+					 FROM clave_prod_serv
 					 WHERE ${normClave} LIKE '${searchPattern}'
 					    OR ${normDesc} LIKE '${searchPattern}'
-					 ORDER BY c_ClaveProdServ
+					 ORDER BY clave
 					 LIMIT ${limitNum} OFFSET ${offsetNum}`
 				);
 			} else {
 				// Normal mode with pagination
 				data = await query<ClaveProdServ>(
-					`SELECT c_ClaveProdServ, Descripcion
-					 FROM c_ClaveProdServ
-					 ORDER BY c_ClaveProdServ
+					`SELECT clave AS c_ClaveProdServ, descripcion AS Descripcion
+					 FROM clave_prod_serv
+					 ORDER BY clave
 					 LIMIT ${limitNum} OFFSET ${offsetNum}`
 				);
 			}
@@ -114,15 +114,15 @@
 
 	async function loadCounts() {
 		try {
-			totalCount = await count('c_ClaveProdServ');
+			totalCount = await count('clave_prod_serv');
 			// Count distinct sectors (first 2 digits of code)
 			const sectorResult = await query<{ cnt: number }>(
-				`SELECT COUNT(DISTINCT substr(c_ClaveProdServ, 1, 2)) as cnt FROM c_ClaveProdServ`
+				`SELECT COUNT(DISTINCT substr(clave, 1, 2)) as cnt FROM clave_prod_serv`
 			);
 			sectorCount = sectorResult[0]?.cnt || 0;
 			// Count distinct families (first 6 digits of code)
 			const familyResult = await query<{ cnt: number }>(
-				`SELECT COUNT(DISTINCT substr(c_ClaveProdServ, 1, 6)) as cnt FROM c_ClaveProdServ`
+				`SELECT COUNT(DISTINCT substr(clave, 1, 6)) as cnt FROM clave_prod_serv`
 			);
 			familyCount = familyResult[0]?.cnt || 0;
 		} catch (e) {
@@ -188,7 +188,7 @@
 				</button>
 				<button
 					class="btn btn-secondary"
-					onclick={() => copyToClipboard('SELECT * FROM c_ClaveProdServ LIMIT 100')}
+					onclick={() => copyToClipboard('SELECT * FROM clave_prod_serv LIMIT 100')}
 				>
 					{#if copied}
 						<Check class="h-4 w-4 text-green-500" />

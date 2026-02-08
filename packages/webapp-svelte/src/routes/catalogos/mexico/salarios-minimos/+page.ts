@@ -1,2 +1,2 @@
-// Disable prerendering for this page since it loads data dynamically
-export const prerender = false;
+// Prerender shell so direct route loads with HTTP 200 on static hosting.
+export const prerender = true;

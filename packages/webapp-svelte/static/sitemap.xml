@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://catalogmx.openbancor.com/</loc>
+  </url>
+  <url>
+    <loc>https://catalogmx.openbancor.com/catalogos</loc>
+  </url>
+  <url>
+    <loc>https://catalogmx.openbancor.com/validadores</loc>
+  </url>
+  <url>
+    <loc>https://catalogmx.openbancor.com/validadores/rfc</loc>
+  </url>
+  <url>
+    <loc>https://catalogmx.openbancor.com/validadores/curp</loc>
+  </url>
+  <url>
+    <loc>https://catalogmx.openbancor.com/validadores/clabe</loc>
+  </url>
+  <url>
+    <loc>https://catalogmx.openbancor.com/validadores/nss</loc>
+  </url>
+  <url>
+    <loc>https://catalogmx.openbancor.com/calculadoras</loc>
+  </url>
+  <url>
+    <loc>https://catalogmx.openbancor.com/generadores</loc>
+  </url>
+  <url>
+    <loc>https://catalogmx.openbancor.com/docs</loc>
+  </url>
+</urlset>
