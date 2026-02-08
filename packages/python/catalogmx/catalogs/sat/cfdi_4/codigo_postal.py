@@ -74,8 +74,7 @@ class CodigoPostalCatalog:
             db_path = cls._get_db_path()
             if not db_path.exists():
                 raise FileNotFoundError(
-                    f"Database not found at {db_path}. "
-                    "Please ensure the sepomex.db file exists."
+                    f"Database not found at {db_path}. " "Please ensure the sepomex.db file exists."
                 )
             cls._connection = sqlite3.connect(str(db_path))
             cls._connection.row_factory = sqlite3.Row
@@ -196,9 +195,7 @@ class CodigoPostalCatalog:
         total_cp = cursor.fetchone()[0]
         cursor = conn.execute("SELECT COUNT(*) FROM codigos_postales")
         total_asentamientos = cursor.fetchone()[0]
-        cursor = conn.execute(
-            "SELECT COUNT(DISTINCT codigo_estado) FROM codigos_postales"
-        )
+        cursor = conn.execute("SELECT COUNT(DISTINCT codigo_estado) FROM codigos_postales")
         total_estados = cursor.fetchone()[0]
         return {
             "total_codigos_postales": total_cp,

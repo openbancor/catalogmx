@@ -100,9 +100,7 @@ class CodigoAgrupadorSATCatalog:
         return cls._load_items(resolved).copy()
 
     @classmethod
-    def get_by_codigo(
-        cls, codigo: str, version: str | None = None
-    ) -> CodigoAgrupadorSAT | None:
+    def get_by_codigo(cls, codigo: str, version: str | None = None) -> CodigoAgrupadorSAT | None:
         """Obtiene un código agrupador por su clave."""
 
         resolved = cls._resolve_version(version)

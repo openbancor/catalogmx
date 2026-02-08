@@ -175,7 +175,7 @@ jobs:
         run: flutter pub deps
 
       - name: Analyze code
-        run: flutter analyze
+        run: dart analyze
 
       - name: Check formatting
         run: dart format --set-exit-if-changed .

@@ -130,7 +130,7 @@ jobs:
 
       - name: Dart - Run analysis
         working-directory: packages/dart
-        run: flutter analyze
+        run: dart analyze
 
       - name: Dart - Check formatting
         working-directory: packages/dart

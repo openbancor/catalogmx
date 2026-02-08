@@ -36,9 +36,7 @@ def get_shared_data_root() -> Path:
         if sibling_candidate.exists():
             return sibling_candidate
 
-    raise FileNotFoundError(
-        "shared-data not found. Set CATALOGMX_SHARED_DATA to a valid path."
-    )
+    raise FileNotFoundError("shared-data not found. Set CATALOGMX_SHARED_DATA to a valid path.")
 
 
 def get_shared_data_path(*parts: str) -> Path:
