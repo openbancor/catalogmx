@@ -2,6 +2,41 @@
 	import { Building2, CheckCircle2, XCircle, Info, Calendar, User } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import { RFCValidator } from '$lib/catalogmx';
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/validadores/rfc`;
+	const rfcJsonLd = {
+		'@context': 'https://schema.org',
+		'@graph': [
+			{
+				'@type': 'WebPage',
+				name: 'Validador RFC y Calculadora RFC',
+				url: canonicalUrl,
+				description:
+					'Valida RFC de persona física y moral, verifica dígito verificador y decodifica tipo y fecha.'
+			},
+			{
+				'@type': 'FAQPage',
+				mainEntity: [
+					{
+						'@type': 'Question',
+						name: '¿Cuántos caracteres tiene un RFC?',
+						acceptedAnswer: {
+							'@type': 'Answer',
+							text: 'Persona moral: 12 caracteres. Persona física: 13 caracteres.'
+						}
+					},
+					{
+						'@type': 'Question',
+						name: '¿Este validador revisa el dígito verificador?',
+						acceptedAnswer: {
+							'@type': 'Answer',
+							text: 'Sí, valida estructura, homoclave, fecha y dígito verificador del RFC.'
+						}
+					}
+				]
+			}
+		]
+	};
 
 	// State
 	let rfc = $state('');
@@ -59,8 +94,25 @@
 </script>
 
 <svelte:head>
-	<title>Validador RFC - catalogmx</title>
-	<meta name="description" content="Valida RFC de personas físicas y morales. Verifica formato, dígito verificador y decodifica información." />
+	<title>Validador RFC y Calculadora RFC SAT - catalogmx</title>
+	<meta
+		name="description"
+		content="Valida RFC de personas físicas y morales. Calcula y verifica formato, homoclave, fecha y dígito verificador con reglas SAT."
+	/>
+	<meta
+		name="keywords"
+		content="calculadora RFC, validador RFC, validar RFC SAT, RFC persona física, RFC persona moral, dígito verificador RFC"
+	/>
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Validador RFC y Calculadora RFC SAT - catalogmx" />
+	<meta property="og:description" content="Valida RFC y revisa homoclave, tipo de contribuyente y dígito verificador." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Validador RFC - catalogmx" />
+	<meta name="twitter:description" content="Calculadora y validador RFC para persona física y moral." />
+	{@html `<script type="application/ld+json">${JSON.stringify(rfcJsonLd)}</script>`}
 </svelte:head>
 
 <!-- Hero -->
@@ -237,6 +289,27 @@
 			<p class="text-xs text-slate-500 dark:text-slate-400">
 				<strong>Nota:</strong> Este validador verifica el formato, estructura y dígito verificador del RFC.
 				La existencia real del RFC en el SAT solo puede verificarse en el sistema oficial del SAT.
+			</p>
+		</div>
+
+		<div class="mt-6 p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+			<h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
+				Herramientas relacionadas
+			</h2>
+			<p class="text-xs text-slate-600 dark:text-slate-400">
+				Si buscabas calculadora de RFC para generar claves de prueba, usa el
+				<a href="{base}/generadores/rfc" class="text-brand-600 dark:text-brand-400 hover:underline">
+					generador de RFC
+				</a>.
+				También puedes validar
+				<a href="{base}/validadores/curp" class="text-brand-600 dark:text-brand-400 hover:underline">
+					CURP
+				</a>
+				y
+				<a href="{base}/validadores/clabe" class="text-brand-600 dark:text-brand-400 hover:underline">
+					CLABE
+				</a>
+				en línea.
 			</p>
 		</div>
 	</div>

@@ -2,6 +2,41 @@
 	import { User, CheckCircle2, XCircle, Info, Calendar, MapPin, Users } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import { CURPValidator } from '$lib/catalogmx';
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/validadores/curp`;
+	const curpJsonLd = {
+		'@context': 'https://schema.org',
+		'@graph': [
+			{
+				'@type': 'WebPage',
+				name: 'Validador CURP y Calculadora CURP',
+				url: canonicalUrl,
+				description:
+					'Valida CURP de 18 caracteres y decodifica fecha de nacimiento, sexo y estado.'
+			},
+			{
+				'@type': 'FAQPage',
+				mainEntity: [
+					{
+						'@type': 'Question',
+						name: '¿Cuántos caracteres tiene la CURP?',
+						acceptedAnswer: {
+							'@type': 'Answer',
+							text: 'La CURP siempre tiene 18 caracteres.'
+						}
+					},
+					{
+						'@type': 'Question',
+						name: '¿Este validador revisa el dígito verificador?',
+						acceptedAnswer: {
+							'@type': 'Answer',
+							text: 'Sí, valida estructura, datos embebidos y dígito verificador de la CURP.'
+						}
+					}
+				]
+			}
+		]
+	};
 
 	// State
 	let curp = $state('');
@@ -113,8 +148,25 @@
 </script>
 
 <svelte:head>
-	<title>Validador CURP - catalogmx</title>
-	<meta name="description" content="Valida CURP (Clave Única de Registro de Población). Verifica formato y decodifica género, fecha de nacimiento y estado." />
+	<title>Validador CURP y Calculadora CURP - catalogmx</title>
+	<meta
+		name="description"
+		content="Valida CURP en línea con reglas RENAPO. Verifica formato de 18 caracteres, dígito verificador y decodifica fecha, sexo y estado."
+	/>
+	<meta
+		name="keywords"
+		content="calculadora CURP, validador CURP, validar CURP, CURP 18 caracteres, dígito verificador CURP"
+	/>
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Validador CURP y Calculadora CURP - catalogmx" />
+	<meta property="og:description" content="Valida CURP y decodifica fecha de nacimiento, sexo y estado." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Validador CURP - catalogmx" />
+	<meta name="twitter:description" content="Calculadora y validador CURP con reglas RENAPO." />
+	{@html `<script type="application/ld+json">${JSON.stringify(curpJsonLd)}</script>`}
 </svelte:head>
 
 <!-- Hero -->
@@ -293,6 +345,27 @@
 			<p class="text-xs text-slate-500 dark:text-slate-400">
 				<strong>Nota:</strong> Este validador verifica el formato y estructura de la CURP, y decodifica la información contenida.
 				La existencia real de la CURP solo puede verificarse en el sistema oficial de RENAPO.
+			</p>
+		</div>
+
+		<div class="mt-6 p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+			<h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
+				Herramientas relacionadas
+			</h2>
+			<p class="text-xs text-slate-600 dark:text-slate-400">
+				Para generar una CURP de prueba usa el
+				<a href="{base}/generadores/curp" class="text-brand-600 dark:text-brand-400 hover:underline">
+					generador de CURP
+				</a>.
+				También puedes validar
+				<a href="{base}/validadores/rfc" class="text-brand-600 dark:text-brand-400 hover:underline">
+					RFC
+				</a>
+				y
+				<a href="{base}/validadores/clabe" class="text-brand-600 dark:text-brand-400 hover:underline">
+					CLABE
+				</a>
+				desde la misma suite.
 			</p>
 		</div>
 	</div>

@@ -1,6 +1,24 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import { Sparkles, CreditCard, User, Building2, Users } from 'lucide-svelte';
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/generadores`;
+	const generatorsJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		name: 'Calculadoras y generadores de identificadores mexicanos',
+		url: canonicalUrl,
+		description:
+			'Generadores y calculadoras de RFC, CURP, CLABE e identidades mexicanas para pruebas.',
+		mainEntity: {
+			'@type': 'ItemList',
+			itemListElement: [
+				{ '@type': 'ListItem', position: 1, name: 'Generador RFC', url: `${SITE_URL}/generadores/rfc` },
+				{ '@type': 'ListItem', position: 2, name: 'Generador CURP', url: `${SITE_URL}/generadores/curp` },
+				{ '@type': 'ListItem', position: 3, name: 'Generador CLABE', url: `${SITE_URL}/generadores/clabe` }
+			]
+		}
+	};
 
 	const generators = [
 		{
@@ -71,8 +89,25 @@
 </script>
 
 <svelte:head>
-	<title>Generadores - catalogmx</title>
-	<meta name="description" content="Generadores de identificadores oficiales de México: RFC, CURP y CLABE. Basados en algoritmos oficiales." />
+	<title>Calculadoras y Generadores RFC, CURP y CLABE - catalogmx</title>
+	<meta
+		name="description"
+		content="Calculadoras y generadores de RFC, CURP, CLABE e identidades mexicanas. Basados en algoritmos oficiales SAT, RENAPO y Banxico."
+	/>
+	<meta
+		name="keywords"
+		content="calculadora RFC, calculadora CURP, generador CLABE, generador RFC, generador CURP, identidades mexicanas de prueba"
+	/>
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Calculadoras y Generadores RFC, CURP y CLABE - catalogmx" />
+	<meta property="og:description" content="Herramientas para generar RFC, CURP, CLABE y datos de prueba consistentes." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Generadores de catalogmx" />
+	<meta name="twitter:description" content="Generadores oficiales de RFC, CURP y CLABE para México." />
+	{@html `<script type="application/ld+json">${JSON.stringify(generatorsJsonLd)}</script>`}
 </svelte:head>
 
 <!-- Hero -->

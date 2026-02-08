@@ -238,7 +238,7 @@
 					<a href="{base}/catalogos/banxico/tipo-cambio" class="card p-4 hover:border-blue-300 dark:hover:border-blue-700 transition-colors group">
 						<div class="flex items-start justify-between">
 							<div>
-								<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Tipo de Cambio FIX</p>
+								<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Dólar FIX Banxico</p>
 								<p class="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
 									${exchangeData.rate.toFixed(4)}
 								</p>
@@ -255,7 +255,7 @@
 
 				<!-- CETES 28 -->
 				{#if ratesData && ratesData.cetes28}
-					<a href="{base}/catalogos/banxico/tasas" class="card p-4 hover:border-purple-300 dark:hover:border-purple-700 transition-colors group">
+					<a href="{base}/calculadoras/tasas-interes" class="card p-4 hover:border-purple-300 dark:hover:border-purple-700 transition-colors group">
 						<div class="flex items-start justify-between">
 							<div>
 								<p class="text-sm text-slate-500 dark:text-slate-400 mb-1">CETES 28 días</p>

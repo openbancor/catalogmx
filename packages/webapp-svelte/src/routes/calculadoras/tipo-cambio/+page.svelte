@@ -4,6 +4,23 @@
 	import { query } from '$lib/db';
 	import { base } from '$app/paths';
 
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/calculadoras/tipo-cambio`;
+	const tipoCambioJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'WebPage',
+		name: 'Calculadora Dólar FIX Banxico',
+		url: canonicalUrl,
+		description:
+			'Convierte USD/MXN con histórico del tipo de cambio FIX de Banxico.',
+		mainEntity: {
+			'@type': 'SoftwareApplication',
+			name: 'Calculadora de tipo de cambio FIX',
+			applicationCategory: 'FinanceApplication',
+			operatingSystem: 'Web'
+		}
+	};
+
 	interface ExchangeRate {
 		fecha: string;
 		tipo_cambio: number;
@@ -115,11 +132,21 @@
 </script>
 
 <svelte:head>
-	<title>Calculadora Tipo de Cambio USD/MXN - catalogmx</title>
+	<title>Calculadora Dólar FIX Banxico (USD/MXN) - catalogmx</title>
 	<meta
 		name="description"
-		content="Convierte entre dolares (USD) y pesos mexicanos (MXN) con tipos de cambio historicos de Banxico. Calcula diferencias entre fechas."
+		content="Convierte entre dólares (USD) y pesos mexicanos (MXN) con histórico del tipo de cambio FIX de Banxico. Compara fechas y variaciones."
 	/>
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Calculadora Dólar FIX Banxico (USD/MXN) - catalogmx" />
+	<meta property="og:description" content="Conversor USD/MXN con histórico FIX de Banxico por fecha." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Calculadora Dólar FIX Banxico - catalogmx" />
+	<meta name="twitter:description" content="Tipo de cambio FIX USD/MXN de Banxico con comparador histórico." />
+	{@html `<script type="application/ld+json">${JSON.stringify(tipoCambioJsonLd)}</script>`}
 </svelte:head>
 
 <!-- Hero -->
@@ -142,10 +169,10 @@
 			</div>
 			<div>
 				<h1 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-2">
-					Tipo de Cambio USD/MXN
+					Dólar FIX Banxico (USD/MXN)
 				</h1>
 				<p class="text-lg text-slate-600 dark:text-slate-300">
-					Conversion y datos historicos del Banco de Mexico
+					Conversión y datos históricos del Banco de México
 				</p>
 			</div>
 		</div>

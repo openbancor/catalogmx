@@ -91,6 +91,10 @@
 <svelte:head>
 	<title>Validadores - catalogmx</title>
 	<meta name="description" content="Validadores de identificadores mexicanos: RFC, CURP, CLABE, NSS. Validación en tiempo real con decodificación de información." />
+	<meta
+		name="keywords"
+		content="validador RFC, validador CURP, validador CLABE, calculadora RFC, calculadora CURP, validadores México"
+	/>
 	<meta name="robots" content="index, follow, max-image-preview:large" />
 	<link rel="canonical" href={canonicalUrl} />
 	<meta property="og:type" content="website" />

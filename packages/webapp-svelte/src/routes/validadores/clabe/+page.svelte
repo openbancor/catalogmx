@@ -8,16 +8,42 @@
 	const canonicalUrl = `${SITE_URL}/validadores/clabe`;
 	const clabeJsonLd = {
 		'@context': 'https://schema.org',
-		'@type': 'WebPage',
-		name: 'Validador CLABE',
-		url: canonicalUrl,
-		description: 'Valida CLABE de 18 dígitos y decodifica banco/plaza para transferencias SPEI en México.',
-		mainEntity: {
-			'@type': 'SoftwareApplication',
-			name: 'Validador CLABE catalogmx',
-			applicationCategory: 'FinanceApplication',
-			operatingSystem: 'Web'
-		}
+		'@graph': [
+			{
+				'@type': 'WebPage',
+				name: 'Validador CLABE',
+				url: canonicalUrl,
+				description:
+					'Valida CLABE de 18 dígitos y decodifica banco/plaza para transferencias SPEI en México.',
+				mainEntity: {
+					'@type': 'SoftwareApplication',
+					name: 'Validador CLABE catalogmx',
+					applicationCategory: 'FinanceApplication',
+					operatingSystem: 'Web'
+				}
+			},
+			{
+				'@type': 'FAQPage',
+				mainEntity: [
+					{
+						'@type': 'Question',
+						name: '¿Qué valida una CLABE de 18 dígitos?',
+						acceptedAnswer: {
+							'@type': 'Answer',
+							text: 'Se valida longitud, estructura de banco/plaza/cuenta y dígito de control.'
+						}
+					},
+					{
+						'@type': 'Question',
+						name: '¿Se puede identificar el banco desde la CLABE?',
+						acceptedAnswer: {
+							'@type': 'Answer',
+							text: 'Sí, el código de banco y plaza se decodifica usando catálogos Banxico.'
+						}
+					}
+				]
+			}
+		]
 	};
 
 	// State
@@ -380,6 +406,27 @@
 			<p class="text-xs text-slate-500 dark:text-slate-400">
 				<strong>Nota:</strong> Este validador verifica el formato, estructura y dígito de control de la CLABE, e identifica el banco emisor.
 				La existencia y estado de la cuenta solo puede verificarse con el banco correspondiente.
+			</p>
+		</div>
+
+		<div class="mt-6 p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+			<h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
+				Información de CLABE y recursos
+			</h2>
+			<p class="text-xs text-slate-600 dark:text-slate-400">
+				Genera cuentas de prueba con el
+				<a href="{base}/generadores/clabe" class="text-brand-600 dark:text-brand-400 hover:underline">
+					generador de CLABE
+				</a>,
+				consulta
+				<a href="{base}/catalogos/banxico/bancos" class="text-brand-600 dark:text-brand-400 hover:underline">
+					bancos Banxico
+				</a>
+				y
+				<a href="{base}/catalogos/banxico/plazas" class="text-brand-600 dark:text-brand-400 hover:underline">
+					plazas bancarias
+				</a>
+				para identificar correctamente banco y sucursal.
 			</p>
 		</div>
 	</div>

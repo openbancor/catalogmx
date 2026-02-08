@@ -2,6 +2,22 @@
 	import { CreditCard, Info, User, Building2, AlertCircle, CheckCircle2 } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import { generateRfcPersonaFisica, generateRfcPersonaMoral, RFCValidator } from '$lib/catalogmx';
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/generadores/rfc`;
+	const rfcGeneratorJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'WebPage',
+		name: 'Calculadora RFC SAT',
+		url: canonicalUrl,
+		description:
+			'Genera RFC para persona física o moral con homoclave y dígito verificador usando reglas SAT.',
+		mainEntity: {
+			'@type': 'SoftwareApplication',
+			name: 'Generador RFC catalogmx',
+			applicationCategory: 'FinanceApplication',
+			operatingSystem: 'Web'
+		}
+	};
 
 	type PersonType = 'fisica' | 'moral';
 
@@ -120,8 +136,25 @@
 </script>
 
 <svelte:head>
-	<title>Generador RFC - catalogmx</title>
-	<meta name="description" content="Genera RFC para personas físicas y morales con homoclave calculada según algoritmo oficial del SAT." />
+	<title>Calculadora RFC SAT | Generador RFC - catalogmx</title>
+	<meta
+		name="description"
+		content="Calculadora RFC para persona física y moral. Genera RFC con homoclave y dígito verificador con algoritmo oficial del SAT."
+	/>
+	<meta
+		name="keywords"
+		content="calculadora RFC, generador RFC, RFC SAT, RFC persona física, RFC persona moral, homoclave RFC"
+	/>
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Calculadora RFC SAT | Generador RFC - catalogmx" />
+	<meta property="og:description" content="Genera RFC de prueba con homoclave y dígito verificador." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Calculadora RFC SAT - catalogmx" />
+	<meta name="twitter:description" content="Generador RFC para persona física y moral." />
+	{@html `<script type="application/ld+json">${JSON.stringify(rfcGeneratorJsonLd)}</script>`}
 </svelte:head>
 
 <!-- Hero -->
@@ -355,6 +388,26 @@
 				<strong>Nota:</strong> Este generador utiliza el algoritmo oficial del SAT para calcular el RFC.
 				El RFC generado incluye la homoclave y dígito verificador calculados. Para obtener el RFC oficial,
 				debes tramitarlo ante el SAT con documentación válida.
+			</p>
+		</div>
+
+		<div class="mt-6 p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+			<h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
+				Validación y recursos
+			</h2>
+			<p class="text-xs text-slate-600 dark:text-slate-400">
+				Verifica el RFC generado en el
+				<a href="{base}/validadores/rfc" class="text-brand-600 dark:text-brand-400 hover:underline">
+					validador de RFC
+				</a>
+				y complementa tus pruebas con
+				<a href="{base}/generadores/curp" class="text-brand-600 dark:text-brand-400 hover:underline">
+					generador de CURP
+				</a>
+				y
+				<a href="{base}/generadores/clabe" class="text-brand-600 dark:text-brand-400 hover:underline">
+					generador de CLABE
+				</a>.
 			</p>
 		</div>
 	</div>

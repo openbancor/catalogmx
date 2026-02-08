@@ -4,6 +4,22 @@
 	import { onMount } from 'svelte';
 	import { CURPValidator, generateCurp } from '$lib/catalogmx';
 	import { query } from '$lib/db';
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/generadores/curp`;
+	const curpGeneratorJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'WebPage',
+		name: 'Calculadora CURP RENAPO',
+		url: canonicalUrl,
+		description:
+			'Genera CURP de 18 caracteres con dígito verificador usando reglas de RENAPO.',
+		mainEntity: {
+			'@type': 'SoftwareApplication',
+			name: 'Generador CURP catalogmx',
+			applicationCategory: 'FinanceApplication',
+			operatingSystem: 'Web'
+		}
+	};
 
 	// State
 	let nombre = $state('');
@@ -124,8 +140,25 @@
 </script>
 
 <svelte:head>
-	<title>Generador CURP - catalogmx</title>
-	<meta name="description" content="Genera CURP con dígito verificador según algoritmo oficial de RENAPO." />
+	<title>Calculadora CURP RENAPO | Generador CURP - catalogmx</title>
+	<meta
+		name="description"
+		content="Calculadora CURP con reglas RENAPO. Genera CURP de 18 caracteres y valida dígito verificador para pruebas."
+	/>
+	<meta
+		name="keywords"
+		content="calculadora CURP, generador CURP, CURP RENAPO, dígito verificador CURP, CURP 18 caracteres"
+	/>
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Calculadora CURP RENAPO | Generador CURP - catalogmx" />
+	<meta property="og:description" content="Genera CURP con dígito verificador y desglose por campos." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Calculadora CURP - catalogmx" />
+	<meta name="twitter:description" content="Generador CURP con reglas RENAPO y catálogo de estados." />
+	{@html `<script type="application/ld+json">${JSON.stringify(curpGeneratorJsonLd)}</script>`}
 </svelte:head>
 
 <!-- Hero -->
@@ -354,6 +387,26 @@
 				La CURP generada incluye el dígito verificador calculado. Para obtener la CURP oficial,
 				debes tramitarla ante RENAPO con documentación válida. La homoclave asignada oficialmente puede diferir
 				de la calculada aquí, ya que RENAPO asigna homoclaves únicas para evitar duplicados.
+			</p>
+		</div>
+
+		<div class="mt-6 p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+			<h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
+				Validación y recursos
+			</h2>
+			<p class="text-xs text-slate-600 dark:text-slate-400">
+				Valida tu resultado en el
+				<a href="{base}/validadores/curp" class="text-brand-600 dark:text-brand-400 hover:underline">
+					validador de CURP
+				</a>.
+				Si necesitas un flujo completo de identidad, revisa también el
+				<a href="{base}/generadores/rfc" class="text-brand-600 dark:text-brand-400 hover:underline">
+					generador de RFC
+				</a>
+				y el
+				<a href="{base}/generadores/identidad" class="text-brand-600 dark:text-brand-400 hover:underline">
+					generador de identidades
+				</a>.
 			</p>
 		</div>
 	</div>
