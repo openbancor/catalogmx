@@ -111,6 +111,7 @@ npm run lint:fix
 npm run format
 npm run typecheck
 npm test
+npm test -- tests/integration-workflows.test.ts
 popd >/dev/null
 
 step "Python package: format + lint + typecheck + tests"
@@ -123,6 +124,8 @@ echo "📊 Type checking with mypy..."
 mypy catalogmx
 echo "🧪 Running tests with pytest..."
 pytest tests/ --cov=catalogmx --cov-branch
+echo "🔗 Running integration tests..."
+pytest tests/test_integration_workflows.py -q
 popd >/dev/null
 
 step "Dart package: analyze + format check + tests"
@@ -130,6 +133,7 @@ pushd "${ROOT_DIR}/packages/dart" >/dev/null
 dart format .
 dart analyze
 dart test
+dart test test/integration_workflows_test.dart
 popd >/dev/null
 
 echo

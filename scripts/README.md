@@ -12,6 +12,7 @@ Ejecuta **TODOS** los checks de calidad antes de publicar:
 6. ✅ Lint + typecheck TypeScript
 7. ✅ Format + lint + tests Python (>90% coverage)
 8. ✅ Format + analyze + tests Dart
+9. ✅ Integration tests (Python + TypeScript + Dart)
 
 ## 🎯 Uso
 
@@ -73,17 +74,20 @@ git push origin main
 - 🎨 ESLint + auto-fix
 - 💅 Prettier format
 - 🔍 Type check
+- 🔗 Integration suite (`tests/integration-workflows.test.ts`)
 
 ### Python
 - 🎨 Black format
 - 🔍 Ruff lint + auto-fix
 - 🏷️ mypy type check
 - 🧪 Tests con >90% coverage
+- 🔗 Integration suite (`tests/test_integration_workflows.py`)
 
 ### Dart
 - 🎨 dart format
 - 🔍 dart analyze
 - 🧪 dart test
+- 🔗 Integration suite (`test/integration_workflows_test.dart`)
 
 ## ⏱️ Tiempo Estimado
 
@@ -98,4 +102,3 @@ All checks completed.
 ```
 
 Entonces TODO está listo para commitear y publicar. 🚀
-

@@ -93,6 +93,14 @@ else
     ((ERRORS++))
 fi
 
+info "Running Python integration tests..."
+if pytest tests/test_integration_workflows.py -q --tb=line; then
+    success "Python integration tests passed"
+else
+    error "Python integration tests failed"
+    ((ERRORS++))
+fi
+
 # Code quality
 info "Checking Python code quality..."
 if black --check catalogmx/ >/dev/null 2>&1; then
@@ -143,6 +151,14 @@ if npm test --silent; then
     success "TypeScript tests passed"
 else
     error "TypeScript tests failed"
+    ((ERRORS++))
+fi
+
+info "Running TypeScript integration tests..."
+if npm test --silent -- tests/integration-workflows.test.ts; then
+    success "TypeScript integration tests passed"
+else
+    error "TypeScript integration tests failed"
     ((ERRORS++))
 fi
 
@@ -207,6 +223,14 @@ if dart test; then
     success "Dart tests passed"
 else
     error "Dart tests failed"
+    ((ERRORS++))
+fi
+
+info "Running Dart integration tests..."
+if dart test test/integration_workflows_test.dart; then
+    success "Dart integration tests passed"
+else
+    error "Dart integration tests failed"
     ((ERRORS++))
 fi
 
