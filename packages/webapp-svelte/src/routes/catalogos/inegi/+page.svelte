@@ -56,7 +56,7 @@
 </script>
 
 <svelte:head>
-	<title>Catalogos INEGI - catalogmx</title>
+	<title>Catálogos INEGI - catalogmx</title>
 	<meta name="description" content="Catalogos oficiales del Instituto Nacional de Estadistica y Geografia (INEGI) de Mexico." />
 </svelte:head>
 

@@ -4,6 +4,9 @@
 	import { base } from '$app/paths';
 	import { query, queryOne } from '$lib/db';
 
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/catalogos/banxico/inflacion`;
+
 	interface InflacionRecord {
 		fecha: string;
 		valor: number;
@@ -54,8 +57,14 @@
 </script>
 
 <svelte:head>
-	<title>Inflación - catalogmx</title>
-	<meta name="description" content="Histórico de la inflación anual en México (INPC)" />
+	<title>Inflación anual en México (INPC) - catalogmx</title>
+	<meta name="description" content="Consulta el histórico de inflación anual de México (INPC) con series oficiales relacionadas de Banxico." />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Inflación anual en México (INPC) - catalogmx" />
+	<meta property="og:description" content="Histórico de inflación en México para análisis económico y financiero." />
+	<meta property="og:url" content={canonicalUrl} />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

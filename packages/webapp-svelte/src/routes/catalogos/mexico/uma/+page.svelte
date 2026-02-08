@@ -6,6 +6,22 @@
 	import { query } from '$lib/db';
 	import { base } from '$app/paths';
 
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/catalogos/mexico/uma`;
+	const umaJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'Dataset',
+		name: 'Histórico UMA México',
+		description:
+			'Valores históricos de la Unidad de Medida y Actualización (UMA) en México.',
+		url: canonicalUrl,
+		isAccessibleForFree: true,
+		creator: {
+			'@type': 'Organization',
+			name: 'catalogmx'
+		}
+	};
+
 	interface UMA {
 		año: number;
 		vigencia_inicio: string;
@@ -88,8 +104,18 @@
 </script>
 
 <svelte:head>
-	<title>UMA - Unidad de Medida y Actualizacion - catalogmx</title>
-	<meta name="description" content="Catalogo historico de valores de la Unidad de Medida y Actualizacion (UMA) en Mexico desde 2017." />
+	<title>UMA: Unidad de Medida y Actualización - catalogmx</title>
+	<meta name="description" content="Consulta el catálogo histórico de la Unidad de Medida y Actualización (UMA) en México, con valores diario, mensual y anual." />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="UMA: Unidad de Medida y Actualización - catalogmx" />
+	<meta property="og:description" content="Valores históricos de UMA en México para cálculo fiscal y administrativo." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="UMA México - catalogmx" />
+	<meta name="twitter:description" content="Catálogo histórico de UMA: valor diario, mensual y anual en México." />
+	{@html `<script type="application/ld+json">${JSON.stringify(umaJsonLd)}</script>`}
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

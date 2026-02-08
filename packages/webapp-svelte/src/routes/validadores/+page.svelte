@@ -100,7 +100,7 @@
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:title" content="Validadores RFC, CURP, CLABE y NSS - catalogmx" />
 	<meta name="twitter:description" content="Valida RFC, CURP, CLABE y NSS con reglas oficiales." />
-	<script type="application/ld+json">{JSON.stringify(validatorsJsonLd)}</script>
+	{@html `<script type="application/ld+json">${JSON.stringify(validatorsJsonLd)}</script>`}
 </svelte:head>
 
 <!-- Hero -->

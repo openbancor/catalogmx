@@ -164,7 +164,7 @@
 </script>
 
 <svelte:head>
-	<title>Calculadora Tasas de Interes CETES/TIIE - catalogmx</title>
+	<title>Calculadora de Tasas de Interés CETES/TIIE - catalogmx</title>
 	<meta
 		name="description"
 		content="Calcula intereses con tasas CETES 28 y TIIE 28 de Banxico. Compara rendimientos entre diferentes instrumentos de renta fija."

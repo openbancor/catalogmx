@@ -102,7 +102,7 @@
 
 <svelte:head>
 	{#if estado}
-		<title>{estado.nombre} - Estados de Mexico | catalogmx</title>
+		<title>{estado.nombre} - Estados de México | catalogmx</title>
 		<meta name="description" content="Municipios de {estado.nombre}: {municipios.length} municipios, poblacion {formatNumber(totalPoblacion)}. Datos de INEGI y CONAPO." />
 	{:else}
 		<title>Estado | catalogmx</title>

@@ -4,6 +4,9 @@
 	import type { ColumnDef } from '$lib/table';
 	import { onMount } from 'svelte';
 	import { query } from '$lib/db';
+
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/catalogos/ift/ladas`;
 	import { base } from '$app/paths';
 
 	interface CodigoLada {
@@ -81,10 +84,15 @@
 </script>
 
 <svelte:head>
-	<title>Codigos LADA de Mexico - Claves de Larga Distancia - catalogmx</title>
-	<meta name="description" content="Catalogo completo de codigos LADA (claves de larga distancia) de Mexico. Incluye 402 prefijos telefonicos con informacion de ciudad, estado y region. Encuentra el codigo LADA de cualquier ciudad mexicana." />
-	<meta name="keywords" content="codigos LADA, claves LADA, prefijos telefonicos Mexico, larga distancia Mexico, LADA CDMX, LADA Guadalajara, LADA Monterrey, IFT" />
-	<link rel="canonical" href="https://catalogmx.com/catalogos/ift/ladas" />
+	<title>Códigos LADA de México (IFT) - catalogmx</title>
+	<meta name="description" content="Catálogo completo de códigos LADA de México con ciudad, estado y región. Consulta claves de larga distancia oficiales del IFT." />
+	<meta name="keywords" content="códigos LADA, claves LADA, prefijos telefónicos México, larga distancia México, IFT" />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Códigos LADA de México (IFT) - catalogmx" />
+	<meta property="og:description" content="Consulta códigos LADA oficiales de México por ciudad, estado y región." />
+	<meta property="og:url" content={canonicalUrl} />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

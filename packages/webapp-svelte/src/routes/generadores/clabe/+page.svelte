@@ -5,6 +5,23 @@
 	import { calculateClabeCheckDigit, generateClabe, validateClabe } from '$lib/catalogmx';
 	import { query } from '$lib/db';
 
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/generadores/clabe`;
+	const clabeGeneratorJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'WebPage',
+		name: 'Generador CLABE',
+		url: canonicalUrl,
+		description:
+			'Genera CLABE válida de 18 dígitos para pruebas y validación técnica con banco y plaza.',
+		mainEntity: {
+			'@type': 'SoftwareApplication',
+			name: 'Generador CLABE catalogmx',
+			applicationCategory: 'FinanceApplication',
+			operatingSystem: 'Web'
+		}
+	};
+
 	type Bank = {
 		code: string;
 		name: string;
@@ -153,8 +170,18 @@
 </script>
 
 <svelte:head>
-	<title>Generador CLABE - catalogmx</title>
-	<meta name="description" content="Genera CLABE (Clave Bancaria Estandarizada) con digito verificador calculado. Herramienta para generar numeros de cuenta interbancarios validos." />
+	<title>Generador de CLABE (18 dígitos) - catalogmx</title>
+	<meta name="description" content="Genera CLABE válida de 18 dígitos con cálculo de dígito verificador, banco y plaza para transferencias SPEI en México." />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Generador de CLABE (18 dígitos) - catalogmx" />
+	<meta property="og:description" content="Genera CLABEs válidas para pruebas de integración y validación financiera." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Generador CLABE - catalogmx" />
+	<meta name="twitter:description" content="Genera CLABE con dígito verificador, banco y plaza." />
+	{@html `<script type="application/ld+json">${JSON.stringify(clabeGeneratorJsonLd)}</script>`}
 </svelte:head>
 
 <!-- Hero -->

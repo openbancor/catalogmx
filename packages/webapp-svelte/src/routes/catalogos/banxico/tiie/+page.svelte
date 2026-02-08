@@ -4,6 +4,9 @@
 	import { base } from '$app/paths';
 	import { query, queryOne } from '$lib/db';
 
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/catalogos/banxico/tiie`;
+
 	interface TIIERecord {
 		fecha: string;
 		valor: number;
@@ -65,8 +68,14 @@
 </script>
 
 <svelte:head>
-	<title>TIIE y CETES - catalogmx</title>
-	<meta name="description" content="Histórico de tasas de interés TIIE y CETES del Banco de México" />
+	<title>TIIE y CETES 28 días (Banxico) - catalogmx</title>
+	<meta name="description" content="Histórico de tasas TIIE y CETES a 28 días con datos oficiales de Banxico para análisis financiero en México." />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="TIIE y CETES 28 días (Banxico) - catalogmx" />
+	<meta property="og:description" content="Serie histórica de tasas de referencia TIIE y CETES con fuente Banxico." />
+	<meta property="og:url" content={canonicalUrl} />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

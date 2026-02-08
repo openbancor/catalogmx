@@ -77,7 +77,7 @@
 </script>
 
 <svelte:head>
-	<title>Catalogos CFDI 4.0 - catalogmx</title>
+	<title>Catálogos CFDI 4.0 - catalogmx</title>
 	<meta name="description" content="Catalogos oficiales del SAT para CFDI 4.0: productos, unidades, regimenes fiscales, formas de pago y mas." />
 </svelte:head>
 

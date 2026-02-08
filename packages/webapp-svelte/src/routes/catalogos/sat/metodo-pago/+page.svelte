@@ -54,7 +54,7 @@
 </script>
 
 <svelte:head>
-	<title>Metodo de Pago (SAT CFDI 4.0) - catalogmx</title>
+	<title>Método de Pago (SAT CFDI 4.0) - catalogmx</title>
 	<meta name="description" content="Catalogo de metodos de pago del SAT para CFDI 4.0." />
 </svelte:head>
 

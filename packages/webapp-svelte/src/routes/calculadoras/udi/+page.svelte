@@ -4,6 +4,23 @@
 	import { query, queryOne } from '$lib/db';
 	import { base } from '$app/paths';
 
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/calculadoras/udi`;
+	const udiJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'WebPage',
+		name: 'Calculadora UDI',
+		url: canonicalUrl,
+		description:
+			'Convierte entre UDI y MXN y calcula rendimientos históricos con valores oficiales de Banxico.',
+		mainEntity: {
+			'@type': 'SoftwareApplication',
+			name: 'Calculadora UDI catalogmx',
+			applicationCategory: 'FinanceApplication',
+			operatingSystem: 'Web'
+		}
+	};
+
 	interface UDIValue {
 		fecha: string;
 		valor: number;
@@ -188,11 +205,21 @@
 </script>
 
 <svelte:head>
-	<title>Calculadora UDI - catalogmx</title>
+	<title>Calculadora UDI Banxico (MXN a UDI) - catalogmx</title>
 	<meta
 		name="description"
-		content="Convierte entre UDIs y pesos mexicanos. Calcula rendimientos de inversiones indexadas a UDIs con datos históricos de Banxico."
+		content="Convierte entre UDI y pesos mexicanos (MXN). Calcula rendimientos históricos con valores oficiales de Banxico para inversiones indexadas a UDI."
 	/>
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Calculadora UDI Banxico (MXN a UDI) - catalogmx" />
+	<meta property="og:description" content="Conversor UDI/MXN y cálculo de rendimiento con histórico oficial de Banxico." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Calculadora UDI - catalogmx" />
+	<meta name="twitter:description" content="Convierte UDI a MXN y calcula rendimiento histórico con datos Banxico." />
+	{@html `<script type="application/ld+json">${JSON.stringify(udiJsonLd)}</script>`}
 </svelte:head>
 
 <!-- Hero -->

@@ -124,7 +124,7 @@
 </script>
 
 <svelte:head>
-	<title>Estados de Mexico (INEGI) - catalogmx</title>
+	<title>Estados de México (INEGI) - catalogmx</title>
 	<meta name="description" content="Catalogo oficial de estados de Mexico segun INEGI. Incluye claves, abreviaturas y clasificacion regional." />
 </svelte:head>
 

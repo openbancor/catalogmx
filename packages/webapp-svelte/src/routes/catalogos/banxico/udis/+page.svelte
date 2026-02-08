@@ -4,6 +4,9 @@
 	import { base } from '$app/paths';
 	import { query, queryOne } from '$lib/db';
 
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/catalogos/banxico/udis`;
+
 	interface UDIRecord {
 		fecha: string;
 		valor: number;
@@ -67,8 +70,14 @@
 </script>
 
 <svelte:head>
-	<title>Valor de la UDI - catalogmx</title>
-	<meta name="description" content="Histórico del valor de las Unidades de Inversión (UDIs) del Banco de México" />
+	<title>Valor de la UDI (Banxico) - catalogmx</title>
+	<meta name="description" content="Histórico oficial del valor de la UDI (Unidad de Inversión) publicado por Banxico." />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Valor de la UDI (Banxico) - catalogmx" />
+	<meta property="og:description" content="Serie histórica de la UDI con datos oficiales de Banxico." />
+	<meta property="og:url" content={canonicalUrl} />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

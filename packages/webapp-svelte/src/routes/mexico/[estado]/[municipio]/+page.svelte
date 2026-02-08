@@ -106,7 +106,7 @@
 
 <svelte:head>
 	{#if municipio}
-		<title>{municipio.nombre}, {municipio.estado} - Municipios de Mexico | catalogmx</title>
+		<title>{municipio.nombre}, {municipio.estado} - Municipios de México | catalogmx</title>
 		<meta name="description" content="Datos de {municipio.nombre}, {municipio.estado}: poblacion {formatNumber(municipio.poblacion_total)}, {codigosPostales.length > 0 ? codigosPostales.length + ' colonias' : ''}. Datos oficiales de INEGI." />
 	{:else}
 		<title>Municipio | catalogmx</title>

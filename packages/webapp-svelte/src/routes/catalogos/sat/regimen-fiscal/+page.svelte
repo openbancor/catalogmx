@@ -70,7 +70,7 @@
 </script>
 
 <svelte:head>
-	<title>Regimen Fiscal (SAT CFDI 4.0) - catalogmx</title>
+	<title>Régimen Fiscal (SAT CFDI 4.0) - catalogmx</title>
 	<meta name="description" content="Catalogo de regimenes fiscales del SAT para CFDI 4.0." />
 </svelte:head>
 

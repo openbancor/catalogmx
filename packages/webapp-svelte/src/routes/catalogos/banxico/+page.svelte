@@ -1,6 +1,21 @@
 <script lang="ts">
-	import { base } from '$app/paths';
-	import { ChevronRight, Building2, MapPin, Coins, ArrowRight, DollarSign, TrendingUp, Percent } from 'lucide-svelte';
+import { base } from '$app/paths';
+import { ChevronRight, Building2, MapPin, Coins, ArrowRight, DollarSign, TrendingUp, Percent } from 'lucide-svelte';
+
+const SITE_URL = 'https://catalogmx.openbancor.com';
+const canonicalUrl = `${SITE_URL}/catalogos/banxico`;
+const banxicoJsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'CollectionPage',
+	name: 'Catálogos Banxico',
+	url: canonicalUrl,
+	description:
+		'Colección de catálogos del Banco de México: bancos, plazas, UDI, inflación, TIIE, CETES y tipo de cambio.',
+	mainEntity: {
+		'@type': 'ItemList',
+		name: 'Catálogos financieros Banxico'
+	}
+};
 
 	const catalogs = [
 		{
@@ -63,8 +78,18 @@
 </script>
 
 <svelte:head>
-	<title>Catálogos Banxico - catalogmx</title>
-	<meta name="description" content="Catálogos del Banco de México (Banxico): instituciones bancarias, códigos de plaza, tipos de cambio y más." />
+	<title>Catálogos Banxico: UDI, inflación, TIIE, CETES y más - catalogmx</title>
+	<meta name="description" content="Explora catálogos oficiales de Banxico: bancos, códigos de plaza, UDI, inflación, TIIE, CETES, tipo de cambio y monedas." />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Catálogos Banxico: UDI, inflación, TIIE, CETES y más - catalogmx" />
+	<meta property="og:description" content="Datos financieros oficiales de Banxico para validación, análisis y cálculo en México." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Catálogos Banxico - catalogmx" />
+	<meta name="twitter:description" content="UDI, inflación, TIIE, CETES, tipo de cambio y catálogos bancarios de Banxico." />
+	{@html `<script type="application/ld+json">${JSON.stringify(banxicoJsonLd)}</script>`}
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

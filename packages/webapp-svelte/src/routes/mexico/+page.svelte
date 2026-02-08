@@ -59,7 +59,7 @@
 </script>
 
 <svelte:head>
-	<title>Estados de Mexico | catalogmx</title>
+	<title>Estados de México | catalogmx</title>
 	<meta name="description" content="Explora los 32 estados de Mexico: poblacion, municipios, zonas metropolitanas, codigos postales y mas." />
 </svelte:head>
 

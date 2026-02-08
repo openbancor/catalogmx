@@ -79,7 +79,7 @@
 </script>
 
 <svelte:head>
-	<title>Pais (SAT CFDI 4.0) - catalogmx</title>
+	<title>País (SAT CFDI 4.0) - catalogmx</title>
 	<meta name="description" content="Catalogo de paises del SAT para CFDI 4.0." />
 </svelte:head>
 

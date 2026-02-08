@@ -157,7 +157,7 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="catalogmx - Catálogos Oficiales de México" />
 	<meta name="twitter:description" content="Validadores de RFC, CURP, CLABE y NSS con catálogos oficiales de México." />
-	<script type="application/ld+json">{JSON.stringify(homeJsonLd)}</script>
+	{@html `<script type="application/ld+json">${JSON.stringify(homeJsonLd)}</script>`}
 </svelte:head>
 
 <!-- Hero -->

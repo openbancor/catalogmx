@@ -146,18 +146,19 @@
 </script>
 
 <svelte:head>
-	<title>Validador CLABE - catalogmx</title>
-	<meta name="description" content="Valida CLABE (Clave Bancaria Estandarizada). Verifica formato, dígito de control y decodifica banco, plaza y cuenta." />
+	<title>Validador de CLABE (18 dígitos SPEI) - catalogmx</title>
+	<meta name="description" content="Valida CLABE de 18 dígitos para SPEI. Verifica formato, dígito de control y decodifica banco, plaza y cuenta en México." />
+	<meta name="keywords" content="validador CLABE, validar CLABE, CLABE 18 dígitos, SPEI, banco, plaza, cuenta interbancaria" />
 	<meta name="robots" content="index, follow, max-image-preview:large" />
 	<link rel="canonical" href={canonicalUrl} />
 	<meta property="og:type" content="website" />
-	<meta property="og:title" content="Validador CLABE (18 dígitos) - catalogmx" />
+	<meta property="og:title" content="Validador de CLABE (18 dígitos SPEI) - catalogmx" />
 	<meta property="og:description" content="Valida CLABE, verifica dígito de control y decodifica banco/plaza." />
 	<meta property="og:url" content={canonicalUrl} />
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:title" content="Validador CLABE - catalogmx" />
 	<meta name="twitter:description" content="Validación CLABE para SPEI con reglas oficiales de México." />
-	<script type="application/ld+json">{JSON.stringify(clabeJsonLd)}</script>
+	{@html `<script type="application/ld+json">${JSON.stringify(clabeJsonLd)}</script>`}
 </svelte:head>
 
 <!-- Hero -->

@@ -6,6 +6,9 @@
 	import { onMount } from 'svelte';
 	import { query, count } from '$lib/db';
 
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/catalogos/sepomex/codigos-postales`;
+
 	interface CodigoPostal {
 		cp: string;
 		asentamiento: string;
@@ -168,8 +171,17 @@
 </script>
 
 <svelte:head>
-	<title>Codigos Postales - SEPOMEX - catalogmx</title>
-	<meta name="description" content="Catalogo completo de codigos postales de Mexico con informacion de asentamientos, municipios y estados. Mas de 145,000 registros." />
+	<title>Códigos Postales de México (SEPOMEX) - catalogmx</title>
+	<meta name="description" content="Consulta el catálogo de códigos postales de México con colonia, municipio y estado. Datos oficiales de SEPOMEX." />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Códigos Postales de México (SEPOMEX) - catalogmx" />
+	<meta property="og:description" content="Buscador de CP de México por colonia, municipio y estado con datos oficiales de SEPOMEX." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Códigos Postales México - catalogmx" />
+	<meta name="twitter:description" content="Explora códigos postales de México con información de colonia, municipio y estado." />
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -266,19 +278,25 @@
 	<!-- Info section -->
 	<div class="mt-8 card p-6">
 		<h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">
-			Acerca de este catalogo
+			Acerca de este catálogo
 		</h2>
 		<div class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
 			<p>
-				El <strong>codigo postal</strong> es un identificador numerico de 5 digitos que permite ubicar una localidad
-				especifica dentro del territorio nacional.
+				El <strong>código postal</strong> es un identificador numérico de 5 dígitos que permite ubicar una localidad
+				específica dentro del territorio nacional.
 			</p>
 			<p>
 				<strong>Fuente:</strong> Servicio Postal Mexicano (SEPOMEX)
 			</p>
 			<p>
-				<strong>Uso:</strong> Los codigos postales se utilizan para identificar ubicaciones geograficas en envios,
-				direcciones fiscales, y servicios de geolocalizacion.
+				<strong>Uso:</strong> Los códigos postales se utilizan para identificar ubicaciones geográficas en envíos,
+				direcciones fiscales y servicios de geolocalización.
+			</p>
+			<p>
+				<strong>Ejemplo:</strong> consulta la ficha de
+				<a class="text-brand-600 dark:text-brand-400 hover:underline" href="{base}/catalogos/sepomex/codigos-postales/03650">
+					CP 03650 (Letrán Valle, Benito Juárez, Ciudad de México)
+				</a>.
 			</p>
 		</div>
 	</div>

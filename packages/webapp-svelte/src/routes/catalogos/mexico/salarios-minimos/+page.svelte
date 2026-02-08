@@ -104,7 +104,7 @@
 </script>
 
 <svelte:head>
-	<title>Salarios Minimos - Mexico - catalogmx</title>
+	<title>Salarios Mínimos - México - catalogmx</title>
 	<meta name="description" content="Catalogo historico de salarios minimos en Mexico desde 2010 por zona geografica." />
 </svelte:head>
 
