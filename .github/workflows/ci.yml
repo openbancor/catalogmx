@@ -163,31 +163,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Dart SDK
-        uses: dart-lang/setup-dart@v1
+      - name: Set up Flutter SDK
+        uses: subosito/flutter-action@v2
         with:
-          sdk: ${{ matrix.dart-version }}
+          channel: ${{ matrix.dart-version }}
 
       - name: Get dependencies
-        run: dart pub get
+        run: flutter pub get
 
       - name: Verify dependencies
-        run: dart pub deps
+        run: flutter pub deps
 
       - name: Analyze code
-        run: dart analyze
+        run: flutter analyze
 
       - name: Check formatting
         run: dart format --set-exit-if-changed .
 
       - name: Run tests with coverage
-        run: dart test --coverage=coverage
-
-      - name: Generate coverage report
-        if: matrix.dart-version == 'stable'
-        run: |
-          dart pub global activate coverage
-          dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --report-on=lib
+        run: flutter test --coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -199,7 +193,7 @@ jobs:
         continue-on-error: true
 
       - name: Dry run pub.dev publish
-        run: dart pub publish --dry-run
+        run: flutter pub publish --dry-run
         if: matrix.dart-version == 'stable'
 
   # Kotlin/JVM Testing

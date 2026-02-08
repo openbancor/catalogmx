@@ -53,10 +53,7 @@ export function buildUnsignedCfdiXml(data: CfdiComprobanteInput): string {
   )}${attr('UsoCFDI', data.receptor.usoCfdi)}${attr(
     'RegimenFiscalReceptor',
     data.receptor.regimenFiscalReceptor
-  )}${attr(
-    'DomicilioFiscalReceptor',
-    data.receptor.domicilioFiscalReceptor
-  )}/>`;
+  )}${attr('DomicilioFiscalReceptor', data.receptor.domicilioFiscalReceptor)}/>`;
 
   const conceptos = data.conceptos
     .map((c) => {

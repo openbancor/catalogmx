@@ -7,9 +7,9 @@ recomendaciones 20 y 21 de UN/ECE.
 """
 
 import json
+from typing import TypedDict
 
 from catalogmx.utils.shared_data import get_shared_data_path
-from typing import TypedDict
 
 
 class ClaveUnidad(TypedDict):

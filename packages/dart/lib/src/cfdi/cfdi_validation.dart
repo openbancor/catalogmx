@@ -66,6 +66,13 @@ class CfdiValidation {
 
   static String normalizeXml(String xml) {
     final document = XmlDocument.parse(xml);
+    // Drop formatting-only whitespace so pretty-printed XML normalizes
+    // back to its compact structural representation.
+    for (final node in document.descendants.whereType<XmlText>().toList()) {
+      if (node.value.trim().isEmpty) {
+        node.parent?.children.remove(node);
+      }
+    }
     return document.toXmlString(pretty: false, indent: '', newLine: '');
   }
 

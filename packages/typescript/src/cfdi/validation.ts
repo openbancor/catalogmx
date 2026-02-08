@@ -36,10 +36,7 @@ export async function generateCadenaOriginal(
   return { cadena: String(cadena).trim() };
 }
 
-export async function validateCfdiXsd(
-  xml: string,
-  xsd: string
-): Promise<XsdValidationResult> {
+export async function validateCfdiXsd(xml: string, xsd: string): Promise<XsdValidationResult> {
   if (typeof window !== 'undefined') {
     throw new Error('XSD validation is only supported in Node.js');
   }

@@ -38,10 +38,7 @@ export class CodigoAgrupadorSATCatalog {
     }
     const data = loadCatalogObject<CodigoAgrupadorSAT>(VERSION_FILES[version]);
     this._cache.set(version, data);
-    this._byCodigo.set(
-      version,
-      new Map(data.map((item) => [item.codigo, item]))
-    );
+    this._byCodigo.set(version, new Map(data.map((item) => [item.codigo, item])));
     return data;
   }
 
@@ -58,10 +55,7 @@ export class CodigoAgrupadorSATCatalog {
     return this.load(resolved).slice();
   }
 
-  static getByCodigo(
-    codigo: string,
-    version?: string
-  ): CodigoAgrupadorSAT | undefined {
+  static getByCodigo(codigo: string, version?: string): CodigoAgrupadorSAT | undefined {
     const resolved = this.resolveVersion(version);
     this.load(resolved);
     return this._byCodigo.get(resolved)?.get(codigo);
