@@ -233,6 +233,7 @@ object CodigosPostales {
      * @param limit Maximum results to return (default 100)
      * @return List of matching records
      */
+    @Suppress("NestedBlockDepth")
     fun search(query: String, limit: Int = 100): List<Map<String, Any?>> {
         ensureLoaded()
 

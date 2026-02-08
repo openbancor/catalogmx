@@ -1,3 +1,5 @@
+@file:Suppress("PackageNaming")
+
 package com.openbancor.catalogmx.catalogs.sat.carta_porte
 
 import com.openbancor.catalogmx.catalogs.base.BaseCatalog

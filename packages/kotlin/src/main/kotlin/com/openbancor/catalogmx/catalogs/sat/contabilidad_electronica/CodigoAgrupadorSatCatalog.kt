@@ -1,3 +1,5 @@
+@file:Suppress("PackageNaming", "FunctionNaming")
+
 package com.openbancor.catalogmx.catalogs.sat.contabilidad_electronica
 
 import com.openbancor.catalogmx.catalogs.base.BaseCatalog

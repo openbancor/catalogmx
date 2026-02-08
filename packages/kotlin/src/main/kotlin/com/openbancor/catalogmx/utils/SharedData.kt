@@ -23,7 +23,7 @@ object SharedData {
             if (candidate.exists()) return candidate
         }
 
-        throw IllegalStateException("shared-data not found. Set $ENV_NAME to a valid path.")
+        error("shared-data not found. Set $ENV_NAME to a valid path.")
     }
 
     fun resolvePath(relative: String): File = File(resolveRoot(), relative)

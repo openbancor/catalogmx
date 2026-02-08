@@ -1,3 +1,5 @@
+@file:Suppress("PackageNaming")
+
 package com.openbancor.catalogmx.catalogs.sat.comercio_exterior
 
 import com.openbancor.catalogmx.catalogs.base.BaseCatalog
