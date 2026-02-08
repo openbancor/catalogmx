@@ -57,7 +57,7 @@ export class CETES28Catalog {
 
     const result = await updater.query(
       `
-      SELECT fecha, tasa, plazo, instrumento, tipo, anio, mes
+      SELECT fecha, tasa, plazo, 'CETES' AS instrumento, 'tasa' AS tipo, anio, mes
       FROM cetes
       WHERE fecha = ? AND plazo = 28
       LIMIT 1
@@ -79,7 +79,7 @@ export class CETES28Catalog {
     const updater = this.getUpdater();
 
     const result = await updater.query(`
-      SELECT fecha, tasa, plazo, instrumento, tipo, anio, mes
+      SELECT fecha, tasa, plazo, 'CETES' AS instrumento, 'tasa' AS tipo, anio, mes
       FROM cetes
       WHERE plazo = 28
       ORDER BY fecha DESC
@@ -109,7 +109,7 @@ export class CETES28Catalog {
 
     const result = await updater.query(
       `
-      SELECT fecha, tasa, plazo, instrumento, tipo, anio, mes
+      SELECT fecha, tasa, plazo, 'CETES' AS instrumento, 'tasa' AS tipo, anio, mes
       FROM cetes
       WHERE anio = ? AND plazo = 28
       ORDER BY fecha

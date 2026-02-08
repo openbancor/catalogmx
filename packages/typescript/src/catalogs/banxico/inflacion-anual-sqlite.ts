@@ -10,7 +10,7 @@ import { HttpVfsUpdater } from '../../data/http-vfs-updater';
 export interface InflacionAnualRecord {
   fecha: string;
   inflacion_anual: number;
-  indice: string;
+  indice: number | null;
   tipo: string;
   año: number;
   mes: number;
@@ -40,7 +40,7 @@ export class InflacionAnualCatalog {
     return {
       fecha: row[0] as string,
       inflacion_anual: row[1] as number,
-      indice: row[2] as string,
+      indice: row[2] as number | null,
       tipo: row[3] as string,
       año: row[4] as number,
       mes: row[5] as number,
@@ -55,7 +55,7 @@ export class InflacionAnualCatalog {
 
     const result = await updater.query(
       `
-      SELECT fecha, inflacion_anual, indice, tipo, anio, mes
+      SELECT fecha, inflacion_anual, inpc AS indice, 'inpc' AS tipo, anio, mes
       FROM inflacion
       WHERE fecha = ?
       LIMIT 1
@@ -77,7 +77,7 @@ export class InflacionAnualCatalog {
     const updater = this.getUpdater();
 
     const result = await updater.query(`
-      SELECT fecha, inflacion_anual, indice, tipo, anio, mes
+      SELECT fecha, inflacion_anual, inpc AS indice, 'inpc' AS tipo, anio, mes
       FROM inflacion
       ORDER BY fecha DESC
       LIMIT 1
@@ -106,7 +106,7 @@ export class InflacionAnualCatalog {
 
     const result = await updater.query(
       `
-      SELECT fecha, inflacion_anual, indice, tipo, anio, mes
+      SELECT fecha, inflacion_anual, inpc AS indice, 'inpc' AS tipo, anio, mes
       FROM inflacion
       WHERE anio = ?
       ORDER BY fecha

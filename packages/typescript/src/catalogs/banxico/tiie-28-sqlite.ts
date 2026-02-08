@@ -55,7 +55,7 @@ export class TIIE28Catalog {
 
     const result = await updater.query(
       `
-      SELECT fecha, tasa, plazo, tipo, anio, mes
+      SELECT fecha, tasa, plazo, 'tiie' AS tipo, anio, mes
       FROM tiie
       WHERE fecha = ? AND plazo = 28
       LIMIT 1
@@ -77,7 +77,7 @@ export class TIIE28Catalog {
     const updater = this.getUpdater();
 
     const result = await updater.query(`
-      SELECT fecha, tasa, plazo, tipo, anio, mes
+      SELECT fecha, tasa, plazo, 'tiie' AS tipo, anio, mes
       FROM tiie
       WHERE plazo = 28
       ORDER BY fecha DESC
@@ -107,7 +107,7 @@ export class TIIE28Catalog {
 
     const result = await updater.query(
       `
-      SELECT fecha, tasa, plazo, tipo, anio, mes
+      SELECT fecha, tasa, plazo, 'tiie' AS tipo, anio, mes
       FROM tiie
       WHERE anio = ? AND plazo = 28
       ORDER BY fecha

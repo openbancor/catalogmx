@@ -62,7 +62,15 @@ export class SalariosMinimosCatalog {
 
     const result = await updater.query(
       `
-      SELECT fecha, salario_minimo, tipo, zona, periodo, serie, anio, mes
+      SELECT
+        fecha,
+        salario_diario AS salario_minimo,
+        'diario' AS tipo,
+        zona,
+        'mensual' AS periodo,
+        'banxico_salarios_minimos' AS serie,
+        anio,
+        mes
       FROM salarios_minimos
       WHERE fecha = ? AND zona = ?
       LIMIT 1
@@ -85,7 +93,15 @@ export class SalariosMinimosCatalog {
 
     const result = await updater.query(
       `
-      SELECT fecha, salario_minimo, tipo, zona, periodo, serie, anio, mes
+      SELECT
+        fecha,
+        salario_diario AS salario_minimo,
+        'diario' AS tipo,
+        zona,
+        'mensual' AS periodo,
+        'banxico_salarios_minimos' AS serie,
+        anio,
+        mes
       FROM salarios_minimos
       WHERE zona = ?
       ORDER BY fecha DESC
@@ -134,7 +150,15 @@ export class SalariosMinimosCatalog {
 
     const result = await updater.query(
       `
-      SELECT fecha, salario_minimo, tipo, zona, periodo, serie, anio, mes
+      SELECT
+        fecha,
+        salario_diario AS salario_minimo,
+        'diario' AS tipo,
+        zona,
+        'mensual' AS periodo,
+        'banxico_salarios_minimos' AS serie,
+        anio,
+        mes
       FROM salarios_minimos
       WHERE anio = ? AND zona = ?
       ORDER BY fecha
