@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { base } from '$app/paths';
-	import { Calculator, TrendingUp, Percent, DollarSign, Receipt, Shield, Users } from 'lucide-svelte';
+	import { Calculator, TrendingUp, Percent, DollarSign, Receipt, Shield, Users, CreditCard } from 'lucide-svelte';
 
 	const calculators = [
 		{
@@ -100,6 +100,22 @@
 			status: 'available'
 		},
 		{
+			id: 'informacion-clabe',
+			name: 'Información CLABE',
+			description: 'Decodifica banco y plaza',
+			longDescription: 'Pega una CLABE y obtén información de banco, plaza, cuenta y validez del dígito de control',
+			href: `${base}/calculadoras/informacion-clabe`,
+			icon: CreditCard,
+			color: 'bg-emerald-500',
+			features: [
+				'Identifica banco por código',
+				'Decodifica plaza/sucursal',
+				'Valida dígito de control',
+				'Desglose completo de CLABE'
+			],
+			status: 'available'
+		},
+		{
 			id: 'tipo-cambio',
 			name: 'Dólar FIX',
 			description: 'Conversión USD/MXN Banxico',
@@ -152,7 +168,8 @@
 
 <svelte:head>
 	<title>Calculadoras - catalogmx</title>
-	<meta name="description" content="Calculadoras fiscales y laborales de México: ISR, RESICO, IVA, IMSS, Costo del Trabajador. Basadas en datos oficiales." />
+	<meta name="description" content="Calculadoras de México: ISR, RESICO, IVA, IMSS, costo laboral, UDI, dólar FIX Banxico e información de CLABE." />
+	<meta name="keywords" content="calculadora ISR, calculadora IMSS, dólar FIX Banxico, información de CLABE, decodificar CLABE" />
 </svelte:head>
 
 <!-- Hero -->
