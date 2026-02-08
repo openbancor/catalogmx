@@ -44,10 +44,18 @@
 			loading = true;
 			error = null;
 
-			// Load tipos de incapacidad from SQLite
-			data = await query<TipoIncapacidad>(
-				"SELECT clave, descripcion, dias_pago FROM imss_catalogs WHERE dias_pago IS NOT NULL ORDER BY clave"
+			// Load tipos de incapacidad from canonical IMSS JSON in SQLite
+			const result = await query<{ payload: string }>(
+				'SELECT payload FROM catalog_json WHERE path = ? LIMIT 1',
+				['imss-catalogs.json']
 			);
+			if (result.length === 0) {
+				throw new Error('No se encontro imss-catalogs.json en catalog_json');
+			}
+			const catalog = JSON.parse(result[0].payload) as {
+				tipos_incapacidad?: TipoIncapacidad[];
+			};
+			data = Array.isArray(catalog.tipos_incapacidad) ? catalog.tipos_incapacidad : [];
 
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';

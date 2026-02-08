@@ -96,8 +96,7 @@
 						<Loader2 class="h-4 w-4 animate-spin text-slate-400" />
 					{:else if hasExpandableContent}
 						<ChevronRight
-							class="h-4 w-4 text-slate-400 transition-transform duration-200"
-							class:rotate-90={isExpanded}
+							class={`h-4 w-4 text-slate-400 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}
 						/>
 					{:else}
 						<span class="w-4"></span>

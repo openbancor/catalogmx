@@ -67,36 +67,18 @@
 			loading = true;
 			error = null;
 
-			// Load IVA tasas data from SQLite
-			const tasas = await query<Tasa>('SELECT * FROM sat_impuestos_iva_tasas ORDER BY vigencia_inicio DESC');
-
-			// Construct the data structure with static exenciones and tasa_cero_productos
+			// Load canonical IVA catalog JSON from SQLite
+			const result = await query<{ payload: string }>(
+				'SELECT payload FROM catalog_json WHERE path = ? LIMIT 1',
+				['sat/impuestos/iva_tasas.json']
+			);
+			if (result.length === 0) {
+				throw new Error('No se encontro sat/impuestos/iva_tasas.json en catalog_json');
+			}
+			const parsed = JSON.parse(result[0].payload) as IVAData;
 			data = {
-				metadata: {
-					catalog: 'SAT IVA Tasas',
-					description: 'Tasas del Impuesto al Valor Agregado',
-					source: 'SAT - Ley del IVA',
-					last_updated: new Date().toISOString().split('T')[0],
-					notes: 'Tasas históricas y vigentes del IVA en México'
-				},
-				tasas: tasas,
-				exenciones: [
-					{ concepto: 'servicios_medicos', descripcion: 'Servicios médicos y hospitalarios', articulo: 'Art. 15, fracción XIV LIVA' },
-					{ concepto: 'educacion', descripcion: 'Servicios educativos', articulo: 'Art. 15, fracción IV LIVA' },
-					{ concepto: 'transporte_terrestre', descripcion: 'Transporte público terrestre de personas', articulo: 'Art. 15, fracción V LIVA' },
-					{ concepto: 'vivienda', descripcion: 'Enajenación de casa habitación', articulo: 'Art. 9, fracción II LIVA' }
-				],
-				tasa_cero_productos: [
-					{ categoria: 'alimentos', descripcion: 'Animales y vegetales no industrializados' },
-					{ categoria: 'alimentos', descripcion: 'Carne en estado natural' },
-					{ categoria: 'alimentos', descripcion: 'Leche y derivados' },
-					{ categoria: 'alimentos', descripcion: 'Huevo, harina, pan y tortillas' },
-					{ categoria: 'agropecuarios', descripcion: 'Invernaderos para cultivos' },
-					{ categoria: 'agropecuarios', descripcion: 'Tractores y maquinaria agrícola' },
-					{ categoria: 'medicinas', descripcion: 'Medicinas de patente' },
-					{ categoria: 'medicinas', descripcion: 'Productos destinados a la alimentación' },
-					{ categoria: 'libros', descripcion: 'Libros, periódicos y revistas' }
-				]
+				...parsed,
+				tasas: [...parsed.tasas].sort((a, b) => b.vigencia_inicio.localeCompare(a.vigencia_inicio))
 			};
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';

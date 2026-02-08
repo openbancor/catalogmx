@@ -38,6 +38,7 @@
 	let expandedIds = $state(new Set<string>());
 	let byCodigo = $state(new Map<string, CodigoAgrupadorRow>());
 	let matchCount = $state(0);
+	const selectedItem = $derived(selectedId ? byCodigo.get(selectedId) : null);
 
 	function tableForVersion(ver: VersionKey): string {
 		return ver === '2024-01-22'
@@ -191,17 +192,17 @@
 		loadData();
 	});
 
-	$: if (searchQuery.trim() || nivelFilter !== 'all') {
-		const { nodes, expanded, matches } = filterTree(tree, searchQuery.trim());
-		filteredTree = nodes;
-		expandedIds = expanded;
-		matchCount = matches;
-	} else {
-		filteredTree = tree;
-		matchCount = 0;
-	}
-
-	$: selectedItem = selectedId ? byCodigo.get(selectedId) : null;
+	$effect(() => {
+		if (searchQuery.trim() || nivelFilter !== 'all') {
+			const { nodes, expanded, matches } = filterTree(tree, searchQuery.trim());
+			filteredTree = nodes;
+			expandedIds = expanded;
+			matchCount = matches;
+		} else {
+			filteredTree = tree;
+			matchCount = 0;
+		}
+	});
 </script>
 
 <svelte:head>

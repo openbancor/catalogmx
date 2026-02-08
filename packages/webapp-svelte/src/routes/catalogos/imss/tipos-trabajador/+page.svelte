@@ -44,10 +44,18 @@
 			loading = true;
 			error = null;
 
-			// Load tipos de trabajador from SQLite
-			data = await query<TipoTrabajador>(
-				"SELECT clave, descripcion, caracteristicas FROM imss_catalogs WHERE caracteristicas IS NOT NULL ORDER BY clave"
+			// Load tipos de trabajador from canonical IMSS JSON in SQLite
+			const result = await query<{ payload: string }>(
+				'SELECT payload FROM catalog_json WHERE path = ? LIMIT 1',
+				['imss-catalogs.json']
 			);
+			if (result.length === 0) {
+				throw new Error('No se encontro imss-catalogs.json en catalog_json');
+			}
+			const catalog = JSON.parse(result[0].payload) as {
+				tipos_trabajador?: TipoTrabajador[];
+			};
+			data = Array.isArray(catalog.tipos_trabajador) ? catalog.tipos_trabajador : [];
 
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';

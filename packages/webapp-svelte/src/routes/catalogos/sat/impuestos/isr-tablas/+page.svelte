@@ -53,61 +53,28 @@
 		return `${value.toFixed(2)}%`;
 	}
 
-	interface ISRRow {
-		año: number;
-		periodicidad: string;
-		vigencia_inicio: string;
-		vigencia_fin: string | null;
-		notas: string | null;
-		limite_inferior: number;
-		limite_superior: number | null;
-		cuota_fija: number;
-		tasa_excedente: number;
-	}
+async function loadData() {
+	try {
+		loading = true;
+		error = null;
 
-	async function loadData() {
-		try {
-			loading = true;
-			error = null;
+		// Load canonical ISR catalog JSON from SQLite
+		const result = await query<{ payload: string }>(
+			'SELECT payload FROM catalog_json WHERE path = ? LIMIT 1',
+			['sat/impuestos/isr_tablas.json']
+		);
+		if (result.length === 0) {
+			throw new Error('No se encontro sat/impuestos/isr_tablas.json en catalog_json');
+		}
+		const parsed = JSON.parse(result[0].payload) as ISRData;
+		data = {
+			...parsed,
+			tablas: [...parsed.tablas].sort((a, b) => b.año - a.año)
+		};
 
-			// Load ISR tablas data from SQLite
-			const rows = await query<ISRRow>('SELECT * FROM sat_impuestos_isr_tablas ORDER BY año DESC, limite_inferior ASC');
-
-			// Group rows by year to reconstruct the tablas structure
-			const tablasMap = new Map<number, Tabla>();
-			for (const row of rows) {
-				if (!tablasMap.has(row.año)) {
-					tablasMap.set(row.año, {
-						año: row.año,
-						periodicidad: row.periodicidad,
-						vigencia_inicio: row.vigencia_inicio,
-						vigencia_fin: row.vigencia_fin,
-						notas: row.notas || undefined,
-						tramos: []
-					});
-				}
-				tablasMap.get(row.año)!.tramos.push({
-					limite_inferior: row.limite_inferior,
-					limite_superior: row.limite_superior,
-					cuota_fija: row.cuota_fija,
-					tasa_excedente: row.tasa_excedente
-				});
-			}
-
-			data = {
-				metadata: {
-					catalog: 'SAT ISR Tablas',
-					description: 'Tablas del Impuesto Sobre la Renta',
-					source: 'SAT - Ley del ISR Art. 96',
-					last_updated: new Date().toISOString().split('T')[0],
-					notes: 'Tarifas mensuales históricas'
-				},
-				tablas: Array.from(tablasMap.values())
-			};
-
-			// Select the most recent year by default
-			if (data && data.tablas.length > 0) {
-				selectedYear = data.tablas[0].año;
+		// Select the most recent year by default
+		if (data && data.tablas.length > 0) {
+			selectedYear = data.tablas[0].año;
 			}
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';

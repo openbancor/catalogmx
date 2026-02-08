@@ -36,15 +36,19 @@
 			header: 'Salario Diario',
 			cell: ({ row }) => {
 				const salario = row.original;
-				if (salario.zona_frontera_norte !== null) {
+				if (typeof salario.zona_frontera_norte === 'number') {
 					const frontera = salario.zona_frontera_norte.toLocaleString('es-MX', { minimumFractionDigits: 2 });
-					const resto = salario.resto_pais?.toLocaleString('es-MX', { minimumFractionDigits: 2 }) || 'N/A';
+					const resto = typeof salario.resto_pais === 'number'
+						? salario.resto_pais.toLocaleString('es-MX', { minimumFractionDigits: 2 })
+						: 'N/A';
 					return `Frontera: $${frontera} / Resto: $${resto}`;
-				} else if (salario.zona_general !== null) {
+				} else if (typeof salario.zona_general === 'number') {
 					return `$${salario.zona_general.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
-				} else if (salario.zona_a !== null) {
+				} else if (typeof salario.zona_a === 'number') {
 					const zonaA = salario.zona_a.toLocaleString('es-MX', { minimumFractionDigits: 2 });
-					const zonaB = salario.zona_b?.toLocaleString('es-MX', { minimumFractionDigits: 2 }) || 'N/A';
+					const zonaB = typeof salario.zona_b === 'number'
+						? salario.zona_b.toLocaleString('es-MX', { minimumFractionDigits: 2 })
+						: 'N/A';
 					return `Zona A: $${zonaA} / B: $${zonaB}`;
 				}
 				return 'N/A';
@@ -73,8 +77,18 @@
 			loading = true;
 			error = null;
 
-			// Load salarios minimos data from SQLite (banxico_salarios_minimos from dynamic data)
-			data = await query<SalarioMinimo>('SELECT * FROM banxico_salarios_minimos ORDER BY fecha DESC');
+			// Load official Mexico salaries catalog (zone-based historical values)
+			data = await query<SalarioMinimo>(`
+				SELECT
+					COALESCE(vigencia_inicio, printf('%04d-01-01', año)) AS fecha,
+					zona_frontera_norte,
+					resto_pais,
+					zona_general,
+					zona_a,
+					zona_b
+				FROM mexico_salarios_minimos
+				ORDER BY año DESC
+			`);
 
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';

@@ -54,10 +54,20 @@
 			loading = true;
 			error = null;
 
-			// Load tipos de movimiento from SQLite
-			data = await query<TipoMovimiento>(
-				"SELECT clave, descripcion, tipo FROM imss_catalogs WHERE tipo IS NOT NULL AND tipo != '' ORDER BY clave"
+			// Load tipos de movimiento from canonical IMSS JSON in SQLite
+			const result = await query<{ payload: string }>(
+				'SELECT payload FROM catalog_json WHERE path = ? LIMIT 1',
+				['imss-catalogs.json']
 			);
+			if (result.length === 0) {
+				throw new Error('No se encontro imss-catalogs.json en catalog_json');
+			}
+			const catalog = JSON.parse(result[0].payload) as {
+				tipos_movimiento_afiliatorio?: TipoMovimiento[];
+			};
+			data = Array.isArray(catalog.tipos_movimiento_afiliatorio)
+				? catalog.tipos_movimiento_afiliatorio
+				: [];
 
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Error loading data';
