@@ -1,7 +1,7 @@
 {
   "name": "catalogmx",
   "version": "0.5.1",
-  "description": "Comprehensive Mexican Data Validators and Official Catalogs - 170,505+ records including complete SEPOMEX, INEGI municipalities and localities with GPS",
+  "description": "Enterprise Mexican library: validators, generators, tax calculators, CFDI tooling and official SAT/INEGI/SEPOMEX/Banxico/IFT/CNBV catalogs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -31,9 +31,16 @@
     "validator",
     "validation",
     "catalogs",
+    "generators",
+    "calculators",
+    "cfdi",
     "banxico",
     "inegi",
     "sepomex",
+    "imss",
+    "ift",
+    "cnbv",
+    "conapo",
     "postal-codes",
     "geographic-data",
     "tax",
@@ -52,7 +59,7 @@
   "bugs": {
     "url": "https://github.com/openbancor/catalogmx/issues"
   },
-  "homepage": "https://github.com/openbancor/catalogmx#readme",
+  "homepage": "https://catalogmx.openbancor.com",
   "files": [
     "dist",
     "README.md"

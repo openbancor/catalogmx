@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "catalogmx"
 version = "0.5.1"
-description = "Comprehensive Mexican data validators and official catalogs library - 170K+ records"
+description = "Enterprise Mexican library with validators, generators, calculators, CFDI tooling and official SAT/INEGI/SEPOMEX/Banxico/IFT/CNBV/CONAPO/IMSS catalogs"
 readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.10"
 license = {text = "BSD-2-Clause"}
@@ -28,8 +28,15 @@ keywords = [
     "banxico",
     "validators",
     "catalogs",
+    "generators",
+    "calculators",
+    "cfdi",
     "postal-codes",
-    "geographic-data"
+    "geographic-data",
+    "imss",
+    "ift",
+    "cnbv",
+    "conapo"
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -80,7 +87,8 @@ all = [
 
 [project.urls]
 Homepage = "https://github.com/openbancor/catalogmx"
-Documentation = "https://catalogmx.readthedocs.io"
+Documentation = "https://catalogmx.openbancor.com/docs"
+Package = "https://pypi.org/project/catalogmx/"
 Repository = "https://github.com/openbancor/catalogmx.git"
 Issues = "https://github.com/openbancor/catalogmx/issues"
 Changelog = "https://github.com/openbancor/catalogmx/blob/main/CHANGELOG.rst"

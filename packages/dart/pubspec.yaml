@@ -1,10 +1,10 @@
 name: catalogmx
-description: Enterprise-grade Mexican data validation and official catalog library for Flutter/Dart - RFC, CURP, CLABE, NSS validators and 58+ government catalogs with 470K+ records
+description: Enterprise Mexican library for Flutter/Dart: validators, generators, tax calculators, CFDI helpers and official SAT/INEGI/SEPOMEX/Banxico/IFT/CNBV catalogs.
 version: 0.5.1
-homepage: https://github.com/openbancor/catalogmx
+homepage: https://catalogmx.openbancor.com
 repository: https://github.com/openbancor/catalogmx
 issue_tracker: https://github.com/openbancor/catalogmx/issues
-documentation: https://github.com/openbancor/catalogmx#readme
+documentation: https://catalogmx.openbancor.com/docs
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

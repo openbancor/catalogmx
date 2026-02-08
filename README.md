@@ -21,6 +21,9 @@
 **catalogmx** delivers enterprise-grade validation and data access for Mexican regulatory compliance and business operations:
 
 - **4 Production-Ready Validators**: RFC, CURP, CLABE, NSS with complete official algorithms
+- **Generators and Helpers**: RFC/CURP/CLABE/NSS generation plus CLABE decoding/formatting utilities
+- **Tax and Payroll Calculators**: ISR, RESICO, IMSS, IVA, IEPS, retenciones, and worker total cost
+- **CFDI Tooling**: CFDI 4.0 build, validation, resources, and signing helpers
 - **58 Official Government Catalogs**: SAT, INEGI, SEPOMEX, Banxico, IFT, National Regulations
 - **470,000+ Verified Records**: Complete databases with 157K postal codes, 300K localities, 2.4K municipalities
 - **Multi-Platform Support**: Python 3.10+, TypeScript 5.0+, and Dart/Flutter 3.0+ with identical APIs
@@ -276,6 +279,11 @@ info = nss.get_nss_info("12345678903")
 
 ## Official Catalogs
 
+Published packages:
+- PyPI: https://pypi.org/project/catalogmx/
+- npm: https://www.npmjs.com/package/catalogmx
+- pub.dev: https://pub.dev/packages/catalogmx
+
 ### SAT (Servicio de Administración Tributaria) - 31 Catalogs
 
 #### CFDI 4.0 (Digital Tax Receipts) - 16 Catalogs
@@ -346,6 +354,25 @@ info = nss.get_nss_info("12345678903")
 ### IFT (Telecommunications Institute) - 2 Catalogs
 
 - **Mobile Operators** (Operadores Móviles): Licensed telecommunications operators
+- **LADA Codes** (Códigos LADA): National dialing area codes by region
+
+### CONAPO (Population Council) - 2 Catalogs
+
+- **Metropolitan Areas** (Zonas Metropolitanas): Official metropolitan zones and municipalities
+- **National Urban System** (Sistema Urbano Nacional): Urban hierarchy and population clusters
+
+### CNBV (Banking and Securities Commission) - 1 Catalog
+
+- **Financial Sectors** (Sectores): Regulated financial sectors and classification codes
+
+### IMSS - 6 Catalogs
+
+- **Insurance Types** (Seguros): Mandatory and optional insurance regimes
+- **Employee Types** (Tipos de Trabajador): Employment classification keys
+- **Movement Types** (Tipos de Movimiento): Affiliation movement keys
+- **Disability Types** (Tipos de Incapacidad): Incapacity classifications
+- **Pension Tables** (Pensiones): Pension factors and thresholds
+- **Contribution Weeks** (Semanas Cotizadas): Pension eligibility requirements by regime
 
 ### Mexico National - 4 Catalogs
 

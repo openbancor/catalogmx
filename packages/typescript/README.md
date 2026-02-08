@@ -2,11 +2,16 @@
 
 **Comprehensive Mexican Data Validators and Official Catalogs**
 
-A complete TypeScript/JavaScript library for validating Mexican identifiers and accessing official catalogs from SAT, Banxico, INEGI, SEPOMEX, and other government agencies.
+A complete TypeScript/JavaScript library for validating Mexican identifiers and accessing official catalogs from SAT, Banxico, INEGI, SEPOMEX, IFT, CNBV, and Mexico reference datasets.
 
 [![npm version](https://img.shields.io/npm/v/catalogmx)](https://www.npmjs.com/package/catalogmx)
 [![License](https://img.shields.io/badge/license-BSD-blue)](../../LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
+
+Published packages:
+- npm: https://www.npmjs.com/package/catalogmx
+- PyPI: https://pypi.org/project/catalogmx/
+- pub.dev: https://pub.dev/packages/catalogmx
 
 ---
 
@@ -29,18 +34,62 @@ A complete TypeScript/JavaScript library for validating Mexican identifiers and 
 - **CLABE** - Clave Bancaria Estandarizada
   - 18-digit bank account validator
   - Modulo 10 check digit (Luhn-like)
-  - Bank/branch code extraction
+  - Bank/branch code extraction with `decodeClabe()`
+  - Formatting helpers with `formatClabe()`
 
 - **NSS** - Número de Seguridad Social (IMSS)
   - 11-digit validation
   - Modified Luhn algorithm check digit
 
-### 📚 Official Catalogs
+### ⚙️ Generators and Utilities
 
-- **Banxico** - 100+ Mexican banks with SPEI status
-- **INEGI** - States and municipalities
-- **SEPOMEX** - Postal codes
-- **SAT CFDI 4.0** - Tax catalogs (Régimen Fiscal, Uso CFDI, Forma de Pago)
+- **Identifier generation**:
+  - RFC persona física and persona moral
+  - CURP from personal identity data
+  - CLABE with valid check digit
+  - NSS with check digit
+- **CLABE utilities**:
+  - `validateClabe()`, `decodeClabe()`, `formatClabe()`
+  - Random/example CLABE generation helpers
+- **Shared data loaders**:
+  - JSON and SQLite-backed catalog loading
+  - Hybrid loaders for large SAT/Banxico catalogs
+
+### 🧮 Tax and Payroll Calculators
+
+- **ISR** (monthly/annual and other periods)
+- **RESICO** (Régimen Simplificado de Confianza)
+- **IMSS** (cuotas obrero-patronales, modalidades)
+- **IVA / IEPS / Retenciones / Impuestos locales**
+- **Costo total del trabajador** (integrated payroll cost)
+
+### 🧾 CFDI Tooling
+
+- CFDI 4.0 builder helpers
+- CFDI XML validation helpers
+- CFDI signing helpers
+- CFDI resource management helpers
+
+### 🌐 Runtime Compatibility
+
+- `validateClabe()` and `formatClabe()` are pure functions and work in Node.js, browsers, and edge/workers environments.
+- `decodeClabe()` enriches CLABE data with bank/plaza catalogs and requires catalog data loading (SQLite/JSON backend).
+
+### 📚 Official Catalog Inventory
+
+Project inventory (58+ official catalogs), grouped by source:
+
+- **SAT CFDI 4.0**: `c_ClaveProdServ`, `c_ClaveUnidad`, `c_CodigoPostal`, `c_RegimenFiscal`, `c_UsoCFDI`, `c_FormaPago`, `c_MetodoPago`, `c_Impuesto`, `c_ObjetoImp`, `c_Exportacion`, `c_TipoComprobante`, `c_TipoRelacion`, `c_TipoFactor`, `c_TasaOCuota`, `c_Meses`, `c_Periodicidad`.
+- **SAT Nómina**: `c_Banco`, `c_TipoContrato`, `c_TipoRegimen`, `c_TipoJornada`, `c_RiesgoPuesto`, `c_PeriodicidadPago`, `c_TipoNomina`.
+- **SAT Comercio Exterior**: `c_Incoterm`, `c_Pais`, `c_Moneda`, `c_ClavePedimento`, `c_UnidadAduana`, `c_MotivoTraslado`, `c_RegistroIdentTrib`, estados USA/Canadá.
+- **SAT Carta Porte**: aeropuertos, carreteras, configuración de autotransporte, material peligroso, puertos marítimos, tipo de embalaje, tipo de permiso.
+- **SAT Contabilidad Electrónica**: código agrupador.
+- **Banxico**: bancos SPEI, códigos de plaza, instituciones financieras, monedas/divisas, UDI, tipo de cambio USD/MXN, TIIE 28, CETES 28, inflación anual, salarios mínimos históricos.
+- **INEGI**: estados, municipios, municipios completos, localidades, SCIAN.
+- **SEPOMEX**: códigos postales y versión completa.
+- **IFT**: operadores móviles.
+- **CNBV**: sectores financieros.
+- **México**: UMA, salarios mínimos, hoy no circula, formatos de placas, giros mercantiles.
 
 ---
 
@@ -181,6 +230,8 @@ All catalog data comes from official Mexican government sources:
 - **INEGI** - Instituto Nacional de Estadística y Geografía
 - **SEPOMEX** - Servicio Postal Mexicano
 - **Banxico** - Banco de México
+- **IFT** - Instituto Federal de Telecomunicaciones
+- **CNBV** - Comisión Nacional Bancaria y de Valores
 
 ---
 

@@ -7,6 +7,11 @@
 
 This is the official Dart/Flutter port of [catalogmx](https://github.com/openbancor/catalogmx), maintaining 100% API compatibility with the Python and TypeScript versions.
 
+Published packages:
+- pub.dev: https://pub.dev/packages/catalogmx
+- PyPI: https://pypi.org/project/catalogmx/
+- npm: https://www.npmjs.com/package/catalogmx
+
 ---
 
 ## 🚀 Features
@@ -17,11 +22,34 @@ This is the official Dart/Flutter port of [catalogmx](https://github.com/openban
 - ✅ **CLABE** - Clave Bancaria Estandarizada (Bank Account)
 - ✅ **NSS** - Número de Seguridad Social (Social Security)
 
+### Generators and Identity Helpers
+- ✅ Generate RFC (persona física and moral)
+- ✅ Generate CURP from personal data
+- ✅ Generate CLABE with check digit
+- ✅ Generate NSS with check digit
+- ✅ Identity helper workflows (`identity.dart`)
+
+### Tax and Payroll Calculators
+- ✅ ISR calculator
+- ✅ RESICO calculator
+- ✅ IMSS calculators
+- ✅ IVA / IEPS / retenciones / impuestos locales
+- ✅ Costo total del trabajador
+
+### CFDI Tooling
+- ✅ CFDI 4.0 XML builder
+- ✅ CFDI validation helpers
+- ✅ CFDI signing helpers
+- ✅ CFDI PAC helper interfaces
+
 ### Official Catalogs
-- 📦 **INEGI** - States, municipalities, localities
-- 📦 **SAT** - Tax catalogs, airports, customs
-- 📦 **Banxico** - Banks and financial institutions
-- 📦 **SEPOMEX** - Postal codes (coming soon)
+- 📦 **SAT** - CFDI, Nómina, Carta Porte, Comercio Exterior y Contabilidad Electrónica
+- 📦 **Banxico** - Banks, plazas, institutions, divisas, UDI, tipo de cambio, TIIE, CETES, inflación y salarios
+- 📦 **INEGI** - States, municipalities, localities and SCIAN
+- 📦 **SEPOMEX** - Postal codes (standard + complete)
+- 📦 **IFT** - Mobile operators and LADA codes
+- 📦 **CNBV** - Financial sectors
+- 📦 **Mexico** - UMA, salarios mínimos, hoy no circula, placas y giros mercantiles
 
 ### Enterprise Features
 - 🎯 **Type-safe** - Full null-safety support for Dart 3.0+
@@ -119,6 +147,20 @@ void main() {
   List<Map<String, dynamic>> results = InegStates.search('mexico');
 }
 ```
+
+### Catalog Inventory (Dart package)
+
+- **SAT CFDI**: régimen fiscal, uso CFDI, forma de pago, método de pago, tipo de comprobante.
+- **SAT Nómina**: bancos, periodicidad de pago, tipo de contrato, tipo de jornada, tipo de nómina, tipo de régimen, riesgo de puesto.
+- **SAT Carta Porte**: aeropuertos, carreteras, configuración de autotransporte, material peligroso, puertos marítimos, tipo de embalaje, tipo de permiso.
+- **SAT Comercio Exterior**: países, monedas, incoterms, claves de pedimento, unidad aduana, motivos de traslado, registro de identificación tributaria, estados USA/Canadá.
+- **SAT Contabilidad Electrónica**: código agrupador.
+- **Banxico**: bancos, códigos de plaza, instituciones financieras, monedas/divisas, UDI, tipo de cambio USD, TIIE 28, CETES 28, inflación anual, salarios mínimos.
+- **INEGI**: estados, municipios, municipios completo, localidades, SCIAN.
+- **SEPOMEX**: códigos postales y códigos postales completo.
+- **IFT**: operadores móviles y códigos LADA.
+- **CNBV**: sectores.
+- **México**: UMA, salarios mínimos, hoy no circula, formatos de placas, giros mercantiles.
 
 ---
 
