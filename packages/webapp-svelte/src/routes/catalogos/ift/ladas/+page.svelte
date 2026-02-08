@@ -7,6 +7,21 @@
 
 	const SITE_URL = 'https://catalogmx.openbancor.com';
 	const canonicalUrl = `${SITE_URL}/catalogos/ift/ladas`;
+	const ladasJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		name: 'Codigos LADA de Mexico',
+		url: canonicalUrl,
+		description: 'Catalogo de codigos LADA oficiales de Mexico por ciudad y estado.',
+		mainEntity: {
+			'@type': 'ItemList',
+			itemListElement: [
+				{ '@type': 'ListItem', position: 1, name: 'LADA 55', url: `${SITE_URL}/catalogos/ift/ladas/55` },
+				{ '@type': 'ListItem', position: 2, name: 'LADA 33', url: `${SITE_URL}/catalogos/ift/ladas/33` },
+				{ '@type': 'ListItem', position: 3, name: 'LADA 81', url: `${SITE_URL}/catalogos/ift/ladas/81` }
+			]
+		}
+	};
 	import { base } from '$app/paths';
 
 	interface CodigoLada {
@@ -22,6 +37,16 @@
 	let data = $state<CodigoLada[]>([]);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
+	const popularLadas = [
+		{ lada: '55', ciudad: 'Ciudad de Mexico' },
+		{ lada: '33', ciudad: 'Guadalajara' },
+		{ lada: '81', ciudad: 'Monterrey' },
+		{ lada: '222', ciudad: 'Puebla' },
+		{ lada: '999', ciudad: 'Merida' },
+		{ lada: '998', ciudad: 'Cancun' },
+		{ lada: '664', ciudad: 'Tijuana' },
+		{ lada: '656', ciudad: 'Ciudad Juarez' }
+	];
 
 	const totalCodigos = $derived(data.length);
 	const metropolitanas = $derived(data.filter(c => c.tipo === 'metropolitana').length);
@@ -93,6 +118,10 @@
 	<meta property="og:title" content="Códigos LADA de México (IFT) - catalogmx" />
 	<meta property="og:description" content="Consulta códigos LADA oficiales de México por ciudad, estado y región." />
 	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Codigos LADA de Mexico - catalogmx" />
+	<meta name="twitter:description" content="Consulta claves LADA oficiales de Mexico por ciudad y estado." />
+	{@html `<script type="application/ld+json">${JSON.stringify(ladasJsonLd)}</script>`}
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -212,6 +241,22 @@
 						A partir del 3 de agosto de 2019, todos los numeros telefonicos en Mexico se marcan con
 						<strong>10 digitos</strong>: el codigo LADA (2 o 3 digitos) + el numero local (7 u 8 digitos).
 					</p>
+				</div>
+			</div>
+
+			<div class="card p-6">
+				<h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">
+					LADAS populares
+				</h2>
+				<div class="flex flex-wrap gap-2">
+					{#each popularLadas as item}
+						<a
+							href="{base}/catalogos/ift/ladas/{item.lada}"
+							class="text-sm bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg text-slate-700 dark:text-slate-300"
+						>
+							LADA {item.lada} - {item.ciudad}
+						</a>
+					{/each}
 				</div>
 			</div>
 

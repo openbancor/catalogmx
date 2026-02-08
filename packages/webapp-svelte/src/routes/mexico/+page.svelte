@@ -1,6 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { query } from '$lib/db';
+	import { base } from '$app/paths';
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/mexico`;
+	const mexicoJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		name: 'Estados de Mexico',
+		url: canonicalUrl,
+		description:
+			'Explora los estados y municipios de Mexico con datos demograficos y enlaces a codigos postales.'
+	};
 
 	type Estado = {
 		cve_inegi: string;
@@ -61,6 +72,17 @@
 <svelte:head>
 	<title>Estados de México | catalogmx</title>
 	<meta name="description" content="Explora los 32 estados de Mexico: poblacion, municipios, zonas metropolitanas, codigos postales y mas." />
+	<meta name="keywords" content="estados de mexico, municipios de mexico, poblacion por estado, INEGI, codigos postales mexico" />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Estados de Mexico - catalogmx" />
+	<meta property="og:description" content="Consulta los 32 estados de Mexico con poblacion y municipios." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Estados de Mexico - catalogmx" />
+	<meta name="twitter:description" content="Datos de estados y municipios de Mexico con fuente oficial." />
+	{@html `<script type="application/ld+json">${JSON.stringify(mexicoJsonLd)}</script>`}
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8">
@@ -107,7 +129,7 @@
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
 			{#each estados as estado}
 				<a
-					href="/mexico/{estado.nombre_slug}/"
+					href="{base}/mexico/{estado.nombre_slug}/"
 					class="block bg-white border border-gray-200 rounded-lg p-4 hover:border-blue-400 hover:shadow-md transition-all"
 				>
 					<div class="flex items-start justify-between">
@@ -131,6 +153,20 @@
 					</div>
 				</a>
 			{/each}
+		</div>
+
+		<div class="mt-8 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 p-4 text-xs text-slate-600 dark:text-slate-300">
+			<strong>Relacionados:</strong>
+			<a href="{base}/catalogos/sepomex/codigos-postales" class="text-brand-600 dark:text-brand-400 hover:underline">
+				codigos postales
+			</a>,
+			<a href="{base}/catalogos/inegi/localidades" class="text-brand-600 dark:text-brand-400 hover:underline">
+				localidades INEGI
+			</a>
+			y
+			<a href="{base}/catalogos/ift/ladas" class="text-brand-600 dark:text-brand-400 hover:underline">
+				codigos LADA
+			</a>.
 		</div>
 	{/if}
 </div>

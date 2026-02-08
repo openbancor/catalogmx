@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { query, queryOne } from '$lib/db';
+	import { base } from '$app/paths';
+	const SITE_URL = 'https://catalogmx.openbancor.com';
 
 	type Municipio = {
 		cve_inegi: string;
@@ -35,14 +37,54 @@
 	let loading = true;
 	let error = '';
 
-	$: estadoSlug = $page.params.estado;
-	$: municipioSlug = $page.params.municipio;
+	$: estadoSlug = $page.params.estado ?? '';
+	$: municipioSlug = $page.params.municipio ?? '';
+
+	function slugToName(slug: string): string {
+		return decodeURIComponent(slug)
+			.replace(/-/g, ' ')
+			.replace(/\b\w/g, (c) => c.toUpperCase());
+	}
+
+	function getEstadoName(): string {
+		return municipio?.estado ?? slugToName(estadoSlug);
+	}
+
+	function getMunicipioName(): string {
+		return municipio?.nombre ?? slugToName(municipioSlug);
+	}
+
+	function getCanonicalUrl(): string {
+		return `${SITE_URL}/mexico/${estadoSlug}/${municipioSlug}`;
+	}
+
+	function getDescription(): string {
+		if (!municipio) {
+			return `Datos de ${getMunicipioName()}, ${getEstadoName()}: poblacion, codigos postales y referencias oficiales de INEGI.`;
+		}
+		return `Datos de ${municipio.nombre}, ${municipio.estado}: poblacion ${formatNumber(municipio.poblacion_total)}, vivienda y ${codigosPostales.length} codigos postales registrados.`;
+	}
+
+	function getJsonLd() {
+		return {
+			'@context': 'https://schema.org',
+			'@type': 'City',
+			name: getMunicipioName(),
+			containedInPlace: {
+				'@type': 'AdministrativeArea',
+				name: getEstadoName()
+			},
+			url: getCanonicalUrl(),
+			description: getDescription()
+		};
+	}
 
 	onMount(async () => {
 		try {
 			// Get municipality with ZM info
 			try {
-				municipio = await queryOne<Municipio>(`
+				municipio = await queryOne<Municipio>(
+					`
 					SELECT
 						m.*,
 						zm.zm_id,
@@ -54,15 +96,20 @@
 					FROM geo_municipios m
 					LEFT JOIN geo_municipio_zm mzm ON m.cve_inegi = mzm.cve_inegi
 					LEFT JOIN geo_zonas_metropolitanas zm ON mzm.zm_id = zm.zm_id
-					WHERE m.estado_slug = '${estadoSlug}' AND m.nombre_slug = '${municipioSlug}'
-				`);
+					WHERE m.estado_slug = ? AND m.nombre_slug = ?
+				`,
+					[estadoSlug, municipioSlug]
+				);
 			} catch {
 				// Fallback without ZM
-				municipio = await queryOne<Municipio>(`
+				municipio = await queryOne<Municipio>(
+					`
 					SELECT *
 					FROM geo_municipios
-					WHERE estado_slug = '${estadoSlug}' AND nombre_slug = '${municipioSlug}'
-				`);
+					WHERE estado_slug = ? AND nombre_slug = ?
+				`,
+					[estadoSlug, municipioSlug]
+				);
 			}
 
 			if (!municipio) {
@@ -73,14 +120,17 @@
 
 			// Get postal codes for this municipality (if available)
 			try {
-				codigosPostales = await query<CodigoPostal>(`
+				codigosPostales = await query<CodigoPostal>(
+					`
 					SELECT DISTINCT cp, asentamiento, tipo_asentamiento
 					FROM codigos_postales
-					WHERE LOWER(municipio) = LOWER('${municipio.nombre}')
-					AND LOWER(estado) LIKE '%${municipio.estado.toLowerCase().substring(0, 10)}%'
+					WHERE LOWER(municipio) = LOWER(?)
+					AND LOWER(estado) LIKE ?
 					ORDER BY cp, asentamiento
 					LIMIT 50
-				`);
+				`,
+					[municipio.nombre, `%${municipio.estado.toLowerCase().substring(0, 10)}%`]
+				);
 			} catch {
 				// Postal codes not available
 				codigosPostales = [];
@@ -105,24 +155,31 @@
 </script>
 
 <svelte:head>
-	{#if municipio}
-		<title>{municipio.nombre}, {municipio.estado} - Municipios de México | catalogmx</title>
-		<meta name="description" content="Datos de {municipio.nombre}, {municipio.estado}: poblacion {formatNumber(municipio.poblacion_total)}, {codigosPostales.length > 0 ? codigosPostales.length + ' colonias' : ''}. Datos oficiales de INEGI." />
-	{:else}
-		<title>Municipio | catalogmx</title>
-	{/if}
+	<title>{getMunicipioName()}, {getEstadoName()} - Municipios de Mexico | catalogmx</title>
+	<meta name="description" content={getDescription()} />
+	<meta name="keywords" content={`municipio ${getMunicipioName()}, ${getEstadoName()}, codigos postales ${getMunicipioName()}, poblacion ${getMunicipioName()}`} />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={getCanonicalUrl()} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content={`${getMunicipioName()}, ${getEstadoName()} - catalogmx`} />
+	<meta property="og:description" content={getDescription()} />
+	<meta property="og:url" content={getCanonicalUrl()} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content={`${getMunicipioName()}, ${getEstadoName()} - catalogmx`} />
+	<meta name="twitter:description" content={getDescription()} />
+	{@html `<script type="application/ld+json">${JSON.stringify(getJsonLd())}</script>`}
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8">
 	<!-- Breadcrumb -->
 	<nav class="text-sm mb-6">
 		<ol class="flex items-center space-x-2 flex-wrap">
-			<li><a href="/" class="text-blue-600 hover:underline">Inicio</a></li>
+			<li><a href="{base}/" class="text-blue-600 hover:underline">Inicio</a></li>
 			<li class="text-gray-400">/</li>
-			<li><a href="/mexico/" class="text-blue-600 hover:underline">Mexico</a></li>
+			<li><a href="{base}/mexico/" class="text-blue-600 hover:underline">Mexico</a></li>
 			<li class="text-gray-400">/</li>
 			{#if municipio}
-				<li><a href="/mexico/{municipio.estado_slug}/" class="text-blue-600 hover:underline">{municipio.estado}</a></li>
+				<li><a href="{base}/mexico/{municipio.estado_slug}/" class="text-blue-600 hover:underline">{municipio.estado}</a></li>
 				<li class="text-gray-400">/</li>
 				<li class="text-gray-600">{municipio.nombre}</li>
 			{/if}
@@ -154,7 +211,7 @@
 			<div class="mb-6 bg-purple-50 border border-purple-200 rounded-lg p-4">
 				<div class="flex items-center gap-2">
 					<span class="text-purple-700 font-medium">Zona Metropolitana:</span>
-					<a href="/zonas-metropolitanas/{municipio.zm_slug}/" class="text-purple-600 hover:underline font-semibold">
+					<a href="{base}/catalogos/conapo/zonas-metropolitanas" class="text-purple-600 hover:underline font-semibold">
 						{municipio.zm_nombre}
 					</a>
 					<span class="text-sm text-purple-500">({municipio.zm_tipo})</span>
@@ -210,7 +267,7 @@
 							{#each codigosPostales as cp}
 								<tr class="hover:bg-gray-50">
 									<td class="px-4 py-2 font-mono text-sm">
-										<a href="/codigo-postal/{cp.cp}/" class="text-blue-600 hover:underline">{cp.cp}</a>
+										<a href="{base}/catalogos/sepomex/codigos-postales/{cp.cp}" class="text-blue-600 hover:underline">{cp.cp}</a>
 									</td>
 									<td class="px-4 py-2 text-sm">{cp.asentamiento}</td>
 									<td class="px-4 py-2 text-sm text-gray-500">{cp.tipo_asentamiento}</td>
@@ -230,13 +287,13 @@
 			<h2 class="text-lg font-semibold mb-3">Enlaces Relacionados</h2>
 			<div class="flex flex-wrap gap-2">
 				<a
-					href="/catalogos/sepomex/codigos-postales/?estado={encodeURIComponent(municipio.estado)}&municipio={encodeURIComponent(municipio.nombre)}"
+					href="{base}/catalogos/sepomex/codigos-postales/?estado={encodeURIComponent(municipio.estado)}&municipio={encodeURIComponent(municipio.nombre)}"
 					class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg text-gray-700"
 				>
 					Ver todos los codigos postales
 				</a>
 				<a
-					href="/catalogos/inegi/localidades/?estado={encodeURIComponent(municipio.estado)}&municipio={encodeURIComponent(municipio.nombre)}"
+					href="{base}/catalogos/inegi/localidades/?estado={encodeURIComponent(municipio.estado)}&municipio={encodeURIComponent(municipio.nombre)}"
 					class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg text-gray-700"
 				>
 					Ver localidades

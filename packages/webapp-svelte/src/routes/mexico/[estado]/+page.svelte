@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { query, queryOne } from '$lib/db';
+	import { base } from '$app/paths';
+	const SITE_URL = 'https://catalogmx.openbancor.com';
 
 	type Estado = {
 		cve_inegi: string;
@@ -29,7 +31,37 @@
 	let totalPoblacion = 0;
 	let searchTerm = '';
 
-	$: estadoSlug = $page.params.estado;
+	$: estadoSlug = $page.params.estado ?? '';
+
+	function slugToName(slug: string): string {
+		return decodeURIComponent(slug)
+			.replace(/-/g, ' ')
+			.replace(/\b\w/g, (c) => c.toUpperCase());
+	}
+
+	function getEstadoName(): string {
+		return estado?.nombre ?? slugToName(estadoSlug);
+	}
+
+	function getCanonicalUrl(): string {
+		return `${SITE_URL}/mexico/${estadoSlug}`;
+	}
+
+	function getDescription(): string {
+		return estado
+			? `Municipios de ${estado.nombre}: ${municipios.length} municipios, poblacion ${formatNumber(totalPoblacion)}. Datos de INEGI y CONAPO.`
+			: `Municipios y datos demograficos del estado ${getEstadoName()} en Mexico.`;
+	}
+
+	function getJsonLd() {
+		return {
+			'@context': 'https://schema.org',
+			'@type': 'AdministrativeArea',
+			name: getEstadoName(),
+			url: getCanonicalUrl(),
+			description: getDescription()
+		};
+	}
 
 	$: filteredMunicipios = searchTerm
 		? municipios.filter(m =>
@@ -41,9 +73,10 @@
 	onMount(async () => {
 		try {
 			// Get state info
-			estado = await queryOne<Estado>(`
-				SELECT * FROM geo_estados WHERE nombre_slug = '${estadoSlug}'
-			`);
+			estado = await queryOne<Estado>(
+				'SELECT * FROM geo_estados WHERE nombre_slug = ?',
+				[estadoSlug]
+			);
 
 			if (!estado) {
 				error = 'Estado no encontrado';
@@ -53,7 +86,8 @@
 
 			// Get municipalities with ZM info
 			try {
-				municipios = await query<Municipio>(`
+				municipios = await query<Municipio>(
+					`
 					SELECT
 						m.cve_inegi,
 						m.cve_municipio,
@@ -66,12 +100,15 @@
 					FROM geo_municipios m
 					LEFT JOIN geo_municipio_zm mzm ON m.cve_inegi = mzm.cve_inegi
 					LEFT JOIN geo_zonas_metropolitanas zm ON mzm.zm_id = zm.zm_id
-					WHERE m.cve_entidad = '${estado.cve_inegi}'
+					WHERE m.cve_entidad = ?
 					ORDER BY m.nombre
-				`);
+					`,
+					[estado.cve_inegi]
+				);
 			} catch {
 				// Fallback without ZM info
-				municipios = await query<Municipio>(`
+				municipios = await query<Municipio>(
+					`
 					SELECT
 						cve_inegi,
 						cve_municipio,
@@ -80,9 +117,11 @@
 						poblacion_total,
 						cabecera
 					FROM geo_municipios
-					WHERE cve_entidad = '${estado.cve_inegi}'
+					WHERE cve_entidad = ?
 					ORDER BY nombre
-				`);
+					`,
+					[estado.cve_inegi]
+				);
 			}
 
 			totalPoblacion = municipios.reduce((sum, m) => sum + (m.poblacion_total || 0), 0);
@@ -101,12 +140,19 @@
 </script>
 
 <svelte:head>
-	{#if estado}
-		<title>{estado.nombre} - Estados de México | catalogmx</title>
-		<meta name="description" content="Municipios de {estado.nombre}: {municipios.length} municipios, poblacion {formatNumber(totalPoblacion)}. Datos de INEGI y CONAPO." />
-	{:else}
-		<title>Estado | catalogmx</title>
-	{/if}
+	<title>{getEstadoName()} - Municipios de Mexico | catalogmx</title>
+	<meta name="description" content={getDescription()} />
+	<meta name="keywords" content={`municipios de ${getEstadoName()}, ${getEstadoName()} poblacion, estado ${getEstadoName()} mexico`} />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={getCanonicalUrl()} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content={`${getEstadoName()} - Municipios de Mexico | catalogmx`} />
+	<meta property="og:description" content={getDescription()} />
+	<meta property="og:url" content={getCanonicalUrl()} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content={`${getEstadoName()} - catalogmx`} />
+	<meta name="twitter:description" content={getDescription()} />
+	{@html `<script type="application/ld+json">${JSON.stringify(getJsonLd())}</script>`}
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8">
@@ -115,7 +161,7 @@
 		<ol class="flex items-center space-x-2">
 			<li><a href="/" class="text-blue-600 hover:underline">Inicio</a></li>
 			<li class="text-gray-400">/</li>
-			<li><a href="/mexico/" class="text-blue-600 hover:underline">Mexico</a></li>
+			<li><a href="{base}/mexico/" class="text-blue-600 hover:underline">Mexico</a></li>
 			<li class="text-gray-400">/</li>
 			<li class="text-gray-600">{estado?.nombre || 'Estado'}</li>
 		</ol>
@@ -187,7 +233,7 @@
 							<td class="px-4 py-3 text-sm font-mono text-gray-500">{municipio.cve_inegi}</td>
 							<td class="px-4 py-3">
 								<a
-									href="/mexico/{estadoSlug}/{municipio.nombre_slug}/"
+									href="{base}/mexico/{estadoSlug}/{municipio.nombre_slug}/"
 									class="text-blue-600 hover:underline font-medium"
 								>
 									{municipio.nombre}
@@ -198,7 +244,7 @@
 							<td class="px-4 py-3 text-sm">
 								{#if municipio.zm_nombre}
 									<a
-										href="/zonas-metropolitanas/{municipio.zm_slug}/"
+										href="{base}/catalogos/conapo/zonas-metropolitanas"
 										class="text-purple-600 hover:underline"
 									>
 										{municipio.zm_nombre}
