@@ -54,7 +54,13 @@ class SalariosMinimosCatalog {
   static Map<String, dynamic>? getCurrent() {
     _loadData();
     if (_data!.isEmpty) return null;
-    return _data!.last;
+    final sorted = List<Map<String, dynamic>>.from(_data!)
+      ..sort((a, b) {
+        final yearA = (a['año'] ?? a['year'] ?? 0) as int;
+        final yearB = (b['año'] ?? b['year'] ?? 0) as int;
+        return yearB.compareTo(yearA);
+      });
+    return sorted.first;
   }
 
   /// Obtiene salario mínimo diario para un año
@@ -67,7 +73,12 @@ class SalariosMinimosCatalog {
   static double? getSalarioDiario(int year) {
     final salario = getByYear(year);
     if (salario == null) return null;
-    return (salario['diario'] ?? salario['salario_diario']) as double?;
+    final value = salario['diario'] ??
+        salario['salario_diario'] ??
+        salario['resto_pais'] ??
+        salario['zona_general'];
+    if (value is num) return value.toDouble();
+    return null;
   }
 
   /// Obtiene salario mínimo mensual para un año
@@ -80,7 +91,10 @@ class SalariosMinimosCatalog {
   static double? getSalarioMensual(int year) {
     final salario = getByYear(year);
     if (salario == null) return null;
-    return (salario['mensual'] ?? salario['salario_mensual']) as double?;
+    final value = salario['mensual'] ?? salario['salario_mensual'];
+    if (value is num) return value.toDouble();
+    final diario = getSalarioDiario(year);
+    return diario != null ? diario * 30.4 : null;
   }
 
   /// Obtiene información de zona fronteriza para un año
@@ -93,6 +107,18 @@ class SalariosMinimosCatalog {
   static Map<String, dynamic>? getZonaFronteriza(int year) {
     final salario = getByYear(year);
     if (salario == null) return null;
-    return salario['zona_fronteriza'] as Map<String, dynamic>?;
+    final zona = salario['zona_fronteriza'];
+    if (zona is Map<String, dynamic>) return zona;
+
+    final value = salario['zona_frontera_norte'];
+    if (value is num) {
+      final diario = value.toDouble();
+      return {
+        'diario': diario,
+        'mensual': diario * 30.4,
+        'anual': diario * 365,
+      };
+    }
+    return null;
   }
 }

@@ -54,7 +54,13 @@ class UMACatalog {
   static Map<String, dynamic>? getCurrent() {
     _loadData();
     if (_data!.isEmpty) return null;
-    return _data!.last;
+    final sorted = List<Map<String, dynamic>>.from(_data!)
+      ..sort((a, b) {
+        final yearA = (a['año'] ?? a['year'] ?? 0) as int;
+        final yearB = (b['año'] ?? b['year'] ?? 0) as int;
+        return yearB.compareTo(yearA);
+      });
+    return sorted.first;
   }
 
   /// Obtiene valor de UMA diaria para un año

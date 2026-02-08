@@ -339,8 +339,13 @@ class MexicoUMA {
   static Map<String, dynamic>? getCurrent() {
     _loadData();
     if (_data!.isEmpty) return null;
-    // Assume last entry is current
-    return _data!.last;
+    final sorted = List<Map<String, dynamic>>.from(_data!)
+      ..sort((a, b) {
+        final yearA = (a['año'] ?? a['year'] ?? 0) as int;
+        final yearB = (b['año'] ?? b['year'] ?? 0) as int;
+        return yearB.compareTo(yearA);
+      });
+    return sorted.first;
   }
 }
 
@@ -369,7 +374,13 @@ class MexicoSalariosMinimos {
   static Map<String, dynamic>? getCurrent() {
     _loadData();
     if (_data!.isEmpty) return null;
-    return _data!.last;
+    final sorted = List<Map<String, dynamic>>.from(_data!)
+      ..sort((a, b) {
+        final yearA = (a['año'] ?? a['year'] ?? 0) as int;
+        final yearB = (b['año'] ?? b['year'] ?? 0) as int;
+        return yearB.compareTo(yearA);
+      });
+    return sorted.first;
   }
 }
 
