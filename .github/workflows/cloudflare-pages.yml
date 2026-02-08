@@ -42,17 +42,61 @@ jobs:
 
       - name: Download SQLite from releases
         run: |
-          echo "📥 Downloading mexico.sqlite3 from releases..."
-          RELEASE_URL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases | \
-            jq -r '[.[] | select(.assets[].name == "mexico.sqlite3")] | first | .assets[] | select(.name == "mexico.sqlite3") | .browser_download_url')
+          echo "📥 Downloading mexico.sqlite3 from sqlite-assets tag..."
+          RELEASE_URL="https://github.com/${{ github.repository }}/releases/download/sqlite-assets/mexico.sqlite3"
+          curl --fail --location --retry 3 --retry-delay 2 -o /tmp/mexico.sqlite3 "$RELEASE_URL"
+          echo "✅ Downloaded mexico.sqlite3 from sqlite-assets"
 
-          if [ -z "$RELEASE_URL" ] || [ "$RELEASE_URL" = "null" ]; then
-            echo "❌ No mexico.sqlite3 release asset found"
-            exit 1
-          fi
+      - name: Validate SQLite freshness
+        run: |
+          python - <<'PY'
+          import datetime as dt
+          import sqlite3
+          import sys
 
-          curl -L -o /tmp/mexico.sqlite3 "$RELEASE_URL"
-          echo "✅ Downloaded mexico.sqlite3"
+          db = sqlite3.connect("/tmp/mexico.sqlite3")
+          today = dt.date.today()
+
+          checks = [
+              ("banxico_udis", "fecha", 14),
+              ("banxico_tipo_cambio", "fecha", 14),
+              ("banxico_tiie", "fecha", 14),
+              ("banxico_cetes", "fecha", 21),
+              ("banxico_inflacion", "fecha", 75),
+              ("banxico_salarios_minimos", "fecha", 75),
+          ]
+
+          failures = []
+          for table, column, max_age_days in checks:
+              row = db.execute(
+                  f"SELECT MAX({column}) FROM {table} WHERE {column} IS NOT NULL"
+              ).fetchone()
+              value = row[0] if row else None
+              if not value:
+                  failures.append(f"{table}: missing max date")
+                  continue
+              try:
+                  latest = dt.date.fromisoformat(value[:10])
+              except ValueError:
+                  failures.append(f"{table}: invalid date {value!r}")
+                  continue
+
+              age = (today - latest).days
+              print(f"{table}: {latest.isoformat()} ({age} days old)")
+              if age > max_age_days:
+                  failures.append(
+                      f"{table}: stale ({age} days old, max {max_age_days})"
+                  )
+
+          db.close()
+          if failures:
+              print("❌ Freshness check failed:")
+              for failure in failures:
+                  print(f"  - {failure}")
+              sys.exit(1)
+
+          print("✅ SQLite freshness check passed")
+          PY
 
       - name: Upload SQLite to R2
         run: |
