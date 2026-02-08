@@ -3,6 +3,21 @@
 	import { onMount } from 'svelte';
 	import { base } from '$app/paths';
 	import { query, queryOne } from '$lib/db';
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/catalogos/banxico/tipo-cambio`;
+	const tipoCambioCatalogJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'WebPage',
+		name: 'Dolar FIX Banxico historico',
+		url: canonicalUrl,
+		description:
+			'Historico del tipo de cambio FIX de Banxico (USD/MXN) con registros por fecha.',
+		mainEntity: {
+			'@type': 'Dataset',
+			name: 'Historico tipo de cambio FIX Banxico',
+			description: 'Serie de tipo de cambio FIX diario en pesos por dolar.'
+		}
+	};
 
 	interface TipoCambio {
 		fecha: string;
@@ -63,8 +78,19 @@
 </script>
 
 <svelte:head>
-	<title>Tipo de Cambio USD/MXN - catalogmx</title>
-	<meta name="description" content="Histórico del tipo de cambio FIX del Banco de México (pesos por dólar)" />
+	<title>Dolar FIX Banxico (USD/MXN) historico - catalogmx</title>
+	<meta name="description" content="Historico del tipo de cambio FIX de Banxico (USD/MXN). Consulta fecha, precio del dolar y fuente oficial." />
+	<meta name="keywords" content="dolar FIX Banxico, tipo de cambio Banxico, USD MXN historico, precio del dolar en Mexico" />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Dolar FIX Banxico (USD/MXN) historico - catalogmx" />
+	<meta property="og:description" content="Serie historica del dolar FIX de Banxico por fecha." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Dolar FIX Banxico - catalogmx" />
+	<meta name="twitter:description" content="Consulta el tipo de cambio FIX USD/MXN de Banxico." />
+	{@html `<script type="application/ld+json">${JSON.stringify(tipoCambioCatalogJsonLd)}</script>`}
 </svelte:head>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -85,10 +111,10 @@
 			</div>
 			<div>
 				<h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-					Tipo de Cambio FIX
+					Dolar FIX Banxico (USD/MXN)
 				</h1>
 				<p class="text-slate-600 dark:text-slate-300">
-					Histórico del tipo de cambio pesos por dólar (USD/MXN)
+					Historico del tipo de cambio pesos por dolar
 				</p>
 			</div>
 		</div>
@@ -166,4 +192,20 @@
 			</div>
 		{/if}
 	{/if}
+
+	<div class="mt-8 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+		<p class="text-xs text-slate-500 dark:text-slate-400">
+			<strong>Herramientas relacionadas:</strong>
+			<a href="{base}/calculadoras/tipo-cambio" class="text-brand-600 dark:text-brand-400 hover:underline">
+				calculadora dolar FIX
+			</a>,
+			<a href="{base}/calculadoras/tasas-interes" class="text-brand-600 dark:text-brand-400 hover:underline">
+				calculadora CETES/TIIE
+			</a>
+			y
+			<a href="{base}/catalogos/banxico/udis" class="text-brand-600 dark:text-brand-400 hover:underline">
+				catalogo de UDI
+			</a>.
+		</p>
+	</div>
 </div>

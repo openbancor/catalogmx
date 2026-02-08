@@ -3,6 +3,26 @@
 	import { onMount } from 'svelte';
 	import { query } from '$lib/db';
 	import { base } from '$app/paths';
+	const SITE_URL = 'https://catalogmx.openbancor.com';
+	const canonicalUrl = `${SITE_URL}/calculadoras/tasas-interes`;
+	const tasasInteresJsonLd = {
+		'@context': 'https://schema.org',
+		'@graph': [
+			{
+				'@type': 'WebPage',
+				name: 'Calculadora CETES y TIIE',
+				url: canonicalUrl,
+				description:
+					'Calcula intereses con historico CETES 28 y TIIE 28 de Banxico y compara resultados.'
+			},
+			{
+				'@type': 'SoftwareApplication',
+				name: 'Calculadora de tasas de interes Banxico',
+				applicationCategory: 'FinanceApplication',
+				operatingSystem: 'Web'
+			}
+		]
+	};
 
 	interface TasaRate {
 		fecha: string;
@@ -164,11 +184,22 @@
 </script>
 
 <svelte:head>
-	<title>Calculadora de Tasas de Interés CETES/TIIE - catalogmx</title>
+	<title>Calculadora CETES y TIIE (historico Banxico) - catalogmx</title>
 	<meta
 		name="description"
-		content="Calcula intereses con tasas CETES 28 y TIIE 28 de Banxico. Compara rendimientos entre diferentes instrumentos de renta fija."
+		content="Calcula intereses con historico CETES 28 y TIIE 28 de Banxico. Compara rendimientos por periodo y capital."
 	/>
+	<meta name="keywords" content="calculadora CETES, calculadora TIIE, interes historico Banxico, comparar tasas CETES TIIE" />
+	<meta name="robots" content="index, follow, max-image-preview:large" />
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Calculadora CETES y TIIE (historico Banxico) - catalogmx" />
+	<meta property="og:description" content="Compara intereses con tasas CETES 28 y TIIE 28 de Banxico." />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Calculadora CETES/TIIE - catalogmx" />
+	<meta name="twitter:description" content="Interes historico con CETES y TIIE de Banxico." />
+	{@html `<script type="application/ld+json">${JSON.stringify(tasasInteresJsonLd)}</script>`}
 </svelte:head>
 
 <!-- Hero -->
@@ -559,6 +590,22 @@
 					Banxico. Los calculos son aproximados usando interes simple a 360 dias. Los rendimientos
 					reales pueden variar segun el instrumento especifico. Para inversiones formales, consulta
 					con tu institucion financiera. No considera ISR ni otras retenciones.
+				</p>
+			</div>
+
+			<div class="mt-6 p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+				<p class="text-xs text-slate-600 dark:text-slate-400">
+					<strong>Herramientas relacionadas:</strong>
+					<a href="{base}/catalogos/banxico/tiie" class="text-brand-600 dark:text-brand-400 hover:underline">
+						serie TIIE Banxico
+					</a>,
+					<a href="{base}/catalogos/banxico/tipo-cambio" class="text-brand-600 dark:text-brand-400 hover:underline">
+						dolar FIX historico
+					</a>
+					y
+					<a href="{base}/calculadoras/udi" class="text-brand-600 dark:text-brand-400 hover:underline">
+						calculadora UDI
+					</a>.
 				</p>
 			</div>
 		{/if}
