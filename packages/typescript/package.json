@@ -86,6 +86,6 @@
     "xslt-processor": "^2.3.1"
   },
   "optionalDependencies": {
-    "libxmljs2": "^0.35.0"
+    "libxmljs2": "^0.37.0"
   }
 }
