@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "catalogmx"
-version = "0.5.1"
+version = "0.6.0"
 description = "Enterprise Mexican library with validators, generators, calculators, CFDI tooling and official SAT/INEGI/SEPOMEX/Banxico/IFT/CNBV/CONAPO/IMSS catalogs"
 readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.10"
