@@ -225,6 +225,5 @@ export class CodigosPostalesCompleto {
 }
 
 function getBetterSqlite3(): typeof import('better-sqlite3') {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   return require('better-sqlite3');
 }

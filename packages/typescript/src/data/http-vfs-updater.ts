@@ -59,7 +59,7 @@ export class HttpVfsUpdater {
    * @unused - Reserved for future HTTP VFS implementation
    */
   // @ts-expect-error - Reserved for future use
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   private createHttpVfs() {
     const url = this.config.dataUrl;
     const pageCache = new Map<number, Uint8Array>();

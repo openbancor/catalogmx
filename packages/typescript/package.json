@@ -1,9 +1,39 @@
 {
   "name": "catalogmx",
-  "version": "0.5.1",
-  "description": "Enterprise Mexican library: validators, generators, tax calculators, CFDI tooling and official SAT/INEGI/SEPOMEX/Banxico/IFT/CNBV catalogs",
+  "version": "0.6.0",
+  "description": "Enterprise Mexican library: validators, generators, tax calculators, CFDI tooling and official SAT/INEGI/SEPOMEX/Banxico/IFT/CNBV catalogs. Works in Node.js and browsers.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./validators": {
+      "types": "./dist/validators/index.d.ts",
+      "default": "./dist/validators/index.js"
+    },
+    "./calculators": {
+      "types": "./dist/calculators/index.d.ts",
+      "default": "./dist/calculators/index.js"
+    },
+    "./catalogs": {
+      "types": "./dist/catalogs/index.d.ts",
+      "default": "./dist/catalogs/index.js"
+    },
+    "./cfdi": {
+      "types": "./dist/cfdi/index.d.ts",
+      "default": "./dist/cfdi/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "default": "./dist/utils/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/types/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
@@ -33,7 +63,6 @@
     "catalogs",
     "generators",
     "calculators",
-    "cfdi",
     "banxico",
     "inegi",
     "sepomex",
@@ -44,7 +73,9 @@
     "postal-codes",
     "geographic-data",
     "tax",
-    "financial"
+    "financial",
+    "browser",
+    "isomorphic"
   ],
   "author": {
     "name": "Luis Fernando Barrera",
@@ -67,25 +98,24 @@
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
     "@types/jest": "^29.5.0",
-    "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.0.0",
+    "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
     "jest": "^29.5.0",
     "prettier": "^3.0.0",
     "ts-jest": "^29.1.0",
-    "typescript": "~5.3.3"
+    "typescript": "^5.7.0"
   },
   "engines": {
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "better-sqlite3": "^12.4.1",
-    "js-yaml": "3.14.2",
-    "sql.js": "^1.13.0",
-    "xslt-processor": "^2.3.1"
+    "sql.js": "^1.14.0"
   },
   "optionalDependencies": {
-    "libxmljs2": "^0.35.0"
+    "better-sqlite3": "^12.6.0",
+    "libxmljs2": "^0.37.0",
+    "xslt-processor": "^2.3.1"
   }
 }

@@ -27,7 +27,7 @@ export async function generateCadenaOriginal(
   }
 
   // Node.js fallback using xslt-processor
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+
   const xsltProcessor = require('xslt-processor');
   const { xmlParse, xsltProcess } = xsltProcessor;
   const xmlDoc = xmlParse(xml);
@@ -43,7 +43,6 @@ export async function validateCfdiXsd(xml: string, xsd: string): Promise<XsdVali
 
   let libxml: any;
   try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     libxml = require('libxmljs2');
   } catch (error: any) {
     const message = error?.message?.includes('Cannot find module')

@@ -221,12 +221,10 @@ export abstract class HybridCatalogLoader<T> {
 }
 
 function getBetterSqlite3(): typeof import('better-sqlite3') {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   return require('better-sqlite3');
 }
 
 function getNodeFs(): typeof import('fs') {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   return require('fs');
 }
 

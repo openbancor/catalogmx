@@ -21,7 +21,6 @@ export function getCfdiXsltPath(url: string): string {
 
 export async function loadResourceText(pathOrUrl: string): Promise<string> {
   if (isNodeRuntime()) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fs = require('fs');
     return fs.readFileSync(pathOrUrl, 'utf-8') as string;
   }

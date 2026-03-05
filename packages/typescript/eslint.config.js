@@ -38,6 +38,7 @@ module.exports = [
       ],
       '@typescript-eslint/no-explicit-any': 'warn', // Allow some any usage
       '@typescript-eslint/no-non-null-assertion': 'off', // Allow non-null assertions
+      '@typescript-eslint/no-require-imports': 'off', // Allow dynamic require() for lazy-loading Node modules
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error',
       'no-var': 'error',

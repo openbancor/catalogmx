@@ -10,7 +10,7 @@ export function signCadenaOriginal(cadena: string, privateKeyPem: string): Sello
   if (typeof window !== 'undefined') {
     throw new Error('Signing is only supported in Node.js');
   }
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+
   const crypto = require('crypto');
   const sign = crypto.createSign('RSA-SHA256');
   sign.update(cadena);

@@ -192,12 +192,10 @@ export function isNodeRuntime(): boolean {
 
 /* istanbul ignore next -- @preserve Node.js-only: dynamic require not testable in isolated unit tests */
 function getNodeFs(): typeof import('fs') {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   return require('fs');
 }
 
 /* istanbul ignore next -- @preserve Node.js-only: dynamic require not testable in isolated unit tests */
 function getNodePath(): typeof import('path') {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   return require('path');
 }
