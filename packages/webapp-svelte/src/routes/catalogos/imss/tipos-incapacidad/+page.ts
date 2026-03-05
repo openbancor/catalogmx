@@ -1,2 +1,2 @@
-// Disable prerendering for this page since it loads data dynamically
-export const prerender = false;
+export const ssr = false;
+export const csr = true;
