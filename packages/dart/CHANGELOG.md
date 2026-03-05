@@ -2,6 +2,12 @@
 
 All notable changes to the Dart/Flutter version of catalogmx will be documented in this file.
 
+## [0.6.0] - 2026-03-05
+
+### Changed
+- Version sync with Python and TypeScript packages
+- Browser compatibility improvements across the ecosystem
+
 ## [0.4.0] - 2024-11-20
 
 ### 🎉 MAJOR UPDATE - Full Catalog Parity Achieved!
