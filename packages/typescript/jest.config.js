@@ -52,6 +52,14 @@ module.exports = {
     // Banxico SQLite loaders - time-series data from database
     '!src/catalogs/banxico/*-sqlite.ts',
 
+    // Hybrid/SQLite catalog loaders - require native SQLite bindings at runtime
+    '!src/utils/hybrid-catalog-loader.ts',
+    '!src/catalogs/sat/cfdi_4/clave-prod-serv-hybrid.ts',
+    '!src/catalogs/sepomex/codigos-postales-completo.ts',
+
+    // Data updater - network I/O, downloads from GitHub releases
+    '!src/data/updater.ts',
+
     // =========================================================================
     // RE-EXPORT INDEX FILES - No logic, just module organization
     // =========================================================================
