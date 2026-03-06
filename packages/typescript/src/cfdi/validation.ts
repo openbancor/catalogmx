@@ -41,20 +41,19 @@ export async function validateCfdiXsd(xml: string, xsd: string): Promise<XsdVali
     throw new Error('XSD validation is only supported in Node.js');
   }
 
-  let libxml: any;
+  let libxml: { parseXml: (str: string) => { validate: (xsd: unknown) => boolean; validationErrors?: { message: string }[] } };
   try {
     libxml = require('libxmljs2');
-  } catch (error: any) {
-    const message = error?.message?.includes('Cannot find module')
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    const message = msg.includes('Cannot find module')
       ? 'libxmljs2 is not installed. Install optional dependency libxmljs2 for XSD validation.'
-      : String(error?.message || error);
+      : msg;
     throw new Error(message);
   }
   const xmlDoc = libxml.parseXml(xml);
   const xsdDoc = libxml.parseXml(xsd);
   const valid = xmlDoc.validate(xsdDoc);
-  const errors = (xmlDoc.validationErrors || []).map((err: { message: string }) =>
-    String(err.message).trim()
-  );
+  const errors = (xmlDoc.validationErrors || []).map((err) => err.message.trim());
   return { valid, errors };
 }
