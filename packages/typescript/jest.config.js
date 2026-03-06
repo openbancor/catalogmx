@@ -63,34 +63,24 @@ module.exports = {
   coverageReporters: ['text', 'lcov', 'json-summary', 'html'],
   coverageDirectory: 'coverage',
 
-  // Coverage thresholds based on actual codebase characteristics:
-  // - Heavy catalog data code (35-50% coverage due to infrastructure)
-  // - High-value validators and calculators (75-85% coverage)
-  // - Thresholds set slightly below actual to allow for minor fluctuations
   coverageThreshold: {
     global: {
-      // Global thresholds account for catalog infrastructure code
-      // Actual coverage: statements ~53%, branches ~38%, functions ~42%, lines ~56%
-      branches: 35,
-      functions: 40,
-      lines: 50,
-      statements: 50,
+      branches: 58,
+      functions: 82,
+      lines: 82,
+      statements: 80,
     },
-    // Validators: Core business logic - must maintain high coverage
-    // Actual coverage: statements ~81%, branches ~59%, functions ~79%, lines ~78%
     './src/validators/': {
-      branches: 55,
-      functions: 75,
-      lines: 75,
-      statements: 75,
+      branches: 58,
+      functions: 79,
+      lines: 80,
+      statements: 77,
     },
-    // Calculators: Fiscal calculations - critical accuracy required
-    // Actual coverage: statements ~76%, branches ~43%, functions ~72%, lines ~75%
     './src/calculators/': {
-      branches: 40,
-      functions: 70,
-      lines: 70,
-      statements: 70,
+      branches: 43,
+      functions: 72,
+      lines: 75,
+      statements: 76,
     },
   },
 };
