@@ -41,7 +41,12 @@ export async function validateCfdiXsd(xml: string, xsd: string): Promise<XsdVali
     throw new Error('XSD validation is only supported in Node.js');
   }
 
-  let libxml: { parseXml: (str: string) => { validate: (xsd: unknown) => boolean; validationErrors?: { message: string }[] } };
+  let libxml: {
+    parseXml: (str: string) => {
+      validate: (xsd: unknown) => boolean;
+      validationErrors?: { message: string }[];
+    };
+  };
   try {
     libxml = require('libxmljs2');
   } catch (error: unknown) {
