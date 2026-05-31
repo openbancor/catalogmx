@@ -88,15 +88,56 @@ class TestEstadoCatalogComplete:
 class TestIncotermsValidatorComplete:
     """Complete tests for Incoterms Validator"""
 
+    def test_get_incoterm_existing_codes(self):
+        """Test get_incoterm with existing codes"""
+        for code in ("EXW", "fob", "CIF"):
+            incoterm = IncotermsValidator.get_incoterm(code)
+            assert incoterm is not None
+            assert incoterm["code"] == code.upper()
+
+    def test_get_incoterm_bad_codes(self):
+        """Test get_incoterm and validation with bad codes"""
+        assert IncotermsValidator.get_incoterm("XXX") is None
+        assert IncotermsValidator.is_valid("XXX") is False
+        assert IncotermsValidator.is_valid_for_transport("XXX", "sea") is False
+        assert IncotermsValidator.seller_pays_freight("XXX") is False
+        assert IncotermsValidator.seller_pays_insurance("XXX") is False
+
     def test_is_valid_for_transport_valid(self):
         """Test is_valid_for_transport with valid code"""
         result = IncotermsValidator.is_valid_for_transport("FOB", "maritime")
         assert isinstance(result, bool)
 
+    def test_all_transport_modes(self):
+        """Test INCOTERM transport mode suitability"""
+        assert IncotermsValidator.is_valid_for_transport("FCA", "land") is True
+        assert IncotermsValidator.is_valid_for_transport("FCA", "air") is True
+        assert IncotermsValidator.is_valid_for_transport("FCA", "multimodal") is True
+        assert IncotermsValidator.is_valid_for_transport("FOB", "sea") is True
+        assert IncotermsValidator.is_valid_for_transport("CIF", "land") is False
+        assert IncotermsValidator.is_valid_for_transport("CIF", "any") is True
+
+    def test_filter_by_transport_mode_lists(self):
+        """Test filtering INCOTERMS by transport mode"""
+        multimodal = IncotermsValidator.get_multimodal_incoterms()
+        maritime = IncotermsValidator.get_maritime_incoterms()
+
+        assert {"EXW", "FCA", "CPT", "CIP", "DAP", "DPU", "DDP"}.issubset(multimodal)
+        assert {"FAS", "FOB", "CFR", "CIF"} == set(maritime)
+        assert set(multimodal).isdisjoint(maritime)
+
+    def test_seller_pays_freight_and_insurance(self):
+        """Test seller cost responsibility helpers"""
+        assert IncotermsValidator.seller_pays_freight("CIF") is True
+        assert IncotermsValidator.seller_pays_freight("EXW") is False
+        assert IncotermsValidator.seller_pays_insurance("CIF") is True
+        assert IncotermsValidator.seller_pays_insurance("CFR") is False
+
     def test_search(self):
         """Test search"""
         result = IncotermsValidator.search("Free")
         assert isinstance(result, list)
+        assert any(item["code"] == "FCA" for item in result)
 
 
 class TestMonedaCatalogComplete:
