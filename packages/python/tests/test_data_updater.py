@@ -30,6 +30,13 @@ class TestDataUpdater:
             updater = DataUpdater(cache_dir=Path(tmpdir))
             assert updater.cache_dir == Path(tmpdir)
 
+    def test_init_custom_cache_dir_string(self):
+        """Test initialization accepts string cache directories."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            updater = DataUpdater(cache_dir=tmpdir)
+            assert updater.cache_dir == Path(tmpdir)
+            assert updater.cache_db == Path(tmpdir) / "mexico_dynamic.sqlite3"
+
     def test_get_local_version_no_cache(self):
         """Test getting local version when no cache exists"""
         with tempfile.TemporaryDirectory() as tmpdir:

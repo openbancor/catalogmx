@@ -164,9 +164,9 @@ class TestIdentityGenerator:
     def test_init_with_seed_for_reproducibility(self):
         """Test that seed produces reproducible results."""
         gen1 = IdentityGenerator(seed=12345)
-        gen2 = IdentityGenerator(seed=12345)
-
         persona1 = gen1.generate_persona_fisica()
+
+        gen2 = IdentityGenerator(seed=12345)
         persona2 = gen2.generate_persona_fisica()
 
         assert persona1.nombre == persona2.nombre
