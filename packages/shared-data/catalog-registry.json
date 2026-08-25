@@ -1,0 +1,335 @@
+{
+  "schema_version": 1,
+  "registry_status": "bootstrap",
+  "inventory_checked_at": "2026-08-25",
+  "legacy_manifest": ".catalog-versions.json",
+  "datasets": [
+    {
+      "id": "sat.cfdi_4",
+      "title": "SAT CFDI 4.0 reference catalogs and schemas",
+      "authority": "SAT",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/sat/cfdi_4.0",
+        "packages/shared-data/sat/xsd",
+        "packages/shared-data/sqlite/clave_prod_serv.db"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative",
+          "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/catCFDI.xls",
+          "format": "xls"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 31,
+        "upstream_checked_at": null
+      },
+      "notes": "The local inventory is implemented; upstream freshness must be re-established from the authoritative SAT artifact."
+    },
+    {
+      "id": "sat.carta_porte",
+      "title": "SAT Carta Porte catalogs and schemas",
+      "authority": "SAT",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/sat/carta_porte_3",
+        "packages/shared-data/sat/xsd/resources/www.sat.gob.mx/sitio_internet/cfd/CartaPorte"
+      ],
+      "upstream": [],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 90,
+        "upstream_checked_at": null
+      },
+      "notes": "Do not infer the current upstream version from the legacy directory name; resolve the authoritative SAT source during the source audit."
+    },
+    {
+      "id": "sat.comercio_exterior",
+      "title": "SAT Comercio Exterior catalogs",
+      "authority": "SAT",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/sat/comercio_exterior"
+      ],
+      "upstream": [],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 90,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "sat.nomina_1_2",
+      "title": "SAT Nómina 1.2 catalogs",
+      "authority": "SAT",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/sat/nomina_1.2"
+      ],
+      "upstream": [],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 180,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "sat.contabilidad_electronica",
+      "title": "SAT Contabilidad Electrónica catalogs",
+      "authority": "SAT",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/sat/contabilidad_electronica"
+      ],
+      "upstream": [],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 180,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "sat.impuestos",
+      "title": "SAT tax reference data",
+      "authority": "SAT",
+      "kind": "regulatory_parameters",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/sat/impuestos",
+        "packages/shared-data/isr-tables.json",
+        "packages/shared-data/resico-tables.json"
+      ],
+      "upstream": [],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 90,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "sat.tigie_nico",
+      "title": "TIGIE/NICO tariff reference data",
+      "authority": "SNICE",
+      "kind": "reference",
+      "status": "planned",
+      "distribution": "optional",
+      "local_paths": [],
+      "upstream": [
+        {
+          "role": "authoritative_portal",
+          "url": "https://www.snice.gob.mx/",
+          "format": "portal"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 90,
+        "upstream_checked_at": null
+      },
+      "notes": "Large regulatory dataset; should be independently versioned and distributed rather than bundled blindly into every language package."
+    },
+    {
+      "id": "banxico.sie_dynamic",
+      "title": "Banco de México SIE time series",
+      "authority": "BANXICO",
+      "kind": "time_series",
+      "status": "managed",
+      "distribution": "release",
+      "local_paths": [
+        "packages/shared-data/mexico_dynamic.sqlite3",
+        "packages/shared-data/schema_dynamic.sql"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_api",
+          "url": "https://www.banxico.org.mx/SieAPIRest/service/v1/",
+          "format": "json_api"
+        }
+      ],
+      "freshness": {
+        "mode": "pipeline",
+        "workflow": ".github/workflows/update-dynamic-data.yml",
+        "max_age_days": 2,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "banxico.reference",
+      "title": "Banco de México banking reference catalogs",
+      "authority": "BANXICO",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/banxico"
+      ],
+      "upstream": [],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 31,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "inegi.ageeml",
+      "title": "INEGI geographic reference data",
+      "authority": "INEGI",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/inegi"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative",
+          "url": "https://www.inegi.org.mx/app/ageeml/",
+          "format": "portal"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 31,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "sepomex.codigos_postales",
+      "title": "Correos de México postal codes and settlements",
+      "authority": "SEPOMEX",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/sepomex",
+        "packages/shared-data/sqlite/sepomex.db"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_export",
+          "url": "https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/CodigoPostal_Exportar.aspx",
+          "format": "export"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 31,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "cnbv.reference",
+      "title": "CNBV financial-sector reference data",
+      "authority": "CNBV",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/cnbv"
+      ],
+      "upstream": [],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 90,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "ift.numbering",
+      "title": "IFT numbering and operator reference data",
+      "authority": "IFT",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/ift",
+        "packages/shared-data/sqlite/prefijos_telefonicos.db"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_portal",
+          "url": "https://www.ift.org.mx/usuarios-y-audiencias/recursos-usuarios/recursos/numeracion",
+          "format": "portal"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 90,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "conapo.territorial",
+      "title": "CONAPO urban and metropolitan classifications",
+      "authority": "CONAPO",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/conapo"
+      ],
+      "upstream": [],
+      "freshness": {
+        "mode": "event",
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "imss.reference",
+      "title": "IMSS contribution and reference tables",
+      "authority": "IMSS",
+      "kind": "regulatory_parameters",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/imss-catalogs.json",
+        "packages/shared-data/imss-tables.json"
+      ],
+      "upstream": [],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 90,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "inegi.denue.filtered",
+      "title": "Filtered DENUE business-directory view",
+      "authority": "INEGI",
+      "kind": "derived",
+      "status": "planned",
+      "distribution": "optional",
+      "local_paths": [],
+      "upstream": [
+        {
+          "role": "authoritative",
+          "url": "https://www.inegi.org.mx/app/mapa/denue/",
+          "format": "dataset"
+        }
+      ],
+      "freshness": {
+        "mode": "event",
+        "upstream_checked_at": null
+      },
+      "derivation": {
+        "type": "filtered_view",
+        "filter_spec": null,
+        "retain_full_upstream_in_core": false
+      },
+      "notes": "DENUE is intentionally modeled as a reproducible filtered derivative, not as a full catalogmx mirror. The filter specification must be defined before materialization."
+    }
+  ]
+}
