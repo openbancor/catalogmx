@@ -73,15 +73,49 @@
       "kind": "reference",
       "status": "managed",
       "distribution": "embedded",
+      "version": "1.2",
+      "revision": "E",
+      "effective_from": "2026-01-01",
       "local_paths": [
-        "packages/shared-data/sat/nomina_1.2"
+        "packages/shared-data/sat/nomina_1.2",
+        "packages/shared-data/sat/xsd/resources/www.sat.gob.mx/sitio_internet/cfd/catalogos/Nomina/catNomina.xsd"
       ],
-      "upstream": [],
+      "upstream": [
+        {
+          "role": "authoritative_notice",
+          "url": "https://www.sat.gob.mx/minisitio/Factura/emite_organismospublicos.htm",
+          "format": "html"
+        },
+        {
+          "role": "authoritative_resource",
+          "url": "https://www.sat.gob.mx/sitio_internet/cfd/catalogos/Nomina/catNomina.xsd",
+          "format": "xsd"
+        },
+        {
+          "role": "technical_mirror",
+          "url": "https://github.com/phpcfdi/resources-sat-xml/blob/master/resources/www.sat.gob.mx/sitio_internet/cfd/catalogos/Nomina/catNomina.xsd",
+          "format": "xsd"
+        }
+      ],
       "freshness": {
         "mode": "interval",
-        "max_age_days": 180,
-        "upstream_checked_at": null
-      }
+        "max_age_days": 31,
+        "upstream_checked_at": "2026-08-25"
+      },
+      "implementation": {
+        "status": "partial",
+        "xsd_catalog_types": 13,
+        "normalized_catalogs": 7,
+        "missing_normalized_catalogs": [
+          "c_OrigenRecurso",
+          "c_TipoDeduccion",
+          "c_TipoHoras",
+          "c_TipoIncapacidad",
+          "c_TipoOtroPago",
+          "c_TipoPercepcion"
+        ]
+      },
+      "notes": "Revision E is current. The XSD resource is synchronized, but language-level normalized catalog APIs still cover only 7 of the 13 catalog types represented by catNomina.xsd."
     },
     {
       "id": "sat.contabilidad_electronica",
