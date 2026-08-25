@@ -11,11 +11,13 @@ from catalogmx import (
     validate_rfc,
     detect_rfc_type,
     is_valid_rfc,
+    validate_clabe,
     # CURP helpers
     generate_curp,
     validate_curp,
     get_curp_info,
     is_valid_curp,
+    validate_nss,
 )
 
 
@@ -60,6 +62,14 @@ class TestRFCHelpers(unittest.TestCase):
         """Test validating an invalid RFC"""
         self.assertFalse(validate_rfc("INVALID"))
         self.assertFalse(validate_rfc(""))
+
+    def test_validate_rfc_foreign_and_special_character_edges(self):
+        """Test RFC validation with foreign and special-character inputs"""
+        self.assertTrue(validate_rfc("XEXX010101000"))
+        self.assertTrue(validate_rfc("xexx010101000"))
+        self.assertFalse(validate_rfc("PE#J900515LN5"))
+        self.assertFalse(validate_rfc("PEGJ900515L!5"))
+        self.assertFalse(validate_rfc("José900515LN5"))
 
     def test_detect_rfc_type_fisica(self):
         """Test detecting RFC type for persona física"""
@@ -224,6 +234,22 @@ class TestCURPHelpers(unittest.TestCase):
         # Should fail validation
         self.assertFalse(validate_curp(corrupted_curp))
 
+    def test_validate_curp_multiple_bad_check_digits(self):
+        """Test CURP validation rejects otherwise valid values with bad check digits"""
+        curp = generate_curp(
+            nombre="Sofía",
+            apellido_paterno="Núñez",
+            apellido_materno="O'Conor",
+            fecha_nacimiento="2001-07-09",
+            sexo="M",
+            estado="Ciudad de México",
+        )
+
+        bad_digits = {"0", "1", "2"} - {curp[-1]}
+        for bad_digit in bad_digits:
+            with self.subTest(bad_digit=bad_digit):
+                self.assertFalse(validate_curp(curp[:-1] + bad_digit))
+
     def test_get_curp_info(self):
         """Test extracting information from CURP"""
         curp = generate_curp(
@@ -346,6 +372,26 @@ class TestIntegrationScenarios(unittest.TestCase):
 
         # All should be unique
         self.assertEqual(len(set(curps)), len(curps))
+
+
+class TestBankAndSocialSecurityHelpers(unittest.TestCase):
+    """Test CLABE and NSS helper edge cases"""
+
+    def test_validate_clabe_edge_cases(self):
+        """Test CLABE validation with invalid numeric edge cases"""
+        self.assertTrue(validate_clabe("000000000000000000"))
+        self.assertFalse(validate_clabe("000000000000000001"))
+        self.assertFalse(validate_clabe("00201007777777777"))
+        self.assertFalse(validate_clabe("00201007777777777A"))
+        self.assertFalse(validate_clabe(""))
+
+    def test_validate_nss_empty_and_length_edges(self):
+        """Test NSS validation handles empty, None, and wrong lengths"""
+        self.assertFalse(validate_nss(None))
+        self.assertFalse(validate_nss(""))
+        self.assertFalse(validate_nss("1234567890"))
+        self.assertFalse(validate_nss("123456789012"))
+        self.assertFalse(validate_nss("1234567890A"))
 
 
 if __name__ == "__main__":

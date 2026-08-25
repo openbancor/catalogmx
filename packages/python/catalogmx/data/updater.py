@@ -74,13 +74,13 @@ class DataUpdater:
     dynamic data SQLite database, allowing data updates without library releases.
     """
 
-    def __init__(self, cache_dir: Path | None = None):
+    def __init__(self, cache_dir: str | Path | None = None):
         """
         Initialize DataUpdater
 
         :param cache_dir: Custom cache directory (default: ~/.catalogmx)
         """
-        self.cache_dir = cache_dir or CACHE_DIR
+        self.cache_dir = Path(cache_dir) if cache_dir is not None else CACHE_DIR
         self.cache_db = self.cache_dir / "mexico_dynamic.sqlite3"
         self.version_file = self.cache_dir / "version.json"
 
