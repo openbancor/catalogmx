@@ -88,39 +88,121 @@ class CodigosPlazaCatalog:
 
     @classmethod
     def get_all(cls) -> list[CodigoPlaza]:
-        """Obtiene todos los códigos de plaza."""
+        """
+        Obtiene todos los códigos de plaza.
+
+        Returns:
+            Lista con todos los códigos de plaza
+        """
         cls._load()
         return cls._data.copy()
 
     @classmethod
     def buscar_por_codigo(cls, codigo: str) -> list[CodigoPlaza]:
-        """Busca plazas por código."""
+        """
+        Busca plazas por código.
+
+        Args:
+            codigo: Código de plaza (3 dígitos)
+
+        Returns:
+            Lista de plazas con ese código (puede haber múltiples)
+
+        Examples:
+            >>> plazas = CodigosPlazaCatalog.buscar_por_codigo("320")
+            >>> for p in plazas:
+            ...     print(f"{p['plaza']}, {p['estado']}")
+            Guadalajara, Jalisco
+            Tonala, Jalisco
+            ...
+        """
         cls._load()
         codigo_padded = codigo.zfill(3)
         return cls._by_codigo.get(codigo_padded, [])
 
     @classmethod
     def buscar_por_plaza(cls, nombre_plaza: str) -> list[CodigoPlaza]:
-        """Busca códigos por nombre de plaza (insensible a acentos)."""
+        """
+        Busca códigos por nombre de plaza (insensible a acentos).
+
+        Args:
+            nombre_plaza: Nombre de la plaza/ciudad
+
+        Returns:
+            Lista de códigos para esa plaza
+
+        Examples:
+            >>> # Tonalá aparece en dos estados diferentes
+            >>> plazas = CodigosPlazaCatalog.buscar_por_plaza("Tonala")
+            >>> for p in plazas:
+            ...     print(f"Código {p['codigo']}: {p['plaza']}, {p['estado']}")
+            Código 135: Tonala, Chiapas
+            Código 320: Tonala, Jalisco
+
+            >>> # Búsqueda insensible a acentos
+            >>> tuxpam = CodigosPlazaCatalog.buscar_por_plaza("Tuxpam")  # sin acento
+            >>> print(len(tuxpam))  # Encuentra "Túxpam" con acento
+            2
+        """
         cls._load()
         plaza_normalized = cls._normalize(nombre_plaza)
         return cls._by_plaza_normalized.get(plaza_normalized, [])
 
     @classmethod
     def get_por_estado(cls, estado: str) -> list[CodigoPlaza]:
-        """Obtiene todas las plazas de un estado."""
+        """
+        Obtiene todas las plazas de un estado.
+
+        Args:
+            estado: Nombre del estado
+
+        Returns:
+            Lista de plazas en ese estado
+
+        Examples:
+            >>> plazas = CodigosPlazaCatalog.get_por_estado("Jalisco")
+            >>> print(f"Jalisco tiene {len(plazas)} plazas")
+        """
         cls._load()
         return cls._by_estado.get(estado, [])
 
     @classmethod
     def get_por_cve_entidad(cls, cve_entidad: str) -> list[CodigoPlaza]:
-        """Obtiene todas las plazas por código INEGI de entidad."""
+        """
+        Obtiene todas las plazas por código INEGI de entidad.
+
+        Args:
+            cve_entidad: Código INEGI del estado (2 dígitos)
+
+        Returns:
+            Lista de plazas en esa entidad
+
+        Examples:
+            >>> # Jalisco tiene cve_entidad '14'
+            >>> plazas = CodigosPlazaCatalog.get_por_cve_entidad("14")
+            >>> print(f"Entidad 14 tiene {len(plazas)} plazas")
+        """
         cls._load()
         return [p for p in cls._data if p["cve_entidad"] == cve_entidad]
 
     @classmethod
     def validar_codigo_clabe(cls, codigo_plaza: str) -> dict:
-        """Valida un código de plaza dentro de una CLABE."""
+        """
+        Valida un código de plaza dentro de una CLABE.
+
+        Args:
+            codigo_plaza: Código de plaza (3 dígitos)
+
+        Returns:
+            Diccionario con información de validación
+
+        Examples:
+            >>> result = CodigosPlazaCatalog.validar_codigo_clabe("180")
+            >>> print(result['valido'])
+            True
+            >>> print(result['plazas'][0]['plaza'])
+            Ciudad de México
+        """
         cls._load()
         codigo_padded = codigo_plaza.zfill(3)
         plazas = cls.buscar_por_codigo(codigo_padded)
@@ -134,7 +216,19 @@ class CodigosPlazaCatalog:
 
     @classmethod
     def get_plazas_duplicadas(cls) -> dict[str, list[CodigoPlaza]]:
-        """Obtiene plazas con nombres duplicados en diferentes estados."""
+        """
+        Obtiene plazas con nombres duplicados en diferentes estados.
+
+        Returns:
+            Diccionario con nombres de plaza y sus instancias
+
+        Examples:
+            >>> duplicadas = CodigosPlazaCatalog.get_plazas_duplicadas()
+            >>> for nombre, plazas in duplicadas.items():
+            ...     print(f"{nombre}: {len(plazas)} ubicaciones")
+            Tonala: 2 ubicaciones (Chiapas, Jalisco)
+            Túxpam: 2 ubicaciones (Jalisco, Nayarit)
+        """
         cls._load()
         duplicadas = {}
         for nombre, plazas in cls._by_plaza.items():
@@ -144,14 +238,38 @@ class CodigosPlazaCatalog:
 
     @classmethod
     def search(cls, query: str) -> list[CodigoPlaza]:
-        """Busca plazas por nombre parcial."""
+        """
+        Busca plazas por nombre parcial (insensible a acentos y mayúsculas).
+
+        Args:
+            query: Texto a buscar
+
+        Returns:
+            Lista de plazas que coinciden
+
+        Examples:
+            >>> # Buscar todas las plazas con "San" en el nombre
+            >>> plazas = CodigosPlazaCatalog.search("San")
+            >>> for p in plazas[:5]:
+            ...     print(f"{p['codigo']}: {p['plaza']}, {p['estado']}")
+
+            >>> # Búsqueda insensible a acentos
+            >>> plazas = CodigosPlazaCatalog.search("Tuxpam")  # sin acento
+            >>> print(len(plazas))  # Encuentra "Túxpam" con acento
+            3
+        """
         cls._load()
         query_normalized = cls._normalize(query)
         return [p for p in cls._data if query_normalized in cls._normalize(p["plaza"])]
 
     @classmethod
     def get_estadisticas(cls) -> dict:
-        """Obtiene estadísticas del catálogo."""
+        """
+        Obtiene estadísticas del catálogo.
+
+        Returns:
+            Diccionario con estadísticas
+        """
         cls._load()
 
         estados = {p["estado"] for p in cls._data}
