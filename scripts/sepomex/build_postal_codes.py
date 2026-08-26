@@ -24,7 +24,7 @@ import tempfile
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Iterable, Iterator, Sequence
+from typing import Any, Iterator, Sequence
 
 DATASET_ID = "sepomex.codigos_postales"
 DATASET_VERSION = "1"
@@ -159,7 +159,9 @@ def create_database(
         )
 
         placeholders = ", ".join("?" for _ in EXPECTED_COLUMNS)
-        quoted_columns = ", ".join(quote_identifier(column) for column in EXPECTED_COLUMNS)
+        quoted_columns = ", ".join(
+            quote_identifier(column) for column in EXPECTED_COLUMNS
+        )
         insert_sql = (
             f"INSERT INTO postal_codes ({quoted_columns}) VALUES ({placeholders})"
         )
@@ -234,7 +236,9 @@ def semantic_hash(database: Path) -> str:
 
     connection = sqlite3.connect(f"file:{database}?mode=ro", uri=True)
     try:
-        quoted_columns = ", ".join(quote_identifier(column) for column in EXPECTED_COLUMNS)
+        quoted_columns = ", ".join(
+            quote_identifier(column) for column in EXPECTED_COLUMNS
+        )
         order_by = quoted_columns
         query = f"SELECT {quoted_columns} FROM postal_codes ORDER BY {order_by}"
         for row in connection.execute(query):
@@ -328,9 +332,7 @@ def build_from_source(
     manifest_path = output_dir / MANIFEST_NAME
 
     statistics = create_database(source_path, output_db, min_records=min_records)
-    manifest = build_manifest(
-        source_path, output_db, statistics, source_metadata or {}
-    )
+    manifest = build_manifest(source_path, output_db, statistics, source_metadata or {})
     manifest_path.write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
