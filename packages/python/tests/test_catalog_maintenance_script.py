@@ -72,8 +72,14 @@ def test_current_registry_schedules_reference_data_but_not_dynamic_pipeline():
 
     assert "banxico.reference" in monthly_ids
     assert "sat.carta_porte" in monthly_ids
+    assert "sepomex.codigos_postales" in monthly_ids
+
     carta_porte = next(item for item in monthly if item.id == "sat.carta_porte")
+    sepomex = next(
+        item for item in monthly if item.id == "sepomex.codigos_postales"
+    )
     assert carta_porte.adapter_configured is True
+    assert sepomex.adapter_configured is True
     assert "banxico.sie_dynamic" not in all_scheduled_ids
 
 
