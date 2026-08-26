@@ -25,7 +25,13 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_REGISTRY = REPO_ROOT / "packages" / "shared-data" / "catalog-registry.json"
 
-ALLOWED_KINDS = {"reference", "time_series", "derived", "regulatory_parameters"}
+ALLOWED_KINDS = {
+    "reference",
+    "classification",
+    "time_series",
+    "derived",
+    "regulatory_parameters",
+}
 ALLOWED_STATUSES = {"managed", "planned", "legacy"}
 ALLOWED_DISTRIBUTIONS = {"embedded", "release", "optional", "mixed"}
 ALLOWED_FRESHNESS_MODES = {"interval", "pipeline", "event", "manual"}

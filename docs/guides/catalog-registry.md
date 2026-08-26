@@ -17,10 +17,13 @@ A file existing in the repository only proves inventory. It does **not** prove t
 
 ## Dataset kinds
 
-- `reference`: identifiers, classifications, code lists, geographic catalogs, and similar master data.
+- `reference`: identifiers, code lists, geographic catalogs, and similar master data whose identity is primarily the current authoritative set.
+- `classification`: explicitly versioned taxonomies/classification systems, such as SCIAN 2023, where edition identity and migration between editions are part of the data contract.
 - `regulatory_parameters`: tables or values whose meaning depends on fiscal, labor, or regulatory rules.
 - `time_series`: observations that change continuously or on a regular schedule.
 - `derived`: reproducible datasets produced from another authoritative dataset.
+
+A classification can still be reference data in the broad domain sense, but the separate registry kind prevents a versioned taxonomy from accidentally inheriting the refresh policy of a continuously maintained master-data catalog from the same authority.
 
 ## Status and distribution
 

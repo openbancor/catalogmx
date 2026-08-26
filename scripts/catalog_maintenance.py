@@ -46,6 +46,12 @@ SLOT_COUNTS = {
 # in-place; release adapters write a manifest and files below dist/catalog-artifacts.
 ADAPTERS: dict[str, tuple[str, ...]] = {
     "banxico.reference": (sys.executable, "scripts/update_banxico_banks.py"),
+    "inegi.ageeml": (
+        sys.executable,
+        "scripts/inegi/build_ageeml.py",
+        "--output-dir",
+        "dist/catalog-artifacts/inegi-ageeml",
+    ),
     "sat.carta_porte": (
         sys.executable,
         "scripts/sat/build_carta_porte_31.py",

@@ -245,26 +245,73 @@
     },
     {
       "id": "inegi.ageeml",
-      "title": "INEGI geographic reference data",
+      "title": "INEGI AGEEML geographic reference data",
       "authority": "INEGI",
       "kind": "reference",
       "status": "managed",
-      "distribution": "embedded",
+      "distribution": "mixed",
       "local_paths": [
-        "packages/shared-data/inegi"
+        "packages/shared-data/inegi/states.json",
+        "packages/shared-data/inegi/municipios.json",
+        "packages/shared-data/inegi/municipios_completo.json",
+        "packages/shared-data/inegi/localidades.json"
       ],
       "upstream": [
         {
-          "role": "authoritative",
-          "url": "https://www.inegi.org.mx/app/ageeml/",
+          "role": "authoritative_portal",
+          "url": "https://www.inegi.org.mx/app/ageeml/default.html",
           "format": "portal"
+        },
+        {
+          "role": "authoritative_predefined_catalog",
+          "url": "https://www.inegi.org.mx/contenidos/app/ageeml/min_con_acento_baja.zip",
+          "format": "zip_csv"
         }
       ],
       "freshness": {
         "mode": "interval",
         "max_age_days": 31,
-        "upstream_checked_at": null
-      }
+        "upstream_checked_at": "2026-08-26",
+        "latest_indexed_cut": "2026/JUN"
+      },
+      "implementation": {
+        "status": "legacy_embedded_views",
+        "canonical_distribution": "release",
+        "planned_release_artifact": "inegi_ageeml.sqlite3",
+        "legacy_download_script": "scripts/download_inegi_complete.py",
+        "synthetic_fallback_forbidden": true,
+        "consumer_migration_required_before_removal": true
+      },
+      "notes": "AGEEML is a permanently updated geographic registry. INEGI exposes current national predefined ZIP catalogs; the latest cut visible in the indexed official AGEEML page on 2026-08-26 is 2026/JUN. The legacy downloader contains a partial synthetic fallback and stale hard-coded metadata and must not be used for unattended maintenance. SCIAN is tracked separately because it has a different version and lifecycle."
+    },
+    {
+      "id": "inegi.scian_2023",
+      "title": "INEGI SCIAN México 2023 classification",
+      "authority": "INEGI",
+      "kind": "classification",
+      "status": "managed",
+      "distribution": "embedded",
+      "version": "2023",
+      "local_paths": [
+        "packages/shared-data/inegi/scian"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_publication",
+          "url": "https://www.inegi.org.mx/app/biblioteca/ficha.html?upc=889463909675",
+          "format": "publication"
+        },
+        {
+          "role": "authoritative_portal",
+          "url": "https://www.inegi.org.mx/app/scian/",
+          "format": "portal"
+        }
+      ],
+      "freshness": {
+        "mode": "event",
+        "upstream_checked_at": "2026-08-26"
+      },
+      "notes": "SCIAN 2023 is the current INEGI industrial classification. It is versioned independently from the monthly AGEEML geographic registry and therefore must not inherit AGEEML scheduling or update logic."
     },
     {
       "id": "sepomex.codigos_postales",
