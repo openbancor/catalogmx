@@ -12,7 +12,8 @@
       "status": "managed",
       "distribution": "mixed",
       "version": "4.0",
-      "effective_from": "2023-04-01",
+      "effective_from": "2022-01-01",
+      "mandatory_from": "2023-04-01",
       "local_paths": [
         "packages/shared-data/sat/cfdi_4.0",
         "packages/shared-data/sat/xsd",
