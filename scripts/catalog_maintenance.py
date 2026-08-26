@@ -58,6 +58,12 @@ ADAPTERS: dict[str, tuple[str, ...]] = {
         "--output-dir",
         "dist/catalog-artifacts/sat-carta-porte-31",
     ),
+    "sat.cfdi_4": (
+        sys.executable,
+        "scripts/sat/build_cfdi_40.py",
+        "--output-dir",
+        "dist/catalog-artifacts/sat-cfdi-40",
+    ),
     "sepomex.codigos_postales": (
         sys.executable,
         "scripts/sepomex/build_postal_codes.py",
@@ -223,7 +229,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "plan":
         plan = build_plan(registry, args.cadence, args.slot)
         if args.json:
-            print(json.dumps([asdict(item) for item in plan], indent=2))
+            print(json.dumps([asdict(item) for item in plan,], indent=2))
         else:
             print_plan(plan)
         return 0
