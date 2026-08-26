@@ -16,7 +16,8 @@ def test_cfdi_40_uses_release_canonical_data_with_legacy_embedded_views():
     )
 
     assert dataset["version"] == "4.0"
-    assert dataset["effective_from"] == "2023-04-01"
+    assert dataset["effective_from"] == "2022-01-01"
+    assert dataset["mandatory_from"] == "2023-04-01"
     assert dataset["distribution"] == "mixed"
     assert dataset["freshness"]["max_age_days"] == 31
     assert dataset["freshness"]["upstream_checked_at"] == "2026-08-26"
