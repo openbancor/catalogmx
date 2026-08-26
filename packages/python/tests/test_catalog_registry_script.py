@@ -43,7 +43,7 @@ def test_audit_marks_unknown_interval_sources_due_without_guessing_freshness():
     report = module.build_audit(registry, today=date(2026, 8, 25))
     states = {item["id"]: item["state"] for item in report["datasets"]}
 
-    assert states["sat.cfdi_4"] == "due"
+    assert states["cnbv.reference"] == "due"
     assert states["banxico.sie_dynamic"] == "pipeline"
     assert states["inegi.denue.filtered"] == "planned"
 

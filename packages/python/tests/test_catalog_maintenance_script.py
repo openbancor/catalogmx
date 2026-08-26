@@ -73,9 +73,15 @@ def test_current_registry_schedules_reference_data_but_not_dynamic_or_event_data
     assert "banxico.reference" in monthly_ids
     assert "inegi.ageeml" in monthly_ids
     assert "sat.carta_porte" in monthly_ids
+    assert "sat.cfdi_4" in monthly_ids
     assert "sepomex.codigos_postales" in monthly_ids
 
-    for dataset_id in ("inegi.ageeml", "sat.carta_porte", "sepomex.codigos_postales"):
+    for dataset_id in (
+        "inegi.ageeml",
+        "sat.carta_porte",
+        "sat.cfdi_4",
+        "sepomex.codigos_postales",
+    ):
         item = next(item for item in monthly if item.id == dataset_id)
         assert item.adapter_configured is True
 
@@ -107,8 +113,8 @@ def test_slots_are_deterministic_balanced_and_partition_a_cadence():
 
 def test_unconfigured_adapter_is_reported_without_execution():
     module = load_module()
-    result = module.run_adapter("sat.cfdi_4")
+    result = module.run_adapter("sat.comercio_exterior")
 
-    assert result.id == "sat.cfdi_4"
+    assert result.id == "sat.comercio_exterior"
     assert result.status == "unconfigured"
     assert result.returncode is None

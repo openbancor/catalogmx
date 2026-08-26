@@ -10,7 +10,10 @@
       "authority": "SAT",
       "kind": "reference",
       "status": "managed",
-      "distribution": "embedded",
+      "distribution": "mixed",
+      "version": "4.0",
+      "effective_from": "2022-01-01",
+      "mandatory_from": "2023-04-01",
       "local_paths": [
         "packages/shared-data/sat/cfdi_4.0",
         "packages/shared-data/sat/xsd",
@@ -18,17 +21,37 @@
       ],
       "upstream": [
         {
-          "role": "authoritative",
+          "role": "authoritative_portal",
+          "url": "https://www.sat.gob.mx/consultas/35025/formato-de-factura-electronica-(anexo-20)",
+          "format": "portal"
+        },
+        {
+          "role": "authoritative_catalog",
           "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/catCFDI.xls",
           "format": "xls"
+        },
+        {
+          "role": "technical_mirror",
+          "url": "https://github.com/phpcfdi/resources-sat-catalogs",
+          "format": "sqlite_sql"
         }
       ],
       "freshness": {
         "mode": "interval",
         "max_age_days": 31,
-        "upstream_checked_at": null
+        "upstream_checked_at": "2026-08-26"
       },
-      "notes": "The local inventory is implemented; upstream freshness must be re-established from the authoritative SAT artifact."
+      "implementation": {
+        "status": "partial",
+        "official_catalogs": 25,
+        "embedded_convenience_json_files": 14,
+        "canonical_distribution": "release",
+        "release_artifact": "sat_cfdi_40.sqlite3",
+        "legacy_view_path": "packages/shared-data/sat/cfdi_4.0",
+        "legacy_fetch_script": "scripts/fetch_sat_catalogs.py",
+        "consumer_migration_required_before_removal": true
+      },
+      "notes": "CFDI 4.0 remains the valid Anexo 20 version. The embedded cfdi_4.0 directory is a convenience subset, not the complete current 25-table CFDI 4.0 catalog family represented by the reviewed technical mirror. Full canonical catalog data is distributed independently as a content-addressed release artifact; legacy embedded views remain for compatibility until consumers use the dataset resolver."
     },
     {
       "id": "sat.carta_porte",
