@@ -293,7 +293,7 @@
         "mode": "interval",
         "max_age_days": 31,
         "upstream_checked_at": "2026-08-26",
-        "source_reported_updated_at": "2026-08-24"
+        "source_reported_updated_at": "2026-08-25"
       },
       "implementation": {
         "status": "legacy_embedded_snapshot",
@@ -310,7 +310,7 @@
         "commercialization_restricted": true,
         "project_relicenses_source_data": false
       },
-      "notes": "The official SEPOMEX portal reported an information update on 2026-08-24. The canonical full dataset is moving to an independently versioned release artifact. Existing large JSON/SQLite snapshots remain temporarily for compatibility with current language consumers and must not be deleted until those consumers use the dataset resolver. Automated ingestion is fail-closed and must never substitute synthetic fallback postal codes when the official source is unavailable."
+      "notes": "The official SEPOMEX portal reported an information update on 2026-08-25. The canonical full dataset is moving to an independently versioned release artifact. Existing large JSON/SQLite snapshots remain temporarily for compatibility with current language consumers and must not be deleted until those consumers use the dataset resolver. Automated ingestion is fail-closed and must never substitute synthetic fallback postal codes when the official source is unavailable."
     },
     {
       "id": "cnbv.reference",
