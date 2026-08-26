@@ -203,7 +203,7 @@ jobs:
               exit 1
             fi
 
-            slug=$(printf '%s-%s' "$dataset_id" "$dataset_version" | tr '._' '--')
+            slug=$(printf '%s-%s' "$dataset_id" "$dataset_version" | sed 's/[._]/-/g')
             channel_tag="data-${slug}-latest"
             immutable_tag="data-${slug}-${content_sha:0:16}"
             previous_dir=$(mktemp -d)
