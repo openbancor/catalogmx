@@ -6,8 +6,8 @@ participating in the SPEI (Sistema de Pagos Electrónicos Interbancarios).
 """
 
 import json
-from pathlib import Path
 
+from catalogmx.utils.shared_data import get_shared_data_path
 from catalogmx.utils.text import normalize_text
 
 
@@ -25,15 +25,7 @@ class BankCatalog:
     def _load_data(cls) -> None:
         """Load bank data from JSON file"""
         if cls._data is None:
-            # Path: catalogmx/packages/python/catalogmx/catalogs/banxico/banks.py
-            # Target: catalogmx/packages/shared-data/banxico/banks.json
-            current_file = Path(__file__)
-            shared_data_path = (
-                current_file.parent.parent.parent.parent.parent
-                / "shared-data"
-                / "banxico"
-                / "banks.json"
-            )
+            shared_data_path = get_shared_data_path("banxico", "banks.json")
 
             with open(shared_data_path, encoding="utf-8") as f:
                 cls._data = json.load(f)
