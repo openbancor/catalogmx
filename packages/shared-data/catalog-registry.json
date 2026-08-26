@@ -272,23 +272,45 @@
       "authority": "SEPOMEX",
       "kind": "reference",
       "status": "managed",
-      "distribution": "embedded",
+      "distribution": "mixed",
       "local_paths": [
         "packages/shared-data/sepomex",
         "packages/shared-data/sqlite/sepomex.db"
       ],
       "upstream": [
         {
-          "role": "authoritative_export",
+          "role": "authoritative_portal",
           "url": "https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/CodigoPostal_Exportar.aspx",
-          "format": "export"
+          "format": "portal"
+        },
+        {
+          "role": "authoritative_export",
+          "url": "https://www.correosdemexico.gob.mx/datosabiertos/cp/cpdescarga.txt",
+          "format": "pipe_delimited_txt"
         }
       ],
       "freshness": {
         "mode": "interval",
         "max_age_days": 31,
-        "upstream_checked_at": null
-      }
+        "upstream_checked_at": "2026-08-26",
+        "source_reported_updated_at": "2026-08-24"
+      },
+      "implementation": {
+        "status": "legacy_embedded_snapshot",
+        "canonical_distribution": "release",
+        "release_artifact": "sepomex_codigos_postales.sqlite3",
+        "legacy_full_json": "packages/shared-data/sepomex/codigos_postales_completo.json",
+        "legacy_sqlite": "packages/shared-data/sqlite/sepomex.db",
+        "legacy_full_json_bytes": 42189614,
+        "legacy_sqlite_bytes": 13287424,
+        "consumer_migration_required_before_removal": true
+      },
+      "rights": {
+        "source_terms_checked_at": "2026-08-26",
+        "commercialization_restricted": true,
+        "project_relicenses_source_data": false
+      },
+      "notes": "The official SEPOMEX portal reported an information update on 2026-08-24. The canonical full dataset is moving to an independently versioned release artifact. Existing large JSON/SQLite snapshots remain temporarily for compatibility with current language consumers and must not be deleted until those consumers use the dataset resolver. Automated ingestion is fail-closed and must never substitute synthetic fallback postal codes when the official source is unavailable."
     },
     {
       "id": "cnbv.reference",
