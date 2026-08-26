@@ -52,6 +52,12 @@ ADAPTERS: dict[str, tuple[str, ...]] = {
         "--output-dir",
         "dist/catalog-artifacts/sat-carta-porte-31",
     ),
+    "sepomex.codigos_postales": (
+        sys.executable,
+        "scripts/sepomex/build_postal_codes.py",
+        "--output-dir",
+        "dist/catalog-artifacts/sepomex-codigos-postales",
+    ),
 }
 
 
