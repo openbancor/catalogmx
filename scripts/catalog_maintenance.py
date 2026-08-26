@@ -8,6 +8,8 @@ slots so GitHub Actions does not hit every upstream at once.
 Adapters are deliberately explicit: an unknown dataset is reported as
 ``unconfigured`` instead of executing arbitrary commands from JSON metadata.
 This keeps the registry declarative and avoids turning it into a shell script.
+Adapters may update canonical repository data or build independently published
+artifacts; the maintenance workflow handles those outputs after adapter runs.
 
 Usage:
     python scripts/catalog_maintenance.py plan --cadence monthly --slot 0
@@ -41,10 +43,16 @@ SLOT_COUNTS = {
 }
 
 # Repository-maintained adapters only. Do not execute commands from registry JSON.
-# Each adapter should be deterministic: update canonical files in-place and let
-# git diff decide whether a PR is necessary.
+# Each adapter must be deterministic. Repository adapters update canonical files
+# in-place; release adapters write a manifest and files below dist/catalog-artifacts.
 ADAPTERS: dict[str, tuple[str, ...]] = {
     "banxico.reference": (sys.executable, "scripts/update_banxico_banks.py"),
+    "sat.carta_porte": (
+        sys.executable,
+        "scripts/sat/build_carta_porte_31.py",
+        "--output-dir",
+        "dist/catalog-artifacts/sat-carta-porte-31",
+    ),
 }
 
 
@@ -140,7 +148,7 @@ def build_plan(
 
 
 def run_adapter(dataset_id: str) -> RunResult:
-    """Run a trusted repository adapter or report that one is not configured."""
+    """Run a trusted adapter or report that one is not configured."""
     command = ADAPTERS.get(dataset_id)
     if command is None:
         return RunResult(id=dataset_id, status="unconfigured")
