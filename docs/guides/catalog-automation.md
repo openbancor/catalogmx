@@ -21,7 +21,7 @@ Datasets with `event` or `manual` freshness, and datasets whose registry status 
 
 ## Staggering
 
-A cadence can have multiple slots. The scheduler hashes the dataset ID into a stable slot so upstream systems are not all queried on the same day or hour. The assignment is deterministic: a dataset stays in the same slot unless the scheduling algorithm itself changes.
+A cadence can have multiple slots. For each cadence, the scheduler sorts the eligible dataset IDs and assigns them round-robin across the available slots. This is deterministic and keeps slot sizes within one dataset of each other, so one day does not accidentally accumulate most of the catalog checks. Assignments can move when the set of eligible datasets in a cadence changes; that is acceptable because the slot is operational scheduling metadata, not part of the dataset contract.
 
 The GitHub Actions workflow currently uses:
 
