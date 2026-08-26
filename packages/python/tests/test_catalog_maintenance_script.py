@@ -58,7 +58,7 @@ def test_pipeline_event_and_planned_datasets_are_not_double_scheduled():
     assert module.cadence_for_dataset(planned) is None
 
 
-def test_current_registry_schedules_reference_data_but_not_dynamic_pipeline():
+def test_current_registry_schedules_reference_data_but_not_dynamic_or_event_data():
     module = load_module()
     registry = module.load_registry(REGISTRY_PATH)
 
@@ -71,16 +71,16 @@ def test_current_registry_schedules_reference_data_but_not_dynamic_pipeline():
     }
 
     assert "banxico.reference" in monthly_ids
+    assert "inegi.ageeml" in monthly_ids
     assert "sat.carta_porte" in monthly_ids
     assert "sepomex.codigos_postales" in monthly_ids
 
-    carta_porte = next(item for item in monthly if item.id == "sat.carta_porte")
-    sepomex = next(
-        item for item in monthly if item.id == "sepomex.codigos_postales"
-    )
-    assert carta_porte.adapter_configured is True
-    assert sepomex.adapter_configured is True
+    for dataset_id in ("inegi.ageeml", "sat.carta_porte", "sepomex.codigos_postales"):
+        item = next(item for item in monthly if item.id == dataset_id)
+        assert item.adapter_configured is True
+
     assert "banxico.sie_dynamic" not in all_scheduled_ids
+    assert "inegi.scian_2023" not in all_scheduled_ids
 
 
 def test_slots_are_deterministic_balanced_and_partition_a_cadence():
