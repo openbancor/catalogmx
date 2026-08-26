@@ -71,10 +71,13 @@ def test_current_registry_schedules_reference_data_but_not_dynamic_pipeline():
     }
 
     assert "banxico.reference" in monthly_ids
+    assert "sat.carta_porte" in monthly_ids
+    carta_porte = next(item for item in monthly if item.id == "sat.carta_porte")
+    assert carta_porte.adapter_configured is True
     assert "banxico.sie_dynamic" not in all_scheduled_ids
 
 
-def test_slots_are_stable_and_partition_a_cadence():
+def test_slots_are_deterministic_balanced_and_partition_a_cadence():
     module = load_module()
     registry = module.load_registry(REGISTRY_PATH)
 
@@ -88,8 +91,12 @@ def test_slots_are_stable_and_partition_a_cadence():
     assert sorted(flattened) == sorted(item.id for item in complete)
     assert len(flattened) == len(set(flattened))
 
+    assignments = module.assign_slots([item.id for item in complete], "monthly")
     for item in complete:
-        assert module.slot_for_dataset(item.id, "monthly") == item.slot
+        assert assignments[item.id] == item.slot
+
+    slot_sizes = [len(slot_plan) for slot_plan in by_slot]
+    assert max(slot_sizes) - min(slot_sizes) <= 1
 
 
 def test_unconfigured_adapter_is_reported_without_execution():
