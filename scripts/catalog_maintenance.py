@@ -21,7 +21,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import subprocess
 import sys
@@ -109,17 +108,25 @@ def cadence_for_dataset(dataset: dict[str, Any]) -> str | None:
     return "annual"
 
 
-def slot_for_dataset(dataset_id: str, cadence: str) -> int:
-    """Assign a stable slot without storing scheduling noise in the registry."""
+def assign_slots(dataset_ids: Sequence[str], cadence: str) -> dict[str, int]:
+    """Deterministically balance one cadence across its available schedule slots.
+
+    IDs are sorted and assigned round-robin. This makes the plan reproducible
+    while keeping each slot within one dataset of the others. Assignments may
+    move when the set of datasets in a cadence changes, which is acceptable for
+    operational staggering and avoids persisting schedule noise in the registry.
+    """
     slot_count = SLOT_COUNTS[cadence]
-    digest = hashlib.sha256(dataset_id.encode("utf-8")).digest()
-    return int.from_bytes(digest[:4], "big") % slot_count
+    return {
+        dataset_id: index % slot_count
+        for index, dataset_id in enumerate(sorted(dataset_ids))
+    }
 
 
 def build_plan(
     registry: dict[str, Any], cadence: str, slot: int | None = None
 ) -> list[PlannedDataset]:
-    """Build a deterministic maintenance plan for one cadence/slot."""
+    """Build a deterministic and balanced maintenance plan for one cadence/slot."""
     if cadence not in CADENCES:
         raise ValueError(f"unsupported cadence: {cadence}")
 
@@ -127,12 +134,16 @@ def build_plan(
     if slot is not None and not 0 <= slot < slot_count:
         raise ValueError(f"slot for {cadence} must be between 0 and {slot_count - 1}")
 
+    eligible = [
+        dataset
+        for dataset in registry["datasets"]
+        if cadence_for_dataset(dataset) == cadence
+    ]
+    assignments = assign_slots([dataset["id"] for dataset in eligible], cadence)
+
     plan: list[PlannedDataset] = []
-    for dataset in registry["datasets"]:
-        dataset_cadence = cadence_for_dataset(dataset)
-        if dataset_cadence != cadence:
-            continue
-        dataset_slot = slot_for_dataset(dataset["id"], cadence)
+    for dataset in eligible:
+        dataset_slot = assignments[dataset["id"]]
         if slot is not None and dataset_slot != slot:
             continue
         plan.append(
