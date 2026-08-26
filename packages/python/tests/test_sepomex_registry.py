@@ -18,7 +18,7 @@ def test_sepomex_uses_release_canonical_data_with_legacy_embedded_snapshot():
     assert dataset["distribution"] == "mixed"
     assert dataset["freshness"]["max_age_days"] == 31
     assert dataset["freshness"]["upstream_checked_at"] == "2026-08-26"
-    assert dataset["freshness"]["source_reported_updated_at"] == "2026-08-24"
+    assert dataset["freshness"]["source_reported_updated_at"] == "2026-08-25"
 
     implementation = dataset["implementation"]
     assert implementation["status"] == "legacy_embedded_snapshot"
