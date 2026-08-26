@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "registry_status": "bootstrap",
-  "inventory_checked_at": "2026-08-25",
+  "inventory_checked_at": "2026-08-26",
   "legacy_manifest": ".catalog-versions.json",
   "datasets": [
     {
@@ -32,22 +32,48 @@
     },
     {
       "id": "sat.carta_porte",
-      "title": "SAT Carta Porte catalogs and schemas",
+      "title": "SAT Carta Porte 3.1 catalogs and schemas",
       "authority": "SAT",
       "kind": "reference",
       "status": "managed",
-      "distribution": "embedded",
+      "distribution": "mixed",
+      "version": "3.1",
+      "effective_from": "2024-07-17",
       "local_paths": [
         "packages/shared-data/sat/carta_porte_3",
         "packages/shared-data/sat/xsd/resources/www.sat.gob.mx/sitio_internet/cfd/CartaPorte"
       ],
-      "upstream": [],
+      "upstream": [
+        {
+          "role": "authoritative_portal",
+          "url": "https://www.sat.gob.mx/portal/public/tramites/complemento-carta-porte",
+          "format": "portal"
+        },
+        {
+          "role": "authoritative_catalog",
+          "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/CatalogosCartaPorte31.xls",
+          "format": "xls"
+        },
+        {
+          "role": "technical_mirror",
+          "url": "https://github.com/phpcfdi/resources-sat-catalogs",
+          "format": "sqlite_sql"
+        }
+      ],
       "freshness": {
         "mode": "interval",
-        "max_age_days": 90,
-        "upstream_checked_at": null
+        "max_age_days": 31,
+        "upstream_checked_at": "2026-08-26"
       },
-      "notes": "Do not infer the current upstream version from the legacy directory name; resolve the authoritative SAT source during the source audit."
+      "implementation": {
+        "status": "partial",
+        "official_catalogs": 32,
+        "embedded_convenience_json_files": 7,
+        "canonical_full_dataset": false,
+        "planned_full_distribution": "release",
+        "legacy_view_path": "packages/shared-data/sat/carta_porte_3"
+      },
+      "notes": "Carta Porte 3.1 is current. The existing carta_porte_3 directory is a legacy partial convenience view, not a complete one-to-one mirror of the 32 official CCP 3.1 catalogs. Some convenience files, such as aeropuertos.json, do not map directly to a same-named SAT catalog. Do not auto-refresh these views as if they were the canonical upstream dataset. Build and distribute the complete official dataset independently, then derive convenience views explicitly."
     },
     {
       "id": "sat.comercio_exterior",

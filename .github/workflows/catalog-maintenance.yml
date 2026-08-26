@@ -1,8 +1,9 @@
 name: Catalog Maintenance
 
 # Reference/regulatory catalogs are checked on staggered schedules derived from
-# catalog-registry.json freshness SLAs. Dynamic Banxico time-series data keeps
-# its dedicated daily release workflow in update-dynamic-data.yml.
+# catalog-registry.json freshness SLAs. Adapters may update compact repository
+# data or build independently versioned release artifacts. Dynamic Banxico
+# time-series data keeps its dedicated daily pipeline.
 
 on:
   schedule:
@@ -144,16 +145,16 @@ jobs:
 
           git diff --check
 
-      - name: Detect data changes
+      - name: Detect repository data changes
         id: changes
         shell: bash
         run: |
           if git diff --quiet -- packages/shared-data; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "No canonical data changes detected."
+            echo "No canonical repository data changes detected."
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "Canonical data changed:"
+            echo "Canonical repository data changed:"
             git diff --stat -- packages/shared-data
           fi
 
@@ -174,3 +175,81 @@ jobs:
             Please review the upstream provenance, semantic diff, generated-data validation, and normal repository CI before merging.
           add-paths: |
             packages/shared-data/**
+
+      - name: Publish changed release artifacts
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          shopt -s nullglob
+          manifests=(dist/catalog-artifacts/*/*.manifest.json)
+
+          if [ ${#manifests[@]} -eq 0 ]; then
+            echo "No release artifacts produced."
+            exit 0
+          fi
+
+          for manifest in "${manifests[@]}"; do
+            artifact_dir=$(dirname "$manifest")
+            artifact_name=$(jq -r '.dataset.file' "$manifest")
+            artifact="$artifact_dir/$artifact_name"
+            dataset_id=$(jq -r '.dataset_id' "$manifest")
+            dataset_version=$(jq -r '.dataset_version' "$manifest")
+            content_sha=$(jq -r '.dataset.content_sha256' "$manifest")
+            source_release=$(jq -r '.ingestion.release // "unknown"' "$manifest")
+
+            if [ ! -f "$artifact" ]; then
+              echo "Manifest $manifest references missing artifact $artifact" >&2
+              exit 1
+            fi
+
+            slug=$(printf '%s-%s' "$dataset_id" "$dataset_version" | sed 's/[._]/-/g')
+            channel_tag="data-${slug}-latest"
+            immutable_tag="data-${slug}-${content_sha:0:16}"
+            previous_dir=$(mktemp -d)
+            previous_sha=""
+
+            if gh release view "$channel_tag" >/dev/null 2>&1; then
+              if gh release download "$channel_tag" \
+                --pattern "$(basename "$manifest")" \
+                --dir "$previous_dir" >/dev/null 2>&1; then
+                previous_manifest="$previous_dir/$(basename "$manifest")"
+                previous_sha=$(jq -r '.dataset.content_sha256 // empty' "$previous_manifest")
+              fi
+            fi
+
+            if [ "$previous_sha" = "$content_sha" ]; then
+              echo "$dataset_id $dataset_version unchanged ($content_sha)"
+              rm -rf "$previous_dir"
+              continue
+            fi
+
+            title="$dataset_id $dataset_version data"
+            notes="Automated CatalogMX data artifact. Source mirror release: $source_release. Semantic content SHA-256: $content_sha. The manifest records authoritative SAT provenance and integrity metadata."
+
+            if ! gh release view "$immutable_tag" >/dev/null 2>&1; then
+              gh release create "$immutable_tag" "$artifact" "$manifest" \
+                --title "$title $content_sha" \
+                --notes "$notes"
+            fi
+
+            if gh release view "$channel_tag" >/dev/null 2>&1; then
+              gh release upload "$channel_tag" "$artifact" "$manifest" --clobber
+              gh release edit "$channel_tag" --title "$title (latest)" --notes "$notes"
+            else
+              gh release create "$channel_tag" "$artifact" "$manifest" \
+                --title "$title (latest)" \
+                --notes "$notes"
+            fi
+
+            {
+              echo "## Published release artifact"
+              echo
+              echo "- Dataset: \`$dataset_id\` $dataset_version"
+              echo "- Content SHA-256: \`$content_sha\`"
+              echo "- Immutable tag: \`$immutable_tag\`"
+              echo "- Channel tag: \`$channel_tag\`"
+            } >> "$GITHUB_STEP_SUMMARY"
+
+            rm -rf "$previous_dir"
+          done

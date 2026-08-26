@@ -21,7 +21,7 @@ Datasets with `event` or `manual` freshness, and datasets whose registry status 
 
 ## Staggering
 
-A cadence can have multiple slots. The scheduler hashes the dataset ID into a stable slot so upstream systems are not all queried on the same day or hour. The assignment is deterministic: a dataset stays in the same slot unless the scheduling algorithm itself changes.
+A cadence can have multiple slots. For each cadence, the scheduler sorts the eligible dataset IDs and assigns them round-robin across the available slots. This is deterministic and keeps slot sizes within one dataset of each other, so one day does not accidentally accumulate most of the catalog checks. Assignments can move when the set of eligible datasets in a cadence changes; that is acceptable because the slot is operational scheduling metadata, not part of the dataset contract.
 
 The GitHub Actions workflow currently uses:
 
@@ -41,16 +41,47 @@ The registry remains declarative and never contains executable shell commands. T
 An adapter must:
 
 1. retrieve data from the registered authoritative or reviewed upstream source;
-2. normalize deterministically into canonical repository files;
+2. normalize deterministically;
 3. avoid deleting or rewriting enriched information unless that behavior is explicitly reviewed;
-4. exit non-zero when retrieval or normalization is unsafe;
-5. leave unchanged files byte-identical whenever upstream content produces no semantic change.
+4. exit non-zero when retrieval, schema validation, or normalization is unsafe;
+5. expose a semantic content identity so irrelevant upstream changes do not create false CatalogMX updates.
 
-The maintenance workflow then validates the registry, checks changed JSON/data, runs `git diff --check`, and opens or updates a pull request only when canonical data actually changed. It does not push reference or regulatory changes directly to `master`.
+### Repository-data adapters
+
+Small catalogs that are appropriate to review in Git update canonical files below `packages/shared-data`. The maintenance workflow validates the repository diff and opens or updates a pull request only when those tracked files actually changed. It does not push regulatory/reference changes directly to `master`.
+
+`banxico.reference` is the first repository-data adapter. It uses `scripts/update_banxico_banks.py`, which checks Banxico's CEP institution endpoint and conservatively adds new institution codes without deleting or overwriting manually enriched fields.
+
+### Release-artifact adapters
+
+Large or independently versioned datasets should not be forced into every language package or committed as large generated blobs. A release adapter writes its files and a `*.manifest.json` below `dist/catalog-artifacts/<dataset>/`.
+
+The manifest records authority, ingestion provenance, table/record inventory, binary SHA-256, and a semantic `content_sha256`. The workflow compares that semantic hash with the mutable dataset channel release. When the content is unchanged, nothing is published even if the technical upstream release changed for some unrelated catalog.
+
+When content changes, the workflow publishes:
+
+- an immutable release tagged from dataset/version plus a content-hash prefix;
+- a mutable `...-latest` channel containing the same verified artifact and manifest.
+
+Consumers can therefore choose reproducibility (immutable tag/hash) or controlled freshness (dataset-specific latest channel) without tying data updates to a Python/TypeScript/Dart/Kotlin package release.
+
+## Carta Porte 3.1
+
+The Carta Porte source audit found that `packages/shared-data/sat/carta_porte_3` is a legacy partial convenience view, not a complete one-to-one mirror of the official Carta Porte 3.1 dataset. The current technical representation contains 32 `ccp_31_*` catalogs, while the legacy directory contains seven convenience JSON files; some of those files do not map directly to a same-named SAT catalog.
+
+For that reason, those seven files are not blindly overwritten by automation. `scripts/sat/build_carta_porte_31.py` instead:
+
+1. treats the SAT Carta Porte portal and `CatalogosCartaPorte31.xls` as authoritative provenance;
+2. obtains the latest versioned SQLite conversion from `phpcfdi/resources-sat-catalogs` as a technical ingestion mirror;
+3. verifies the source asset checksum when GitHub publishes one;
+4. requires the exact expected set of 32 `ccp_31_*` tables and fails closed if the upstream schema adds or removes a catalog;
+5. copies only those 32 tables into `sat_carta_porte_31.sqlite3`;
+6. computes a semantic hash over schemas and deterministically ordered rows;
+7. writes `sat_carta_porte_31.manifest.json` with provenance and record counts.
+
+Carta Porte is checked monthly because its catalogs have received changes outside major complement-version releases. The full official dataset is distributed independently; explicit convenience views can later be regenerated from it once their derivation contracts are defined.
 
 ## Current rollout
-
-The first scheduled reference adapter is `banxico.reference`, using `scripts/update_banxico_banks.py`. That updater uses Banxico's CEP institution endpoint and conservatively adds new institution codes without deleting or overwriting manually enriched fields.
 
 Other managed datasets already participate in planning. Until a reviewed adapter exists they are reported as `unconfigured` rather than being changed by generic scraping logic. This gives a visible automation backlog while preserving source-specific parsing and validation.
 
@@ -74,8 +105,11 @@ python scripts/catalog_maintenance.py plan --cadence monthly --slot 2
 # Machine-readable plan
 python scripts/catalog_maintenance.py plan --cadence monthly --slot 2 --json
 
-# Run one reviewed adapter
+# Run one compact repository adapter
 python scripts/catalog_maintenance.py run --dataset banxico.reference
+
+# Build the current Carta Porte release artifact
+python scripts/catalog_maintenance.py run --dataset sat.carta_porte
 ```
 
 `--strict-unconfigured` is useful when a CI lane should fail until every dataset in a selected slot has a reviewed adapter. The default scheduled workflow is deliberately non-strict during the incremental rollout.
