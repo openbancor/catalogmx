@@ -83,7 +83,7 @@ Carta Porte is checked monthly because its catalogs have received changes outsid
 
 ## SEPOMEX postal codes
 
-The official Correos de México export is also treated as a release-distributed dataset. The source portal reported an information update on 2026-08-24, so `sepomex.codigos_postales` remains on the monthly maintenance lane while we observe its real change frequency.
+The official Correos de México export is also treated as a release-distributed dataset. The source portal reported an information update on 2026-08-25, so `sepomex.codigos_postales` remains on the monthly maintenance lane while we observe its real change frequency.
 
 The repository currently contains a roughly 42 MB full JSON snapshot and a roughly 13 MB SQLite database. Existing Python, TypeScript and Dart consumers still depend on those embedded representations, so they remain temporarily as compatibility snapshots. They are not the long-term canonical distribution mechanism.
 
