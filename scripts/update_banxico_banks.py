@@ -336,7 +336,9 @@ def write_json_transaction(updates: Sequence[tuple[Path, Any]]) -> None:
     replaced: list[Path] = []
 
     try:
-        staged = [(path, _stage_bytes(path, payload)) for path, payload in rendered]
+        for destination, payload in rendered:
+            temp_path = _stage_bytes(destination, payload)
+            staged.append((destination, temp_path))
         for destination, temp_path in staged:
             os.replace(temp_path, destination)
             replaced.append(destination)
