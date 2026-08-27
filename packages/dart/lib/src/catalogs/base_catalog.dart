@@ -48,21 +48,20 @@ abstract class BaseCatalog<T> {
     return item;
   }
 
+  static List<Map<String, dynamic>> _normalizeList(List<dynamic> data) {
+    return data.map((item) {
+      final map = Map<String, dynamic>.from(item as Map);
+      return _normalizeAliases(map);
+    }).toList();
+  }
+
   static List<Map<String, dynamic>> _decodeItems(dynamic data) {
-    if (data is List) {
-      return data
-          .map((item) => _normalizeAliases(Map<String, dynamic>.from(item as Map)))
-          .toList();
-    }
+    if (data is List) return _normalizeList(data);
 
     if (data is Map) {
       final object = Map<String, dynamic>.from(data);
       final itemsData = object['items'];
-      if (itemsData is List) {
-        return itemsData
-            .map((item) => _normalizeAliases(Map<String, dynamic>.from(item as Map)))
-            .toList();
-      }
+      if (itemsData is List) return _normalizeList(itemsData);
 
       // A number of shared-data files use a metadata envelope plus one named
       // array (for example `operadores` or `tipos_institucion`). Treat that
@@ -73,9 +72,7 @@ abstract class BaseCatalog<T> {
           .map((entry) => entry.value as List)
           .toList();
       if (catalogArrays.length == 1) {
-        return catalogArrays.single
-            .map((item) => _normalizeAliases(Map<String, dynamic>.from(item as Map)))
-            .toList();
+        return _normalizeList(catalogArrays.single);
       }
 
       return [_normalizeAliases(object)];
