@@ -40,10 +40,12 @@ abstract class NominaCatalogBase(
         }
 
         if (item.containsKey("vigencia_desde")) {
-            item.putIfAbsent("valid_from", item["vigencia_desde"]?.toString()?.ifBlank { null })
+            val validFrom = item["vigencia_desde"]?.toString()?.takeIf { it.isNotBlank() }
+            item.putIfAbsent("valid_from", validFrom)
         }
         if (item.containsKey("vigencia_hasta")) {
-            item.putIfAbsent("valid_to", item["vigencia_hasta"]?.toString()?.ifBlank { null })
+            val validTo = item["vigencia_hasta"]?.toString()?.takeIf { it.isNotBlank() }
+            item.putIfAbsent("valid_to", validTo)
         }
         return item
     }

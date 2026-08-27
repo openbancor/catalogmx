@@ -75,6 +75,8 @@ ADAPTERS: dict[str, tuple[str, ...]] = {
         "scripts/sat/build_nomina_12.py",
         "--output-dir",
         "dist/catalog-artifacts/sat-nomina-12",
+        "--compat-output-dir",
+        "packages/shared-data/sat/nomina_1.2",
     ),
     "sepomex.codigos_postales": (
         sys.executable,

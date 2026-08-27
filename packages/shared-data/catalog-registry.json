@@ -194,7 +194,7 @@
         "upstream_checked_at": "2026-08-26"
       },
       "implementation": {
-        "status": "partial",
+        "status": "complete",
         "xsd_catalog_types": 13,
         "canonical_catalog_tables": 13,
         "canonical_distribution": "release",
@@ -202,20 +202,13 @@
         "excluded_auxiliary_tables": [
           "nomina_estados"
         ],
-        "embedded_convenience_json_files": 7,
+        "embedded_convenience_json_files": 13,
         "legacy_view_path": "packages/shared-data/sat/nomina_1.2",
-        "normalized_catalogs": 7,
-        "missing_normalized_catalogs": [
-          "c_OrigenRecurso",
-          "c_TipoDeduccion",
-          "c_TipoHoras",
-          "c_TipoIncapacidad",
-          "c_TipoOtroPago",
-          "c_TipoPercepcion"
-        ],
+        "normalized_catalogs": 13,
+        "missing_normalized_catalogs": [],
         "consumer_migration_required_before_removal": true
       },
-      "notes": "Revision E is current from 2026-01-01. The canonical data release contains the 13 catalog families represented by catNomina.xsd; the technical mirror's nomina_estados table is auxiliary and is excluded because it is not one of those 13 types. Seven embedded JSON files remain compatibility views. Language APIs still cover 7/13 catalogs and must be migrated to the canonical dataset before legacy views or Kotlin embedded regulatory copies are removed."
+      "notes": "Revision E is effective from 2026-01-01. The canonical release contains the 13 catalog families represented by catNomina.xsd; nomina_estados remains an explicitly excluded auxiliary table. All 13 embedded JSON compatibility views are generated from the canonical artifact, and Python, TypeScript, Dart and Kotlin expose 13/13 catalog families. Kotlin no longer carries embedded regulatory copies. Embedded views remain until issue #57 completes the common dataset resolver/profile migration."
     },
     {
       "id": "sat.contabilidad_electronica",

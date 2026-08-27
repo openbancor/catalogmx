@@ -66,8 +66,8 @@ def test_web_and_shared_nomina_xsd_are_identical():
     assert WEB_XSD.read_bytes() == SHARED_XSD.read_bytes()
 
 
-def test_registry_records_revision_e_canonical_distribution_and_api_gap():
-    """Canonical data completeness and language API completeness are distinct."""
+def test_registry_records_revision_e_canonical_distribution_and_api_parity():
+    """Canonical distribution and compatibility APIs cover all 13 families."""
     registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
     dataset = next(
         item for item in registry["datasets"] if item["id"] == "sat.nomina_1_2"
@@ -81,23 +81,16 @@ def test_registry_records_revision_e_canonical_distribution_and_api_gap():
     assert dataset["freshness"]["upstream_checked_at"] == "2026-08-26"
 
     implementation = dataset["implementation"]
-    assert implementation["status"] == "partial"
+    assert implementation["status"] == "complete"
     assert implementation["xsd_catalog_types"] == 13
     assert implementation["canonical_catalog_tables"] == 13
     assert implementation["canonical_distribution"] == "release"
     assert implementation["release_artifact"] == "sat_nomina_12.sqlite3"
     assert implementation["excluded_auxiliary_tables"] == ["nomina_estados"]
-    assert implementation["embedded_convenience_json_files"] == 7
-    assert implementation["normalized_catalogs"] == 7
+    assert implementation["embedded_convenience_json_files"] == 13
+    assert implementation["normalized_catalogs"] == 13
     assert implementation["consumer_migration_required_before_removal"] is True
-    assert set(implementation["missing_normalized_catalogs"]) == {
-        "c_OrigenRecurso",
-        "c_TipoDeduccion",
-        "c_TipoHoras",
-        "c_TipoIncapacidad",
-        "c_TipoOtroPago",
-        "c_TipoPercepcion",
-    }
+    assert implementation["missing_normalized_catalogs"] == []
 
     roles = {source["role"] for source in dataset["upstream"]}
     assert {

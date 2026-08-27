@@ -1,8 +1,59 @@
 [
-  {"code":"1","description":"Clase I","descripcion":"Clase I","valid_from":"2017-01-01","valid_to":null,"prima_minima":0.5,"prima_media":0.54355,"prima_maxima":0.625},
-  {"code":"2","description":"Clase II","descripcion":"Clase II","valid_from":"2017-01-01","valid_to":null,"prima_minima":0.625,"prima_media":1.13065,"prima_maxima":1.63},
-  {"code":"3","description":"Clase III","descripcion":"Clase III","valid_from":"2017-01-01","valid_to":null,"prima_minima":1.63,"prima_media":2.59645,"prima_maxima":3.06},
-  {"code":"4","description":"Clase IV","descripcion":"Clase IV","valid_from":"2017-01-01","valid_to":null,"prima_minima":3.06,"prima_media":4.65325,"prima_maxima":5.77},
-  {"code":"5","description":"Clase V","descripcion":"Clase V","valid_from":"2017-01-01","valid_to":null,"prima_minima":5.77,"prima_media":6.71,"prima_maxima":8.7},
-  {"code":"99","description":"No aplica","descripcion":"No aplica","valid_from":"2017-08-13","valid_to":null}
+  {
+    "code": "1",
+    "description": "Clase I",
+    "descripcion": "Clase I",
+    "valid_from": "2017-01-01",
+    "valid_to": null,
+    "prima_minima": 0.5,
+    "prima_media": 0.54355,
+    "prima_maxima": 0.625
+  },
+  {
+    "code": "2",
+    "description": "Clase II",
+    "descripcion": "Clase II",
+    "valid_from": "2017-01-01",
+    "valid_to": null,
+    "prima_minima": 0.625,
+    "prima_media": 1.13065,
+    "prima_maxima": 1.63
+  },
+  {
+    "code": "3",
+    "description": "Clase III",
+    "descripcion": "Clase III",
+    "valid_from": "2017-01-01",
+    "valid_to": null,
+    "prima_minima": 1.63,
+    "prima_media": 2.59645,
+    "prima_maxima": 3.06
+  },
+  {
+    "code": "4",
+    "description": "Clase IV",
+    "descripcion": "Clase IV",
+    "valid_from": "2017-01-01",
+    "valid_to": null,
+    "prima_minima": 3.06,
+    "prima_media": 4.65325,
+    "prima_maxima": 5.77
+  },
+  {
+    "code": "5",
+    "description": "Clase V",
+    "descripcion": "Clase V",
+    "valid_from": "2017-01-01",
+    "valid_to": null,
+    "prima_minima": 5.77,
+    "prima_media": 6.71,
+    "prima_maxima": 8.7
+  },
+  {
+    "code": "99",
+    "description": "No aplica",
+    "descripcion": "No aplica",
+    "valid_from": "2017-08-13",
+    "valid_to": null
+  }
 ]
