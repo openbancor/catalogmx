@@ -15,17 +15,17 @@ class UsoCFDICatalog {
 
     final jsonData = BaseCatalog.loadJsonDataSync('sat/cfdi_4.0/uso_cfdi.json');
 
-    // Handle both list and dict formats
     if (jsonData.isNotEmpty && jsonData.first.containsKey('usos')) {
       _data = (jsonData.first['usos'] as List)
-          .map((e) => e as Map<String, dynamic>)
+          .map((e) => Map<String, dynamic>.from(e as Map))
           .toList();
     } else {
       _data = jsonData;
     }
 
-    // Build index
-    _byClave = {for (var item in _data!) item['clave'] as String: item};
+    _byClave = {
+      for (final item in _data!) item['clave'].toString(): item,
+    };
   }
 
   /// Obtiene todos los usos de CFDI
@@ -51,8 +51,9 @@ class UsoCFDICatalog {
     final queryNorm = query.toUpperCase();
     return _data!
         .where(
-          (item) =>
-              (item['descripcion'] as String).toUpperCase().contains(queryNorm),
+          (item) => (item['descripcion']?.toString() ?? '')
+              .toUpperCase()
+              .contains(queryNorm),
         )
         .toList();
   }
@@ -63,6 +64,7 @@ class UsoCFDICatalog {
     return _data!
         .where(
           (item) =>
+              item['fisica'] == true ||
               item['persona_fisica'] == true ||
               item['aplicaPersonaFisica'] == 'Sí',
         )
@@ -75,6 +77,7 @@ class UsoCFDICatalog {
     return _data!
         .where(
           (item) =>
+              item['moral'] == true ||
               item['persona_moral'] == true ||
               item['aplicaPersonaMoral'] == 'Sí',
         )
