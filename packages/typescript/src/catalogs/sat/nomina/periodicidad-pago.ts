@@ -24,48 +24,34 @@ export class PeriodicidadPagoCatalog {
     return this.getData().find((p) => p.code === code);
   }
 
+  static getByCode(code: string): PeriodicidadPago | undefined {
+    return this.getPeriodicidad(code);
+  }
+
   static isValid(code: string): boolean {
     return this.getData().some((p) => p.code === code);
   }
 
-  /**
-   * Get number of days for payment period
-   */
   static getDays(code: string): number | undefined {
     return this.getPeriodicidad(code)?.days;
   }
 
-  /**
-   * Get description
-   */
   static getDescription(code: string): string | undefined {
     return this.getPeriodicidad(code)?.descripcion;
   }
 
-  /**
-   * Check if it's biweekly (quincenal)
-   */
   static isQuincenal(code: string): boolean {
     return code === '04';
   }
 
-  /**
-   * Check if it's weekly
-   */
   static isSemanal(code: string): boolean {
     return code === '02';
   }
 
-  /**
-   * Check if it's monthly
-   */
   static isMensual(code: string): boolean {
     return code === '05';
   }
 
-  /**
-   * Search by description
-   */
   static searchByDescription(keyword: string): PeriodicidadPago[] {
     const search = keyword.toUpperCase();
     return this.getData().filter((p) => p.descripcion.toUpperCase().includes(search));
