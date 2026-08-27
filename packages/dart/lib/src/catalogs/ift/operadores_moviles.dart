@@ -19,20 +19,25 @@ class OperadoresMovilesCatalog {
       'ift/operadores_moviles.json',
     );
 
-    // Handle both list and dict formats
     if (jsonData.isNotEmpty && jsonData.first.containsKey('operadores')) {
       _data = (jsonData.first['operadores'] as List)
-          .map((e) => e as Map<String, dynamic>)
+          .map((e) => Map<String, dynamic>.from(e as Map))
           .toList();
     } else {
       _data = jsonData;
     }
 
-    // Build indices
-    _byCode = {for (var op in _data!) op['codigo'] as String: op};
-
+    // The current IFT convenience dataset identifies operators by commercial
+    // name and does not assign a synthetic numeric code. Keep code lookup
+    // optional instead of inventing regulatory identifiers.
+    _byCode = {
+      for (final op in _data!)
+        if (op['codigo'] != null) op['codigo'].toString(): op,
+    };
     _byName = {
-      for (var op in _data!) (op['nombre'] as String).toUpperCase(): op,
+      for (final op in _data!)
+        if ((op['nombre'] ?? op['nombre_comercial']) != null)
+          (op['nombre'] ?? op['nombre_comercial']).toString().toUpperCase(): op,
     };
   }
 
@@ -42,56 +47,34 @@ class OperadoresMovilesCatalog {
     return List.from(_data!);
   }
 
-  /// Busca operador por código
-  ///
-  /// Args:
-  ///   codigo: Código del operador
-  ///
-  /// Returns:
-  ///   Información del operador o null si no existe
+  /// Busca operador por código cuando la fuente proporciona uno.
   static Map<String, dynamic>? getByCode(String codigo) {
     _loadData();
     return _byCode![codigo];
   }
 
-  /// Busca operador por nombre (case-insensitive)
-  ///
-  /// Args:
-  ///   nombre: Nombre del operador
-  ///
-  /// Returns:
-  ///   Información del operador o null si no existe
+  /// Busca operador por nombre comercial (case-insensitive)
   static Map<String, dynamic>? getByName(String nombre) {
     _loadData();
     return _byName![nombre.toUpperCase()];
   }
 
   /// Valida si un código de operador existe
-  ///
-  /// Args:
-  ///   codigo: Código del operador
-  ///
-  /// Returns:
-  ///   true si existe, false en caso contrario
   static bool isValid(String codigo) {
     return getByCode(codigo) != null;
   }
 
   /// Busca operadores por nombre parcial
-  ///
-  /// Args:
-  ///   query: Texto a buscar
-  ///
-  /// Returns:
-  ///   Lista de operadores que coinciden
   static List<Map<String, dynamic>> search(String query) {
     _loadData();
     final queryNorm = query.toUpperCase();
-    return _data!
-        .where(
-          (op) => (op['nombre'] as String).toUpperCase().contains(queryNorm),
-        )
-        .toList();
+    return _data!.where((op) {
+      final name = (op['nombre'] ?? op['nombre_comercial'] ?? '')
+          .toString()
+          .toUpperCase();
+      final legalName = (op['razon_social'] ?? '').toString().toUpperCase();
+      return name.contains(queryNorm) || legalName.contains(queryNorm);
+    }).toList();
   }
 
   /// Obtiene operadores activos
@@ -100,15 +83,14 @@ class OperadoresMovilesCatalog {
     return _data!.where((op) => op['activo'] == true).toList();
   }
 
-  /// Obtiene operadores por tipo de servicio
-  ///
-  /// Args:
-  ///   tipoServicio: Tipo de servicio (ej: "MOVIL", "MVNO", etc.)
-  ///
-  /// Returns:
-  ///   Lista de operadores que ofrecen ese servicio
+  /// Obtiene operadores por tipo de servicio / operador.
   static List<Map<String, dynamic>> getByTipoServicio(String tipoServicio) {
     _loadData();
-    return _data!.where((op) => op['tipo_servicio'] == tipoServicio).toList();
+    return _data!
+        .where(
+          (op) =>
+              op['tipo_servicio'] == tipoServicio || op['tipo'] == tipoServicio,
+        )
+        .toList();
   }
 }
