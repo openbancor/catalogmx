@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 import tarfile
 import tempfile
@@ -12,13 +13,14 @@ from collections.abc import Callable, Mapping
 from datetime import datetime, timezone
 from importlib import resources
 from pathlib import Path, PurePosixPath, PureWindowsPath
-from typing import Any
+from typing import Any, TypeGuard
 from urllib.request import Request, urlopen
 
 DEFAULT_RELEASE_BASE_URL = "https://github.com/openbancor/catalogmx/releases/download"
 DEFAULT_DATA_MODE = "fetch-missing"
 ALLOWED_DATA_MODES = {"offline", "fetch-missing", "refresh"}
 CONTRACT_RESOURCE = "dataset_contract.json"
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 Downloader = Callable[[str], bytes]
 
@@ -58,6 +60,10 @@ def _default_downloader(url: str) -> bytes:
 
 def _sha256(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
+
+
+def _is_sha256(value: object) -> TypeGuard[str]:
+    return isinstance(value, str) and _SHA256_RE.fullmatch(value) is not None
 
 
 def _safe_relative_path(value: str) -> Path:
@@ -156,10 +162,10 @@ class DatasetResolver:
 
     def _cached_root(self, dataset_id: str) -> tuple[Path, dict[str, Any]] | None:
         state = self._read_state(dataset_id)
-        if not state:
+        if not state or state.get("dataset_id") != dataset_id:
             return None
         content_sha = state.get("content_sha256")
-        if not isinstance(content_sha, str) or len(content_sha) != 64:
+        if not _is_sha256(content_sha):
             return None
         dataset = self._dataset(dataset_id)
         mount_path = _safe_relative_path(dataset["artifact"]["mount_path"])
@@ -252,7 +258,11 @@ class DatasetResolver:
             raise
 
     def get_dataset_path(self, dataset_id: str, *parts: str) -> Path:
-        path = self.resolve_dataset_root(dataset_id).joinpath(*parts)
+        root = self.resolve_dataset_root(dataset_id)
+        if not parts:
+            return root
+        relative = _safe_relative_path("/".join(parts))
+        path = root / relative
         if not path.exists():
             raise FileNotFoundError(f"dataset path does not exist: {dataset_id}:{'/'.join(parts)}")
         return path
@@ -282,12 +292,15 @@ class DatasetResolver:
             raise RuntimeError("dataset manifest artifact format mismatch")
         if manifest_dataset.get("mount_path") != artifact["mount_path"]:
             raise RuntimeError("dataset manifest mount path mismatch")
-        _safe_relative_path(str(manifest_dataset["mount_path"]))
+        mount_value = manifest_dataset.get("mount_path")
+        if not isinstance(mount_value, str):
+            raise RuntimeError("dataset manifest mount path must be a string")
+        _safe_relative_path(mount_value)
         file_sha = manifest_dataset.get("file_sha256")
         content_sha = manifest_dataset.get("content_sha256")
-        if not isinstance(file_sha, str) or len(file_sha) != 64:
+        if not _is_sha256(file_sha):
             raise RuntimeError("dataset manifest is missing artifact SHA-256")
-        if not isinstance(content_sha, str) or len(content_sha) != 64:
+        if not _is_sha256(content_sha):
             raise RuntimeError("dataset manifest is missing semantic SHA-256")
         return manifest_dataset, content_sha
 
@@ -300,16 +313,30 @@ class DatasetResolver:
         expected_files = manifest_dataset.get("files")
         if not isinstance(expected_files, list) or not expected_files:
             raise RuntimeError("tar dataset manifest must list extracted files")
-        expected: dict[str, str] = {}
+
+        mount_value = manifest_dataset.get("mount_path")
+        if not isinstance(mount_value, str):
+            raise RuntimeError("dataset manifest mount path must be a string")
+        mount_parts = PurePosixPath(mount_value).parts
+
+        expected: dict[str, tuple[str, int]] = {}
         for item in expected_files:
             if not isinstance(item, dict):
                 raise RuntimeError("invalid file metadata in dataset manifest")
             path = item.get("path")
             sha = item.get("sha256")
-            if not isinstance(path, str) or not isinstance(sha, str) or len(sha) != 64:
+            size = item.get("bytes")
+            if not isinstance(path, str) or not _is_sha256(sha):
                 raise RuntimeError("invalid file metadata in dataset manifest")
-            _safe_relative_path(path)
-            expected[path] = sha
+            if not isinstance(size, int) or isinstance(size, bool) or size < 0:
+                raise RuntimeError("invalid file size in dataset manifest")
+            relative = _safe_relative_path(path)
+            if PurePosixPath(path).parts[: len(mount_parts)] != mount_parts:
+                raise RuntimeError(f"dataset file is outside mount path: {path}")
+            if path in expected:
+                raise RuntimeError(f"duplicate file in dataset manifest: {path}")
+            expected[path] = (sha, size)
+            del relative
 
         observed: set[str] = set()
         with tempfile.SpooledTemporaryFile() as archive_file:
@@ -335,7 +362,10 @@ class DatasetResolver:
                     if source is None:
                         raise RuntimeError(f"cannot read dataset archive member: {member.name}")
                     data = source.read()
-                    if _sha256(data) != expected[name]:
+                    expected_sha, expected_size = expected[name]
+                    if len(data) != expected_size:
+                        raise RuntimeError(f"dataset member size mismatch: {member.name}")
+                    if _sha256(data) != expected_sha:
                         raise RuntimeError(f"dataset member checksum mismatch: {member.name}")
                     destination = stage / relative
                     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -437,10 +467,20 @@ class DatasetResolver:
                         return False
                     path_value = item.get("path")
                     sha_value = item.get("sha256")
-                    if not isinstance(path_value, str) or not isinstance(sha_value, str):
+                    size_value = item.get("bytes")
+                    if not isinstance(path_value, str) or not _is_sha256(sha_value):
+                        return False
+                    if (
+                        not isinstance(size_value, int)
+                        or isinstance(size_value, bool)
+                        or size_value < 0
+                    ):
                         return False
                     path = object_dir / _safe_relative_path(path_value)
-                    if not path.exists() or _sha256(path.read_bytes()) != sha_value:
+                    if not path.exists():
+                        return False
+                    payload = path.read_bytes()
+                    if len(payload) != size_value or _sha256(payload) != sha_value:
                         return False
                 return True
 
