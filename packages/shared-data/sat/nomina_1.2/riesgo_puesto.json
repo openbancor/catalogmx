@@ -1,37 +1,8 @@
 [
-  {
-    "code": "1",
-    "descripcion": "Clase I",
-    "prima_minima": 0.50000,
-    "prima_media": 0.54355,
-    "prima_maxima": 0.62500
-  },
-  {
-    "code": "2",
-    "descripcion": "Clase II",
-    "prima_minima": 0.62500,
-    "prima_media": 1.13065,
-    "prima_maxima": 1.63000
-  },
-  {
-    "code": "3",
-    "descripcion": "Clase III",
-    "prima_minima": 1.63000,
-    "prima_media": 2.59645,
-    "prima_maxima": 3.06000
-  },
-  {
-    "code": "4",
-    "descripcion": "Clase IV",
-    "prima_minima": 3.06000,
-    "prima_media": 4.65325,
-    "prima_maxima": 5.77000
-  },
-  {
-    "code": "5",
-    "descripcion": "Clase V",
-    "prima_minima": 5.77000,
-    "prima_media": 6.71000,
-    "prima_maxima": 8.70000
-  }
+  {"code":"1","description":"Clase I","descripcion":"Clase I","valid_from":"2017-01-01","valid_to":null,"prima_minima":0.5,"prima_media":0.54355,"prima_maxima":0.625},
+  {"code":"2","description":"Clase II","descripcion":"Clase II","valid_from":"2017-01-01","valid_to":null,"prima_minima":0.625,"prima_media":1.13065,"prima_maxima":1.63},
+  {"code":"3","description":"Clase III","descripcion":"Clase III","valid_from":"2017-01-01","valid_to":null,"prima_minima":1.63,"prima_media":2.59645,"prima_maxima":3.06},
+  {"code":"4","description":"Clase IV","descripcion":"Clase IV","valid_from":"2017-01-01","valid_to":null,"prima_minima":3.06,"prima_media":4.65325,"prima_maxima":5.77},
+  {"code":"5","description":"Clase V","descripcion":"Clase V","valid_from":"2017-01-01","valid_to":null,"prima_minima":5.77,"prima_media":6.71,"prima_maxima":8.7},
+  {"code":"99","description":"No aplica","descripcion":"No aplica","valid_from":"2017-08-13","valid_to":null}
 ]
