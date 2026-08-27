@@ -64,6 +64,12 @@ ADAPTERS: dict[str, tuple[str, ...]] = {
         "--output-dir",
         "dist/catalog-artifacts/sat-cfdi-40",
     ),
+    "sat.comercio_exterior": (
+        sys.executable,
+        "scripts/sat/build_comercio_exterior_20.py",
+        "--output-dir",
+        "dist/catalog-artifacts/sat-comercio-exterior-20",
+    ),
     "sepomex.codigos_postales": (
         sys.executable,
         "scripts/sepomex/build_postal_codes.py",
