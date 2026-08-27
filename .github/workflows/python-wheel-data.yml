@@ -1,0 +1,80 @@
+name: Python Wheel Data
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  installed-wheel-data:
+    name: Installed wheel resolver
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build local release fixture
+        shell: bash
+        run: |
+          fixture="$RUNNER_TEMP/releases/data-banxico-reference-1-latest"
+          mkdir -p "$fixture"
+          python scripts/banxico/build_reference.py --output-dir "$fixture"
+
+      - name: Build wheel
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build --wheel --outdir "$RUNNER_TEMP/wheels" packages/python
+          unzip -l "$RUNNER_TEMP"/wheels/catalogmx-*.whl | tee "$RUNNER_TEMP/wheel-contents.txt"
+          grep 'catalogmx/data/dataset_contract.json' "$RUNNER_TEMP/wheel-contents.txt"
+          if grep -q 'catalogmx/shared-data/' "$RUNNER_TEMP/wheel-contents.txt"; then
+            echo 'Unexpected embedded shared-data tree in wheel' >&2
+            exit 1
+          fi
+
+      - name: Install wheel into clean virtualenv
+        shell: bash
+        run: |
+          python -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/python" -m pip install --upgrade pip
+          "$RUNNER_TEMP/venv/bin/python" -m pip install "$RUNNER_TEMP"/wheels/catalogmx-*.whl
+
+      - name: Resolve Banxico from release fixture
+        shell: bash
+        env:
+          CATALOGMX_DATA_MODE: fetch-missing
+        run: |
+          export CATALOGMX_RELEASE_BASE_URL="file://$RUNNER_TEMP/releases"
+          export CATALOGMX_CACHE_DIR="$RUNNER_TEMP/catalogmx-cache"
+          unset CATALOGMX_SHARED_DATA
+
+          "$RUNNER_TEMP/venv/bin/python" - <<'PY'
+          import os
+          from pathlib import Path
+
+          cache = Path(os.environ["CATALOGMX_CACHE_DIR"])
+          import catalogmx
+
+          assert not cache.exists(), "import catalogmx must not create the dataset cache"
+
+          from catalogmx.catalogs.banxico.banks import BankCatalog
+          from catalogmx.catalogs.banxico.codigos_plaza import CodigosPlazaCatalog
+          from catalogmx.data import DatasetResolver
+
+          bank = BankCatalog.get_bank_by_code("002")
+          assert bank is not None
+          assert bank["code"] == "002"
+          assert cache.exists()
+
+          plazas = CodigosPlazaCatalog.get_all()
+          assert plazas
+
+          resolver = DatasetResolver()
+          assert resolver.verify_cached_dataset("banxico.reference")
+          assert resolver.verify_profile("payglobal") == {"banxico.reference": True}
+          PY
