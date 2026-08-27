@@ -1,0 +1,79 @@
+name: Apply Resolver Review Fixes
+
+on:
+  push:
+    branches: [feat/data-resolver-profiles]
+    paths:
+      - '.github/workflows/apply-resolver-review-fixes.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/data-resolver-profiles
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Apply reviewed resolver changes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('packages/python/catalogmx/data/resolver.py')
+          text = path.read_text(encoding='utf-8')
+
+          text = text.replace(
+              'import uuid\nfrom collections.abc import Callable, Mapping\n',
+              'import uuid\nfrom contextlib import contextmanager\nfrom collections.abc import Callable, Mapping\n',
+          )
+          text = text.replace(
+              'from typing import Any, TypeGuard\n',
+              'from typing import Any, Iterator, TypeGuard\n',
+          )
+
+          atomic_tail = '''    finally:\n        temp_path.unlink(missing_ok=True)\n\n\nclass DatasetResolver:\n'''
+          lock_block = '''    finally:\n        temp_path.unlink(missing_ok=True)\n\n\n@contextmanager\ndef _exclusive_file_lock(path: Path) -> Iterator[None]:\n    """Serialize a small cache metadata critical section across processes."""\n    path.parent.mkdir(parents=True, exist_ok=True)\n    with path.open("a+b") as handle:\n        handle.seek(0, os.SEEK_END)\n        if handle.tell() == 0:\n            handle.write(b"\\0")\n            handle.flush()\n        handle.seek(0)\n\n        if os.name == "nt":\n            import msvcrt\n\n            msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)\n            try:\n                yield\n            finally:\n                handle.seek(0)\n                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)\n        else:\n            import fcntl\n\n            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)\n            try:\n                yield\n            finally:\n                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)\n\n\nclass DatasetResolver:\n'''
+          if atomic_tail not in text:
+              raise SystemExit('atomic write insertion point not found')
+          text = text.replace(atomic_tail, lock_block, 1)
+
+          state_path = '''    def _state_path(self, dataset_id: str) -> Path:\n        return self._dataset_cache_dir(dataset_id) / "current.json"\n\n'''
+          state_path_replacement = '''    def _state_path(self, dataset_id: str) -> Path:\n        return self._dataset_cache_dir(dataset_id) / "current.json"\n\n    def _state_lock_path(self, dataset_id: str) -> Path:\n        return self.cache_root / ".locks" / f"{dataset_id}.lock"\n\n'''
+          if state_path not in text:
+              raise SystemExit('state path insertion point not found')
+          text = text.replace(state_path, state_path_replacement, 1)
+
+          cached_block = '''        cached = self._cached_root(dataset_id)\n        if cached is not None:\n            root, state = cached\n            if self.mode in {"offline", "fetch-missing"}:\n                return root\n            if not self._cache_is_stale(dataset, state):\n                return root\n\n'''
+          cached_replacement = '''        cached = self._cached_root(dataset_id)\n        if cached is not None:\n            root, state = cached\n            if self.verify_cached_dataset(dataset_id):\n                if self.mode in {"offline", "fetch-missing"}:\n                    return root\n                if not self._cache_is_stale(dataset, state):\n                    return root\n            else:\n                cached = None\n\n'''
+          if cached_block not in text:
+              raise SystemExit('cached resolution block not found')
+          text = text.replace(cached_block, cached_replacement, 1)
+
+          start = text.index('    def fetch_dataset(self, dataset_id: str) -> Path:\n')
+          end = text.index('    def fetch_profile(self, profile: str) -> dict[str, Path]:\n', start)
+          replacement = '''    def _commit_state_if_current(\n        self,\n        dataset_id: str,\n        dataset: Mapping[str, Any],\n        release_tag: str,\n        content_sha: str,\n    ) -> bool:\n        """Commit current.json only while this release is still authoritative."""\n        with _exclusive_file_lock(self._state_lock_path(dataset_id)):\n            discovery = dataset["artifact"].get("discovery", "direct")\n            if discovery == "release-pointer":\n                latest_tag, _, _, _, latest_sha = self._resolve_release(\n                    dataset_id, dataset\n                )\n                if latest_tag != release_tag or latest_sha != content_sha:\n                    return False\n\n            state = {\n                "dataset_id": dataset_id,\n                "content_sha256": content_sha,\n                "fetched_at": datetime.now(timezone.utc).isoformat(),\n                "release_tag": release_tag,\n            }\n            _atomic_write(\n                self._state_path(dataset_id),\n                (json.dumps(state, sort_keys=True, indent=2) + "\\n").encode("utf-8"),\n            )\n            return True\n\n    def fetch_dataset(self, dataset_id: str) -> Path:\n        if self.mode == "offline":\n            raise RuntimeError(\n                "cannot fetch or update datasets while CATALOGMX_DATA_MODE=offline"\n            )\n\n        dataset = self._dataset(dataset_id)\n        artifact = dataset["artifact"]\n\n        for _attempt in range(3):\n            (\n                release_tag,\n                manifest_payload,\n                manifest,\n                manifest_dataset,\n                content_sha,\n            ) = self._resolve_release(dataset_id, dataset)\n\n            artifact_payload = self.downloader(\n                self._release_url(release_tag, artifact["file"])\n            )\n            if _sha256(artifact_payload) != manifest_dataset["file_sha256"]:\n                raise RuntimeError("dataset release artifact checksum mismatch")\n\n            dataset_cache = self._dataset_cache_dir(dataset_id)\n            objects_dir = dataset_cache / "objects"\n            objects_dir.mkdir(parents=True, exist_ok=True)\n            object_dir = objects_dir / content_sha\n\n            if not self._object_matches_manifest(\n                object_dir, dataset, manifest, manifest_dataset\n            ):\n                stage = self._stage_object(\n                    dataset_cache,\n                    dataset,\n                    manifest_payload,\n                    manifest,\n                    manifest_dataset,\n                    artifact_payload,\n                )\n                self._install_object_race_safe(\n                    stage=stage,\n                    object_dir=object_dir,\n                    dataset=dataset,\n                    manifest=manifest,\n                    manifest_dataset=manifest_dataset,\n                )\n\n            root = object_dir / _safe_relative_path(artifact["mount_path"])\n            if not root.exists():\n                raise RuntimeError("cached dataset does not contain its mount path")\n\n            if self._commit_state_if_current(\n                dataset_id, dataset, release_tag, content_sha\n            ):\n                return root\n\n        raise RuntimeError(\n            f"dataset release channel changed repeatedly while fetching {dataset_id}"\n        )\n\n'''
+          text = text[:start] + replacement + text[end:]
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Format with repository Black
+        run: |
+          pip install 'black==26.5.1'
+          cd packages/python
+          black catalogmx/data/resolver.py
+
+      - name: Commit patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/python/catalogmx/data/resolver.py
+          git commit -m "fix(data): close resolver consistency gaps"
+          git push origin HEAD:feat/data-resolver-profiles
