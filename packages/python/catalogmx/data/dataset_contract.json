@@ -3,6 +3,7 @@
     "banxico.reference": {
       "artifact": {
         "channel": "data-banxico-reference-1-latest",
+        "discovery": "release-pointer",
         "file": "banxico_reference.tar.gz",
         "format": "tar.gz",
         "manifest": "banxico_reference.manifest.json",
