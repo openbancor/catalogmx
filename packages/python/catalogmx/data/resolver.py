@@ -10,11 +10,12 @@ import shutil
 import tarfile
 import tempfile
 import uuid
+from contextlib import contextmanager
 from collections.abc import Callable, Mapping
 from datetime import datetime, timezone
 from importlib import resources
 from pathlib import Path, PurePosixPath, PureWindowsPath
-from typing import Any, TypeGuard
+from typing import Any, Iterator, TypeGuard
 from urllib.request import Request, urlopen
 
 DEFAULT_RELEASE_BASE_URL = "https://github.com/openbancor/catalogmx/releases/download"
@@ -103,6 +104,36 @@ def _atomic_write(path: Path, payload: bytes) -> None:
         temp_path.unlink(missing_ok=True)
 
 
+@contextmanager
+def _exclusive_file_lock(path: Path) -> Iterator[None]:
+    """Serialize a small cache metadata critical section across processes."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a+b") as handle:
+        handle.seek(0, os.SEEK_END)
+        if handle.tell() == 0:
+            handle.write(b"\0")
+            handle.flush()
+        handle.seek(0)
+
+        if os.name == "nt":
+            import msvcrt
+
+            msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)
+            try:
+                yield
+            finally:
+                handle.seek(0)
+                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+        else:
+            import fcntl
+
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            try:
+                yield
+            finally:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
 class DatasetResolver:
     """Resolve, fetch, verify and materialize versioned data artifacts."""
 
@@ -160,6 +191,9 @@ class DatasetResolver:
 
     def _state_path(self, dataset_id: str) -> Path:
         return self._dataset_cache_dir(dataset_id) / "current.json"
+
+    def _state_lock_path(self, dataset_id: str) -> Path:
+        return self.cache_root / ".locks" / f"{dataset_id}.lock"
 
     def _read_state(self, dataset_id: str) -> dict[str, Any] | None:
         path = self._state_path(dataset_id)
@@ -243,10 +277,13 @@ class DatasetResolver:
         cached = self._cached_root(dataset_id)
         if cached is not None:
             root, state = cached
-            if self.mode in {"offline", "fetch-missing"}:
-                return root
-            if not self._cache_is_stale(dataset, state):
-                return root
+            if self.verify_cached_dataset(dataset_id):
+                if self.mode in {"offline", "fetch-missing"}:
+                    return root
+                if not self._cache_is_stale(dataset, state):
+                    return root
+            else:
+                cached = None
 
         package = self._package_root(dataset)
         if package is not None:
@@ -619,57 +656,85 @@ class DatasetResolver:
             if quarantine is not None and quarantine.exists():
                 shutil.rmtree(quarantine, ignore_errors=True)
 
+    def _commit_state_if_current(
+        self,
+        dataset_id: str,
+        dataset: Mapping[str, Any],
+        release_tag: str,
+        content_sha: str,
+    ) -> bool:
+        """Commit current.json only while this release is still authoritative."""
+        with _exclusive_file_lock(self._state_lock_path(dataset_id)):
+            discovery = dataset["artifact"].get("discovery", "direct")
+            if discovery == "release-pointer":
+                latest_tag, _, _, _, latest_sha = self._resolve_release(dataset_id, dataset)
+                if latest_tag != release_tag or latest_sha != content_sha:
+                    return False
+
+            state = {
+                "dataset_id": dataset_id,
+                "content_sha256": content_sha,
+                "fetched_at": datetime.now(timezone.utc).isoformat(),
+                "release_tag": release_tag,
+            }
+            _atomic_write(
+                self._state_path(dataset_id),
+                (json.dumps(state, sort_keys=True, indent=2) + "\n").encode("utf-8"),
+            )
+            return True
+
     def fetch_dataset(self, dataset_id: str) -> Path:
+        if self.mode == "offline":
+            raise RuntimeError("cannot fetch or update datasets while CATALOGMX_DATA_MODE=offline")
+
         dataset = self._dataset(dataset_id)
         artifact = dataset["artifact"]
-        (
-            release_tag,
-            manifest_payload,
-            manifest,
-            manifest_dataset,
-            content_sha,
-        ) = self._resolve_release(dataset_id, dataset)
 
-        artifact_payload = self.downloader(self._release_url(release_tag, artifact["file"]))
-        if _sha256(artifact_payload) != manifest_dataset["file_sha256"]:
-            raise RuntimeError("dataset release artifact checksum mismatch")
-
-        dataset_cache = self._dataset_cache_dir(dataset_id)
-        objects_dir = dataset_cache / "objects"
-        objects_dir.mkdir(parents=True, exist_ok=True)
-        object_dir = objects_dir / content_sha
-
-        if not self._object_matches_manifest(object_dir, dataset, manifest, manifest_dataset):
-            stage = self._stage_object(
-                dataset_cache,
-                dataset,
+        for _attempt in range(3):
+            (
+                release_tag,
                 manifest_payload,
                 manifest,
                 manifest_dataset,
-                artifact_payload,
-            )
-            self._install_object_race_safe(
-                stage=stage,
-                object_dir=object_dir,
-                dataset=dataset,
-                manifest=manifest,
-                manifest_dataset=manifest_dataset,
-            )
+                content_sha,
+            ) = self._resolve_release(dataset_id, dataset)
 
-        state = {
-            "dataset_id": dataset_id,
-            "content_sha256": content_sha,
-            "fetched_at": datetime.now(timezone.utc).isoformat(),
-            "release_tag": release_tag,
-        }
-        _atomic_write(
-            self._state_path(dataset_id),
-            (json.dumps(state, sort_keys=True, indent=2) + "\n").encode("utf-8"),
+            artifact_payload = self.downloader(self._release_url(release_tag, artifact["file"]))
+            if _sha256(artifact_payload) != manifest_dataset["file_sha256"]:
+                raise RuntimeError("dataset release artifact checksum mismatch")
+
+            dataset_cache = self._dataset_cache_dir(dataset_id)
+            objects_dir = dataset_cache / "objects"
+            objects_dir.mkdir(parents=True, exist_ok=True)
+            object_dir = objects_dir / content_sha
+
+            if not self._object_matches_manifest(object_dir, dataset, manifest, manifest_dataset):
+                stage = self._stage_object(
+                    dataset_cache,
+                    dataset,
+                    manifest_payload,
+                    manifest,
+                    manifest_dataset,
+                    artifact_payload,
+                )
+                self._install_object_race_safe(
+                    stage=stage,
+                    object_dir=object_dir,
+                    dataset=dataset,
+                    manifest=manifest,
+                    manifest_dataset=manifest_dataset,
+                )
+
+            root = object_dir / _safe_relative_path(artifact["mount_path"])
+            if not root.exists():
+                raise RuntimeError("cached dataset does not contain its mount path")
+
+            if self._commit_state_if_current(dataset_id, dataset, release_tag, content_sha):
+                return root
+
+        raise RuntimeError(
+            f"dataset release channel changed repeatedly while fetching {dataset_id}"
         )
-        root = object_dir / _safe_relative_path(artifact["mount_path"])
-        if not root.exists():
-            raise RuntimeError("cached dataset does not contain its mount path")
-        return root
 
     def fetch_profile(self, profile: str) -> dict[str, Path]:
         return {
