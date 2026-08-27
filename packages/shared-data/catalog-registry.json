@@ -100,20 +100,57 @@
     },
     {
       "id": "sat.comercio_exterior",
-      "title": "SAT Comercio Exterior catalogs",
+      "title": "SAT Comercio Exterior 2.0 catalogs",
       "authority": "SAT",
       "kind": "reference",
       "status": "managed",
-      "distribution": "embedded",
+      "distribution": "mixed",
+      "version": "2.0",
+      "effective_from": "2024-01-18",
       "local_paths": [
         "packages/shared-data/sat/comercio_exterior"
       ],
-      "upstream": [],
+      "upstream": [
+        {
+          "role": "authoritative_portal",
+          "url": "https://www.sat.gob.mx/consultas/61165/comprobante-de-comercio-exterior",
+          "format": "portal"
+        },
+        {
+          "role": "authoritative_technical_page",
+          "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/complemento_comercio_exterior.htm",
+          "format": "html"
+        },
+        {
+          "role": "technical_mirror",
+          "url": "https://github.com/phpcfdi/resources-sat-catalogs",
+          "format": "sqlite_sql"
+        }
+      ],
       "freshness": {
         "mode": "interval",
-        "max_age_days": 90,
-        "upstream_checked_at": null
-      }
+        "max_age_days": 31,
+        "upstream_checked_at": "2026-08-26"
+      },
+      "implementation": {
+        "status": "legacy_embedded_views",
+        "official_catalogs_total": 14,
+        "canonical_owned_catalogs": 10,
+        "shared_cfdi_catalogs": 4,
+        "shared_cfdi_dependency": "sat.cfdi_4",
+        "shared_cfdi_tables": [
+          "cfdi_40_codigos_postales",
+          "cfdi_40_monedas",
+          "cfdi_40_paises",
+          "cfdi_40_regimenes_fiscales"
+        ],
+        "embedded_convenience_json_files": 8,
+        "canonical_distribution": "release",
+        "release_artifact": "sat_comercio_exterior_20.sqlite3",
+        "legacy_view_path": "packages/shared-data/sat/comercio_exterior",
+        "consumer_migration_required_before_removal": true
+      },
+      "notes": "Comercio Exterior 2.0 has been effective with CFDI 4.0 since 2024-01-18. The reviewed technical mirror exposes 10 CCE-owned cce_20_* tables and reuses four shared CFDI 4.0 catalogs (country, currency, postal code and tax regime), for 14 catalog concepts in the complement contract. The eight embedded JSON files are legacy convenience views and mix CCE-owned, shared and derived semantics; do not overwrite them as a canonical mirror. The canonical release contains only the 10 CCE-owned tables and declares sat.cfdi_4 as a dependency."
     },
     {
       "id": "sat.nomina_1_2",
