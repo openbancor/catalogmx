@@ -51,10 +51,11 @@ def test_builder_is_byte_reproducible_and_manifest_verifies_members(tmp_path: Pa
     artifact_b, _, manifest_b = module.build_from_directory(source, tmp_path / "b")
 
     assert artifact_a.read_bytes() == artifact_b.read_bytes()
+    assert manifest_a == manifest_b
     assert manifest_a["dataset_id"] == "banxico.reference"
     assert manifest_a["dataset_version"] == "1"
+    assert manifest_a["ingestion"]["release_member_encoding"] == "canonical-json-v1"
     assert manifest_a["dataset"]["file_sha256"] == module.sha256_file(artifact_a)
-    assert manifest_a["dataset"]["content_sha256"] == manifest_b["dataset"]["content_sha256"]
     assert [item["path"] for item in manifest_a["dataset"]["files"]] == [
         "banxico/banks.json",
         "banxico/codigos_plaza.json",
@@ -64,21 +65,29 @@ def test_builder_is_byte_reproducible_and_manifest_verifies_members(tmp_path: Pa
     ]
 
 
-def test_semantic_hash_ignores_json_formatting_only_changes(tmp_path: Path):
+def test_formatting_only_changes_preserve_semantic_and_binary_identity(tmp_path: Path):
     module = load_module()
     source = tmp_path / "source"
     write_source(source)
-    _, _, first = module.build_from_directory(source, tmp_path / "first")
+    artifact_a, manifest_path_a, first = module.build_from_directory(
+        source, tmp_path / "first"
+    )
 
     banks = json.loads((source / "banks.json").read_text(encoding="utf-8"))
+    # Change both whitespace and object-key order in the reviewed source file.
+    banks[0] = {"name": banks[0]["name"], "code": banks[0]["code"]}
     (source / "banks.json").write_text(
         json.dumps(banks, ensure_ascii=False, separators=(",", ":")),
         encoding="utf-8",
     )
-    _, _, second = module.build_from_directory(source, tmp_path / "second")
+    artifact_b, manifest_path_b, second = module.build_from_directory(
+        source, tmp_path / "second"
+    )
 
     assert first["dataset"]["content_sha256"] == second["dataset"]["content_sha256"]
-    assert first["dataset"]["file_sha256"] != second["dataset"]["file_sha256"]
+    assert first["dataset"]["file_sha256"] == second["dataset"]["file_sha256"]
+    assert artifact_a.read_bytes() == artifact_b.read_bytes()
+    assert manifest_path_a.read_bytes() == manifest_path_b.read_bytes()
 
 
 def test_builder_fails_closed_when_namespace_changes(tmp_path: Path):
