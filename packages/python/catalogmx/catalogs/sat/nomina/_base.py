@@ -83,9 +83,6 @@ class NominaJsonCatalog:
             for item in cls._load()
             if query
             in str(
-                item.get("description")
-                or item.get("name")
-                or item.get("full_name")
-                or ""
+                item.get("description") or item.get("name") or item.get("full_name") or ""
             ).casefold()
         ]

@@ -22,7 +22,8 @@ class _NominaData {
     item['code'] = code;
     item['clave'] ??= code;
 
-    final description = item['description'] ?? item['descripcion'] ?? item['texto'];
+    final description =
+        item['description'] ?? item['descripcion'] ?? item['texto'];
     if (description != null) {
       item['description'] = description.toString();
       item['descripcion'] ??= description.toString();
@@ -55,13 +56,15 @@ abstract class _SimpleNominaCatalog {
       List<Map<String, dynamic>>.from(_NominaData.load(filename));
   static Map<String, dynamic>? byCode(String filename, String code) =>
       _NominaData.byCode(filename, code);
-  static bool valid(String filename, String code) => byCode(filename, code) != null;
+  static bool valid(String filename, String code) =>
+      byCode(filename, code) != null;
 }
 
 class TipoNominaCatalog {
   static const _file = 'tipo_nomina.json';
   static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
-  static Map<String, dynamic>? getByClave(String clave) => _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
   static Map<String, dynamic>? getByCode(String code) => getByClave(code);
   static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
@@ -69,7 +72,8 @@ class TipoNominaCatalog {
 class TipoContratoCatalog {
   static const _file = 'tipo_contrato.json';
   static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
-  static Map<String, dynamic>? getByClave(String clave) => _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
   static Map<String, dynamic>? getByCode(String code) => getByClave(code);
   static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
@@ -77,7 +81,8 @@ class TipoContratoCatalog {
 class TipoJornadaCatalog {
   static const _file = 'tipo_jornada.json';
   static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
-  static Map<String, dynamic>? getByClave(String clave) => _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
   static Map<String, dynamic>? getByCode(String code) => getByClave(code);
   static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
@@ -85,7 +90,8 @@ class TipoJornadaCatalog {
 class TipoRegimenCatalog {
   static const _file = 'tipo_regimen.json';
   static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
-  static Map<String, dynamic>? getByClave(String clave) => _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
   static Map<String, dynamic>? getByCode(String code) => getByClave(code);
   static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
@@ -93,7 +99,8 @@ class TipoRegimenCatalog {
 class PeriodicidadPagoCatalog {
   static const _file = 'periodicidad_pago.json';
   static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
-  static Map<String, dynamic>? getByClave(String clave) => _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
   static Map<String, dynamic>? getByCode(String code) => getByClave(code);
   static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
@@ -101,15 +108,20 @@ class PeriodicidadPagoCatalog {
 class BancoNominaCatalog {
   static const _file = 'banco.json';
   static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
-  static Map<String, dynamic>? getByClave(String clave) => _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
   static Map<String, dynamic>? getByCode(String code) => getByClave(code);
   static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 
   static List<Map<String, dynamic>> search(String query) {
     final q = query.toUpperCase();
     return _NominaData.load(_file).where((item) {
-      final name = (item['name'] ?? item['nombre'] ?? '').toString().toUpperCase();
-      final legal = (item['full_name'] ?? item['razon_social'] ?? '').toString().toUpperCase();
+      final name = (item['name'] ?? item['nombre'] ?? '')
+          .toString()
+          .toUpperCase();
+      final legal = (item['full_name'] ?? item['razon_social'] ?? '')
+          .toString()
+          .toUpperCase();
       return name.contains(q) || legal.contains(q);
     }).toList();
   }
@@ -118,7 +130,8 @@ class BancoNominaCatalog {
 class RiesgoPuestoCatalog {
   static const _file = 'riesgo_puesto.json';
   static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
-  static Map<String, dynamic>? getByClave(String clave) => _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
   static Map<String, dynamic>? getByCode(String code) => getByClave(code);
   static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
@@ -126,7 +139,8 @@ class RiesgoPuestoCatalog {
 class OrigenRecursoCatalog {
   static const _file = 'origen_recurso.json';
   static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
-  static Map<String, dynamic>? getByClave(String clave) => _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
   static Map<String, dynamic>? getByCode(String code) => getByClave(code);
   static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
@@ -134,7 +148,8 @@ class OrigenRecursoCatalog {
 class TipoDeduccionCatalog {
   static const _file = 'tipo_deduccion.json';
   static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
-  static Map<String, dynamic>? getByClave(String clave) => _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
   static Map<String, dynamic>? getByCode(String code) => getByClave(code);
   static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
@@ -142,7 +157,8 @@ class TipoDeduccionCatalog {
 class TipoHorasCatalog {
   static const _file = 'tipo_horas.json';
   static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
-  static Map<String, dynamic>? getByClave(String clave) => _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
   static Map<String, dynamic>? getByCode(String code) => getByClave(code);
   static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
@@ -150,7 +166,8 @@ class TipoHorasCatalog {
 class TipoIncapacidadCatalog {
   static const _file = 'tipo_incapacidad.json';
   static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
-  static Map<String, dynamic>? getByClave(String clave) => _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
   static Map<String, dynamic>? getByCode(String code) => getByClave(code);
   static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
@@ -158,7 +175,8 @@ class TipoIncapacidadCatalog {
 class TipoOtroPagoCatalog {
   static const _file = 'tipo_otro_pago.json';
   static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
-  static Map<String, dynamic>? getByClave(String clave) => _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
   static Map<String, dynamic>? getByCode(String code) => getByClave(code);
   static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
@@ -166,7 +184,8 @@ class TipoOtroPagoCatalog {
 class TipoPercepcionCatalog {
   static const _file = 'tipo_percepcion.json';
   static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
-  static Map<String, dynamic>? getByClave(String clave) => _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
   static Map<String, dynamic>? getByCode(String code) => getByClave(code);
   static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }

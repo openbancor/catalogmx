@@ -17,11 +17,7 @@ class BancoCatalog(NominaJsonCatalog):
         """Return one bank by display name, preserving the historical API."""
         query = name.casefold()
         return next(
-            (
-                item
-                for item in cls.get_all()
-                if str(item.get("name", "")).casefold() == query
-            ),
+            (item for item in cls.get_all() if str(item.get("name", "")).casefold() == query),
             None,
         )
 

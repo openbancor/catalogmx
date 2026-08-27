@@ -122,7 +122,6 @@ describe('TipoJornadaCatalog', () => {
     expect(TipoJornadaCatalog.isValid('ZZ')).toBe(false);
   });
 
-
   test('isDiurna() returns false for invalid code', () => {
     expect(TipoJornadaCatalog.isDiurna('ZZ')).toBe(false);
   });

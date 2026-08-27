@@ -1,4 +1,5 @@
 """SAT Nómina 1.2 c_TipoHoras catalog."""
+
 from ._base import NominaJsonCatalog
 
 
