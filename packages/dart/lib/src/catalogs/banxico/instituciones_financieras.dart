@@ -18,20 +18,33 @@ class InstitucionesFinancierasCatalog {
       'banxico/instituciones_financieras.json',
     );
 
-    // Handle both list and dict formats
+    // BaseCatalog unwraps metadata envelopes with a single catalog array. Keep
+    // compatibility with older wrapped files too.
     if (jsonData.isNotEmpty && jsonData.first.containsKey('instituciones')) {
       _data = (jsonData.first['instituciones'] as List)
-          .map((e) => e as Map<String, dynamic>)
+          .map((e) => Map<String, dynamic>.from(e as Map))
+          .toList();
+    } else if (
+        jsonData.isNotEmpty && jsonData.first.containsKey('tipos_institucion')) {
+      _data = (jsonData.first['tipos_institucion'] as List)
+          .map((e) => Map<String, dynamic>.from(e as Map))
           .toList();
     } else {
       _data = jsonData;
     }
 
-    // Build indices
-    _byCode = {for (var inst in _data!) inst['codigo'] as String: inst};
+    for (final item in _data!) {
+      final displayName = item['nombre'] ?? item['tipo'];
+      if (displayName != null) item['nombre'] = displayName.toString();
+    }
 
+    _byCode = {
+      for (final inst in _data!)
+        if (inst['codigo'] != null) inst['codigo'].toString(): inst,
+    };
     _byName = {
-      for (var inst in _data!) (inst['nombre'] as String).toUpperCase(): inst,
+      for (final inst in _data!)
+        if (inst['nombre'] != null) inst['nombre'].toString().toUpperCase(): inst,
     };
   }
 
@@ -42,65 +55,36 @@ class InstitucionesFinancierasCatalog {
   }
 
   /// Busca institución por código
-  ///
-  /// Args:
-  ///   codigo: Código de la institución
-  ///
-  /// Returns:
-  ///   Información de la institución o null si no existe
   static Map<String, dynamic>? getByCode(String codigo) {
     _loadData();
     return _byCode![codigo];
   }
 
   /// Busca institución por nombre (case-insensitive)
-  ///
-  /// Args:
-  ///   nombre: Nombre de la institución
-  ///
-  /// Returns:
-  ///   Información de la institución o null si no existe
   static Map<String, dynamic>? getByName(String nombre) {
     _loadData();
     return _byName![nombre.toUpperCase()];
   }
 
   /// Valida si un código de institución existe
-  ///
-  /// Args:
-  ///   codigo: Código de la institución
-  ///
-  /// Returns:
-  ///   true si existe, false en caso contrario
   static bool isValid(String codigo) {
     return getByCode(codigo) != null;
   }
 
   /// Busca instituciones por nombre parcial
-  ///
-  /// Args:
-  ///   query: Texto a buscar
-  ///
-  /// Returns:
-  ///   Lista de instituciones que coinciden
   static List<Map<String, dynamic>> search(String query) {
     _loadData();
     final queryNorm = query.toUpperCase();
     return _data!
         .where(
-          (inst) =>
-              (inst['nombre'] as String).toUpperCase().contains(queryNorm),
+          (inst) => (inst['nombre']?.toString() ?? '')
+              .toUpperCase()
+              .contains(queryNorm),
         )
         .toList();
   }
 
   /// Obtiene instituciones por tipo
-  ///
-  /// Args:
-  ///   tipo: Tipo de institución (ej: "BANCO", "CASA DE BOLSA", etc.)
-  ///
-  /// Returns:
-  ///   Lista de instituciones de ese tipo
   static List<Map<String, dynamic>> getByTipo(String tipo) {
     _loadData();
     return _data!.where((inst) => inst['tipo'] == tipo).toList();
