@@ -10,7 +10,9 @@ from typing import Any, Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_REGISTRY = REPO_ROOT / "packages" / "shared-data" / "catalog-registry.json"
-DEFAULT_OUTPUT = REPO_ROOT / "packages" / "python" / "catalogmx" / "data" / "dataset_contract.json"
+DEFAULT_OUTPUT = (
+    REPO_ROOT / "packages" / "python" / "catalogmx" / "data" / "dataset_contract.json"
+)
 
 
 def load_registry(path: Path) -> dict[str, Any]:
@@ -60,8 +62,19 @@ def render_contract(registry: dict[str, Any]) -> dict[str, Any]:
             raise ValueError(
                 f"profile dataset {dataset_id!r} has no runtime artifact contract"
             )
+
+        runtime_artifact = dict(artifact)
+        implementation = dataset.get("implementation")
+        if (
+            isinstance(implementation, dict)
+            and implementation.get("publish_from_reviewed_master") is True
+        ):
+            # Reviewed-master publishers expose a stable release as a metadata
+            # pointer to one complete immutable artifact/manifest release.
+            runtime_artifact["discovery"] = "release-pointer"
+
         projected: dict[str, Any] = {
-            "artifact": artifact,
+            "artifact": runtime_artifact,
             "freshness": dataset.get("freshness", {}),
         }
         source_subpath = dataset.get("source_subpath")
