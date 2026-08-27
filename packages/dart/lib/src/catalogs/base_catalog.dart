@@ -20,6 +20,70 @@ abstract class BaseCatalog<T> {
   /// Path to shared-data directory (relative to packages/dart)
   static String sharedDataPath = '../shared-data';
 
+  static Map<String, dynamic> _normalizeAliases(Map<String, dynamic> source) {
+    final item = Map<String, dynamic>.from(source);
+
+    final code = item['code'] ?? item['clave'] ?? item['codigo'];
+    if (code != null) {
+      final value = code.toString();
+      item.putIfAbsent('code', () => value);
+      item.putIfAbsent('clave', () => value);
+      item.putIfAbsent('codigo', () => value);
+    }
+
+    final description = item['description'] ?? item['descripcion'];
+    if (description != null) {
+      final value = description.toString();
+      item.putIfAbsent('description', () => value);
+      item.putIfAbsent('descripcion', () => value);
+    }
+
+    final name = item['name'] ?? item['nombre'];
+    if (name != null) {
+      final value = name.toString();
+      item.putIfAbsent('name', () => value);
+      item.putIfAbsent('nombre', () => value);
+    }
+
+    return item;
+  }
+
+  static List<Map<String, dynamic>> _decodeItems(dynamic data) {
+    if (data is List) {
+      return data
+          .map((item) => _normalizeAliases(Map<String, dynamic>.from(item as Map)))
+          .toList();
+    }
+
+    if (data is Map) {
+      final object = Map<String, dynamic>.from(data);
+      final itemsData = object['items'];
+      if (itemsData is List) {
+        return itemsData
+            .map((item) => _normalizeAliases(Map<String, dynamic>.from(item as Map)))
+            .toList();
+      }
+
+      // A number of shared-data files use a metadata envelope plus one named
+      // array (for example `operadores` or `tipos_institucion`). Treat that
+      // single array as the catalog payload instead of returning the envelope
+      // as a bogus catalog row.
+      final catalogArrays = object.entries
+          .where((entry) => entry.key != 'metadata' && entry.value is List)
+          .map((entry) => entry.value as List)
+          .toList();
+      if (catalogArrays.length == 1) {
+        return catalogArrays.single
+            .map((item) => _normalizeAliases(Map<String, dynamic>.from(item as Map)))
+            .toList();
+      }
+
+      return [_normalizeAliases(object)];
+    }
+
+    return [];
+  }
+
   /// Loads JSON data from file path with caching
   static Future<List<Map<String, dynamic>>> loadJsonData(
     String relativePath,
@@ -31,28 +95,7 @@ abstract class BaseCatalog<T> {
     try {
       final file = File('$sharedDataPath/$relativePath');
       final contents = await file.readAsString();
-      final data = json.decode(contents);
-
-      List<Map<String, dynamic>> items;
-      if (data is List) {
-        items = data.map((item) => item as Map<String, dynamic>).toList();
-      } else if (data is Map) {
-        // Handle both list and dict formats
-        if (data.containsKey('items')) {
-          final itemsData = data['items'];
-          if (itemsData is List) {
-            items =
-                itemsData.map((item) => item as Map<String, dynamic>).toList();
-          } else {
-            items = [data as Map<String, dynamic>];
-          }
-        } else {
-          items = [data as Map<String, dynamic>];
-        }
-      } else {
-        items = [];
-      }
-
+      final items = _decodeItems(json.decode(contents));
       _cache[relativePath] = items;
       return items;
     } catch (e) {
@@ -74,27 +117,7 @@ abstract class BaseCatalog<T> {
     try {
       final file = File('$sharedDataPath/$relativePath');
       final contents = file.readAsStringSync();
-      final data = json.decode(contents);
-
-      List<Map<String, dynamic>> items;
-      if (data is List) {
-        items = data.map((item) => item as Map<String, dynamic>).toList();
-      } else if (data is Map) {
-        if (data.containsKey('items')) {
-          final itemsData = data['items'];
-          if (itemsData is List) {
-            items =
-                itemsData.map((item) => item as Map<String, dynamic>).toList();
-          } else {
-            items = [data as Map<String, dynamic>];
-          }
-        } else {
-          items = [data as Map<String, dynamic>];
-        }
-      } else {
-        items = [];
-      }
-
+      final items = _decodeItems(json.decode(contents));
       _cache[relativePath] = items;
       return items;
     } catch (e) {
