@@ -1,10 +1,4 @@
 [
-  {
-    "code": "O",
-    "descripcion": "Nómina ordinaria"
-  },
-  {
-    "code": "E",
-    "descripcion": "Nómina extraordinaria"
-  }
+  {"code":"O","description":"Nómina ordinaria","descripcion":"Nómina ordinaria"},
+  {"code":"E","description":"Nómina extraordinaria","descripcion":"Nómina extraordinaria"}
 ]
