@@ -66,19 +66,29 @@ def test_web_and_shared_nomina_xsd_are_identical():
     assert WEB_XSD.read_bytes() == SHARED_XSD.read_bytes()
 
 
-def test_registry_records_revision_e_and_partial_normalized_coverage():
-    """Freshness and implementation completeness are distinct registry facts."""
+def test_registry_records_revision_e_canonical_distribution_and_api_gap():
+    """Canonical data completeness and language API completeness are distinct."""
     registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
     dataset = next(item for item in registry["datasets"] if item["id"] == "sat.nomina_1_2")
 
     assert dataset["version"] == "1.2"
     assert dataset["revision"] == "E"
     assert dataset["effective_from"] == "2026-01-01"
-    assert dataset["freshness"]["upstream_checked_at"] == "2026-08-25"
-    assert dataset["implementation"]["status"] == "partial"
-    assert dataset["implementation"]["normalized_catalogs"] == 7
-    assert dataset["implementation"]["xsd_catalog_types"] == 13
-    assert set(dataset["implementation"]["missing_normalized_catalogs"]) == {
+    assert dataset["distribution"] == "mixed"
+    assert dataset["freshness"]["max_age_days"] == 31
+    assert dataset["freshness"]["upstream_checked_at"] == "2026-08-26"
+
+    implementation = dataset["implementation"]
+    assert implementation["status"] == "partial"
+    assert implementation["xsd_catalog_types"] == 13
+    assert implementation["canonical_catalog_tables"] == 13
+    assert implementation["canonical_distribution"] == "release"
+    assert implementation["release_artifact"] == "sat_nomina_12.sqlite3"
+    assert implementation["excluded_auxiliary_tables"] == ["nomina_estados"]
+    assert implementation["embedded_convenience_json_files"] == 7
+    assert implementation["normalized_catalogs"] == 7
+    assert implementation["consumer_migration_required_before_removal"] is True
+    assert set(implementation["missing_normalized_catalogs"]) == {
         "c_OrigenRecurso",
         "c_TipoDeduccion",
         "c_TipoHoras",
@@ -86,3 +96,11 @@ def test_registry_records_revision_e_and_partial_normalized_coverage():
         "c_TipoOtroPago",
         "c_TipoPercepcion",
     }
+
+    roles = {source["role"] for source in dataset["upstream"]}
+    assert {
+        "authoritative_notice",
+        "authoritative_catalog",
+        "authoritative_resource",
+        "technical_mirror",
+    } <= roles
