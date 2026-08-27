@@ -11,7 +11,7 @@ import tempfile
 from collections.abc import Callable, Mapping
 from datetime import datetime, timezone
 from importlib import resources
-from pathlib import Path, PurePosixPath
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any
 from urllib.request import Request, urlopen
 
@@ -61,10 +61,19 @@ def _sha256(payload: bytes) -> str:
 
 
 def _safe_relative_path(value: str) -> Path:
-    pure = PurePosixPath(value)
-    if pure.is_absolute() or not pure.parts or ".." in pure.parts:
+    """Return a path that is relative and safe on POSIX and Windows."""
+    if not value or "\x00" in value or "\\" in value:
         raise RuntimeError(f"unsafe dataset path in manifest: {value!r}")
-    return Path(*pure.parts)
+
+    raw_parts = value.split("/")
+    if any(part in {"", ".", ".."} for part in raw_parts):
+        raise RuntimeError(f"unsafe dataset path in manifest: {value!r}")
+
+    posix = PurePosixPath(value)
+    windows = PureWindowsPath(value)
+    if posix.is_absolute() or windows.is_absolute() or windows.drive:
+        raise RuntimeError(f"unsafe dataset path in manifest: {value!r}")
+    return Path(*posix.parts)
 
 
 def _atomic_write(path: Path, payload: bytes) -> None:
@@ -269,6 +278,11 @@ class DatasetResolver:
             raise RuntimeError("dataset manifest is missing dataset metadata")
         if manifest_dataset.get("file") != artifact["file"]:
             raise RuntimeError("dataset manifest artifact filename mismatch")
+        if manifest_dataset.get("format") != artifact["format"]:
+            raise RuntimeError("dataset manifest artifact format mismatch")
+        if manifest_dataset.get("mount_path") != artifact["mount_path"]:
+            raise RuntimeError("dataset manifest mount path mismatch")
+        _safe_relative_path(str(manifest_dataset["mount_path"]))
         file_sha = manifest_dataset.get("file_sha256")
         content_sha = manifest_dataset.get("content_sha256")
         if not isinstance(file_sha, str) or len(file_sha) != 64:
@@ -411,24 +425,32 @@ class DatasetResolver:
         try:
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             manifest_dataset, content_sha = self._validate_manifest(dataset_id, dataset, manifest)
-        except (OSError, json.JSONDecodeError, RuntimeError):
-            return False
-        if content_sha != state.get("content_sha256"):
-            return False
+            if content_sha != state.get("content_sha256"):
+                return False
 
-        if dataset["artifact"]["format"] == "tar.gz":
-            files = manifest_dataset.get("files", [])
-            for item in files:
-                path = object_dir / _safe_relative_path(item["path"])
-                if not path.exists() or _sha256(path.read_bytes()) != item["sha256"]:
+            if dataset["artifact"]["format"] == "tar.gz":
+                files = manifest_dataset.get("files")
+                if not isinstance(files, list):
                     return False
-            return True
+                for item in files:
+                    if not isinstance(item, dict):
+                        return False
+                    path_value = item.get("path")
+                    sha_value = item.get("sha256")
+                    if not isinstance(path_value, str) or not isinstance(sha_value, str):
+                        return False
+                    path = object_dir / _safe_relative_path(path_value)
+                    if not path.exists() or _sha256(path.read_bytes()) != sha_value:
+                        return False
+                return True
 
-        artifact_path = root / dataset["artifact"]["file"]
-        return (
-            artifact_path.exists()
-            and _sha256(artifact_path.read_bytes()) == manifest_dataset["file_sha256"]
-        )
+            artifact_path = root / dataset["artifact"]["file"]
+            return (
+                artifact_path.exists()
+                and _sha256(artifact_path.read_bytes()) == manifest_dataset["file_sha256"]
+            )
+        except (KeyError, OSError, TypeError, ValueError, json.JSONDecodeError, RuntimeError):
+            return False
 
     def verify_profile(self, profile: str) -> dict[str, bool]:
         return {
