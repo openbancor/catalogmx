@@ -75,6 +75,7 @@ def test_current_registry_schedules_reference_data_but_not_dynamic_or_event_data
     assert "sat.carta_porte" in monthly_ids
     assert "sat.cfdi_4" in monthly_ids
     assert "sat.comercio_exterior" in monthly_ids
+    assert "sat.nomina_1_2" in monthly_ids
     assert "sepomex.codigos_postales" in monthly_ids
 
     for dataset_id in (
@@ -82,6 +83,7 @@ def test_current_registry_schedules_reference_data_but_not_dynamic_or_event_data
         "sat.carta_porte",
         "sat.cfdi_4",
         "sat.comercio_exterior",
+        "sat.nomina_1_2",
         "sepomex.codigos_postales",
     ):
         item = next(item for item in monthly if item.id == dataset_id)

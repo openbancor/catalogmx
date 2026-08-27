@@ -70,6 +70,12 @@ ADAPTERS: dict[str, tuple[str, ...]] = {
         "--output-dir",
         "dist/catalog-artifacts/sat-comercio-exterior-20",
     ),
+    "sat.nomina_1_2": (
+        sys.executable,
+        "scripts/sat/build_nomina_12.py",
+        "--output-dir",
+        "dist/catalog-artifacts/sat-nomina-12",
+    ),
     "sepomex.codigos_postales": (
         sys.executable,
         "scripts/sepomex/build_postal_codes.py",
