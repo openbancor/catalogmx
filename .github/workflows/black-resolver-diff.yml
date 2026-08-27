@@ -1,0 +1,29 @@
+name: Black Resolver Diff
+
+on:
+  push:
+    branches: [feat/data-resolver-profiles]
+    paths:
+      - 'packages/python/catalogmx/data/resolver.py'
+      - '.github/workflows/black-resolver-diff.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/python
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install CI Black version
+        run: pip install 'black==26.5.1'
+      - name: Show exact Black diff
+        run: black --diff catalogmx/data/resolver.py || true
