@@ -9,21 +9,34 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  diff:
+  format:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: packages/python
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: feat/data-resolver-profiles
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
       - name: Install CI Black version
         run: pip install 'black==26.5.1'
-      - name: Show exact Black diff
-        run: black --diff catalogmx/data/resolver.py || true
+      - name: Apply exact CI formatting
+        working-directory: packages/python
+        run: black catalogmx/data/resolver.py
+      - name: Commit canonical formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- packages/python/catalogmx/data/resolver.py; then
+            echo "Resolver is already formatted."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/python/catalogmx/data/resolver.py
+          git commit -m "style(data): format dataset resolver"
+          git push origin HEAD:feat/data-resolver-profiles
