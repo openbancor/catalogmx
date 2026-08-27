@@ -12,11 +12,15 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPT_PATH = REPO_ROOT / "scripts" / "update_banxico_banks.py"
-SNAPSHOT_PATH = REPO_ROOT / "packages" / "shared-data" / "banxico" / "spei_institutions.json"
+SNAPSHOT_PATH = (
+    REPO_ROOT / "packages" / "shared-data" / "banxico" / "spei_institutions.json"
+)
 
 
 def load_module() -> ModuleType:
-    spec = importlib.util.spec_from_file_location("banxico_reference_updater", SCRIPT_PATH)
+    spec = importlib.util.spec_from_file_location(
+        "banxico_reference_updater", SCRIPT_PATH
+    )
     assert spec is not None
     assert spec.loader is not None
     module = importlib.util.module_from_spec(spec)
@@ -25,7 +29,9 @@ def load_module() -> ModuleType:
     return module
 
 
-def test_parser_extracts_live_table_and_ignores_header(monkeypatch: pytest.MonkeyPatch):
+def test_parser_extracts_live_table_and_ignores_header(
+    monkeypatch: pytest.MonkeyPatch,
+):
     module = load_module()
     monkeypatch.setattr(module, "MIN_EXPECTED_INSTITUTIONS", 2)
     html = """
@@ -53,9 +59,7 @@ def test_parser_fails_closed_on_partial_or_ambiguous_source(
 
     monkeypatch.setattr(module, "MIN_EXPECTED_INSTITUTIONS", 2)
     with pytest.raises(RuntimeError, match="collapse"):
-        module.validate_institutions(
-            [("40001", "FIRST"), ("90001", "SECOND")]
-        )
+        module.validate_institutions([("40001", "FIRST"), ("90001", "SECOND")])
     with pytest.raises(ValueError, match="invalid Banxico institution key"):
         module.normalize_institution_key("ABC")
 
@@ -108,7 +112,9 @@ def test_sync_preserves_enrichments_and_historical_rows(
         "banxico_key": "90721",
         "cep_current": True,
     }
-    assert summary == module.SyncSummary(current=2, added=1, renamed=1, historical=1)
+    assert summary == module.SyncSummary(
+        current=2, added=1, renamed=1, historical=1
+    )
 
 
 def test_snapshot_is_source_faithful_and_deterministic(
@@ -136,6 +142,81 @@ def test_checked_in_snapshot_has_unique_current_source_keys_and_codes():
     assert {"001", "002", "124", "128", "167", "170", "638", "721", "903"} <= {
         item["code"] for item in snapshot
     }
+
+
+def test_snapshot_transition_rejects_large_drop_and_key_replacement(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    module = load_module()
+    monkeypatch.setattr(module, "MIN_EXPECTED_INSTITUTIONS", 2)
+    previous = [
+        {
+            "banxico_key": f"40{code:03d}",
+            "code": f"{code:03d}",
+            "name": f"BANK {code}",
+        }
+        for code in range(1, 11)
+    ]
+
+    with pytest.raises(RuntimeError, match="shrank"):
+        module.validate_snapshot_transition(
+            previous,
+            [(f"40{code:03d}", f"BANK {code}") for code in range(1, 9)],
+        )
+
+    replacement = [(f"40{code:03d}", f"BANK {code}") for code in range(1, 9)]
+    replacement.extend([("40991", "NEW ONE"), ("40992", "NEW TWO")])
+    with pytest.raises(RuntimeError, match="replaced too many"):
+        module.validate_snapshot_transition(previous, replacement)
+
+
+def test_snapshot_transition_accepts_small_reviewable_change(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    module = load_module()
+    monkeypatch.setattr(module, "MIN_EXPECTED_INSTITUTIONS", 2)
+    previous = [
+        {
+            "banxico_key": f"40{code:03d}",
+            "code": f"{code:03d}",
+            "name": f"BANK {code}",
+        }
+        for code in range(1, 11)
+    ]
+    current = [(f"40{code:03d}", f"BANK {code}") for code in range(1, 10)]
+
+    module.validate_snapshot_transition(previous, current)
+
+
+def test_transaction_rolls_back_first_write_if_second_replace_fails(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+):
+    module = load_module()
+    snapshot_path = tmp_path / "spei_institutions.json"
+    banks_path = tmp_path / "banks.json"
+    snapshot_path.write_text('[{"old": "snapshot"}]\n', encoding="utf-8")
+    banks_path.write_text('[{"old": "banks"}]\n', encoding="utf-8")
+    original_snapshot = snapshot_path.read_bytes()
+    original_banks = banks_path.read_bytes()
+    real_replace = module.os.replace
+
+    def failing_replace(source: str | Path, destination: str | Path) -> None:
+        if Path(destination) == banks_path:
+            raise OSError("simulated second replace failure")
+        real_replace(source, destination)
+
+    monkeypatch.setattr(module.os, "replace", failing_replace)
+
+    with pytest.raises(OSError, match="simulated"):
+        module.write_json_transaction(
+            [
+                (snapshot_path, [{"new": "snapshot"}]),
+                (banks_path, [{"new": "banks"}]),
+            ]
+        )
+
+    assert snapshot_path.read_bytes() == original_snapshot
+    assert banks_path.read_bytes() == original_banks
 
 
 def test_main_does_not_write_when_source_validation_fails(
