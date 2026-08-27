@@ -3,7 +3,12 @@ package com.openbancor.catalogmx.catalogs.base
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import java.io.File
@@ -172,20 +177,19 @@ object BaseCatalog {
         else -> emptyMap()
     }
 
+    /** Preserve JSON's declared primitive type; catalog codes such as "002" are strings. */
     private fun JsonElement.toKotlinValue(): Any? = when (this) {
         is JsonObject -> this.toMap()
         is JsonArray -> this.jsonArray.map { it.toKotlinValue() }
-        else -> {
-            val str = this.toString().trim('"')
-            when {
-                str == "null" -> null
-                str == "true" -> true
-                str == "false" -> false
-                str.toIntOrNull() != null -> str.toInt()
-                str.toDoubleOrNull() != null -> str.toDouble()
-                else -> str
-            }
+        is JsonNull -> null
+        is JsonPrimitive -> when {
+            this.isString -> this.content
+            this.booleanOrNull != null -> this.booleanOrNull
+            this.intOrNull != null -> this.intOrNull
+            this.doubleOrNull != null -> this.doubleOrNull
+            else -> this.content
         }
+        else -> null
     }
 }
 
