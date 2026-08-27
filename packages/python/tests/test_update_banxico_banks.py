@@ -12,6 +12,7 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPT_PATH = REPO_ROOT / "scripts" / "update_banxico_banks.py"
+SNAPSHOT_PATH = REPO_ROOT / "packages" / "shared-data" / "banxico" / "spei_institutions.json"
 
 
 def load_module() -> ModuleType:
@@ -123,6 +124,18 @@ def test_snapshot_is_source_faithful_and_deterministic(
         {"banxico_key": "40002", "code": "002", "name": "BANAMEX"},
         {"banxico_key": "90721", "code": "721", "name": "albo"},
     ]
+
+
+def test_checked_in_snapshot_has_unique_current_source_keys_and_codes():
+    module = load_module()
+    snapshot = json.loads(SNAPSHOT_PATH.read_text(encoding="utf-8"))
+
+    assert len(snapshot) >= module.MIN_EXPECTED_INSTITUTIONS
+    assert len({item["banxico_key"] for item in snapshot}) == len(snapshot)
+    assert len({item["code"] for item in snapshot}) == len(snapshot)
+    assert {"001", "002", "124", "128", "167", "170", "638", "721", "903"} <= {
+        item["code"] for item in snapshot
+    }
 
 
 def test_main_does_not_write_when_source_validation_fails(
