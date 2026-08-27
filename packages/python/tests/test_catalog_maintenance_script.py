@@ -115,6 +115,14 @@ def test_slots_are_deterministic_balanced_and_partition_a_cadence():
     assert max(slot_sizes) - min(slot_sizes) <= 1
 
 
+def test_nomina_adapter_regenerates_compatibility_views():
+    module = load_module()
+    command = module.ADAPTERS["sat.nomina_1_2"]
+
+    assert "--compat-output-dir" in command
+    assert "packages/shared-data/sat/nomina_1.2" in command
+
+
 def test_unconfigured_adapter_is_reported_without_execution():
     module = load_module()
     result = module.run_adapter("cnbv.reference")

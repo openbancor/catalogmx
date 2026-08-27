@@ -1,54 +1,93 @@
 [
   {
     "code": "02",
-    "description": "Sueldos (Incluye ingresos señalados en la fracción I del artículo 94 de LISR)"
+    "description": "Sueldos (Incluye ingresos señalados en la fracción I del artículo 94 de LISR)",
+    "descripcion": "Sueldos (Incluye ingresos señalados en la fracción I del artículo 94 de LISR)",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "03",
-    "description": "Jubilados"
+    "description": "Jubilados",
+    "descripcion": "Jubilados",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "04",
-    "description": "Pensionados"
+    "description": "Pensionados",
+    "descripcion": "Pensionados",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "05",
-    "description": "Asimilados a salarios"
+    "description": "Asimilados Miembros Sociedades Cooperativas Produccion",
+    "descripcion": "Asimilados Miembros Sociedades Cooperativas Produccion",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "06",
-    "description": "Asimilados a salarios - Miembros Sociedades Cooperativas de Producción"
+    "description": "Asimilados Integrantes Sociedades Asociaciones Civiles",
+    "descripcion": "Asimilados Integrantes Sociedades Asociaciones Civiles",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "07",
-    "description": "Asimilados a salarios - Integrantes Sociedades y Asociaciones Civiles"
+    "description": "Asimilados Miembros consejos",
+    "descripcion": "Asimilados Miembros consejos",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "08",
-    "description": "Asimilados a salarios - Miembros consejos directivos, administración, vigilancia"
+    "description": "Asimilados comisionistas",
+    "descripcion": "Asimilados comisionistas",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "09",
-    "description": "Asimilados a salarios - Actividades empresariales y servicios profesionales"
+    "description": "Asimilados Honorarios",
+    "descripcion": "Asimilados Honorarios",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "10",
-    "description": "Asimilados a salarios - Honorarios a miembros consejos de administración"
+    "description": "Asimilados acciones",
+    "descripcion": "Asimilados acciones",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "11",
-    "description": "Asimilados a salarios - Honorarios a personas físicas"
+    "description": "Asimilados otros",
+    "descripcion": "Asimilados otros",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "12",
-    "description": "Asimilados a salarios - Comisionistas"
+    "description": "Jubilados o Pensionados",
+    "descripcion": "Jubilados o Pensionados",
+    "valid_from": "2017-03-27",
+    "valid_to": null
   },
   {
     "code": "13",
-    "description": "Asimilados a salarios - Otros"
+    "description": "Indemnización o Separación",
+    "descripcion": "Indemnización o Separación",
+    "valid_from": "2018-10-15",
+    "valid_to": null
   },
   {
     "code": "99",
-    "description": "Otro régimen"
+    "description": "Otro Regimen",
+    "descripcion": "Otro Regimen",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   }
 ]

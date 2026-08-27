@@ -1,0 +1,17 @@
+[
+  {
+    "code": "IF",
+    "description": "Ingreso federales.",
+    "descripcion": "Ingreso federales."
+  },
+  {
+    "code": "IM",
+    "description": "Ingresos mixtos.",
+    "descripcion": "Ingresos mixtos."
+  },
+  {
+    "code": "IP",
+    "description": "Ingresos propios.",
+    "descripcion": "Ingresos propios."
+  }
+]

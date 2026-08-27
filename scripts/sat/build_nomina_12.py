@@ -12,9 +12,10 @@ mirror is deliberately excluded because it is published separately and is not
 one of the 13 catNomina simple types.
 
 The builder fails closed when the Nómina table family changes and emits both a
-file SHA-256 and a semantic content SHA-256. The generic catalog-maintenance
-workflow can therefore publish a new data release only when canonical Nómina
-content actually changes.
+file SHA-256 and a semantic content SHA-256. It can also derive all 13 legacy
+JSON compatibility views from the canonical SQLite artifact. Existing CatalogMX
+enrichments that are outside catNomina (payment-period day counts and IMSS risk
+premium ranges) are preserved by code while SAT-owned fields are regenerated.
 """
 
 from __future__ import annotations
@@ -68,6 +69,29 @@ EXPECTED_TABLES = (
 # The technical mirror carries c_Estado next to Nómina, but catNomina.xsd has
 # 13 simple types and c_Estado is not one of them. Keep the boundary explicit.
 KNOWN_AUXILIARY_TABLES = ("nomina_estados",)
+
+COMPATIBILITY_VIEWS = {
+    "nomina_bancos": "banco.json",
+    "nomina_origenes_recursos": "origen_recurso.json",
+    "nomina_periodicidades_pagos": "periodicidad_pago.json",
+    "nomina_riesgos_puestos": "riesgo_puesto.json",
+    "nomina_tipos_contratos": "tipo_contrato.json",
+    "nomina_tipos_deducciones": "tipo_deduccion.json",
+    "nomina_tipos_horas": "tipo_horas.json",
+    "nomina_tipos_incapacidades": "tipo_incapacidad.json",
+    "nomina_tipos_jornadas": "tipo_jornada.json",
+    "nomina_tipos_nominas": "tipo_nomina.json",
+    "nomina_tipos_otros_pagos": "tipo_otro_pago.json",
+    "nomina_tipos_percepciones": "tipo_percepcion.json",
+    "nomina_tipos_regimenes": "tipo_regimen.json",
+}
+
+# These fields are CatalogMX convenience enrichments, not catNomina columns.
+# Preserve them while replacing SAT-owned code/description/vigencia fields.
+COMPATIBILITY_EXTENSION_FIELDS = {
+    "periodicidad_pago.json": ("days",),
+    "riesgo_puesto.json": ("prima_minima", "prima_media", "prima_maxima"),
+}
 
 
 def sha256_file(path: Path) -> str:
@@ -233,6 +257,103 @@ def semantic_hash(database: Path, tables: Iterable[str]) -> str:
     return digest.hexdigest()
 
 
+def _existing_extensions(path: Path) -> dict[str, dict[str, Any]]:
+    """Read whitelisted non-SAT compatibility metadata keyed by code."""
+    fields = COMPATIBILITY_EXTENSION_FIELDS.get(path.name, ())
+    if not fields or not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
+    if not isinstance(payload, list):
+        return {}
+
+    extensions: dict[str, dict[str, Any]] = {}
+    for item in payload:
+        if not isinstance(item, dict) or "code" not in item:
+            continue
+        values = {field: item[field] for field in fields if field in item}
+        if values:
+            extensions[str(item["code"])] = values
+    return extensions
+
+
+def _compatibility_item(table: str, row: sqlite3.Row) -> dict[str, Any]:
+    """Normalize one canonical SQLite row to the stable compatibility shape."""
+    values = dict(row)
+    code = str(values["id"])
+    text = str(values["texto"])
+
+    if table == "nomina_bancos":
+        legal_name = str(values.get("razon_social") or "")
+        item: dict[str, Any] = {
+            "code": code,
+            "name": text,
+            "full_name": legal_name,
+            "razon_social": legal_name,
+        }
+    else:
+        item = {
+            "code": code,
+            # Keep both spellings during the compatibility window. Existing
+            # language implementations historically consumed different aliases.
+            "description": text,
+            "descripcion": text,
+        }
+
+    if "vigencia_desde" in values:
+        item["valid_from"] = values.get("vigencia_desde") or None
+    if "vigencia_hasta" in values:
+        item["valid_to"] = values.get("vigencia_hasta") or None
+    return item
+
+
+def render_compatibility_views(database: Path, output_dir: Path) -> dict[str, int]:
+    """Regenerate all 13 JSON views from canonical SQLite data.
+
+    SAT-owned fields are replaced on every run. Whitelisted CatalogMX-specific
+    enrichments are retained by code so canonical refreshes do not erase useful
+    convenience metadata from periodicidad/riesgo views.
+    """
+    output_dir.mkdir(parents=True, exist_ok=True)
+    connection = sqlite3.connect(f"file:{database}?mode=ro", uri=True)
+    connection.row_factory = sqlite3.Row
+    try:
+        existing_tables = {
+            row[0]
+            for row in connection.execute(
+                "SELECT name FROM sqlite_master WHERE type='table'"
+            ).fetchall()
+        }
+        missing = sorted(set(COMPATIBILITY_VIEWS) - existing_tables)
+        if missing:
+            raise RuntimeError(
+                "canonical Nómina artifact cannot render compatibility views; "
+                f"missing tables: {', '.join(missing)}"
+            )
+
+        counts: dict[str, int] = {}
+        for table, filename in COMPATIBILITY_VIEWS.items():
+            path = output_dir / filename
+            extensions = _existing_extensions(path)
+            quoted = quote_identifier(table)
+            rows = connection.execute(f"SELECT * FROM {quoted} ORDER BY id").fetchall()
+            items = []
+            for row in rows:
+                item = _compatibility_item(table, row)
+                item.update(extensions.get(item["code"], {}))
+                items.append(item)
+            path.write_text(
+                json.dumps(items, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            counts[filename] = len(items)
+        return counts
+    finally:
+        connection.close()
+
+
 def build_manifest(
     output_db: Path,
     counts: dict[str, int],
@@ -258,6 +379,10 @@ def build_manifest(
             "asset_size": source_metadata.get("asset_size"),
         },
         "excluded_auxiliary_tables": list(KNOWN_AUXILIARY_TABLES),
+        "compatibility_views": {
+            "count": len(COMPATIBILITY_VIEWS),
+            "derived_from_canonical_artifact": True,
+        },
         "dataset": {
             "file": output_db.name,
             "file_sha256": sha256_file(output_db),
@@ -315,6 +440,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, default=Path("dist"))
     parser.add_argument(
+        "--compat-output-dir",
+        type=Path,
+        help="Also regenerate all 13 JSON compatibility views from the artifact",
+    )
+    parser.add_argument(
         "--source-db",
         type=Path,
         help="Build from a local catalogs.db instead of downloading the latest release",
@@ -331,11 +461,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     else:
         output_db, manifest_path, manifest = build_latest(args.output_dir)
 
+    compat_counts: dict[str, int] | None = None
+    if args.compat_output_dir:
+        compat_counts = render_compatibility_views(output_db, args.compat_output_dir)
+
     print(f"database={output_db}")
     print(f"manifest={manifest_path}")
     print(f"tables={manifest['dataset']['table_count']}")
     print(f"rows={manifest['dataset']['row_count']}")
     print(f"content_sha256={manifest['dataset']['content_sha256']}")
+    if compat_counts is not None:
+        print(f"compatibility_views={len(compat_counts)}")
     return 0
 
 

@@ -1,222 +1,190 @@
-/// Catálogos SAT Nómina 1.2 - Implementación Completa
-///
-/// Este archivo contiene todos los catálogos del SAT para Nómina 1.2
+/// SAT Nómina 1.2 catalogs.
 library;
 
 import 'package:catalogmx/src/catalogs/base_catalog.dart';
 
-// ============================================================================
-// NÓMINA 1.2 - CATÁLOGOS
-// ============================================================================
+class _NominaData {
+  static final Map<String, List<Map<String, dynamic>>> _cache = {};
 
-/// Catálogo de Tipos de Nómina
+  static List<Map<String, dynamic>> load(String filename) {
+    return _cache.putIfAbsent(filename, () {
+      final rows = BaseCatalog.loadJsonDataSync('sat/nomina_1.2/$filename');
+      return rows.map(_normalize).toList(growable: false);
+    });
+  }
+
+  static Map<String, dynamic> _normalize(Map<String, dynamic> source) {
+    final item = Map<String, dynamic>.from(source);
+    final code = (item['code'] ?? item['clave'] ?? item['id'])?.toString();
+    if (code == null) {
+      throw StateError('SAT Nómina row has no code');
+    }
+    item['code'] = code;
+    item['clave'] ??= code;
+
+    final description =
+        item['description'] ?? item['descripcion'] ?? item['texto'];
+    if (description != null) {
+      item['description'] = description.toString();
+      item['descripcion'] ??= description.toString();
+    }
+
+    final name = item['name'] ?? item['nombre'];
+    if (name != null) {
+      item['name'] = name.toString();
+      item['nombre'] ??= name.toString();
+    }
+
+    final legalName = item['razon_social'] ?? item['full_name'];
+    if (legalName != null) {
+      item['razon_social'] = legalName.toString();
+      item['full_name'] ??= legalName.toString();
+    }
+    return item;
+  }
+
+  static Map<String, dynamic>? byCode(String filename, String code) {
+    for (final item in load(filename)) {
+      if (item['code'] == code) return item;
+    }
+    return null;
+  }
+}
+
+abstract class _SimpleNominaCatalog {
+  static List<Map<String, dynamic>> all(String filename) =>
+      List<Map<String, dynamic>>.from(_NominaData.load(filename));
+  static Map<String, dynamic>? byCode(String filename, String code) =>
+      _NominaData.byCode(filename, code);
+  static bool valid(String filename, String code) =>
+      byCode(filename, code) != null;
+}
+
 class TipoNominaCatalog {
-  static List<Map<String, dynamic>>? _data;
-  static Map<String, Map<String, dynamic>>? _byClave;
-
-  static void _loadData() {
-    if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync(
-      'sat/nomina_1.2/tipo_nomina.json',
-    );
-    _data = jsonData.isNotEmpty && jsonData.first.containsKey('tipos')
-        ? (jsonData.first['tipos'] as List).cast<Map<String, dynamic>>()
-        : jsonData;
-    _byClave = {for (var item in _data!) item['clave'] as String: item};
-  }
-
-  static List<Map<String, dynamic>> getAll() {
-    _loadData();
-    return List.from(_data!);
-  }
-
-  static Map<String, dynamic>? getByClave(String clave) {
-    _loadData();
-    return _byClave![clave];
-  }
-
-  static bool isValid(String clave) => getByClave(clave) != null;
+  static const _file = 'tipo_nomina.json';
+  static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByCode(String code) => getByClave(code);
+  static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
 
-/// Catálogo de Tipos de Contrato
 class TipoContratoCatalog {
-  static List<Map<String, dynamic>>? _data;
-  static Map<String, Map<String, dynamic>>? _byClave;
-
-  static void _loadData() {
-    if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync(
-      'sat/nomina_1.2/tipo_contrato.json',
-    );
-    _data = jsonData.isNotEmpty && jsonData.first.containsKey('tipos')
-        ? (jsonData.first['tipos'] as List).cast<Map<String, dynamic>>()
-        : jsonData;
-    _byClave = {for (var item in _data!) item['clave'] as String: item};
-  }
-
-  static List<Map<String, dynamic>> getAll() {
-    _loadData();
-    return List.from(_data!);
-  }
-
-  static Map<String, dynamic>? getByClave(String clave) {
-    _loadData();
-    return _byClave![clave];
-  }
-
-  static bool isValid(String clave) => getByClave(clave) != null;
+  static const _file = 'tipo_contrato.json';
+  static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByCode(String code) => getByClave(code);
+  static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
 
-/// Catálogo de Tipos de Jornada
 class TipoJornadaCatalog {
-  static List<Map<String, dynamic>>? _data;
-  static Map<String, Map<String, dynamic>>? _byClave;
-
-  static void _loadData() {
-    if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync(
-      'sat/nomina_1.2/tipo_jornada.json',
-    );
-    _data = jsonData.isNotEmpty && jsonData.first.containsKey('tipos')
-        ? (jsonData.first['tipos'] as List).cast<Map<String, dynamic>>()
-        : jsonData;
-    _byClave = {for (var item in _data!) item['clave'] as String: item};
-  }
-
-  static List<Map<String, dynamic>> getAll() {
-    _loadData();
-    return List.from(_data!);
-  }
-
-  static Map<String, dynamic>? getByClave(String clave) {
-    _loadData();
-    return _byClave![clave];
-  }
-
-  static bool isValid(String clave) => getByClave(clave) != null;
+  static const _file = 'tipo_jornada.json';
+  static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByCode(String code) => getByClave(code);
+  static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
 
-/// Catálogo de Tipos de Régimen
 class TipoRegimenCatalog {
-  static List<Map<String, dynamic>>? _data;
-  static Map<String, Map<String, dynamic>>? _byClave;
-
-  static void _loadData() {
-    if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync(
-      'sat/nomina_1.2/tipo_regimen.json',
-    );
-    _data = jsonData.isNotEmpty && jsonData.first.containsKey('tipos')
-        ? (jsonData.first['tipos'] as List).cast<Map<String, dynamic>>()
-        : jsonData;
-    _byClave = {for (var item in _data!) item['clave'] as String: item};
-  }
-
-  static List<Map<String, dynamic>> getAll() {
-    _loadData();
-    return List.from(_data!);
-  }
-
-  static Map<String, dynamic>? getByClave(String clave) {
-    _loadData();
-    return _byClave![clave];
-  }
-
-  static bool isValid(String clave) => getByClave(clave) != null;
+  static const _file = 'tipo_regimen.json';
+  static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByCode(String code) => getByClave(code);
+  static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
 
-/// Catálogo de Periodicidad de Pago
 class PeriodicidadPagoCatalog {
-  static List<Map<String, dynamic>>? _data;
-  static Map<String, Map<String, dynamic>>? _byClave;
-
-  static void _loadData() {
-    if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync(
-      'sat/nomina_1.2/periodicidad_pago.json',
-    );
-    _data = jsonData.isNotEmpty && jsonData.first.containsKey('periodicidades')
-        ? (jsonData.first['periodicidades'] as List)
-            .cast<Map<String, dynamic>>()
-        : jsonData;
-    _byClave = {for (var item in _data!) item['clave'] as String: item};
-  }
-
-  static List<Map<String, dynamic>> getAll() {
-    _loadData();
-    return List.from(_data!);
-  }
-
-  static Map<String, dynamic>? getByClave(String clave) {
-    _loadData();
-    return _byClave![clave];
-  }
-
-  static bool isValid(String clave) => getByClave(clave) != null;
+  static const _file = 'periodicidad_pago.json';
+  static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByCode(String code) => getByClave(code);
+  static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
 
-/// Catálogo de Bancos (Nómina)
 class BancoNominaCatalog {
-  static List<Map<String, dynamic>>? _data;
-  static Map<String, Map<String, dynamic>>? _byClave;
-
-  static void _loadData() {
-    if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync('sat/nomina_1.2/banco.json');
-    _data = jsonData.isNotEmpty && jsonData.first.containsKey('bancos')
-        ? (jsonData.first['bancos'] as List).cast<Map<String, dynamic>>()
-        : jsonData;
-    _byClave = {for (var item in _data!) item['clave'] as String: item};
-  }
-
-  static List<Map<String, dynamic>> getAll() {
-    _loadData();
-    return List.from(_data!);
-  }
-
-  static Map<String, dynamic>? getByClave(String clave) {
-    _loadData();
-    return _byClave![clave];
-  }
-
-  static bool isValid(String clave) => getByClave(clave) != null;
+  static const _file = 'banco.json';
+  static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByCode(String code) => getByClave(code);
+  static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 
   static List<Map<String, dynamic>> search(String query) {
-    _loadData();
     final q = query.toUpperCase();
-    return _data!
-        .where(
-          (item) => (item['nombre'] as String? ?? '').toUpperCase().contains(q),
-        )
-        .toList();
+    return _NominaData.load(_file).where((item) {
+      final name =
+          (item['name'] ?? item['nombre'] ?? '').toString().toUpperCase();
+      final legal = (item['full_name'] ?? item['razon_social'] ?? '')
+          .toString()
+          .toUpperCase();
+      return name.contains(q) || legal.contains(q);
+    }).toList();
   }
 }
 
-/// Catálogo de Riesgo de Puesto
 class RiesgoPuestoCatalog {
-  static List<Map<String, dynamic>>? _data;
-  static Map<String, Map<String, dynamic>>? _byClave;
+  static const _file = 'riesgo_puesto.json';
+  static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByCode(String code) => getByClave(code);
+  static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
+}
 
-  static void _loadData() {
-    if (_data != null) return;
-    final jsonData = BaseCatalog.loadJsonDataSync(
-      'sat/nomina_1.2/riesgo_puesto.json',
-    );
-    _data = jsonData.isNotEmpty && jsonData.first.containsKey('riesgos')
-        ? (jsonData.first['riesgos'] as List).cast<Map<String, dynamic>>()
-        : jsonData;
-    _byClave = {for (var item in _data!) item['clave'] as String: item};
-  }
+class OrigenRecursoCatalog {
+  static const _file = 'origen_recurso.json';
+  static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByCode(String code) => getByClave(code);
+  static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
+}
 
-  static List<Map<String, dynamic>> getAll() {
-    _loadData();
-    return List.from(_data!);
-  }
+class TipoDeduccionCatalog {
+  static const _file = 'tipo_deduccion.json';
+  static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByCode(String code) => getByClave(code);
+  static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
+}
 
-  static Map<String, dynamic>? getByClave(String clave) {
-    _loadData();
-    return _byClave![clave];
-  }
+class TipoHorasCatalog {
+  static const _file = 'tipo_horas.json';
+  static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByCode(String code) => getByClave(code);
+  static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
+}
 
-  static bool isValid(String clave) => getByClave(clave) != null;
+class TipoIncapacidadCatalog {
+  static const _file = 'tipo_incapacidad.json';
+  static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByCode(String code) => getByClave(code);
+  static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
+}
+
+class TipoOtroPagoCatalog {
+  static const _file = 'tipo_otro_pago.json';
+  static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByCode(String code) => getByClave(code);
+  static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
+}
+
+class TipoPercepcionCatalog {
+  static const _file = 'tipo_percepcion.json';
+  static List<Map<String, dynamic>> getAll() => _SimpleNominaCatalog.all(_file);
+  static Map<String, dynamic>? getByClave(String clave) =>
+      _SimpleNominaCatalog.byCode(_file, clave);
+  static Map<String, dynamic>? getByCode(String code) => getByClave(code);
+  static bool isValid(String clave) => _SimpleNominaCatalog.valid(_file, clave);
 }
