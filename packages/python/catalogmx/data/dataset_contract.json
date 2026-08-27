@@ -1,0 +1,39 @@
+{
+  "datasets": {
+    "banxico.reference": {
+      "artifact": {
+        "channel": "data-banxico-reference-1-latest",
+        "file": "banxico_reference.tar.gz",
+        "format": "tar.gz",
+        "manifest": "banxico_reference.manifest.json",
+        "mount_path": "banxico",
+        "version": "1"
+      },
+      "freshness": {
+        "max_age_days": 31,
+        "mode": "interval",
+        "upstream_checked_at": "2026-08-27"
+      },
+      "source_subpath": "banxico"
+    }
+  },
+  "profiles": {
+    "core": {
+      "datasets": [],
+      "description": "Pure validators and calculators; no external dataset requirement."
+    },
+    "payglobal": {
+      "datasets": [
+        "banxico.reference"
+      ],
+      "description": "Bank and routing reference data used by PayGlobal runtime services."
+    },
+    "payglobal-e2e": {
+      "datasets": [
+        "banxico.reference"
+      ],
+      "description": "PayGlobal runtime data plus identity and CLABE generation references."
+    }
+  },
+  "schema_version": 1
+}
