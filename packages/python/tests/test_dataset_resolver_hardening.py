@@ -149,6 +149,8 @@ def test_release_pointer_resolves_only_immutable_assets(tmp_path: Path):
         f"https://example.invalid/releases/tags/{CHANNEL}",
         f"https://example.invalid/releases/download/{IMMUTABLE}/{MANIFEST}",
         f"https://example.invalid/releases/download/{IMMUTABLE}/{ARTIFACT}",
+        f"https://example.invalid/releases/tags/{CHANNEL}",
+        f"https://example.invalid/releases/download/{IMMUTABLE}/{MANIFEST}",
     ]
     assert resolver.cache_status("banxico.reference")["release_tag"] == IMMUTABLE
 
@@ -187,6 +189,81 @@ def test_explicit_fetch_repairs_corrupt_content_addressed_object(tmp_path: Path)
     assert repaired == root
     assert json.loads((root / "banks.json").read_text())[0]["code"] == "002"
     assert resolver.verify_cached_dataset("banxico.reference") is True
+
+
+def test_fetch_missing_repairs_corrupt_cache_before_returning(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    _, manifest_payload, artifact_payload = release_fixture()
+    resolver = DatasetResolver(
+        cache_dir=tmp_path / "cache",
+        contract=contract(),
+        downloader=direct_downloader(manifest_payload, artifact_payload),
+    )
+    root = resolver.fetch_dataset("banxico.reference")
+    (root / "banks.json").write_text("[]\n", encoding="utf-8")
+    monkeypatch.setattr(resolver, "_package_root", lambda dataset: None)
+    monkeypatch.setattr(resolver, "_repo_root", lambda dataset: None)
+
+    repaired = resolver.resolve_dataset_root("banxico.reference")
+
+    assert repaired == root
+    assert json.loads((root / "banks.json").read_text())[0]["code"] == "002"
+    assert resolver.verify_cached_dataset("banxico.reference") is True
+
+
+def test_offline_resolution_fails_closed_on_corrupt_cache(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    _, manifest_payload, artifact_payload = release_fixture()
+    cache_dir = tmp_path / "cache"
+    online = DatasetResolver(
+        cache_dir=cache_dir,
+        contract=contract(),
+        downloader=direct_downloader(manifest_payload, artifact_payload),
+    )
+    root = online.fetch_dataset("banxico.reference")
+    (root / "banks.json").write_text("[]\n", encoding="utf-8")
+
+    calls = 0
+
+    def forbidden_download(url: str) -> bytes:
+        nonlocal calls
+        calls += 1
+        raise AssertionError(f"offline resolver attempted network access: {url}")
+
+    offline = DatasetResolver(
+        cache_dir=cache_dir,
+        mode="offline",
+        contract=contract(),
+        downloader=forbidden_download,
+    )
+    monkeypatch.setattr(offline, "_package_root", lambda dataset: None)
+    monkeypatch.setattr(offline, "_repo_root", lambda dataset: None)
+
+    with pytest.raises(FileNotFoundError, match="offline mode"):
+        offline.resolve_dataset_root("banxico.reference")
+    assert calls == 0
+
+
+def test_offline_fetch_profile_rejects_without_downloading(tmp_path: Path):
+    calls = 0
+
+    def forbidden_download(url: str) -> bytes:
+        nonlocal calls
+        calls += 1
+        raise AssertionError(f"offline resolver attempted network access: {url}")
+
+    resolver = DatasetResolver(
+        cache_dir=tmp_path / "cache",
+        mode="offline",
+        contract=contract(),
+        downloader=forbidden_download,
+    )
+
+    with pytest.raises(RuntimeError, match="offline"):
+        resolver.fetch_profile("payglobal")
+    assert calls == 0
 
 
 def _prepared_stage(tmp_path: Path):
@@ -288,3 +365,45 @@ def test_repair_race_preserves_concurrently_installed_valid_object(
         object_dir, dataset, manifest, manifest_dataset
     )
     assert not list(object_dir.parent.glob(".corrupt-*"))
+
+
+def test_older_candidate_cannot_replace_current_release_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    resolver = DatasetResolver(
+        cache_dir=tmp_path / "cache",
+        contract=contract(discovery="release-pointer"),
+        downloader=lambda url: (_ for _ in ()).throw(AssertionError(url)),
+    )
+    dataset = resolver._dataset("banxico.reference")
+    state_path = resolver._state_path("banxico.reference")
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    newer_state = {
+        "dataset_id": "banxico.reference",
+        "content_sha256": "b" * 64,
+        "fetched_at": "2026-08-27T22:00:00+00:00",
+        "release_tag": "data-banxico-reference-1-" + "b" * 64,
+    }
+    state_path.write_text(json.dumps(newer_state), encoding="utf-8")
+
+    monkeypatch.setattr(
+        resolver,
+        "_resolve_release",
+        lambda dataset_id, dataset: (
+            newer_state["release_tag"],
+            b"{}",
+            {},
+            {},
+            newer_state["content_sha256"],
+        ),
+    )
+
+    committed = resolver._commit_state_if_current(
+        "banxico.reference",
+        dataset,
+        "data-banxico-reference-1-" + "a" * 64,
+        "a" * 64,
+    )
+
+    assert committed is False
+    assert json.loads(state_path.read_text(encoding="utf-8")) == newer_state
