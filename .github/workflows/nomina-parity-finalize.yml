@@ -1,0 +1,62 @@
+name: Finalize Nómina parity
+
+on:
+  push:
+    branches:
+      - feat/sat-nomina-api-parity
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: ${{ !contains(github.event.head_commit.message, '[nomina-finalized]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/sat-nomina-api-parity
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Regenerate canonical compatibility views
+        run: |
+          python scripts/sat/build_nomina_12.py \
+            --output-dir /tmp/sat-nomina-12 \
+            --compat-output-dir packages/shared-data/sat/nomina_1.2
+
+      - name: Finalize registry, scheduler, docs and regression expectations
+        run: python scripts/sat/finalize_nomina_parity.py
+
+      - name: Validate finalized metadata and views
+        run: |
+          python scripts/catalog_registry.py validate
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('packages/shared-data/sat/nomina_1.2')
+          files = sorted(root.glob('*.json'))
+          assert len(files) == 13, [p.name for p in files]
+          def codes(name):
+              return {str(item['code']) for item in json.loads((root / name).read_text())}
+          assert {'002', '149', '160', '600', '670', '901', '902'} <= codes('banco.json')
+          assert '10' in codes('tipo_contrato.json')
+          assert '08' in codes('tipo_jornada.json')
+          assert '99' in codes('riesgo_puesto.json')
+          assert {'108','109','110','111','112','113','114','115'} <= codes('tipo_deduccion.json')
+          assert {'054','055','056','057'} <= codes('tipo_percepcion.json')
+          PY
+
+      - name: Commit deterministic finalization
+        run: |
+          rm .github/workflows/nomina-parity-finalize.yml
+          rm scripts/sat/finalize_nomina_parity.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "chore(data): finalize Nómina 1.2 parity [nomina-finalized]"
+          git push origin HEAD:feat/sat-nomina-api-parity
