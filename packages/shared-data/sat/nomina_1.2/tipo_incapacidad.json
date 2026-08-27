@@ -1,0 +1,22 @@
+[
+  {
+    "code": "01",
+    "description": "Riesgo de trabajo.",
+    "descripcion": "Riesgo de trabajo."
+  },
+  {
+    "code": "02",
+    "description": "Enfermedad en general.",
+    "descripcion": "Enfermedad en general."
+  },
+  {
+    "code": "03",
+    "description": "Maternidad.",
+    "descripcion": "Maternidad."
+  },
+  {
+    "code": "04",
+    "description": "Licencia por cuidados médicos de hijos diagnosticados con cáncer.",
+    "descripcion": "Licencia por cuidados médicos de hijos diagnosticados con cáncer."
+  }
+]
