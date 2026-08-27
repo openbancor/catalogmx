@@ -45,9 +45,7 @@ def test_partial_staging_failure_removes_already_created_temp_file(
     monkeypatch.setattr(module, "_stage_bytes", fail_second_stage)
 
     with pytest.raises(OSError, match="simulated staging failure"):
-        module.write_json_transaction(
-            [(first, [{"new": 1}]), (second, [{"new": 2}])]
-        )
+        module.write_json_transaction([(first, [{"new": 1}]), (second, [{"new": 2}])])
 
     assert first.read_text(encoding="utf-8") == "[]\n"
     assert second.read_text(encoding="utf-8") == "[]\n"
