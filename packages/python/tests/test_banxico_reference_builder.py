@@ -25,7 +25,7 @@ def load_module() -> ModuleType:
 
 
 def write_source(source: Path) -> None:
-    source.mkdir(parents=True)
+    source.mkdir(parents=True, exist_ok=True)
     payloads = {
         "banks.json": [{"code": "002", "name": "BANAMEX"}],
         "codigos_plaza.json": {"plazas": [{"codigo": "001"}]},
