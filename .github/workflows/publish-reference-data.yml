@@ -1,0 +1,111 @@
+name: Publish Reference Data
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'packages/shared-data/banxico/**'
+      - 'packages/shared-data/catalog-registry.json'
+      - 'packages/python/catalogmx/data/dataset_contract.json'
+      - 'scripts/banxico/build_reference.py'
+      - 'scripts/render_dataset_contract.py'
+      - '.github/workflows/publish-reference-data.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-reference-data
+  cancel-in-progress: false
+
+jobs:
+  banxico-reference:
+    name: Banxico Reference
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout reviewed master
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate registry and runtime contract
+        run: |
+          python scripts/catalog_registry.py validate
+          python scripts/render_dataset_contract.py --check
+
+      - name: Build reviewed Banxico bundle
+        run: |
+          python scripts/banxico/build_reference.py \
+            --output-dir dist/catalog-artifacts/banxico-reference
+          git diff --exit-code -- packages/shared-data/banxico
+
+      - name: Publish content-addressed release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          dir=dist/catalog-artifacts/banxico-reference
+          contract=packages/python/catalogmx/data/dataset_contract.json
+          channel=$(jq -r '.datasets["banxico.reference"].artifact.channel' "$contract")
+          artifact_name=$(jq -r '.datasets["banxico.reference"].artifact.file' "$contract")
+          manifest_name=$(jq -r '.datasets["banxico.reference"].artifact.manifest' "$contract")
+          version=$(jq -r '.datasets["banxico.reference"].artifact.version' "$contract")
+          manifest="$dir/$manifest_name"
+          artifact="$dir/$artifact_name"
+          content_sha=$(jq -r '.dataset.content_sha256' "$manifest")
+          immutable="data-banxico-reference-${version}-${content_sha:0:16}"
+
+          previous_dir=$(mktemp -d)
+          trap 'rm -rf "$previous_dir"' EXIT
+          previous_sha=""
+          if gh release view "$channel" >/dev/null 2>&1; then
+            if gh release download "$channel" \
+              --pattern "$manifest_name" \
+              --dir "$previous_dir" >/dev/null 2>&1; then
+              previous_sha=$(jq -r '.dataset.content_sha256 // empty' \
+                "$previous_dir/$manifest_name")
+            fi
+          fi
+
+          if [ "$previous_sha" = "$content_sha" ]; then
+            echo "banxico.reference unchanged: $content_sha"
+            exit 0
+          fi
+
+          notes="CatalogMX reviewed Banco de México reference-data bundle. Semantic content SHA-256: $content_sha. The manifest records the exact files and SHA-256 digests. This data release is independent from library package versions."
+
+          if ! gh release view "$immutable" >/dev/null 2>&1; then
+            gh release create "$immutable" "$artifact" "$manifest" \
+              --title "banxico.reference $version $content_sha" \
+              --notes "$notes" \
+              --target "${GITHUB_SHA}"
+          fi
+
+          if gh release view "$channel" >/dev/null 2>&1; then
+            gh release upload "$channel" "$artifact" "$manifest" --clobber
+            gh release edit "$channel" \
+              --title "banxico.reference $version (latest)" \
+              --notes "$notes" \
+              --target "${GITHUB_SHA}"
+          else
+            gh release create "$channel" "$artifact" "$manifest" \
+              --title "banxico.reference $version (latest)" \
+              --notes "$notes" \
+              --target "${GITHUB_SHA}"
+          fi
+
+          {
+            echo '## Banxico reference publication'
+            echo
+            echo "- Content SHA-256: \`$content_sha\`"
+            echo "- Immutable tag: \`$immutable\`"
+            echo "- Channel tag: \`$channel\`"
+          } >> "$GITHUB_STEP_SUMMARY"
