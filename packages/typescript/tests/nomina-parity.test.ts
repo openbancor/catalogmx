@@ -15,9 +15,15 @@ import {
   TipoRegimenCatalog,
 } from '../src/catalogs';
 
+type SimpleNominaCatalogApi = {
+  getAll(): Array<{ code: string }>;
+  getByCode(code: string): { code: string } | undefined;
+  isValid(code: string): boolean;
+};
+
 describe('SAT Nómina 1.2 API parity', () => {
   test('exposes all 13 catalog families', () => {
-    const samples: Array<[typeof OrigenRecursoCatalog, string]> = [
+    const samples: Array<[SimpleNominaCatalogApi, string]> = [
       [OrigenRecursoCatalog, 'IP'],
       [TipoDeduccionCatalog, '115'],
       [TipoHorasCatalog, '01'],
