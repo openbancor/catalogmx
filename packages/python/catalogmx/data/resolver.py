@@ -10,12 +10,12 @@ import shutil
 import tarfile
 import tempfile
 import uuid
+from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
-from collections.abc import Callable, Mapping
 from datetime import datetime, timezone
 from importlib import resources
 from pathlib import Path, PurePosixPath, PureWindowsPath
-from typing import Any, Iterator, TypeGuard
+from typing import Any, TypeGuard
 from urllib.request import Request, urlopen
 
 DEFAULT_RELEASE_BASE_URL = "https://github.com/openbancor/catalogmx/releases/download"
