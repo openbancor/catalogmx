@@ -21,9 +21,37 @@ jobs:
       - name: Build local release fixture
         shell: bash
         run: |
-          fixture="$RUNNER_TEMP/releases/data-banxico-reference-1-latest"
-          mkdir -p "$fixture"
-          python scripts/banxico/build_reference.py --output-dir "$fixture"
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/reference-build"
+          mkdir -p "$build_dir"
+          python scripts/banxico/build_reference.py --output-dir "$build_dir"
+
+          content_sha=$(jq -r '.dataset.content_sha256' \
+            "$build_dir/banxico_reference.manifest.json")
+          immutable="data-banxico-reference-1-${content_sha}"
+          release_dir="$RUNNER_TEMP/releases/$immutable"
+          metadata_dir="$RUNNER_TEMP/release-metadata"
+          mkdir -p "$release_dir" "$metadata_dir"
+          cp "$build_dir/banxico_reference.tar.gz" "$release_dir/"
+          cp "$build_dir/banxico_reference.manifest.json" "$release_dir/"
+
+          pointer=$(jq -cn \
+            --arg release_tag "$immutable" \
+            --arg content_sha256 "$content_sha" \
+            '{
+              schema_version: 1,
+              dataset_id: "banxico.reference",
+              dataset_version: "1",
+              release_tag: $release_tag,
+              content_sha256: $content_sha256,
+              artifact: "banxico_reference.tar.gz",
+              manifest: "banxico_reference.manifest.json"
+            }')
+          jq -cn \
+            --arg tag_name "data-banxico-reference-1-latest" \
+            --arg body "$pointer" \
+            '{tag_name: $tag_name, body: $body}' \
+            > "$metadata_dir/data-banxico-reference-1-latest"
 
       - name: Build wheel
         shell: bash
@@ -50,6 +78,7 @@ jobs:
           CATALOGMX_DATA_MODE: fetch-missing
         run: |
           export CATALOGMX_RELEASE_BASE_URL="file://$RUNNER_TEMP/releases"
+          export CATALOGMX_RELEASE_METADATA_BASE_URL="file://$RUNNER_TEMP/release-metadata"
           export CATALOGMX_CACHE_DIR="$RUNNER_TEMP/catalogmx-cache"
           unset CATALOGMX_SHARED_DATA
 
@@ -77,4 +106,6 @@ jobs:
           resolver = DatasetResolver()
           assert resolver.verify_cached_dataset("banxico.reference")
           assert resolver.verify_profile("payglobal") == {"banxico.reference": True}
+          state = resolver.cache_status("banxico.reference")
+          assert state["release_tag"].startswith("data-banxico-reference-1-")
           PY
