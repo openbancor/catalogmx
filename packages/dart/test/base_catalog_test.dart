@@ -1,11 +1,19 @@
-import 'package:test/test.dart';
 import 'package:catalogmx/catalogmx.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('BaseCatalog', () {
     test('loadJsonDataSync returns empty list when file not found', () {
       final data = BaseCatalog.loadJsonDataSync('nonexistent/file.json');
       expect(data, isEmpty);
+    });
+
+    test('loads real shared data from the package root', () {
+      final data = BaseCatalog.loadJsonDataSync(
+        'sat/nomina_1.2/tipo_contrato.json',
+      );
+      expect(data, isNotEmpty);
+      expect(data.any((item) => item['code'] == '10'), isTrue);
     });
 
     test('cache is populated after first load', () {
