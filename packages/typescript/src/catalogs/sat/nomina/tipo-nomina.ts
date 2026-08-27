@@ -21,6 +21,10 @@ export class TipoNominaCatalog {
     return this.getData().find((t) => t.code === code);
   }
 
+  static getByCode(code: string): TipoNomina | undefined {
+    return this.getTipo(code);
+  }
+
   static isValid(code: string): boolean {
     return this.getTipo(code) !== undefined;
   }
