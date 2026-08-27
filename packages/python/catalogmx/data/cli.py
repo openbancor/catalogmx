@@ -9,15 +9,7 @@ import click
 from catalogmx.data.resolver import DatasetResolver
 
 
-@click.group("data")
-def data() -> None:
-    """Fetch, verify and inspect independently versioned datasets."""
-
-
-@data.command("status")
-@click.option("--profile", default="payglobal", show_default=True)
-def data_status(profile: str) -> None:
-    """Show cache state for all datasets in a profile."""
+def _echo_profile_status(profile: str) -> None:
     resolver = DatasetResolver()
     dataset_ids = resolver.dataset_ids_for_profile(profile)
     if not dataset_ids:
@@ -33,6 +25,18 @@ def data_status(profile: str) -> None:
             f"{dataset_id}: {freshness} "
             f"content={state['content_sha256']} fetched={state['fetched_at']}"
         )
+
+
+@click.group("data")
+def data() -> None:
+    """Fetch, verify and inspect independently versioned datasets."""
+
+
+@data.command("status")
+@click.option("--profile", default="payglobal", show_default=True)
+def data_status(profile: str) -> None:
+    """Show cache state for all datasets in a profile."""
+    _echo_profile_status(profile)
 
 
 @data.command("fetch")
@@ -96,7 +100,7 @@ def data_cache() -> None:
 @click.option("--profile", default="payglobal", show_default=True)
 def data_cache_info(profile: str) -> None:
     """Show cache information for a profile."""
-    data_status.callback(profile)  # type: ignore[attr-defined]
+    _echo_profile_status(profile)
 
 
 @data_cache.command("clear")
