@@ -45,7 +45,7 @@ jobs:
             --output-dir dist/catalog-artifacts/banxico-reference
           git diff --exit-code -- packages/shared-data/banxico
 
-      - name: Publish content-addressed release
+      - name: Publish immutable bundle and move channel pointer
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
@@ -61,18 +61,30 @@ jobs:
           manifest="$dir/$manifest_name"
           artifact="$dir/$artifact_name"
           content_sha=$(jq -r '.dataset.content_sha256' "$manifest")
-          immutable="data-banxico-reference-${version}-${content_sha:0:16}"
+          immutable="data-banxico-reference-${version}-${content_sha}"
 
-          previous_dir=$(mktemp -d)
-          trap 'rm -rf "$previous_dir"' EXIT
+          pointer=$(jq -cn \
+            --arg dataset_id "banxico.reference" \
+            --arg dataset_version "$version" \
+            --arg release_tag "$immutable" \
+            --arg content_sha256 "$content_sha" \
+            --arg artifact "$artifact_name" \
+            --arg manifest "$manifest_name" \
+            '{
+              schema_version: 1,
+              dataset_id: $dataset_id,
+              dataset_version: $dataset_version,
+              release_tag: $release_tag,
+              content_sha256: $content_sha256,
+              artifact: $artifact,
+              manifest: $manifest
+            }')
+
           previous_sha=""
           if gh release view "$channel" >/dev/null 2>&1; then
-            if gh release download "$channel" \
-              --pattern "$manifest_name" \
-              --dir "$previous_dir" >/dev/null 2>&1; then
-              previous_sha=$(jq -r '.dataset.content_sha256 // empty' \
-                "$previous_dir/$manifest_name")
-            fi
+            previous_body=$(gh release view "$channel" --json body --jq '.body' || true)
+            previous_sha=$(printf '%s' "$previous_body" \
+              | jq -r '.content_sha256 // empty' 2>/dev/null || true)
           fi
 
           if [ "$previous_sha" = "$content_sha" ]; then
@@ -82,6 +94,8 @@ jobs:
 
           notes="CatalogMX reviewed Banco de México reference-data bundle. Semantic content SHA-256: $content_sha. The manifest records the exact files and SHA-256 digests. This data release is independent from library package versions."
 
+          # Immutable releases own the artifact/manifest pair. We never clobber
+          # assets on the live discovery channel.
           if ! gh release view "$immutable" >/dev/null 2>&1; then
             gh release create "$immutable" "$artifact" "$manifest" \
               --title "banxico.reference $version $content_sha" \
@@ -89,16 +103,33 @@ jobs:
               --target "${GITHUB_SHA}"
           fi
 
+          # Verify the immutable release is complete before moving the pointer.
+          verify_dir=$(mktemp -d)
+          trap 'rm -rf "$verify_dir"' EXIT
+          gh release download "$immutable" \
+            --pattern "$artifact_name" \
+            --pattern "$manifest_name" \
+            --dir "$verify_dir"
+          cmp "$artifact" "$verify_dir/$artifact_name"
+          cmp "$manifest" "$verify_dir/$manifest_name"
+          remote_sha=$(jq -r '.dataset.content_sha256' "$verify_dir/$manifest_name")
+          if [ "$remote_sha" != "$content_sha" ]; then
+            echo "Immutable release manifest SHA does not match local build" >&2
+            exit 1
+          fi
+
+          # The channel contains only a JSON metadata pointer. Editing one
+          # metadata field is the publication commit: until this succeeds,
+          # clients continue to resolve the previous immutable release.
           if gh release view "$channel" >/dev/null 2>&1; then
-            gh release upload "$channel" "$artifact" "$manifest" --clobber
             gh release edit "$channel" \
               --title "banxico.reference $version (latest)" \
-              --notes "$notes" \
+              --notes "$pointer" \
               --target "${GITHUB_SHA}"
           else
-            gh release create "$channel" "$artifact" "$manifest" \
+            gh release create "$channel" \
               --title "banxico.reference $version (latest)" \
-              --notes "$notes" \
+              --notes "$pointer" \
               --target "${GITHUB_SHA}"
           fi
 
@@ -108,4 +139,5 @@ jobs:
             echo "- Content SHA-256: \`$content_sha\`"
             echo "- Immutable tag: \`$immutable\`"
             echo "- Channel tag: \`$channel\`"
+            echo "- Channel publication: metadata pointer only"
           } >> "$GITHUB_STEP_SUMMARY"
