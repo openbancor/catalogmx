@@ -28,7 +28,7 @@ from catalogmx.validators.rfc import RFCGenerator, RFCValidator
 
 
 @click.group()
-@click.version_option(package_name="catalogmx")
+@click.version_option(version="0.2.0")
 def main():
     """
     Mexican RFC and CURP calculator and validator.
