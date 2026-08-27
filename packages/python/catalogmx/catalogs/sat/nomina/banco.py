@@ -14,6 +14,20 @@ class BancoCatalog(NominaJsonCatalog):
 
     @classmethod
     def get_by_name(cls, name: str):
+        """Return one bank by display name, preserving the historical API."""
+        query = name.casefold()
+        return next(
+            (
+                item
+                for item in cls.get_all()
+                if str(item.get("name", "")).casefold() == query
+            ),
+            None,
+        )
+
+    @classmethod
+    def search_by_name(cls, name: str):
+        """Search display and legal names case-insensitively."""
         query = name.casefold()
         return [
             item
