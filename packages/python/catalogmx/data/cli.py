@@ -66,7 +66,12 @@ def data_fetch(profile: str, dest: Path | None) -> None:
 @click.option("--dataset", "dataset_id", required=True)
 def data_update(dataset_id: str) -> None:
     """Force synchronization of one dataset release into the local cache."""
-    resolver = DatasetResolver(mode="refresh")
+    resolver = DatasetResolver()
+    if resolver.mode == "offline":
+        raise click.ClickException(
+            "dataset update is disabled while CATALOGMX_DATA_MODE=offline"
+        )
+    resolver.mode = "refresh"
     root = resolver.fetch_dataset(dataset_id)
     click.echo(f"{dataset_id}: {root}")
 

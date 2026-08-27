@@ -50,6 +50,15 @@ class FakeResolver:
         self.cleared = dataset_id
 
 
+class OfflineResolver(FakeResolver):
+    def __init__(self, mode: str | None = None):
+        del mode
+        super().__init__(mode="offline")
+
+    def fetch_dataset(self, dataset_id: str) -> Path:
+        raise AssertionError(f"offline update attempted fetch: {dataset_id}")
+
+
 def test_status_and_cache_info(monkeypatch):
     FakeResolver.instances.clear()
     monkeypatch.setattr(data_cli, "DatasetResolver", FakeResolver)
@@ -103,3 +112,18 @@ def test_fetch_update_verify_and_clear(monkeypatch, tmp_path: Path):
     )
     assert result.exit_code == 0
     assert FakeResolver.instances[-1].cleared == "banxico.reference"
+
+
+def test_update_honors_offline_policy(monkeypatch):
+    FakeResolver.instances.clear()
+    monkeypatch.setattr(data_cli, "DatasetResolver", OfflineResolver)
+    runner = CliRunner()
+
+    result = runner.invoke(
+        data_cli.data,
+        ["update", "--dataset", "banxico.reference"],
+    )
+
+    assert result.exit_code != 0
+    assert "CATALOGMX_DATA_MODE=offline" in result.output
+    assert FakeResolver.instances[-1].mode == "offline"
