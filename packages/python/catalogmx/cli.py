@@ -22,12 +22,13 @@ import datetime
 
 import click
 
+from catalogmx.data.cli import data as data_cli
 from catalogmx.validators.curp import CURPGenerator, CURPValidator
 from catalogmx.validators.rfc import RFCGenerator, RFCValidator
 
 
 @click.group()
-@click.version_option(version="0.2.0")
+@click.version_option(package_name="catalogmx")
 def main():
     """
     Mexican RFC and CURP calculator and validator.
@@ -35,6 +36,7 @@ def main():
     This tool helps you generate and validate:
     - RFC (Registro Federal de Contribuyentes) for individuals and companies
     - CURP (Clave Única de Registro de Población) for individuals
+    - Independently versioned CatalogMX datasets
     """
     pass
 
@@ -49,6 +51,9 @@ def rfc():
 def curp():
     """CURP (Clave Única de Registro de Población) commands"""
     pass
+
+
+main.add_command(data_cli)
 
 
 @rfc.command("validate")
