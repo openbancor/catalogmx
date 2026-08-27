@@ -158,7 +158,7 @@
       "authority": "SAT",
       "kind": "reference",
       "status": "managed",
-      "distribution": "embedded",
+      "distribution": "mixed",
       "version": "1.2",
       "revision": "E",
       "effective_from": "2026-01-01",
@@ -173,24 +173,37 @@
           "format": "html"
         },
         {
+          "role": "authoritative_catalog",
+          "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/catNomina.xls",
+          "format": "xls"
+        },
+        {
           "role": "authoritative_resource",
           "url": "https://www.sat.gob.mx/sitio_internet/cfd/catalogos/Nomina/catNomina.xsd",
           "format": "xsd"
         },
         {
           "role": "technical_mirror",
-          "url": "https://github.com/phpcfdi/resources-sat-xml/blob/master/resources/www.sat.gob.mx/sitio_internet/cfd/catalogos/Nomina/catNomina.xsd",
-          "format": "xsd"
+          "url": "https://github.com/phpcfdi/resources-sat-catalogs",
+          "format": "sqlite_sql"
         }
       ],
       "freshness": {
         "mode": "interval",
         "max_age_days": 31,
-        "upstream_checked_at": "2026-08-25"
+        "upstream_checked_at": "2026-08-26"
       },
       "implementation": {
         "status": "partial",
         "xsd_catalog_types": 13,
+        "canonical_catalog_tables": 13,
+        "canonical_distribution": "release",
+        "release_artifact": "sat_nomina_12.sqlite3",
+        "excluded_auxiliary_tables": [
+          "nomina_estados"
+        ],
+        "embedded_convenience_json_files": 7,
+        "legacy_view_path": "packages/shared-data/sat/nomina_1.2",
         "normalized_catalogs": 7,
         "missing_normalized_catalogs": [
           "c_OrigenRecurso",
@@ -199,9 +212,10 @@
           "c_TipoIncapacidad",
           "c_TipoOtroPago",
           "c_TipoPercepcion"
-        ]
+        ],
+        "consumer_migration_required_before_removal": true
       },
-      "notes": "Revision E is current. The XSD resource is synchronized, but language-level normalized catalog APIs still cover only 7 of the 13 catalog types represented by catNomina.xsd."
+      "notes": "Revision E is current from 2026-01-01. The canonical data release contains the 13 catalog families represented by catNomina.xsd; the technical mirror's nomina_estados table is auxiliary and is excluded because it is not one of those 13 types. Seven embedded JSON files remain compatibility views. Language APIs still cover 7/13 catalogs and must be migrated to the canonical dataset before legacy views or Kotlin embedded regulatory copies are removed."
     },
     {
       "id": "sat.contabilidad_electronica",
