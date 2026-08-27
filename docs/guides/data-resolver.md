@@ -28,25 +28,37 @@ Set `CATALOGMX_DATA_MODE` to one of:
 - `fetch-missing` — default; use available local/cache data and fetch a missing dataset;
 - `refresh` — refresh a stale cached dataset according to the registry freshness SLA.
 
-A refresh that cannot reach the release channel may continue using an already verified cached object. A missing dataset has no synthetic or unverified fallback.
+A refresh that cannot reach the release channel may continue using an already verified cached object. A missing or corrupt dataset has no synthetic or unverified fallback. An explicit fetch/update repairs a corrupt cached object from the verified release.
 
-## Integrity model
+## Integrity and publication model
 
-`banxico.reference` is published as `banxico_reference.tar.gz` with `banxico_reference.manifest.json`.
+`banxico.reference` is built as `banxico_reference.tar.gz` with `banxico_reference.manifest.json`.
 
-The resolver downloads the manifest first, then:
+Publication separates discovery from immutable data:
 
-1. validates dataset id, version, expected artifact name, and manifest schema;
-2. verifies the complete artifact SHA-256;
-3. allows only manifest-declared regular archive members;
-4. rejects absolute paths, `..` traversal, duplicate or unexpected members;
-5. verifies every extracted file SHA-256;
-6. stores the result under a semantic `content_sha256` object directory;
-7. atomically updates the current-cache pointer only after verification succeeds.
+1. reviewed `master` data is rebuilt deterministically;
+2. the complete artifact/manifest pair is published under a content-addressed immutable release tag;
+3. the workflow downloads and byte-verifies both immutable assets;
+4. only after that verification succeeds does it update the stable `data-banxico-reference-1-latest` release body;
+5. that body is a small JSON pointer containing the immutable release tag and semantic content SHA-256.
 
-The release builder normalizes tar/gzip metadata, so identical reviewed source bytes create identical artifacts. `content_sha256` is computed from canonical JSON semantics, so whitespace-only source changes do not create a new semantic data version.
+The stable channel therefore owns no mutable artifact/manifest pair. If immutable publication or verification fails, the existing channel still points to the previous complete release. Runtime clients first read the channel metadata, then download both data assets from the immutable tag.
 
-The mutable `data-banxico-reference-1-latest` tag is a discovery channel. The publishing workflow also creates an immutable tag containing the first 16 characters of the semantic content hash. Runtime integrity never depends on mutable `master` content.
+The resolver then:
+
+1. validates the channel pointer schema, dataset id/version, release tag, filenames, and semantic hash;
+2. validates the immutable manifest identity/version/artifact metadata;
+3. requires the pointer and manifest semantic hashes to match;
+4. verifies the complete artifact SHA-256;
+5. allows only manifest-declared regular archive members;
+6. rejects absolute paths, `..` traversal, duplicate/unexpected members, and symlinks;
+7. verifies every extracted file size and SHA-256;
+8. stores the result under a semantic `content_sha256` object directory;
+9. atomically updates the current-cache state only after a valid object exists.
+
+Cache object installation is race-tolerant. Concurrent processes sharing one cold cache may both prepare the same immutable object; once one process installs a valid object, the other treats that verified object as the successful outcome. Repair uses a unique quarantine rename for an invalid object and never intentionally overwrites a valid concurrent winner.
+
+The bundle builder normalizes tar/gzip metadata, so identical reviewed source bytes create identical artifacts. `content_sha256` is computed from canonical JSON semantics, so whitespace-only source changes do not create a new semantic data version.
 
 ## Profiles
 
@@ -58,7 +70,7 @@ The canonical registry currently exposes:
 | `payglobal` | `banxico.reference` | Bank/routing data used by runtime services |
 | `payglobal-e2e` | `banxico.reference` | Runtime data plus identity/CLABE generation references such as `codigos_plaza.json` |
 
-The wheel contains a generated `dataset_contract.json` projection of these registry fields. CI requires that projection to match the canonical registry exactly.
+The wheel contains a generated `dataset_contract.json` projection of registry metadata. Datasets published only from reviewed `master` are projected with `discovery: release-pointer`, keeping transport behavior derived from the canonical lifecycle contract rather than duplicated manually. CI requires the checked-in projection to match the registry exactly.
 
 ## CLI
 
@@ -75,7 +87,7 @@ Fetch into the normal user cache:
 catalogmx data fetch --profile payglobal
 ```
 
-Force synchronization of a dataset:
+Force synchronization or repair of a dataset:
 
 ```bash
 catalogmx data update --dataset banxico.reference
@@ -110,20 +122,21 @@ CATALOGMX_SHARED_DATA=/var/lib/catalogmx
 CATALOGMX_DATA_MODE=offline
 ```
 
-This makes startup deterministic and removes GitHub availability from the request-serving path. The materialized directory also contains `.catalogmx/manifests/` so the exact release metadata can be retained alongside the runtime data.
+This makes startup deterministic and removes GitHub availability from the request-serving path. The materialized directory also contains `.catalogmx/manifests/` so exact immutable release metadata can be retained alongside runtime data.
 
 ## Environment variables
 
 - `CATALOGMX_SHARED_DATA` — strict shared-data root override;
 - `CATALOGMX_CACHE_DIR` — cache root (default `~/.cache/catalogmx`);
 - `CATALOGMX_DATA_MODE` — `offline`, `fetch-missing`, or `refresh`;
-- `CATALOGMX_RELEASE_BASE_URL` — release base override, primarily for mirrors/tests.
+- `CATALOGMX_RELEASE_BASE_URL` — immutable release asset base override, primarily for mirrors/tests;
+- `CATALOGMX_RELEASE_METADATA_BASE_URL` — release-metadata API base override for the stable pointer channel.
 
 ## Publishing boundary
 
 The monthly catalog-maintenance workflow may discover a Banxico reference change and open a normal data PR. It does **not** publish that unreviewed workspace state as a runtime artifact.
 
-After reviewed Banxico data lands on `master`, `publish-reference-data.yml` rebuilds the bundle from the committed source. It publishes only when semantic content changed. This separates upstream observation, human/repository review, and runtime distribution.
+After reviewed Banxico data lands on `master`, `publish-reference-data.yml` rebuilds the bundle from committed source. It publishes only when semantic content changed. This separates upstream observation, repository review, immutable runtime distribution, and the final stable-channel pointer update.
 
 ## Next migration phases
 
