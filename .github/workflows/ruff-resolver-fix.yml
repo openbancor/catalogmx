@@ -1,0 +1,40 @@
+name: Ruff Resolver Fix
+
+on:
+  push:
+    branches: [feat/data-resolver-profiles]
+    paths:
+      - '.github/workflows/ruff-resolver-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/data-resolver-profiles
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Apply Ruff and Black
+        run: |
+          pip install 'ruff>=0.1.0' 'black==26.5.1'
+          cd packages/python
+          ruff check --fix catalogmx/data/resolver.py
+          black catalogmx/data/resolver.py
+      - name: Commit formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- packages/python/catalogmx/data/resolver.py; then
+            echo "Resolver already canonical."
+            exit 0
+          fi
+          git add packages/python/catalogmx/data/resolver.py
+          git commit -m "style(data): canonicalize resolver imports"
+          git push origin HEAD:feat/data-resolver-profiles
