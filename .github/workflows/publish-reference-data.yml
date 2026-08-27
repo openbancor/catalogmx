@@ -98,8 +98,7 @@ jobs:
             local tag="$1"
             gh api --paginate \
               "repos/${GITHUB_REPOSITORY}/releases?per_page=100" \
-              --jq ".[] | select(.tag_name == \"$tag\") | {id: .id, draft: .draft}" \
-              | head -n 1
+              --jq ".[] | select(.tag_name == \"$tag\") | {id: .id, draft: .draft}"
           }
 
           delete_release_record() {
