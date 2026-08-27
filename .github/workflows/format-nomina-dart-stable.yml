@@ -1,0 +1,36 @@
+name: Format Nómina Dart stable
+
+on:
+  push:
+    branches:
+      - feat/sat-nomina-api-parity
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: ${{ !contains(github.event.head_commit.message, '[nomina-dart-formatted]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/sat-nomina-api-parity
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Format Nómina source with CI Dart
+        run: dart format packages/dart/lib/src/catalogs/sat/nomina_all.dart packages/dart/test/nomina_parity_test.dart
+
+      - name: Commit exact stable formatting and remove helper workflow
+        run: |
+          rm .github/workflows/format-nomina-dart-stable.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "style(dart): format Nómina parity with stable SDK [nomina-dart-formatted]"
+          git push origin HEAD:feat/sat-nomina-api-parity
