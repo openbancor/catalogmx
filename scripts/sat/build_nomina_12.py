@@ -34,7 +34,9 @@ LATEST_RELEASE_API = (
     "https://api.github.com/repos/phpcfdi/resources-sat-catalogs/releases/latest"
 )
 TECHNICAL_MIRROR = "https://github.com/phpcfdi/resources-sat-catalogs"
-AUTHORITATIVE_NOTICE = "https://www.sat.gob.mx/minisitio/Factura/emite_organismospublicos.htm"
+AUTHORITATIVE_NOTICE = (
+    "https://www.sat.gob.mx/minisitio/Factura/emite_organismospublicos.htm"
+)
 AUTHORITATIVE_CATALOG = (
     "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/catNomina.xls"
 )
