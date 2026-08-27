@@ -86,9 +86,7 @@ def data_verify(profile: str) -> None:
         if not valid:
             failed.append(dataset_id)
     if failed:
-        raise click.ClickException(
-            "dataset verification failed: " + ", ".join(sorted(failed))
-        )
+        raise click.ClickException("dataset verification failed: " + ", ".join(sorted(failed)))
 
 
 @data.group("cache")
