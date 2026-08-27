@@ -17,8 +17,8 @@ abstract class BaseCatalog<T> {
   /// Cached data
   static final Map<String, List<Map<String, dynamic>>> _cache = {};
 
-  /// Path to shared-data directory (relative to package root)
-  static String sharedDataPath = '../../shared-data';
+  /// Path to shared-data directory (relative to packages/dart)
+  static String sharedDataPath = '../shared-data';
 
   /// Loads JSON data from file path with caching
   static Future<List<Map<String, dynamic>>> loadJsonData(
