@@ -69,7 +69,9 @@ def test_web_and_shared_nomina_xsd_are_identical():
 def test_registry_records_revision_e_canonical_distribution_and_api_gap():
     """Canonical data completeness and language API completeness are distinct."""
     registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
-    dataset = next(item for item in registry["datasets"] if item["id"] == "sat.nomina_1_2")
+    dataset = next(
+        item for item in registry["datasets"] if item["id"] == "sat.nomina_1_2"
+    )
 
     assert dataset["version"] == "1.2"
     assert dataset["revision"] == "E"
