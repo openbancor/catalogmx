@@ -61,7 +61,9 @@ class NominaJsonCatalog:
 
     @classmethod
     def get_all(cls) -> list[dict[str, Any]]:
-        return cls._load()
+        # Existing Nómina APIs returned a shallow list copy. Preserve that
+        # contract so callers cannot mutate the catalog cache by appending.
+        return cls._load().copy()
 
     @classmethod
     def get_by_code(cls, code: str) -> dict[str, Any] | None:
