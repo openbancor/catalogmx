@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import importlib.util
-import json
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -13,7 +12,14 @@ from catalogmx.data.resolver import load_dataset_contract
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPT_PATH = REPO_ROOT / "scripts" / "render_dataset_contract.py"
 REGISTRY_PATH = REPO_ROOT / "packages" / "shared-data" / "catalog-registry.json"
-CONTRACT_PATH = REPO_ROOT / "packages" / "python" / "catalogmx" / "data" / "dataset_contract.json"
+CONTRACT_PATH = (
+    REPO_ROOT
+    / "packages"
+    / "python"
+    / "catalogmx"
+    / "data"
+    / "dataset_contract.json"
+)
 
 
 def load_script() -> ModuleType:
@@ -44,6 +50,7 @@ def test_payglobal_profiles_resolve_only_banxico_reference():
     banxico = contract["datasets"]["banxico.reference"]
     assert banxico["artifact"] == {
         "channel": "data-banxico-reference-1-latest",
+        "discovery": "release-pointer",
         "file": "banxico_reference.tar.gz",
         "format": "tar.gz",
         "manifest": "banxico_reference.manifest.json",
