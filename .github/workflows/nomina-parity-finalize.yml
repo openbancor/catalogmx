@@ -28,6 +28,28 @@ jobs:
             --output-dir /tmp/sat-nomina-12 \
             --compat-output-dir packages/shared-data/sat/nomina_1.2
 
+      - name: Scope one-shot risk regression replacement
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('scripts/sat/finalize_nomina_parity.py')
+          text = path.read_text(encoding='utf-8')
+          old = '''        ("test('getAll() returns a non-empty array of 5 risk classes'", "test('getAll() returns five risk classes plus No aplica'"),
+                  ("expect(all.length).toBe(5);", "expect(all.length).toBe(6);"),'''
+          new = '''        (''' + '"""' + '''  test('getAll() returns a non-empty array of 5 risk classes', () => {
+              const all = RiesgoPuestoCatalog.getAll();
+              expect(Array.isArray(all)).toBe(true);
+              expect(all.length).toBe(5);
+            });''' + '"""' + ''', ''' + '"""' + '''  test('getAll() returns five risk classes plus No aplica', () => {
+              const all = RiesgoPuestoCatalog.getAll();
+              expect(Array.isArray(all)).toBe(true);
+              expect(all.length).toBe(6);
+            });''' + '"""' + '''),'''
+          if old not in text:
+              raise SystemExit('risk replacement tuple not found')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
       - name: Finalize registry, scheduler, docs and regression expectations
         run: python scripts/sat/finalize_nomina_parity.py
 
