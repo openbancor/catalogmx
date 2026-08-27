@@ -36,7 +36,9 @@ def make_tar(path: str, payload: bytes) -> bytes:
 
 
 def release_fixture(
-    *, member_path: str = "banxico/banks.json", member_payload: bytes = b'[{"code":"002"}]\n'
+    *,
+    member_path: str = "banxico/banks.json",
+    member_payload: bytes = b'[{"code":"002"}]\n',
 ) -> tuple[dict, bytes, bytes]:
     artifact = make_tar(member_path, member_payload)
     manifest = {
@@ -166,6 +168,21 @@ def test_checksum_failure_does_not_publish_current_cache(tmp_path: Path):
     assert resolver.cache_status("banxico.reference")["cached"] is False
 
 
+def test_manifest_rejects_non_hex_content_hash_before_cache_path_use(tmp_path: Path):
+    manifest, _, artifact_payload = release_fixture()
+    manifest["dataset"]["content_sha256"] = "../" * 21 + "x"
+    download, _ = mapped_downloader(json.dumps(manifest).encode(), artifact_payload)
+    resolver = DatasetResolver(
+        cache_dir=tmp_path / "cache",
+        contract=contract(),
+        downloader=download,
+    )
+
+    with pytest.raises(RuntimeError, match="semantic SHA-256"):
+        resolver.fetch_dataset("banxico.reference")
+    assert not (tmp_path / "x").exists()
+
+
 def test_offline_missing_dataset_fails_without_network(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
@@ -207,7 +224,37 @@ def test_archive_rejects_unsafe_member_path(tmp_path: Path, member_path: str):
     assert not (tmp_path / "escape.json").exists()
 
 
-def test_verify_detects_cached_file_tampering(tmp_path: Path):
+def test_archive_rejects_duplicate_manifest_members_and_size_drift(tmp_path: Path):
+    manifest, _, artifact_payload = release_fixture()
+    manifest["dataset"]["files"].append(dict(manifest["dataset"]["files"][0]))
+    download, _ = mapped_downloader(json.dumps(manifest).encode(), artifact_payload)
+    resolver = DatasetResolver(
+        cache_dir=tmp_path / "cache-a",
+        contract=contract(),
+        downloader=download,
+    )
+    with pytest.raises(RuntimeError, match="duplicate file"):
+        resolver.fetch_dataset("banxico.reference")
+
+    manifest, _, artifact_payload = release_fixture()
+    manifest["dataset"]["files"][0]["bytes"] += 1
+    download, _ = mapped_downloader(json.dumps(manifest).encode(), artifact_payload)
+    resolver = DatasetResolver(
+        cache_dir=tmp_path / "cache-b",
+        contract=contract(),
+        downloader=download,
+    )
+    with pytest.raises(RuntimeError, match="size mismatch"):
+        resolver.fetch_dataset("banxico.reference")
+
+
+def test_dataset_path_rejects_caller_traversal(tmp_path: Path):
+    resolver = DatasetResolver(cache_dir=tmp_path / "cache", contract=contract())
+    with pytest.raises(RuntimeError, match="unsafe dataset path"):
+        resolver.get_dataset_path("banxico.reference", "..", "catalog-registry.json")
+
+
+def test_verify_detects_cached_file_and_manifest_tampering(tmp_path: Path):
     _, manifest_payload, artifact_payload = release_fixture()
     download, _ = mapped_downloader(manifest_payload, artifact_payload)
     resolver = DatasetResolver(
@@ -218,6 +265,14 @@ def test_verify_detects_cached_file_tampering(tmp_path: Path):
     root = resolver.fetch_dataset("banxico.reference")
     assert resolver.verify_cached_dataset("banxico.reference") is True
     (root / "banks.json").write_text("[]\n", encoding="utf-8")
+    assert resolver.verify_cached_dataset("banxico.reference") is False
+
+    root = resolver.fetch_dataset("banxico.reference")
+    object_dir = root.parent
+    manifest_path = object_dir / ".manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["dataset"]["files"][0].pop("sha256")
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
     assert resolver.verify_cached_dataset("banxico.reference") is False
 
 
