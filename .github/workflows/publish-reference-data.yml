@@ -62,6 +62,8 @@ jobs:
           artifact="$dir/$artifact_name"
           content_sha=$(jq -r '.dataset.content_sha256' "$manifest")
           immutable="data-banxico-reference-${version}-${content_sha}"
+          verify_dir=$(mktemp -d)
+          trap 'rm -rf "$verify_dir"' EXIT
 
           pointer=$(jq -cn \
             --arg dataset_id "banxico.reference" \
@@ -81,41 +83,67 @@ jobs:
             }')
 
           previous_sha=""
+          previous_release_tag=""
           if gh release view "$channel" >/dev/null 2>&1; then
             previous_body=$(gh release view "$channel" --json body --jq '.body' || true)
             previous_sha=$(printf '%s' "$previous_body" \
               | jq -r '.content_sha256 // empty' 2>/dev/null || true)
-          fi
-
-          if [ "$previous_sha" = "$content_sha" ]; then
-            echo "banxico.reference unchanged: $content_sha"
-            exit 0
+            previous_release_tag=$(printf '%s' "$previous_body" \
+              | jq -r '.release_tag // empty' 2>/dev/null || true)
           fi
 
           notes="CatalogMX reviewed Banco de México reference-data bundle. Semantic content SHA-256: $content_sha. The manifest records the exact files and SHA-256 digests. This data release is independent from library package versions."
 
-          # Immutable releases own the artifact/manifest pair. We never clobber
-          # assets on the live discovery channel.
-          if ! gh release view "$immutable" >/dev/null 2>&1; then
+          verify_immutable() {
+            rm -rf "$verify_dir"
+            mkdir -p "$verify_dir"
+            if ! gh release download "$immutable" \
+              --pattern "$artifact_name" \
+              --pattern "$manifest_name" \
+              --dir "$verify_dir"; then
+              return 1
+            fi
+            [ -f "$verify_dir/$artifact_name" ] || return 1
+            [ -f "$verify_dir/$manifest_name" ] || return 1
+            cmp "$artifact" "$verify_dir/$artifact_name" || return 1
+            cmp "$manifest" "$verify_dir/$manifest_name" || return 1
+            remote_sha=$(jq -r '.dataset.content_sha256 // empty' \
+              "$verify_dir/$manifest_name")
+            [ "$remote_sha" = "$content_sha" ]
+          }
+
+          create_immutable() {
             gh release create "$immutable" "$artifact" "$manifest" \
               --title "banxico.reference $version $content_sha" \
               --notes "$notes" \
               --target "${GITHUB_SHA}"
+          }
+
+          # Immutable releases own the artifact/manifest pair. A failed first
+          # upload can leave an incomplete release, so a retry verifies it and
+          # safely recreates it only when the live channel does not point there.
+          if gh release view "$immutable" >/dev/null 2>&1; then
+            if ! verify_immutable; then
+              if [ "$previous_release_tag" = "$immutable" ]; then
+                echo "Live immutable release is incomplete; refusing to mutate the current channel target" >&2
+                exit 1
+              fi
+              gh release delete "$immutable" --cleanup-tag --yes
+              create_immutable
+            fi
+          else
+            create_immutable
           fi
 
-          # Verify the immutable release is complete before moving the pointer.
-          verify_dir=$(mktemp -d)
-          trap 'rm -rf "$verify_dir"' EXIT
-          gh release download "$immutable" \
-            --pattern "$artifact_name" \
-            --pattern "$manifest_name" \
-            --dir "$verify_dir"
-          cmp "$artifact" "$verify_dir/$artifact_name"
-          cmp "$manifest" "$verify_dir/$manifest_name"
-          remote_sha=$(jq -r '.dataset.content_sha256' "$verify_dir/$manifest_name")
-          if [ "$remote_sha" != "$content_sha" ]; then
-            echo "Immutable release manifest SHA does not match local build" >&2
+          if ! verify_immutable; then
+            echo "Immutable release is incomplete or does not match the reviewed build" >&2
             exit 1
+          fi
+
+          if [ "$previous_sha" = "$content_sha" ] \
+             && [ "$previous_release_tag" = "$immutable" ]; then
+            echo "banxico.reference unchanged and verified: $content_sha"
+            exit 0
           fi
 
           # The channel contains only a JSON metadata pointer. Editing one
