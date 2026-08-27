@@ -36,7 +36,8 @@ class PlacasFormatosCatalog {
       if (state != null) {
         _byEstado!.putIfAbsent(state.toUpperCase(), () => item);
       }
-      final stateCode = (item['cve_estado'] ?? item['codigo_estado'])?.toString();
+      final rawStateCode = item['cve_estado'] ?? item['codigo_estado'];
+      final stateCode = rawStateCode?.toString();
       if (stateCode != null) {
         _byCveEstado!.putIfAbsent(stateCode, () => item);
       }
