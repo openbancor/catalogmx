@@ -166,7 +166,9 @@ def test_checksum_failure_does_not_publish_current_cache(tmp_path: Path):
     assert resolver.cache_status("banxico.reference")["cached"] is False
 
 
-def test_offline_missing_dataset_fails_without_network(tmp_path: Path):
+def test_offline_missing_dataset_fails_without_network(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
     def no_network(url: str) -> bytes:
         raise AssertionError(f"offline resolver attempted network: {url}")
 
@@ -176,12 +178,24 @@ def test_offline_missing_dataset_fails_without_network(tmp_path: Path):
         downloader=no_network,
         mode="offline",
     )
+    monkeypatch.setattr(resolver, "_package_root", lambda dataset: None)
+    monkeypatch.setattr(resolver, "_repo_root", lambda dataset: None)
+
     with pytest.raises(FileNotFoundError, match="offline mode"):
         resolver.resolve_dataset_root("banxico.reference")
 
 
-def test_archive_rejects_unsafe_member_path(tmp_path: Path):
-    _, manifest_payload, artifact_payload = release_fixture(member_path="../escape.json")
+@pytest.mark.parametrize(
+    "member_path",
+    [
+        "../escape.json",
+        r"..\escape.json",
+        r"C:\escape.json",
+        r"banxico\..\escape.json",
+    ],
+)
+def test_archive_rejects_unsafe_member_path(tmp_path: Path, member_path: str):
+    _, manifest_payload, artifact_payload = release_fixture(member_path=member_path)
     download, _ = mapped_downloader(manifest_payload, artifact_payload)
     resolver = DatasetResolver(
         cache_dir=tmp_path / "cache",
