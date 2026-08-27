@@ -2,10 +2,15 @@
 """Build a deterministic Banco de México reference-data bundle.
 
 The tracked JSON files under ``packages/shared-data/banxico`` are the reviewed
-compatibility/reference views. This builder packages those committed files into
+compatibility/reference views. This builder packages their JSON semantics into
 one language-independent release artifact with a manifest and per-file SHA-256
 checksums. It does not contact Banco de México or mutate source data; source
 refresh and publication review remain separate steps.
+
+Release members are canonical JSON rather than copies of repository formatting.
+Therefore formatting-only or object-key-order changes preserve both semantic and
+binary artifact identity, which makes the content-addressed release tag truly
+reusable for semantically identical reviewed data.
 """
 
 from __future__ import annotations
@@ -47,6 +52,19 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def canonical_json_bytes(parsed: Any) -> bytes:
+    """Render stable release bytes for one parsed JSON value."""
+    return (
+        json.dumps(
+            parsed,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        + "\n"
+    ).encode("utf-8")
+
+
 def load_source_files(source_dir: Path) -> list[tuple[str, bytes, Any]]:
     """Load and validate the exact reviewed Banxico JSON namespace."""
     observed = sorted(path.name for path in source_dir.glob("*.json"))
@@ -66,32 +84,24 @@ def load_source_files(source_dir: Path) -> list[tuple[str, bytes, Any]]:
     result: list[tuple[str, bytes, Any]] = []
     for name in EXPECTED_FILES:
         path = source_dir / name
-        payload = path.read_bytes()
+        source_payload = path.read_bytes()
         try:
-            parsed = json.loads(payload.decode("utf-8"))
+            parsed = json.loads(source_payload.decode("utf-8"))
         except (UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise RuntimeError(f"invalid Banxico JSON file: {name}") from exc
         if not isinstance(parsed, (list, dict)):
             raise RuntimeError(f"Banxico JSON root must be object/array: {name}")
-        result.append((name, payload, parsed))
+        result.append((name, canonical_json_bytes(parsed), parsed))
     return result
 
 
 def semantic_hash(files: Sequence[tuple[str, bytes, Any]]) -> str:
-    """Hash JSON semantics instead of whitespace or object-key formatting."""
+    """Hash JSON semantics independently from repository formatting."""
     digest = hashlib.sha256()
-    for name, _, parsed in sorted(files, key=lambda item: item[0]):
+    for name, canonical_payload, _ in sorted(files, key=lambda item: item[0]):
         digest.update(name.encode("utf-8"))
         digest.update(b"\0")
-        digest.update(
-            json.dumps(
-                parsed,
-                ensure_ascii=False,
-                sort_keys=True,
-                separators=(",", ":"),
-            ).encode("utf-8")
-        )
-        digest.update(b"\n")
+        digest.update(canonical_payload)
     return digest.hexdigest()
 
 
@@ -132,6 +142,7 @@ def build_manifest(
         "ingestion": {
             "release": "repository-reviewed",
             "source": "packages/shared-data/banxico",
+            "release_member_encoding": "canonical-json-v1",
         },
         "dataset": {
             "file": output_path.name,
