@@ -7,16 +7,20 @@ that current source snapshot separately from ``banks.json``: the latter is a
 compatibility/enrichment view that also carries manually curated fields such as
 RFC, legal name and institution type.
 
-The updater is deliberately fail-closed. It validates the source shape and a
-minimum plausible row count before writing anything, preserves historical
-entries and manual enrichments, and never treats an empty/partial response as a
-successful update.
+The updater is deliberately fail-closed. It validates the source shape, a
+minimum plausible row count, and continuity against the prior source snapshot
+before writing anything. Historical entries and manual enrichments are
+preserved, and the two local catalog views are committed as one recoverable
+filesystem transaction.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import math
+import os
+import tempfile
 from dataclasses import dataclass
 from html.parser import HTMLParser
 from pathlib import Path
@@ -35,6 +39,8 @@ SNAPSHOT_PATH = (
     / "spei_institutions.json"
 )
 MIN_EXPECTED_INSTITUTIONS = 50
+MIN_PREVIOUS_COUNT_FRACTION = 0.90
+MIN_RETAINED_KEYS_FRACTION = 0.85
 
 
 class InstitutionTableParser(HTMLParser):
@@ -163,13 +169,63 @@ def load_banks(path: Path = BANKS_PATH) -> list[dict[str, Any]]:
     return data
 
 
-def write_json(path: Path, payload: Any) -> None:
-    """Write deterministic UTF-8 JSON."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+def load_snapshot(path: Path = SNAPSHOT_PATH) -> list[dict[str, str]]:
+    """Load the prior source-faithful snapshot, if one already exists."""
+    if not path.exists():
+        return []
+    with path.open(encoding="utf-8") as handle:
+        data = json.load(handle)
+    if not isinstance(data, list):
+        raise ValueError("Banxico source snapshot must be a JSON array")
+
+    result: list[dict[str, str]] = []
+    seen_keys: set[str] = set()
+    for item in data:
+        if not isinstance(item, dict):
+            raise ValueError("Banxico source snapshot rows must be objects")
+        key = str(item.get("banxico_key", "")).strip()
+        code = str(item.get("code", "")).strip()
+        name = str(item.get("name", "")).strip()
+        if not key or not code or not name:
+            raise ValueError("Banxico source snapshot row is missing required fields")
+        if normalize_institution_key(key) != code:
+            raise ValueError(f"Banxico source snapshot has inconsistent code for {key}")
+        if key in seen_keys:
+            raise ValueError(f"duplicate Banxico source snapshot key: {key}")
+        seen_keys.add(key)
+        result.append({"banxico_key": key, "code": code, "name": name})
+    return result
+
+
+def validate_snapshot_transition(
+    previous: Sequence[dict[str, str]],
+    institutions: Sequence[tuple[str, str]],
+) -> None:
+    """Reject implausibly large source drops before changing lifecycle state."""
+    if not previous:
+        return
+
+    current = validate_institutions(institutions)
+    previous_keys = {item["banxico_key"] for item in previous}
+    current_keys = {key for key, _ in current}
+    previous_count = len(previous_keys)
+
+    min_count = math.ceil(previous_count * MIN_PREVIOUS_COUNT_FRACTION)
+    if len(current_keys) < min_count:
+        raise RuntimeError(
+            "Banxico CEP snapshot shrank beyond the allowed continuity bound: "
+            f"previous={previous_count}, current={len(current_keys)}, "
+            f"minimum={min_count}"
+        )
+
+    retained = len(previous_keys & current_keys)
+    min_retained = math.ceil(previous_count * MIN_RETAINED_KEYS_FRACTION)
+    if retained < min_retained:
+        raise RuntimeError(
+            "Banxico CEP snapshot replaced too many prior institution keys: "
+            f"previous={previous_count}, retained={retained}, "
+            f"minimum={min_retained}"
+        )
 
 
 def render_current_snapshot(
@@ -249,6 +305,63 @@ def sync_banks(
     return merged, summary
 
 
+def _render_json(payload: Any) -> str:
+    return json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+
+
+def _stage_bytes(destination: Path, payload: bytes) -> Path:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temp_name = tempfile.mkstemp(
+        prefix=f".{destination.name}.", suffix=".tmp", dir=destination.parent
+    )
+    temp_path = Path(temp_name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+    except Exception:
+        temp_path.unlink(missing_ok=True)
+        raise
+    return temp_path
+
+
+def write_json_transaction(updates: Sequence[tuple[Path, Any]]) -> None:
+    """Replace all JSON destinations together, rolling back partial commits."""
+    rendered = [(path, _render_json(payload).encode("utf-8")) for path, payload in updates]
+    originals = {
+        path: path.read_bytes() if path.exists() else None for path, _ in rendered
+    }
+    staged: list[tuple[Path, Path]] = []
+    replaced: list[Path] = []
+
+    try:
+        staged = [(path, _stage_bytes(path, payload)) for path, payload in rendered]
+        for destination, temp_path in staged:
+            os.replace(temp_path, destination)
+            replaced.append(destination)
+    except Exception as exc:
+        rollback_errors: list[Exception] = []
+        for destination in reversed(replaced):
+            original = originals[destination]
+            try:
+                if original is None:
+                    destination.unlink(missing_ok=True)
+                else:
+                    rollback_path = _stage_bytes(destination, original)
+                    os.replace(rollback_path, destination)
+            except Exception as rollback_exc:  # pragma: no cover - catastrophic FS failure
+                rollback_errors.append(rollback_exc)
+        if rollback_errors:
+            raise RuntimeError(
+                "Banxico catalog transaction failed and rollback was incomplete"
+            ) from exc
+        raise
+    finally:
+        for _, temp_path in staged:
+            temp_path.unlink(missing_ok=True)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-url", default=CEP_LIST_URL)
@@ -258,14 +371,20 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     try:
         institutions = fetch_institutions(args.source_url)
+        previous_snapshot = load_snapshot(args.snapshot_path)
+        validate_snapshot_transition(previous_snapshot, institutions)
         existing = load_banks(args.banks_path)
         merged, summary = sync_banks(existing, institutions)
+        write_json_transaction(
+            [
+                (args.snapshot_path, render_current_snapshot(institutions)),
+                (args.banks_path, merged),
+            ]
+        )
     except (HTTPError, URLError, TimeoutError, OSError, ValueError, RuntimeError) as exc:
         print(f"Banxico reference maintenance failed: {exc}")
         return 1
 
-    write_json(args.snapshot_path, render_current_snapshot(institutions))
-    write_json(args.banks_path, merged)
     print(
         "Banxico reference synchronized: "
         f"current={summary.current}, added={summary.added}, "
