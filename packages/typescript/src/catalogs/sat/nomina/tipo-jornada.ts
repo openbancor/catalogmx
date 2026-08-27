@@ -24,37 +24,29 @@ export class TipoJornadaCatalog {
     return this.getData().find((j) => j.code === code);
   }
 
+  static getByCode(code: string): TipoJornada | undefined {
+    return this.getJornada(code);
+  }
+
   static isValid(code: string): boolean {
     return this.getData().some((j) => j.code === code);
   }
 
-  /**
-   * Search by description
-   */
   static searchByDescription(keyword: string): TipoJornada[] {
     const search = keyword.toUpperCase();
     return this.getData().filter((j) => j.descripcion.toUpperCase().includes(search));
   }
 
-  /**
-   * Check if it's day shift
-   */
   static isDiurna(code: string): boolean {
     const jornada = this.getJornada(code);
     return jornada?.descripcion.toUpperCase().includes('DIURNA') ?? false;
   }
 
-  /**
-   * Check if it's night shift
-   */
   static isNocturna(code: string): boolean {
     const jornada = this.getJornada(code);
     return jornada?.descripcion.toUpperCase().includes('NOCTURNA') ?? false;
   }
 
-  /**
-   * Check if it's mixed shift
-   */
   static isMixta(code: string): boolean {
     const jornada = this.getJornada(code);
     return jornada?.descripcion.toUpperCase().includes('MIXTA') ?? false;

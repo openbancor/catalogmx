@@ -22,29 +22,29 @@ type SimpleNominaCatalogApi = {
 };
 
 describe('SAT Nómina 1.2 API parity', () => {
-  test('exposes all 13 catalog families', () => {
+  test('exposes a uniform lookup across all 13 catalog families', () => {
     const samples: Array<[SimpleNominaCatalogApi, string]> = [
+      [BancoNominaCatalog, '002'],
       [OrigenRecursoCatalog, 'IP'],
+      [PeriodicidadPagoCatalog, '04'],
+      [RiesgoPuestoCatalog, '99'],
+      [TipoContratoCatalog, '10'],
       [TipoDeduccionCatalog, '115'],
       [TipoHorasCatalog, '01'],
       [TipoIncapacidadCatalog, '04'],
+      [TipoJornadaCatalog, '08'],
+      [TipoNominaCatalog, 'O'],
       [TipoOtroPagoCatalog, '999'],
       [TipoPercepcionCatalog, '057'],
+      [TipoRegimenCatalog, '13'],
     ];
-    expect(samples).toHaveLength(6);
+
+    expect(samples).toHaveLength(13);
     for (const [catalog, code] of samples) {
       expect(catalog.getAll().length).toBeGreaterThan(0);
       expect(catalog.isValid(code)).toBe(true);
       expect(catalog.getByCode(code)?.code).toBe(code);
     }
-
-    expect(BancoNominaCatalog.isValid('002')).toBe(true);
-    expect(PeriodicidadPagoCatalog.isValid('04')).toBe(true);
-    expect(RiesgoPuestoCatalog.isValid('99')).toBe(true);
-    expect(TipoContratoCatalog.isValid('10')).toBe(true);
-    expect(TipoJornadaCatalog.isValid('08')).toBe(true);
-    expect(TipoNominaCatalog.isValid('O')).toBe(true);
-    expect(TipoRegimenCatalog.isValid('13')).toBe(true);
   });
 
   test('fixed compatibility fields are usable', () => {

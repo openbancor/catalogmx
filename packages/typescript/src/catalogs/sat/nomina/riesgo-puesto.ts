@@ -21,6 +21,10 @@ export class RiesgoPuestoCatalog {
     return this.getData().find((r) => r.code === code);
   }
 
+  static getByCode(code: string): RiesgoPuesto | undefined {
+    return this.getRiesgo(code);
+  }
+
   static isValid(code: string): boolean {
     return this.getRiesgo(code) !== undefined;
   }

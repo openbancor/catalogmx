@@ -24,6 +24,10 @@ export class BancoNominaCatalog {
     return this.getData().find((b) => b.code === code);
   }
 
+  static getByCode(code: string): BancoNomina | undefined {
+    return this.getBanco(code);
+  }
+
   static isValid(code: string): boolean {
     return this.getData().some((b) => b.code === code);
   }
