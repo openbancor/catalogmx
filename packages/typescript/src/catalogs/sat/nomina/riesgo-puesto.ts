@@ -31,9 +31,12 @@ export class RiesgoPuestoCatalog {
     const riesgo = this.getRiesgo(code);
     if (
       !riesgo ||
-      riesgo.prima_minima == null ||
-      riesgo.prima_media == null ||
-      riesgo.prima_maxima == null
+      riesgo.prima_minima === null ||
+      riesgo.prima_minima === undefined ||
+      riesgo.prima_media === null ||
+      riesgo.prima_media === undefined ||
+      riesgo.prima_maxima === null ||
+      riesgo.prima_maxima === undefined
     ) {
       return undefined;
     }
