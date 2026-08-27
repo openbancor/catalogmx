@@ -17,35 +17,33 @@ class InstitucionesFinancierasCatalog {
     final jsonData = BaseCatalog.loadJsonDataSync(
       'banxico/instituciones_financieras.json',
     );
+    final first = jsonData.isNotEmpty ? jsonData.first : null;
 
     // BaseCatalog unwraps metadata envelopes with a single catalog array. Keep
     // compatibility with older wrapped files too.
-    if (jsonData.isNotEmpty && jsonData.first.containsKey('instituciones')) {
-      _data = (jsonData.first['instituciones'] as List)
+    if (first != null && first.containsKey('instituciones')) {
+      _data = (first['instituciones'] as List)
           .map((e) => Map<String, dynamic>.from(e as Map))
           .toList();
-    } else if (
-        jsonData.isNotEmpty && jsonData.first.containsKey('tipos_institucion')) {
-      _data = (jsonData.first['tipos_institucion'] as List)
+    } else if (first != null && first.containsKey('tipos_institucion')) {
+      _data = (first['tipos_institucion'] as List)
           .map((e) => Map<String, dynamic>.from(e as Map))
           .toList();
     } else {
       _data = jsonData;
     }
 
+    _byCode = {};
+    _byName = {};
     for (final item in _data!) {
       final displayName = item['nombre'] ?? item['tipo'];
-      if (displayName != null) item['nombre'] = displayName.toString();
+      if (displayName != null) {
+        item['nombre'] = displayName.toString();
+        _byName![displayName.toString().toUpperCase()] = item;
+      }
+      final code = item['codigo'];
+      if (code != null) _byCode![code.toString()] = item;
     }
-
-    _byCode = {
-      for (final inst in _data!)
-        if (inst['codigo'] != null) inst['codigo'].toString(): inst,
-    };
-    _byName = {
-      for (final inst in _data!)
-        if (inst['nombre'] != null) inst['nombre'].toString().toUpperCase(): inst,
-    };
   }
 
   /// Obtiene todas las instituciones financieras
@@ -75,13 +73,10 @@ class InstitucionesFinancierasCatalog {
   static List<Map<String, dynamic>> search(String query) {
     _loadData();
     final queryNorm = query.toUpperCase();
-    return _data!
-        .where(
-          (inst) => (inst['nombre']?.toString() ?? '')
-              .toUpperCase()
-              .contains(queryNorm),
-        )
-        .toList();
+    return _data!.where((inst) {
+      final name = inst['nombre']?.toString().toUpperCase() ?? '';
+      return name.contains(queryNorm);
+    }).toList();
   }
 
   /// Obtiene instituciones por tipo
