@@ -94,6 +94,28 @@ jobs:
 
           notes="CatalogMX reviewed Banco de México reference-data bundle. Semantic content SHA-256: $content_sha. The manifest records the exact files and SHA-256 digests. This data release is independent from library package versions."
 
+          find_release() {
+            local tag="$1"
+            gh api --paginate \
+              "repos/${GITHUB_REPOSITORY}/releases?per_page=100" \
+              --jq ".[] | select(.tag_name == \"$tag\") | {id: .id, draft: .draft}" \
+              | head -n 1
+          }
+
+          delete_release_record() {
+            local release_json="$1"
+            local tag="$2"
+            local release_id
+            release_id=$(printf '%s' "$release_json" | jq -r '.id')
+            gh api --method DELETE \
+              "repos/${GITHUB_REPOSITORY}/releases/${release_id}"
+            # Draft asset creation may never have created the git tag. Remove it
+            # if present, but absence is expected and not an error.
+            gh api --method DELETE \
+              "repos/${GITHUB_REPOSITORY}/git/refs/tags/${tag}" \
+              >/dev/null 2>&1 || true
+          }
+
           verify_immutable() {
             rm -rf "$verify_dir"
             mkdir -p "$verify_dir"
@@ -119,16 +141,27 @@ jobs:
               --target "${GITHUB_SHA}"
           }
 
-          # Immutable releases own the artifact/manifest pair. A failed first
-          # upload can leave an incomplete release, so a retry verifies it and
-          # safely recreates it only when the live channel does not point there.
-          if gh release view "$immutable" >/dev/null 2>&1; then
-            if ! verify_immutable; then
+          # gh release create with assets creates a draft first, uploads each
+          # asset, then publishes. A failed upload can therefore leave a draft
+          # that `gh release view <tag>` does not represent as a published
+          # release. Inspect the authenticated releases collection so retries
+          # recover both draft and published partial states.
+          immutable_release=$(find_release "$immutable")
+          if [ -n "$immutable_release" ]; then
+            immutable_draft=$(printf '%s' "$immutable_release" | jq -r '.draft')
+            if [ "$immutable_draft" = "true" ]; then
+              if [ "$previous_release_tag" = "$immutable" ]; then
+                echo "Live channel points to a draft immutable release; refusing mutation" >&2
+                exit 1
+              fi
+              delete_release_record "$immutable_release" "$immutable"
+              create_immutable
+            elif ! verify_immutable; then
               if [ "$previous_release_tag" = "$immutable" ]; then
                 echo "Live immutable release is incomplete; refusing to mutate the current channel target" >&2
                 exit 1
               fi
-              gh release delete "$immutable" --cleanup-tag --yes
+              delete_release_record "$immutable_release" "$immutable"
               create_immutable
             fi
           else
