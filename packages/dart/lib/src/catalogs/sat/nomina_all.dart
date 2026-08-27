@@ -116,9 +116,8 @@ class BancoNominaCatalog {
   static List<Map<String, dynamic>> search(String query) {
     final q = query.toUpperCase();
     return _NominaData.load(_file).where((item) {
-      final name = (item['name'] ?? item['nombre'] ?? '')
-          .toString()
-          .toUpperCase();
+      final name =
+          (item['name'] ?? item['nombre'] ?? '').toString().toUpperCase();
       final legal = (item['full_name'] ?? item['razon_social'] ?? '')
           .toString()
           .toUpperCase();
