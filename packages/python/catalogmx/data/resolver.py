@@ -9,6 +9,7 @@ import re
 import shutil
 import tarfile
 import tempfile
+import uuid
 from collections.abc import Callable, Mapping
 from datetime import datetime, timezone
 from importlib import resources
@@ -17,10 +18,14 @@ from typing import Any, TypeGuard
 from urllib.request import Request, urlopen
 
 DEFAULT_RELEASE_BASE_URL = "https://github.com/openbancor/catalogmx/releases/download"
+DEFAULT_RELEASE_METADATA_BASE_URL = (
+    "https://api.github.com/repos/openbancor/catalogmx/releases/tags"
+)
 DEFAULT_DATA_MODE = "fetch-missing"
 ALLOWED_DATA_MODES = {"offline", "fetch-missing", "refresh"}
 CONTRACT_RESOURCE = "dataset_contract.json"
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+_RELEASE_TAG_RE = re.compile(r"^[A-Za-z0-9._-]+$")
 
 Downloader = Callable[[str], bytes]
 
@@ -107,6 +112,7 @@ class DatasetResolver:
         cache_dir: str | Path | None = None,
         mode: str | None = None,
         release_base_url: str | None = None,
+        release_metadata_base_url: str | None = None,
         contract: Mapping[str, Any] | None = None,
         downloader: Downloader | None = None,
     ) -> None:
@@ -118,9 +124,18 @@ class DatasetResolver:
         )
         self.mode = mode or os.getenv("CATALOGMX_DATA_MODE", DEFAULT_DATA_MODE)
         if self.mode not in ALLOWED_DATA_MODES:
-            raise ValueError(f"CATALOGMX_DATA_MODE must be one of {sorted(ALLOWED_DATA_MODES)}")
+            raise ValueError(
+                f"CATALOGMX_DATA_MODE must be one of {sorted(ALLOWED_DATA_MODES)}"
+            )
         self.release_base_url = (
-            release_base_url or os.getenv("CATALOGMX_RELEASE_BASE_URL") or DEFAULT_RELEASE_BASE_URL
+            release_base_url
+            or os.getenv("CATALOGMX_RELEASE_BASE_URL")
+            or DEFAULT_RELEASE_BASE_URL
+        ).rstrip("/")
+        self.release_metadata_base_url = (
+            release_metadata_base_url
+            or os.getenv("CATALOGMX_RELEASE_METADATA_BASE_URL")
+            or DEFAULT_RELEASE_METADATA_BASE_URL
         ).rstrip("/")
         self.downloader = downloader or _default_downloader
 
@@ -130,7 +145,9 @@ class DatasetResolver:
             raise KeyError(f"unknown CatalogMX data profile: {profile}")
         value = profiles[profile]
         datasets = value.get("datasets") if isinstance(value, dict) else value
-        if not isinstance(datasets, list) or not all(isinstance(item, str) for item in datasets):
+        if not isinstance(datasets, list) or not all(
+            isinstance(item, str) for item in datasets
+        ):
             raise RuntimeError(f"invalid dataset profile contract: {profile}")
         return list(datasets)
 
@@ -175,7 +192,9 @@ class DatasetResolver:
             return None
         return root, state
 
-    def _cache_is_stale(self, dataset: Mapping[str, Any], state: Mapping[str, Any]) -> bool:
+    def _cache_is_stale(
+        self, dataset: Mapping[str, Any], state: Mapping[str, Any]
+    ) -> bool:
         max_age_days = dataset.get("freshness", {}).get("max_age_days")
         if not isinstance(max_age_days, int) or max_age_days <= 0:
             return False
@@ -200,7 +219,9 @@ class DatasetResolver:
             raise FileNotFoundError(f"CATALOGMX_SHARED_DATA does not exist: {base}")
         candidate = base / _safe_relative_path(dataset["artifact"]["mount_path"])
         if not candidate.exists():
-            raise FileNotFoundError(f"dataset is missing from CATALOGMX_SHARED_DATA: {candidate}")
+            raise FileNotFoundError(
+                f"dataset is missing from CATALOGMX_SHARED_DATA: {candidate}"
+            )
         return candidate
 
     def _package_root(self, dataset: Mapping[str, Any]) -> Path | None:
@@ -248,12 +269,14 @@ class DatasetResolver:
         if self.mode == "offline":
             if cached is not None:
                 return cached[0]
-            raise FileNotFoundError(f"dataset {dataset_id} is unavailable in offline mode")
+            raise FileNotFoundError(
+                f"dataset {dataset_id} is unavailable in offline mode"
+            )
 
         try:
             return self.fetch_dataset(dataset_id)
         except Exception:
-            if cached is not None:
+            if cached is not None and self.verify_cached_dataset(dataset_id):
                 return cached[0]
             raise
 
@@ -264,11 +287,20 @@ class DatasetResolver:
         relative = _safe_relative_path("/".join(parts))
         path = root / relative
         if not path.exists():
-            raise FileNotFoundError(f"dataset path does not exist: {dataset_id}:{'/'.join(parts)}")
+            raise FileNotFoundError(
+                f"dataset path does not exist: {dataset_id}:{'/'.join(parts)}"
+            )
         return path
 
-    def _release_url(self, channel: str, filename: str) -> str:
-        return f"{self.release_base_url}/{channel}/{filename}"
+    def _release_url(self, release_tag: str, filename: str) -> str:
+        if not _RELEASE_TAG_RE.fullmatch(release_tag):
+            raise RuntimeError(f"unsafe dataset release tag: {release_tag!r}")
+        return f"{self.release_base_url}/{release_tag}/{filename}"
+
+    def _release_metadata_url(self, channel: str) -> str:
+        if not _RELEASE_TAG_RE.fullmatch(channel):
+            raise RuntimeError(f"unsafe dataset channel: {channel!r}")
+        return f"{self.release_metadata_base_url}/{channel}"
 
     def _validate_manifest(
         self,
@@ -304,12 +336,88 @@ class DatasetResolver:
             raise RuntimeError("dataset manifest is missing semantic SHA-256")
         return manifest_dataset, content_sha
 
-    def _extract_tar_bundle(
-        self,
-        payload: bytes,
-        stage: Path,
-        manifest_dataset: Mapping[str, Any],
-    ) -> None:
+    def _parse_manifest(
+        self, dataset_id: str, dataset: Mapping[str, Any], payload: bytes
+    ) -> tuple[dict[str, Any], dict[str, Any], str]:
+        try:
+            manifest = json.loads(payload.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise RuntimeError("invalid dataset release manifest") from exc
+        if not isinstance(manifest, dict):
+            raise RuntimeError("dataset release manifest must be an object")
+        manifest_dataset, content_sha = self._validate_manifest(
+            dataset_id, dataset, manifest
+        )
+        return manifest, manifest_dataset, content_sha
+
+    def _resolve_release(
+        self, dataset_id: str, dataset: Mapping[str, Any]
+    ) -> tuple[str, bytes, dict[str, Any], dict[str, Any], str]:
+        artifact = dataset["artifact"]
+        channel = artifact["channel"]
+        release_tag = channel
+        expected_pointer_sha: str | None = None
+
+        discovery = artifact.get("discovery", "direct")
+        if discovery == "release-pointer":
+            metadata_payload = self.downloader(self._release_metadata_url(channel))
+            try:
+                metadata = json.loads(metadata_payload.decode("utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise RuntimeError("invalid dataset channel metadata") from exc
+            if not isinstance(metadata, dict):
+                raise RuntimeError("dataset channel metadata must be an object")
+            if metadata.get("tag_name") not in {None, channel}:
+                raise RuntimeError("dataset channel tag mismatch")
+            body = metadata.get("body")
+            if not isinstance(body, str):
+                raise RuntimeError("dataset channel metadata is missing pointer body")
+            try:
+                pointer = json.loads(body)
+            except json.JSONDecodeError as exc:
+                raise RuntimeError("invalid dataset release pointer") from exc
+            if not isinstance(pointer, dict) or pointer.get("schema_version") != 1:
+                raise RuntimeError("unsupported dataset release pointer schema")
+            if pointer.get("dataset_id") != dataset_id:
+                raise RuntimeError("dataset release pointer id mismatch")
+            if str(pointer.get("dataset_version")) != str(artifact["version"]):
+                raise RuntimeError("dataset release pointer version mismatch")
+            if pointer.get("artifact") != artifact["file"]:
+                raise RuntimeError("dataset release pointer artifact mismatch")
+            if pointer.get("manifest") != artifact["manifest"]:
+                raise RuntimeError("dataset release pointer manifest mismatch")
+            release_tag_value = pointer.get("release_tag")
+            if not isinstance(release_tag_value, str) or not _RELEASE_TAG_RE.fullmatch(
+                release_tag_value
+            ):
+                raise RuntimeError("dataset release pointer has unsafe release tag")
+            pointer_sha = pointer.get("content_sha256")
+            if not _is_sha256(pointer_sha):
+                raise RuntimeError("dataset release pointer is missing content SHA-256")
+            release_tag = release_tag_value
+            expected_pointer_sha = pointer_sha
+        elif discovery != "direct":
+            raise RuntimeError(f"unsupported dataset discovery mode: {discovery}")
+
+        manifest_payload = self.downloader(
+            self._release_url(release_tag, artifact["manifest"])
+        )
+        manifest, manifest_dataset, content_sha = self._parse_manifest(
+            dataset_id, dataset, manifest_payload
+        )
+        if expected_pointer_sha is not None and content_sha != expected_pointer_sha:
+            raise RuntimeError("dataset release pointer content SHA-256 mismatch")
+        return (
+            release_tag,
+            manifest_payload,
+            manifest,
+            manifest_dataset,
+            content_sha,
+        )
+
+    def _expected_tar_files(
+        self, manifest_dataset: Mapping[str, Any]
+    ) -> dict[str, tuple[str, int]]:
         expected_files = manifest_dataset.get("files")
         if not isinstance(expected_files, list) or not expected_files:
             raise RuntimeError("tar dataset manifest must list extracted files")
@@ -330,14 +438,21 @@ class DatasetResolver:
                 raise RuntimeError("invalid file metadata in dataset manifest")
             if not isinstance(size, int) or isinstance(size, bool) or size < 0:
                 raise RuntimeError("invalid file size in dataset manifest")
-            relative = _safe_relative_path(path)
+            _safe_relative_path(path)
             if PurePosixPath(path).parts[: len(mount_parts)] != mount_parts:
                 raise RuntimeError(f"dataset file is outside mount path: {path}")
             if path in expected:
                 raise RuntimeError(f"duplicate file in dataset manifest: {path}")
             expected[path] = (sha, size)
-            del relative
+        return expected
 
+    def _extract_tar_bundle(
+        self,
+        payload: bytes,
+        stage: Path,
+        manifest_dataset: Mapping[str, Any],
+    ) -> None:
+        expected = self._expected_tar_files(manifest_dataset)
         observed: set[str] = set()
         with tempfile.SpooledTemporaryFile() as archive_file:
             archive_file.write(payload)
@@ -360,38 +475,209 @@ class DatasetResolver:
                         )
                     source = archive.extractfile(member)
                     if source is None:
-                        raise RuntimeError(f"cannot read dataset archive member: {member.name}")
+                        raise RuntimeError(
+                            f"cannot read dataset archive member: {member.name}"
+                        )
                     data = source.read()
                     expected_sha, expected_size = expected[name]
                     if len(data) != expected_size:
-                        raise RuntimeError(f"dataset member size mismatch: {member.name}")
+                        raise RuntimeError(
+                            f"dataset member size mismatch: {member.name}"
+                        )
                     if _sha256(data) != expected_sha:
-                        raise RuntimeError(f"dataset member checksum mismatch: {member.name}")
+                        raise RuntimeError(
+                            f"dataset member checksum mismatch: {member.name}"
+                        )
                     destination = stage / relative
                     destination.parent.mkdir(parents=True, exist_ok=True)
                     destination.write_bytes(data)
                     observed.add(name)
         if observed != set(expected):
             missing = sorted(set(expected) - observed)
-            raise RuntimeError("dataset archive is missing manifest files: " + ", ".join(missing))
+            raise RuntimeError(
+                "dataset archive is missing manifest files: " + ", ".join(missing)
+            )
+
+    def _object_matches_manifest(
+        self,
+        object_dir: Path,
+        dataset: Mapping[str, Any],
+        manifest: Mapping[str, Any],
+        manifest_dataset: Mapping[str, Any],
+    ) -> bool:
+        if not object_dir.is_dir() or object_dir.is_symlink():
+            return False
+        stored_manifest_path = object_dir / ".manifest.json"
+        try:
+            stored_manifest = json.loads(stored_manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        if stored_manifest != manifest:
+            return False
+
+        artifact = dataset["artifact"]
+        mount_path = _safe_relative_path(artifact["mount_path"])
+        root = object_dir / mount_path
+        if not root.exists() or root.is_symlink():
+            return False
+
+        if artifact["format"] == "tar.gz":
+            try:
+                expected = self._expected_tar_files(manifest_dataset)
+            except RuntimeError:
+                return False
+            expected_paths = set(expected)
+            observed_paths: set[str] = set()
+            try:
+                for path in object_dir.rglob("*"):
+                    if path.is_symlink():
+                        return False
+                    if not path.is_file():
+                        continue
+                    relative = path.relative_to(object_dir).as_posix()
+                    if relative == ".manifest.json":
+                        continue
+                    observed_paths.add(relative)
+                if observed_paths != expected_paths:
+                    return False
+                for relative, (expected_sha, expected_size) in expected.items():
+                    path = object_dir / _safe_relative_path(relative)
+                    payload = path.read_bytes()
+                    if len(payload) != expected_size or _sha256(payload) != expected_sha:
+                        return False
+                return True
+            except OSError:
+                return False
+
+        if artifact["format"] == "file":
+            artifact_path = root / artifact["file"]
+            try:
+                return (
+                    artifact_path.is_file()
+                    and not artifact_path.is_symlink()
+                    and _sha256(artifact_path.read_bytes())
+                    == manifest_dataset["file_sha256"]
+                )
+            except OSError:
+                return False
+        return False
+
+    def _stage_object(
+        self,
+        dataset_cache: Path,
+        dataset: Mapping[str, Any],
+        manifest_payload: bytes,
+        manifest: Mapping[str, Any],
+        manifest_dataset: Mapping[str, Any],
+        artifact_payload: bytes,
+    ) -> Path:
+        stage = Path(tempfile.mkdtemp(prefix=".stage-", dir=dataset_cache))
+        try:
+            artifact = dataset["artifact"]
+            mount_path = _safe_relative_path(artifact["mount_path"])
+            if artifact["format"] == "tar.gz":
+                self._extract_tar_bundle(artifact_payload, stage, manifest_dataset)
+            elif artifact["format"] == "file":
+                destination_dir = stage / mount_path
+                destination_dir.mkdir(parents=True, exist_ok=True)
+                (destination_dir / artifact["file"]).write_bytes(artifact_payload)
+            else:
+                raise RuntimeError(
+                    f"unsupported dataset artifact format: {artifact['format']}"
+                )
+            (stage / ".manifest.json").write_bytes(manifest_payload)
+            if not self._object_matches_manifest(
+                stage, dataset, manifest, manifest_dataset
+            ):
+                raise RuntimeError("staged dataset object failed verification")
+            return stage
+        except Exception:
+            shutil.rmtree(stage, ignore_errors=True)
+            raise
+
+    def _install_object_race_safe(
+        self,
+        *,
+        stage: Path,
+        object_dir: Path,
+        dataset: Mapping[str, Any],
+        manifest: Mapping[str, Any],
+        manifest_dataset: Mapping[str, Any],
+    ) -> None:
+        """Install a verified object without clobbering a valid concurrent winner."""
+        quarantine: Path | None = None
+        stage_path: Path | None = stage
+        try:
+            if object_dir.exists():
+                if self._object_matches_manifest(
+                    object_dir, dataset, manifest, manifest_dataset
+                ):
+                    return
+                quarantine = object_dir.with_name(
+                    f".corrupt-{object_dir.name}-{uuid.uuid4().hex}"
+                )
+                try:
+                    os.replace(object_dir, quarantine)
+                except FileNotFoundError:
+                    quarantine = None
+                except OSError:
+                    if object_dir.exists() and self._object_matches_manifest(
+                        object_dir, dataset, manifest, manifest_dataset
+                    ):
+                        return
+                    raise
+
+            try:
+                assert stage_path is not None
+                os.replace(stage_path, object_dir)
+                stage_path = None
+            except OSError:
+                if object_dir.exists() and self._object_matches_manifest(
+                    object_dir, dataset, manifest, manifest_dataset
+                ):
+                    return
+                if (
+                    quarantine is not None
+                    and quarantine.exists()
+                    and not object_dir.exists()
+                ):
+                    os.replace(quarantine, object_dir)
+                    quarantine = None
+                raise
+
+            if not self._object_matches_manifest(
+                object_dir, dataset, manifest, manifest_dataset
+            ):
+                raise RuntimeError("installed dataset object failed verification")
+        except Exception:
+            if (
+                quarantine is not None
+                and quarantine.exists()
+                and not object_dir.exists()
+            ):
+                os.replace(quarantine, object_dir)
+                quarantine = None
+            raise
+        finally:
+            if stage_path is not None and stage_path.exists():
+                shutil.rmtree(stage_path, ignore_errors=True)
+            if quarantine is not None and quarantine.exists():
+                shutil.rmtree(quarantine, ignore_errors=True)
 
     def fetch_dataset(self, dataset_id: str) -> Path:
         dataset = self._dataset(dataset_id)
         artifact = dataset["artifact"]
-        channel = artifact["channel"]
-        manifest_name = artifact["manifest"]
-        artifact_name = artifact["file"]
+        (
+            release_tag,
+            manifest_payload,
+            manifest,
+            manifest_dataset,
+            content_sha,
+        ) = self._resolve_release(dataset_id, dataset)
 
-        manifest_payload = self.downloader(self._release_url(channel, manifest_name))
-        try:
-            manifest = json.loads(manifest_payload.decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-            raise RuntimeError("invalid dataset release manifest") from exc
-        if not isinstance(manifest, dict):
-            raise RuntimeError("dataset release manifest must be an object")
-        manifest_dataset, content_sha = self._validate_manifest(dataset_id, dataset, manifest)
-
-        artifact_payload = self.downloader(self._release_url(channel, artifact_name))
+        artifact_payload = self.downloader(
+            self._release_url(release_tag, artifact["file"])
+        )
         if _sha256(artifact_payload) != manifest_dataset["file_sha256"]:
             raise RuntimeError("dataset release artifact checksum mismatch")
 
@@ -400,29 +686,30 @@ class DatasetResolver:
         objects_dir.mkdir(parents=True, exist_ok=True)
         object_dir = objects_dir / content_sha
 
-        if not object_dir.exists():
-            stage = Path(tempfile.mkdtemp(prefix=".stage-", dir=dataset_cache))
-            try:
-                artifact_format = artifact["format"]
-                mount_path = _safe_relative_path(artifact["mount_path"])
-                if artifact_format == "tar.gz":
-                    self._extract_tar_bundle(artifact_payload, stage, manifest_dataset)
-                elif artifact_format == "file":
-                    destination_dir = stage / mount_path
-                    destination_dir.mkdir(parents=True, exist_ok=True)
-                    (destination_dir / artifact_name).write_bytes(artifact_payload)
-                else:
-                    raise RuntimeError(f"unsupported dataset artifact format: {artifact_format}")
-                (stage / ".manifest.json").write_bytes(manifest_payload)
-                os.replace(stage, object_dir)
-            finally:
-                if stage.exists():
-                    shutil.rmtree(stage)
+        if not self._object_matches_manifest(
+            object_dir, dataset, manifest, manifest_dataset
+        ):
+            stage = self._stage_object(
+                dataset_cache,
+                dataset,
+                manifest_payload,
+                manifest,
+                manifest_dataset,
+                artifact_payload,
+            )
+            self._install_object_race_safe(
+                stage=stage,
+                object_dir=object_dir,
+                dataset=dataset,
+                manifest=manifest,
+                manifest_dataset=manifest_dataset,
+            )
 
         state = {
             "dataset_id": dataset_id,
             "content_sha256": content_sha,
             "fetched_at": datetime.now(timezone.utc).isoformat(),
+            "release_tag": release_tag,
         }
         _atomic_write(
             self._state_path(dataset_id),
@@ -450,47 +737,18 @@ class DatasetResolver:
         for _ in mount_path.parts:
             object_dir = object_dir.parent
         manifest_path = object_dir / ".manifest.json"
-        if not manifest_path.exists():
-            return False
         try:
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-            manifest_dataset, content_sha = self._validate_manifest(dataset_id, dataset, manifest)
-            if content_sha != state.get("content_sha256"):
-                return False
-
-            if dataset["artifact"]["format"] == "tar.gz":
-                files = manifest_dataset.get("files")
-                if not isinstance(files, list):
-                    return False
-                for item in files:
-                    if not isinstance(item, dict):
-                        return False
-                    path_value = item.get("path")
-                    sha_value = item.get("sha256")
-                    size_value = item.get("bytes")
-                    if not isinstance(path_value, str) or not _is_sha256(sha_value):
-                        return False
-                    if (
-                        not isinstance(size_value, int)
-                        or isinstance(size_value, bool)
-                        or size_value < 0
-                    ):
-                        return False
-                    path = object_dir / _safe_relative_path(path_value)
-                    if not path.exists():
-                        return False
-                    payload = path.read_bytes()
-                    if len(payload) != size_value or _sha256(payload) != sha_value:
-                        return False
-                return True
-
-            artifact_path = root / dataset["artifact"]["file"]
-            return (
-                artifact_path.exists()
-                and _sha256(artifact_path.read_bytes()) == manifest_dataset["file_sha256"]
+            manifest_payload = manifest_path.read_bytes()
+            manifest, manifest_dataset, content_sha = self._parse_manifest(
+                dataset_id, dataset, manifest_payload
             )
-        except (KeyError, OSError, TypeError, ValueError, json.JSONDecodeError, RuntimeError):
+        except (KeyError, OSError, TypeError, ValueError, RuntimeError):
             return False
+        if content_sha != state.get("content_sha256"):
+            return False
+        return self._object_matches_manifest(
+            object_dir, dataset, manifest, manifest_dataset
+        )
 
     def verify_profile(self, profile: str) -> dict[str, bool]:
         return {
@@ -544,6 +802,7 @@ class DatasetResolver:
             "stale": self._cache_is_stale(dataset, state),
             "content_sha256": state.get("content_sha256"),
             "fetched_at": state.get("fetched_at"),
+            "release_tag": state.get("release_tag"),
             "root": str(root),
         }
 
