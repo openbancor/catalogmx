@@ -8,10 +8,11 @@ import os
 import shutil
 import tarfile
 import tempfile
+from collections.abc import Callable, Mapping
 from datetime import datetime, timezone
 from importlib import resources
 from pathlib import Path, PurePosixPath
-from typing import Any, Callable, Mapping
+from typing import Any
 from urllib.request import Request, urlopen
 
 DEFAULT_RELEASE_BASE_URL = "https://github.com/openbancor/catalogmx/releases/download"
