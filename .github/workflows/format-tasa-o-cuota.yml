@@ -1,0 +1,54 @@
+name: Format TasaOCuota fix
+
+on:
+  push:
+    branches:
+      - fix/cfdi-tasa-o-cuota
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/cfdi-tasa-o-cuota
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Format changed Python files
+        run: |
+          python -m pip install black ruff
+          black \
+            packages/python/catalogmx/catalogs/sat/cfdi_4/_resolver_views.py \
+            packages/python/catalogmx/catalogs/sat/cfdi_4/tasa_o_cuota.py \
+            packages/python/tests/test_tasa_o_cuota_complete.py \
+            packages/python/tests/test_sat_cfdi_resolver_consumers.py
+          ruff check --fix \
+            packages/python/catalogmx/catalogs/sat/cfdi_4/_resolver_views.py \
+            packages/python/catalogmx/catalogs/sat/cfdi_4/tasa_o_cuota.py \
+            packages/python/tests/test_tasa_o_cuota_complete.py \
+            packages/python/tests/test_sat_cfdi_resolver_consumers.py
+          black \
+            packages/python/catalogmx/catalogs/sat/cfdi_4/_resolver_views.py \
+            packages/python/catalogmx/catalogs/sat/cfdi_4/tasa_o_cuota.py \
+            packages/python/tests/test_tasa_o_cuota_complete.py \
+            packages/python/tests/test_sat_cfdi_resolver_consumers.py
+          git diff --check
+      - name: Commit formatting if needed
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name 'catalogmx-data[bot]'
+          git config user.email 'catalogmx-data[bot]@users.noreply.github.com'
+          git add \
+            packages/python/catalogmx/catalogs/sat/cfdi_4/_resolver_views.py \
+            packages/python/catalogmx/catalogs/sat/cfdi_4/tasa_o_cuota.py \
+            packages/python/tests/test_tasa_o_cuota_complete.py \
+            packages/python/tests/test_sat_cfdi_resolver_consumers.py
+          git commit -m 'style(data): format TasaOCuota fix'
+          git push origin HEAD:fix/cfdi-tasa-o-cuota
