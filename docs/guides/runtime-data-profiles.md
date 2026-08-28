@@ -86,4 +86,16 @@ The remaining Carta Porte legacy surfaces require separate source/identity work 
 
 Installed-wheel CI builds a verified local `sat.carta_porte` release and exercises these four migrated public classes through the release-pointer/cache path without packaging the tracked Carta Porte JSON directory.
 
+### Python Comercio Exterior 2.0 consumer cutover
+
+Four Python Comercio Exterior surfaces with direct CCE 2.0 authority tables now terminate at `DatasetResolver` and read `sat_comercio_exterior_20.sqlite3`: `EstadoCatalog`, `IncotermsValidator`, `MotivoTrasladoCatalog` and `UnidadAduanaCatalog`.
+
+The cutover intentionally updates runtime values when the tracked snapshots disagree with the current canonical release. `cce_20_estados` contains 50 USA states, 13 Canadian provinces/territories and 32 Mexican states; the historical Python `EstadoCatalog` contract still exposes only USA/Canada, but now uses the authority's current membership and codes, including `UN` for Nunavut. `cce_20_motivos_traslado` keeps six rows but its current code `01` text differs materially from the legacy snapshot. `cce_20_unidades_medida` contains 23 current units rather than the tracked snapshot's 20.
+
+INCOTERM identity, official Spanish text and vigencias come from `cce_20_incoterms`. Transport applicability plus seller-freight/insurance helpers remain explicit CatalogMX/ICC convenience rules in code so those useful historical Python methods do not masquerade as SAT columns. The existing `MotivoTrasladoCatalog.requires_propietario()` application rule is also explicit in code; code `05` now activates the `ComercioExteriorValidator` requirement for at least one `Propietario`, instead of silently remaining false because the legacy JSON omitted that metadata. Customs-unit `type` is likewise a search-only CatalogMX classification layered over the authority rows.
+
+Several historical APIs deliberately remain outside this slice because their source boundary is different. `ClavePedimentoCatalog` exposes roughly 42 general Anexo 22 customs keys, while the CCE 2.0-owned `cce_20_claves_pedimentos` table contains only `A1`; it needs its own customs-source lifecycle rather than destructive narrowing. `RegistroIdentTribCatalog` has no CCE-owned table; current tax-identity patterns are associated with countries in the reused CFDI `cfdi_40_paises` table and require an API/model redesign. `PaisCatalog` and `MonedaCatalog` are also CFDI dependencies, but their legacy JSON adds ISO-2/country enrichments that are not direct columns of `cfdi_40_paises` / `cfdi_40_monedas`, so those enrichments need an explicit policy before cutover.
+
+Installed-wheel CI builds a verified local `sat.comercio_exterior` release and exercises the four migrated public classes through the release-pointer/cache path without packaging the tracked Comercio Exterior JSON directory.
+
 The remaining consumer migration rule is simple: public catalog APIs may translate canonical datasets into historical return shapes, but they must ultimately obtain runtime data from `DatasetResolver` rather than create another downloader, cache or package-data lifecycle.
