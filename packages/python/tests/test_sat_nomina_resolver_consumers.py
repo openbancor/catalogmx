@@ -59,9 +59,7 @@ def _create_nomina_database(path: Path) -> None:
             "nomina_origenes_recursos": [("IP", "Ingresos propios.")],
             "nomina_tipos_contratos": [("10", "Jubilación, pensión, retiro.")],
             "nomina_tipos_horas": [("01", "Dobles")],
-            "nomina_tipos_incapacidades": [
-                ("04", "Licencia por cuidados médicos")
-            ],
+            "nomina_tipos_incapacidades": [("04", "Licencia por cuidados médicos")],
             "nomina_tipos_jornadas": [("08", "Por hora")],
             "nomina_tipos_nominas": [
                 ("E", "Nómina extraordinaria"),
@@ -69,31 +67,19 @@ def _create_nomina_database(path: Path) -> None:
             ],
         }
         for table, rows in two_column_rows.items():
-            connection.execute(
-                f'CREATE TABLE "{table}" (id TEXT PRIMARY KEY, texto TEXT NOT NULL)'
-            )
+            connection.execute(f'CREATE TABLE "{table}" (id TEXT PRIMARY KEY, texto TEXT NOT NULL)')
             connection.executemany(f'INSERT INTO "{table}" VALUES (?, ?)', rows)
 
         four_column_rows = {
-            "nomina_periodicidades_pagos": [
-                ("04", "Quincenal", "2016-11-01", "")
-            ],
+            "nomina_periodicidades_pagos": [("04", "Quincenal", "2016-11-01", "")],
             "nomina_riesgos_puestos": [
                 ("1", "Clase I", "2017-01-01", ""),
                 ("99", "No aplica", "2017-08-13", ""),
             ],
-            "nomina_tipos_deducciones": [
-                ("115", "Deducción revision E", "2026-01-01", "")
-            ],
-            "nomina_tipos_otros_pagos": [
-                ("999", "Pagos distintos", "2017-01-01", "")
-            ],
-            "nomina_tipos_percepciones": [
-                ("057", "Percepción revision E", "2026-01-01", "")
-            ],
-            "nomina_tipos_regimenes": [
-                ("13", "Indemnización o separación", "2017-01-01", "")
-            ],
+            "nomina_tipos_deducciones": [("115", "Deducción revision E", "2026-01-01", "")],
+            "nomina_tipos_otros_pagos": [("999", "Pagos distintos", "2017-01-01", "")],
+            "nomina_tipos_percepciones": [("057", "Percepción revision E", "2026-01-01", "")],
+            "nomina_tipos_regimenes": [("13", "Indemnización o separación", "2017-01-01", "")],
         }
         for table, rows in four_column_rows.items():
             connection.execute(
@@ -101,9 +87,7 @@ def _create_nomina_database(path: Path) -> None:
                 "id TEXT PRIMARY KEY, texto TEXT NOT NULL, "
                 "vigencia_desde TEXT NOT NULL, vigencia_hasta TEXT NOT NULL)"
             )
-            connection.executemany(
-                f'INSERT INTO "{table}" VALUES (?, ?, ?, ?)', rows
-            )
+            connection.executemany(f'INSERT INTO "{table}" VALUES (?, ?, ?, ?)', rows)
 
         connection.execute(
             "CREATE TABLE nomina_composite_order_fixture ("
@@ -213,9 +197,7 @@ def test_reader_fails_closed_for_missing_or_unsafe_identifiers(
     nomina_shared_data: Path,
 ) -> None:
     with pytest.raises(RuntimeError, match="canonical SQLite table is missing"):
-        read_dataset_table(
-            "sat.nomina_1_2", "sat_nomina_12.sqlite3", "missing_table"
-        )
+        read_dataset_table("sat.nomina_1_2", "sat_nomina_12.sqlite3", "missing_table")
     with pytest.raises(ValueError, match="unsafe SQLite identifier"):
         read_dataset_table(
             "sat.nomina_1_2",

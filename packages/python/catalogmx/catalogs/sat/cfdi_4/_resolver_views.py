@@ -21,12 +21,8 @@ _IMPUESTO_NAMES = {
 }
 
 
-def _rows(
-    table: str, *, order_by: str | tuple[str, ...] = "id"
-) -> list[dict[str, Any]]:
-    return read_dataset_table(
-        DATASET_ID, DATABASE_NAME, table, order_by=order_by
-    )
+def _rows(table: str, *, order_by: str | tuple[str, ...] = "id") -> list[dict[str, Any]]:
+    return read_dataset_table(DATASET_ID, DATABASE_NAME, table, order_by=order_by)
 
 
 def _description(value: object, *, strip_terminal_period: bool = False) -> str:
@@ -88,20 +84,12 @@ def uso_cfdi_rows() -> list[dict[str, Any]]:
         fisica = bool(row.get("aplica_fisica"))
         moral = bool(row.get("aplica_moral"))
         applies_to = (
-            "both"
-            if fisica and moral
-            else "fisica"
-            if fisica
-            else "moral"
-            if moral
-            else "none"
+            "both" if fisica and moral else "fisica" if fisica else "moral" if moral else "none"
         )
         result.append(
             {
                 "code": str(row["id"]),
-                "description": _description(
-                    row.get("texto"), strip_terminal_period=True
-                ),
+                "description": _description(row.get("texto"), strip_terminal_period=True),
                 "fisica": fisica,
                 "moral": moral,
                 "applies_to": applies_to,

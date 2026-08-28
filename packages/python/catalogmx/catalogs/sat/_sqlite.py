@@ -58,13 +58,8 @@ def read_dataset_table(
         if exists is None:
             raise RuntimeError(f"{dataset_id}: canonical SQLite table is missing: {table}")
 
-        columns = {
-            row[1]
-            for row in connection.execute(f"PRAGMA table_info({quoted_table})")
-        }
-        missing_order_columns = [
-            column for column in order_columns if column not in columns
-        ]
+        columns = {row[1] for row in connection.execute(f"PRAGMA table_info({quoted_table})")}
+        missing_order_columns = [column for column in order_columns if column not in columns]
         if missing_order_columns:
             missing = ", ".join(missing_order_columns)
             raise RuntimeError(
