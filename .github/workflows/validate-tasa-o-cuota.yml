@@ -1,0 +1,35 @@
+name: Validate TasaOCuota fix
+
+on:
+  push:
+    branches:
+      - fix/cfdi-tasa-o-cuota
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/cfdi-tasa-o-cuota
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install
+        run: python -m pip install -e 'packages/python[dev]'
+      - name: Static checks
+        run: |
+          ruff check packages/python/catalogmx/catalogs/sat/cfdi_4/_resolver_views.py packages/python/catalogmx/catalogs/sat/cfdi_4/tasa_o_cuota.py packages/python/tests/test_tasa_o_cuota_complete.py packages/python/tests/test_sat_cfdi_resolver_consumers.py
+          black --check packages/python/catalogmx/catalogs/sat/cfdi_4/_resolver_views.py packages/python/catalogmx/catalogs/sat/cfdi_4/tasa_o_cuota.py packages/python/tests/test_tasa_o_cuota_complete.py packages/python/tests/test_sat_cfdi_resolver_consumers.py
+          git diff --check
+      - name: Behavioral tests
+        working-directory: packages/python
+        run: |
+          pytest -q \
+            tests/test_tasa_o_cuota_complete.py \
+            tests/test_sat_cfdi_resolver_consumers.py \
+            tests/test_remaining_coverage.py \
+            tests/test_absolute_final_push.py \
+            tests/test_100_percent_coverage.py \
+            tests/test_final_100_percent.py \
+            tests/test_every_remaining_gap.py
