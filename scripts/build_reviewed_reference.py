@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Build deterministic bundles from reviewed small reference-data snapshots.
 
 This builder is for datasets whose tracked files are reviewed compatibility or
@@ -95,7 +94,7 @@ def canonical_json_bytes(payload: bytes, name: str) -> bytes:
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise RuntimeError(f"invalid JSON reference file: {name}") from exc
     if not isinstance(parsed, (list, dict)):
-        raise RuntimeError(f"JSON reference root must be object/array: {name}")
+        raise TypeError(f"JSON reference root must be object/array: {name}")
     return (
         json.dumps(parsed, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
         + "\n"
@@ -175,9 +174,10 @@ def write_deterministic_archive(
             archive.addfile(info, io.BytesIO(payload))
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with output_path.open("wb") as raw:
-        with gzip.GzipFile(fileobj=raw, mode="wb", filename="", mtime=0) as compressed:
-            compressed.write(tar_buffer.getvalue())
+    with output_path.open("wb") as raw, gzip.GzipFile(
+        fileobj=raw, mode="wb", filename="", mtime=0
+    ) as compressed:
+        compressed.write(tar_buffer.getvalue())
 
 
 def build_manifest(
