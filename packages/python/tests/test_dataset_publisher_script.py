@@ -35,6 +35,12 @@ def load_meta(tag):
     return json.loads(path.read_text()) if path.exists() else None
 
 
+def asset_id(tag, name):
+    # GitHub asset IDs are globally unique even when two releases contain files
+    # with the same name. Model that property so cleanup targets the owner.
+    return f"{tag}__{name}"
+
+
 def release_snapshot(tag):
     meta = load_meta(tag)
     if meta is None:
@@ -44,7 +50,7 @@ def release_snapshot(tag):
     if assets_dir.exists():
         for path in sorted(assets_dir.iterdir()):
             if path.is_file():
-                assets.append({"id": path.name, "name": path.name})
+                assets.append({"id": asset_id(tag, path.name), "name": path.name})
     meta["assets"] = assets
     return meta
 
@@ -63,12 +69,15 @@ if args and args[0] == "api":
         if method != "DELETE":
             raise SystemExit(f"unexpected fake gh API method: {method}")
         if "/releases/assets/" in endpoint:
-            asset_id = endpoint.rsplit("/", 1)[-1]
+            requested_id = endpoint.rsplit("/", 1)[-1]
             for directory in releases.iterdir():
-                candidate = directory / "assets" / asset_id
-                if candidate.exists():
-                    candidate.unlink()
-                    raise SystemExit(0)
+                assets_dir = directory / "assets"
+                if not assets_dir.exists():
+                    continue
+                for candidate in assets_dir.iterdir():
+                    if candidate.is_file() and asset_id(directory.name, candidate.name) == requested_id:
+                        candidate.unlink()
+                        raise SystemExit(0)
             raise SystemExit(1)
         if "/git/refs/tags/" in endpoint:
             raise SystemExit(0)
