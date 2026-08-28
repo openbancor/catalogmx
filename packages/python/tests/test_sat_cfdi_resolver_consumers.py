@@ -49,22 +49,16 @@ def _create_cfdi_database(path: Path) -> None:
             "cfdi_40_formas_pago": [("01", "Efectivo")],
             "cfdi_40_metodos_pago": [("PUE", "Pago en una sola exhibición")],
             "cfdi_40_objetos_impuestos": [("01", "No objeto de impuesto.")],
-            "cfdi_40_tipos_relaciones": [
-                ("01", "Nota de crédito de los documentos relacionados")
-            ],
+            "cfdi_40_tipos_relaciones": [("01", "Nota de crédito de los documentos relacionados")],
             "cfdi_40_tipos_comprobantes": [("I", "Ingreso")],
             "cfdi_40_meses": [("01", "Enero")],
             "cfdi_40_periodicidades": [("01", "Diario")],
         }
         for table, rows in simple.items():
-            connection.execute(
-                f'CREATE TABLE "{table}" (id TEXT PRIMARY KEY, texto TEXT NOT NULL)'
-            )
+            connection.execute(f'CREATE TABLE "{table}" (id TEXT PRIMARY KEY, texto TEXT NOT NULL)')
             connection.executemany(f'INSERT INTO "{table}" VALUES (?, ?)', rows)
 
-        connection.execute(
-            "CREATE TABLE cfdi_40_tipos_factores (id TEXT PRIMARY KEY)"
-        )
+        connection.execute("CREATE TABLE cfdi_40_tipos_factores (id TEXT PRIMARY KEY)")
         connection.execute("INSERT INTO cfdi_40_tipos_factores VALUES ('Tasa')")
 
         connection.execute(
