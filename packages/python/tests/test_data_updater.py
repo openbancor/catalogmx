@@ -241,3 +241,23 @@ def test_registry_freshness_applies_when_no_legacy_or_environment_ttl(
     dataset = resolver._dataset(DATASET_ID)
     assert resolver.cache_ttl_seconds is None
     assert resolver._cache_ttl(dataset) == 2 * 86400
+
+
+def test_download_latest_honors_explicit_offline_mode(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("CATALOGMX_DATA_MODE", "offline")
+    updater = DataUpdater(cache_dir=tmp_path / "cache")
+    with mock.patch("catalogmx.data.updater.DatasetResolver") as resolver_type:
+        resolver = resolver_type.return_value
+        resolver.fetch_dataset.side_effect = RuntimeError(
+            "cannot fetch or update datasets while CATALOGMX_DATA_MODE=offline"
+        )
+        assert updater.download_latest(verbose=False) is False
+
+    resolver_type.assert_called_once_with(
+        cache_dir=tmp_path / "cache",
+        mode="offline",
+        cache_ttl_seconds=None,
+    )
+    resolver.fetch_dataset.assert_called_once_with(DATASET_ID)

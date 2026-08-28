@@ -121,7 +121,8 @@ class DataUpdater:
         """Synchronize the verified immutable release selected by its stable pointer."""
         del force  # The explicit operation always resolves the current pointer.
         try:
-            root = self._resolver(mode="refresh").fetch_dataset(DATASET_ID)
+            mode = os.getenv("CATALOGMX_DATA_MODE", "refresh")
+            root = self._resolver(mode=mode).fetch_dataset(DATASET_ID)
             path = self._database_from_root(root)
             version = self._verify_database(path)
             if version is None:

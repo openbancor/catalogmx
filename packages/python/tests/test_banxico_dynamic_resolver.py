@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+from urllib.error import HTTPError
 
 import pytest
 
@@ -164,4 +165,24 @@ def test_invalid_release_metadata_never_falls_back_to_bootstrap(
     with pytest.raises(RuntimeError, match="invalid dataset channel metadata"):
         resolver.resolve_dataset_root("banxico.sie_dynamic")
 
+    assert resolver.cache_status("banxico.sie_dynamic")["cached"] is False
+
+
+def test_http_release_failure_never_falls_back_to_bootstrap(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("CATALOGMX_SHARED_DATA", raising=False)
+
+    def missing(url: str) -> bytes:
+        raise HTTPError(url, 404, "Not Found", hdrs=None, fp=None)
+
+    resolver = DatasetResolver(
+        cache_dir=tmp_path / "empty-cache",
+        mode="fetch-missing",
+        downloader=missing,
+    )
+
+    with pytest.raises(HTTPError) as exc_info:
+        resolver.resolve_dataset_root("banxico.sie_dynamic")
+    assert exc_info.value.code == 404
     assert resolver.cache_status("banxico.sie_dynamic")["cached"] is False

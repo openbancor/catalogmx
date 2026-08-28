@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 from importlib import resources
 from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any, TypeGuard
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 DEFAULT_RELEASE_BASE_URL = "https://github.com/openbancor/catalogmx/releases/download"
@@ -204,6 +205,11 @@ class DatasetResolver:
         """
         try:
             return self.downloader(url)
+        except HTTPError:
+            # A server response (404/5xx) is a publication/integrity failure,
+            # not evidence that transport is unavailable. Never hide it behind
+            # a package bootstrap snapshot.
+            raise
         except OSError as exc:
             raise _DatasetTransportError(f"dataset transport unavailable: {url}") from exc
 
