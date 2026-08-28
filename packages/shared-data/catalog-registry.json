@@ -19,6 +19,12 @@
       "datasets": [
         "banxico.reference"
       ]
+    },
+    "banxico-dynamic": {
+      "description": "Banco de México SIE time-series data with independent daily refresh.",
+      "datasets": [
+        "banxico.sie_dynamic"
+      ]
     }
   },
   "datasets": [
@@ -309,7 +315,24 @@
         "workflow": ".github/workflows/update-dynamic-data.yml",
         "max_age_days": 2,
         "upstream_checked_at": null
-      }
+      },
+      "version": "1",
+      "artifact": {
+        "version": "1",
+        "channel": "latest",
+        "file": "mexico_dynamic.sqlite3",
+        "manifest": "mexico_dynamic.manifest.json",
+        "format": "file",
+        "mount_path": "dynamic"
+      },
+      "implementation": {
+        "status": "resolver_ready",
+        "canonical_distribution": "release",
+        "release_artifact": "mexico_dynamic.sqlite3",
+        "manifest": "mexico_dynamic.manifest.json",
+        "legacy_data_updater_compatibility": true
+      },
+      "notes": "Daily Banxico SIE time-series data remains independently released by update-dynamic-data.yml. The release now carries a validated manifest and is addressable through the common DatasetResolver while the legacy DataUpdater API remains a compatibility facade during migration."
     },
     {
       "id": "banxico.reference",

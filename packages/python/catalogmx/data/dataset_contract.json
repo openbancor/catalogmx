@@ -16,9 +16,31 @@
         "upstream_checked_at": "2026-08-27"
       },
       "source_subpath": "banxico"
+    },
+    "banxico.sie_dynamic": {
+      "artifact": {
+        "channel": "latest",
+        "file": "mexico_dynamic.sqlite3",
+        "format": "file",
+        "manifest": "mexico_dynamic.manifest.json",
+        "mount_path": "dynamic",
+        "version": "1"
+      },
+      "freshness": {
+        "max_age_days": 2,
+        "mode": "pipeline",
+        "upstream_checked_at": null,
+        "workflow": ".github/workflows/update-dynamic-data.yml"
+      }
     }
   },
   "profiles": {
+    "banxico-dynamic": {
+      "datasets": [
+        "banxico.sie_dynamic"
+      ],
+      "description": "Banco de México SIE time-series data with independent daily refresh."
+    },
     "core": {
       "datasets": [],
       "description": "Pure validators and calculators; no external dataset requirement."
