@@ -103,6 +103,10 @@ jobs:
             echo 'Unexpected embedded shared-data tree in wheel' >&2
             exit 1
           fi
+          if grep -q 'catalogmx/data/mexico_dynamic.sqlite3' "$RUNNER_TEMP/wheel-contents.txt"; then
+            echo 'Dynamic runtime data must not be embedded in the code wheel' >&2
+            exit 1
+          fi
 
       - name: Install wheel into clean virtualenv
         shell: bash
