@@ -71,9 +71,7 @@ class DataUpdater:
     def _database_from_root(root: Path) -> Path:
         path = root / DATABASE_NAME
         if not path.is_file():
-            raise FileNotFoundError(
-                f"resolved {DATASET_ID} artifact is missing {DATABASE_NAME}"
-            )
+            raise FileNotFoundError(f"resolved {DATASET_ID} artifact is missing {DATABASE_NAME}")
         return path
 
     def _cached_database_path(self) -> Path | None:
@@ -114,9 +112,7 @@ class DataUpdater:
             return None
         try:
             with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as db:
-                row = db.execute(
-                    "SELECT value FROM _metadata WHERE key = 'version'"
-                ).fetchone()
+                row = db.execute("SELECT value FROM _metadata WHERE key = 'version'").fetchone()
             return str(row[0]) if row else None
         except (sqlite3.Error, OSError):
             return None
@@ -129,9 +125,7 @@ class DataUpdater:
             path = self._database_from_root(root)
             version = self._verify_database(path)
             if version is None:
-                raise RuntimeError(
-                    "resolved dynamic database failed SQLite metadata verification"
-                )
+                raise RuntimeError("resolved dynamic database failed SQLite metadata verification")
             if verbose:
                 print(f"Data synchronized to version {version}")
             return True
@@ -157,9 +151,7 @@ class DataUpdater:
                 print(f"Error resolving data: {exc}")
             raise
 
-    def get_database_path(
-        self, auto_update: bool = True, max_age_hours: int = 24
-    ) -> Path:
+    def get_database_path(self, auto_update: bool = True, max_age_hours: int = 24) -> Path:
         """Return the resolved SQLite artifact path."""
         if auto_update:
             return self.auto_update(max_age_hours=max_age_hours)

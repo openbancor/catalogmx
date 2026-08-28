@@ -166,9 +166,7 @@ class DatasetResolver:
         )
         self.mode = mode or os.getenv("CATALOGMX_DATA_MODE", DEFAULT_DATA_MODE)
         if self.mode not in ALLOWED_DATA_MODES:
-            raise ValueError(
-                f"CATALOGMX_DATA_MODE must be one of {sorted(ALLOWED_DATA_MODES)}"
-            )
+            raise ValueError(f"CATALOGMX_DATA_MODE must be one of {sorted(ALLOWED_DATA_MODES)}")
         ttl_value: int | str | None = cache_ttl_seconds
         if ttl_value is None:
             ttl_value = os.getenv("CATALOGMX_CACHE_TTL")
@@ -182,13 +180,9 @@ class DatasetResolver:
                     "CATALOGMX_CACHE_TTL must be a positive integer number of seconds"
                 ) from exc
             if self.cache_ttl_seconds <= 0:
-                raise ValueError(
-                    "CATALOGMX_CACHE_TTL must be a positive integer number of seconds"
-                )
+                raise ValueError("CATALOGMX_CACHE_TTL must be a positive integer number of seconds")
         self.release_base_url = (
-            release_base_url
-            or os.getenv("CATALOGMX_RELEASE_BASE_URL")
-            or DEFAULT_RELEASE_BASE_URL
+            release_base_url or os.getenv("CATALOGMX_RELEASE_BASE_URL") or DEFAULT_RELEASE_BASE_URL
         ).rstrip("/")
         self.release_metadata_base_url = (
             release_metadata_base_url
@@ -203,9 +197,7 @@ class DatasetResolver:
             raise KeyError(f"unknown CatalogMX data profile: {profile}")
         value = profiles[profile]
         datasets = value.get("datasets") if isinstance(value, dict) else value
-        if not isinstance(datasets, list) or not all(
-            isinstance(item, str) for item in datasets
-        ):
+        if not isinstance(datasets, list) or not all(isinstance(item, str) for item in datasets):
             raise RuntimeError(f"invalid dataset profile contract: {profile}")
         return list(datasets)
 
@@ -216,9 +208,7 @@ class DatasetResolver:
             raise KeyError(f"unknown CatalogMX dataset: {dataset_id}")
         artifact = dataset.get("artifact")
         if not isinstance(artifact, dict):
-            raise RuntimeError(
-                f"dataset has no runtime artifact contract: {dataset_id}"
-            )
+            raise RuntimeError(f"dataset has no runtime artifact contract: {dataset_id}")
         return dataset
 
     def _dataset_cache_dir(self, dataset_id: str) -> Path:
@@ -269,9 +259,7 @@ class DatasetResolver:
             return None
         return max_age_days * 86400
 
-    def _cache_is_stale(
-        self, dataset: Mapping[str, Any], state: Mapping[str, Any]
-    ) -> bool:
+    def _cache_is_stale(self, dataset: Mapping[str, Any], state: Mapping[str, Any]) -> bool:
         ttl_seconds = self._cache_ttl(dataset)
         if ttl_seconds is None:
             return False
@@ -296,9 +284,7 @@ class DatasetResolver:
             raise FileNotFoundError(f"CATALOGMX_SHARED_DATA does not exist: {base}")
         candidate = base / _safe_relative_path(dataset["artifact"]["mount_path"])
         if not candidate.exists():
-            raise FileNotFoundError(
-                f"dataset is missing from CATALOGMX_SHARED_DATA: {candidate}"
-            )
+            raise FileNotFoundError(f"dataset is missing from CATALOGMX_SHARED_DATA: {candidate}")
         return candidate
 
     def _package_root(self, dataset: Mapping[str, Any]) -> Path | None:
@@ -338,15 +324,11 @@ class DatasetResolver:
             raise RuntimeError("unsupported dataset bootstrap kind")
         package_path = bootstrap.get("package_path")
         if not isinstance(package_path, str) or not package_path:
-            raise RuntimeError(
-                "dataset bootstrap package_path must be a non-empty string"
-            )
+            raise RuntimeError("dataset bootstrap package_path must be a non-empty string")
         artifact = dataset["artifact"]
         if artifact.get("format") != "file":
             raise RuntimeError("file bootstrap requires a file artifact")
-        candidate = Path(__file__).resolve().parents[1] / _safe_relative_path(
-            package_path
-        )
+        candidate = Path(__file__).resolve().parents[1] / _safe_relative_path(package_path)
         if candidate.name != artifact.get("file"):
             raise RuntimeError("dataset bootstrap filename mismatch")
         return candidate.parent if candidate.is_file() else None
@@ -384,9 +366,7 @@ class DatasetResolver:
                 return cached[0]
             if bootstrap is not None:
                 return bootstrap
-            raise FileNotFoundError(
-                f"dataset {dataset_id} is unavailable in offline mode"
-            )
+            raise FileNotFoundError(f"dataset {dataset_id} is unavailable in offline mode")
 
         try:
             return self.fetch_dataset(dataset_id)
@@ -404,9 +384,7 @@ class DatasetResolver:
         relative = _safe_relative_path("/".join(parts))
         path = root / relative
         if not path.exists():
-            raise FileNotFoundError(
-                f"dataset path does not exist: {dataset_id}:{'/'.join(parts)}"
-            )
+            raise FileNotFoundError(f"dataset path does not exist: {dataset_id}:{'/'.join(parts)}")
         return path
 
     def _release_url(self, release_tag: str, filename: str) -> str:
@@ -462,9 +440,7 @@ class DatasetResolver:
             raise RuntimeError("invalid dataset release manifest") from exc
         if not isinstance(manifest, dict):
             raise RuntimeError("dataset release manifest must be an object")
-        manifest_dataset, content_sha = self._validate_manifest(
-            dataset_id, dataset, manifest
-        )
+        manifest_dataset, content_sha = self._validate_manifest(dataset_id, dataset, manifest)
         return manifest, manifest_dataset, content_sha
 
     def _resolve_release(
@@ -516,9 +492,7 @@ class DatasetResolver:
         elif discovery != "direct":
             raise RuntimeError(f"unsupported dataset discovery mode: {discovery}")
 
-        manifest_payload = self.downloader(
-            self._release_url(release_tag, artifact["manifest"])
-        )
+        manifest_payload = self.downloader(self._release_url(release_tag, artifact["manifest"]))
         manifest, manifest_dataset, content_sha = self._parse_manifest(
             dataset_id, dataset, manifest_payload
         )
@@ -592,28 +566,20 @@ class DatasetResolver:
                         )
                     source = archive.extractfile(member)
                     if source is None:
-                        raise RuntimeError(
-                            f"cannot read dataset archive member: {member.name}"
-                        )
+                        raise RuntimeError(f"cannot read dataset archive member: {member.name}")
                     data = source.read()
                     expected_sha, expected_size = expected[name]
                     if len(data) != expected_size:
-                        raise RuntimeError(
-                            f"dataset member size mismatch: {member.name}"
-                        )
+                        raise RuntimeError(f"dataset member size mismatch: {member.name}")
                     if _sha256(data) != expected_sha:
-                        raise RuntimeError(
-                            f"dataset member checksum mismatch: {member.name}"
-                        )
+                        raise RuntimeError(f"dataset member checksum mismatch: {member.name}")
                     destination = stage / relative
                     destination.parent.mkdir(parents=True, exist_ok=True)
                     destination.write_bytes(data)
                     observed.add(name)
         if observed != set(expected):
             missing = sorted(set(expected) - observed)
-            raise RuntimeError(
-                "dataset archive is missing manifest files: " + ", ".join(missing)
-            )
+            raise RuntimeError("dataset archive is missing manifest files: " + ", ".join(missing))
 
     def _object_matches_manifest(
         self,
@@ -626,9 +592,7 @@ class DatasetResolver:
             return False
         stored_manifest_path = object_dir / ".manifest.json"
         try:
-            stored_manifest = json.loads(
-                stored_manifest_path.read_text(encoding="utf-8")
-            )
+            stored_manifest = json.loads(stored_manifest_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             return False
         if stored_manifest != manifest:
@@ -662,10 +626,7 @@ class DatasetResolver:
                 for relative, (expected_sha, expected_size) in expected.items():
                     path = object_dir / _safe_relative_path(relative)
                     payload = path.read_bytes()
-                    if (
-                        len(payload) != expected_size
-                        or _sha256(payload) != expected_sha
-                    ):
+                    if len(payload) != expected_size or _sha256(payload) != expected_sha:
                         return False
                 return True
             except OSError:
@@ -677,8 +638,7 @@ class DatasetResolver:
                 return (
                     artifact_path.is_file()
                     and not artifact_path.is_symlink()
-                    and _sha256(artifact_path.read_bytes())
-                    == manifest_dataset["file_sha256"]
+                    and _sha256(artifact_path.read_bytes()) == manifest_dataset["file_sha256"]
                 )
             except OSError:
                 return False
@@ -704,13 +664,9 @@ class DatasetResolver:
                 destination_dir.mkdir(parents=True, exist_ok=True)
                 (destination_dir / artifact["file"]).write_bytes(artifact_payload)
             else:
-                raise RuntimeError(
-                    f"unsupported dataset artifact format: {artifact['format']}"
-                )
+                raise RuntimeError(f"unsupported dataset artifact format: {artifact['format']}")
             (stage / ".manifest.json").write_bytes(manifest_payload)
-            if not self._object_matches_manifest(
-                stage, dataset, manifest, manifest_dataset
-            ):
+            if not self._object_matches_manifest(stage, dataset, manifest, manifest_dataset):
                 raise RuntimeError("staged dataset object failed verification")
             return stage
         except Exception:
@@ -731,13 +687,9 @@ class DatasetResolver:
         stage_path: Path | None = stage
         try:
             if object_dir.exists():
-                if self._object_matches_manifest(
-                    object_dir, dataset, manifest, manifest_dataset
-                ):
+                if self._object_matches_manifest(object_dir, dataset, manifest, manifest_dataset):
                     return
-                quarantine = object_dir.with_name(
-                    f".corrupt-{object_dir.name}-{uuid.uuid4().hex}"
-                )
+                quarantine = object_dir.with_name(f".corrupt-{object_dir.name}-{uuid.uuid4().hex}")
                 try:
                     os.replace(object_dir, quarantine)
                 except FileNotFoundError:
@@ -758,25 +710,15 @@ class DatasetResolver:
                     object_dir, dataset, manifest, manifest_dataset
                 ):
                     return
-                if (
-                    quarantine is not None
-                    and quarantine.exists()
-                    and not object_dir.exists()
-                ):
+                if quarantine is not None and quarantine.exists() and not object_dir.exists():
                     os.replace(quarantine, object_dir)
                     quarantine = None
                 raise
 
-            if not self._object_matches_manifest(
-                object_dir, dataset, manifest, manifest_dataset
-            ):
+            if not self._object_matches_manifest(object_dir, dataset, manifest, manifest_dataset):
                 raise RuntimeError("installed dataset object failed verification")
         except Exception:
-            if (
-                quarantine is not None
-                and quarantine.exists()
-                and not object_dir.exists()
-            ):
+            if quarantine is not None and quarantine.exists() and not object_dir.exists():
                 os.replace(quarantine, object_dir)
                 quarantine = None
             raise
@@ -797,9 +739,7 @@ class DatasetResolver:
         with _exclusive_file_lock(self._state_lock_path(dataset_id)):
             discovery = dataset["artifact"].get("discovery", "direct")
             if discovery == "release-pointer":
-                latest_tag, _, _, _, latest_sha = self._resolve_release(
-                    dataset_id, dataset
-                )
+                latest_tag, _, _, _, latest_sha = self._resolve_release(dataset_id, dataset)
                 if latest_tag != release_tag or latest_sha != content_sha:
                     return False
 
@@ -817,9 +757,7 @@ class DatasetResolver:
 
     def fetch_dataset(self, dataset_id: str) -> Path:
         if self.mode == "offline":
-            raise RuntimeError(
-                "cannot fetch or update datasets while CATALOGMX_DATA_MODE=offline"
-            )
+            raise RuntimeError("cannot fetch or update datasets while CATALOGMX_DATA_MODE=offline")
 
         dataset = self._dataset(dataset_id)
         artifact = dataset["artifact"]
@@ -833,9 +771,7 @@ class DatasetResolver:
                 content_sha,
             ) = self._resolve_release(dataset_id, dataset)
 
-            artifact_payload = self.downloader(
-                self._release_url(release_tag, artifact["file"])
-            )
+            artifact_payload = self.downloader(self._release_url(release_tag, artifact["file"]))
             if _sha256(artifact_payload) != manifest_dataset["file_sha256"]:
                 raise RuntimeError("dataset release artifact checksum mismatch")
 
@@ -844,9 +780,7 @@ class DatasetResolver:
             objects_dir.mkdir(parents=True, exist_ok=True)
             object_dir = objects_dir / content_sha
 
-            if not self._object_matches_manifest(
-                object_dir, dataset, manifest, manifest_dataset
-            ):
+            if not self._object_matches_manifest(object_dir, dataset, manifest, manifest_dataset):
                 stage = self._stage_object(
                     dataset_cache,
                     dataset,
@@ -867,9 +801,7 @@ class DatasetResolver:
             if not root.exists():
                 raise RuntimeError("cached dataset does not contain its mount path")
 
-            if self._commit_state_if_current(
-                dataset_id, dataset, release_tag, content_sha
-            ):
+            if self._commit_state_if_current(dataset_id, dataset, release_tag, content_sha):
                 return root
 
         raise RuntimeError(
@@ -902,9 +834,7 @@ class DatasetResolver:
             return False
         if content_sha != state.get("content_sha256"):
             return False
-        return self._object_matches_manifest(
-            object_dir, dataset, manifest, manifest_dataset
-        )
+        return self._object_matches_manifest(object_dir, dataset, manifest, manifest_dataset)
 
     def verify_profile(self, profile: str) -> dict[str, bool]:
         return {
