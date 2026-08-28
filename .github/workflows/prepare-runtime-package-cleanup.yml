@@ -31,16 +31,12 @@ jobs:
           text = cli.read_text(encoding='utf-8')
           marker = 'def rfc_generate_moral(razon_social, fecha):'
           before, after = text.split(marker, 1)
-          after = after.replace('click.echo(f"Birth date: {fecha}")', 'click.echo(f"Incorporation date: {fecha}")', 1)
+          after = after.replace(
+              'click.echo(f"Birth date: {fecha}")',
+              'click.echo(f"Incorporation date: {fecha}")',
+              1,
+          )
           cli.write_text(before + marker + after, encoding='utf-8')
-
-          wheel = Path('.github/workflows/python-wheel-data.yml')
-          text = wheel.read_text(encoding='utf-8')
-          old = '''          if grep -q 'catalogmx/shared-data/' "$RUNNER_TEMP/wheel-contents.txt"; then\n            echo 'Unexpected embedded shared-data tree in wheel' >&2\n            exit 1\n          fi\n'''
-          new = old + '''          if grep -q 'catalogmx/data/mexico_dynamic.sqlite3' "$RUNNER_TEMP/wheel-contents.txt"; then\n            echo 'Dynamic runtime data must not be embedded in the code wheel' >&2\n            exit 1\n          fi\n'''
-          if old not in text:
-              raise SystemExit('wheel assertion anchor not found')
-          wheel.write_text(text.replace(old, new, 1), encoding='utf-8')
           PY
           git rm packages/python/catalogmx/data/mexico_dynamic.sqlite3
       - name: Format and validate
@@ -52,6 +48,6 @@ jobs:
         run: |
           git config user.name 'catalogmx-lifecycle[bot]'
           git config user.email 'catalogmx-lifecycle[bot]@users.noreply.github.com'
-          git add packages/python/pyproject.toml packages/python/catalogmx/cli.py .github/workflows/python-wheel-data.yml packages/python/catalogmx/data/updater.py packages/python/tests/test_data_updater.py packages/python/tests/test_data_lifecycle_contract.py
+          git add packages/python/pyproject.toml packages/python/catalogmx/cli.py packages/python/catalogmx/data/updater.py packages/python/tests/test_data_updater.py packages/python/tests/test_data_lifecycle_contract.py
           git commit -m 'refactor(data): apply runtime package cleanup'
           git push origin HEAD:feat/finish-data-lifecycle
