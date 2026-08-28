@@ -88,36 +88,33 @@ jobs:
           cd packages/shared-data
 
           failures=()
+          readonly NO_OBSERVATION=3
 
-          # Legacy fetchers use exit 1 for both a real failure and a valid
-          # Banxico window with no observations (weekends, holidays, publication
-          # gaps). Distinguish the two states from their explicit messages until
-          # the legacy fetcher CLI contract is normalized. Also fail closed if a
-          # multi-series updater reports an internal partial-source error.
+          # Fetchers share an explicit process contract:
+          #   0 = success / already current
+          #   3 = valid official-source window with no observations
+          #   anything else = failure
+          # This keeps orchestration independent from human-readable log text.
           run_updater() {
             label="$1"
             shift
-            log=$(mktemp)
 
             set +e
-            "$@" 2>&1 | tee "$log"
-            status=${PIPESTATUS[0]}
+            "$@"
+            status=$?
             set -e
 
-            if grep -Fq 'Error with' "$log"; then
-              echo "[workflow] $label reported a partial source failure." >&2
-              failures+=("$label")
-            elif [ "$status" -eq 0 ]; then
-              :
-            elif [ "$status" -eq 1 ] && \
-                 grep -Fq '[fetch] No new records' "$log" && \
-                 ! grep -Fq '[fetch] ERROR' "$log"; then
-              echo "[workflow] $label has no new observations; treating as a successful no-op."
-            else
-              failures+=("$label")
-            fi
-
-            rm -f "$log"
+            case "$status" in
+              0)
+                ;;
+              "$NO_OBSERVATION")
+                echo "[workflow] $label has no new observations; successful no-op."
+                ;;
+              *)
+                echo "[workflow] $label failed with exit code $status." >&2
+                failures+=("$label")
+                ;;
+            esac
           }
 
           run_updater UDIs python scripts/fetch_udis_banxico.py
@@ -147,7 +144,7 @@ jobs:
 
           echo "content_sha=$(jq -r '.dataset.content_sha256' mexico_dynamic.manifest.json)" \
             >> "$GITHUB_OUTPUT"
-          echo "data_version=$(jq -r '.data_version' mexico_dynamic.manifest.json)" \
+          echo "effective_through=$(jq -r '.max_effective_date // .data_version' mexico_dynamic.manifest.json)" \
             >> "$GITHUB_OUTPUT"
 
       - name: Decide whether publication state needs repair
@@ -162,8 +159,8 @@ jobs:
           manifest=mexico_dynamic.manifest.json
           local_dir=packages/shared-data
           content_sha='${{ steps.manifest.outputs.content_sha }}'
-          data_version='${{ steps.manifest.outputs.data_version }}'
-          archive_tag="data-${data_version}-${content_sha:0:12}"
+          effective_through='${{ steps.manifest.outputs.effective_through }}'
+          archive_tag="data-${effective_through}-${content_sha:0:12}"
           previous_sha=''
           previous_release_tag=''
           needs_publication=false
@@ -257,22 +254,22 @@ jobs:
           database=mexico_dynamic.sqlite3
           manifest=mexico_dynamic.manifest.json
           content_sha='${{ steps.manifest.outputs.content_sha }}'
-          data_version='${{ steps.manifest.outputs.data_version }}'
+          effective_through='${{ steps.manifest.outputs.effective_through }}'
           channel=data-banxico-sie-dynamic-1-latest
           immutable="data-banxico-sie-dynamic-1-${content_sha}"
-          archive_tag="data-${data_version}-${content_sha:0:12}"
+          archive_tag="data-${effective_through}-${content_sha:0:12}"
           verify_dir=$(mktemp -d)
           notes_file=$(mktemp)
           trap 'rm -rf "$verify_dir" "$notes_file"' EXIT
 
           cat > "$notes_file" <<EOF
-          # Dynamic Mexico data — ${data_version}
+          # Dynamic Mexico data — effective through ${effective_through}
 
           Independently versioned time-series data refreshed from configured official sources.
 
           - Dataset: \`banxico.sie_dynamic\`
           - Contract version: \`1\`
-          - Source-data cut: \`${data_version}\`
+          - Maximum effective date: \`${effective_through}\`
           - Semantic SHA-256: \`${content_sha}\`
 
           This data release is independent from CatalogMX package versions.
@@ -293,18 +290,16 @@ jobs:
             [ "$remote_sha" = "$content_sha" ]
           }
 
-          # Compatibility channel for existing DataUpdater clients. Keep the
-          # historical URL stable while adding the verified manifest.
           if gh release view latest >/dev/null 2>&1; then
             gh release upload latest "$database" "$manifest" --clobber
             gh release edit latest \
-              --title "Latest Data (${data_version})" \
+              --title "Latest Data (effective through ${effective_through})" \
               --notes-file "$notes_file" \
               --target "$reviewed_sha" \
               --latest=false
           else
             gh release create latest "$database" "$manifest" \
-              --title "Latest Data (${data_version})" \
+              --title "Latest Data (effective through ${effective_through})" \
               --notes-file "$notes_file" \
               --target "$reviewed_sha" \
               --latest=false
@@ -312,8 +307,8 @@ jobs:
           verify_release_assets latest
 
           # Human-readable archives are immutable per semantic content. A new
-          # semantic state creates a new date+hash tag instead of clobbering an
-          # older archive that happened to share the same source-data cut.
+          # semantic state creates a new effective-date+hash tag instead of
+          # clobbering an older archive with the same maximum effective date.
           if gh release view "$archive_tag" >/dev/null 2>&1; then
             if ! verify_release_assets "$archive_tag"; then
               echo "Existing dynamic archive $archive_tag does not match reviewed bytes." >&2
@@ -321,7 +316,7 @@ jobs:
             fi
           else
             gh release create "$archive_tag" "$database" "$manifest" \
-              --title "Data Update ${data_version} (${content_sha:0:12})" \
+              --title "Data effective through ${effective_through} (${content_sha:0:12})" \
               --notes-file "$notes_file" \
               --target "$reviewed_sha" \
               --latest=true
@@ -340,7 +335,7 @@ jobs:
           {
             echo '## Dynamic data publication'
             echo
-            echo "- Source-data cut: \`$data_version\`"
+            echo "- Maximum effective date: \`$effective_through\`"
             echo "- Content SHA-256: \`$content_sha\`"
             echo "- Immutable tag: \`$immutable\`"
             echo "- Resolver channel: \`$channel\`"

@@ -149,14 +149,14 @@ def validate_database(
             raise RuntimeError("dynamic SQLite contains a table without a source date")
 
         # `_metadata.version` is retained for the legacy DataUpdater contract but
-        # historically was not advanced by every incremental fetch. Runtime data
-        # identity therefore comes from the actual source rows, not that mutable
-        # compatibility field. This also keeps the cut deterministic for a given
-        # semantic dataset.
-        data_version = max(source_dates)
+        # historically was not advanced by every incremental fetch. Resolver
+        # identity therefore uses the maximum effective date present in source
+        # rows. Some series (notably UDI) legitimately publish future-effective
+        # observations, so this is not the workflow/update date.
+        max_effective_date = max(source_dates)
 
         return {
-            "data_version": data_version,
+            "max_effective_date": max_effective_date,
             "metadata_version": metadata_version,
             "schema_version": metadata.get("schema_version"),
             "counts": counts,
@@ -173,11 +173,15 @@ def build_manifest(
 ) -> dict[str, Any]:
     """Build a resolver manifest after applying the selected coverage guards."""
     validation = validate_database(path, minimum_counts=minimum_counts)
+    max_effective_date = validation["max_effective_date"]
     return {
         "schema_version": 1,
         "dataset_id": DATASET_ID,
         "dataset_version": DATASET_VERSION,
-        "data_version": validation["data_version"],
+        # ``data_version`` is part of the generic resolver contract. For this
+        # dataset its value is explicitly defined as the maximum effective date.
+        "data_version": max_effective_date,
+        "max_effective_date": max_effective_date,
         "authority": {
             "name": "BANXICO",
             "api": "https://www.banxico.org.mx/SieAPIRest/service/v1/",
@@ -216,7 +220,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         encoding="utf-8",
     )
     print(
-        f"Validated {args.database}: data={manifest['data_version']} "
+        f"Validated {args.database}: effective_through={manifest['max_effective_date']} "
         f"content={manifest['dataset']['content_sha256']}"
     )
     print(f"Wrote {args.output}")
