@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, ClassVar, Mapping
+from collections.abc import Mapping
+from typing import Any, ClassVar
 
 from catalogmx.catalogs.sat._sqlite import read_dataset_table
 
