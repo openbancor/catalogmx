@@ -1,8 +1,8 @@
 """Foreign tax-identity validation for Comercio Exterior.
 
 SAT publishes ``NumRegIdTrib`` format metadata by country in the shared CFDI
-``c_Pais`` catalog.  Historical CatalogMX versions also exposed a small,
-non-SAT list of generic identity-type aliases (``01``..``14``/``99``).  Those
+``c_Pais`` catalog. Historical CatalogMX versions also exposed a small,
+non-SAT list of generic identity-type aliases (``01``..``14``/``99``). Those
 aliases remain as code-owned compatibility labels, but regulatory validation is
 country-scoped and resolver-backed.
 """
@@ -82,25 +82,42 @@ class RegistroIdentTribCatalog:
 
         Most SAT country rows do not publish a local regex, so CatalogMX cannot
         invent one and accepts the value locally. Mexico explicitly requests
-        ``Lista del SAT`` validation; that remote/registry validation is likewise
-        not reduced to the accompanying pattern.
+        ``Lista del SAT`` validation; that external validation mode is surfaced
+        to callers instead of being reduced to the accompanying pattern.
         """
         rule = cls.get_country_rule(country_code)
         if not rule:
-            return {"valid": False, "errors": ["País no válido para NumRegIdTrib"]}
+            return {
+                "valid": False,
+                "errors": ["País no válido para NumRegIdTrib"],
+                "validation": None,
+                "requires_external_validation": False,
+            }
+
+        validation_mode = rule.get("validation_mode")
+        requires_external_validation = bool(validation_mode)
+        result_metadata = {
+            "validation": validation_mode,
+            "requires_external_validation": requires_external_validation,
+        }
+
         if not num_reg_id_trib:
-            return {"valid": False, "errors": ["NumRegIdTrib no puede estar vacío"]}
+            return {
+                "valid": False,
+                "errors": ["NumRegIdTrib no puede estar vacío"],
+                **result_metadata,
+            }
 
         pattern = rule.get("format_pattern")
-        validation_mode = rule.get("validation_mode")
-        if pattern and validation_mode != "Lista del SAT":
+        if pattern and not requires_external_validation:
             if re.fullmatch(pattern, num_reg_id_trib) is None:
                 return {
                     "valid": False,
                     "errors": [f"Formato de NumRegIdTrib no válido para país {rule['country']}"],
+                    **result_metadata,
                 }
 
-        return {"valid": True, "errors": []}
+        return {"valid": True, "errors": [], **result_metadata}
 
     @classmethod
     def validate_tax_id(cls, tipo_registro: str, num_reg_id_trib: str) -> dict:
