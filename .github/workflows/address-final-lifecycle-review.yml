@@ -1,0 +1,97 @@
+name: Address final lifecycle review
+
+on:
+  push:
+    branches:
+      - feat/finish-data-lifecycle
+
+permissions:
+  contents: write
+
+jobs:
+  address-review:
+    if: ${{ !contains(github.event.head_commit.message, 'close final lifecycle review') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/finish-data-lifecycle
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Keep HTTP failures fail-closed and honor offline sync
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          resolver = Path('packages/python/catalogmx/data/resolver.py')
+          text = resolver.read_text(encoding='utf-8')
+          text = text.replace(
+              'from urllib.request import Request, urlopen\n',
+              'from urllib.error import HTTPError\nfrom urllib.request import Request, urlopen\n',
+              1,
+          )
+          old = '''        try:\n            return self.downloader(url)\n        except OSError as exc:\n            raise _DatasetTransportError(f"dataset transport unavailable: {url}") from exc\n'''
+          new = '''        try:\n            return self.downloader(url)\n        except HTTPError:\n            # A server response (404/5xx) is a publication/integrity failure,\n            # not evidence that transport is unavailable. Never hide it behind\n            # a package bootstrap snapshot.\n            raise\n        except OSError as exc:\n            raise _DatasetTransportError(f"dataset transport unavailable: {url}") from exc\n'''
+          if old not in text:
+              raise SystemExit('resolver transport anchor not found')
+          resolver.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          updater = Path('packages/python/catalogmx/data/updater.py')
+          text = updater.read_text(encoding='utf-8')
+          old = '''        try:\n            root = self._resolver(mode="refresh").fetch_dataset(DATASET_ID)\n'''
+          new = '''        try:\n            mode = os.getenv("CATALOGMX_DATA_MODE", "refresh")\n            root = self._resolver(mode=mode).fetch_dataset(DATASET_ID)\n'''
+          if old not in text:
+              raise SystemExit('DataUpdater download anchor not found')
+          updater.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Add regression coverage
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          dynamic_tests = Path('packages/python/tests/test_banxico_dynamic_resolver.py')
+          text = dynamic_tests.read_text(encoding='utf-8')
+          if 'from urllib.error import HTTPError\n' not in text:
+              text = text.replace(
+                  'from pathlib import Path\n',
+                  'from pathlib import Path\nfrom urllib.error import HTTPError\n',
+                  1,
+              )
+          text += '''\n\ndef test_http_release_failure_never_falls_back_to_bootstrap(\n    tmp_path: Path, monkeypatch: pytest.MonkeyPatch\n) -> None:\n    monkeypatch.delenv("CATALOGMX_SHARED_DATA", raising=False)\n\n    def missing(url: str) -> bytes:\n        raise HTTPError(url, 404, "Not Found", hdrs=None, fp=None)\n\n    resolver = DatasetResolver(\n        cache_dir=tmp_path / "empty-cache",\n        mode="fetch-missing",\n        downloader=missing,\n    )\n\n    with pytest.raises(HTTPError) as exc_info:\n        resolver.resolve_dataset_root("banxico.sie_dynamic")\n    assert exc_info.value.code == 404\n    assert resolver.cache_status("banxico.sie_dynamic")["cached"] is False\n'''
+          dynamic_tests.write_text(text, encoding='utf-8')
+
+          updater_tests = Path('packages/python/tests/test_data_updater.py')
+          text = updater_tests.read_text(encoding='utf-8')
+          text += '''\n\ndef test_download_latest_honors_explicit_offline_mode(\n    tmp_path: Path, monkeypatch: pytest.MonkeyPatch\n) -> None:\n    monkeypatch.setenv("CATALOGMX_DATA_MODE", "offline")\n    updater = DataUpdater(cache_dir=tmp_path / "cache")\n    with mock.patch(\n        "catalogmx.data.updater.DatasetResolver"\n    ) as resolver_type:\n        resolver = resolver_type.return_value\n        resolver.fetch_dataset.side_effect = RuntimeError(\n            "cannot fetch or update datasets while CATALOGMX_DATA_MODE=offline"\n        )\n        assert updater.download_latest(verbose=False) is False\n\n    resolver_type.assert_called_once_with(\n        cache_dir=tmp_path / "cache",\n        mode="offline",\n        cache_ttl_seconds=None,\n    )\n    resolver.fetch_dataset.assert_called_once_with(DATASET_ID)\n'''
+          updater_tests.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Validate final review fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e 'packages/python[dev]'
+          ruff check --fix packages/python/catalogmx/data/resolver.py packages/python/catalogmx/data/updater.py packages/python/tests/test_banxico_dynamic_resolver.py packages/python/tests/test_data_updater.py
+          black packages/python/catalogmx/data/resolver.py packages/python/catalogmx/data/updater.py packages/python/tests/test_banxico_dynamic_resolver.py packages/python/tests/test_data_updater.py
+          ruff check packages/python/catalogmx/data/resolver.py packages/python/catalogmx/data/updater.py packages/python/tests/test_banxico_dynamic_resolver.py packages/python/tests/test_data_updater.py
+          git diff --check
+          cd packages/python
+          pytest -q tests/test_banxico_dynamic_resolver.py tests/test_data_updater.py tests/test_dataset_resolver.py tests/test_dataset_resolver_hardening.py tests/test_python_wheel_lifecycle_contract.py
+
+      - name: Commit fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'catalogmx-lifecycle[bot]'
+          git config user.email 'catalogmx-lifecycle[bot]@users.noreply.github.com'
+          git add packages/python/catalogmx/data/resolver.py packages/python/catalogmx/data/updater.py packages/python/tests/test_banxico_dynamic_resolver.py packages/python/tests/test_data_updater.py
+          git commit -m 'fix(data): close final lifecycle review'
+          git push origin HEAD:feat/finish-data-lifecycle
