@@ -1,0 +1,91 @@
+name: Inspect CFDI consumer contract
+
+on:
+  push:
+    branches:
+      - feat/resolver-backed-cfdi-consumers
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/resolver-backed-cfdi-consumers
+      - name: Inspect JSON views and canonical SQLite schema
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import re
+          import sqlite3
+          import urllib.request
+          from pathlib import Path
+
+          modules = Path('packages/python/catalogmx/catalogs/sat/cfdi_4')
+          shared = Path('packages/shared-data/sat/cfdi_4.0')
+          pattern = re.compile(
+              r'get_shared_data_path\(\s*["\']sat["\']\s*,\s*["\']cfdi_4\.0["\']\s*,\s*["\']([^"\']+)["\']'
+          )
+
+          print('=== LEGACY JSON SHAPES ===')
+          for module in sorted(modules.glob('*.py')):
+              text = module.read_text(encoding='utf-8')
+              match = pattern.search(text)
+              if not match:
+                  continue
+              filename = match.group(1)
+              path = shared / filename
+              payload = json.loads(path.read_text(encoding='utf-8'))
+              if isinstance(payload, list):
+                  rows = payload
+                  envelope = 'list'
+              elif isinstance(payload, dict):
+                  envelope = 'dict:' + ','.join(sorted(payload))
+                  rows = None
+                  for value in payload.values():
+                      if isinstance(value, list):
+                          rows = value
+                          break
+                  if rows is None and isinstance(payload.get('data'), list):
+                      rows = payload['data']
+                  rows = rows or []
+              else:
+                  envelope = type(payload).__name__
+                  rows = []
+              sample = rows[0] if rows else None
+              keys = sorted(sample) if isinstance(sample, dict) else []
+              print(json.dumps({
+                  'module': module.name,
+                  'filename': filename,
+                  'envelope': envelope,
+                  'row_count': len(rows),
+                  'keys': keys,
+                  'sample': sample,
+              }, ensure_ascii=False, default=str))
+
+          url = (
+              'https://github.com/openbancor/catalogmx/releases/download/'
+              'data-sat-cfdi-4-4-0-6a15f6bdf37682967be4105d1522de7e9d5401fc0e74ce944bc633d6d05347f6/'
+              'sat_cfdi_40.sqlite3'
+          )
+          db_path = Path('/tmp/sat_cfdi_40.sqlite3')
+          urllib.request.urlretrieve(url, db_path)
+          con = sqlite3.connect(db_path)
+          try:
+              tables = [row[0] for row in con.execute(
+                  "SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'cfdi_40_%' ORDER BY name"
+              )]
+              print('=== CANONICAL SQLITE SHAPES ===')
+              for table in tables:
+                  cols = [row[1] for row in con.execute(f'PRAGMA table_info("{table}")')]
+                  sample = con.execute(f'SELECT * FROM "{table}" LIMIT 1').fetchone()
+                  print(json.dumps({
+                      'table': table,
+                      'columns': cols,
+                      'sample': list(sample) if sample is not None else None,
+                  }, ensure_ascii=False, default=str))
+          finally:
+              con.close()
+          PY
