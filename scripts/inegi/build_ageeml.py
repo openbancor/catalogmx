@@ -33,6 +33,8 @@ AUTHORITATIVE_PORTAL = "https://www.inegi.org.mx/app/ageeml/default.html"
 SOURCE_URL = "https://www.inegi.org.mx/contenidos/app/ageeml/min_con_acento_baja.zip"
 OUTPUT_NAME = "inegi_ageeml.sqlite3"
 MANIFEST_NAME = "inegi_ageeml.manifest.json"
+ARTIFACT_FORMAT = "file"
+MOUNT_PATH = "inegi/ageeml"
 MIN_NATIONAL_RECORDS = 250_000
 EXPECTED_STATE_CODES = frozenset(f"{value:02d}" for value in range(1, 33))
 
@@ -414,6 +416,8 @@ def build_manifest(
         },
         "dataset": {
             "file": output_db.name,
+            "format": ARTIFACT_FORMAT,
+            "mount_path": MOUNT_PATH,
             "file_sha256": sha256_file(output_db),
             "content_sha256": semantic_hash(output_db),
             "record_count": statistics["record_count"],

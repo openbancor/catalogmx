@@ -25,6 +25,38 @@
       "datasets": [
         "banxico.sie_dynamic"
       ]
+    },
+    "sat-cfdi": {
+      "description": "SAT CFDI 4.0 canonical reference catalogs.",
+      "datasets": [
+        "sat.cfdi_4"
+      ]
+    },
+    "sat-carta-porte": {
+      "description": "SAT Carta Porte 3.1 canonical reference catalogs.",
+      "datasets": [
+        "sat.carta_porte"
+      ]
+    },
+    "sat-comercio-exterior": {
+      "description": "SAT Comercio Exterior 2.0 plus its shared CFDI 4.0 catalog dependency.",
+      "datasets": [
+        "sat.cfdi_4",
+        "sat.comercio_exterior"
+      ]
+    },
+    "sat-nomina": {
+      "description": "SAT Nomina 1.2 revision E canonical reference catalogs.",
+      "datasets": [
+        "sat.nomina_1_2"
+      ]
+    },
+    "mexico-geo": {
+      "description": "National INEGI AGEEML localities and SEPOMEX postal reference data.",
+      "datasets": [
+        "inegi.ageeml",
+        "sepomex.codigos_postales"
+      ]
     }
   },
   "datasets": [
@@ -66,16 +98,26 @@
         "upstream_checked_at": "2026-08-26"
       },
       "implementation": {
-        "status": "partial",
+        "status": "resolver_ready",
         "official_catalogs": 25,
         "embedded_convenience_json_files": 14,
         "canonical_distribution": "release",
         "release_artifact": "sat_cfdi_40.sqlite3",
         "legacy_view_path": "packages/shared-data/sat/cfdi_4.0",
         "legacy_fetch_script": "scripts/fetch_sat_catalogs.py",
-        "consumer_migration_required_before_removal": true
+        "consumer_migration_required_before_removal": true,
+        "manifest": "sat_cfdi_40.manifest.json"
       },
-      "notes": "CFDI 4.0 remains the valid Anexo 20 version. The embedded cfdi_4.0 directory is a convenience subset, not the complete current 25-table CFDI 4.0 catalog family represented by the reviewed technical mirror. Full canonical catalog data is distributed independently as a content-addressed release artifact; legacy embedded views remain for compatibility until consumers use the dataset resolver."
+      "notes": "CFDI 4.0 remains the valid Anexo 20 version. The canonical 25-table SQLite dataset is independently versioned and resolver-ready; legacy embedded convenience views remain only for compatibility while consumers migrate.",
+      "artifact": {
+        "version": "4.0",
+        "channel": "data-sat-cfdi-4-4-0-latest",
+        "file": "sat_cfdi_40.sqlite3",
+        "manifest": "sat_cfdi_40.manifest.json",
+        "format": "file",
+        "mount_path": "sat/cfdi_4.0",
+        "discovery": "release-pointer"
+      }
     },
     {
       "id": "sat.carta_porte",
@@ -113,14 +155,25 @@
         "upstream_checked_at": "2026-08-26"
       },
       "implementation": {
-        "status": "partial",
+        "status": "resolver_ready",
         "official_catalogs": 32,
         "embedded_convenience_json_files": 7,
-        "canonical_full_dataset": false,
-        "planned_full_distribution": "release",
-        "legacy_view_path": "packages/shared-data/sat/carta_porte_3"
+        "legacy_view_path": "packages/shared-data/sat/carta_porte_3",
+        "canonical_distribution": "release",
+        "release_artifact": "sat_carta_porte_31.sqlite3",
+        "manifest": "sat_carta_porte_31.manifest.json",
+        "consumer_migration_required_before_removal": true
       },
-      "notes": "Carta Porte 3.1 is current. The existing carta_porte_3 directory is a legacy partial convenience view, not a complete one-to-one copy of the 32 official CCP 3.1 catalogs. Some convenience files, such as aeropuertos.json, do not map directly to same-named SAT catalogs. Do not auto-refresh these views as if they were the canonical upstream dataset. Build and distribute the complete official dataset independently, then derive convenience views explicitly."
+      "notes": "Carta Porte 3.1 is current. The canonical release contains the complete 32-table ccp_31 catalog family and is independently versioned and resolver-ready; legacy convenience JSON views remain compatibility projections rather than the canonical source.",
+      "artifact": {
+        "version": "3.1",
+        "channel": "data-sat-carta-porte-3-1-latest",
+        "file": "sat_carta_porte_31.sqlite3",
+        "manifest": "sat_carta_porte_31.manifest.json",
+        "format": "file",
+        "mount_path": "sat/carta_porte_3.1",
+        "discovery": "release-pointer"
+      }
     },
     {
       "id": "sat.comercio_exterior",
@@ -157,7 +210,7 @@
         "upstream_checked_at": "2026-08-26"
       },
       "implementation": {
-        "status": "legacy_embedded_views",
+        "status": "resolver_ready",
         "official_catalogs_total": 14,
         "canonical_owned_catalogs": 10,
         "shared_cfdi_catalogs": 4,
@@ -172,9 +225,19 @@
         "canonical_distribution": "release",
         "release_artifact": "sat_comercio_exterior_20.sqlite3",
         "legacy_view_path": "packages/shared-data/sat/comercio_exterior",
-        "consumer_migration_required_before_removal": true
+        "consumer_migration_required_before_removal": true,
+        "manifest": "sat_comercio_exterior_20.manifest.json"
       },
-      "notes": "Comercio Exterior 2.0 has been effective with CFDI 4.0 since 2024-01-18. The reviewed technical mirror exposes 10 CCE-owned cce_20_* tables and reuses four shared CFDI 4.0 catalogs (country, currency, postal code and tax regime), for 14 catalog concepts in the complement contract. The eight embedded JSON files are legacy convenience views and mix CCE-owned, shared and derived semantics; do not overwrite them as a canonical mirror. The canonical release contains only the 10 CCE-owned tables and declares sat.cfdi_4 as a dependency."
+      "notes": "Comercio Exterior 2.0 has been effective with CFDI 4.0 since 2024-01-18. Its canonical release contains the 10 CCE-owned tables; the sat-comercio-exterior runtime profile also resolves sat.cfdi_4 for the four shared CFDI catalog concepts. Legacy JSON views remain for compatibility during consumer migration.",
+      "artifact": {
+        "version": "2.0",
+        "channel": "data-sat-comercio-exterior-2-0-latest",
+        "file": "sat_comercio_exterior_20.sqlite3",
+        "manifest": "sat_comercio_exterior_20.manifest.json",
+        "format": "file",
+        "mount_path": "sat/comercio_exterior_2.0",
+        "discovery": "release-pointer"
+      }
     },
     {
       "id": "sat.nomina_1_2",
@@ -218,7 +281,7 @@
         "upstream_checked_at": "2026-08-26"
       },
       "implementation": {
-        "status": "complete",
+        "status": "resolver_ready",
         "xsd_catalog_types": 13,
         "canonical_catalog_tables": 13,
         "canonical_distribution": "release",
@@ -230,9 +293,19 @@
         "legacy_view_path": "packages/shared-data/sat/nomina_1.2",
         "normalized_catalogs": 13,
         "missing_normalized_catalogs": [],
-        "consumer_migration_required_before_removal": true
+        "consumer_migration_required_before_removal": true,
+        "manifest": "sat_nomina_12.manifest.json"
       },
-      "notes": "Revision E is effective from 2026-01-01. The canonical release contains the 13 catalog families represented by catNomina.xsd; nomina_estados remains an explicitly excluded auxiliary table. All 13 embedded JSON compatibility views are generated from the canonical artifact, and Python, TypeScript, Dart and Kotlin expose 13/13 catalog families. Kotlin no longer carries embedded regulatory copies. Embedded views remain until issue #57 completes the common dataset resolver/profile migration."
+      "notes": "Nómina 1.2 revision E is effective from 2026-01-01. The canonical release contains all 13 catNomina catalog families and is resolver-ready; generated embedded JSON views remain compatibility projections while consumers migrate.",
+      "artifact": {
+        "version": "1.2-revision-e",
+        "channel": "data-sat-nomina-1-2-1-2-revision-e-latest",
+        "file": "sat_nomina_12.sqlite3",
+        "manifest": "sat_nomina_12.manifest.json",
+        "format": "file",
+        "mount_path": "sat/nomina_1.2",
+        "discovery": "release-pointer"
+      }
     },
     {
       "id": "sat.contabilidad_electronica",
@@ -408,14 +481,24 @@
         "latest_indexed_cut": "2026/JUN"
       },
       "implementation": {
-        "status": "legacy_embedded_views",
+        "status": "resolver_ready",
         "canonical_distribution": "release",
-        "planned_release_artifact": "inegi_ageeml.sqlite3",
         "legacy_download_script": "scripts/download_inegi_complete.py",
         "synthetic_fallback_forbidden": true,
-        "consumer_migration_required_before_removal": true
+        "consumer_migration_required_before_removal": true,
+        "release_artifact": "inegi_ageeml.sqlite3",
+        "manifest": "inegi_ageeml.manifest.json"
       },
-      "notes": "AGEEML is a permanently updated geographic registry. INEGI exposes current national predefined ZIP catalogs; the latest cut visible in the indexed official AGEEML page on 2026-08-26 is 2026/JUN. The legacy downloader contains a partial synthetic fallback and stale hard-coded metadata and must not be used for unattended maintenance. SCIAN is tracked separately because it has a different version and lifecycle."
+      "notes": "AGEEML is a permanently updated national geographic registry. The fail-closed canonical SQLite release preserves active/inactive localities and full 01-32 state coverage and is resolver-ready; synthetic fallback is forbidden. Legacy embedded views remain compatibility data during migration.",
+      "artifact": {
+        "version": "1",
+        "channel": "data-inegi-ageeml-1-latest",
+        "file": "inegi_ageeml.sqlite3",
+        "manifest": "inegi_ageeml.manifest.json",
+        "format": "file",
+        "mount_path": "inegi/ageeml",
+        "discovery": "release-pointer"
+      }
     },
     {
       "id": "inegi.scian_2023",
@@ -476,21 +559,31 @@
         "source_reported_updated_at": "2026-08-25"
       },
       "implementation": {
-        "status": "legacy_embedded_snapshot",
+        "status": "resolver_ready",
         "canonical_distribution": "release",
         "release_artifact": "sepomex_codigos_postales.sqlite3",
         "legacy_full_json": "packages/shared-data/sepomex/codigos_postales_completo.json",
         "legacy_sqlite": "packages/shared-data/sqlite/sepomex.db",
         "legacy_full_json_bytes": 42189614,
         "legacy_sqlite_bytes": 13287424,
-        "consumer_migration_required_before_removal": true
+        "consumer_migration_required_before_removal": true,
+        "manifest": "sepomex_codigos_postales.manifest.json"
       },
       "rights": {
         "source_terms_checked_at": "2026-08-26",
         "commercialization_restricted": true,
         "project_relicenses_source_data": false
       },
-      "notes": "The official SEPOMEX portal reported an information update on 2026-08-25. The canonical full dataset is moving to an independently versioned release artifact. Existing large JSON/SQLite snapshots remain temporarily for compatibility with current language consumers and must not be deleted until those consumers use the dataset resolver. Automated ingestion is fail-closed and must never substitute synthetic fallback postal codes when the official source is unavailable."
+      "notes": "The official national Correos de México/SEPOMEX export is normalized into a fail-closed canonical SQLite release with full state coverage. The release is resolver-ready; the large embedded JSON and legacy SQLite snapshots remain only for compatibility while consumers migrate.",
+      "artifact": {
+        "version": "1",
+        "channel": "data-sepomex-codigos-postales-1-latest",
+        "file": "sepomex_codigos_postales.sqlite3",
+        "manifest": "sepomex_codigos_postales.manifest.json",
+        "format": "file",
+        "mount_path": "sepomex",
+        "discovery": "release-pointer"
+      }
     },
     {
       "id": "cnbv.reference",

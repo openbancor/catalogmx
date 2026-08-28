@@ -38,6 +38,8 @@ DATASET_ID = "sat.carta_porte"
 DATASET_VERSION = "3.1"
 OUTPUT_NAME = "sat_carta_porte_31.sqlite3"
 MANIFEST_NAME = "sat_carta_porte_31.manifest.json"
+ARTIFACT_FORMAT = "file"
+MOUNT_PATH = "sat/carta_porte_3.1"
 
 EXPECTED_TABLES = (
     "ccp_31_autorizaciones_naviero",
@@ -259,6 +261,8 @@ def build_manifest(
         },
         "dataset": {
             "file": output_db.name,
+            "format": ARTIFACT_FORMAT,
+            "mount_path": MOUNT_PATH,
             "file_sha256": sha256_file(output_db),
             "content_sha256": semantic_hash(output_db, counts),
             "table_count": len(counts),

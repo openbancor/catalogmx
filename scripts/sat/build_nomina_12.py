@@ -49,6 +49,8 @@ DATASET_ID = "sat.nomina_1_2"
 DATASET_VERSION = "1.2-revision-e"
 OUTPUT_NAME = "sat_nomina_12.sqlite3"
 MANIFEST_NAME = "sat_nomina_12.manifest.json"
+ARTIFACT_FORMAT = "file"
+MOUNT_PATH = "sat/nomina_1.2"
 
 EXPECTED_TABLES = (
     "nomina_bancos",
@@ -385,6 +387,8 @@ def build_manifest(
         },
         "dataset": {
             "file": output_db.name,
+            "format": ARTIFACT_FORMAT,
+            "mount_path": MOUNT_PATH,
             "file_sha256": sha256_file(output_db),
             "content_sha256": semantic_hash(output_db, counts),
             "table_count": len(counts),
