@@ -48,9 +48,7 @@ class MaterialPeligrosoCatalog:
         """
         cls._load_data()
         return [
-            material
-            for material in cls._data
-            if material.get("packing_group") == packing_group
+            material for material in cls._data if material.get("packing_group") == packing_group
         ]
 
     @classmethod
