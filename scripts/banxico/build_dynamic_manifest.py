@@ -49,11 +49,14 @@ TABLE_COLUMNS: dict[str, tuple[str, ...]] = {
 
 # These are intentionally conservative publication guards, not expected exact
 # counts. A truncated/empty database must never replace the live release.
+# CETES 28-day observations are weekly from 1978; 3,000 observations would be
+# impossible before the 2030s, so its guard is deliberately below the plausible
+# current full-history count while still rejecting severe truncation.
 MINIMUM_COUNTS: dict[str, int] = {
     "udis": 10_000,
     "tipo_cambio": 20_000,
     "tiie": 5_000,
-    "cetes": 3_000,
+    "cetes": 2_000,
     "inflacion": 100,
     "salarios_minimos": 100,
 }
@@ -119,8 +122,8 @@ def validate_database(
             raise RuntimeError("dynamic SQLite is missing tables: " + ", ".join(missing))
 
         metadata = dict(connection.execute("SELECT key, value FROM _metadata").fetchall())
-        data_version = metadata.get("version")
-        if not isinstance(data_version, str) or not data_version:
+        metadata_version = metadata.get("version")
+        if not isinstance(metadata_version, str) or not metadata_version:
             raise RuntimeError("dynamic SQLite metadata is missing version")
         if metadata.get("source") != "banxico":
             raise RuntimeError("dynamic SQLite metadata source is not banxico")
@@ -141,8 +144,20 @@ def validate_database(
                 f"SELECT MAX(fecha) FROM {quoted}"
             ).fetchone()[0]
 
+        source_dates = [value for value in latest_dates.values() if value]
+        if len(source_dates) != len(TABLE_COLUMNS):
+            raise RuntimeError("dynamic SQLite contains a table without a source date")
+
+        # `_metadata.version` is retained for the legacy DataUpdater contract but
+        # historically was not advanced by every incremental fetch. Runtime data
+        # identity therefore comes from the actual source rows, not that mutable
+        # compatibility field. This also keeps the cut deterministic for a given
+        # semantic dataset.
+        data_version = max(source_dates)
+
         return {
             "data_version": data_version,
+            "metadata_version": metadata_version,
             "schema_version": metadata.get("schema_version"),
             "counts": counts,
             "latest_dates": latest_dates,
