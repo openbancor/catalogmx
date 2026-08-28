@@ -23,6 +23,7 @@ import datetime
 import click
 
 from catalogmx.data.cli import data as data_cli
+from catalogmx.data.cli import data_fetch
 from catalogmx.validators.curp import CURPGenerator, CURPValidator
 from catalogmx.validators.rfc import RFCGenerator, RFCValidator
 
@@ -54,6 +55,9 @@ def curp():
 
 
 main.add_command(data_cli)
+# Keep the structured ``catalogmx data fetch`` surface while also honoring the
+# original explicit-fetch contract as a convenient top-level alias.
+main.add_command(data_fetch, name="fetch")
 
 
 @rfc.command("validate")

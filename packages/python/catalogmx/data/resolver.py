@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 from importlib import resources
 from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any, TypeGuard
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 DEFAULT_RELEASE_BASE_URL = "https://github.com/openbancor/catalogmx/releases/download"
@@ -31,6 +32,10 @@ _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _RELEASE_TAG_RE = re.compile(r"^[A-Za-z0-9._-]+$")
 
 Downloader = Callable[[str], bytes]
+
+
+class _DatasetTransportError(RuntimeError):
+    """Remote dataset transport is unavailable before integrity validation."""
 
 
 def load_dataset_contract() -> dict[str, Any]:
@@ -156,6 +161,7 @@ class DatasetResolver:
         release_metadata_base_url: str | None = None,
         contract: Mapping[str, Any] | None = None,
         downloader: Downloader | None = None,
+        cache_ttl_seconds: int | None = None,
     ) -> None:
         self.contract = dict(contract or load_dataset_contract())
         self.cache_root = (
@@ -166,6 +172,20 @@ class DatasetResolver:
         self.mode = mode or os.getenv("CATALOGMX_DATA_MODE", DEFAULT_DATA_MODE)
         if self.mode not in ALLOWED_DATA_MODES:
             raise ValueError(f"CATALOGMX_DATA_MODE must be one of {sorted(ALLOWED_DATA_MODES)}")
+        ttl_value: int | str | None = cache_ttl_seconds
+        if ttl_value is None:
+            ttl_value = os.getenv("CATALOGMX_CACHE_TTL")
+        if ttl_value in {None, ""}:
+            self.cache_ttl_seconds: int | None = None
+        else:
+            try:
+                self.cache_ttl_seconds = int(ttl_value)
+            except (TypeError, ValueError) as exc:
+                raise ValueError(
+                    "CATALOGMX_CACHE_TTL must be a positive integer number of seconds"
+                ) from exc
+            if self.cache_ttl_seconds <= 0:
+                raise ValueError("CATALOGMX_CACHE_TTL must be a positive integer number of seconds")
         self.release_base_url = (
             release_base_url or os.getenv("CATALOGMX_RELEASE_BASE_URL") or DEFAULT_RELEASE_BASE_URL
         ).rstrip("/")
@@ -175,6 +195,23 @@ class DatasetResolver:
             or DEFAULT_RELEASE_METADATA_BASE_URL
         ).rstrip("/")
         self.downloader = downloader or _default_downloader
+
+    def _download(self, url: str) -> bytes:
+        """Download bytes while separating transport failure from bad data.
+
+        Bootstrap fallback is permitted only when bytes cannot be obtained.
+        Once a remote endpoint returns bytes, pointer/manifest/checksum errors
+        remain fail-closed and must never be hidden by package bootstrap data.
+        """
+        try:
+            return self.downloader(url)
+        except HTTPError:
+            # A server response (404/5xx) is a publication/integrity failure,
+            # not evidence that transport is unavailable. Never hide it behind
+            # a package bootstrap snapshot.
+            raise
+        except OSError as exc:
+            raise _DatasetTransportError(f"dataset transport unavailable: {url}") from exc
 
     def dataset_ids_for_profile(self, profile: str) -> list[str]:
         profiles = self.contract["profiles"]
@@ -230,9 +267,23 @@ class DatasetResolver:
             return None
         return root, state
 
-    def _cache_is_stale(self, dataset: Mapping[str, Any], state: Mapping[str, Any]) -> bool:
+    def _cache_ttl(self, dataset: Mapping[str, Any]) -> int | None:
+        """Return the effective cache TTL in seconds.
+
+        ``CATALOGMX_CACHE_TTL`` / ``cache_ttl_seconds`` is an operational
+        override. Without it, each dataset keeps the freshness SLA declared in
+        the generated registry contract.
+        """
+        if self.cache_ttl_seconds is not None:
+            return self.cache_ttl_seconds
         max_age_days = dataset.get("freshness", {}).get("max_age_days")
         if not isinstance(max_age_days, int) or max_age_days <= 0:
+            return None
+        return max_age_days * 86400
+
+    def _cache_is_stale(self, dataset: Mapping[str, Any], state: Mapping[str, Any]) -> bool:
+        ttl_seconds = self._cache_ttl(dataset)
+        if ttl_seconds is None:
             return False
         fetched_at = state.get("fetched_at")
         if not isinstance(fetched_at, str):
@@ -244,7 +295,7 @@ class DatasetResolver:
         if fetched.tzinfo is None:
             fetched = fetched.replace(tzinfo=timezone.utc)
         age = datetime.now(timezone.utc) - fetched.astimezone(timezone.utc)
-        return age.total_seconds() > max_age_days * 86400
+        return age.total_seconds() > ttl_seconds
 
     def _configured_root(self, dataset: Mapping[str, Any]) -> Path | None:
         configured = os.getenv("CATALOGMX_SHARED_DATA")
@@ -277,6 +328,33 @@ class DatasetResolver:
                 return candidate
         return None
 
+    def _bootstrap_root(self, dataset: Mapping[str, Any]) -> Path | None:
+        """Return an explicitly declared package bootstrap root, if present.
+
+        Bootstrap data is a compatibility/offline fallback only. It is never
+        considered verified cache state and never suppresses normal remote
+        resolution in ``fetch-missing`` or ``refresh`` modes.
+        """
+        bootstrap = dataset.get("bootstrap")
+        if bootstrap is None:
+            return None
+        if not isinstance(bootstrap, dict):
+            raise RuntimeError("dataset bootstrap contract must be an object")
+        if bootstrap.get("role") != "offline-fallback":
+            raise RuntimeError("unsupported dataset bootstrap role")
+        if bootstrap.get("kind") != "file":
+            raise RuntimeError("unsupported dataset bootstrap kind")
+        package_path = bootstrap.get("package_path")
+        if not isinstance(package_path, str) or not package_path:
+            raise RuntimeError("dataset bootstrap package_path must be a non-empty string")
+        artifact = dataset["artifact"]
+        if artifact.get("format") != "file":
+            raise RuntimeError("file bootstrap requires a file artifact")
+        candidate = Path(__file__).resolve().parents[1] / _safe_relative_path(package_path)
+        if candidate.name != artifact.get("file"):
+            raise RuntimeError("dataset bootstrap filename mismatch")
+        return candidate.parent if candidate.is_file() else None
+
     def resolve_dataset_root(self, dataset_id: str) -> Path:
         dataset = self._dataset(dataset_id)
 
@@ -303,16 +381,22 @@ class DatasetResolver:
         if repository is not None:
             return repository
 
+        bootstrap = self._bootstrap_root(dataset)
+
         if self.mode == "offline":
             if cached is not None:
                 return cached[0]
+            if bootstrap is not None:
+                return bootstrap
             raise FileNotFoundError(f"dataset {dataset_id} is unavailable in offline mode")
 
         try:
             return self.fetch_dataset(dataset_id)
-        except Exception:
+        except Exception as exc:
             if cached is not None and self.verify_cached_dataset(dataset_id):
                 return cached[0]
+            if bootstrap is not None and isinstance(exc, _DatasetTransportError):
+                return bootstrap
             raise
 
     def get_dataset_path(self, dataset_id: str, *parts: str) -> Path:
@@ -391,7 +475,7 @@ class DatasetResolver:
 
         discovery = artifact.get("discovery", "direct")
         if discovery == "release-pointer":
-            metadata_payload = self.downloader(self._release_metadata_url(channel))
+            metadata_payload = self._download(self._release_metadata_url(channel))
             try:
                 metadata = json.loads(metadata_payload.decode("utf-8"))
             except (UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -430,7 +514,7 @@ class DatasetResolver:
         elif discovery != "direct":
             raise RuntimeError(f"unsupported dataset discovery mode: {discovery}")
 
-        manifest_payload = self.downloader(self._release_url(release_tag, artifact["manifest"]))
+        manifest_payload = self._download(self._release_url(release_tag, artifact["manifest"]))
         manifest, manifest_dataset, content_sha = self._parse_manifest(
             dataset_id, dataset, manifest_payload
         )
@@ -709,7 +793,7 @@ class DatasetResolver:
                 content_sha,
             ) = self._resolve_release(dataset_id, dataset)
 
-            artifact_payload = self.downloader(self._release_url(release_tag, artifact["file"]))
+            artifact_payload = self._download(self._release_url(release_tag, artifact["file"]))
             if _sha256(artifact_payload) != manifest_dataset["file_sha256"]:
                 raise RuntimeError("dataset release artifact checksum mismatch")
 

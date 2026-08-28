@@ -27,6 +27,11 @@
         "mount_path": "dynamic",
         "version": "1"
       },
+      "bootstrap": {
+        "kind": "file",
+        "package_path": "data/mexico_dynamic.sqlite3",
+        "role": "offline-fallback"
+      },
       "freshness": {
         "max_age_days": 2,
         "mode": "pipeline",
