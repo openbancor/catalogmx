@@ -1,0 +1,21 @@
+name: Debug Black
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  black-diff:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/python
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install exact Black from CI
+        run: pip install black==26.5.1
+      - name: Show required formatting
+        run: black --diff --check catalogmx/data/cli.py
