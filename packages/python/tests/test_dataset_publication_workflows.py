@@ -22,6 +22,8 @@ def test_generic_publisher_has_valid_shell_syntax_and_no_live_asset_clobber():
     assert 'expected_pointer=$(printf \'%s\' "$pointer" | jq -ceS \'.\')' in text
     assert "release_count()" in text
     assert "jq -sc 'length'" in text
+    assert "validate_pointer_body()" in text
+    assert '.release_tag == ($release_prefix + .content_sha256)' in text
     assert "verify_legacy_channel()" in text
     assert '"Automated CatalogMX data artifact. Source mirror release:"*' in text
     assert "cleanup_channel_assets()" in text
