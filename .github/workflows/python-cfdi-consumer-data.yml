@@ -171,6 +171,23 @@ jobs:
               )
 
               connection.execute(
+                  "CREATE TABLE cfdi_40_paises ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, "
+                  "patron_identidad_tributaria TEXT, "
+                  "validacion_identidad_tributaria TEXT, "
+                  "patron_codigo_postal TEXT, agrupaciones TEXT)"
+              )
+              connection.executemany(
+                  "INSERT INTO cfdi_40_paises VALUES (?, ?, ?, ?, ?, ?)",
+                  [
+                      ("CAN", "Canadá", "[0-9]{9}", "", "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]", "TLCAN"),
+                      ("ESP", "España", "", "", "", "Unión Europea"),
+                      ("MEX", "México", "[A-Z&Ñ]{3,4}[0-9]{2}[0-9A-Z]+", "Lista del SAT", "[0-9]{5}", "TLCAN"),
+                      ("USA", "Estados Unidos (los)", "[0-9]{9}", "", "[0-9]{5}(-[0-9]{4})?", "TLCAN"),
+                  ],
+              )
+
+              connection.execute(
                   "CREATE TABLE cfdi_40_reglas_tasa_cuota ("
                   "tipo TEXT NOT NULL, minimo TEXT, valor TEXT, "
                   "impuesto TEXT NOT NULL, factor TEXT NOT NULL, "
@@ -212,7 +229,7 @@ jobs:
           payload = database.read_bytes()
           file_sha = hashlib.sha256(payload).hexdigest()
           content_sha = hashlib.sha256(
-              b"catalogmx-cfdi-installed-wheel-consumer-fixture-v3"
+              b"catalogmx-cfdi-installed-wheel-consumer-fixture-v4"
           ).hexdigest()
           channel = contract["channel"]
           release_tag = f"{channel.removesuffix('-latest')}-{content_sha}"
@@ -304,7 +321,10 @@ jobs:
           from catalogmx.catalogs.sat.cfdi_4.periodicidad import Periodicidad
           from catalogmx.catalogs.sat.cfdi_4.tasa_o_cuota import TasaOCuota
           from catalogmx.catalogs.sat.cfdi_4.tipo_factor import TipoFactor
-          from catalogmx.catalogs.sat.comercio_exterior import MonedaCatalog
+          from catalogmx.catalogs.sat.comercio_exterior import (
+              MonedaCatalog,
+              RegistroIdentTribCatalog,
+          )
           from catalogmx.data import DatasetResolver
 
           assert ExportacionCatalog.get_exportacion("01") == {
@@ -365,6 +385,24 @@ jobs:
           assert moneda["decimales"] == 2
           assert moneda["pais"] is None
           assert [item["codigo"] for item in MonedaCatalog.search("Euro")] == ["EUR"]
+
+          usa_rule = RegistroIdentTribCatalog.get_country_rule("USA")
+          assert usa_rule is not None
+          assert usa_rule["format_pattern"] == "[0-9]{9}"
+          assert RegistroIdentTribCatalog.validate_for_country(
+              "USA", "123456789"
+          )["valid"] is True
+          assert RegistroIdentTribCatalog.validate_for_country(
+              "USA", "12345678"
+          )["valid"] is False
+          assert RegistroIdentTribCatalog.validate_for_country(
+              "ESP", "ES-ANY-VALUE"
+          )["valid"] is True
+          mexico = RegistroIdentTribCatalog.validate_for_country(
+              "MEX", "ABC010101AA0"
+          )
+          assert mexico["requires_external_validation"] is True
+          assert mexico["validation"] == "Lista del SAT"
 
           resolver = DatasetResolver()
           assert resolver.verify_cached_dataset("sat.cfdi_4")
