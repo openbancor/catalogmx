@@ -98,8 +98,10 @@ jobs:
           echo "slot=$slot" >> "$GITHUB_OUTPUT"
           echo "Running $cadence maintenance slot $slot"
 
-      - name: Validate catalog registry
-        run: python scripts/catalog_registry.py validate
+      - name: Validate catalog registry and publisher
+        run: |
+          python scripts/catalog_registry.py validate
+          bash -n scripts/publish_dataset_release.sh
 
       - name: Plan maintenance
         run: |
@@ -181,6 +183,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -euo pipefail
           shopt -s nullglob
           manifests=(dist/catalog-artifacts/*/*.manifest.json)
 
@@ -189,67 +192,33 @@ jobs:
             exit 0
           fi
 
+          reviewed_sha=$(git rev-parse HEAD)
+          master_sha=$(git rev-parse origin/master)
+          if [ "$reviewed_sha" != "$master_sha" ]; then
+            echo "Checked-out publication source is not origin/master" >&2
+            exit 1
+          fi
+
           for manifest in "${manifests[@]}"; do
             artifact_dir=$(dirname "$manifest")
-            artifact_name=$(jq -r '.dataset.file' "$manifest")
+            artifact_name=$(jq -er '.dataset.file' "$manifest")
             artifact="$artifact_dir/$artifact_name"
-            dataset_id=$(jq -r '.dataset_id' "$manifest")
-            dataset_version=$(jq -r '.dataset_version' "$manifest")
-            content_sha=$(jq -r '.dataset.content_sha256' "$manifest")
-            source_release=$(jq -r '.ingestion.release // "unknown"' "$manifest")
+            dataset_id=$(jq -er '.dataset_id' "$manifest")
+            dataset_version=$(jq -er '.dataset_version | tostring' "$manifest")
 
             if [ ! -f "$artifact" ]; then
               echo "Manifest $manifest references missing artifact $artifact" >&2
               exit 1
             fi
 
-            slug=$(printf '%s-%s' "$dataset_id" "$dataset_version" | sed 's/[._]/-/g')
-            channel_tag="data-${slug}-latest"
-            immutable_tag="data-${slug}-${content_sha:0:16}"
-            previous_dir=$(mktemp -d)
-            previous_sha=""
+            slug=$(printf '%s-%s' "$dataset_id" "$dataset_version" \
+              | tr '[:upper:]' '[:lower:]' \
+              | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')
+            channel="data-${slug}-latest"
 
-            if gh release view "$channel_tag" >/dev/null 2>&1; then
-              if gh release download "$channel_tag" \
-                --pattern "$(basename "$manifest")" \
-                --dir "$previous_dir" >/dev/null 2>&1; then
-                previous_manifest="$previous_dir/$(basename "$manifest")"
-                previous_sha=$(jq -r '.dataset.content_sha256 // empty' "$previous_manifest")
-              fi
-            fi
-
-            if [ "$previous_sha" = "$content_sha" ]; then
-              echo "$dataset_id $dataset_version unchanged ($content_sha)"
-              rm -rf "$previous_dir"
-              continue
-            fi
-
-            title="$dataset_id $dataset_version data"
-            notes="Automated CatalogMX data artifact. Source mirror release: $source_release. Semantic content SHA-256: $content_sha. The manifest records authoritative SAT provenance and integrity metadata."
-
-            if ! gh release view "$immutable_tag" >/dev/null 2>&1; then
-              gh release create "$immutable_tag" "$artifact" "$manifest" \
-                --title "$title $content_sha" \
-                --notes "$notes"
-            fi
-
-            if gh release view "$channel_tag" >/dev/null 2>&1; then
-              gh release upload "$channel_tag" "$artifact" "$manifest" --clobber
-              gh release edit "$channel_tag" --title "$title (latest)" --notes "$notes"
-            else
-              gh release create "$channel_tag" "$artifact" "$manifest" \
-                --title "$title (latest)" \
-                --notes "$notes"
-            fi
-
-            {
-              echo "## Published release artifact"
-              echo
-              echo "- Dataset: \`$dataset_id\` $dataset_version"
-              echo "- Content SHA-256: \`$content_sha\`"
-              echo "- Immutable tag: \`$immutable_tag\`"
-              echo "- Channel tag: \`$channel_tag\`"
-            } >> "$GITHUB_STEP_SUMMARY"
-
-            rm -rf "$previous_dir"
+            scripts/publish_dataset_release.sh \
+              --manifest "$manifest" \
+              --artifact "$artifact" \
+              --channel "$channel" \
+              --target "$reviewed_sha"
           done
