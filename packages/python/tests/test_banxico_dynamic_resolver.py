@@ -10,7 +10,9 @@ from catalogmx.data.resolver import DatasetResolver
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 REGISTRY_PATH = REPO_ROOT / "packages" / "shared-data" / "catalog-registry.json"
-CONTRACT_PATH = REPO_ROOT / "packages" / "python" / "catalogmx" / "data" / "dataset_contract.json"
+CONTRACT_PATH = (
+    REPO_ROOT / "packages" / "python" / "catalogmx" / "data" / "dataset_contract.json"
+)
 
 
 def test_registry_exposes_dynamic_profile_and_verified_release_contract():
@@ -21,7 +23,9 @@ def test_registry_exposes_dynamic_profile_and_verified_release_contract():
         "banxico.sie_dynamic"
     ]
     dynamic = next(
-        dataset for dataset in registry["datasets"] if dataset["id"] == "banxico.sie_dynamic"
+        dataset
+        for dataset in registry["datasets"]
+        if dataset["id"] == "banxico.sie_dynamic"
     )
     assert dynamic["distribution"] == "release"
     assert dynamic["artifact"] == {
@@ -33,11 +37,22 @@ def test_registry_exposes_dynamic_profile_and_verified_release_contract():
         "mount_path": "dynamic",
         "discovery": "release-pointer",
     }
+    assert dynamic["bootstrap"] == {
+        "kind": "file",
+        "package_path": "data/mexico_dynamic.sqlite3",
+        "role": "offline-fallback",
+    }
+    assert dynamic["implementation"]["bootstrap_is_canonical"] is False
 
     assert contract["profiles"]["banxico-dynamic"]["datasets"] == [
         "banxico.sie_dynamic"
     ]
-    assert contract["datasets"]["banxico.sie_dynamic"]["artifact"] == dynamic["artifact"]
+    assert (
+        contract["datasets"]["banxico.sie_dynamic"]["artifact"] == dynamic["artifact"]
+    )
+    assert (
+        contract["datasets"]["banxico.sie_dynamic"]["bootstrap"] == dynamic["bootstrap"]
+    )
 
 
 def test_resolver_fetches_dynamic_file_from_verified_pointer(tmp_path: Path):
@@ -64,6 +79,11 @@ def test_resolver_fetches_dynamic_file_from_verified_pointer(tmp_path: Path):
                     "mount_path": "dynamic",
                 },
                 "freshness": {"mode": "pipeline", "max_age_days": 2},
+                "bootstrap": {
+                    "kind": "file",
+                    "package_path": "data/mexico_dynamic.sqlite3",
+                    "role": "offline-fallback",
+                },
             }
         },
     }
@@ -111,8 +131,33 @@ def test_resolver_fetches_dynamic_file_from_verified_pointer(tmp_path: Path):
         release_metadata_base_url=metadata_base,
     )
 
-    fetched = resolver.fetch_profile("banxico-dynamic")
-    root = fetched["banxico.sie_dynamic"]
+    root = resolver.resolve_dataset_root("banxico.sie_dynamic")
     assert (root / "mexico_dynamic.sqlite3").read_bytes() == database
+    assert str(root).startswith(str(tmp_path / "cache"))
     assert resolver.verify_profile("banxico-dynamic") == {"banxico.sie_dynamic": True}
     assert resolver.cache_status("banxico.sie_dynamic")["release_tag"] == release_tag
+
+
+def test_resolver_uses_bootstrap_offline_only_after_cache_and_shared_sources(
+    tmp_path: Path, monkeypatch
+):
+    monkeypatch.delenv("CATALOGMX_SHARED_DATA", raising=False)
+    resolver = DatasetResolver(cache_dir=tmp_path / "empty-cache", mode="offline")
+    root = resolver.resolve_dataset_root("banxico.sie_dynamic")
+    database = root / "mexico_dynamic.sqlite3"
+    assert database.is_file()
+    assert root == Path(__file__).resolve().parents[1] / "catalogmx" / "data"
+
+
+def test_fetch_failure_can_fall_back_to_bootstrap_without_marking_it_cached(
+    tmp_path: Path, monkeypatch
+):
+    monkeypatch.delenv("CATALOGMX_SHARED_DATA", raising=False)
+    resolver = DatasetResolver(
+        cache_dir=tmp_path / "empty-cache",
+        mode="fetch-missing",
+        downloader=lambda _url: (_ for _ in ()).throw(OSError("offline")),
+    )
+    root = resolver.resolve_dataset_root("banxico.sie_dynamic")
+    assert (root / "mexico_dynamic.sqlite3").is_file()
+    assert resolver.cache_status("banxico.sie_dynamic")["cached"] is False

@@ -4,7 +4,7 @@ CatalogMX treats the language packages and runtime datasets as separate release 
 
 ## Package boundary
 
-The Python wheel contains code, validators, catalog adapters and the generated `dataset_contract.json`. Mutable runtime datasets are not versioned by the wheel. In particular, the Banxico dynamic SQLite database is no longer an embedded package fallback.
+The Python wheel contains code, validators, catalog adapters and the generated `dataset_contract.json`. Mutable runtime datasets are independently versioned and canonical releases never depend on the wheel version. The Python wheel retains one explicitly declared Banxico dynamic SQLite bootstrap snapshot only as a non-canonical offline/first-run failure fallback.
 
 ## Runtime boundary
 
@@ -37,3 +37,8 @@ The Python `DataUpdater` API is the first completed example: it retains the hist
 ## Remaining consumer cutover
 
 Resolver-ready SAT/INEGI/SEPOMEX artifacts already have independent publication lifecycles. Some historical Python convenience loaders still read repository compatibility views. Their migration is a consumer-adapter concern: they should translate canonical resolver artifacts into the existing public return shapes without reintroducing package-data or independent cache mechanisms.
+
+
+## Bootstrap semantics
+
+The Banxico dynamic bootstrap exists for compatibility and zero-network startup, but it does not participate in freshness or release identity. Resolution prefers `CATALOGMX_SHARED_DATA`, then a verified content-addressed cache. In normal `fetch-missing`/`refresh` operation the resolver still attempts the verified immutable release before considering bootstrap. Bootstrap is used when `offline` has no better source, or when a first remote fetch fails and no verified cache exists. Explicit `catalogmx fetch` remains a synchronization operation and therefore fails if it cannot fetch and verify the requested release.

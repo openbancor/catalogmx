@@ -54,6 +54,6 @@ Important boundaries:
 - AGEEML and SEPOMEX releases are fail-closed national datasets; synthetic/partial data cannot replace a verified canonical release.
 - Nómina runtime identity is `1.2-revision-e`, not merely `1.2`.
 - CONAPO and IFT reviewed bundles explicitly preserve CatalogMX compatibility/enrichment semantics instead of claiming to be raw authority exports.
-- Banxico dynamic data has no code-wheel database fallback. The historical `DataUpdater` API delegates to `DatasetResolver` and therefore uses the same verified cache/release contract.
+- Banxico dynamic data keeps an explicitly declared non-canonical wheel bootstrap for offline/first-fetch failure compatibility. The historical `DataUpdater` API still delegates to `DatasetResolver`; normal online resolution and freshness use the independent release/cache contract.
 
 The remaining consumer migration rule is simple: public catalog APIs may translate canonical datasets into historical return shapes, but they must ultimately obtain runtime data from `DatasetResolver` rather than create another downloader, cache or package-data lifecycle.

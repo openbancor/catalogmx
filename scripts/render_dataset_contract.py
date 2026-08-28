@@ -82,6 +82,15 @@ def render_contract(registry: dict[str, Any]) -> dict[str, Any]:
             if not isinstance(source_subpath, str) or not source_subpath:
                 raise ValueError(f"invalid source_subpath for {dataset_id!r}")
             projected["source_subpath"] = source_subpath
+
+        bootstrap = dataset.get("bootstrap")
+        if bootstrap is not None:
+            if not isinstance(bootstrap, dict):
+                raise ValueError(f"invalid bootstrap contract for {dataset_id!r}")
+            package_path = bootstrap.get("package_path")
+            if not isinstance(package_path, str) or not package_path:
+                raise ValueError(f"invalid bootstrap package_path for {dataset_id!r}")
+            projected["bootstrap"] = dict(bootstrap)
         runtime_datasets[dataset_id] = projected
 
     return {

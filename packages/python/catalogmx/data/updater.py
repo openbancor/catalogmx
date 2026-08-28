@@ -12,7 +12,6 @@ import os
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
 
 from catalogmx.data.resolver import DatasetResolver, default_cache_root
 
@@ -41,8 +40,9 @@ class DataUpdater:
 
     The old updater downloaded a mutable ``latest`` asset, maintained its own
     ``version.json`` and could fall back to a database embedded in the wheel.
-    Those responsibilities now belong to the common dataset contract.  A
-    verified cache or ``CATALOGMX_SHARED_DATA`` is the only offline source.
+    Those responsibilities now belong to the common dataset contract. A
+    verified cache or ``CATALOGMX_SHARED_DATA`` remains preferred; the package
+    snapshot is an explicitly declared non-canonical bootstrap fallback.
     """
 
     def __init__(self, cache_dir: str | Path | None = None):
@@ -71,7 +71,9 @@ class DataUpdater:
     def _database_from_root(root: Path) -> Path:
         path = root / DATABASE_NAME
         if not path.is_file():
-            raise FileNotFoundError(f"resolved {DATASET_ID} artifact is missing {DATABASE_NAME}")
+            raise FileNotFoundError(
+                f"resolved {DATASET_ID} artifact is missing {DATABASE_NAME}"
+            )
         return path
 
     def _cached_database_path(self) -> Path | None:
@@ -112,7 +114,9 @@ class DataUpdater:
             return None
         try:
             with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as db:
-                row = db.execute("SELECT value FROM _metadata WHERE key = 'version'").fetchone()
+                row = db.execute(
+                    "SELECT value FROM _metadata WHERE key = 'version'"
+                ).fetchone()
             return str(row[0]) if row else None
         except (sqlite3.Error, OSError):
             return None
@@ -125,7 +129,9 @@ class DataUpdater:
             path = self._database_from_root(root)
             version = self._verify_database(path)
             if version is None:
-                raise RuntimeError("resolved dynamic database failed SQLite metadata verification")
+                raise RuntimeError(
+                    "resolved dynamic database failed SQLite metadata verification"
+                )
             if verbose:
                 print(f"Data synchronized to version {version}")
             return True
@@ -138,9 +144,9 @@ class DataUpdater:
         """Resolve dynamic data and refresh verified cache entries older than the TTL.
 
         ``max_age_hours`` is retained for API compatibility and is translated to
-        the resolver TTL.  Network failures may fall back only to a previously
-        verified resolver object; unverified legacy caches and wheel snapshots
-        are deliberately excluded.
+        the resolver TTL. Network failures prefer a previously verified resolver
+        object and may use the explicitly declared package bootstrap only when no
+        verified cache is available.
         """
         mode = "refresh" if AUTO_UPDATE_ENABLED else "offline"
         resolver = self._resolver(mode=mode, max_age_hours=max_age_hours)
@@ -151,7 +157,9 @@ class DataUpdater:
                 print(f"Error resolving data: {exc}")
             raise
 
-    def get_database_path(self, auto_update: bool = True, max_age_hours: int = 24) -> Path:
+    def get_database_path(
+        self, auto_update: bool = True, max_age_hours: int = 24
+    ) -> Path:
         """Return the resolved SQLite artifact path."""
         if auto_update:
             return self.auto_update(max_age_hours=max_age_hours)

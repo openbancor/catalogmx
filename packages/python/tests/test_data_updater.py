@@ -38,7 +38,9 @@ def test_verify_database_reads_dynamic_metadata(tmp_path: Path) -> None:
     assert updater._verify_database(invalid) is None
 
 
-def test_auto_update_delegates_to_refresh_resolver_with_legacy_24h_ttl(tmp_path: Path) -> None:
+def test_auto_update_delegates_to_refresh_resolver_with_legacy_24h_ttl(
+    tmp_path: Path,
+) -> None:
     root = tmp_path / "dynamic"
     database = _database(root)
     resolver = mock.Mock()
@@ -58,7 +60,7 @@ def test_auto_update_delegates_to_refresh_resolver_with_legacy_24h_ttl(tmp_path:
     resolver.resolve_dataset_root.assert_called_once_with(DATASET_ID)
 
 
-def test_auto_update_disabled_is_offline_not_embedded(tmp_path: Path) -> None:
+def test_auto_update_disabled_delegates_to_offline_resolver(tmp_path: Path) -> None:
     root = tmp_path / "dynamic"
     database = _database(root)
     resolver = mock.Mock()
@@ -134,14 +136,39 @@ def test_local_version_rejects_unverified_cache(tmp_path: Path) -> None:
         assert updater.get_local_version() is None
 
 
-def test_no_auto_update_requires_verified_offline_source(tmp_path: Path, monkeypatch) -> None:
+def test_no_auto_update_uses_declared_bootstrap_when_cache_is_empty(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     monkeypatch.delenv("CATALOGMX_SHARED_DATA", raising=False)
     updater = DataUpdater(cache_dir=tmp_path / "empty-cache")
-    with pytest.raises(FileNotFoundError):
-        updater.get_database_path(auto_update=False)
+    path = updater.get_database_path(auto_update=False)
+    assert path == updater_module.EMBEDDED_DB
+    assert updater._verify_database(path) is not None
 
 
-def test_clear_cache_delegates_and_removes_obsolete_legacy_files(tmp_path: Path) -> None:
+def test_bootstrap_database_has_required_dynamic_tables() -> None:
+    assert updater_module.EMBEDDED_DB.is_file()
+    with sqlite3.connect(f"file:{updater_module.EMBEDDED_DB}?mode=ro", uri=True) as db:
+        tables = {
+            row[0]
+            for row in db.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
+            ).fetchall()
+        }
+    assert {
+        "_metadata",
+        "udis",
+        "tipo_cambio",
+        "tiie",
+        "cetes",
+        "inflacion",
+        "salarios_minimos",
+    }.issubset(tables)
+
+
+def test_clear_cache_delegates_and_removes_obsolete_legacy_files(
+    tmp_path: Path,
+) -> None:
     updater = DataUpdater(cache_dir=tmp_path)
     updater.cache_db.write_bytes(b"legacy")
     updater.version_file.write_text("{}", encoding="utf-8")
@@ -162,7 +189,9 @@ def test_convenience_functions_delegate_to_singleton() -> None:
     singleton.download_latest.return_value = True
 
     with mock.patch.object(updater_module, "_default_updater", singleton):
-        assert updater_module.get_database_path(False, 12) == Path("/tmp/mexico_dynamic.sqlite3")
+        assert updater_module.get_database_path(False, 12) == Path(
+            "/tmp/mexico_dynamic.sqlite3"
+        )
         assert updater_module.get_version() == "2026-08-31"
         assert updater_module.update_now(force=True, verbose=False)
 

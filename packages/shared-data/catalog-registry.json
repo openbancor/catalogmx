@@ -411,9 +411,16 @@
         "canonical_distribution": "release",
         "release_artifact": "mexico_dynamic.sqlite3",
         "manifest": "mexico_dynamic.manifest.json",
-        "legacy_data_updater_compatibility": true
+        "legacy_data_updater_compatibility": true,
+        "bootstrap_snapshot": "packages/python/catalogmx/data/mexico_dynamic.sqlite3",
+        "bootstrap_is_canonical": false
       },
-      "notes": "Daily Banxico SIE time-series data remains independently released by update-dynamic-data.yml. The release now carries a validated manifest and is addressable through the common DatasetResolver while the legacy DataUpdater API remains a compatibility facade during migration."
+      "notes": "Daily Banxico SIE time-series data remains independently released by update-dynamic-data.yml. The release now carries a validated manifest and is addressable through the common DatasetResolver while the legacy DataUpdater API remains a compatibility facade during migration.",
+      "bootstrap": {
+        "kind": "file",
+        "package_path": "data/mexico_dynamic.sqlite3",
+        "role": "offline-fallback"
+      }
     },
     {
       "id": "banxico.reference",

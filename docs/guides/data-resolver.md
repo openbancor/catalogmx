@@ -10,9 +10,9 @@ Resolution occurs on explicit fetch or first access to a dataset-aware API. The 
 
 1. `CATALOGMX_SHARED_DATA` — strict application/production override;
 2. verified local content-addressed cache;
-3. deliberately packaged data, only when a dataset contract explicitly retains such a compatibility source;
-4. repository `packages/shared-data` layout for development compatibility;
-5. verified immutable release fetch when the configured data mode permits it.
+3. repository `packages/shared-data` layout for development compatibility;
+4. verified immutable release fetch when the configured data mode permits it;
+5. explicitly declared package bootstrap data only as offline/fetch-failure fallback.
 
 `CATALOGMX_SHARED_DATA` is fail-closed. If it is configured but the requested mount is missing, CatalogMX reports the deployment error instead of silently contacting GitHub.
 
@@ -101,7 +101,7 @@ catalogmx fetch --profile payglobal --dest /var/lib/catalogmx
 
 `DataUpdater`, `get_database_path()` and `update_now()` remain public compatibility APIs for Banxico time-series consumers. They no longer implement a second downloader/cache/version protocol: they delegate to `DatasetResolver` for `banxico.sie_dynamic`.
 
-The dynamic SQLite database is therefore not a code-wheel fallback. Offline use requires a verified resolver cache or `CATALOGMX_SHARED_DATA`.
+The dynamic SQLite database keeps a non-canonical bootstrap snapshot for offline/first-fetch failure compatibility. Normal online resolution still fetches the independently versioned release and verified cache always outranks bootstrap.
 
 Historical `max_age_hours=24` arguments are translated to resolver TTL seconds, preserving the old API while keeping one runtime data mechanism.
 

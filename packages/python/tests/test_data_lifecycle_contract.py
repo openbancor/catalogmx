@@ -10,7 +10,6 @@ from click.testing import CliRunner
 from catalogmx.cli import main
 from catalogmx.data.resolver import DatasetResolver
 
-
 CONTRACT = {
     "schema_version": 1,
     "datasets": {
@@ -44,7 +43,9 @@ def test_registry_freshness_remains_default_ttl() -> None:
 
 
 def test_cache_ttl_constructor_overrides_dataset_sla() -> None:
-    resolver = DatasetResolver(contract=CONTRACT, mode="offline", cache_ttl_seconds=86400)
+    resolver = DatasetResolver(
+        contract=CONTRACT, mode="offline", cache_ttl_seconds=86400
+    )
     dataset = resolver._dataset("example.reference")
     assert resolver._cache_ttl(dataset) == 86400
     assert resolver._cache_is_stale(dataset, _state(86401))
@@ -57,7 +58,9 @@ def test_cache_ttl_environment_override(monkeypatch: pytest.MonkeyPatch) -> None
 
 
 @pytest.mark.parametrize("value", ["0", "-1", "abc"])
-def test_cache_ttl_rejects_invalid_values(monkeypatch: pytest.MonkeyPatch, value: str) -> None:
+def test_cache_ttl_rejects_invalid_values(
+    monkeypatch: pytest.MonkeyPatch, value: str
+) -> None:
     monkeypatch.setenv("CATALOGMX_CACHE_TTL", value)
     with pytest.raises(ValueError, match="CATALOGMX_CACHE_TTL"):
         DatasetResolver(contract=CONTRACT, mode="offline")
@@ -73,3 +76,16 @@ def test_structured_data_fetch_surface_is_preserved() -> None:
     result = CliRunner().invoke(main, ["data", "fetch", "--profile", "core"])
     assert result.exit_code == 0, result.output
     assert "core: no external datasets required" in result.output
+
+
+def test_dynamic_contract_declares_noncanonical_bootstrap() -> None:
+    resolver = DatasetResolver(mode="offline")
+    dataset = resolver._dataset("banxico.sie_dynamic")
+    assert dataset["bootstrap"] == {
+        "kind": "file",
+        "package_path": "data/mexico_dynamic.sqlite3",
+        "role": "offline-fallback",
+    }
+    root = resolver._bootstrap_root(dataset)
+    assert root is not None
+    assert (root / "mexico_dynamic.sqlite3").is_file()
