@@ -21,6 +21,7 @@ from catalogmx.catalogs.sat.cfdi_4 import (
 )
 from catalogmx.catalogs.sat.cfdi_4.meses import Meses
 from catalogmx.catalogs.sat.cfdi_4.periodicidad import Periodicidad
+from catalogmx.catalogs.sat.cfdi_4.tasa_o_cuota import TasaOCuota
 from catalogmx.catalogs.sat.cfdi_4.tipo_factor import TipoFactor
 
 MIGRATED_MODULES = (
@@ -33,6 +34,7 @@ MIGRATED_MODULES = (
     "objeto_imp.py",
     "periodicidad.py",
     "regimen_fiscal.py",
+    "tasa_o_cuota.py",
     "tipo_comprobante.py",
     "tipo_factor.py",
     "tipo_relacion.py",
@@ -128,6 +130,30 @@ def _create_cfdi_database(path: Path) -> None:
                 ),
             ],
         )
+
+        connection.execute(
+            "CREATE TABLE cfdi_40_reglas_tasa_cuota ("
+            "tipo TEXT NOT NULL, minimo TEXT, valor TEXT, impuesto TEXT NOT NULL, "
+            "factor TEXT NOT NULL, traslado INTEGER, retencion INTEGER, "
+            "vigencia_desde TEXT, vigencia_hasta TEXT)"
+        )
+        connection.executemany(
+            "INSERT INTO cfdi_40_reglas_tasa_cuota VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                ("Fijo", "", "0.160000", "IVA", "Tasa", 1, 0, "2022-01-01", ""),
+                (
+                    "Rango",
+                    "0.000000",
+                    "0.160000",
+                    "IVA",
+                    "Tasa",
+                    0,
+                    1,
+                    "2022-01-01",
+                    "",
+                ),
+            ],
+        )
         connection.commit()
     finally:
         connection.close()
@@ -151,6 +177,7 @@ def _reset_caches() -> None:
     ClaveUnidadCatalog._by_id = None
     Meses._data = None
     Periodicidad._data = None
+    TasaOCuota._data = None
     TipoFactor._data = None
 
 
@@ -239,6 +266,20 @@ def test_value_catalogs_preserve_historical_valor_shape(cfdi_shared_data: Path) 
     assert TipoFactor.is_valid("Tasa") is True
 
 
+def test_tasa_o_cuota_uses_normalized_canonical_rules(cfdi_shared_data: Path) -> None:
+    data = TasaOCuota.get_data()
+    assert data[0]["valor_mínimo"] is None
+    assert data[0]["valor_máximo"] == "0.160000"
+
+    fixed = TasaOCuota.get_by_range_and_tax(None, 0.16, "002", "tasa", True, False)
+    assert len(fixed) == 1
+    assert fixed[0]["tipo"] == "Fijo"
+
+    retained_range = TasaOCuota.get_by_range_and_tax(0, "0.160000", "IVA", "Tasa", False, True)
+    assert len(retained_range) == 1
+    assert retained_range[0]["tipo"] == "Rango"
+
+
 def test_clave_unidad_preserves_keys_and_date_format_while_using_canonical_values(
     cfdi_shared_data: Path,
 ) -> None:
@@ -268,11 +309,3 @@ def test_migrated_modules_have_no_runtime_json_fallback() -> None:
         source = (root / filename).read_text(encoding="utf-8")
         assert "get_shared_data_path" not in source, filename
         assert "json.load" not in source, filename
-
-    # TasaOCuota is deliberately a separate bug-fix slice. Its current method
-    # expects normalized keys that its historical raw spreadsheet JSON does not
-    # provide, so this PR must not silently redefine that API while migrating
-    # the coherent consumers.
-    tasa_source = (root / "tasa_o_cuota.py").read_text(encoding="utf-8")
-    assert "get_shared_data_path" in tasa_source
-    assert "json.load" in tasa_source

@@ -155,6 +155,42 @@ jobs:
                       ),
                   ],
               )
+
+              connection.execute(
+                  "CREATE TABLE cfdi_40_reglas_tasa_cuota ("
+                  "tipo TEXT NOT NULL, minimo TEXT, valor TEXT, "
+                  "impuesto TEXT NOT NULL, factor TEXT NOT NULL, "
+                  "traslado INTEGER, retencion INTEGER, "
+                  "vigencia_desde TEXT, vigencia_hasta TEXT)"
+              )
+              connection.executemany(
+                  "INSERT INTO cfdi_40_reglas_tasa_cuota "
+                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                  [
+                      (
+                          "Fijo",
+                          "",
+                          "0.160000",
+                          "IVA",
+                          "Tasa",
+                          1,
+                          0,
+                          "2022-01-01",
+                          "",
+                      ),
+                      (
+                          "Rango",
+                          "0.000000",
+                          "0.160000",
+                          "IVA",
+                          "Tasa",
+                          0,
+                          1,
+                          "2022-01-01",
+                          "",
+                      ),
+                  ],
+              )
               connection.commit()
           finally:
               connection.close()
@@ -162,7 +198,7 @@ jobs:
           payload = database.read_bytes()
           file_sha = hashlib.sha256(payload).hexdigest()
           content_sha = hashlib.sha256(
-              b"catalogmx-cfdi-installed-wheel-consumer-fixture-v1"
+              b"catalogmx-cfdi-installed-wheel-consumer-fixture-v2"
           ).hexdigest()
           channel = contract["channel"]
           release_tag = f"{channel.removesuffix('-latest')}-{content_sha}"
@@ -252,6 +288,7 @@ jobs:
           )
           from catalogmx.catalogs.sat.cfdi_4.meses import Meses
           from catalogmx.catalogs.sat.cfdi_4.periodicidad import Periodicidad
+          from catalogmx.catalogs.sat.cfdi_4.tasa_o_cuota import TasaOCuota
           from catalogmx.catalogs.sat.cfdi_4.tipo_factor import TipoFactor
           from catalogmx.data import DatasetResolver
 
@@ -286,6 +323,20 @@ jobs:
           assert Meses.get_by_id("01") == {"valor": "01"}
           assert Periodicidad.get_by_id("01") == {"valor": "01"}
           assert TipoFactor.get_by_id("Tasa") == {"valor": "Tasa"}
+
+          fixed_rate = TasaOCuota.get_by_range_and_tax(
+              None, 0.16, "002", "tasa", True, False
+          )
+          assert len(fixed_rate) == 1
+          assert fixed_rate[0]["tipo"] == "Fijo"
+          assert fixed_rate[0]["valor_mínimo"] is None
+          assert fixed_rate[0]["valor_máximo"] == "0.160000"
+
+          retained_range = TasaOCuota.get_by_range_and_tax(
+              0, "0.160000", "IVA", "Tasa", False, True
+          )
+          assert len(retained_range) == 1
+          assert retained_range[0]["tipo"] == "Rango"
 
           unidad = ClaveUnidadCatalog.get_unidad("KGM")
           assert unidad is not None

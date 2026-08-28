@@ -21,8 +21,8 @@ _IMPUESTO_NAMES = {
 }
 
 
-def _rows(table: str) -> list[dict[str, Any]]:
-    return read_dataset_table(DATASET_ID, DATABASE_NAME, table)
+def _rows(table: str, *, order_by: str | tuple[str, ...] = "id") -> list[dict[str, Any]]:
+    return read_dataset_table(DATASET_ID, DATABASE_NAME, table, order_by=order_by)
 
 
 def _description(value: object, *, strip_terminal_period: bool = False) -> str:
@@ -98,6 +98,45 @@ def uso_cfdi_rows() -> list[dict[str, Any]]:
     return result
 
 
+def tasa_o_cuota_rows() -> list[dict[str, Any]]:
+    """Normalize canonical tax-rate rules into the Python query shape.
+
+    SAT stores fixed values and range maxima in the same ``valor`` column. The
+    historical Python API already named that value ``valor_máximo``; fixed
+    rules therefore expose ``valor_mínimo`` as ``None`` and keep the exact
+    decimal text in ``valor_máximo``.
+    """
+    order_by = (
+        "tipo",
+        "minimo",
+        "valor",
+        "impuesto",
+        "factor",
+        "traslado",
+        "retencion",
+        "vigencia_desde",
+        "vigencia_hasta",
+    )
+    result: list[dict[str, Any]] = []
+    for row in _rows("cfdi_40_reglas_tasa_cuota", order_by=order_by):
+        minimo = row.get("minimo")
+        valor = row.get("valor")
+        result.append(
+            {
+                "tipo": str(row.get("tipo") or ""),
+                "valor_mínimo": None if minimo in (None, "") else str(minimo),
+                "valor_máximo": None if valor in (None, "") else str(valor),
+                "impuesto": str(row.get("impuesto") or ""),
+                "factor": str(row.get("factor") or ""),
+                "trasladado": bool(row.get("traslado")),
+                "retenido": bool(row.get("retencion")),
+                "vigencia_desde": str(row.get("vigencia_desde") or ""),
+                "vigencia_hasta": str(row.get("vigencia_hasta") or ""),
+            }
+        )
+    return result
+
+
 def _legacy_date(value: object) -> str:
     """Preserve ClaveUnidad's historical DD-MM-YYYY presentation."""
     text = str(value or "")
@@ -131,6 +170,7 @@ __all__ = [
     "code_description_rows",
     "impuesto_rows",
     "regimen_fiscal_rows",
+    "tasa_o_cuota_rows",
     "uso_cfdi_rows",
     "value_rows",
 ]

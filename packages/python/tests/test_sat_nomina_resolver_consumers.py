@@ -88,6 +88,15 @@ def _create_nomina_database(path: Path) -> None:
                 "vigencia_desde TEXT NOT NULL, vigencia_hasta TEXT NOT NULL)"
             )
             connection.executemany(f'INSERT INTO "{table}" VALUES (?, ?, ?, ?)', rows)
+
+        connection.execute(
+            "CREATE TABLE nomina_composite_order_fixture ("
+            "primary_value TEXT NOT NULL, secondary_value TEXT NOT NULL)"
+        )
+        connection.executemany(
+            "INSERT INTO nomina_composite_order_fixture VALUES (?, ?)",
+            [("b", "2"), ("a", "2"), ("a", "1")],
+        )
         connection.commit()
     finally:
         connection.close()
@@ -108,7 +117,9 @@ def nomina_shared_data(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
             catalog.reload()
 
 
-def test_all_thirteen_public_catalogs_use_resolver_sqlite(nomina_shared_data: Path) -> None:
+def test_all_thirteen_public_catalogs_use_resolver_sqlite(
+    nomina_shared_data: Path,
+) -> None:
     samples = [
         (BancoCatalog, "002"),
         (OrigenRecursoCatalog, "IP"),
@@ -148,7 +159,9 @@ def test_reader_uses_shared_mount_and_preserves_null_vigencia(
     nomina_shared_data: Path,
 ) -> None:
     rows = read_dataset_table(
-        "sat.nomina_1_2", "sat_nomina_12.sqlite3", "nomina_periodicidades_pagos"
+        "sat.nomina_1_2",
+        "sat_nomina_12.sqlite3",
+        "nomina_periodicidades_pagos",
     )
     assert rows == [
         {
@@ -164,10 +177,51 @@ def test_reader_uses_shared_mount_and_preserves_null_vigencia(
     assert item["valid_to"] is None
 
 
-def test_reader_fails_closed_for_missing_or_unsafe_table(
+def test_reader_supports_deterministic_composite_ordering_without_id(
+    nomina_shared_data: Path,
+) -> None:
+    rows = read_dataset_table(
+        "sat.nomina_1_2",
+        "sat_nomina_12.sqlite3",
+        "nomina_composite_order_fixture",
+        order_by=("primary_value", "secondary_value"),
+    )
+    assert rows == [
+        {"primary_value": "a", "secondary_value": "1"},
+        {"primary_value": "a", "secondary_value": "2"},
+        {"primary_value": "b", "secondary_value": "2"},
+    ]
+
+
+def test_reader_fails_closed_for_missing_or_unsafe_identifiers(
     nomina_shared_data: Path,
 ) -> None:
     with pytest.raises(RuntimeError, match="canonical SQLite table is missing"):
         read_dataset_table("sat.nomina_1_2", "sat_nomina_12.sqlite3", "missing_table")
     with pytest.raises(ValueError, match="unsafe SQLite identifier"):
-        read_dataset_table("sat.nomina_1_2", "sat_nomina_12.sqlite3", "nomina_bancos; DROP TABLE x")
+        read_dataset_table(
+            "sat.nomina_1_2",
+            "sat_nomina_12.sqlite3",
+            "nomina_bancos; DROP TABLE x",
+        )
+    with pytest.raises(ValueError, match="unsafe SQLite identifier"):
+        read_dataset_table(
+            "sat.nomina_1_2",
+            "sat_nomina_12.sqlite3",
+            "nomina_composite_order_fixture",
+            order_by=("primary_value", "secondary_value; DROP TABLE x"),
+        )
+    with pytest.raises(ValueError, match="at least one SQLite identifier"):
+        read_dataset_table(
+            "sat.nomina_1_2",
+            "sat_nomina_12.sqlite3",
+            "nomina_composite_order_fixture",
+            order_by=(),
+        )
+    with pytest.raises(RuntimeError, match="has no ordering column"):
+        read_dataset_table(
+            "sat.nomina_1_2",
+            "sat_nomina_12.sqlite3",
+            "nomina_composite_order_fixture",
+            order_by=("primary_value", "missing_column"),
+        )
