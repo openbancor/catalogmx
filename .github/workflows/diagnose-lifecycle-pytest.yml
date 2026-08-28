@@ -1,0 +1,24 @@
+name: Diagnose lifecycle pytest
+
+on:
+  push:
+    branches:
+      - feat/finish-data-lifecycle
+
+jobs:
+  pytest-first-failure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/finish-data-lifecycle
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Python package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e 'packages/python[dev]'
+      - name: Stop at first pytest failure
+        working-directory: packages/python
+        run: pytest -q --maxfail=1 --tb=short
