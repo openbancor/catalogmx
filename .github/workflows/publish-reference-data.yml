@@ -81,24 +81,13 @@ jobs:
               artifact: $artifact,
               manifest: $manifest
             }')
-
-          previous_sha=""
-          previous_release_tag=""
-          if gh release view "$channel" >/dev/null 2>&1; then
-            previous_body=$(gh release view "$channel" --json body --jq '.body' || true)
-            previous_sha=$(printf '%s' "$previous_body" \
-              | jq -r '.content_sha256 // empty' 2>/dev/null || true)
-            previous_release_tag=$(printf '%s' "$previous_body" \
-              | jq -r '.release_tag // empty' 2>/dev/null || true)
-          fi
-
-          notes="CatalogMX reviewed Banco de México reference-data bundle. Semantic content SHA-256: $content_sha. The manifest records the exact files and SHA-256 digests. This data release is independent from library package versions."
+          expected_pointer=$(printf '%s' "$pointer" | jq -ceS '.')
 
           find_release() {
             local tag="$1"
             gh api --paginate \
               "repos/${GITHUB_REPOSITORY}/releases?per_page=100" \
-              --jq ".[] | select(.tag_name == \"$tag\") | {id: .id, draft: .draft}"
+              --jq ".[] | select(.tag_name == \"$tag\") | {id: .id, draft: .draft, body: .body}"
           }
 
           delete_release_record() {
@@ -114,6 +103,26 @@ jobs:
               "repos/${GITHUB_REPOSITORY}/git/refs/tags/${tag}" \
               >/dev/null 2>&1 || true
           }
+
+          previous_pointer=""
+          previous_release_tag=""
+          channel_release=$(find_release "$channel")
+          if [ -n "$channel_release" ]; then
+            channel_draft=$(printf '%s' "$channel_release" | jq -r '.draft')
+            if [ "$channel_draft" = "true" ]; then
+              echo "Live channel exists only as a draft release; refusing publication" >&2
+              exit 1
+            fi
+            previous_body=$(printf '%s' "$channel_release" | jq -r '.body // empty')
+            if ! previous_pointer=$(printf '%s' "$previous_body" | jq -ceS '.'); then
+              echo "Live channel body is missing or is not valid JSON; refusing publication" >&2
+              exit 1
+            fi
+            previous_release_tag=$(printf '%s' "$previous_pointer" \
+              | jq -r '.release_tag // empty')
+          fi
+
+          notes="CatalogMX reviewed Banco de México reference-data bundle. Semantic content SHA-256: $content_sha. The manifest records the exact files and SHA-256 digests. This data release is independent from library package versions."
 
           verify_immutable() {
             rm -rf "$verify_dir"
@@ -137,7 +146,8 @@ jobs:
             gh release create "$immutable" "$artifact" "$manifest" \
               --title "banxico.reference $version $content_sha" \
               --notes "$notes" \
-              --target "${GITHUB_SHA}"
+              --target "${GITHUB_SHA}" \
+              --latest=false
           }
 
           # gh release create with assets creates a draft first, uploads each
@@ -172,8 +182,7 @@ jobs:
             exit 1
           fi
 
-          if [ "$previous_sha" = "$content_sha" ] \
-             && [ "$previous_release_tag" = "$immutable" ]; then
+          if [ "$previous_pointer" = "$expected_pointer" ]; then
             echo "banxico.reference unchanged and verified: $content_sha"
             exit 0
           fi
@@ -181,16 +190,18 @@ jobs:
           # The channel contains only a JSON metadata pointer. Editing one
           # metadata field is the publication commit: until this succeeds,
           # clients continue to resolve the previous immutable release.
-          if gh release view "$channel" >/dev/null 2>&1; then
+          if [ -n "$channel_release" ]; then
             gh release edit "$channel" \
               --title "banxico.reference $version (latest)" \
               --notes "$pointer" \
-              --target "${GITHUB_SHA}"
+              --target "${GITHUB_SHA}" \
+              --latest=false
           else
             gh release create "$channel" \
               --title "banxico.reference $version (latest)" \
               --notes "$pointer" \
-              --target "${GITHUB_SHA}"
+              --target "${GITHUB_SHA}" \
+              --latest=false
           fi
 
           {
