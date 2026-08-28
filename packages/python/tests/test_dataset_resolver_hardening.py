@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
+import errno
 import gzip
 import hashlib
 import io
 import json
 import os
 import shutil
+import sys
 import tarfile
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -292,12 +295,8 @@ def _prepared_stage(tmp_path: Path):
     return resolver, dataset, manifest, manifest_dataset, stage, object_dir
 
 
-def test_concurrent_cold_cache_winner_is_accepted(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-):
-    resolver, dataset, manifest, manifest_dataset, stage, object_dir = _prepared_stage(
-        tmp_path
-    )
+def test_concurrent_cold_cache_winner_is_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    resolver, dataset, manifest, manifest_dataset, stage, object_dir = _prepared_stage(tmp_path)
     real_replace = os.replace
     injected = False
 
@@ -320,18 +319,14 @@ def test_concurrent_cold_cache_winner_is_accepted(
     )
 
     assert injected is True
-    assert resolver._object_matches_manifest(
-        object_dir, dataset, manifest, manifest_dataset
-    )
+    assert resolver._object_matches_manifest(object_dir, dataset, manifest, manifest_dataset)
     assert not stage.exists()
 
 
 def test_repair_race_preserves_concurrently_installed_valid_object(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
-    resolver, dataset, manifest, manifest_dataset, stage, object_dir = _prepared_stage(
-        tmp_path
-    )
+    resolver, dataset, manifest, manifest_dataset, stage, object_dir = _prepared_stage(tmp_path)
     object_dir.mkdir(parents=True)
     (object_dir / ".manifest.json").write_text("{}", encoding="utf-8")
     (object_dir / "banxico").mkdir()
@@ -361,9 +356,7 @@ def test_repair_race_preserves_concurrently_installed_valid_object(
     )
 
     assert injected is True
-    assert resolver._object_matches_manifest(
-        object_dir, dataset, manifest, manifest_dataset
-    )
+    assert resolver._object_matches_manifest(object_dir, dataset, manifest, manifest_dataset)
     assert not list(object_dir.parent.glob(".corrupt-*"))
 
 
@@ -407,3 +400,39 @@ def test_older_candidate_cannot_replace_current_release_state(
 
     assert committed is False
     assert json.loads(state_path.read_text(encoding="utf-8")) == newer_state
+
+
+def test_windows_lock_retries_beyond_msvcrt_default_limit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    attempts = 0
+    unlocks = 0
+    sleeps: list[float] = []
+    lk_nblck = 1
+    lk_unlck = 2
+
+    def locking(_fd: int, mode: int, nbytes: int) -> None:
+        nonlocal attempts, unlocks
+        assert nbytes == 1
+        if mode == lk_unlck:
+            unlocks += 1
+            return
+        assert mode == lk_nblck
+        attempts += 1
+        if attempts <= 12:
+            raise OSError(errno.EACCES, "simulated lock contention")
+
+    fake_msvcrt = SimpleNamespace(
+        LK_NBLCK=lk_nblck,
+        LK_UNLCK=lk_unlck,
+        locking=locking,
+    )
+    monkeypatch.setitem(sys.modules, "msvcrt", fake_msvcrt)
+    monkeypatch.setattr(resolver_module.os, "name", "nt")
+    monkeypatch.setattr(resolver_module.time, "sleep", sleeps.append)
+
+    with resolver_module._exclusive_file_lock(tmp_path / "windows.lock"):
+        assert attempts == 13
+
+    assert unlocks == 1
+    assert sleeps == [0.05] * 12

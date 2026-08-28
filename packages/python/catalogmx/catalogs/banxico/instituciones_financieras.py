@@ -7,9 +7,9 @@ CONSAR y otras entidades reguladoras.
 """
 
 import json
-from pathlib import Path
 from typing import TypedDict
 
+from catalogmx.utils.shared_data import get_shared_data_path
 from catalogmx.utils.text import normalize_text
 
 
@@ -63,14 +63,7 @@ class InstitucionesFinancieras:
         if cls._data is not None:
             return
 
-        # Path: catalogmx/packages/python/catalogmx/catalogs/banxico/instituciones_financieras.py
-        # Target: catalogmx/packages/shared-data/banxico/instituciones_financieras.json
-        data_path = (
-            Path(__file__).parent.parent.parent.parent.parent
-            / "shared-data"
-            / "banxico"
-            / "instituciones_financieras.json"
-        )
+        data_path = get_shared_data_path("banxico", "instituciones_financieras.json")
 
         with open(data_path, encoding="utf-8") as f:
             json_data = json.load(f)
