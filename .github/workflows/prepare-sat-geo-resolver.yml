@@ -1,5 +1,6 @@
 name: Prepare SAT Geo Resolver Branch
 
+# Second branch push intentionally triggers this one-shot preparation workflow.
 on:
   push:
     branches: [feat/data-resolver-sat-geo]
