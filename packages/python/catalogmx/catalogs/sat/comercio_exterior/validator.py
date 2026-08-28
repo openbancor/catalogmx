@@ -153,10 +153,13 @@ class ComercioExteriorValidator:
 
         # Validar país
         pais = receptor.get("pais")
+        pais_info = None
         if not pais:
             errors.append("Receptor.Pais es obligatorio")
-        elif not PaisCatalog.is_valid(pais):
-            errors.append(f"Receptor.Pais {pais} no válido")
+        else:
+            pais_info = PaisCatalog.get_pais(pais)
+            if pais_info is None:
+                errors.append(f"Receptor.Pais {pais} no válido")
 
         # Validar estado (obligatorio para USA/CAN)
         if pais:
@@ -165,12 +168,21 @@ class ComercioExteriorValidator:
             )
             errors.extend(address_result["errors"])
 
-        # Validar tipo y número de identificación tributaria
+        # El antiguo tipo_registro_trib es una conveniencia CatalogMX, no una
+        # dimensión regulatoria del SAT. Si viene presente se conserva su
+        # validación de compatibilidad, pero no decide el formato de NumRegIdTrib.
         tipo_reg = receptor.get("tipo_registro_trib")
-        num_reg = receptor.get("num_reg_id_trib")
+        if tipo_reg and not RegistroIdentTribCatalog.is_valid(tipo_reg):
+            errors.append("Tipo de registro no válido")
 
-        if tipo_reg and num_reg:
-            tax_id_result = RegistroIdentTribCatalog.validate_tax_id(tipo_reg, num_reg)
+        # SAT publica el patrón de NumRegIdTrib por c_Pais. PaisCatalog conserva
+        # temporalmente aliases Alpha-2; usar su código canónico permite validar
+        # sin duplicar ese enriquecimiento aquí.
+        num_reg = receptor.get("num_reg_id_trib")
+        if num_reg and pais_info:
+            tax_id_result = RegistroIdentTribCatalog.validate_for_country(
+                pais_info["code"], num_reg
+            )
             errors.extend(tax_id_result["errors"])
 
         return {"errors": errors}
