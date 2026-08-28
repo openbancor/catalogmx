@@ -83,9 +83,13 @@ def test_get_data_normalizes_fixed_and_range_rows() -> None:
         "vigencia_desde": "2022-01-01",
         "vigencia_hasta": "",
     }
-    assert data[2]["tipo"] == "Rango"
-    assert data[2]["valor_mínimo"] == "0.000000"
-    assert data[2]["valor_máximo"] == "0.160000"
+    range_row = next(
+        item
+        for item in data
+        if item["tipo"] == "Rango" and item["impuesto"] == "IVA"
+    )
+    assert range_row["valor_mínimo"] == "0.000000"
+    assert range_row["valor_máximo"] == "0.160000"
 
 
 def test_get_data_is_cached() -> None:
