@@ -1,0 +1,69 @@
+name: Retry explicit bootstrap fallback
+
+on:
+  push:
+    branches:
+      - feat/finish-data-lifecycle
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    if: ${{ !contains(github.event.head_commit.message, 'apply explicit bootstrap fallback') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/finish-data-lifecycle
+          fetch-depth: 0
+
+      - name: Reuse preparation steps
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install pyyaml
+          python - <<'PY'
+          import subprocess
+          import yaml
+
+          with open('.github/workflows/prepare-bootstrap-fallback.yml', encoding='utf-8') as handle:
+              workflow = yaml.safe_load(handle)
+          steps = workflow['jobs']['prepare']['steps']
+          wanted = {
+              'Restore and declare bootstrap snapshot',
+              'Update bootstrap tests and docs',
+          }
+          for step in steps:
+              if step.get('name') in wanted:
+                  subprocess.run(
+                      step['run'],
+                      shell=True,
+                      executable='/bin/bash',
+                      check=True,
+                  )
+          PY
+
+      - name: Validate bootstrap behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd packages/python
+          python -m pip install -e '.[dev]'
+          cd ../..
+          python scripts/render_dataset_contract.py --check
+          black packages/python/catalogmx/data/resolver.py packages/python/catalogmx/data/updater.py packages/python/tests/test_data_lifecycle_contract.py packages/python/tests/test_data_updater.py packages/python/tests/test_banxico_dynamic_resolver.py scripts/render_dataset_contract.py
+          ruff check packages/python/catalogmx/data/resolver.py packages/python/catalogmx/data/updater.py packages/python/tests/test_data_lifecycle_contract.py packages/python/tests/test_data_updater.py packages/python/tests/test_banxico_dynamic_resolver.py
+          git diff --check
+          cd packages/python
+          pytest -q tests/test_data_lifecycle_contract.py tests/test_data_updater.py tests/test_banxico_dynamic_resolver.py tests/test_dataset_contract.py
+
+      - name: Commit bootstrap fallback
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'catalogmx-lifecycle[bot]'
+          git config user.email 'catalogmx-lifecycle[bot]@users.noreply.github.com'
+          git add packages/shared-data/catalog-registry.json scripts/render_dataset_contract.py packages/python/catalogmx/data/dataset_contract.json packages/python/catalogmx/data/resolver.py packages/python/catalogmx/data/updater.py packages/python/catalogmx/data/mexico_dynamic.sqlite3 packages/python/pyproject.toml packages/python/tests/test_data_lifecycle_contract.py packages/python/tests/test_data_updater.py packages/python/tests/test_banxico_dynamic_resolver.py docs/guides/data-lifecycle-migration.md docs/guides/data-resolver.md docs/guides/runtime-data-profiles.md
+          git commit -m 'refactor(data): apply explicit bootstrap fallback'
+          git push origin HEAD:feat/finish-data-lifecycle
