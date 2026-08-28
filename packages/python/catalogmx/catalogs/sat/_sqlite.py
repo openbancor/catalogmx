@@ -49,9 +49,7 @@ def read_dataset_table(
         if exists is None:
             raise RuntimeError(f"{dataset_id}: canonical SQLite table is missing: {table}")
 
-        columns = {
-            row[1] for row in connection.execute(f"PRAGMA table_info({quoted_table})")
-        }
+        columns = {row[1] for row in connection.execute(f"PRAGMA table_info({quoted_table})")}
         if order_by not in columns:
             raise RuntimeError(
                 f"{dataset_id}: canonical SQLite table {table} has no {order_by} column"

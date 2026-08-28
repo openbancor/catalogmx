@@ -67,9 +67,7 @@ def _create_nomina_database(path: Path) -> None:
             ],
         }
         for table, rows in two_column_rows.items():
-            connection.execute(
-                f'CREATE TABLE "{table}" (id TEXT PRIMARY KEY, texto TEXT NOT NULL)'
-            )
+            connection.execute(f'CREATE TABLE "{table}" (id TEXT PRIMARY KEY, texto TEXT NOT NULL)')
             connection.executemany(f'INSERT INTO "{table}" VALUES (?, ?)', rows)
 
         four_column_rows = {
@@ -172,6 +170,4 @@ def test_reader_fails_closed_for_missing_or_unsafe_table(
     with pytest.raises(RuntimeError, match="canonical SQLite table is missing"):
         read_dataset_table("sat.nomina_1_2", "sat_nomina_12.sqlite3", "missing_table")
     with pytest.raises(ValueError, match="unsafe SQLite identifier"):
-        read_dataset_table(
-            "sat.nomina_1_2", "sat_nomina_12.sqlite3", 'nomina_bancos; DROP TABLE x'
-        )
+        read_dataset_table("sat.nomina_1_2", "sat_nomina_12.sqlite3", "nomina_bancos; DROP TABLE x")
