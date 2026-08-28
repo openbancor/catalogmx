@@ -52,6 +52,7 @@ jobs:
           python -m pip install -e '.[dev]'
           cd ../..
           python scripts/render_dataset_contract.py --check
+          ruff check --fix packages/python/catalogmx/data/updater.py packages/python/tests/test_data_lifecycle_contract.py packages/python/tests/test_data_updater.py packages/python/tests/test_banxico_dynamic_resolver.py
           black packages/python/catalogmx/data/resolver.py packages/python/catalogmx/data/updater.py packages/python/tests/test_data_lifecycle_contract.py packages/python/tests/test_data_updater.py packages/python/tests/test_banxico_dynamic_resolver.py scripts/render_dataset_contract.py
           ruff check packages/python/catalogmx/data/resolver.py packages/python/catalogmx/data/updater.py packages/python/tests/test_data_lifecycle_contract.py packages/python/tests/test_data_updater.py packages/python/tests/test_banxico_dynamic_resolver.py
           git diff --check
