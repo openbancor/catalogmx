@@ -54,16 +54,21 @@ Small catalogs that are appropriate to review in Git update canonical files belo
 
 ### Release-artifact adapters
 
-Large or independently versioned datasets should not be forced into every language package or committed as large generated blobs. A release adapter writes its files and a `*.manifest.json` below `dist/catalog-artifacts/<dataset>/`.
+Large or independently versioned datasets should not be forced into every language package or committed as large generated blobs. A release adapter writes its artifact and a `*.manifest.json` below `dist/catalog-artifacts/<dataset>/`.
 
-The manifest records authority, ingestion provenance, table/record inventory, binary SHA-256, and a semantic `content_sha256`. The workflow compares that semantic hash with the mutable dataset channel release. When the content is unchanged, nothing is published even if the technical upstream release changed for some unrelated catalog.
+The manifest records authority, ingestion provenance, table/record inventory, binary SHA-256, and a semantic `content_sha256`. Publication is centralized in `scripts/publish_dataset_release.sh`; authority-specific builders do not implement GitHub Release mutation themselves.
 
-When content changes, the workflow publishes:
+For every changed semantic dataset, the publisher uses a two-level release protocol:
 
-- an immutable release tagged from dataset/version plus a content-hash prefix;
-- a mutable `...-latest` channel containing the same verified artifact and manifest.
+1. create or reuse a full content-addressed immutable release containing the artifact and manifest;
+2. download both remote assets and compare them byte-for-byte with the reviewed build;
+3. only after that verification, create or edit a stable `...-latest` release whose body is a small JSON pointer to the immutable release.
 
-Consumers can therefore choose reproducibility (immutable tag/hash) or controlled freshness (dataset-specific latest channel) without tying data updates to a Python/TypeScript/Dart/Kotlin package release.
+The stable channel owns **no data assets**. It is only the publication pointer. This means a failed upload can never clobber the previous live artifact/manifest pair: until the final pointer edit succeeds, clients continue resolving the prior immutable release. Incomplete draft/immutable releases can be recreated only when they are not the current live target; an incomplete live target fails closed for manual review.
+
+Both immutable and channel releases use `--latest=false`, so dataset publication cannot replace the repository-wide dynamic/package `latest` release. Publication is pinned to the exact reviewed `master` checkout rather than the workflow event ref, including manual workflow dispatch.
+
+Consumers can therefore choose reproducibility (immutable content SHA) or controlled freshness (dataset-specific stable pointer) without tying data updates to a Python/TypeScript/Dart/Kotlin package release. The Python dataset resolver introduced for `banxico.reference` consumes this same pointer protocol and will be extended to other canonical artifacts.
 
 ## Carta Porte 3.1
 
