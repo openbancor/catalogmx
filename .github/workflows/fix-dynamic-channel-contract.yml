@@ -1,0 +1,52 @@
+name: Align Dynamic Resolver Channel
+
+on:
+  push:
+    branches: [feat/data-resolver-dynamic]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/data-resolver-dynamic
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Align canonical contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('packages/shared-data/catalog-registry.json')
+          registry = json.loads(path.read_text(encoding='utf-8'))
+          dataset = next(
+              item for item in registry['datasets']
+              if item['id'] == 'banxico.sie_dynamic'
+          )
+          dataset['artifact']['channel'] = 'data-banxico-sie-dynamic-1-latest'
+          dataset['artifact']['discovery'] = 'release-pointer'
+          path.write_text(
+              json.dumps(registry, ensure_ascii=False, indent=2) + '\n',
+              encoding='utf-8',
+          )
+          PY
+          python scripts/catalog_registry.py validate
+          python scripts/render_dataset_contract.py
+          python scripts/render_dataset_contract.py --check
+          git diff --check
+      - name: Commit contract
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add packages/shared-data/catalog-registry.json \
+            packages/python/catalogmx/data/dataset_contract.json
+          git commit -m 'fix(data): align dynamic resolver pointer channel'
+          git push origin HEAD:feat/data-resolver-dynamic
