@@ -16,7 +16,16 @@ from pathlib import Path
 from typing import Any
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
-from banxico_sqlite_helper import ensure_database_exists, get_last_date, save_to_db, get_table_stats, DB_FILE
+from banxico_sqlite_helper import (
+    DB_FILE,
+    EXIT_ERROR,
+    EXIT_NO_OBSERVATION,
+    EXIT_SUCCESS,
+    ensure_database_exists,
+    get_last_date,
+    save_to_db,
+    get_table_stats,
+)
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_ROOT = SCRIPT_DIR.parent
@@ -136,12 +145,10 @@ def main():
     
     if not args.token:
         print("ERROR: BANXICO_TOKEN required")
-        return 1
+        return EXIT_ERROR
     
-    # Ensure database exists
     ensure_database_exists(args.database)
 
-    # Determine start date
     start_date = args.start_date
     if not start_date:
         if args.full:
@@ -157,38 +164,34 @@ def main():
                 start_date = "1991-11-08"
                 print("[fetch] No data found, starting from 1991-11-08")
     
-    # Check if up to date
     if start_date > args.end_date:
         last_date = get_last_date(args.database, "tipo_cambio", where_clause="fuente = 'FIX'")
         print(f"[fetch] ✓ Already up to date (last: {last_date})")
-        return 0
+        return EXIT_SUCCESS
     
     try:
         new_records = fetch_data(args.token, start_date, args.end_date)
 
         if not new_records:
             print("[fetch] No new records")
-            return 1
+            return EXIT_NO_OBSERVATION
 
-        # Save to database
         inserted_count = save_to_db(args.database, "tipo_cambio", new_records)
 
         print(f"[fetch] ✓ Saved {inserted_count} records to database")
         print(f"[fetch] Latest: {new_records[-1]['tipo_cambio']} MXN per USD ({new_records[-1]['fecha']})")
 
-        # Get total count from database
         stats = get_table_stats(args.database, "tipo_cambio")
         print(f"[fetch] Total records in database: {stats['count']:,}")
         if stats['min_date'] and stats['max_date']:
             print(f"[fetch] Database date range: {stats['min_date']} to {stats['max_date']}")
 
-        return 0
+        return EXIT_SUCCESS
 
     except ValueError as e:
         print(f"[fetch] ERROR: {e}")
-        return 1
+        return EXIT_ERROR
 
 
 if __name__ == "__main__":
-    exit(main())
-
+    raise SystemExit(main())
