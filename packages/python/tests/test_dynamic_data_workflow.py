@@ -32,7 +32,9 @@ def test_dynamic_workflow_distinguishes_empty_windows_from_real_failures():
     assert "[fetch] No new records" in text
     assert "[fetch] ERROR" in text
     assert "reported a partial source failure" in text
-    assert "run_updater Salarios python scripts/fetch_salarios_minimos_banxico.py" in text
+    assert (
+        "run_updater Salarios python scripts/fetch_salarios_minimos_banxico.py" in text
+    )
 
 
 def test_dynamic_workflow_preserves_and_repairs_compatibility_channels():
@@ -46,7 +48,9 @@ def test_dynamic_workflow_preserves_and_repairs_compatibility_channels():
     assert 'archive_tag="data-${data_version}"' in text
     assert 'verify_release_assets "$archive_tag"' in text
 
-    compatibility = text.index("# Compatibility channel for existing DataUpdater clients")
+    compatibility = text.index(
+        "# Compatibility channel for existing DataUpdater clients"
+    )
     archive = text.index("# Human-readable dated archive")
     pointer = text.index("# Commit the resolver pointer last")
     assert compatibility < archive < pointer
