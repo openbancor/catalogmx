@@ -1,0 +1,65 @@
+name: Inspect tax identity contract
+
+on:
+  push:
+    branches:
+      - feat/resolver-backed-tax-identity
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/resolver-backed-tax-identity
+      - name: Inspect CFDI country tax identity rules
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import sqlite3
+          import urllib.request
+          from collections import Counter
+          from pathlib import Path
+
+          pointer = json.loads(urllib.request.urlopen(
+              'https://api.github.com/repos/openbancor/catalogmx/releases/tags/data-sat-cfdi-4-4-0-latest'
+          ).read())
+          body = json.loads(pointer['body'])
+          url = (
+              'https://github.com/openbancor/catalogmx/releases/download/'
+              f"{body['release_tag']}/{body['artifact']}"
+          )
+          db = Path('/tmp/cfdi.sqlite3')
+          urllib.request.urlretrieve(url, db)
+          con = sqlite3.connect(db)
+          try:
+              rows = con.execute(
+                  'SELECT id,texto,patron_identidad_tributaria,'
+                  'validacion_identidad_tributaria,patron_codigo_postal,agrupaciones '
+                  'FROM cfdi_40_paises ORDER BY id'
+              ).fetchall()
+              print('TOTAL', len(rows))
+              print('VALIDATION VALUES')
+              for value, count in Counter(row[3] for row in rows).most_common():
+                  print(repr(value), count)
+              print('PATTERN PRESENCE', sum(bool(row[2]) for row in rows))
+              print('SELECTED COUNTRIES')
+              for code in (
+                  'USA','CAN','MEX','ESP','ARG','BRA','CHL','COL','PER','ECU',
+                  'DEU','FRA','GBR','CHN','JPN','IND','URY','PRY','BOL'
+              ):
+                  row = next((item for item in rows if item[0] == code), None)
+                  print(code, row)
+              print('PATTERN SAMPLES')
+              shown = 0
+              for row in rows:
+                  if row[2]:
+                      print(row)
+                      shown += 1
+                      if shown >= 40:
+                          break
+          finally:
+              con.close()
+          PY
