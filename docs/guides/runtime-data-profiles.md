@@ -56,4 +56,12 @@ Important boundaries:
 - CONAPO and IFT reviewed bundles explicitly preserve CatalogMX compatibility/enrichment semantics instead of claiming to be raw authority exports.
 - Banxico dynamic data keeps an explicitly declared non-canonical wheel bootstrap for offline/first-fetch failure compatibility. The historical `DataUpdater` API still delegates to `DatasetResolver`; normal online resolution and freshness use the independent release/cache contract.
 
+### Python Nómina consumer cutover
+
+The Python Nómina 1.2 public catalog classes now terminate at `DatasetResolver` and read the canonical `sat_nomina_12.sqlite3` artifact. `BancoCatalog`, `PeriodicidadPagoCatalog`, `RiesgoPuestoCatalog` and the other ten public Nómina catalog classes keep their historical method names, return aliases and lazy-loading behavior; only the runtime source changed.
+
+Two convenience fields are intentionally code-owned CatalogMX enrichments rather than SAT artifact columns: payment-period `days`, and the risk-class `prima_minima` / `prima_media` / `prima_maxima` values. Keeping those mappings explicit separates CatalogMX behavior from authority-owned rows without requiring a second runtime data lifecycle.
+
+The tracked `packages/shared-data/sat/nomina_1.2/*.json` views remain for source review and SDK compatibility while other consumers migrate. Python does **not** use them as a runtime fallback: missing tables, invalid identifiers or resolver/integrity failures remain fail-closed. Installed-wheel CI builds a local verified Nómina release and exercises all 13 public Python catalog classes without packaging the shared-data JSON tree.
+
 The remaining consumer migration rule is simple: public catalog APIs may translate canonical datasets into historical return shapes, but they must ultimately obtain runtime data from `DatasetResolver` rather than create another downloader, cache or package-data lifecycle.
