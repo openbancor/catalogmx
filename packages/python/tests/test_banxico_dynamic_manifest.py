@@ -81,11 +81,10 @@ def test_manifest_matches_dataset_resolver_file_contract(tmp_path: Path):
     module = load_module()
     database = tmp_path / module.OUTPUT_NAME
     create_database(database)
+    minimum_counts = {name: 1 for name in module.TABLE_COLUMNS}
 
-    validation = module.validate_database(
-        database, minimum_counts={name: 1 for name in module.TABLE_COLUMNS}
-    )
-    manifest = module.build_manifest(database)
+    validation = module.validate_database(database, minimum_counts=minimum_counts)
+    manifest = module.build_manifest(database, minimum_counts=minimum_counts)
 
     assert validation["data_version"] == "2026-08-27"
     assert manifest["schema_version"] == 1
@@ -98,6 +97,15 @@ def test_manifest_matches_dataset_resolver_file_contract(tmp_path: Path):
     assert len(manifest["dataset"]["file_sha256"]) == 64
     assert len(manifest["dataset"]["content_sha256"]) == 64
     assert manifest["dataset"]["row_count"] == 6
+
+
+def test_build_manifest_keeps_production_thresholds_by_default(tmp_path: Path):
+    module = load_module()
+    database = tmp_path / module.OUTPUT_NAME
+    create_database(database)
+
+    with pytest.raises(RuntimeError, match="udis looks incomplete"):
+        module.build_manifest(database)
 
 
 def test_semantic_hash_ignores_volatile_updated_at(tmp_path: Path):
