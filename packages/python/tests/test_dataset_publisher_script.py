@@ -286,3 +286,48 @@ def test_generic_publisher_migrates_verified_legacy_channel_without_clobber(tmp_
     assert pointer["release_tag"].startswith("data-test-dataset-1-")
     assert list(assets_dir.iterdir()) == []
     assert "legacy channel migrated to verified pointer" in completed.stdout
+
+
+def test_generic_publisher_rejects_json_that_is_not_a_valid_dataset_pointer(tmp_path: Path):
+    fixture = make_fixture(tmp_path)
+    state = fixture["state"]
+    channel = fixture["channel"]
+    content_sha = fixture["content_sha"]
+
+    channel_dir = state / "releases" / channel
+    channel_dir.mkdir(parents=True)
+    malformed_body = json.dumps(
+        {
+            "schema_version": 1,
+            "dataset_id": "wrong.dataset",
+            "dataset_version": "1",
+            "release_tag": f"data-test-dataset-1-{content_sha}",
+            "content_sha256": content_sha,
+            "artifact": "dataset.bin",
+            "manifest": "dataset.manifest.json",
+        }
+    )
+    (channel_dir / "meta.json").write_text(
+        json.dumps(
+            {
+                "id": channel,
+                "draft": False,
+                "body": malformed_body,
+                "target": "0" * 40,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    completed = subprocess.run(
+        fixture["command"],
+        check=False,
+        env=fixture["env"],
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode != 0
+    assert "neither a valid pointer nor a verified legacy" in completed.stderr
+    immutable = state / "releases" / f"data-test-dataset-1-{content_sha}"
+    assert not immutable.exists()
