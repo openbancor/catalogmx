@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sys
 import tarfile
 from pathlib import Path
 from types import ModuleType
@@ -19,6 +20,7 @@ def load_module() -> ModuleType:
     assert spec is not None
     assert spec.loader is not None
     module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -28,7 +30,9 @@ def test_ift_bundle_is_deterministic_and_canonicalizes_json(tmp_path: Path):
     source = tmp_path / "ift"
     source.mkdir()
     (source / "codigos_lada.json").write_text('{"b":2,"a":1}\n', encoding="utf-8")
-    (source / "operadores_moviles.json").write_text('[{"z":2,"a":1}]\n', encoding="utf-8")
+    (source / "operadores_moviles.json").write_text(
+        '[{"z":2,"a":1}]\n', encoding="utf-8"
+    )
     (source / "operadores_pnn.json").write_text('{"x":true}\n', encoding="utf-8")
 
     first = tmp_path / "first"
@@ -46,7 +50,10 @@ def test_ift_bundle_is_deterministic_and_canonicalizes_json(tmp_path: Path):
     )
 
     assert artifact1.read_bytes() == artifact2.read_bytes()
-    assert manifest1["dataset"]["content_sha256"] == manifest2["dataset"]["content_sha256"]
+    assert (
+        manifest1["dataset"]["content_sha256"]
+        == manifest2["dataset"]["content_sha256"]
+    )
     assert json.loads(manifest1_path.read_text(encoding="utf-8")) == manifest1
     assert json.loads(manifest2_path.read_text(encoding="utf-8")) == manifest2
     assert manifest1["dataset_id"] == "ift.numbering"
@@ -72,7 +79,9 @@ def test_conapo_bundle_normalizes_text_line_endings(tmp_path: Path):
     (source / "municipios_tipologia.csv").write_bytes(b"a,b\r\n1,2\r\n")
     (source / "sun_2020.csv").write_bytes(b"x,y\r3,4")
 
-    artifact, _, manifest = module.build_dataset("conapo.territorial", tmp_path / "out", source)
+    artifact, _, manifest = module.build_dataset(
+        "conapo.territorial", tmp_path / "out", source
+    )
 
     assert manifest["dataset_version"] == "2020"
     assert manifest["dataset"]["mount_path"] == "conapo"
@@ -87,7 +96,11 @@ def test_reviewed_bundle_fails_closed_when_namespace_changes(tmp_path: Path):
     module = load_module()
     source = tmp_path / "ift"
     source.mkdir()
-    for name in ("codigos_lada.json", "operadores_moviles.json", "operadores_pnn.json"):
+    for name in (
+        "codigos_lada.json",
+        "operadores_moviles.json",
+        "operadores_pnn.json",
+    ):
         (source / name).write_text("{}\n", encoding="utf-8")
     (source / "future.json").write_text("{}\n", encoding="utf-8")
 
