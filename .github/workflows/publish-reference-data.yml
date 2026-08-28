@@ -27,6 +27,7 @@ jobs:
       - name: Checkout reviewed master
         uses: actions/checkout@v4
         with:
+          ref: master
           fetch-depth: 0
 
       - name: Set up Python
@@ -51,6 +52,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
+          # workflow_dispatch can be launched while viewing any ref. Publication
+          # is nevertheless pinned to the reviewed master checkout above, and
+          # every release target uses this checked-out commit rather than the
+          # event's GITHUB_SHA.
+          reviewed_sha=$(git rev-parse HEAD)
+          master_sha=$(git rev-parse origin/master)
+          if [ "$reviewed_sha" != "$master_sha" ]; then
+            echo "Checked-out publication source is not origin/master" >&2
+            exit 1
+          fi
 
           dir=dist/catalog-artifacts/banxico-reference
           contract=packages/python/catalogmx/data/dataset_contract.json
@@ -146,7 +158,7 @@ jobs:
             gh release create "$immutable" "$artifact" "$manifest" \
               --title "banxico.reference $version $content_sha" \
               --notes "$notes" \
-              --target "${GITHUB_SHA}" \
+              --target "$reviewed_sha" \
               --latest=false
           }
 
@@ -194,19 +206,20 @@ jobs:
             gh release edit "$channel" \
               --title "banxico.reference $version (latest)" \
               --notes "$pointer" \
-              --target "${GITHUB_SHA}" \
+              --target "$reviewed_sha" \
               --latest=false
           else
             gh release create "$channel" \
               --title "banxico.reference $version (latest)" \
               --notes "$pointer" \
-              --target "${GITHUB_SHA}" \
+              --target "$reviewed_sha" \
               --latest=false
           fi
 
           {
             echo '## Banxico reference publication'
             echo
+            echo "- Reviewed master SHA: \`$reviewed_sha\`"
             echo "- Content SHA-256: \`$content_sha\`"
             echo "- Immutable tag: \`$immutable\`"
             echo "- Channel tag: \`$channel\`"
