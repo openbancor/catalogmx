@@ -84,15 +84,51 @@ def uso_cfdi_rows() -> list[dict[str, Any]]:
         fisica = bool(row.get("aplica_fisica"))
         moral = bool(row.get("aplica_moral"))
         applies_to = (
-            "both" if fisica and moral else "fisica" if fisica else "moral" if moral else "none"
+            "both"
+            if fisica and moral
+            else "fisica"
+            if fisica
+            else "moral"
+            if moral
+            else "none"
         )
         result.append(
             {
                 "code": str(row["id"]),
-                "description": _description(row.get("texto"), strip_terminal_period=True),
+                "description": _description(
+                    row.get("texto"), strip_terminal_period=True
+                ),
                 "fisica": fisica,
                 "moral": moral,
                 "applies_to": applies_to,
+            }
+        )
+    return result
+
+
+def tasa_o_cuota_rows() -> list[dict[str, Any]]:
+    """Normalize canonical tax-rate rules into the Python query shape.
+
+    SAT stores fixed values and range maxima in the same ``valor`` column. The
+    historical Python API already named that value ``valor_máximo``; fixed
+    rules therefore expose ``valor_mínimo`` as ``None`` and keep the exact
+    decimal text in ``valor_máximo``.
+    """
+    result: list[dict[str, Any]] = []
+    for row in _rows("cfdi_40_reglas_tasa_cuota"):
+        minimo = row.get("minimo")
+        valor = row.get("valor")
+        result.append(
+            {
+                "tipo": str(row.get("tipo") or ""),
+                "valor_mínimo": None if minimo in (None, "") else str(minimo),
+                "valor_máximo": None if valor in (None, "") else str(valor),
+                "impuesto": str(row.get("impuesto") or ""),
+                "factor": str(row.get("factor") or ""),
+                "trasladado": bool(row.get("traslado")),
+                "retenido": bool(row.get("retencion")),
+                "vigencia_desde": str(row.get("vigencia_desde") or ""),
+                "vigencia_hasta": str(row.get("vigencia_hasta") or ""),
             }
         )
     return result
@@ -131,6 +167,7 @@ __all__ = [
     "code_description_rows",
     "impuesto_rows",
     "regimen_fiscal_rows",
+    "tasa_o_cuota_rows",
     "uso_cfdi_rows",
     "value_rows",
 ]
