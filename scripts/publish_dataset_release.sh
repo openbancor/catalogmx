@@ -64,7 +64,8 @@ slug=$(printf '%s-%s' "$dataset_id" "$version" \
   | tr '[:upper:]' '[:lower:]' \
   | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')
 [ -n "$slug" ] || { echo "Cannot derive immutable release slug" >&2; exit 1; }
-immutable="data-${slug}-${content_sha}"
+release_prefix="data-${slug}-"
+immutable="${release_prefix}${content_sha}"
 verify_dir=$(mktemp -d)
 trap 'rm -rf "$verify_dir"' EXIT
 
@@ -110,6 +111,26 @@ delete_release_record() {
   gh api --method DELETE "repos/${GITHUB_REPOSITORY}/releases/${release_id}"
   gh api --method DELETE "repos/${GITHUB_REPOSITORY}/git/refs/tags/${tag}" \
     >/dev/null 2>&1 || true
+}
+
+validate_pointer_body() {
+  local body="$1"
+  printf '%s' "$body" | jq -ceS \
+    --arg dataset_id "$dataset_id" \
+    --arg dataset_version "$version" \
+    --arg release_prefix "$release_prefix" \
+    --arg artifact "$artifact_name" \
+    --arg manifest "$manifest_name" '
+      select(type == "object")
+      | select(.schema_version == 1)
+      | select(.dataset_id == $dataset_id)
+      | select((.dataset_version | tostring) == $dataset_version)
+      | select(.artifact == $artifact)
+      | select(.manifest == $manifest)
+      | select(.content_sha256 | type == "string" and test("^[0-9a-f]{64}$"))
+      | select(.release_tag | type == "string")
+      | select(.release_tag == ($release_prefix + .content_sha256))
+    '
 }
 
 verify_legacy_channel() {
@@ -178,8 +199,8 @@ if [ "$channel_count" -eq 1 ]; then
     exit 1
   fi
   previous_body=$(printf '%s' "$channel_release" | jq -r '.body // empty')
-  if previous_pointer=$(printf '%s' "$previous_body" | jq -ceS '.' 2>/dev/null); then
-    previous_release_tag=$(printf '%s' "$previous_pointer" | jq -r '.release_tag // empty')
+  if previous_pointer=$(validate_pointer_body "$previous_body" 2>/dev/null); then
+    previous_release_tag=$(printf '%s' "$previous_pointer" | jq -r '.release_tag')
   elif verify_legacy_channel "$channel_release" "$previous_body"; then
     legacy_channel=true
     previous_pointer=""
