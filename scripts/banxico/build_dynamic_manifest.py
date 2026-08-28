@@ -152,8 +152,12 @@ def validate_database(
         connection.close()
 
 
-def build_manifest(path: Path) -> dict[str, Any]:
-    validation = validate_database(path)
+def build_manifest(
+    path: Path,
+    minimum_counts: Mapping[str, int] = MINIMUM_COUNTS,
+) -> dict[str, Any]:
+    """Build a resolver manifest after applying the selected coverage guards."""
+    validation = validate_database(path, minimum_counts=minimum_counts)
     return {
         "schema_version": 1,
         "dataset_id": DATASET_ID,
