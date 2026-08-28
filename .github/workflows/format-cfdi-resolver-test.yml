@@ -1,0 +1,40 @@
+name: Format CFDI resolver test
+
+on:
+  push:
+    branches:
+      - feat/resolver-backed-cfdi-consumers
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: ${{ !contains(github.event.head_commit.message, 'format CFDI resolver test') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/resolver-backed-cfdi-consumers
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Format
+        run: |
+          python -m pip install black ruff
+          black packages/python/tests/test_sat_cfdi_resolver_consumers.py
+          ruff check --fix packages/python/tests/test_sat_cfdi_resolver_consumers.py
+          black packages/python/tests/test_sat_cfdi_resolver_consumers.py
+          ruff check packages/python/tests/test_sat_cfdi_resolver_consumers.py
+          git diff --check
+      - name: Commit
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name 'catalogmx-data[bot]'
+          git config user.email 'catalogmx-data[bot]@users.noreply.github.com'
+          git add packages/python/tests/test_sat_cfdi_resolver_consumers.py
+          git commit -m 'style(data): format CFDI resolver test'
+          git push origin HEAD:feat/resolver-backed-cfdi-consumers
