@@ -82,7 +82,9 @@ def test_sat_and_geo_profiles_capture_runtime_boundaries_and_dependencies():
     assert profiles["mexico-geo"]["datasets"] == [
         "inegi.ageeml",
         "sepomex.codigos_postales",
+        "conapo.territorial",
     ]
+    assert profiles["mexico-telecom"]["datasets"] == ["ift.numbering"]
 
 
 def test_runtime_contract_matches_builder_release_contracts():
