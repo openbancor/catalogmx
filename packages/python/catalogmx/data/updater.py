@@ -134,15 +134,16 @@ class DataUpdater:
                 print(f"Error synchronizing data: {exc}")
             return False
 
-    def auto_update(self, max_age_hours: int = 24, verbose: bool = False) -> Path:
+    def auto_update(self, max_age_hours: int | float | None = None, verbose: bool = False) -> Path:
         """Resolve dynamic data and refresh verified cache entries older than the TTL.
 
-        ``max_age_hours`` is retained for API compatibility and is translated to
-        the resolver TTL. Network failures prefer a previously verified resolver
-        object and may use the explicitly declared package bootstrap only when no
-        verified cache is available.
+        An explicitly supplied ``max_age_hours`` remains a legacy TTL override.
+        When omitted, ``CATALOGMX_CACHE_TTL`` and then the dataset registry SLA
+        remain authoritative. ``CATALOGMX_DATA_MODE`` likewise takes precedence
+        over the legacy auto-update flag when explicitly configured.
         """
-        mode = "refresh" if AUTO_UPDATE_ENABLED else "offline"
+        configured_mode = os.getenv("CATALOGMX_DATA_MODE")
+        mode = configured_mode or ("refresh" if AUTO_UPDATE_ENABLED else "offline")
         resolver = self._resolver(mode=mode, max_age_hours=max_age_hours)
         try:
             return self._database_from_root(resolver.resolve_dataset_root(DATASET_ID))
@@ -151,7 +152,9 @@ class DataUpdater:
                 print(f"Error resolving data: {exc}")
             raise
 
-    def get_database_path(self, auto_update: bool = True, max_age_hours: int = 24) -> Path:
+    def get_database_path(
+        self, auto_update: bool = True, max_age_hours: int | float | None = None
+    ) -> Path:
         """Return the resolved SQLite artifact path."""
         if auto_update:
             return self.auto_update(max_age_hours=max_age_hours)
@@ -197,7 +200,7 @@ class DataUpdater:
 _default_updater = DataUpdater()
 
 
-def get_database_path(auto_update: bool = True, max_age_hours: int = 24) -> Path:
+def get_database_path(auto_update: bool = True, max_age_hours: int | float | None = None) -> Path:
     return _default_updater.get_database_path(auto_update, max_age_hours)
 
 

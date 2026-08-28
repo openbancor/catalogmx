@@ -27,7 +27,7 @@ class CETESCatalog:
     def _get_db_path(cls) -> Path:
         """Get path to database with auto-update"""
         if cls._db_path is None:
-            cls._db_path = get_database_path(auto_update=True, max_age_hours=24)
+            cls._db_path = get_database_path(auto_update=True)
         return cls._db_path
 
     @classmethod

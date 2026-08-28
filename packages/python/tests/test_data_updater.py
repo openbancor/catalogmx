@@ -78,7 +78,7 @@ def test_auto_update_disabled_delegates_to_offline_resolver(tmp_path: Path) -> N
     resolver_type.assert_called_once_with(
         cache_dir=tmp_path / "cache",
         mode="offline",
-        cache_ttl_seconds=86400,
+        cache_ttl_seconds=None,
     )
 
 
@@ -189,11 +189,55 @@ def test_convenience_functions_delegate_to_singleton() -> None:
     singleton.download_latest.return_value = True
 
     with mock.patch.object(updater_module, "_default_updater", singleton):
-        assert updater_module.get_database_path(False, 12) == Path(
-            "/tmp/mexico_dynamic.sqlite3"
-        )
+        assert updater_module.get_database_path(False, 12) == Path("/tmp/mexico_dynamic.sqlite3")
         assert updater_module.get_version() == "2026-08-31"
         assert updater_module.update_now(force=True, verbose=False)
 
     singleton.get_database_path.assert_called_once_with(False, 12)
     singleton.download_latest.assert_called_once_with(force=True, verbose=False)
+
+
+@pytest.mark.parametrize("data_mode", ["offline", "fetch-missing", "refresh"])
+def test_explicit_data_mode_outranks_legacy_auto_update_flag(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, data_mode: str
+) -> None:
+    root = tmp_path / "dynamic"
+    database = _database(root)
+    resolver = mock.Mock()
+    resolver.resolve_dataset_root.return_value = root
+    monkeypatch.setenv("CATALOGMX_DATA_MODE", data_mode)
+
+    with (
+        mock.patch.object(updater_module, "AUTO_UPDATE_ENABLED", True),
+        mock.patch(
+            "catalogmx.data.updater.DatasetResolver", return_value=resolver
+        ) as resolver_type,
+    ):
+        updater = DataUpdater(cache_dir=tmp_path / "cache")
+        assert updater.auto_update() == database
+
+    resolver_type.assert_called_once_with(
+        cache_dir=tmp_path / "cache",
+        mode=data_mode,
+        cache_ttl_seconds=None,
+    )
+
+
+def test_environment_ttl_reaches_default_dynamic_consumer(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("CATALOGMX_CACHE_TTL", "86400")
+    updater = DataUpdater(cache_dir=tmp_path / "cache")
+    resolver = updater._resolver(mode="refresh")
+    assert resolver.cache_ttl_seconds == 86400
+
+
+def test_registry_freshness_applies_when_no_legacy_or_environment_ttl(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("CATALOGMX_CACHE_TTL", raising=False)
+    updater = DataUpdater(cache_dir=tmp_path / "cache")
+    resolver = updater._resolver(mode="refresh")
+    dataset = resolver._dataset(DATASET_ID)
+    assert resolver.cache_ttl_seconds is None
+    assert resolver._cache_ttl(dataset) == 2 * 86400
