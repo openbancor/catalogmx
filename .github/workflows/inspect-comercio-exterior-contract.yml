@@ -1,0 +1,86 @@
+name: Inspect Comercio Exterior contract
+
+on:
+  push:
+    branches:
+      - feat/resolver-backed-comercio-exterior-consumers
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/resolver-backed-comercio-exterior-consumers
+      - name: Inspect legacy JSON and canonical releases
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import sqlite3
+          import urllib.request
+          from pathlib import Path
+
+          shared = Path('packages/shared-data/sat/comercio_exterior')
+          print('=== LEGACY JSON SHAPES ===')
+          for path in sorted(shared.glob('*.json')):
+              payload = json.loads(path.read_text(encoding='utf-8'))
+              rows = payload if isinstance(payload, list) else next(
+                  (value for value in payload.values() if isinstance(value, list)), []
+              )
+              sample = rows[0] if rows else None
+              print(json.dumps({
+                  'file': path.name,
+                  'rows': len(rows),
+                  'keys': sorted(sample) if isinstance(sample, dict) else [],
+                  'sample': sample,
+              }, ensure_ascii=False))
+
+          releases = {
+              'cce': (
+                  'data-sat-comercio-exterior-2-0-acea2cb6587addfb9ff7f79da4f64f2d89c36af7d62a02f9a0a15ee916145d9c',
+                  'sat_comercio_exterior_20.sqlite3',
+              ),
+              'cfdi': (
+                  'data-sat-cfdi-4-4-0-5f53f36cf75d47bdc885966c1f81948183a88feaa44a0d347455f417c3ba515e',
+                  'sat_cfdi_40.sqlite3',
+              ),
+          }
+          # The CFDI tag above may have advanced; resolve current pointer if needed.
+          pointer = json.loads(urllib.request.urlopen(
+              'https://api.github.com/repos/openbancor/catalogmx/releases/tags/data-sat-cfdi-4-4-0-latest'
+          ).read())
+          body = json.loads(pointer['body'])
+          releases['cfdi'] = (body['release_tag'], body['artifact'])
+
+          for label, (tag, asset) in releases.items():
+              url = f'https://github.com/openbancor/catalogmx/releases/download/{tag}/{asset}'
+              db = Path(f'/tmp/{label}.sqlite3')
+              urllib.request.urlretrieve(url, db)
+              con = sqlite3.connect(db)
+              try:
+                  prefix = 'cce_20_%' if label == 'cce' else 'cfdi_40_%'
+                  tables = [row[0] for row in con.execute(
+                      "SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ? ORDER BY name",
+                      (prefix,),
+                  )]
+                  if label == 'cfdi':
+                      tables = [t for t in tables if t in {
+                          'cfdi_40_monedas', 'cfdi_40_paises', 'cfdi_40_codigos_postales',
+                          'cfdi_40_regimenes_fiscales'
+                      }]
+                  print(f'=== {label.upper()} TABLES ===')
+                  for table in tables:
+                      cols = [row[1] for row in con.execute(f'PRAGMA table_info("{table}")')]
+                      count = con.execute(f'SELECT COUNT(*) FROM "{table}"').fetchone()[0]
+                      samples = con.execute(f'SELECT * FROM "{table}" LIMIT 5').fetchall()
+                      print(json.dumps({
+                          'table': table,
+                          'rows': count,
+                          'columns': cols,
+                          'samples': [list(row) for row in samples],
+                      }, ensure_ascii=False, default=str))
+              finally:
+                  con.close()
+          PY
