@@ -1,0 +1,35 @@
+name: Run Nomina wheel patcher
+
+on:
+  push:
+    branches:
+      - feat/resolver-backed-sat-consumers
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: ${{ !contains(github.event.head_commit.message, 'cover Nomina installed-wheel consumers') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/resolver-backed-sat-consumers
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Patch and validate
+        run: |
+          python scripts/_prepare_nomina_wheel_coverage.py
+          python -m pip install pyyaml
+          python -c "import yaml; yaml.safe_load(open('.github/workflows/python-wheel-data.yml', encoding='utf-8'))"
+          git diff --check
+      - name: Commit permanent wheel coverage
+        run: |
+          git config user.name 'catalogmx-data[bot]'
+          git config user.email 'catalogmx-data[bot]@users.noreply.github.com'
+          git add .github/workflows/python-wheel-data.yml
+          git commit -m 'test(data): cover Nomina installed-wheel consumers'
+          git push origin HEAD:feat/resolver-backed-sat-consumers
