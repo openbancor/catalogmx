@@ -1,0 +1,32 @@
+name: Validate Nomina resolver consumers
+
+on:
+  push:
+    branches:
+      - feat/resolver-backed-sat-consumers
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/resolver-backed-sat-consumers
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install
+        run: python -m pip install -e 'packages/python[dev]'
+      - name: Static checks
+        run: |
+          ruff check packages/python/catalogmx/catalogs/sat packages/python/tests/test_sat_nomina_resolver_consumers.py
+          black --check packages/python/catalogmx/catalogs/sat packages/python/tests/test_sat_nomina_resolver_consumers.py
+          git diff --check
+      - name: Resolver-backed Nomina tests
+        working-directory: packages/python
+        run: |
+          pytest -q \
+            tests/test_sat_nomina_resolver_consumers.py \
+            tests/test_sat_nomina_api_parity.py \
+            tests/test_all_catalog_loading.py \
+            tests/test_sat_nomina_revision_e.py
