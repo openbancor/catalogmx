@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -34,6 +35,20 @@ def load_meta(tag):
     return json.loads(path.read_text()) if path.exists() else None
 
 
+def release_snapshot(tag):
+    meta = load_meta(tag)
+    if meta is None:
+        return None
+    assets_dir = release_dir(tag) / "assets"
+    assets = []
+    if assets_dir.exists():
+        for path in sorted(assets_dir.iterdir()):
+            if path.is_file():
+                assets.append({"id": path.name, "name": path.name})
+    meta["assets"] = assets
+    return meta
+
+
 def save_meta(tag, body, target):
     directory = release_dir(tag)
     directory.mkdir(parents=True, exist_ok=True)
@@ -43,14 +58,35 @@ def save_meta(tag, body, target):
 
 if args and args[0] == "api":
     if "--method" in args:
-        raise SystemExit("delete is not expected in the happy-path fixture")
+        method = args[args.index("--method") + 1]
+        endpoint = args[-1]
+        if method != "DELETE":
+            raise SystemExit(f"unexpected fake gh API method: {method}")
+        if "/releases/assets/" in endpoint:
+            asset_id = endpoint.rsplit("/", 1)[-1]
+            for directory in releases.iterdir():
+                candidate = directory / "assets" / asset_id
+                if candidate.exists():
+                    candidate.unlink()
+                    raise SystemExit(0)
+            raise SystemExit(1)
+        if "/git/refs/tags/" in endpoint:
+            raise SystemExit(0)
+        if "/releases/" in endpoint:
+            release_id = endpoint.rsplit("/", 1)[-1]
+            directory = release_dir(release_id)
+            if directory.exists():
+                shutil.rmtree(directory)
+            raise SystemExit(0)
+        raise SystemExit(f"unexpected fake gh delete endpoint: {endpoint}")
+
     query = args[args.index("--jq") + 1]
     match = re.search(r'tag_name == \\"([^\"]+)\\"', query)
     if match is None:
         match = re.search(r'tag_name == "([^"]+)"', query)
     if match is None:
         raise SystemExit(f"cannot parse tag from jq query: {query}")
-    meta = load_meta(match.group(1))
+    meta = release_snapshot(match.group(1))
     if meta is not None:
         print(json.dumps(meta))
     raise SystemExit(0)
@@ -101,7 +137,7 @@ raise SystemExit(f"unexpected fake gh invocation: {args}")
 '''
 
 
-def test_generic_publisher_creates_verified_immutable_release_then_pointer(tmp_path: Path):
+def make_fixture(tmp_path: Path) -> dict[str, object]:
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
     fake_gh = bin_dir / "gh"
@@ -148,8 +184,34 @@ def test_generic_publisher_creates_verified_immutable_release_then_pointer(tmp_p
         "--target",
         target,
     ]
+    return {
+        "artifact": artifact,
+        "manifest": manifest,
+        "content_sha": content_sha,
+        "state": state,
+        "env": env,
+        "channel": channel,
+        "target": target,
+        "command": command,
+    }
 
-    subprocess.run(command, check=True, env=env, capture_output=True, text=True)
+
+def test_generic_publisher_creates_verified_immutable_release_then_pointer(tmp_path: Path):
+    fixture = make_fixture(tmp_path)
+    artifact = fixture["artifact"]
+    manifest = fixture["manifest"]
+    content_sha = fixture["content_sha"]
+    state = fixture["state"]
+    channel = fixture["channel"]
+    target = fixture["target"]
+
+    subprocess.run(
+        fixture["command"],
+        check=True,
+        env=fixture["env"],
+        capture_output=True,
+        text=True,
+    )
 
     immutable = f"data-test-dataset-1-{content_sha}"
     immutable_dir = state / "releases" / immutable
@@ -171,5 +233,56 @@ def test_generic_publisher_creates_verified_immutable_release_then_pointer(tmp_p
     }
     assert channel_meta["target"] == target
 
-    second = subprocess.run(command, check=True, env=env, capture_output=True, text=True)
+    second = subprocess.run(
+        fixture["command"],
+        check=True,
+        env=fixture["env"],
+        capture_output=True,
+        text=True,
+    )
     assert "unchanged and verified" in second.stdout
+
+
+def test_generic_publisher_migrates_verified_legacy_channel_without_clobber(tmp_path: Path):
+    fixture = make_fixture(tmp_path)
+    artifact = fixture["artifact"]
+    manifest = fixture["manifest"]
+    state = fixture["state"]
+    channel = fixture["channel"]
+
+    channel_dir = state / "releases" / channel
+    assets_dir = channel_dir / "assets"
+    assets_dir.mkdir(parents=True)
+    shutil.copy2(artifact, assets_dir / artifact.name)
+    shutil.copy2(manifest, assets_dir / manifest.name)
+    legacy_body = (
+        "Automated CatalogMX data artifact. Source mirror release: old-source. "
+        "Semantic content SHA-256: legacy. The manifest records authoritative "
+        "SAT provenance and integrity metadata."
+    )
+    (channel_dir / "meta.json").write_text(
+        json.dumps(
+            {
+                "id": channel,
+                "draft": False,
+                "body": legacy_body,
+                "target": "0" * 40,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    completed = subprocess.run(
+        fixture["command"],
+        check=True,
+        env=fixture["env"],
+        capture_output=True,
+        text=True,
+    )
+
+    channel_meta = json.loads((channel_dir / "meta.json").read_text(encoding="utf-8"))
+    pointer = json.loads(channel_meta["body"])
+    assert pointer["dataset_id"] == "test.dataset"
+    assert pointer["release_tag"].startswith("data-test-dataset-1-")
+    assert list(assets_dir.iterdir()) == []
+    assert "legacy channel migrated to verified pointer" in completed.stdout
