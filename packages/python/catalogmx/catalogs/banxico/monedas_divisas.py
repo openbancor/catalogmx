@@ -7,8 +7,9 @@ basado en códigos ISO 4217.
 """
 
 import json
-from pathlib import Path
 from typing import TypedDict
+
+from catalogmx.utils.shared_data import get_shared_data_path
 
 
 class MonedaDivisa(TypedDict, total=False):
@@ -66,14 +67,7 @@ class MonedasDivisas:
         if cls._data is not None:
             return
 
-        # Path: catalogmx/packages/python/catalogmx/catalogs/banxico/monedas_divisas.py
-        # Target: catalogmx/packages/shared-data/banxico/monedas_divisas.json
-        data_path = (
-            Path(__file__).parent.parent.parent.parent.parent
-            / "shared-data"
-            / "banxico"
-            / "monedas_divisas.json"
-        )
+        data_path = get_shared_data_path("banxico", "monedas_divisas.json")
 
         with open(data_path, encoding="utf-8") as f:
             json_data = json.load(f)

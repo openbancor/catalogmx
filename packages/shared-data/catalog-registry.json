@@ -1,8 +1,26 @@
 {
   "schema_version": 1,
   "registry_status": "bootstrap",
-  "inventory_checked_at": "2026-08-26",
+  "inventory_checked_at": "2026-08-27",
   "legacy_manifest": ".catalog-versions.json",
+  "profiles": {
+    "core": {
+      "description": "Pure validators and calculators; no external dataset requirement.",
+      "datasets": []
+    },
+    "payglobal": {
+      "description": "Bank and routing reference data used by PayGlobal runtime services.",
+      "datasets": [
+        "banxico.reference"
+      ]
+    },
+    "payglobal-e2e": {
+      "description": "PayGlobal runtime data plus identity and CLABE generation references.",
+      "datasets": [
+        "banxico.reference"
+      ]
+    }
+  },
   "datasets": [
     {
       "id": "sat.cfdi_4",
@@ -96,7 +114,7 @@
         "planned_full_distribution": "release",
         "legacy_view_path": "packages/shared-data/sat/carta_porte_3"
       },
-      "notes": "Carta Porte 3.1 is current. The existing carta_porte_3 directory is a legacy partial convenience view, not a complete one-to-one mirror of the 32 official CCP 3.1 catalogs. Some convenience files, such as aeropuertos.json, do not map directly to a same-named SAT catalog. Do not auto-refresh these views as if they were the canonical upstream dataset. Build and distribute the complete official dataset independently, then derive convenience views explicitly."
+      "notes": "Carta Porte 3.1 is current. The existing carta_porte_3 directory is a legacy partial convenience view, not a complete one-to-one copy of the 32 official CCP 3.1 catalogs. Some convenience files, such as aeropuertos.json, do not map directly to same-named SAT catalogs. Do not auto-refresh these views as if they were the canonical upstream dataset. Build and distribute the complete official dataset independently, then derive convenience views explicitly."
     },
     {
       "id": "sat.comercio_exterior",
@@ -299,16 +317,40 @@
       "authority": "BANXICO",
       "kind": "reference",
       "status": "managed",
-      "distribution": "embedded",
+      "distribution": "mixed",
+      "version": "1",
+      "source_subpath": "banxico",
+      "artifact": {
+        "version": "1",
+        "channel": "data-banxico-reference-1-latest",
+        "file": "banxico_reference.tar.gz",
+        "manifest": "banxico_reference.manifest.json",
+        "format": "tar.gz",
+        "mount_path": "banxico"
+      },
       "local_paths": [
         "packages/shared-data/banxico"
       ],
-      "upstream": [],
+      "upstream": [
+        {
+          "role": "authoritative_payment_system_reference",
+          "url": "https://www.banxico.org.mx/cep-scl/listaInstituciones.do",
+          "format": "html"
+        }
+      ],
       "freshness": {
         "mode": "interval",
         "max_age_days": 31,
-        "upstream_checked_at": null
-      }
+        "upstream_checked_at": "2026-08-27"
+      },
+      "implementation": {
+        "status": "resolver_ready",
+        "canonical_distribution": "release",
+        "release_artifact": "banxico_reference.tar.gz",
+        "tracked_compatibility_views": 5,
+        "publish_from_reviewed_master": true
+      },
+      "notes": "Banco de México remains authoritative for current institution reference fields. CatalogMX keeps reviewed compatibility/enrichment JSON views in Git and publishes the exact reviewed five-file Banxico subset as an independently versioned, checksummed release bundle. Runtime consumers may resolve that bundle without coupling data freshness to the catalogmx package version or mutable master content."
     },
     {
       "id": "inegi.ageeml",
