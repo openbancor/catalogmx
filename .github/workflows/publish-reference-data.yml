@@ -8,6 +8,7 @@ on:
       - 'packages/shared-data/catalog-registry.json'
       - 'packages/python/catalogmx/data/dataset_contract.json'
       - 'scripts/banxico/build_reference.py'
+      - 'scripts/publish_dataset_release.sh'
       - 'scripts/render_dataset_contract.py'
       - '.github/workflows/publish-reference-data.yml'
   workflow_dispatch:
@@ -16,7 +17,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: publish-reference-data
+  group: publish-reference-data-banxico-reference
   cancel-in-progress: false
 
 jobs:
@@ -39,6 +40,7 @@ jobs:
         run: |
           python scripts/catalog_registry.py validate
           python scripts/render_dataset_contract.py --check
+          bash -n scripts/publish_dataset_release.sh
 
       - name: Build reviewed Banxico bundle
         run: |
@@ -52,11 +54,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
-          # workflow_dispatch can be launched while viewing any ref. Publication
-          # is nevertheless pinned to the reviewed master checkout above, and
-          # every release target uses this checked-out commit rather than the
-          # event's GITHUB_SHA.
           reviewed_sha=$(git rev-parse HEAD)
           master_sha=$(git rev-parse origin/master)
           if [ "$reviewed_sha" != "$master_sha" ]; then
@@ -66,162 +63,12 @@ jobs:
 
           dir=dist/catalog-artifacts/banxico-reference
           contract=packages/python/catalogmx/data/dataset_contract.json
-          channel=$(jq -r '.datasets["banxico.reference"].artifact.channel' "$contract")
-          artifact_name=$(jq -r '.datasets["banxico.reference"].artifact.file' "$contract")
-          manifest_name=$(jq -r '.datasets["banxico.reference"].artifact.manifest' "$contract")
-          version=$(jq -r '.datasets["banxico.reference"].artifact.version' "$contract")
-          manifest="$dir/$manifest_name"
-          artifact="$dir/$artifact_name"
-          content_sha=$(jq -r '.dataset.content_sha256' "$manifest")
-          immutable="data-banxico-reference-${version}-${content_sha}"
-          verify_dir=$(mktemp -d)
-          trap 'rm -rf "$verify_dir"' EXIT
+          channel=$(jq -er '.datasets["banxico.reference"].artifact.channel' "$contract")
+          artifact_name=$(jq -er '.datasets["banxico.reference"].artifact.file' "$contract")
+          manifest_name=$(jq -er '.datasets["banxico.reference"].artifact.manifest' "$contract")
 
-          pointer=$(jq -cn \
-            --arg dataset_id "banxico.reference" \
-            --arg dataset_version "$version" \
-            --arg release_tag "$immutable" \
-            --arg content_sha256 "$content_sha" \
-            --arg artifact "$artifact_name" \
-            --arg manifest "$manifest_name" \
-            '{
-              schema_version: 1,
-              dataset_id: $dataset_id,
-              dataset_version: $dataset_version,
-              release_tag: $release_tag,
-              content_sha256: $content_sha256,
-              artifact: $artifact,
-              manifest: $manifest
-            }')
-          expected_pointer=$(printf '%s' "$pointer" | jq -ceS '.')
-
-          find_release() {
-            local tag="$1"
-            gh api --paginate \
-              "repos/${GITHUB_REPOSITORY}/releases?per_page=100" \
-              --jq ".[] | select(.tag_name == \"$tag\") | {id: .id, draft: .draft, body: .body}"
-          }
-
-          delete_release_record() {
-            local release_json="$1"
-            local tag="$2"
-            local release_id
-            release_id=$(printf '%s' "$release_json" | jq -r '.id')
-            gh api --method DELETE \
-              "repos/${GITHUB_REPOSITORY}/releases/${release_id}"
-            # Draft asset creation may never have created the git tag. Remove it
-            # if present, but absence is expected and not an error.
-            gh api --method DELETE \
-              "repos/${GITHUB_REPOSITORY}/git/refs/tags/${tag}" \
-              >/dev/null 2>&1 || true
-          }
-
-          previous_pointer=""
-          previous_release_tag=""
-          channel_release=$(find_release "$channel")
-          if [ -n "$channel_release" ]; then
-            channel_draft=$(printf '%s' "$channel_release" | jq -r '.draft')
-            if [ "$channel_draft" = "true" ]; then
-              echo "Live channel exists only as a draft release; refusing publication" >&2
-              exit 1
-            fi
-            previous_body=$(printf '%s' "$channel_release" | jq -r '.body // empty')
-            if ! previous_pointer=$(printf '%s' "$previous_body" | jq -ceS '.'); then
-              echo "Live channel body is missing or is not valid JSON; refusing publication" >&2
-              exit 1
-            fi
-            previous_release_tag=$(printf '%s' "$previous_pointer" \
-              | jq -r '.release_tag // empty')
-          fi
-
-          notes="CatalogMX reviewed Banco de México reference-data bundle. Semantic content SHA-256: $content_sha. The manifest records the exact files and SHA-256 digests. This data release is independent from library package versions."
-
-          verify_immutable() {
-            rm -rf "$verify_dir"
-            mkdir -p "$verify_dir"
-            if ! gh release download "$immutable" \
-              --pattern "$artifact_name" \
-              --pattern "$manifest_name" \
-              --dir "$verify_dir"; then
-              return 1
-            fi
-            [ -f "$verify_dir/$artifact_name" ] || return 1
-            [ -f "$verify_dir/$manifest_name" ] || return 1
-            cmp "$artifact" "$verify_dir/$artifact_name" || return 1
-            cmp "$manifest" "$verify_dir/$manifest_name" || return 1
-            remote_sha=$(jq -r '.dataset.content_sha256 // empty' \
-              "$verify_dir/$manifest_name")
-            [ "$remote_sha" = "$content_sha" ]
-          }
-
-          create_immutable() {
-            gh release create "$immutable" "$artifact" "$manifest" \
-              --title "banxico.reference $version $content_sha" \
-              --notes "$notes" \
-              --target "$reviewed_sha" \
-              --latest=false
-          }
-
-          # gh release create with assets creates a draft first, uploads each
-          # asset, then publishes. A failed upload can therefore leave a draft
-          # that `gh release view <tag>` does not represent as a published
-          # release. Inspect the authenticated releases collection so retries
-          # recover both draft and published partial states.
-          immutable_release=$(find_release "$immutable")
-          if [ -n "$immutable_release" ]; then
-            immutable_draft=$(printf '%s' "$immutable_release" | jq -r '.draft')
-            if [ "$immutable_draft" = "true" ]; then
-              if [ "$previous_release_tag" = "$immutable" ]; then
-                echo "Live channel points to a draft immutable release; refusing mutation" >&2
-                exit 1
-              fi
-              delete_release_record "$immutable_release" "$immutable"
-              create_immutable
-            elif ! verify_immutable; then
-              if [ "$previous_release_tag" = "$immutable" ]; then
-                echo "Live immutable release is incomplete; refusing to mutate the current channel target" >&2
-                exit 1
-              fi
-              delete_release_record "$immutable_release" "$immutable"
-              create_immutable
-            fi
-          else
-            create_immutable
-          fi
-
-          if ! verify_immutable; then
-            echo "Immutable release is incomplete or does not match the reviewed build" >&2
-            exit 1
-          fi
-
-          if [ "$previous_pointer" = "$expected_pointer" ]; then
-            echo "banxico.reference unchanged and verified: $content_sha"
-            exit 0
-          fi
-
-          # The channel contains only a JSON metadata pointer. Editing one
-          # metadata field is the publication commit: until this succeeds,
-          # clients continue to resolve the previous immutable release.
-          if [ -n "$channel_release" ]; then
-            gh release edit "$channel" \
-              --title "banxico.reference $version (latest)" \
-              --notes "$pointer" \
-              --target "$reviewed_sha" \
-              --latest=false
-          else
-            gh release create "$channel" \
-              --title "banxico.reference $version (latest)" \
-              --notes "$pointer" \
-              --target "$reviewed_sha" \
-              --latest=false
-          fi
-
-          {
-            echo '## Banxico reference publication'
-            echo
-            echo "- Reviewed master SHA: \`$reviewed_sha\`"
-            echo "- Content SHA-256: \`$content_sha\`"
-            echo "- Immutable tag: \`$immutable\`"
-            echo "- Channel tag: \`$channel\`"
-            echo "- Channel publication: metadata pointer only"
-          } >> "$GITHUB_STEP_SUMMARY"
+          scripts/publish_dataset_release.sh \
+            --manifest "$dir/$manifest_name" \
+            --artifact "$dir/$artifact_name" \
+            --channel "$channel" \
+            --target "$reviewed_sha"
