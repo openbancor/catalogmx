@@ -102,7 +102,9 @@ class DataUpdater:
             return None
         if fetched.tzinfo is None:
             fetched = fetched.replace(tzinfo=timezone.utc)
-        return (datetime.now(timezone.utc) - fetched.astimezone(timezone.utc)).total_seconds() / 3600
+        return (
+            datetime.now(timezone.utc) - fetched.astimezone(timezone.utc)
+        ).total_seconds() / 3600
 
     def _verify_database(self, db_path: Path | None) -> str | None:
         """Verify SQLite readability and return its declared data version."""

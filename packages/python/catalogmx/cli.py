@@ -122,7 +122,7 @@ def rfc_generate_moral(razon_social, fecha):
 
         click.echo(click.style(f"\nGenerated RFC: {rfc_code}", fg="green", bold=True))
         click.echo(f"\nCompany: {razon_social}")
-        click.echo(f"Birth date: {fecha}")
+        click.echo(f"Incorporation date: {fecha}")
 
     except ValueError as e:
         click.echo(click.style(f"Error: {str(e)}", fg="red"))

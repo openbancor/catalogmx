@@ -108,8 +108,6 @@ exclude = ["tests*"]
 [tool.setuptools.package-data]
 catalogmx = [
     "py.typed",
-    "data/*.sqlite3",
-    "data/*.db",
     "data/*.json"
 ]
 
