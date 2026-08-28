@@ -50,7 +50,7 @@ A resolver-ready canonical artifact does not automatically mean every historical
 Important boundaries:
 
 - `sat-comercio-exterior` resolves `sat.cfdi_4` alongside the CCE-owned artifact rather than duplicating four shared CFDI catalogs.
-- Carta Porte's canonical release is the complete 32-table `ccp_31_*` family; its smaller JSON directory is a compatibility projection.
+- Carta Porte's canonical release is the complete 32-table `ccp_31_*` family. The smaller tracked JSON directory contains legacy compatibility/enrichment views and is not a complete or schema-equivalent mirror of the SAT 3.1 artifact.
 - AGEEML and SEPOMEX releases are fail-closed national datasets; synthetic/partial data cannot replace a verified canonical release.
 - Nómina runtime identity is `1.2-revision-e`, not merely `1.2`.
 - CONAPO and IFT reviewed bundles explicitly preserve CatalogMX compatibility/enrichment semantics instead of claiming to be raw authority exports.
@@ -75,5 +75,15 @@ Compatibility projection is explicit rather than implicit JSON fallback. For exa
 The shared SAT SQLite reader keeps `id` as its default ordering key but also accepts a validated tuple of ordering columns for canonical tables with composite identity such as `cfdi_40_reglas_tasa_cuota`. Empty, missing or unsafe ordering identifiers fail closed before SQL execution.
 
 Deterministic tests exercise the CFDI APIs against a local `CATALOGMX_SHARED_DATA` SQLite mount, and installed-wheel CI exercises the same public surfaces through a verified release-pointer/cache path without packaging the shared-data JSON tree.
+
+### Python Carta Porte 3.1 consumer cutover
+
+Four Python Carta Porte surfaces with direct canonical SAT counterparts now terminate at `DatasetResolver` and read `sat_carta_porte_31.sqlite3`: `ConfigAutotransporteCatalog`, `MaterialPeligrosoCatalog`, `TipoEmbalajeCatalog` and `TipoPermisoCatalog`. They keep their public lookup/search methods while expanding from the small tracked snapshots to the current canonical tables.
+
+Authority-owned and CatalogMX-owned fields are kept distinct. Vehicle axes, wheel counts, trailer capability, dangerous-goods class/division, permit transport key and vigencias come directly from the SAT artifact. High-level vehicle/permit classifications and packaging material labels are convenience derivations used to preserve historical searches. Legacy `packing_group`, `grupo_embalaje` and `categoria_onu` values are not present in the SAT Carta Porte 3.1 tables, so Python exposes them as unknown instead of fabricating them from obsolete partial snapshots.
+
+The remaining Carta Porte legacy surfaces require separate source/identity work rather than a mechanical SQLite cutover. Current SAT airports are rows in `ccp_31_estaciones` with SAT station IDs such as `EA0426` plus an IATA designator; the historical Python airport snapshot instead used IATA as `code` and added ICAO/city/state fields not published by the Carta Porte table. Maritime stations similarly use current `PMxxx` SAT IDs rather than the tracked snapshot's numeric port codes. `CarreterasCatalog` has no direct table in the canonical 32-table Carta Porte 3.1 release and therefore needs an independently identified SICT source instead of being represented as SAT data.
+
+Installed-wheel CI builds a verified local `sat.carta_porte` release and exercises these four migrated public classes through the release-pointer/cache path without packaging the tracked Carta Porte JSON directory.
 
 The remaining consumer migration rule is simple: public catalog APIs may translate canonical datasets into historical return shapes, but they must ultimately obtain runtime data from `DatasetResolver` rather than create another downloader, cache or package-data lifecycle.
