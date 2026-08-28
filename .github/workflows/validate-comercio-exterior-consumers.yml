@@ -1,0 +1,47 @@
+name: Validate Comercio Exterior consumers
+
+on:
+  push:
+    branches:
+      - feat/resolver-backed-comercio-exterior-consumers
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/resolver-backed-comercio-exterior-consumers
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install
+        run: python -m pip install -e 'packages/python[dev]'
+      - name: Static checks
+        run: |
+          ruff check \
+            packages/python/catalogmx/catalogs/sat/comercio_exterior/_resolver_views.py \
+            packages/python/catalogmx/catalogs/sat/comercio_exterior/estados.py \
+            packages/python/catalogmx/catalogs/sat/comercio_exterior/incoterms.py \
+            packages/python/catalogmx/catalogs/sat/comercio_exterior/motivos_traslado.py \
+            packages/python/catalogmx/catalogs/sat/comercio_exterior/unidades_aduana.py \
+            packages/python/tests/test_sat_comercio_exterior_resolver_consumers.py
+          black --check \
+            packages/python/catalogmx/catalogs/sat/comercio_exterior/_resolver_views.py \
+            packages/python/catalogmx/catalogs/sat/comercio_exterior/estados.py \
+            packages/python/catalogmx/catalogs/sat/comercio_exterior/incoterms.py \
+            packages/python/catalogmx/catalogs/sat/comercio_exterior/motivos_traslado.py \
+            packages/python/catalogmx/catalogs/sat/comercio_exterior/unidades_aduana.py \
+            packages/python/tests/test_sat_comercio_exterior_resolver_consumers.py
+          git diff --check
+      - name: Behavioral tests
+        working-directory: packages/python
+        run: |
+          pytest -q \
+            tests/test_sat_comercio_exterior_resolver_consumers.py \
+            tests/test_remaining_coverage.py \
+            tests/test_final_coverage.py \
+            tests/test_final_100_percent.py \
+            tests/test_absolute_final_push.py \
+            tests/test_100_percent_coverage.py \
+            tests/test_every_remaining_gap.py
