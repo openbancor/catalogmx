@@ -29,7 +29,7 @@ def create_database(path: Path) -> None:
     db.executescript(
         """
         CREATE TABLE _metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL);
-        INSERT INTO _metadata VALUES ('version', '2026-08-27');
+        INSERT INTO _metadata VALUES ('version', '2000-01-01');
         INSERT INTO _metadata VALUES ('source', 'banxico');
         INSERT INTO _metadata VALUES ('schema_version', '1.0');
 
@@ -86,6 +86,9 @@ def test_manifest_matches_dataset_resolver_file_contract(tmp_path: Path):
     validation = module.validate_database(database, minimum_counts=minimum_counts)
     manifest = module.build_manifest(database, minimum_counts=minimum_counts)
 
+    # The legacy metadata version may be stale. Runtime data identity is derived
+    # from the actual latest source rows instead.
+    assert validation["metadata_version"] == "2000-01-01"
     assert validation["data_version"] == "2026-08-27"
     assert manifest["schema_version"] == 1
     assert manifest["dataset_id"] == "banxico.sie_dynamic"
@@ -106,6 +109,12 @@ def test_build_manifest_keeps_production_thresholds_by_default(tmp_path: Path):
 
     with pytest.raises(RuntimeError, match="looks incomplete"):
         module.build_manifest(database)
+
+
+def test_cetes_guard_is_plausible_for_weekly_history():
+    module = load_module()
+
+    assert module.MINIMUM_COUNTS["cetes"] == 2_000
 
 
 def test_semantic_hash_ignores_volatile_updated_at(tmp_path: Path):
