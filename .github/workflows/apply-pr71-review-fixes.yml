@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Apply review fixes
+      - name: Apply resolver and consumer fixes
         shell: bash
         run: |
           set -euo pipefail
@@ -87,17 +87,6 @@ jobs:
               + '''\n\ndef test_windows_lock_retries_beyond_msvcrt_default_limit(\n    tmp_path: Path, monkeypatch: pytest.MonkeyPatch\n):\n    attempts = 0\n    unlocks = 0\n    sleeps: list[float] = []\n    lk_nblck = 1\n    lk_unlck = 2\n\n    def locking(_fd: int, mode: int, nbytes: int) -> None:\n        nonlocal attempts, unlocks\n        assert nbytes == 1\n        if mode == lk_unlck:\n            unlocks += 1\n            return\n        assert mode == lk_nblck\n        attempts += 1\n        if attempts <= 12:\n            raise OSError(errno.EACCES, "simulated lock contention")\n\n    fake_msvcrt = SimpleNamespace(\n        LK_NBLCK=lk_nblck,\n        LK_UNLCK=lk_unlck,\n        locking=locking,\n    )\n    monkeypatch.setitem(sys.modules, "msvcrt", fake_msvcrt)\n    monkeypatch.setattr(resolver_module.os, "name", "nt")\n    monkeypatch.setattr(resolver_module.time, "sleep", sleeps.append)\n\n    with resolver_module._exclusive_file_lock(tmp_path / "windows.lock"):\n        assert attempts == 13\n\n    assert unlocks == 1\n    assert sleeps == [0.05] * 12\n''',
               encoding="utf-8",
           )
-
-          replace_once(
-              ".github/workflows/python-wheel-data.yml",
-              '''          from catalogmx.catalogs.banxico.banks import BankCatalog\n          from catalogmx.catalogs.banxico.codigos_plaza import CodigosPlazaCatalog\n          from catalogmx.data import DatasetResolver\n''',
-              '''          from catalogmx.catalogs.banxico.banks import BankCatalog\n          from catalogmx.catalogs.banxico.codigos_plaza import CodigosPlazaCatalog\n          from catalogmx.catalogs.banxico.instituciones_financieras import (\n              InstitucionesFinancieras,\n          )\n          from catalogmx.catalogs.banxico.monedas_divisas import MonedasDivisas\n          from catalogmx.data import DatasetResolver\n''',
-          )
-          replace_once(
-              ".github/workflows/python-wheel-data.yml",
-              '''          plazas = CodigosPlazaCatalog.get_all()\n          assert plazas\n\n          resolver = DatasetResolver()\n''',
-              '''          plazas = CodigosPlazaCatalog.get_all()\n          assert plazas\n          assert InstitucionesFinancieras.get_por_codigo("01") is not None\n          assert MonedasDivisas.get_por_codigo("MXN") is not None\n\n          resolver = DatasetResolver()\n''',
-          )
           PY
 
           python -m pip install --upgrade black==26.5.1
@@ -105,14 +94,13 @@ jobs:
             packages/python/catalogmx/catalogs/banxico/instituciones_financieras.py \
             packages/python/catalogmx/catalogs/banxico/monedas_divisas.py \
             packages/python/tests/test_dataset_resolver_hardening.py
-          rm .github/workflows/apply-pr71-review-fixes.yml
           git diff --check
-      - name: Commit fixes and remove helper workflow
+      - name: Commit code fixes
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
+          git add packages/python
           git commit -m 'fix(data): address final resolver review findings'
           git push origin HEAD:feat/data-resolver-profiles
