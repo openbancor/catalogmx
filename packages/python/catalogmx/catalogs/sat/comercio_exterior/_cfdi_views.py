@@ -43,4 +43,26 @@ def moneda_rows() -> list[dict[str, Any]]:
     ]
 
 
-__all__ = ["moneda_rows"]
+def country_tax_identity_rows() -> list[dict[str, Any]]:
+    """Return SAT country-scoped tax-identity validation metadata.
+
+    ``cfdi_40_paises`` is the actual SAT owner of the foreign tax identity
+    pattern used by Comercio Exterior. Most countries intentionally publish no
+    local pattern. Mexico additionally marks identity validation as
+    ``Lista del SAT``; callers must not reinterpret that marker as a regex-only
+    validation rule.
+    """
+    return [
+        {
+            "country": str(row["id"]),
+            "country_name": str(row.get("texto") or ""),
+            "format_pattern": _optional_text(row.get("patron_identidad_tributaria")),
+            "validation_mode": _optional_text(row.get("validacion_identidad_tributaria")),
+            "postal_code_pattern": _optional_text(row.get("patron_codigo_postal")),
+            "groups": _optional_text(row.get("agrupaciones")),
+        }
+        for row in read_dataset_table(DATASET_ID, DATABASE_NAME, "cfdi_40_paises")
+    ]
+
+
+__all__ = ["country_tax_identity_rows", "moneda_rows"]
