@@ -34,6 +34,39 @@
         "workflow": ".github/workflows/update-dynamic-data.yml"
       }
     },
+    "conapo.territorial": {
+      "artifact": {
+        "channel": "data-conapo-territorial-2020-latest",
+        "discovery": "release-pointer",
+        "file": "conapo_territorial.tar.gz",
+        "format": "tar.gz",
+        "manifest": "conapo_territorial.manifest.json",
+        "mount_path": "conapo",
+        "version": "2020"
+      },
+      "freshness": {
+        "mode": "event",
+        "upstream_checked_at": "2026-08-28"
+      },
+      "source_subpath": "conapo"
+    },
+    "ift.numbering": {
+      "artifact": {
+        "channel": "data-ift-numbering-1-latest",
+        "discovery": "release-pointer",
+        "file": "ift_numbering.tar.gz",
+        "format": "tar.gz",
+        "manifest": "ift_numbering.manifest.json",
+        "mount_path": "ift",
+        "version": "1"
+      },
+      "freshness": {
+        "max_age_days": 90,
+        "mode": "interval",
+        "upstream_checked_at": "2026-08-28"
+      },
+      "source_subpath": "ift"
+    },
     "inegi.ageeml": {
       "artifact": {
         "channel": "data-inegi-ageeml-1-latest",
@@ -147,9 +180,16 @@
     "mexico-geo": {
       "datasets": [
         "inegi.ageeml",
-        "sepomex.codigos_postales"
+        "sepomex.codigos_postales",
+        "conapo.territorial"
       ],
       "description": "National INEGI AGEEML localities and SEPOMEX postal reference data."
+    },
+    "mexico-telecom": {
+      "datasets": [
+        "ift.numbering"
+      ],
+      "description": "IFT numbering and reviewed telecom reference snapshots."
     },
     "payglobal": {
       "datasets": [

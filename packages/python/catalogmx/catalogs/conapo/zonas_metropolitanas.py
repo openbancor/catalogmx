@@ -11,7 +11,8 @@ Contiene 92 metrópolis conformadas por 421 municipios:
 """
 
 import csv
-from pathlib import Path
+
+from catalogmx.utils.shared_data import get_shared_data_path
 
 
 class ZonasMetropolitanasCatalog:
@@ -28,12 +29,7 @@ class ZonasMetropolitanasCatalog:
         if cls._data is not None:
             return
 
-        data_path = (
-            Path(__file__).resolve().parents[4]
-            / "shared-data"
-            / "conapo"
-            / "municipios_tipologia.csv"
-        )
+        data_path = get_shared_data_path("conapo", "municipios_tipologia.csv")
 
         cls._data = []
         cls._by_clave = {}

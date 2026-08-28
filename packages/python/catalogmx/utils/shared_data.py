@@ -7,6 +7,8 @@ from pathlib import Path
 
 _DATASET_PREFIXES = {
     "banxico": "banxico.reference",
+    "conapo": "conapo.territorial",
+    "ift": "ift.numbering",
 }
 
 

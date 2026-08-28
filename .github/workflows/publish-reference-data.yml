@@ -5,9 +5,12 @@ on:
     branches: [master]
     paths:
       - 'packages/shared-data/banxico/**'
+      - 'packages/shared-data/conapo/**'
+      - 'packages/shared-data/ift/**'
       - 'packages/shared-data/catalog-registry.json'
       - 'packages/python/catalogmx/data/dataset_contract.json'
       - 'scripts/banxico/build_reference.py'
+      - 'scripts/build_reviewed_reference.py'
       - 'scripts/inegi/build_ageeml.py'
       - 'scripts/sat/build_carta_porte_31.py'
       - 'scripts/sat/build_cfdi_40.py'
@@ -73,6 +76,105 @@ jobs:
           artifact_name=$(jq -er '.datasets["banxico.reference"].artifact.file' "$contract")
           manifest_name=$(jq -er '.datasets["banxico.reference"].artifact.manifest' "$contract")
 
+          bash scripts/publish_dataset_release.sh \
+            --manifest "$dir/$manifest_name" \
+            --artifact "$dir/$artifact_name" \
+            --channel "$channel" \
+            --target "$reviewed_sha"
+
+  reviewed-reference-datasets:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: CONAPO territorial reference
+            dataset_id: conapo.territorial
+            output_dir: dist/catalog-artifacts/conapo-territorial
+          - name: IFT numbering reference
+            dataset_id: ift.numbering
+            output_dir: dist/catalog-artifacts/ift-numbering
+
+    steps:
+      - name: Checkout reviewed master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate registry, runtime contract and publisher
+        run: |
+          python scripts/catalog_registry.py validate
+          python scripts/render_dataset_contract.py --check
+          bash -n scripts/publish_dataset_release.sh
+
+      - name: Build reviewed reference bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/build_reviewed_reference.py \
+            --dataset "${{ matrix.dataset_id }}" \
+            --output-dir "${{ matrix.output_dir }}"
+          git diff --exit-code -- packages/shared-data
+
+      - name: Verify generated manifest against runtime contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          contract=packages/python/catalogmx/data/dataset_contract.json
+          dataset_id='${{ matrix.dataset_id }}'
+          dir='${{ matrix.output_dir }}'
+          artifact_name=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.file' "$contract")
+          manifest_name=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.manifest' "$contract")
+          expected_version=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.version | tostring' "$contract")
+          expected_format=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.format' "$contract")
+          expected_mount=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.mount_path' "$contract")
+          manifest="$dir/$manifest_name"
+          artifact="$dir/$artifact_name"
+          test -f "$manifest"
+          test -f "$artifact"
+          jq -e \
+            --arg id "$dataset_id" \
+            --arg version "$expected_version" \
+            --arg file "$artifact_name" \
+            --arg format "$expected_format" \
+            --arg mount "$expected_mount" \
+            '.schema_version == 1
+             and .dataset_id == $id
+             and (.dataset_version | tostring) == $version
+             and .dataset.file == $file
+             and .dataset.format == $format
+             and .dataset.mount_path == $mount
+             and (.dataset.file_sha256 | test("^[0-9a-f]{64}$"))
+             and (.dataset.content_sha256 | test("^[0-9a-f]{64}$"))
+             and (.dataset.files | length > 0)' \
+            "$manifest" >/dev/null
+
+      - name: Publish immutable bundle and move channel pointer
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          reviewed_sha=$(git rev-parse HEAD)
+          git fetch origin master
+          master_sha=$(git rev-parse origin/master)
+          if [ "$reviewed_sha" != "$master_sha" ]; then
+            echo "Checked-out publication source is not origin/master" >&2
+            exit 1
+          fi
+          contract=packages/python/catalogmx/data/dataset_contract.json
+          dataset_id='${{ matrix.dataset_id }}'
+          dir='${{ matrix.output_dir }}'
+          channel=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.channel' "$contract")
+          artifact_name=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.file' "$contract")
+          manifest_name=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.manifest' "$contract")
           bash scripts/publish_dataset_release.sh \
             --manifest "$dir/$manifest_name" \
             --artifact "$dir/$artifact_name" \

@@ -53,6 +53,45 @@ jobs:
             '{tag_name: $tag_name, body: $body}' \
             > "$metadata_dir/data-banxico-reference-1-latest"
 
+      - name: Build CONAPO and IFT release fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          contract=packages/python/catalogmx/data/dataset_contract.json
+          metadata_dir="$RUNNER_TEMP/release-metadata"
+          mkdir -p "$metadata_dir"
+          for dataset_id in conapo.territorial ift.numbering; do
+            slug=$(printf '%s' "$dataset_id" | tr '.' '-')
+            build_dir="$RUNNER_TEMP/${slug}-build"
+            mkdir -p "$build_dir"
+            python scripts/build_reviewed_reference.py \
+              --dataset "$dataset_id" \
+              --output-dir "$build_dir"
+            channel=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.channel' "$contract")
+            artifact=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.file' "$contract")
+            manifest=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.manifest' "$contract")
+            version=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.version | tostring' "$contract")
+            content_sha=$(jq -er '.dataset.content_sha256' "$build_dir/$manifest")
+            immutable="${channel%-latest}-${content_sha}"
+            release_dir="$RUNNER_TEMP/releases/$immutable"
+            mkdir -p "$release_dir"
+            cp "$build_dir/$artifact" "$release_dir/"
+            cp "$build_dir/$manifest" "$release_dir/"
+            pointer=$(jq -cn \
+              --arg dataset_id "$dataset_id" \
+              --arg dataset_version "$version" \
+              --arg release_tag "$immutable" \
+              --arg content_sha256 "$content_sha" \
+              --arg artifact "$artifact" \
+              --arg manifest "$manifest" \
+              '{schema_version:1,dataset_id:$dataset_id,dataset_version:$dataset_version,release_tag:$release_tag,content_sha256:$content_sha256,artifact:$artifact,manifest:$manifest}')
+            jq -cn \
+              --arg tag_name "$channel" \
+              --arg body "$pointer" \
+              '{tag_name:$tag_name,body:$body}' \
+              > "$metadata_dir/$channel"
+          done
+
       - name: Build wheel
         shell: bash
         run: |
@@ -114,4 +153,32 @@ jobs:
           assert resolver.verify_profile("payglobal") == {"banxico.reference": True}
           state = resolver.cache_status("banxico.reference")
           assert state["release_tag"].startswith("data-banxico-reference-1-")
+          PY
+
+      - name: Resolve CONAPO and IFT from release fixtures
+        shell: bash
+        env:
+          CATALOGMX_DATA_MODE: fetch-missing
+        run: |
+          export CATALOGMX_RELEASE_BASE_URL="file://$RUNNER_TEMP/releases"
+          export CATALOGMX_RELEASE_METADATA_BASE_URL="file://$RUNNER_TEMP/release-metadata"
+          export CATALOGMX_CACHE_DIR="$RUNNER_TEMP/catalogmx-cache-secondary"
+          unset CATALOGMX_SHARED_DATA
+
+          "$RUNNER_TEMP/venv/bin/python" - <<'PY'
+          from catalogmx.catalogs.conapo.sistema_urbano_nacional import SistemaUrbanoNacionalCatalog
+          from catalogmx.catalogs.conapo.zonas_metropolitanas import ZonasMetropolitanasCatalog
+          from catalogmx.catalogs.ift.codigos_lada import CodigosLADACatalog
+          from catalogmx.catalogs.ift.operadores_moviles import OperadoresMovilesCatalog
+          from catalogmx.data import DatasetResolver
+
+          assert SistemaUrbanoNacionalCatalog.get_all()
+          assert ZonasMetropolitanasCatalog.get_metropolis()
+          assert CodigosLADACatalog.get_all()
+          assert OperadoresMovilesCatalog.get_all()
+
+          resolver = DatasetResolver()
+          assert resolver.verify_cached_dataset("conapo.territorial")
+          assert resolver.verify_cached_dataset("ift.numbering")
+          assert resolver.verify_profile("mexico-telecom") == {"ift.numbering": True}
           PY
