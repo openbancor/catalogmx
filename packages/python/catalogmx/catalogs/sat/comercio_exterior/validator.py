@@ -181,7 +181,7 @@ class ComercioExteriorValidator:
         num_reg = receptor.get("num_reg_id_trib")
         if num_reg and pais_info:
             tax_id_result = RegistroIdentTribCatalog.validate_for_country(
-                pais_info["code"], num_reg
+                pais_info["codigo"], num_reg
             )
             errors.extend(tax_id_result["errors"])
 
