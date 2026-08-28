@@ -1,0 +1,199 @@
+name: Prepare explicit bootstrap fallback
+
+on:
+  push:
+    branches:
+      - feat/finish-data-lifecycle
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    if: ${{ !contains(github.event.head_commit.message, 'apply explicit bootstrap fallback') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/finish-data-lifecycle
+          fetch-depth: 0
+
+      - name: Restore and declare bootstrap snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin master
+          git checkout origin/master -- packages/python/catalogmx/data/mexico_dynamic.sqlite3
+
+          python - <<'PY'
+          from __future__ import annotations
+
+          import json
+          from pathlib import Path
+
+          registry_path = Path('packages/shared-data/catalog-registry.json')
+          registry = json.loads(registry_path.read_text(encoding='utf-8'))
+          dynamic = next(item for item in registry['datasets'] if item['id'] == 'banxico.sie_dynamic')
+          dynamic['bootstrap'] = {
+              'kind': 'file',
+              'package_path': 'data/mexico_dynamic.sqlite3',
+              'role': 'offline-fallback',
+          }
+          impl = dynamic.setdefault('implementation', {})
+          impl['bootstrap_snapshot'] = 'packages/python/catalogmx/data/mexico_dynamic.sqlite3'
+          impl['bootstrap_is_canonical'] = False
+          registry_path.write_text(
+              json.dumps(registry, ensure_ascii=False, indent=2) + '\n',
+              encoding='utf-8',
+          )
+
+          render_path = Path('scripts/render_dataset_contract.py')
+          text = render_path.read_text(encoding='utf-8')
+          anchor = '''        source_subpath = dataset.get("source_subpath")\n        if source_subpath is not None:\n            if not isinstance(source_subpath, str) or not source_subpath:\n                raise ValueError(f"invalid source_subpath for {dataset_id!r}")\n            projected["source_subpath"] = source_subpath\n        runtime_datasets[dataset_id] = projected\n'''
+          replacement = '''        source_subpath = dataset.get("source_subpath")\n        if source_subpath is not None:\n            if not isinstance(source_subpath, str) or not source_subpath:\n                raise ValueError(f"invalid source_subpath for {dataset_id!r}")\n            projected["source_subpath"] = source_subpath\n\n        bootstrap = dataset.get("bootstrap")\n        if bootstrap is not None:\n            if not isinstance(bootstrap, dict):\n                raise ValueError(f"invalid bootstrap contract for {dataset_id!r}")\n            package_path = bootstrap.get("package_path")\n            if not isinstance(package_path, str) or not package_path:\n                raise ValueError(f"invalid bootstrap package_path for {dataset_id!r}")\n            projected["bootstrap"] = dict(bootstrap)\n        runtime_datasets[dataset_id] = projected\n'''
+          if anchor not in text:
+              raise SystemExit('dataset contract renderer anchor not found')
+          render_path.write_text(text.replace(anchor, replacement, 1), encoding='utf-8')
+
+          resolver_path = Path('packages/python/catalogmx/data/resolver.py')
+          text = resolver_path.read_text(encoding='utf-8')
+          anchor = '''    def _repo_root(self, dataset: Mapping[str, Any]) -> Path | None:\n        source_subpath = dataset.get("source_subpath")\n        if not isinstance(source_subpath, str):\n            return None\n        relative = _safe_relative_path(source_subpath)\n        for parent in Path(__file__).resolve().parents:\n            candidate = parent / "packages" / "shared-data" / relative\n            if candidate.exists():\n                return candidate\n        return None\n\n    def resolve_dataset_root(self, dataset_id: str) -> Path:\n'''
+          replacement = '''    def _repo_root(self, dataset: Mapping[str, Any]) -> Path | None:\n        source_subpath = dataset.get("source_subpath")\n        if not isinstance(source_subpath, str):\n            return None\n        relative = _safe_relative_path(source_subpath)\n        for parent in Path(__file__).resolve().parents:\n            candidate = parent / "packages" / "shared-data" / relative\n            if candidate.exists():\n                return candidate\n        return None\n\n    def _bootstrap_root(self, dataset: Mapping[str, Any]) -> Path | None:\n        """Return an explicitly declared package bootstrap root, if present.\n\n        Bootstrap data is a compatibility/offline fallback only. It is never\n        considered verified cache state and never suppresses normal remote\n        resolution in ``fetch-missing`` or ``refresh`` modes.\n        """\n        bootstrap = dataset.get("bootstrap")\n        if bootstrap is None:\n            return None\n        if not isinstance(bootstrap, dict):\n            raise RuntimeError("dataset bootstrap contract must be an object")\n        if bootstrap.get("role") != "offline-fallback":\n            raise RuntimeError("unsupported dataset bootstrap role")\n        if bootstrap.get("kind") != "file":\n            raise RuntimeError("unsupported dataset bootstrap kind")\n        package_path = bootstrap.get("package_path")\n        if not isinstance(package_path, str) or not package_path:\n            raise RuntimeError("dataset bootstrap package_path must be a non-empty string")\n        artifact = dataset["artifact"]\n        if artifact.get("format") != "file":\n            raise RuntimeError("file bootstrap requires a file artifact")\n        candidate = Path(__file__).resolve().parents[1] / _safe_relative_path(package_path)\n        if candidate.name != artifact.get("file"):\n            raise RuntimeError("dataset bootstrap filename mismatch")\n        return candidate.parent if candidate.is_file() else None\n\n    def resolve_dataset_root(self, dataset_id: str) -> Path:\n'''
+          if anchor not in text:
+              raise SystemExit('resolver bootstrap insertion anchor not found')
+          text = text.replace(anchor, replacement, 1)
+
+          anchor = '''        repository = self._repo_root(dataset)\n        if repository is not None:\n            return repository\n\n        if self.mode == "offline":\n            if cached is not None:\n                return cached[0]\n            raise FileNotFoundError(f"dataset {dataset_id} is unavailable in offline mode")\n\n        try:\n            return self.fetch_dataset(dataset_id)\n        except Exception:\n            if cached is not None and self.verify_cached_dataset(dataset_id):\n                return cached[0]\n            raise\n'''
+          replacement = '''        repository = self._repo_root(dataset)\n        if repository is not None:\n            return repository\n\n        bootstrap = self._bootstrap_root(dataset)\n\n        if self.mode == "offline":\n            if cached is not None:\n                return cached[0]\n            if bootstrap is not None:\n                return bootstrap\n            raise FileNotFoundError(f"dataset {dataset_id} is unavailable in offline mode")\n\n        try:\n            return self.fetch_dataset(dataset_id)\n        except Exception:\n            if cached is not None and self.verify_cached_dataset(dataset_id):\n                return cached[0]\n            if bootstrap is not None:\n                return bootstrap\n            raise\n'''
+          if anchor not in text:
+              raise SystemExit('resolver precedence anchor not found')
+          resolver_path.write_text(text.replace(anchor, replacement, 1), encoding='utf-8')
+
+          updater_path = Path('packages/python/catalogmx/data/updater.py')
+          text = updater_path.read_text(encoding='utf-8')
+          text = text.replace('from typing import Any\n\n', '')
+          text = text.replace(
+              '''    Those responsibilities now belong to the common dataset contract.  A\n    verified cache or ``CATALOGMX_SHARED_DATA`` is the only offline source.\n''',
+              '''    Those responsibilities now belong to the common dataset contract. A\n    verified cache or ``CATALOGMX_SHARED_DATA`` remains preferred; the package\n    snapshot is an explicitly declared non-canonical bootstrap fallback.\n''',
+          )
+          text = text.replace(
+              '''        ``max_age_hours`` is retained for API compatibility and is translated to\n        the resolver TTL.  Network failures may fall back only to a previously\n        verified resolver object; unverified legacy caches and wheel snapshots\n        are deliberately excluded.\n''',
+              '''        ``max_age_hours`` is retained for API compatibility and is translated to\n        the resolver TTL. Network failures prefer a previously verified resolver\n        object and may use the explicitly declared package bootstrap only when no\n        verified cache is available.\n''',
+          )
+          updater_path.write_text(text, encoding='utf-8')
+
+          pyproject = Path('packages/python/pyproject.toml')
+          text = pyproject.read_text(encoding='utf-8')
+          if '    "data/*.sqlite3",\n' not in text:
+              text = text.replace(
+                  '    "py.typed",\n',
+                  '    "py.typed",\n    "data/*.sqlite3",\n',
+                  1,
+              )
+          pyproject.write_text(text, encoding='utf-8')
+          PY
+
+          python scripts/render_dataset_contract.py
+
+      - name: Update bootstrap tests and docs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          updater_tests = Path('packages/python/tests/test_data_updater.py')
+          text = updater_tests.read_text(encoding='utf-8')
+          text = text.replace(
+              'def test_auto_update_disabled_is_offline_not_embedded(tmp_path: Path) -> None:',
+              'def test_auto_update_disabled_delegates_to_offline_resolver(tmp_path: Path) -> None:',
+          )
+          old = '''def test_no_auto_update_requires_verified_offline_source(tmp_path: Path, monkeypatch) -> None:\n    monkeypatch.delenv("CATALOGMX_SHARED_DATA", raising=False)\n    updater = DataUpdater(cache_dir=tmp_path / "empty-cache")\n    with pytest.raises(FileNotFoundError):\n        updater.get_database_path(auto_update=False)\n\n\n'''
+          new = '''def test_no_auto_update_uses_declared_bootstrap_when_cache_is_empty(\n    tmp_path: Path, monkeypatch: pytest.MonkeyPatch\n) -> None:\n    monkeypatch.delenv("CATALOGMX_SHARED_DATA", raising=False)\n    updater = DataUpdater(cache_dir=tmp_path / "empty-cache")\n    path = updater.get_database_path(auto_update=False)\n    assert path == updater_module.EMBEDDED_DB\n    assert updater._verify_database(path) is not None\n\n\ndef test_bootstrap_database_has_required_dynamic_tables() -> None:\n    assert updater_module.EMBEDDED_DB.is_file()\n    with sqlite3.connect(f"file:{updater_module.EMBEDDED_DB}?mode=ro", uri=True) as db:\n        tables = {\n            row[0]\n            for row in db.execute(\n                "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"\n            ).fetchall()\n        }\n    assert {\n        "_metadata",\n        "udis",\n        "tipo_cambio",\n        "tiie",\n        "cetes",\n        "inflacion",\n        "salarios_minimos",\n    }.issubset(tables)\n\n\n'''
+          if old not in text:
+              raise SystemExit('updater offline test anchor not found')
+          updater_tests.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          dynamic_tests = Path('packages/python/tests/test_banxico_dynamic_resolver.py')
+          text = dynamic_tests.read_text(encoding='utf-8')
+          anchor = '''    assert dynamic["artifact"] == {\n        "version": "1",\n        "channel": "data-banxico-sie-dynamic-1-latest",\n        "file": "mexico_dynamic.sqlite3",\n        "manifest": "mexico_dynamic.manifest.json",\n        "format": "file",\n        "mount_path": "dynamic",\n        "discovery": "release-pointer",\n    }\n\n    assert contract["profiles"]["banxico-dynamic"]["datasets"] == [\n'''
+          replacement = '''    assert dynamic["artifact"] == {\n        "version": "1",\n        "channel": "data-banxico-sie-dynamic-1-latest",\n        "file": "mexico_dynamic.sqlite3",\n        "manifest": "mexico_dynamic.manifest.json",\n        "format": "file",\n        "mount_path": "dynamic",\n        "discovery": "release-pointer",\n    }\n    assert dynamic["bootstrap"] == {\n        "kind": "file",\n        "package_path": "data/mexico_dynamic.sqlite3",\n        "role": "offline-fallback",\n    }\n    assert dynamic["implementation"]["bootstrap_is_canonical"] is False\n\n    assert contract["profiles"]["banxico-dynamic"]["datasets"] == [\n'''
+          if anchor not in text:
+              raise SystemExit('dynamic registry test anchor not found')
+          text = text.replace(anchor, replacement, 1)
+          text = text.replace(
+              '''    assert contract["datasets"]["banxico.sie_dynamic"]["artifact"] == dynamic["artifact"]\n\n\ndef test_resolver_fetches_dynamic_file_from_verified_pointer''',
+              '''    assert contract["datasets"]["banxico.sie_dynamic"]["artifact"] == dynamic["artifact"]\n    assert contract["datasets"]["banxico.sie_dynamic"]["bootstrap"] == dynamic["bootstrap"]\n\n\ndef test_resolver_fetches_dynamic_file_from_verified_pointer''',
+              1,
+          )
+          text = text.replace(
+              '''                "freshness": {"mode": "pipeline", "max_age_days": 2},\n''',
+              '''                "freshness": {"mode": "pipeline", "max_age_days": 2},\n                "bootstrap": {\n                    "kind": "file",\n                    "package_path": "data/mexico_dynamic.sqlite3",\n                    "role": "offline-fallback",\n                },\n''',
+              1,
+          )
+          text = text.replace(
+              '''    fetched = resolver.fetch_profile("banxico-dynamic")\n    root = fetched["banxico.sie_dynamic"]\n    assert (root / "mexico_dynamic.sqlite3").read_bytes() == database\n''',
+              '''    root = resolver.resolve_dataset_root("banxico.sie_dynamic")\n    assert (root / "mexico_dynamic.sqlite3").read_bytes() == database\n    assert str(root).startswith(str(tmp_path / "cache"))\n''',
+              1,
+          )
+          text += '''\n\ndef test_resolver_uses_bootstrap_offline_only_after_cache_and_shared_sources(\n    tmp_path: Path, monkeypatch\n):\n    monkeypatch.delenv("CATALOGMX_SHARED_DATA", raising=False)\n    resolver = DatasetResolver(cache_dir=tmp_path / "empty-cache", mode="offline")\n    root = resolver.resolve_dataset_root("banxico.sie_dynamic")\n    database = root / "mexico_dynamic.sqlite3"\n    assert database.is_file()\n    assert root == Path(__file__).resolve().parents[1] / "catalogmx" / "data"\n\n\ndef test_fetch_failure_can_fall_back_to_bootstrap_without_marking_it_cached(\n    tmp_path: Path, monkeypatch\n):\n    monkeypatch.delenv("CATALOGMX_SHARED_DATA", raising=False)\n    resolver = DatasetResolver(\n        cache_dir=tmp_path / "empty-cache",\n        mode="fetch-missing",\n        downloader=lambda _url: (_ for _ in ()).throw(OSError("offline")),\n    )\n    root = resolver.resolve_dataset_root("banxico.sie_dynamic")\n    assert (root / "mexico_dynamic.sqlite3").is_file()\n    assert resolver.cache_status("banxico.sie_dynamic")["cached"] is False\n'''
+          dynamic_tests.write_text(text, encoding='utf-8')
+
+          lifecycle = Path('packages/python/tests/test_data_lifecycle_contract.py')
+          text = lifecycle.read_text(encoding='utf-8')
+          text += '''\n\ndef test_dynamic_contract_declares_noncanonical_bootstrap() -> None:\n    resolver = DatasetResolver(mode="offline")\n    dataset = resolver._dataset("banxico.sie_dynamic")\n    assert dataset["bootstrap"] == {\n        "kind": "file",\n        "package_path": "data/mexico_dynamic.sqlite3",\n        "role": "offline-fallback",\n    }\n    root = resolver._bootstrap_root(dataset)\n    assert root is not None\n    assert (root / "mexico_dynamic.sqlite3").is_file()\n'''
+          lifecycle.write_text(text, encoding='utf-8')
+
+          docs = Path('docs/guides/data-lifecycle-migration.md')
+          text = docs.read_text(encoding='utf-8')
+          text = text.replace(
+              'Mutable runtime datasets are not versioned by the wheel. In particular, the Banxico dynamic SQLite database is no longer an embedded package fallback.',
+              'Mutable runtime datasets are independently versioned and canonical releases never depend on the wheel version. The Python wheel retains one explicitly declared Banxico dynamic SQLite bootstrap snapshot only as a non-canonical offline/first-run failure fallback.',
+          )
+          text += '''\n\n## Bootstrap semantics\n\nThe Banxico dynamic bootstrap exists for compatibility and zero-network startup, but it does not participate in freshness or release identity. Resolution prefers `CATALOGMX_SHARED_DATA`, then a verified content-addressed cache. In normal `fetch-missing`/`refresh` operation the resolver still attempts the verified immutable release before considering bootstrap. Bootstrap is used when `offline` has no better source, or when a first remote fetch fails and no verified cache exists. Explicit `catalogmx fetch` remains a synchronization operation and therefore fails if it cannot fetch and verify the requested release.\n'''
+          docs.write_text(text, encoding='utf-8')
+
+          resolver_docs = Path('docs/guides/data-resolver.md')
+          text = resolver_docs.read_text(encoding='utf-8')
+          text = text.replace(
+              '3. deliberately packaged data, only when a dataset contract explicitly retains such a compatibility source;\n4. repository `packages/shared-data` layout for development compatibility;\n5. verified immutable release fetch when the configured data mode permits it.',
+              '3. repository `packages/shared-data` layout for development compatibility;\n4. verified immutable release fetch when the configured data mode permits it;\n5. explicitly declared package bootstrap data only as offline/fetch-failure fallback.',
+          )
+          text = text.replace(
+              'The dynamic SQLite database is therefore not a code-wheel fallback. Offline use requires a verified resolver cache or `CATALOGMX_SHARED_DATA`.',
+              'The dynamic SQLite database keeps a non-canonical bootstrap snapshot for offline/first-fetch failure compatibility. Normal online resolution still fetches the independently versioned release and verified cache always outranks bootstrap.',
+          )
+          resolver_docs.write_text(text, encoding='utf-8')
+
+          profiles = Path('docs/guides/runtime-data-profiles.md')
+          text = profiles.read_text(encoding='utf-8')
+          text = text.replace(
+              '- Banxico dynamic data has no code-wheel database fallback. The historical `DataUpdater` API delegates to `DatasetResolver` and therefore uses the same verified cache/release contract.',
+              '- Banxico dynamic data keeps an explicitly declared non-canonical wheel bootstrap for offline/first-fetch failure compatibility. The historical `DataUpdater` API still delegates to `DatasetResolver`; normal online resolution and freshness use the independent release/cache contract.',
+          )
+          profiles.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Validate bootstrap contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd packages/python
+          python -m pip install -e '.[dev]'
+          cd ../..
+          python scripts/render_dataset_contract.py --check
+          ruff check packages/python/catalogmx/data/resolver.py packages/python/catalogmx/data/updater.py packages/python/tests/test_data_lifecycle_contract.py packages/python/tests/test_data_updater.py packages/python/tests/test_banxico_dynamic_resolver.py scripts/render_dataset_contract.py
+          black packages/python/catalogmx/data/resolver.py packages/python/catalogmx/data/updater.py packages/python/tests/test_data_lifecycle_contract.py packages/python/tests/test_data_updater.py packages/python/tests/test_banxico_dynamic_resolver.py scripts/render_dataset_contract.py
+          git diff --check
+          cd packages/python
+          pytest -q tests/test_data_lifecycle_contract.py tests/test_data_updater.py tests/test_banxico_dynamic_resolver.py tests/test_dataset_contract.py
+
+      - name: Commit bootstrap fallback
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'catalogmx-lifecycle[bot]'
+          git config user.email 'catalogmx-lifecycle[bot]@users.noreply.github.com'
+          git add packages/shared-data/catalog-registry.json scripts/render_dataset_contract.py packages/python/catalogmx/data/dataset_contract.json packages/python/catalogmx/data/resolver.py packages/python/catalogmx/data/updater.py packages/python/catalogmx/data/mexico_dynamic.sqlite3 packages/python/pyproject.toml packages/python/tests/test_data_lifecycle_contract.py packages/python/tests/test_data_updater.py packages/python/tests/test_banxico_dynamic_resolver.py docs/guides/data-lifecycle-migration.md docs/guides/data-resolver.md docs/guides/runtime-data-profiles.md
+          git commit -m 'refactor(data): apply explicit bootstrap fallback'
+          git push origin HEAD:feat/finish-data-lifecycle
