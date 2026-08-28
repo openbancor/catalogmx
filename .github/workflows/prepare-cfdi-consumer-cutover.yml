@@ -1,0 +1,140 @@
+name: Prepare CFDI resolver consumer cutover
+
+on:
+  push:
+    branches:
+      - feat/resolver-backed-cfdi-consumers
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    if: ${{ !contains(github.event.head_commit.message, 'cut over CFDI JSON consumers') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/resolver-backed-cfdi-consumers
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Replace JSON loaders with resolver projections
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('packages/python/catalogmx/catalogs/sat/cfdi_4')
+
+          replacements = {
+              'exportacion.py': (
+                  'code_description_rows',
+                  '''    @classmethod\n    def _load_data(cls) -> None:\n        """Carga lazy desde el artefacto canónico CFDI 4.0."""\n        if cls._data is None:\n            cls._data = code_description_rows("cfdi_40_exportaciones")\n            cls._by_code = {item["code"]: item for item in cls._data}\n\n''',
+              ),
+              'forma_pago.py': (
+                  'code_description_rows',
+                  '''    @classmethod\n    def _load_data(cls) -> None:\n        """Carga lazy desde el artefacto canónico CFDI 4.0."""\n        if cls._data is None:\n            cls._data = code_description_rows("cfdi_40_formas_pago")\n            cls._by_code = {item["code"]: item for item in cls._data}\n\n''',
+              ),
+              'metodo_pago.py': (
+                  'code_description_rows',
+                  '''    @classmethod\n    def _load_data(cls) -> None:\n        """Carga lazy desde el artefacto canónico CFDI 4.0."""\n        if cls._data is None:\n            cls._data = code_description_rows("cfdi_40_metodos_pago")\n            cls._by_code = {item["code"]: item for item in cls._data}\n\n''',
+              ),
+              'objeto_imp.py': (
+                  'code_description_rows',
+                  '''    @classmethod\n    def _load_data(cls) -> None:\n        """Carga lazy desde el artefacto canónico CFDI 4.0."""\n        if cls._data is None:\n            cls._data = code_description_rows(\n                "cfdi_40_objetos_impuestos", strip_terminal_period=True\n            )\n            cls._by_code = {item["code"]: item for item in cls._data}\n\n''',
+              ),
+              'tipo_relacion.py': (
+                  'code_description_rows',
+                  '''    @classmethod\n    def _load_data(cls) -> None:\n        """Carga lazy desde el artefacto canónico CFDI 4.0."""\n        if cls._data is None:\n            cls._data = code_description_rows("cfdi_40_tipos_relaciones")\n            cls._by_code = {item["code"]: item for item in cls._data}\n\n''',
+              ),
+              'tipo_comprobante.py': (
+                  'code_description_rows',
+                  '''    @classmethod\n    def _load_data(cls) -> None:\n        """Carga lazy desde el artefacto canónico CFDI 4.0."""\n        if cls._data is None:\n            cls._data = code_description_rows("cfdi_40_tipos_comprobantes")\n            cls._by_code = {item["code"]: item for item in cls._data}\n\n''',
+              ),
+              'impuesto.py': (
+                  'impuesto_rows',
+                  '''    @classmethod\n    def _load_data(cls) -> None:\n        """Carga lazy desde el artefacto canónico CFDI 4.0."""\n        if cls._data is None:\n            cls._data = impuesto_rows()\n            cls._by_code = {item["code"]: item for item in cls._data}\n\n''',
+              ),
+              'regimen_fiscal.py': (
+                  'regimen_fiscal_rows',
+                  '''    @classmethod\n    def _load_data(cls) -> None:\n        """Carga lazy desde el artefacto canónico CFDI 4.0."""\n        if cls._data is None:\n            cls._data = regimen_fiscal_rows()\n            cls._by_code = {item["code"]: item for item in cls._data}\n\n''',
+              ),
+              'uso_cfdi.py': (
+                  'uso_cfdi_rows',
+                  '''    @classmethod\n    def _load_data(cls) -> None:\n        """Carga lazy desde el artefacto canónico CFDI 4.0."""\n        if cls._data is None:\n            cls._data = uso_cfdi_rows()\n            cls._by_code = {item["code"]: item for item in cls._data}\n\n''',
+              ),
+              'meses.py': (
+                  'value_rows',
+                  '''    @classmethod\n    def _load_data(cls):\n        if cls._data is None:\n            rows = value_rows("cfdi_40_meses")\n            cls._data = {item["valor"]: item for item in rows}\n        return cls._data\n\n''',
+              ),
+              'periodicidad.py': (
+                  'value_rows',
+                  '''    @classmethod\n    def _load_data(cls):\n        if cls._data is None:\n            rows = value_rows("cfdi_40_periodicidades")\n            cls._data = {item["valor"]: item for item in rows}\n        return cls._data\n\n''',
+              ),
+              'tipo_factor.py': (
+                  'value_rows',
+                  '''    @classmethod\n    def _load_data(cls):\n        if cls._data is None:\n            rows = value_rows("cfdi_40_tipos_factores")\n            cls._data = {item["valor"]: item for item in rows}\n        return cls._data\n\n''',
+              ),
+              'clave_unidad.py': (
+                  'clave_unidad_rows',
+                  '''    @classmethod\n    def _load_data(cls) -> None:\n        """Carga lazy desde el artefacto canónico CFDI 4.0."""\n        if cls._data is not None:\n            return\n        cls._data = clave_unidad_rows()\n        cls._by_id = {item["id"]: item for item in cls._data}\n\n''',
+              ),
+          }
+
+          pattern = re.compile(
+              r'^    @classmethod\n    def _load_data\(cls[^\n]*\):.*?(?=^    @classmethod\n)',
+              re.MULTILINE | re.DOTALL,
+          )
+
+          for filename, (helper, body) in replacements.items():
+              path = root / filename
+              text = path.read_text(encoding='utf-8')
+              text = text.replace('import json\n', '')
+              text = text.replace(
+                  'from catalogmx.utils.shared_data import get_shared_data_path\n', ''
+              )
+              import_line = (
+                  'from catalogmx.catalogs.sat.cfdi_4._resolver_views '
+                  f'import {helper}\n'
+              )
+              if import_line not in text:
+                  # Insert after future import when present, otherwise before first class.
+                  future = 'from __future__ import annotations\n'
+                  if future in text:
+                      text = text.replace(future, future + '\n' + import_line, 1)
+                  else:
+                      class_index = text.find('\nclass ')
+                      if class_index == -1:
+                          raise SystemExit(f'no class anchor in {filename}')
+                      text = text[:class_index] + '\n' + import_line + text[class_index:]
+              text, count = pattern.subn(body, text, count=1)
+              if count != 1:
+                  raise SystemExit(f'failed to replace _load_data in {filename}: {count}')
+              path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Validate modified modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e 'packages/python[dev]'
+          ruff check --fix packages/python/catalogmx/catalogs/sat/cfdi_4
+          black packages/python/catalogmx/catalogs/sat/cfdi_4
+          ruff check packages/python/catalogmx/catalogs/sat/cfdi_4
+          git diff --check
+          python -m compileall -q packages/python/catalogmx/catalogs/sat/cfdi_4
+
+      - name: Commit cutover
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'catalogmx-data[bot]'
+          git config user.email 'catalogmx-data[bot]@users.noreply.github.com'
+          git add packages/python/catalogmx/catalogs/sat/cfdi_4
+          git commit -m 'refactor(data): cut over CFDI JSON consumers'
+          git push origin HEAD:feat/resolver-backed-cfdi-consumers
