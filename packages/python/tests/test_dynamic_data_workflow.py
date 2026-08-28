@@ -25,9 +25,28 @@ def test_dynamic_workflow_fails_closed_and_publishes_verified_pointer():
     assert 'if [ "$reviewed_sha" != "$master_sha" ]; then' in text
 
 
-def test_dynamic_workflow_preserves_legacy_latest_url_with_manifest():
+def test_dynamic_workflow_distinguishes_empty_windows_from_real_failures():
     text = WORKFLOW.read_text(encoding="utf-8")
 
+    assert "run_updater()" in text
+    assert "[fetch] No new records" in text
+    assert "[fetch] ERROR" in text
+    assert "reported a partial source failure" in text
+    assert "run_updater Salarios python scripts/fetch_salarios_minimos_banxico.py" in text
+
+
+def test_dynamic_workflow_preserves_and_repairs_compatibility_channels():
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert 'release_matches latest' in text
+    assert 'release_matches "$archive_tag"' in text
     assert 'gh release upload latest "$database" "$manifest" --clobber' in text
     assert 'gh release create latest "$database" "$manifest"' in text
+    assert 'verify_release_assets latest' in text
     assert 'archive_tag="data-${data_version}"' in text
+    assert 'verify_release_assets "$archive_tag"' in text
+
+    compatibility = text.index("# Compatibility channel for existing DataUpdater clients")
+    archive = text.index("# Human-readable dated archive")
+    pointer = text.index("# Commit the resolver pointer last")
+    assert compatibility < archive < pointer
