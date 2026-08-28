@@ -39,6 +39,8 @@ DATASET_ID = "sat.cfdi_4"
 DATASET_VERSION = "4.0"
 OUTPUT_NAME = "sat_cfdi_40.sqlite3"
 MANIFEST_NAME = "sat_cfdi_40.manifest.json"
+ARTIFACT_FORMAT = "file"
+MOUNT_PATH = "sat/cfdi_4.0"
 
 EXPECTED_TABLES = (
     "cfdi_40_aduanas",
@@ -257,6 +259,8 @@ def build_manifest(
         },
         "dataset": {
             "file": output_db.name,
+            "format": ARTIFACT_FORMAT,
+            "mount_path": MOUNT_PATH,
             "file_sha256": sha256_file(output_db),
             "content_sha256": semantic_hash(output_db, counts),
             "table_count": len(counts),

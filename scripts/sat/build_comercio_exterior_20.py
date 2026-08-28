@@ -46,6 +46,8 @@ DATASET_ID = "sat.comercio_exterior"
 DATASET_VERSION = "2.0"
 OUTPUT_NAME = "sat_comercio_exterior_20.sqlite3"
 MANIFEST_NAME = "sat_comercio_exterior_20.manifest.json"
+ARTIFACT_FORMAT = "file"
+MOUNT_PATH = "sat/comercio_exterior_2.0"
 
 EXPECTED_TABLES = (
     "cce_20_claves_pedimentos",
@@ -280,6 +282,8 @@ def build_manifest(
         ],
         "dataset": {
             "file": output_db.name,
+            "format": ARTIFACT_FORMAT,
+            "mount_path": MOUNT_PATH,
             "file_sha256": sha256_file(output_db),
             "content_sha256": semantic_hash(output_db, counts),
             "table_count": len(counts),

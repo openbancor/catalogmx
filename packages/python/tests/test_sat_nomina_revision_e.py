@@ -6,7 +6,6 @@ import json
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SHARED_XSD = (
     REPO_ROOT
@@ -81,7 +80,7 @@ def test_registry_records_revision_e_canonical_distribution_and_api_parity():
     assert dataset["freshness"]["upstream_checked_at"] == "2026-08-26"
 
     implementation = dataset["implementation"]
-    assert implementation["status"] == "complete"
+    assert implementation["status"] == "resolver_ready"
     assert implementation["xsd_catalog_types"] == 13
     assert implementation["canonical_catalog_tables"] == 13
     assert implementation["canonical_distribution"] == "release"
@@ -91,6 +90,17 @@ def test_registry_records_revision_e_canonical_distribution_and_api_parity():
     assert implementation["normalized_catalogs"] == 13
     assert implementation["consumer_migration_required_before_removal"] is True
     assert implementation["missing_normalized_catalogs"] == []
+
+    artifact = dataset["artifact"]
+    assert artifact == {
+        "version": "1.2-revision-e",
+        "channel": "data-sat-nomina-1-2-1-2-revision-e-latest",
+        "file": "sat_nomina_12.sqlite3",
+        "manifest": "sat_nomina_12.manifest.json",
+        "format": "file",
+        "mount_path": "sat/nomina_1.2",
+        "discovery": "release-pointer",
+    }
 
     roles = {source["role"] for source in dataset["upstream"]}
     assert {
