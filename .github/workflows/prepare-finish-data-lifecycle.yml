@@ -1,0 +1,57 @@
+name: Prepare finish data lifecycle
+
+on:
+  push:
+    branches:
+      - feat/finish-data-lifecycle
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    if: ${{ !contains(github.event.head_commit.message, 'apply resolver TTL contract') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/finish-data-lifecycle
+          fetch-depth: 0
+      - name: Apply resolver TTL contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('packages/python/catalogmx/data/resolver.py')
+          text = path.read_text(encoding='utf-8')
+
+          old = '''        contract: Mapping[str, Any] | None = None,\n        downloader: Downloader | None = None,\n    ) -> None:\n'''
+          new = '''        contract: Mapping[str, Any] | None = None,\n        downloader: Downloader | None = None,\n        cache_ttl_seconds: int | None = None,\n    ) -> None:\n'''
+          if old not in text:
+              raise SystemExit('resolver constructor anchor not found')
+          text = text.replace(old, new, 1)
+
+          old = '''        if self.mode not in ALLOWED_DATA_MODES:\n            raise ValueError(f"CATALOGMX_DATA_MODE must be one of {sorted(ALLOWED_DATA_MODES)}")\n        self.release_base_url = (\n'''
+          new = '''        if self.mode not in ALLOWED_DATA_MODES:\n            raise ValueError(f"CATALOGMX_DATA_MODE must be one of {sorted(ALLOWED_DATA_MODES)}")\n        ttl_value: int | str | None = cache_ttl_seconds\n        if ttl_value is None:\n            ttl_value = os.getenv("CATALOGMX_CACHE_TTL")\n        if ttl_value in {None, ""}:\n            self.cache_ttl_seconds: int | None = None\n        else:\n            try:\n                self.cache_ttl_seconds = int(ttl_value)\n            except (TypeError, ValueError) as exc:\n                raise ValueError("CATALOGMX_CACHE_TTL must be a positive integer number of seconds") from exc\n            if self.cache_ttl_seconds <= 0:\n                raise ValueError("CATALOGMX_CACHE_TTL must be a positive integer number of seconds")\n        self.release_base_url = (\n'''
+          if old not in text:
+              raise SystemExit('resolver mode anchor not found')
+          text = text.replace(old, new, 1)
+
+          old = '''    def _cache_is_stale(self, dataset: Mapping[str, Any], state: Mapping[str, Any]) -> bool:\n        max_age_days = dataset.get("freshness", {}).get("max_age_days")\n        if not isinstance(max_age_days, int) or max_age_days <= 0:\n            return False\n        fetched_at = state.get("fetched_at")\n        if not isinstance(fetched_at, str):\n            return True\n        try:\n            fetched = datetime.fromisoformat(fetched_at.replace("Z", "+00:00"))\n        except ValueError:\n            return True\n        if fetched.tzinfo is None:\n            fetched = fetched.replace(tzinfo=timezone.utc)\n        age = datetime.now(timezone.utc) - fetched.astimezone(timezone.utc)\n        return age.total_seconds() > max_age_days * 86400\n'''
+          new = '''    def _cache_ttl(self, dataset: Mapping[str, Any]) -> int | None:\n        """Return the effective cache TTL in seconds.\n\n        ``CATALOGMX_CACHE_TTL`` / ``cache_ttl_seconds`` is an operational\n        override. Without it, each dataset keeps the freshness SLA declared in\n        the generated registry contract.\n        """\n        if self.cache_ttl_seconds is not None:\n            return self.cache_ttl_seconds\n        max_age_days = dataset.get("freshness", {}).get("max_age_days")\n        if not isinstance(max_age_days, int) or max_age_days <= 0:\n            return None\n        return max_age_days * 86400\n\n    def _cache_is_stale(self, dataset: Mapping[str, Any], state: Mapping[str, Any]) -> bool:\n        ttl_seconds = self._cache_ttl(dataset)\n        if ttl_seconds is None:\n            return False\n        fetched_at = state.get("fetched_at")\n        if not isinstance(fetched_at, str):\n            return True\n        try:\n            fetched = datetime.fromisoformat(fetched_at.replace("Z", "+00:00"))\n        except ValueError:\n            return True\n        if fetched.tzinfo is None:\n            fetched = fetched.replace(tzinfo=timezone.utc)\n        age = datetime.now(timezone.utc) - fetched.astimezone(timezone.utc)\n        return age.total_seconds() > ttl_seconds\n'''
+          if old not in text:
+              raise SystemExit('resolver stale anchor not found')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+      - name: Validate formatting
+        run: |
+          python -m pip install black==25.1.0
+          black packages/python/catalogmx/data/resolver.py
+          git diff --check
+      - name: Commit generated change
+        run: |
+          git config user.name 'catalogmx-lifecycle[bot]'
+          git config user.email 'catalogmx-lifecycle[bot]@users.noreply.github.com'
+          git add packages/python/catalogmx/data/resolver.py
+          git commit -m 'feat(data): apply resolver TTL contract'
+          git push origin HEAD:feat/finish-data-lifecycle
