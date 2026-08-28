@@ -1,0 +1,234 @@
+name: Prepare SAT Geo Resolver Branch
+
+on:
+  push:
+    branches: [feat/data-resolver-sat-geo]
+    paths:
+      - '.github/workflows/prepare-sat-geo-resolver.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/data-resolver-sat-geo
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Register runtime datasets and normalize builder manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+
+          import json
+          from pathlib import Path
+
+          registry_path = Path("packages/shared-data/catalog-registry.json")
+          registry = json.loads(registry_path.read_text(encoding="utf-8"))
+
+          profiles = registry["profiles"]
+          profiles.update(
+              {
+                  "sat-cfdi": {
+                      "description": "SAT CFDI 4.0 canonical reference catalogs.",
+                      "datasets": ["sat.cfdi_4"],
+                  },
+                  "sat-carta-porte": {
+                      "description": "SAT Carta Porte 3.1 canonical reference catalogs.",
+                      "datasets": ["sat.carta_porte"],
+                  },
+                  "sat-comercio-exterior": {
+                      "description": "SAT Comercio Exterior 2.0 plus its shared CFDI 4.0 catalog dependency.",
+                      "datasets": ["sat.cfdi_4", "sat.comercio_exterior"],
+                  },
+                  "sat-nomina": {
+                      "description": "SAT Nomina 1.2 revision E canonical reference catalogs.",
+                      "datasets": ["sat.nomina_1_2"],
+                  },
+                  "mexico-geo": {
+                      "description": "National INEGI AGEEML localities and SEPOMEX postal reference data.",
+                      "datasets": ["inegi.ageeml", "sepomex.codigos_postales"],
+                  },
+              }
+          )
+
+          specs = {
+              "sat.cfdi_4": {
+                  "version": "4.0",
+                  "channel": "data-sat-cfdi-4-4-0-latest",
+                  "file": "sat_cfdi_40.sqlite3",
+                  "manifest": "sat_cfdi_40.manifest.json",
+                  "mount_path": "sat/cfdi_4.0",
+                  "builder": Path("scripts/sat/build_cfdi_40.py"),
+                  "note": (
+                      "CFDI 4.0 remains the valid Anexo 20 version. The canonical 25-table "
+                      "SQLite dataset is independently versioned and resolver-ready; legacy "
+                      "embedded convenience views remain only for compatibility while consumers migrate."
+                  ),
+              },
+              "sat.carta_porte": {
+                  "version": "3.1",
+                  "channel": "data-sat-carta-porte-3-1-latest",
+                  "file": "sat_carta_porte_31.sqlite3",
+                  "manifest": "sat_carta_porte_31.manifest.json",
+                  "mount_path": "sat/carta_porte_3.1",
+                  "builder": Path("scripts/sat/build_carta_porte_31.py"),
+                  "note": (
+                      "Carta Porte 3.1 is current. The canonical release contains the complete "
+                      "32-table ccp_31 catalog family and is independently versioned and resolver-ready; "
+                      "legacy convenience JSON views remain compatibility projections rather than the canonical source."
+                  ),
+              },
+              "sat.comercio_exterior": {
+                  "version": "2.0",
+                  "channel": "data-sat-comercio-exterior-2-0-latest",
+                  "file": "sat_comercio_exterior_20.sqlite3",
+                  "manifest": "sat_comercio_exterior_20.manifest.json",
+                  "mount_path": "sat/comercio_exterior_2.0",
+                  "builder": Path("scripts/sat/build_comercio_exterior_20.py"),
+                  "note": (
+                      "Comercio Exterior 2.0 has been effective with CFDI 4.0 since 2024-01-18. "
+                      "Its canonical release contains the 10 CCE-owned tables; the sat-comercio-exterior "
+                      "runtime profile also resolves sat.cfdi_4 for the four shared CFDI catalog concepts. "
+                      "Legacy JSON views remain for compatibility during consumer migration."
+                  ),
+              },
+              "sat.nomina_1_2": {
+                  "version": "1.2-revision-e",
+                  "channel": "data-sat-nomina-1-2-1-2-revision-e-latest",
+                  "file": "sat_nomina_12.sqlite3",
+                  "manifest": "sat_nomina_12.manifest.json",
+                  "mount_path": "sat/nomina_1.2",
+                  "builder": Path("scripts/sat/build_nomina_12.py"),
+                  "note": (
+                      "Nómina 1.2 revision E is effective from 2026-01-01. The canonical release "
+                      "contains all 13 catNomina catalog families and is resolver-ready; generated "
+                      "embedded JSON views remain compatibility projections while consumers migrate."
+                  ),
+              },
+              "inegi.ageeml": {
+                  "version": "1",
+                  "channel": "data-inegi-ageeml-1-latest",
+                  "file": "inegi_ageeml.sqlite3",
+                  "manifest": "inegi_ageeml.manifest.json",
+                  "mount_path": "inegi/ageeml",
+                  "builder": Path("scripts/inegi/build_ageeml.py"),
+                  "note": (
+                      "AGEEML is a permanently updated national geographic registry. The fail-closed "
+                      "canonical SQLite release preserves active/inactive localities and full 01-32 state "
+                      "coverage and is resolver-ready; synthetic fallback is forbidden. Legacy embedded "
+                      "views remain compatibility data during migration."
+                  ),
+              },
+              "sepomex.codigos_postales": {
+                  "version": "1",
+                  "channel": "data-sepomex-codigos-postales-1-latest",
+                  "file": "sepomex_codigos_postales.sqlite3",
+                  "manifest": "sepomex_codigos_postales.manifest.json",
+                  "mount_path": "sepomex",
+                  "builder": Path("scripts/sepomex/build_postal_codes.py"),
+                  "note": (
+                      "The official national Correos de México/SEPOMEX export is normalized into a "
+                      "fail-closed canonical SQLite release with full state coverage. The release is "
+                      "resolver-ready; the large embedded JSON and legacy SQLite snapshots remain only "
+                      "for compatibility while consumers migrate."
+                  ),
+              },
+          }
+
+          by_id = {dataset["id"]: dataset for dataset in registry["datasets"]}
+          missing = sorted(set(specs) - set(by_id))
+          if missing:
+              raise SystemExit(f"registry missing expected datasets: {missing}")
+
+          for dataset_id, spec in specs.items():
+              dataset = by_id[dataset_id]
+              artifact = {
+                  "version": spec["version"],
+                  "channel": spec["channel"],
+                  "file": spec["file"],
+                  "manifest": spec["manifest"],
+                  "format": "file",
+                  "mount_path": spec["mount_path"],
+                  "discovery": "release-pointer",
+              }
+              dataset["artifact"] = artifact
+              implementation = dataset.setdefault("implementation", {})
+              implementation["status"] = "resolver_ready"
+              implementation["canonical_distribution"] = "release"
+              implementation["release_artifact"] = spec["file"]
+              implementation["manifest"] = spec["manifest"]
+              implementation["consumer_migration_required_before_removal"] = True
+              implementation.pop("planned_release_artifact", None)
+              implementation.pop("planned_full_distribution", None)
+              implementation.pop("canonical_full_dataset", None)
+              dataset["notes"] = spec["note"]
+
+              builder_path = spec["builder"]
+              text = builder_path.read_text(encoding="utf-8")
+              manifest_assignment = f'MANIFEST_NAME = "{spec["manifest"]}"\n'
+              constants = (
+                  manifest_assignment
+                  + 'ARTIFACT_FORMAT = "file"\n'
+                  + f'MOUNT_PATH = "{spec["mount_path"]}"\n'
+              )
+              if "ARTIFACT_FORMAT = " not in text:
+                  if text.count(manifest_assignment) != 1:
+                      raise SystemExit(f"cannot locate manifest constant in {builder_path}")
+                  text = text.replace(manifest_assignment, constants, 1)
+
+              dataset_file = '            "file": output_db.name,\n'
+              runtime_fields = (
+                  dataset_file
+                  + '            "format": ARTIFACT_FORMAT,\n'
+                  + '            "mount_path": MOUNT_PATH,\n'
+              )
+              if '            "format": ARTIFACT_FORMAT,\n' not in text:
+                  if text.count(dataset_file) != 1:
+                      raise SystemExit(f"cannot locate manifest dataset.file in {builder_path}")
+                  text = text.replace(dataset_file, runtime_fields, 1)
+              builder_path.write_text(text, encoding="utf-8")
+
+          registry_path.write_text(
+              json.dumps(registry, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+          python scripts/catalog_registry.py validate
+          python scripts/render_dataset_contract.py
+          python scripts/render_dataset_contract.py --check
+          git diff --check
+
+      - name: Commit generated branch changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'catalogmx-resolver-prep[bot]'
+          git config user.email 'catalogmx-resolver-prep[bot]@users.noreply.github.com'
+          git add \
+            packages/shared-data/catalog-registry.json \
+            packages/python/catalogmx/data/dataset_contract.json \
+            scripts/sat/build_cfdi_40.py \
+            scripts/sat/build_carta_porte_31.py \
+            scripts/sat/build_comercio_exterior_20.py \
+            scripts/sat/build_nomina_12.py \
+            scripts/inegi/build_ageeml.py \
+            scripts/sepomex/build_postal_codes.py
+          if git diff --cached --quiet; then
+            echo 'No generated changes required.'
+            exit 0
+          fi
+          git commit -m 'feat(data): register SAT and geo resolver datasets'
+          git push origin HEAD:feat/data-resolver-sat-geo
