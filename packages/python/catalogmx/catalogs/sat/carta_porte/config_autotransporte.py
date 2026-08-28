@@ -28,7 +28,7 @@ class ConfigAutotransporteCatalog:
 
     @classmethod
     def get_all(cls) -> list[dict]:
-        """Obtiene todas las configuraciones vigentes/publicadas por SAT."""
+        """Obtiene las configuraciones publicadas por SAT."""
         cls._load_data()
         return cls._data.copy()
 
