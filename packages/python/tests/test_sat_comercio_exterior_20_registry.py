@@ -24,7 +24,7 @@ def test_comercio_exterior_20_separates_owned_and_shared_catalogs():
     assert dataset["freshness"]["upstream_checked_at"] == "2026-08-26"
 
     implementation = dataset["implementation"]
-    assert implementation["status"] == "legacy_embedded_views"
+    assert implementation["status"] == "resolver_ready"
     assert implementation["official_catalogs_total"] == 14
     assert implementation["canonical_owned_catalogs"] == 10
     assert implementation["shared_cfdi_catalogs"] == 4
@@ -39,6 +39,17 @@ def test_comercio_exterior_20_separates_owned_and_shared_catalogs():
     assert implementation["canonical_distribution"] == "release"
     assert implementation["release_artifact"] == "sat_comercio_exterior_20.sqlite3"
     assert implementation["consumer_migration_required_before_removal"] is True
+
+    artifact = dataset["artifact"]
+    assert artifact == {
+        "version": "2.0",
+        "channel": "data-sat-comercio-exterior-2-0-latest",
+        "file": "sat_comercio_exterior_20.sqlite3",
+        "manifest": "sat_comercio_exterior_20.manifest.json",
+        "format": "file",
+        "mount_path": "sat/comercio_exterior_2.0",
+        "discovery": "release-pointer",
+    }
 
     roles = {source["role"] for source in dataset["upstream"]}
     assert {

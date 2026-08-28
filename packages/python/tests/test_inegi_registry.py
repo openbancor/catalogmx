@@ -14,7 +14,7 @@ def load_datasets() -> dict[str, dict]:
     return {dataset["id"]: dataset for dataset in registry["datasets"]}
 
 
-def test_ageeml_is_monthly_release_data_with_legacy_embedded_views():
+def test_ageeml_is_resolver_ready_with_legacy_embedded_views():
     dataset = load_datasets()["inegi.ageeml"]
 
     assert dataset["distribution"] == "mixed"
@@ -23,10 +23,22 @@ def test_ageeml_is_monthly_release_data_with_legacy_embedded_views():
     assert dataset["freshness"]["latest_indexed_cut"] == "2026/JUN"
 
     implementation = dataset["implementation"]
-    assert implementation["status"] == "legacy_embedded_views"
+    assert implementation["status"] == "resolver_ready"
     assert implementation["canonical_distribution"] == "release"
-    assert implementation["planned_release_artifact"] == "inegi_ageeml.sqlite3"
+    assert implementation["release_artifact"] == "inegi_ageeml.sqlite3"
     assert implementation["synthetic_fallback_forbidden"] is True
+    assert implementation["consumer_migration_required_before_removal"] is True
+
+    artifact = dataset["artifact"]
+    assert artifact == {
+        "version": "1",
+        "channel": "data-inegi-ageeml-1-latest",
+        "file": "inegi_ageeml.sqlite3",
+        "manifest": "inegi_ageeml.manifest.json",
+        "format": "file",
+        "mount_path": "inegi/ageeml",
+        "discovery": "release-pointer",
+    }
 
     assert all("/scian" not in path for path in dataset["local_paths"])
     roles = {source["role"] for source in dataset["upstream"]}
