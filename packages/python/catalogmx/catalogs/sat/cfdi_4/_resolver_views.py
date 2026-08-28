@@ -21,8 +21,12 @@ _IMPUESTO_NAMES = {
 }
 
 
-def _rows(table: str) -> list[dict[str, Any]]:
-    return read_dataset_table(DATASET_ID, DATABASE_NAME, table)
+def _rows(
+    table: str, *, order_by: str | tuple[str, ...] = "id"
+) -> list[dict[str, Any]]:
+    return read_dataset_table(
+        DATASET_ID, DATABASE_NAME, table, order_by=order_by
+    )
 
 
 def _description(value: object, *, strip_terminal_period: bool = False) -> str:
@@ -84,12 +88,20 @@ def uso_cfdi_rows() -> list[dict[str, Any]]:
         fisica = bool(row.get("aplica_fisica"))
         moral = bool(row.get("aplica_moral"))
         applies_to = (
-            "both" if fisica and moral else "fisica" if fisica else "moral" if moral else "none"
+            "both"
+            if fisica and moral
+            else "fisica"
+            if fisica
+            else "moral"
+            if moral
+            else "none"
         )
         result.append(
             {
                 "code": str(row["id"]),
-                "description": _description(row.get("texto"), strip_terminal_period=True),
+                "description": _description(
+                    row.get("texto"), strip_terminal_period=True
+                ),
                 "fisica": fisica,
                 "moral": moral,
                 "applies_to": applies_to,
@@ -106,8 +118,19 @@ def tasa_o_cuota_rows() -> list[dict[str, Any]]:
     rules therefore expose ``valor_mínimo`` as ``None`` and keep the exact
     decimal text in ``valor_máximo``.
     """
+    order_by = (
+        "tipo",
+        "minimo",
+        "valor",
+        "impuesto",
+        "factor",
+        "traslado",
+        "retencion",
+        "vigencia_desde",
+        "vigencia_hasta",
+    )
     result: list[dict[str, Any]] = []
-    for row in _rows("cfdi_40_reglas_tasa_cuota"):
+    for row in _rows("cfdi_40_reglas_tasa_cuota", order_by=order_by):
         minimo = row.get("minimo")
         valor = row.get("valor")
         result.append(
