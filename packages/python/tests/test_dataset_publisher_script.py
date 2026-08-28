@@ -62,10 +62,17 @@ if args[:2] == ["release", "create"]:
     save_meta(tag, notes, target)
     assets = release_dir(tag) / "assets"
     assets.mkdir(exist_ok=True)
+    # `gh release create TAG [files...] [flags]`: only positional arguments
+    # between TAG and the first flag are assets. Do not probe flag values with
+    # Path.is_file(); long --notes strings raise ENAMETOOLONG on Python <=3.13.
+    asset_values = []
     for value in args[3:]:
+        if value.startswith("--"):
+            break
+        asset_values.append(value)
+    for value in asset_values:
         path = Path(value)
-        if path.is_file():
-            shutil.copy2(path, assets / path.name)
+        shutil.copy2(path, assets / path.name)
     raise SystemExit(0)
 
 if args[:2] == ["release", "download"]:
