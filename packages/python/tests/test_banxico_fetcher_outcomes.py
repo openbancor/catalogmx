@@ -76,7 +76,9 @@ def test_valid_empty_source_window_returns_no_observation(
     assert module.main() == 3
 
 
-def test_salary_fetch_is_fail_closed_across_series(monkeypatch: pytest.MonkeyPatch):
+def test_salary_fetch_is_fail_closed_across_relevant_series(
+    monkeypatch: pytest.MonkeyPatch,
+):
     module = load_script("fetch_salarios_minimos_banxico.py")
     monkeypatch.setattr(
         module,
@@ -114,6 +116,66 @@ def test_salary_fetch_is_fail_closed_across_series(monkeypatch: pytest.MonkeyPat
 
     with pytest.raises(ValueError, match="SECOND: upstream unavailable"):
         module.fetch_all_series("token", "2026-01-01", "2026-01-31")
+
+
+def test_salary_fetch_skips_expired_series(monkeypatch: pytest.MonkeyPatch):
+    module = load_script("fetch_salarios_minimos_banxico.py")
+    monkeypatch.setattr(
+        module,
+        "SALARY_SERIES",
+        {
+            "EXPIRED": {
+                "name": "Expired",
+                "start_date": "1976-01-01",
+                "end_date": "2012-11-30",
+                "type": "nominal",
+                "zone": "general",
+            },
+            "CURRENT": {
+                "name": "Current",
+                "start_date": "2018-12-01",
+                "type": "nominal",
+                "zone": "general",
+            },
+        },
+    )
+    calls: list[tuple[str, str, str]] = []
+
+    def fake_fetch(_token, series_id, _info, start_date, end_date):
+        calls.append((series_id, start_date, end_date))
+        return []
+
+    monkeypatch.setattr(module, "fetch_series_chunk", fake_fetch)
+
+    assert module.fetch_all_series("token", "2026-08-01", "2026-08-27") == []
+    assert calls == [("CURRENT", "2026-08-01", "2026-08-27")]
+
+
+def test_salary_fetch_caps_request_at_series_end(monkeypatch: pytest.MonkeyPatch):
+    module = load_script("fetch_salarios_minimos_banxico.py")
+    monkeypatch.setattr(
+        module,
+        "SALARY_SERIES",
+        {
+            "HISTORICAL": {
+                "name": "Historical",
+                "start_date": "2012-12-01",
+                "end_date": "2018-12-31",
+                "type": "nominal",
+                "zone": "general",
+            }
+        },
+    )
+    calls: list[tuple[str, str, str]] = []
+
+    def fake_fetch(_token, series_id, _info, start_date, end_date):
+        calls.append((series_id, start_date, end_date))
+        return []
+
+    monkeypatch.setattr(module, "fetch_series_chunk", fake_fetch)
+
+    assert module.fetch_all_series("token", "2018-12-01", "2019-02-01") == []
+    assert calls == [("HISTORICAL", "2018-12-01", "2018-12-31")]
 
 
 def test_local_full_check_understands_no_observation_exit_code():

@@ -43,6 +43,7 @@ SALARY_SERIES = {
         "name": "Salarios Mínimos General",
         "period": "hasta_nov_2012",
         "start_date": "1976-01-01",
+        "end_date": "2012-11-30",
         "type": "nominal",
         "zone": "general"
     },
@@ -50,6 +51,7 @@ SALARY_SERIES = {
         "name": "Índices Reales (1994=100) General",
         "period": "hasta_nov_2012",
         "start_date": "1976-01-01",
+        "end_date": "2012-11-30",
         "type": "real",
         "zone": "general",
         "base_year": 1994
@@ -58,6 +60,7 @@ SALARY_SERIES = {
         "name": "Salarios Mínimos General",
         "period": "dic_2012_dic_2018",
         "start_date": "2012-12-01",
+        "end_date": "2018-12-31",
         "type": "nominal",
         "zone": "general"
     },
@@ -65,6 +68,7 @@ SALARY_SERIES = {
         "name": "Índices Reales (Dic2012=100) General",
         "period": "dic_2012_dic_2018",
         "start_date": "2012-12-01",
+        "end_date": "2018-12-31",
         "type": "real",
         "zone": "general",
         "base_year": 2012
@@ -177,12 +181,16 @@ def fetch_all_series(token: str, start_date: str, end_date: str) -> list[dict[st
 
         try:
             series_start = series_info["start_date"]
+            series_end = series_info.get("end_date")
             if series_start > end_date:
                 print(f"[fetch]   Skipping {series_id} (starts after end date)")
                 continue
+            if series_end and series_end < start_date:
+                print(f"[fetch]   Skipping {series_id} (ended before start date)")
+                continue
 
             effective_start = max(start_date, series_start)
-            effective_end = end_date
+            effective_end = min(end_date, series_end) if series_end else end_date
 
             if effective_start > effective_end:
                 print(f"[fetch]   Skipping {series_id} (no overlap)")
