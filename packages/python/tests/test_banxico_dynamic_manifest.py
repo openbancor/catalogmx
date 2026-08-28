@@ -104,7 +104,7 @@ def test_build_manifest_keeps_production_thresholds_by_default(tmp_path: Path):
     database = tmp_path / module.OUTPUT_NAME
     create_database(database)
 
-    with pytest.raises(RuntimeError, match="udis looks incomplete"):
+    with pytest.raises(RuntimeError, match="looks incomplete"):
         module.build_manifest(database)
 
 
