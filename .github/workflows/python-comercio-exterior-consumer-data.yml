@@ -1,0 +1,224 @@
+name: Python Comercio Exterior Consumer Data
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  installed-wheel-comercio-exterior:
+    name: Installed wheel Comercio Exterior consumers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build verified Comercio Exterior release fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          export FIXTURE_ROOT="$RUNNER_TEMP/comercio-exterior-fixture"
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import shutil
+          import sqlite3
+          from pathlib import Path
+
+          root = Path(os.environ["FIXTURE_ROOT"])
+          releases = root / "releases"
+          metadata = root / "release-metadata"
+          build = root / "build"
+          build.mkdir(parents=True, exist_ok=True)
+          metadata.mkdir(parents=True, exist_ok=True)
+
+          contract = json.loads(
+              Path("packages/python/catalogmx/data/dataset_contract.json").read_text(
+                  encoding="utf-8"
+              )
+          )["datasets"]["sat.comercio_exterior"]["artifact"]
+          database = build / contract["file"]
+
+          connection = sqlite3.connect(database)
+          try:
+              connection.execute(
+                  "CREATE TABLE cce_20_estados ("
+                  "estado TEXT NOT NULL, pais TEXT NOT NULL, texto TEXT NOT NULL, "
+                  "vigencia_desde TEXT, vigencia_hasta TEXT)"
+              )
+              connection.executemany(
+                  "INSERT INTO cce_20_estados VALUES (?, ?, ?, ?, ?)",
+                  [
+                      ("AGU", "MEX", "Aguascalientes", "2024-01-18", ""),
+                      ("ON", "CAN", "Ontario", "2024-01-18", ""),
+                      ("TX", "USA", "Texas", "2024-01-18", ""),
+                  ],
+              )
+
+              connection.execute(
+                  "CREATE TABLE cce_20_incoterms ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, vigencia_desde TEXT, "
+                  "vigencia_hasta TEXT)"
+              )
+              connection.executemany(
+                  "INSERT INTO cce_20_incoterms VALUES (?, ?, ?, ?)",
+                  [
+                      ("CIF", "COSTE, SEGURO Y FLETE (PUERTO DE DESTINO CONVENIDO).", "2024-01-18", ""),
+                      ("EXW", "EN FABRICA (LUGAR CONVENIDO).", "2024-01-18", ""),
+                  ],
+              )
+
+              connection.execute(
+                  "CREATE TABLE cce_20_motivos_traslado ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL)"
+              )
+              connection.executemany(
+                  "INSERT INTO cce_20_motivos_traslado VALUES (?, ?)",
+                  [
+                      ("01", "Envío de mercancias facturadas con anterioridad"),
+                      ("05", "Envío de mercancías propiedad de terceros"),
+                  ],
+              )
+
+              connection.execute(
+                  "CREATE TABLE cce_20_unidades_medida ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, vigencia_desde TEXT, "
+                  "vigencia_hasta TEXT)"
+              )
+              connection.executemany(
+                  "INSERT INTO cce_20_unidades_medida VALUES (?, ?, ?, ?)",
+                  [
+                      ("01", "KILO", "2024-01-18", ""),
+                      ("20", "CAJA", "2024-01-18", ""),
+                      ("99", "SERVICIO", "2024-01-18", ""),
+                  ],
+              )
+              connection.commit()
+          finally:
+              connection.close()
+
+          payload = database.read_bytes()
+          file_sha = hashlib.sha256(payload).hexdigest()
+          content_sha = hashlib.sha256(
+              b"catalogmx-comercio-exterior-installed-wheel-consumer-fixture-v1"
+          ).hexdigest()
+          channel = contract["channel"]
+          release_tag = f"{channel.removesuffix('-latest')}-{content_sha}"
+
+          manifest = {
+              "schema_version": 1,
+              "dataset_id": "sat.comercio_exterior",
+              "dataset_version": str(contract["version"]),
+              "data_version": "wheel-fixture",
+              "dataset": {
+                  "file": contract["file"],
+                  "format": contract["format"],
+                  "mount_path": contract["mount_path"],
+                  "file_sha256": file_sha,
+                  "content_sha256": content_sha,
+              },
+          }
+          manifest_path = build / contract["manifest"]
+          manifest_path.write_text(
+              json.dumps(manifest, sort_keys=True, indent=2) + "\n",
+              encoding="utf-8",
+          )
+
+          release_dir = releases / release_tag
+          release_dir.mkdir(parents=True, exist_ok=True)
+          shutil.copy2(database, release_dir / database.name)
+          shutil.copy2(manifest_path, release_dir / manifest_path.name)
+
+          pointer = {
+              "schema_version": 1,
+              "dataset_id": "sat.comercio_exterior",
+              "dataset_version": str(contract["version"]),
+              "release_tag": release_tag,
+              "content_sha256": content_sha,
+              "artifact": contract["file"],
+              "manifest": contract["manifest"],
+          }
+          (metadata / channel).write_text(
+              json.dumps(
+                  {"tag_name": channel, "body": json.dumps(pointer, sort_keys=True)},
+                  sort_keys=True,
+              ),
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Build and install clean wheel
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip build
+          python -m build --wheel --outdir "$RUNNER_TEMP/wheels" packages/python
+          unzip -l "$RUNNER_TEMP"/wheels/catalogmx-*.whl \
+            > "$RUNNER_TEMP/wheel-contents.txt"
+          if grep -q 'catalogmx/shared-data/' "$RUNNER_TEMP/wheel-contents.txt"; then
+            echo 'Unexpected embedded shared-data tree in wheel' >&2
+            exit 1
+          fi
+          python -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/python" -m pip install --upgrade pip
+          "$RUNNER_TEMP/venv/bin/python" -m pip install \
+            "$RUNNER_TEMP"/wheels/catalogmx-*.whl
+
+      - name: Resolve Comercio Exterior public APIs from verified release
+        shell: bash
+        env:
+          CATALOGMX_DATA_MODE: fetch-missing
+        run: |
+          set -euo pipefail
+          export CATALOGMX_RELEASE_BASE_URL="file://$RUNNER_TEMP/comercio-exterior-fixture/releases"
+          export CATALOGMX_RELEASE_METADATA_BASE_URL="file://$RUNNER_TEMP/comercio-exterior-fixture/release-metadata"
+          export CATALOGMX_CACHE_DIR="$RUNNER_TEMP/comercio-exterior-consumer-cache"
+          unset CATALOGMX_SHARED_DATA
+
+          "$RUNNER_TEMP/venv/bin/python" - <<'PY'
+          from catalogmx.catalogs.sat.comercio_exterior import (
+              EstadoCatalog,
+              IncotermsValidator,
+              MotivoTrasladoCatalog,
+              UnidadAduanaCatalog,
+          )
+          from catalogmx.data import DatasetResolver
+
+          texas = EstadoCatalog.get_estado_usa("TX")
+          assert texas is not None
+          assert texas["name"] == "Texas"
+          assert EstadoCatalog.get_estado("TX", "CAN") is None
+          assert all(item["country"] != "MEX" for item in EstadoCatalog.get_all())
+
+          cif = IncotermsValidator.get_incoterm("CIF")
+          assert cif is not None
+          assert cif["description"].startswith("COSTE, SEGURO")
+          assert IncotermsValidator.is_valid_for_transport("CIF", "sea") is True
+          assert IncotermsValidator.is_valid_for_transport("CIF", "land") is False
+          assert IncotermsValidator.seller_pays_freight("CIF") is True
+          assert IncotermsValidator.seller_pays_insurance("CIF") is True
+
+          motivo = MotivoTrasladoCatalog.get_motivo("01")
+          assert motivo is not None
+          assert motivo["descripcion"] == "Envío de mercancias facturadas con anterioridad"
+          assert MotivoTrasladoCatalog.requires_propietario("05") is True
+
+          kilo = UnidadAduanaCatalog.get_unidad("01")
+          assert kilo is not None
+          assert kilo["descripcion"] == "KILO"
+          assert kilo["type"] == "weight"
+          assert [item["code"] for item in UnidadAduanaCatalog.get_by_type("container")] == ["20"]
+          assert [item["code"] for item in UnidadAduanaCatalog.get_by_type("service")] == ["99"]
+
+          resolver = DatasetResolver()
+          assert resolver.verify_cached_dataset("sat.comercio_exterior")
+          state = resolver.cache_status("sat.comercio_exterior")
+          assert state["cached"] is True
+          assert state["release_tag"].startswith("data-sat-comercio-exterior-2-0-")
+          PY
