@@ -103,7 +103,7 @@ def test_resolver_fetches_dynamic_file_from_verified_pointer(tmp_path: Path):
     }
 
     resolver = DatasetResolver(
-        cache_root=tmp_path / "cache",
+        cache_dir=tmp_path / "cache",
         mode="fetch-missing",
         contract=contract,
         downloader=lambda url: responses[url],
