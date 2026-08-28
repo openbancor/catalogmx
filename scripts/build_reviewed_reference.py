@@ -18,9 +18,10 @@ import hashlib
 import io
 import json
 import tarfile
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal, Sequence
+from typing import Any, Literal
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -161,7 +162,9 @@ def write_deterministic_archive(
     output_path: Path,
 ) -> None:
     tar_buffer = io.BytesIO()
-    with tarfile.open(fileobj=tar_buffer, mode="w", format=tarfile.PAX_FORMAT) as archive:
+    with tarfile.open(
+        fileobj=tar_buffer, mode="w", format=tarfile.PAX_FORMAT
+    ) as archive:
         for name, payload in sorted(files):
             info = tarfile.TarInfo(name=f"{dataset.mount_path}/{name}")
             info.size = len(payload)

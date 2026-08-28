@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "registry_status": "bootstrap",
-  "inventory_checked_at": "2026-08-27",
+  "inventory_checked_at": "2026-08-28",
   "legacy_manifest": ".catalog-versions.json",
   "profiles": {
     "core": {
@@ -55,7 +55,14 @@
       "description": "National INEGI AGEEML localities and SEPOMEX postal reference data.",
       "datasets": [
         "inegi.ageeml",
-        "sepomex.codigos_postales"
+        "sepomex.codigos_postales",
+        "conapo.territorial"
+      ]
+    },
+    "mexico-telecom": {
+      "description": "IFT numbering and reviewed telecom reference snapshots.",
+      "datasets": [
+        "ift.numbering"
       ]
     }
   },
@@ -608,12 +615,22 @@
       "authority": "IFT",
       "kind": "reference",
       "status": "managed",
-      "distribution": "embedded",
+      "distribution": "mixed",
       "local_paths": [
         "packages/shared-data/ift",
         "packages/shared-data/sqlite/prefijos_telefonicos.db"
       ],
       "upstream": [
+        {
+          "role": "authoritative_numbering_service",
+          "url": "https://sns.ift.org.mx/sns-frontend/consulta-numeracion/numeracion-geografica.xhtml",
+          "format": "interactive_portal"
+        },
+        {
+          "role": "authoritative_numbering_areas",
+          "url": "https://sns.ift.org.mx/sns-frontend/areas-geograficas-numeracion/areas-numeracion.xhtml",
+          "format": "interactive_portal"
+        },
         {
           "role": "authoritative_portal",
           "url": "https://www.ift.org.mx/usuarios-y-audiencias/recursos-usuarios/recursos/numeracion",
@@ -623,8 +640,33 @@
       "freshness": {
         "mode": "interval",
         "max_age_days": 90,
-        "upstream_checked_at": null
-      }
+        "upstream_checked_at": "2026-08-28"
+      },
+      "source_subpath": "ift",
+      "implementation": {
+        "status": "resolver_ready",
+        "canonical_distribution": "release",
+        "release_artifact": "ift_numbering.tar.gz",
+        "manifest": "ift_numbering.manifest.json",
+        "reviewed_files": [
+          "codigos_lada.json",
+          "operadores_moviles.json",
+          "operadores_pnn.json"
+        ],
+        "legacy_view_path": "packages/shared-data/ift",
+        "publish_from_reviewed_master": true,
+        "consumer_migration_required_before_removal": true
+      },
+      "artifact": {
+        "version": "1",
+        "channel": "data-ift-numbering-1-latest",
+        "file": "ift_numbering.tar.gz",
+        "manifest": "ift_numbering.manifest.json",
+        "format": "tar.gz",
+        "mount_path": "ift",
+        "discovery": "release-pointer"
+      },
+      "notes": "The IFT SNS is authoritative for numbering assignments. The tracked JSON files also contain CatalogMX compatibility enrichments (for example INEGI mapping, metropolitan overlays and mobile-operator convenience fields), so the runtime artifact is a reviewed snapshot rather than a claimed one-to-one IFT export. Source refresh and enrichment review remain separate from release distribution."
     },
     {
       "id": "conapo.territorial",
@@ -632,15 +674,55 @@
       "authority": "CONAPO",
       "kind": "reference",
       "status": "managed",
-      "distribution": "embedded",
+      "distribution": "mixed",
       "local_paths": [
         "packages/shared-data/conapo"
       ],
-      "upstream": [],
+      "upstream": [
+        {
+          "role": "authoritative_publication",
+          "url": "https://www.gob.mx/conapo/documentos/sistema-urbano-nacional-2020",
+          "format": "publication"
+        },
+        {
+          "role": "authoritative_dataset",
+          "url": "https://www.datos.gob.mx/dataset/sistema_urbano_nacional",
+          "format": "csv"
+        },
+        {
+          "role": "authoritative_metropolitan_dataset",
+          "url": "https://www.datos.gob.mx/dataset/metropolis_mexico_2020",
+          "format": "csv"
+        }
+      ],
       "freshness": {
         "mode": "event",
-        "upstream_checked_at": null
-      }
+        "upstream_checked_at": "2026-08-28"
+      },
+      "source_subpath": "conapo",
+      "implementation": {
+        "status": "resolver_ready",
+        "canonical_distribution": "release",
+        "release_artifact": "conapo_territorial.tar.gz",
+        "manifest": "conapo_territorial.manifest.json",
+        "reviewed_files": [
+          "municipios_tipologia.csv",
+          "sun_2020.csv"
+        ],
+        "legacy_view_path": "packages/shared-data/conapo",
+        "publish_from_reviewed_master": true,
+        "consumer_migration_required_before_removal": true
+      },
+      "artifact": {
+        "version": "2020",
+        "channel": "data-conapo-territorial-2020-latest",
+        "file": "conapo_territorial.tar.gz",
+        "manifest": "conapo_territorial.manifest.json",
+        "format": "tar.gz",
+        "mount_path": "conapo",
+        "discovery": "release-pointer"
+      },
+      "notes": "SUN 2020 and Metrópolis de México 2020 remain versioned territorial classifications. CatalogMX distributes the two reviewed CSV compatibility views as a deterministic release bundle so installed runtimes do not depend on a repository checkout. The bundle preserves reviewed project semantics; authority refresh remains a separate review step."
     },
     {
       "id": "imss.reference",

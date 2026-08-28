@@ -6,7 +6,8 @@ https://www.datos.gob.mx/dataset/sistema_urbano_nacional
 """
 
 import csv
-from pathlib import Path
+
+from catalogmx.utils.shared_data import get_shared_data_path
 
 
 class SistemaUrbanoNacionalCatalog:
@@ -21,7 +22,7 @@ class SistemaUrbanoNacionalCatalog:
         if cls._data is not None:
             return
 
-        data_path = Path(__file__).resolve().parents[4] / "shared-data" / "conapo" / "sun_2020.csv"
+        data_path = get_shared_data_path("conapo", "sun_2020.csv")
 
         cls._data = []
         cls._by_clave = {}

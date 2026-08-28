@@ -102,7 +102,9 @@ def test_conapo_and_ift_catalogs_honor_shared_data_override(
         "exteriores_continuidad_geografica",
         "entidad_etq",
     ]
-    with (conapo / "municipios_tipologia.csv").open("w", encoding="utf-8", newline="") as handle:
+    with (conapo / "municipios_tipologia.csv").open(
+        "w", encoding="utf-8", newline=""
+    ) as handle:
         writer = csv.DictWriter(handle, fieldnames=metropolis_fields)
         writer.writeheader()
         writer.writerow(
@@ -172,13 +174,22 @@ def test_conapo_and_ift_catalogs_honor_shared_data_override(
     monkeypatch.setenv("CATALOGMX_SHARED_DATA", str(root))
     reset_catalogs()
     try:
-        assert SistemaUrbanoNacionalCatalog.get_por_clave("99.01")["nombre"] == "Ciudad Prueba"
-        assert ZonasMetropolitanasCatalog.buscar_por_municipio("99", "1")[
-            "nombre_metropoli"
-        ] == "Metrópoli Prueba"
+        assert (
+            SistemaUrbanoNacionalCatalog.get_por_clave("99.01")["nombre"]
+            == "Ciudad Prueba"
+        )
+        assert (
+            ZonasMetropolitanasCatalog.buscar_por_municipio("99", "1")[
+                "nombre_metropoli"
+            ]
+            == "Metrópoli Prueba"
+        )
         assert CodigosLADACatalog.buscar_por_lada("999")["ciudad"] == "Ciudad Prueba"
-        assert OperadoresMovilesCatalog.buscar_por_nombre("Operador Prueba")[
-            "razon_social"
-        ] == "Operador Prueba, S.A."
+        assert (
+            OperadoresMovilesCatalog.buscar_por_nombre("Operador Prueba")[
+                "razon_social"
+            ]
+            == "Operador Prueba, S.A."
+        )
     finally:
         reset_catalogs()

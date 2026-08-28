@@ -7,7 +7,8 @@ Incluye mapeo geográfico a códigos INEGI y zonas metropolitanas.
 
 import json
 import random
-from pathlib import Path
+
+from catalogmx.utils.shared_data import get_shared_data_path
 
 
 class CodigosLADACatalog:
@@ -212,9 +213,7 @@ class CodigosLADACatalog:
         if cls._data is not None:
             return
 
-        data_path = (
-            Path(__file__).resolve().parents[4] / "shared-data" / "ift" / "codigos_lada.json"
-        )
+        data_path = get_shared_data_path("ift", "codigos_lada.json")
 
         with open(data_path, encoding="utf-8") as f:
             raw = json.load(f)
@@ -310,7 +309,9 @@ class CodigosLADACatalog:
         return [c for c in cls._data if c.get("region") == region]
 
     @classmethod
-    def get_prefijos_por_municipio(cls, cve_entidad: str, cve_municipio: str) -> list[str]:
+    def get_prefijos_por_municipio(
+        cls, cve_entidad: str, cve_municipio: str
+    ) -> list[str]:
         """
         Obtiene todos los prefijos telefónicos probables para un municipio.
 

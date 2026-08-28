@@ -51,8 +51,7 @@ def test_ift_bundle_is_deterministic_and_canonicalizes_json(tmp_path: Path):
 
     assert artifact1.read_bytes() == artifact2.read_bytes()
     assert (
-        manifest1["dataset"]["content_sha256"]
-        == manifest2["dataset"]["content_sha256"]
+        manifest1["dataset"]["content_sha256"] == manifest2["dataset"]["content_sha256"]
     )
     assert json.loads(manifest1_path.read_text(encoding="utf-8")) == manifest1
     assert json.loads(manifest2_path.read_text(encoding="utf-8")) == manifest2
