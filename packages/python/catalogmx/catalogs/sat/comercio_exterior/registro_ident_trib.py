@@ -57,9 +57,7 @@ class RegistroIdentTribCatalog:
         """Load SAT country rules from the shared resolver-backed CFDI dataset."""
         if cls._country_rules is None:
             cls._country_rules = country_tax_identity_rows()
-            cls._country_rule_by_code = {
-                item["country"]: item for item in cls._country_rules
-            }
+            cls._country_rule_by_code = {item["country"]: item for item in cls._country_rules}
 
     @classmethod
     def get_tipo(cls, code: str) -> dict | None:
@@ -99,9 +97,7 @@ class RegistroIdentTribCatalog:
             if re.fullmatch(pattern, num_reg_id_trib) is None:
                 return {
                     "valid": False,
-                    "errors": [
-                        f"Formato de NumRegIdTrib no válido para país {rule['country']}"
-                    ],
+                    "errors": [f"Formato de NumRegIdTrib no válido para país {rule['country']}"],
                 }
 
         return {"valid": True, "errors": []}
