@@ -1,8 +1,6 @@
 """Catálogo c_UsoCFDI"""
 
-import json
-
-from catalogmx.utils.shared_data import get_shared_data_path
+from catalogmx.catalogs.sat.cfdi_4._resolver_views import uso_cfdi_rows
 
 
 class UsoCFDICatalog:
@@ -13,13 +11,9 @@ class UsoCFDICatalog:
 
     @classmethod
     def _load_data(cls) -> None:
-        """Carga los datos del catálogo si aún no han sido cargados"""
+        """Carga lazy desde el artefacto canónico CFDI 4.0."""
         if cls._data is None:
-            path = get_shared_data_path("sat", "cfdi_4.0", "uso_cfdi.json")
-            with open(path, encoding="utf-8") as f:
-                data = json.load(f)
-                # Handle both list and dict formats
-                cls._data = data if isinstance(data, list) else data.get("usos", data)
+            cls._data = uso_cfdi_rows()
             cls._by_code = {item["code"]: item for item in cls._data}
 
     @classmethod

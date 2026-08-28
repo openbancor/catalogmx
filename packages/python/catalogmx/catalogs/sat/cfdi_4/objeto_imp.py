@@ -1,8 +1,6 @@
 """Catálogo c_ObjetoImp"""
 
-import json
-
-from catalogmx.utils.shared_data import get_shared_data_path
+from catalogmx.catalogs.sat.cfdi_4._resolver_views import code_description_rows
 
 
 class ObjetoImpCatalog:
@@ -13,13 +11,11 @@ class ObjetoImpCatalog:
 
     @classmethod
     def _load_data(cls) -> None:
-        """Carga los datos del catálogo si aún no han sido cargados"""
+        """Carga lazy desde el artefacto canónico CFDI 4.0."""
         if cls._data is None:
-            path = get_shared_data_path("sat", "cfdi_4.0", "objeto_imp.json")
-            with open(path, encoding="utf-8") as f:
-                data = json.load(f)
-                # Handle both list and dict formats
-                cls._data = data if isinstance(data, list) else data.get("objetos", data)
+            cls._data = code_description_rows(
+                "cfdi_40_objetos_impuestos", strip_terminal_period=True
+            )
             cls._by_code = {item["code"]: item for item in cls._data}
 
     @classmethod

@@ -64,4 +64,14 @@ Two convenience fields are intentionally code-owned CatalogMX enrichments rather
 
 The tracked `packages/shared-data/sat/nomina_1.2/*.json` views remain for source review and SDK compatibility while other consumers migrate. Python does **not** use them as a runtime fallback: missing tables, invalid identifiers or resolver/integrity failures remain fail-closed. Installed-wheel CI builds a local verified Nómina release and exercises all 13 public Python catalog classes without packaging the shared-data JSON tree.
 
+### Python CFDI 4.0 consumer cutover
+
+Thirteen coherent Python CFDI 4.0 catalog surfaces now read the canonical `sat_cfdi_40.sqlite3` artifact through `DatasetResolver`: exportación, forma y método de pago, objeto de impuesto, tipo de relación, tipo de comprobante, impuestos, régimen fiscal, uso CFDI, meses, periodicidad, tipo factor and clave de unidad. Their existing public classes and historical dictionary shapes remain stable while authority-owned values come from the current independent release.
+
+Compatibility projection is explicit rather than implicit JSON fallback. For example, `UsoCFDICatalog` derives `applies_to` from the canonical physical/moral applicability flags, `ImpuestoCatalog` retains CatalogMX's long tax-name convenience labels, and `ClaveUnidadCatalog` preserves its historical `DD-MM-YYYY` presentation while using the canonical release's current vigencia values. The tracked `packages/shared-data/sat/cfdi_4.0/*.json` files remain cross-SDK/source-review views and are not a Python runtime source for these migrated consumers.
+
+`TasaOCuota` is deliberately excluded from this cutover. Its historical loader reads a raw spreadsheet-shaped JSON export while `get_by_range_and_tax()` expects normalized keys that those rows do not contain. That pre-existing API inconsistency is handled as a separate bug-fix slice against canonical `cfdi_40_reglas_tasa_cuota` rather than being silently redefined inside the lifecycle migration.
+
+Deterministic tests exercise the migrated APIs against a local `CATALOGMX_SHARED_DATA` SQLite mount, and installed-wheel CI exercises the same public surfaces through a verified release-pointer/cache path without packaging the shared-data JSON tree.
+
 The remaining consumer migration rule is simple: public catalog APIs may translate canonical datasets into historical return shapes, but they must ultimately obtain runtime data from `DatasetResolver` rather than create another downloader, cache or package-data lifecycle.

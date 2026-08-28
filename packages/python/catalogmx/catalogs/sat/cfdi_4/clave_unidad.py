@@ -6,10 +6,9 @@ Contiene ~2,400 unidades oficiales del SAT basadas en las
 recomendaciones 20 y 21 de UN/ECE.
 """
 
-import json
 from typing import TypedDict
 
-from catalogmx.utils.shared_data import get_shared_data_path
+from catalogmx.catalogs.sat.cfdi_4._resolver_views import clave_unidad_rows
 
 
 class ClaveUnidad(TypedDict):
@@ -57,18 +56,10 @@ class ClaveUnidadCatalog:
 
     @classmethod
     def _load_data(cls) -> None:
-        """Carga lazy de datos desde JSON"""
+        """Carga lazy desde el artefacto canónico CFDI 4.0."""
         if cls._data is not None:
             return
-
-        # Path: catalogmx/packages/python/catalogmx/catalogs/sat/cfdi_4/clave_unidad.py
-        # Target: catalogmx/packages/shared-data/sat/cfdi_4.0/clave_unidad.json
-        data_path = get_shared_data_path("sat", "cfdi_4.0", "clave_unidad.json")
-
-        with open(data_path, encoding="utf-8") as f:
-            cls._data = json.load(f)
-
-        # Crear índice por ID
+        cls._data = clave_unidad_rows()
         cls._by_id = {item["id"]: item for item in cls._data}
 
     @classmethod
