@@ -149,14 +149,15 @@ def validate_database(
             raise RuntimeError("dynamic SQLite contains a table without a source date")
 
         # `_metadata.version` is retained for the legacy DataUpdater contract but
-        # historically was not advanced by every incremental fetch. Resolver
-        # identity therefore uses the maximum effective date present in source
-        # rows. Some series (notably UDI) legitimately publish future-effective
-        # observations, so this is not the workflow/update date.
-        max_effective_date = max(source_dates)
+        # historically was not advanced by every incremental fetch. Runtime data
+        # identity therefore comes from the actual source rows. For this dataset,
+        # ``data_version`` means the maximum effective date represented in any
+        # source table; it is not necessarily the workflow/update date because
+        # UDI values can legitimately be published ahead through month end.
+        data_version = max(source_dates)
 
         return {
-            "max_effective_date": max_effective_date,
+            "data_version": data_version,
             "metadata_version": metadata_version,
             "schema_version": metadata.get("schema_version"),
             "counts": counts,
@@ -173,15 +174,11 @@ def build_manifest(
 ) -> dict[str, Any]:
     """Build a resolver manifest after applying the selected coverage guards."""
     validation = validate_database(path, minimum_counts=minimum_counts)
-    max_effective_date = validation["max_effective_date"]
     return {
         "schema_version": 1,
         "dataset_id": DATASET_ID,
         "dataset_version": DATASET_VERSION,
-        # ``data_version`` is part of the generic resolver contract. For this
-        # dataset its value is explicitly defined as the maximum effective date.
-        "data_version": max_effective_date,
-        "max_effective_date": max_effective_date,
+        "data_version": validation["data_version"],
         "authority": {
             "name": "BANXICO",
             "api": "https://www.banxico.org.mx/SieAPIRest/service/v1/",
@@ -220,7 +217,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         encoding="utf-8",
     )
     print(
-        f"Validated {args.database}: effective_through={manifest['max_effective_date']} "
+        f"Validated {args.database}: effective_through={manifest['data_version']} "
         f"content={manifest['dataset']['content_sha256']}"
     )
     print(f"Wrote {args.output}")

@@ -161,7 +161,7 @@ def fetch_series_chunk(token: str, series_id: str, series_info: dict, start_date
 
 
 def fetch_all_series(token: str, start_date: str, end_date: str) -> list[dict[str, Any]]:
-    """Fetch salary data from every configured series, failing closed on any source error."""
+    """Fetch all nominal salary sources, failing closed if any relevant source fails."""
     all_records = []
     failures: list[str] = []
 
@@ -170,6 +170,10 @@ def fetch_all_series(token: str, start_date: str, end_date: str) -> list[dict[st
 
     for series_id, series_info in SALARY_SERIES.items():
         print(f"[fetch] Series {series_id}: {series_info['name']}")
+
+        if series_info["type"] != "nominal":
+            print(f"[fetch]   Skipping {series_id} (not part of nominal salary table)")
+            continue
 
         try:
             series_start = series_info["start_date"]
@@ -195,7 +199,7 @@ def fetch_all_series(token: str, start_date: str, end_date: str) -> list[dict[st
     if failures:
         raise ValueError("salary source failures: " + "; ".join(failures))
 
-    print(f"[fetch] ✓ Total records from all series: {len(all_records)}")
+    print(f"[fetch] ✓ Total records from nominal series: {len(all_records)}")
     return all_records
 
 
