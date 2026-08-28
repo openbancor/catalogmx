@@ -33,6 +33,10 @@ _RELEASE_TAG_RE = re.compile(r"^[A-Za-z0-9._-]+$")
 Downloader = Callable[[str], bytes]
 
 
+class _DatasetTransportError(RuntimeError):
+    """Remote dataset transport is unavailable before integrity validation."""
+
+
 def load_dataset_contract() -> dict[str, Any]:
     """Load the package-local runtime contract generated from the registry."""
     resource = resources.files("catalogmx.data").joinpath(CONTRACT_RESOURCE)
@@ -190,6 +194,18 @@ class DatasetResolver:
             or DEFAULT_RELEASE_METADATA_BASE_URL
         ).rstrip("/")
         self.downloader = downloader or _default_downloader
+
+    def _download(self, url: str) -> bytes:
+        """Download bytes while separating transport failure from bad data.
+
+        Bootstrap fallback is permitted only when bytes cannot be obtained.
+        Once a remote endpoint returns bytes, pointer/manifest/checksum errors
+        remain fail-closed and must never be hidden by package bootstrap data.
+        """
+        try:
+            return self.downloader(url)
+        except OSError as exc:
+            raise _DatasetTransportError(f"dataset transport unavailable: {url}") from exc
 
     def dataset_ids_for_profile(self, profile: str) -> list[str]:
         profiles = self.contract["profiles"]
@@ -370,10 +386,10 @@ class DatasetResolver:
 
         try:
             return self.fetch_dataset(dataset_id)
-        except Exception:
+        except Exception as exc:
             if cached is not None and self.verify_cached_dataset(dataset_id):
                 return cached[0]
-            if bootstrap is not None:
+            if bootstrap is not None and isinstance(exc, _DatasetTransportError):
                 return bootstrap
             raise
 
@@ -453,7 +469,7 @@ class DatasetResolver:
 
         discovery = artifact.get("discovery", "direct")
         if discovery == "release-pointer":
-            metadata_payload = self.downloader(self._release_metadata_url(channel))
+            metadata_payload = self._download(self._release_metadata_url(channel))
             try:
                 metadata = json.loads(metadata_payload.decode("utf-8"))
             except (UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -492,7 +508,7 @@ class DatasetResolver:
         elif discovery != "direct":
             raise RuntimeError(f"unsupported dataset discovery mode: {discovery}")
 
-        manifest_payload = self.downloader(self._release_url(release_tag, artifact["manifest"]))
+        manifest_payload = self._download(self._release_url(release_tag, artifact["manifest"]))
         manifest, manifest_dataset, content_sha = self._parse_manifest(
             dataset_id, dataset, manifest_payload
         )
@@ -771,7 +787,7 @@ class DatasetResolver:
                 content_sha,
             ) = self._resolve_release(dataset_id, dataset)
 
-            artifact_payload = self.downloader(self._release_url(release_tag, artifact["file"]))
+            artifact_payload = self._download(self._release_url(release_tag, artifact["file"]))
             if _sha256(artifact_payload) != manifest_dataset["file_sha256"]:
                 raise RuntimeError("dataset release artifact checksum mismatch")
 
