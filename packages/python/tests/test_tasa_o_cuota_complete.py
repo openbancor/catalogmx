@@ -137,12 +137,8 @@ def test_none_criteria_are_wildcards() -> None:
 
 
 def test_decimal_criteria_are_representation_independent() -> None:
-    from_string = TasaOCuota.get_by_range_and_tax(
-        None, "0.530000", "003", "Tasa", True, True
-    )
-    from_float = TasaOCuota.get_by_range_and_tax(
-        None, 0.53, "IEPS", "tasa", True, True
-    )
+    from_string = TasaOCuota.get_by_range_and_tax(None, "0.530000", "003", "Tasa", True, True)
+    from_float = TasaOCuota.get_by_range_and_tax(None, 0.53, "IEPS", "tasa", True, True)
     assert from_string == from_float
     assert len(from_float) == 1
 

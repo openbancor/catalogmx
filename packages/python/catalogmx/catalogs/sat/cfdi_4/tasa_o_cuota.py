@@ -87,9 +87,6 @@ class TasaOCuota:
             and cls._decimal_matches(item.get("valor_máximo"), valor_max)
             and cls._impuesto_matches(item.get("impuesto"), impuesto)
             and cls._factor_matches(item.get("factor"), factor)
-            and (
-                trasladado is None
-                or bool(item.get("trasladado")) is bool(trasladado)
-            )
+            and (trasladado is None or bool(item.get("trasladado")) is bool(trasladado))
             and (retenido is None or bool(item.get("retenido")) is bool(retenido))
         ]
