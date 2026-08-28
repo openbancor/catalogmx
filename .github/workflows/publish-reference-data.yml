@@ -67,7 +67,7 @@ jobs:
           artifact_name=$(jq -er '.datasets["banxico.reference"].artifact.file' "$contract")
           manifest_name=$(jq -er '.datasets["banxico.reference"].artifact.manifest' "$contract")
 
-          scripts/publish_dataset_release.sh \
+          bash scripts/publish_dataset_release.sh \
             --manifest "$dir/$manifest_name" \
             --artifact "$dir/$artifact_name" \
             --channel "$channel" \
