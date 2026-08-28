@@ -36,7 +36,7 @@ done
 [[ "$channel" =~ ^[A-Za-z0-9._-]+$ ]] || { echo "Unsafe release channel: $channel" >&2; exit 1; }
 [[ "$target" =~ ^[0-9a-fA-F]{40}$ ]] || { echo "Target must be a full commit SHA" >&2; exit 1; }
 
-for command in gh jq sha256sum cmp mktemp; do
+for command in gh jq sha256sum cmp mktemp awk sed tr; do
   command -v "$command" >/dev/null 2>&1 || {
     echo "Required command is unavailable: $command" >&2
     exit 1
@@ -93,6 +93,15 @@ find_release() {
     --jq ".[] | select(.tag_name == \"$tag\") | {id: .id, draft: .draft, body: .body}"
 }
 
+release_count() {
+  local payload="$1"
+  if [ -z "$payload" ]; then
+    printf '0\n'
+    return
+  fi
+  printf '%s\n' "$payload" | jq -sc 'length'
+}
+
 delete_release_record() {
   local release_json="$1"
   local tag="$2"
@@ -106,12 +115,12 @@ delete_release_record() {
 previous_pointer=""
 previous_release_tag=""
 channel_release=$(find_release "$channel")
-if [ -n "$channel_release" ]; then
-  channel_count=$(printf '%s\n' "$channel_release" | grep -c . || true)
-  if [ "$channel_count" -ne 1 ]; then
-    echo "Expected at most one live channel release for $channel" >&2
-    exit 1
-  fi
+channel_count=$(release_count "$channel_release")
+if [ "$channel_count" -gt 1 ]; then
+  echo "Expected at most one live channel release for $channel" >&2
+  exit 1
+fi
+if [ "$channel_count" -eq 1 ]; then
   channel_draft=$(printf '%s' "$channel_release" | jq -r '.draft')
   if [ "$channel_draft" = "true" ]; then
     echo "Stable channel exists only as a draft release; refusing publication" >&2
@@ -153,12 +162,12 @@ create_immutable() {
 }
 
 immutable_release=$(find_release "$immutable")
-if [ -n "$immutable_release" ]; then
-  immutable_count=$(printf '%s\n' "$immutable_release" | grep -c . || true)
-  if [ "$immutable_count" -ne 1 ]; then
-    echo "Expected at most one immutable release for $immutable" >&2
-    exit 1
-  fi
+immutable_count=$(release_count "$immutable_release")
+if [ "$immutable_count" -gt 1 ]; then
+  echo "Expected at most one immutable release for $immutable" >&2
+  exit 1
+fi
+if [ "$immutable_count" -eq 1 ]; then
   immutable_draft=$(printf '%s' "$immutable_release" | jq -r '.draft')
   if [ "$immutable_draft" = "true" ]; then
     if [ "$previous_release_tag" = "$immutable" ]; then
@@ -189,7 +198,7 @@ if [ "$previous_pointer" = "$expected_pointer" ]; then
   exit 0
 fi
 
-if [ -n "$channel_release" ]; then
+if [ "$channel_count" -eq 1 ]; then
   gh release edit "$channel" \
     --title "$dataset_id $version (latest)" \
     --notes "$pointer" \
