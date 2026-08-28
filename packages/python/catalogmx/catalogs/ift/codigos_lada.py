@@ -309,9 +309,7 @@ class CodigosLADACatalog:
         return [c for c in cls._data if c.get("region") == region]
 
     @classmethod
-    def get_prefijos_por_municipio(
-        cls, cve_entidad: str, cve_municipio: str
-    ) -> list[str]:
+    def get_prefijos_por_municipio(cls, cve_entidad: str, cve_municipio: str) -> list[str]:
         """
         Obtiene todos los prefijos telefónicos probables para un municipio.
 

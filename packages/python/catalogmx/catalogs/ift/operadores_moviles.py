@@ -231,8 +231,7 @@ class OperadoresMovilesCatalog:
         return [
             op
             for op in cls._data  # type: ignore
-            if "grupo_empresarial" in op
-            and grupo_lower in op["grupo_empresarial"].lower()
+            if "grupo_empresarial" in op and grupo_lower in op["grupo_empresarial"].lower()
         ]
 
     @classmethod
