@@ -157,6 +157,20 @@ jobs:
               )
 
               connection.execute(
+                  "CREATE TABLE cfdi_40_monedas ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, decimales INTEGER, "
+                  "porcentaje_variacion TEXT, vigencia_desde TEXT, vigencia_hasta TEXT)"
+              )
+              connection.executemany(
+                  "INSERT INTO cfdi_40_monedas VALUES (?, ?, ?, ?, ?, ?)",
+                  [
+                      ("EUR", "Euro", 2, "0.01", "2022-01-01", ""),
+                      ("MXN", "Peso Mexicano", 2, "0.01", "2022-01-01", ""),
+                      ("USD", "Dolar americano", 2, "0.01", "2022-01-01", ""),
+                  ],
+              )
+
+              connection.execute(
                   "CREATE TABLE cfdi_40_reglas_tasa_cuota ("
                   "tipo TEXT NOT NULL, minimo TEXT, valor TEXT, "
                   "impuesto TEXT NOT NULL, factor TEXT NOT NULL, "
@@ -198,7 +212,7 @@ jobs:
           payload = database.read_bytes()
           file_sha = hashlib.sha256(payload).hexdigest()
           content_sha = hashlib.sha256(
-              b"catalogmx-cfdi-installed-wheel-consumer-fixture-v2"
+              b"catalogmx-cfdi-installed-wheel-consumer-fixture-v3"
           ).hexdigest()
           channel = contract["channel"]
           release_tag = f"{channel.removesuffix('-latest')}-{content_sha}"
@@ -290,6 +304,7 @@ jobs:
           from catalogmx.catalogs.sat.cfdi_4.periodicidad import Periodicidad
           from catalogmx.catalogs.sat.cfdi_4.tasa_o_cuota import TasaOCuota
           from catalogmx.catalogs.sat.cfdi_4.tipo_factor import TipoFactor
+          from catalogmx.catalogs.sat.comercio_exterior import MonedaCatalog
           from catalogmx.data import DatasetResolver
 
           assert ExportacionCatalog.get_exportacion("01") == {
@@ -343,6 +358,13 @@ jobs:
           assert unidad["nombre"] == "Kilogramo"
           assert unidad["simbolo"] == "kg"
           assert unidad["fechaDeInicioDeVigencia"] == "01-01-2022"
+
+          moneda = MonedaCatalog.get_moneda("MXN")
+          assert moneda is not None
+          assert moneda["nombre"] == "Peso Mexicano"
+          assert moneda["decimales"] == 2
+          assert moneda["pais"] is None
+          assert [item["codigo"] for item in MonedaCatalog.search("Euro")] == ["EUR"]
 
           resolver = DatasetResolver()
           assert resolver.verify_cached_dataset("sat.cfdi_4")
