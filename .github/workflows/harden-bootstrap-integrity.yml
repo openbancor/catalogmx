@@ -1,0 +1,82 @@
+name: Harden bootstrap integrity fallback
+
+on:
+  push:
+    branches:
+      - feat/finish-data-lifecycle
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    if: ${{ !contains(github.event.head_commit.message, 'harden bootstrap integrity fallback') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/finish-data-lifecycle
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Apply transport-only bootstrap fallback
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('packages/python/catalogmx/data/resolver.py')
+          text = path.read_text(encoding='utf-8')
+
+          marker = 'Downloader = Callable[[str], bytes]\n\n\n'
+          replacement = '''Downloader = Callable[[str], bytes]\n\n\nclass _DatasetTransportError(RuntimeError):\n    """Remote dataset transport is unavailable before integrity validation."""\n\n\n'''
+          if marker not in text:
+              raise SystemExit('transport exception anchor not found')
+          text = text.replace(marker, replacement, 1)
+
+          text = text.replace('self.downloader(', 'self._download(')
+
+          marker = '''        self.downloader = downloader or _default_downloader\n\n    def dataset_ids_for_profile(self, profile: str) -> list[str]:\n'''
+          replacement = '''        self.downloader = downloader or _default_downloader\n\n    def _download(self, url: str) -> bytes:\n        """Download bytes while separating transport failure from bad data.\n\n        Bootstrap fallback is permitted only when bytes cannot be obtained.\n        Once a remote endpoint returns bytes, pointer/manifest/checksum errors\n        remain fail-closed and must never be hidden by package bootstrap data.\n        """\n        try:\n            return self.downloader(url)\n        except OSError as exc:\n            raise _DatasetTransportError(f"dataset transport unavailable: {url}") from exc\n\n    def dataset_ids_for_profile(self, profile: str) -> list[str]:\n'''
+          if marker not in text:
+              raise SystemExit('download helper anchor not found')
+          text = text.replace(marker, replacement, 1)
+
+          old = '''        try:\n            return self.fetch_dataset(dataset_id)\n        except Exception:\n            if cached is not None and self.verify_cached_dataset(dataset_id):\n                return cached[0]\n            if bootstrap is not None:\n                return bootstrap\n            raise\n'''
+          new = '''        try:\n            return self.fetch_dataset(dataset_id)\n        except Exception as exc:\n            if cached is not None and self.verify_cached_dataset(dataset_id):\n                return cached[0]\n            if bootstrap is not None and isinstance(exc, _DatasetTransportError):\n                return bootstrap\n            raise\n'''
+          if old not in text:
+              raise SystemExit('bootstrap fallback anchor not found')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          test_path = Path('packages/python/tests/test_banxico_dynamic_resolver.py')
+          tests = test_path.read_text(encoding='utf-8')
+          if 'import pytest\n' not in tests:
+              tests = tests.replace('from pathlib import Path\n\n', 'from pathlib import Path\n\nimport pytest\n\n', 1)
+          tests += '''\n\ndef test_invalid_release_metadata_never_falls_back_to_bootstrap(\n    tmp_path: Path, monkeypatch: pytest.MonkeyPatch\n) -> None:\n    monkeypatch.delenv("CATALOGMX_SHARED_DATA", raising=False)\n    resolver = DatasetResolver(\n        cache_dir=tmp_path / "empty-cache",\n        mode="fetch-missing",\n        downloader=lambda _url: b"{not-valid-json",\n    )\n\n    with pytest.raises(RuntimeError, match="invalid dataset channel metadata"):\n        resolver.resolve_dataset_root("banxico.sie_dynamic")\n\n    assert resolver.cache_status("banxico.sie_dynamic")["cached"] is False\n'''
+          test_path.write_text(tests, encoding='utf-8')
+          PY
+
+      - name: Validate hardening
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -e 'packages/python[dev]'
+          ruff check --fix packages/python/catalogmx/data/resolver.py packages/python/tests/test_banxico_dynamic_resolver.py packages/python/tests/test_python_wheel_lifecycle_contract.py
+          black packages/python/catalogmx/data/resolver.py packages/python/tests/test_banxico_dynamic_resolver.py packages/python/tests/test_python_wheel_lifecycle_contract.py
+          ruff check packages/python/catalogmx/data/resolver.py packages/python/tests/test_banxico_dynamic_resolver.py packages/python/tests/test_python_wheel_lifecycle_contract.py
+          git diff --check
+          cd packages/python
+          pytest -q tests/test_banxico_dynamic_resolver.py tests/test_python_wheel_lifecycle_contract.py tests/test_dataset_resolver.py tests/test_dataset_resolver_hardening.py
+
+      - name: Commit hardening
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'catalogmx-lifecycle[bot]'
+          git config user.email 'catalogmx-lifecycle[bot]@users.noreply.github.com'
+          git add packages/python/catalogmx/data/resolver.py packages/python/tests/test_banxico_dynamic_resolver.py packages/python/tests/test_python_wheel_lifecycle_contract.py
+          git commit -m 'fix(data): harden bootstrap integrity fallback'
+          git push origin HEAD:feat/finish-data-lifecycle
