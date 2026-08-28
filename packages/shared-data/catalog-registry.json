@@ -319,11 +319,12 @@
       "version": "1",
       "artifact": {
         "version": "1",
-        "channel": "latest",
+        "channel": "data-banxico-sie-dynamic-1-latest",
         "file": "mexico_dynamic.sqlite3",
         "manifest": "mexico_dynamic.manifest.json",
         "format": "file",
-        "mount_path": "dynamic"
+        "mount_path": "dynamic",
+        "discovery": "release-pointer"
       },
       "implementation": {
         "status": "resolver_ready",

@@ -19,7 +19,8 @@
     },
     "banxico.sie_dynamic": {
       "artifact": {
-        "channel": "latest",
+        "channel": "data-banxico-sie-dynamic-1-latest",
+        "discovery": "release-pointer",
         "file": "mexico_dynamic.sqlite3",
         "format": "file",
         "manifest": "mexico_dynamic.manifest.json",
