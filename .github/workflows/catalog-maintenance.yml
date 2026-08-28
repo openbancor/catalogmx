@@ -216,7 +216,7 @@ jobs:
               | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')
             channel="data-${slug}-latest"
 
-            scripts/publish_dataset_release.sh \
+            bash scripts/publish_dataset_release.sh \
               --manifest "$manifest" \
               --artifact "$artifact" \
               --channel "$channel" \
