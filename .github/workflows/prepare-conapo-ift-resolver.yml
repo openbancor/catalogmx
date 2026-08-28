@@ -5,6 +5,7 @@ on:
     branches: [feat/data-resolver-conapo-ift]
     paths:
       - 'scripts/prepare_conapo_ift_resolver.py'
+      - 'scripts/prepare_conapo_ift_resolver_safe.py'
       - '.github/workflows/prepare-conapo-ift-resolver.yml'
 
 permissions:
@@ -35,7 +36,7 @@ jobs:
           python -m pip install -e 'packages/python[dev]'
 
       - name: Apply resolver migration
-        run: python scripts/prepare_conapo_ift_resolver.py
+        run: python scripts/prepare_conapo_ift_resolver_safe.py
 
       - name: Format and lint changed Python
         run: |
