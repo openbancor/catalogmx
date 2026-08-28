@@ -1,143 +1,138 @@
-# Dataset resolver and profiles
+# Dataset resolver and independent data lifecycle
 
-CatalogMX versions code and data independently. Reference/regulatory datasets can therefore change without forcing a Python, TypeScript, Dart, or Kotlin package release.
+CatalogMX versions code and runtime data independently. Language packages contain code, validators and the generated dataset contract; mutable regulatory/reference datasets are independently versioned artifacts.
 
-This guide documents the first runtime implementation of that model: Python consumers using the `core`, `payglobal`, and `payglobal-e2e` profiles with the independently published `banxico.reference` dataset.
+The Python runtime uses `DatasetResolver` as the common boundary for Banxico reference and dynamic data, SAT, INEGI, SEPOMEX, CONAPO and IFT datasets. Importing `catalogmx` performs no network I/O.
 
 ## Resolution model
 
-Importing CatalogMX does not fetch data. Resolution occurs when a consumer actually accesses a catalog that needs an external dataset or when the data CLI is invoked.
-
-For a dataset-aware lookup, the effective precedence is:
+Resolution occurs on explicit fetch or first access to a dataset-aware API. The precedence is:
 
 1. `CATALOGMX_SHARED_DATA` — strict application/production override;
-2. local content-addressed CatalogMX cache;
-3. deliberately embedded package data, when a dataset is actually packaged;
-4. repository `packages/shared-data` layout during development;
-5. verified GitHub Release fetch when the selected data mode permits it.
+2. verified local content-addressed cache;
+3. deliberately packaged data, only when a dataset contract explicitly retains such a compatibility source;
+4. repository `packages/shared-data` layout for development compatibility;
+5. verified immutable release fetch when the configured data mode permits it.
 
-A configured `CATALOGMX_SHARED_DATA` is fail-closed. If the directory or requested dataset is missing, CatalogMX reports that configuration error instead of silently reaching the network.
-
-Legacy calls such as `get_shared_data_path("banxico", "banks.json")` retain local/repository behavior and bridge to `banxico.reference` only when no local shared-data path exists. This keeps current SDK APIs compatible while removing installed-wheel assumptions about repository paths or symlinks.
+`CATALOGMX_SHARED_DATA` is fail-closed. If it is configured but the requested mount is missing, CatalogMX reports the deployment error instead of silently contacting GitHub.
 
 ## Data modes
 
-Set `CATALOGMX_DATA_MODE` to one of:
+`CATALOGMX_DATA_MODE` is explicit:
 
-- `offline` — never fetch; require the configured root or a populated cache;
-- `fetch-missing` — default; use available local/cache data and fetch a missing dataset;
-- `refresh` — refresh a stale cached dataset according to the registry freshness SLA.
+- `offline` — never use the network;
+- `fetch-missing` — default; fetch only when no usable local dataset exists;
+- `refresh` — use the dataset freshness policy and refresh stale verified cache entries.
 
-A refresh that cannot reach the release channel may continue using an already verified cached object. A missing or corrupt dataset has no synthetic or unverified fallback. An explicit fetch/update repairs a corrupt cached object from the verified release.
+`fetch-missing` deliberately does **not** become `refresh` when a cache entry ages. The modes are separate operational policies.
 
-## Integrity and publication model
+A refresh failure may fall back to a previously verified cached object. Missing, corrupt or unverified data has no synthetic fallback.
 
-`banxico.reference` is built as `banxico_reference.tar.gz` with `banxico_reference.manifest.json`.
+## Cache freshness and TTL
 
-Publication separates discovery from immutable data:
+Each dataset declares its normal freshness SLA in `catalog-registry.json`. The generated runtime contract carries that policy to the resolver.
 
-1. reviewed `master` data is rebuilt deterministically;
-2. the complete artifact/manifest pair is published under a content-addressed immutable release tag;
-3. the workflow downloads and byte-verifies both immutable assets;
-4. only after that verification succeeds does it update the stable `data-banxico-reference-1-latest` release body;
-5. that body is a small JSON pointer containing the immutable release tag and semantic content SHA-256.
+`CATALOGMX_CACHE_TTL` is an optional operational override expressed in positive integer **seconds**. For example:
 
-The stable channel therefore owns no mutable artifact/manifest pair. If immutable publication or verification fails, the existing channel still points to the previous complete release. Runtime clients first read the channel metadata, then download both data assets from the immutable tag.
+```text
+CATALOGMX_CACHE_TTL=86400
+```
 
-The resolver then:
+sets a 24-hour cache TTL for the resolver instance. When absent, the dataset-specific registry SLA remains authoritative. The TTL controls staleness and therefore `refresh`; it does not change `fetch-missing` into an implicit refresh policy.
 
-1. validates the channel pointer schema, dataset id/version, release tag, filenames, and semantic hash;
-2. validates the immutable manifest identity/version/artifact metadata;
-3. requires the pointer and manifest semantic hashes to match;
-4. verifies the complete artifact SHA-256;
-5. allows only manifest-declared regular archive members;
-6. rejects absolute paths, `..` traversal, duplicate/unexpected members, and symlinks;
-7. verifies every extracted file size and SHA-256;
-8. stores the result under a semantic `content_sha256` object directory;
-9. atomically updates the current-cache state only after a valid object exists.
+The Python API may also pass `cache_ttl_seconds=` directly to `DatasetResolver`.
 
-Cache object installation is race-tolerant. Concurrent processes sharing one cold cache may both prepare the same immutable object; once one process installs a valid object, the other treats that verified object as the successful outcome. Repair uses a unique quarantine rename for an invalid object and never intentionally overwrites a valid concurrent winner.
+## Artifact integrity and discovery
 
-The bundle builder normalizes tar/gzip metadata, so identical reviewed source bytes create identical artifacts. `content_sha256` is computed from canonical JSON semantics, so whitespace-only source changes do not create a new semantic data version.
+Resolver-ready datasets use a stable release channel only for discovery. Its body is a small JSON pointer to a content-addressed immutable release.
+
+The immutable release owns the artifact and manifest. Before cache state changes, the resolver validates:
+
+1. pointer schema, dataset identity/version, filenames and semantic hash;
+2. immutable manifest identity and artifact metadata;
+3. pointer/manifest semantic-hash agreement;
+4. complete artifact SHA-256;
+5. declared archive members or file shape;
+6. extracted/member checksums and safe paths where applicable.
+
+Valid content is installed below a semantic `content_sha256` object directory and `current.json` is updated atomically only after verification. Concurrent cold-cache installation is race-tolerant and never intentionally overwrites a valid concurrent winner.
+
+Publication uses the inverse protocol: build from reviewed input, publish immutable content, verify it, then move the stable pointer last. A failed publication therefore cannot replace the previous known-good channel target.
 
 ## Profiles
 
-The canonical registry currently exposes:
+Profiles are synchronization conveniences, not Python dependency extras. Current examples include:
 
-| Profile | Datasets | Purpose |
-| --- | --- | --- |
-| `core` | none | Pure validators/calculators with no external data requirement |
-| `payglobal` | `banxico.reference` | Bank/routing data used by runtime services |
-| `payglobal-e2e` | `banxico.reference` | Runtime data plus identity/CLABE generation references such as `codigos_plaza.json` |
+- `core` — no external datasets;
+- `payglobal` / `payglobal-e2e` — `banxico.reference`;
+- `banxico-dynamic` — `banxico.sie_dynamic`;
+- `sat-cfdi`, `sat-carta-porte`, `sat-comercio-exterior`, `sat-nomina`;
+- `mexico-geo` — AGEEML, SEPOMEX and CONAPO territorial data;
+- `mexico-telecom` — IFT numbering reference data.
 
-The wheel contains a generated `dataset_contract.json` projection of registry metadata. Datasets published only from reviewed `master` are projected with `discovery: release-pointer`, keeping transport behavior derived from the canonical lifecycle contract rather than duplicated manually. CI requires the checked-in projection to match the registry exactly.
+The wheel contains `catalogmx/data/dataset_contract.json`, generated from `catalog-registry.json`. CI requires that projection to remain synchronized with the canonical registry.
 
 ## CLI
 
-Inspect the local state:
+The original explicit-fetch surface is available directly:
 
 ```bash
-catalogmx data status --profile payglobal
-catalogmx data cache info --profile payglobal
+catalogmx fetch --profile payglobal
 ```
 
-Fetch into the normal user cache:
+The structured data CLI remains available and is equivalent for fetching:
 
 ```bash
 catalogmx data fetch --profile payglobal
-```
-
-Force synchronization or repair of a dataset:
-
-```bash
-catalogmx data update --dataset banxico.reference
-```
-
-Verify the populated cache without network access:
-
-```bash
-CATALOGMX_DATA_MODE=offline catalogmx data verify --profile payglobal
-```
-
-Clear one cached dataset:
-
-```bash
+catalogmx data status --profile payglobal
+catalogmx data update --dataset banxico.sie_dynamic
+catalogmx data verify --profile payglobal
+catalogmx data cache info --profile payglobal
 catalogmx data cache clear --dataset banxico.reference
 ```
 
-## Kubernetes / production
-
-Production services should normally synchronize data before application startup rather than letting every pod fetch independently.
-
-An init container or deployment job can materialize a conventional shared-data root:
+Use `--dest` to materialize a conventional shared root:
 
 ```bash
-catalogmx data fetch --profile payglobal --dest /var/lib/catalogmx
+catalogmx fetch --profile payglobal --dest /var/lib/catalogmx
 ```
 
-Application containers then mount that directory read-only and use:
+## Legacy `DataUpdater`
+
+`DataUpdater`, `get_database_path()` and `update_now()` remain public compatibility APIs for Banxico time-series consumers. They no longer implement a second downloader/cache/version protocol: they delegate to `DatasetResolver` for `banxico.sie_dynamic`.
+
+The dynamic SQLite database is therefore not a code-wheel fallback. Offline use requires a verified resolver cache or `CATALOGMX_SHARED_DATA`.
+
+Historical `max_age_hours=24` arguments are translated to resolver TTL seconds, preserving the old API while keeping one runtime data mechanism.
+
+## Kubernetes / production
+
+Production should normally synchronize data before request-serving containers start:
 
 ```text
-CATALOGMX_SHARED_DATA=/var/lib/catalogmx
-CATALOGMX_DATA_MODE=offline
+init container / deployment job
+    -> catalogmx fetch --profile payglobal --dest /var/lib/catalogmx
+application containers
+    -> CATALOGMX_SHARED_DATA=/var/lib/catalogmx
+    -> CATALOGMX_DATA_MODE=offline
+    -> /var/lib/catalogmx mounted read-only
 ```
 
-This makes startup deterministic and removes GitHub availability from the request-serving path. The materialized directory also contains `.catalogmx/manifests/` so exact immutable release metadata can be retained alongside runtime data.
+This keeps GitHub out of the request-serving path and makes startup deterministic. `.catalogmx/manifests/` in a materialized root retains exact release metadata alongside the mounted data.
 
 ## Environment variables
 
-- `CATALOGMX_SHARED_DATA` — strict shared-data root override;
-- `CATALOGMX_CACHE_DIR` — cache root (default `~/.cache/catalogmx`);
+- `CATALOGMX_SHARED_DATA` — strict shared-data root override and highest-priority runtime source;
+- `CATALOGMX_CACHE_DIR` — local content-addressed cache root;
+- `CATALOGMX_CACHE_TTL` — optional positive TTL override in seconds;
 - `CATALOGMX_DATA_MODE` — `offline`, `fetch-missing`, or `refresh`;
-- `CATALOGMX_RELEASE_BASE_URL` — immutable release asset base override, primarily for mirrors/tests;
-- `CATALOGMX_RELEASE_METADATA_BASE_URL` — release-metadata API base override for the stable pointer channel.
+- `CATALOGMX_RELEASE_BASE_URL` — immutable release asset base override for mirrors/tests;
+- `CATALOGMX_RELEASE_METADATA_BASE_URL` — stable pointer metadata base override.
 
-## Publishing boundary
+## Architectural invariant
 
-The monthly catalog-maintenance workflow may discover a Banxico reference change and open a normal data PR. It does **not** publish that unreviewed workspace state as a runtime artifact.
+The intended boundary is:
 
-After reviewed Banxico data lands on `master`, `publish-reference-data.yml` rebuilds the bundle from committed source. It publishes only when semantic content changed. This separates upstream observation, repository review, immutable runtime distribution, and the final stable-channel pointer update.
+> **CatalogMX packages code, schemas/contracts and behavior. Runtime datasets have independent identity, provenance, freshness policy and immutable artifacts. Every data-consuming API should ultimately resolve through the same dataset contract, regardless of whether the bytes come from a local cache, a Kubernetes shared volume or a remote release.**
 
-## Next migration phases
-
-The same manifest/resolver contract will be extended to SAT and geo profiles, then the existing Banxico dynamic time-series updater will be expressed through the common dataset metadata model. Existing compatibility blobs remain until their SDK consumers have migrated and installed-package tests prove they are no longer required.
+Compatibility loaders may temporarily translate historical API shapes, but they must not introduce a second distribution or cache lifecycle.
