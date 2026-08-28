@@ -27,7 +27,14 @@ def _create_cfdi_database(path: Path) -> None:
         connection.executemany(
             "INSERT INTO cfdi_40_paises VALUES (?, ?, ?, ?, ?, ?)",
             [
-                ("CAN", "Canadá", "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]", "[0-9]{9}", "", "TLCAN"),
+                (
+                    "CAN",
+                    "Canadá",
+                    "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]",
+                    "[0-9]{9}",
+                    "",
+                    "TLCAN",
+                ),
                 ("ESP", "España", "", "", "", "Unión Europea"),
                 (
                     "MEX",
@@ -37,7 +44,14 @@ def _create_cfdi_database(path: Path) -> None:
                     "Lista del SAT",
                     "TLCAN",
                 ),
-                ("USA", "Estados Unidos (los)", "[0-9]{5}(-[0-9]{4})?", "[0-9]{9}", "", "TLCAN"),
+                (
+                    "USA",
+                    "Estados Unidos (los)",
+                    "[0-9]{5}(-[0-9]{4})?",
+                    "[0-9]{9}",
+                    "",
+                    "TLCAN",
+                ),
             ],
         )
         connection.commit()
@@ -108,11 +122,14 @@ def test_usa_and_canada_use_sat_nine_digit_pattern() -> None:
     assert RegistroIdentTribCatalog.validate_for_country("USA", "123456789") == {
         "valid": True,
         "errors": [],
+        "validation": None,
+        "requires_external_validation": False,
     }
     assert RegistroIdentTribCatalog.validate_for_country("CAN", "987654321")["valid"] is True
 
     usa_invalid = RegistroIdentTribCatalog.validate_for_country("USA", "12345678")
     assert usa_invalid["valid"] is False
+    assert usa_invalid["requires_external_validation"] is False
     assert "USA" in usa_invalid["errors"][0]
 
     canada_invalid = RegistroIdentTribCatalog.validate_for_country("CAN", "123-456-789")
@@ -123,6 +140,8 @@ def test_countries_without_local_pattern_are_not_given_invented_rules() -> None:
     assert RegistroIdentTribCatalog.validate_for_country("ESP", "NIF-LOCAL-FORMAT") == {
         "valid": True,
         "errors": [],
+        "validation": None,
+        "requires_external_validation": False,
     }
     assert RegistroIdentTribCatalog.validate_for_country("ESP", "")["valid"] is False
 
@@ -131,7 +150,12 @@ def test_sat_list_validation_is_not_reduced_to_regex() -> None:
     # SAT marks Mexico as "Lista del SAT". A local regex match or mismatch cannot
     # replace that external validation mode, so CatalogMX does not reject locally.
     result = RegistroIdentTribCatalog.validate_for_country("MEX", "NOT-A-MEXICAN-RFC")
-    assert result == {"valid": True, "errors": []}
+    assert result == {
+        "valid": True,
+        "errors": [],
+        "validation": "Lista del SAT",
+        "requires_external_validation": True,
+    }
 
 
 def test_legacy_identity_type_aliases_remain_code_owned_compatibility() -> None:
