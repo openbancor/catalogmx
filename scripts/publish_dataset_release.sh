@@ -36,7 +36,7 @@ done
 [[ "$channel" =~ ^[A-Za-z0-9._-]+$ ]] || { echo "Unsafe release channel: $channel" >&2; exit 1; }
 [[ "$target" =~ ^[0-9a-fA-F]{40}$ ]] || { echo "Target must be a full commit SHA" >&2; exit 1; }
 
-for command in gh jq sha256sum cmp mktemp awk sed tr; do
+for command in gh jq sha256sum cmp mktemp awk sed tr sort; do
   command -v "$command" >/dev/null 2>&1 || {
     echo "Required command is unavailable: $command" >&2
     exit 1
@@ -90,7 +90,7 @@ find_release() {
   local tag="$1"
   gh api --paginate \
     "repos/${GITHUB_REPOSITORY}/releases?per_page=100" \
-    --jq ".[] | select(.tag_name == \"$tag\") | {id: .id, draft: .draft, body: .body}"
+    --jq ".[] | select(.tag_name == \"$tag\") | {id: .id, draft: .draft, body: .body, assets: [.assets[] | {id: .id, name: .name}]}"
 }
 
 release_count() {
@@ -112,8 +112,59 @@ delete_release_record() {
     >/dev/null 2>&1 || true
 }
 
+verify_legacy_channel() {
+  local release_json="$1"
+  local body="$2"
+  case "$body" in
+    "Automated CatalogMX data artifact. Source mirror release:"*) ;;
+    *) return 1 ;;
+  esac
+
+  local asset_count
+  asset_count=$(printf '%s' "$release_json" | jq -r '.assets | length')
+  [ "$asset_count" -eq 2 ] || return 1
+
+  local actual_names expected_names
+  actual_names=$(printf '%s' "$release_json" | jq -r '.assets[].name' | sort)
+  expected_names=$(printf '%s\n%s\n' "$artifact_name" "$manifest_name" | sort)
+  [ "$actual_names" = "$expected_names" ] || return 1
+
+  local legacy_dir="$verify_dir/legacy-channel"
+  mkdir -p "$legacy_dir"
+  gh release download "$channel" \
+    --pattern "$artifact_name" \
+    --pattern "$manifest_name" \
+    --dir "$legacy_dir" >/dev/null
+
+  local legacy_manifest="$legacy_dir/$manifest_name"
+  local legacy_artifact="$legacy_dir/$artifact_name"
+  [ -f "$legacy_manifest" ] || return 1
+  [ -f "$legacy_artifact" ] || return 1
+  [ "$(jq -er '.schema_version' "$legacy_manifest")" = "1" ] || return 1
+  [ "$(jq -er '.dataset_id' "$legacy_manifest")" = "$dataset_id" ] || return 1
+  [ "$(jq -er '.dataset_version | tostring' "$legacy_manifest")" = "$version" ] || return 1
+  [ "$(jq -er '.dataset.file' "$legacy_manifest")" = "$artifact_name" ] || return 1
+
+  local legacy_file_sha legacy_content_sha legacy_actual_sha
+  legacy_file_sha=$(jq -er '.dataset.file_sha256 | select(type == "string" and test("^[0-9a-f]{64}$"))' "$legacy_manifest") || return 1
+  legacy_content_sha=$(jq -er '.dataset.content_sha256 | select(type == "string" and test("^[0-9a-f]{64}$"))' "$legacy_manifest") || return 1
+  [ -n "$legacy_content_sha" ] || return 1
+  legacy_actual_sha=$(sha256sum "$legacy_artifact" | awk '{print $1}')
+  [ "$legacy_actual_sha" = "$legacy_file_sha" ]
+}
+
+cleanup_channel_assets() {
+  local release_json="$1"
+  local asset_id
+  while IFS= read -r asset_id; do
+    [ -n "$asset_id" ] || continue
+    gh api --method DELETE "repos/${GITHUB_REPOSITORY}/releases/assets/${asset_id}"
+  done < <(printf '%s' "$release_json" | jq -r '.assets[]?.id')
+}
+
 previous_pointer=""
 previous_release_tag=""
+legacy_channel=false
 channel_release=$(find_release "$channel")
 channel_count=$(release_count "$channel_release")
 if [ "$channel_count" -gt 1 ]; then
@@ -127,29 +178,33 @@ if [ "$channel_count" -eq 1 ]; then
     exit 1
   fi
   previous_body=$(printf '%s' "$channel_release" | jq -r '.body // empty')
-  if ! previous_pointer=$(printf '%s' "$previous_body" | jq -ceS '.'); then
-    echo "Stable channel body is missing or is not valid JSON; refusing publication" >&2
+  if previous_pointer=$(printf '%s' "$previous_body" | jq -ceS '.' 2>/dev/null); then
+    previous_release_tag=$(printf '%s' "$previous_pointer" | jq -r '.release_tag // empty')
+  elif verify_legacy_channel "$channel_release" "$previous_body"; then
+    legacy_channel=true
+    previous_pointer=""
+  else
+    echo "Stable channel is neither a valid pointer nor a verified legacy CatalogMX release" >&2
     exit 1
   fi
-  previous_release_tag=$(printf '%s' "$previous_pointer" | jq -r '.release_tag // empty')
 fi
 
 notes="CatalogMX data artifact for ${dataset_id} ${version}. Semantic content SHA-256: ${content_sha}. The manifest records authority/provenance and integrity metadata. This data release is independent from library package versions."
 
 verify_immutable() {
-  rm -rf "$verify_dir"
-  mkdir -p "$verify_dir"
+  rm -rf "$verify_dir/immutable"
+  mkdir -p "$verify_dir/immutable"
   if ! gh release download "$immutable" \
     --pattern "$artifact_name" \
     --pattern "$manifest_name" \
-    --dir "$verify_dir"; then
+    --dir "$verify_dir/immutable"; then
     return 1
   fi
-  [ -f "$verify_dir/$artifact_name" ] || return 1
-  [ -f "$verify_dir/$manifest_name" ] || return 1
-  cmp "$artifact" "$verify_dir/$artifact_name" || return 1
-  cmp "$manifest" "$verify_dir/$manifest_name" || return 1
-  remote_sha=$(jq -r '.dataset.content_sha256 // empty' "$verify_dir/$manifest_name")
+  [ -f "$verify_dir/immutable/$artifact_name" ] || return 1
+  [ -f "$verify_dir/immutable/$manifest_name" ] || return 1
+  cmp "$artifact" "$verify_dir/immutable/$artifact_name" || return 1
+  cmp "$manifest" "$verify_dir/immutable/$manifest_name" || return 1
+  remote_sha=$(jq -r '.dataset.content_sha256 // empty' "$verify_dir/immutable/$manifest_name")
   [ "$remote_sha" = "$content_sha" ]
 }
 
@@ -193,12 +248,10 @@ if ! verify_immutable; then
   exit 1
 fi
 
+pointer_already_current=false
 if [ "$previous_pointer" = "$expected_pointer" ]; then
-  echo "$dataset_id unchanged and verified: $content_sha"
-  exit 0
-fi
-
-if [ "$channel_count" -eq 1 ]; then
+  pointer_already_current=true
+elif [ "$channel_count" -eq 1 ]; then
   gh release edit "$channel" \
     --title "$dataset_id $version (latest)" \
     --notes "$pointer" \
@@ -210,6 +263,22 @@ else
     --notes "$pointer" \
     --target "$target" \
     --latest=false
+fi
+
+# Stable channels are metadata pointers only. Legacy publishers stored the
+# artifact and manifest on the channel itself; remove those assets only after a
+# verified immutable release exists and the pointer is current, so migration is
+# failure-safe. The same cleanup repairs any later accidental channel assets.
+if [ "$channel_count" -eq 1 ]; then
+  cleanup_channel_assets "$channel_release"
+fi
+
+if [ "$pointer_already_current" = "true" ]; then
+  echo "$dataset_id unchanged and verified: $content_sha"
+  exit 0
+fi
+if [ "$legacy_channel" = "true" ]; then
+  echo "$dataset_id legacy channel migrated to verified pointer: $content_sha"
 fi
 
 if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
