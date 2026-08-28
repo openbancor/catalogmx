@@ -1,11 +1,23 @@
 """
-Helper functions for Banxico fetch scripts to write directly to SQLite database
+Helper functions for Banxico fetch scripts to write directly to SQLite database.
+
+Fetcher process exit contract:
+- 0: success, including an already-current local dataset
+- 1: source/configuration/parse/write failure
+- 3: the requested official-source window was valid but contained no observations
+
+Exit code 3 is deliberately nonzero so callers can distinguish a publication
+calendar gap from an ordinary successful update without parsing human logs.
 """
 
 import sqlite3
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+EXIT_SUCCESS = 0
+EXIT_ERROR = 1
+EXIT_NO_OBSERVATION = 3
 
 # Default database path
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -25,16 +37,20 @@ def ensure_database_exists(db_path: Path = DB_FILE):
         schema_path = DATA_ROOT / "schema_dynamic.sql"
         if schema_path.exists():
             db = sqlite3.connect(db_path)
-            with open(schema_path, 'r', encoding='utf-8') as f:
+            with open(schema_path, "r", encoding="utf-8") as f:
                 db.executescript(f.read())
             db.close()
-            print(f"[db] ✓ Database created with schema")
+            print("[db] ✓ Database created with schema")
         else:
             raise FileNotFoundError(f"Schema file not found: {schema_path}")
 
 
-def get_last_date(db_path: Path, table: str, date_column: str = 'fecha',
-                  where_clause: str = "") -> str | None:
+def get_last_date(
+    db_path: Path,
+    table: str,
+    date_column: str = "fecha",
+    where_clause: str = "",
+) -> str | None:
     """
     Get the last date from a table
 
@@ -66,8 +82,12 @@ def get_last_date(db_path: Path, table: str, date_column: str = 'fecha',
         return None
 
 
-def save_to_db(db_path: Path, table: str, records: list[dict[str, Any]],
-               conflict_columns: list[str] | None = None) -> int:
+def save_to_db(
+    db_path: Path,
+    table: str,
+    records: list[dict[str, Any]],
+    conflict_columns: list[str] | None = None,
+) -> int:
     """
     Save records to SQLite database using INSERT OR REPLACE
 
@@ -91,7 +111,7 @@ def save_to_db(db_path: Path, table: str, records: list[dict[str, Any]],
     columns = list(records[0].keys())
 
     # Build INSERT OR REPLACE query
-    placeholders = ', '.join(['?' for _ in columns])
+    placeholders = ", ".join(["?" for _ in columns])
     query = f"""
         INSERT OR REPLACE INTO {table} ({', '.join(columns)})
         VALUES ({placeholders})
@@ -125,28 +145,27 @@ def get_table_stats(db_path: Path, table: str) -> dict[str, Any]:
         count, min_date, max_date = cursor.fetchone()
         db.close()
 
-        return {
-            "count": count or 0,
-            "min_date": min_date,
-            "max_date": max_date
-        }
+        return {"count": count or 0, "min_date": min_date, "max_date": max_date}
     except Exception as e:
         print(f"[db] Warning: Could not get table stats: {e}")
         return {"count": 0, "min_date": None, "max_date": None}
 
 
 def update_metadata_version(db_path: Path):
-    """Update the version metadata to today's date"""
+    """Update the legacy compatibility version metadata to today's date."""
     if not db_path.exists():
         return
 
     try:
         db = sqlite3.connect(db_path)
-        today = datetime.now().strftime('%Y-%m-%d')
-        db.execute("""
+        today = datetime.now().strftime("%Y-%m-%d")
+        db.execute(
+            """
             INSERT OR REPLACE INTO _metadata (key, value)
             VALUES ('version', ?)
-        """, (today,))
+            """,
+            (today,),
+        )
         db.commit()
         db.close()
         print(f"[db] Updated metadata version to {today}")

@@ -60,7 +60,7 @@ def create_database(path: Path) -> None:
         );
 
         INSERT INTO udis VALUES
-            ('2026-08-27', 8.1, 2026, 8, 'diario', 'MXN', NULL, 'volatile-1');
+            ('2026-08-31', 8.1, 2026, 8, 'diario', 'MXN', NULL, 'volatile-1');
         INSERT INTO tipo_cambio VALUES
             ('2026-08-27', 'FIX', 18.5, 2026, 8, 'USD', 'MXN', 'volatile-1');
         INSERT INTO tiie VALUES
@@ -86,14 +86,15 @@ def test_manifest_matches_dataset_resolver_file_contract(tmp_path: Path):
     validation = module.validate_database(database, minimum_counts=minimum_counts)
     manifest = module.build_manifest(database, minimum_counts=minimum_counts)
 
-    # The legacy metadata version may be stale. Runtime data identity is derived
-    # from the actual latest source rows instead.
+    # The legacy metadata version may be stale and UDI may contain legitimate
+    # future-effective rows. For this dataset, data_version is the maximum
+    # effective source-row date, not the workflow/update date.
     assert validation["metadata_version"] == "2000-01-01"
-    assert validation["data_version"] == "2026-08-27"
+    assert validation["data_version"] == "2026-08-31"
     assert manifest["schema_version"] == 1
     assert manifest["dataset_id"] == "banxico.sie_dynamic"
     assert manifest["dataset_version"] == "1"
-    assert manifest["data_version"] == "2026-08-27"
+    assert manifest["data_version"] == "2026-08-31"
     assert manifest["dataset"]["file"] == "mexico_dynamic.sqlite3"
     assert manifest["dataset"]["format"] == "file"
     assert manifest["dataset"]["mount_path"] == "dynamic"

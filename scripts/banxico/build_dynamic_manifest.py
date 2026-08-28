@@ -150,9 +150,10 @@ def validate_database(
 
         # `_metadata.version` is retained for the legacy DataUpdater contract but
         # historically was not advanced by every incremental fetch. Runtime data
-        # identity therefore comes from the actual source rows, not that mutable
-        # compatibility field. This also keeps the cut deterministic for a given
-        # semantic dataset.
+        # identity therefore comes from the actual source rows. For this dataset,
+        # ``data_version`` means the maximum effective date represented in any
+        # source table; it is not necessarily the workflow/update date because
+        # UDI values can legitimately be published ahead through month end.
         data_version = max(source_dates)
 
         return {
@@ -216,7 +217,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         encoding="utf-8",
     )
     print(
-        f"Validated {args.database}: data={manifest['data_version']} "
+        f"Validated {args.database}: effective_through={manifest['data_version']} "
         f"content={manifest['dataset']['content_sha256']}"
     )
     print(f"Wrote {args.output}")

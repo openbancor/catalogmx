@@ -33,13 +33,16 @@ def test_dynamic_workflow_validates_seed_before_using_it():
     assert "Published legacy latest database failed validation" in text
 
 
-def test_dynamic_workflow_distinguishes_empty_windows_from_real_failures():
+def test_dynamic_workflow_uses_explicit_fetcher_exit_contract():
     text = WORKFLOW.read_text(encoding="utf-8")
 
     assert "run_updater()" in text
-    assert "[fetch] No new records" in text
-    assert "[fetch] ERROR" in text
-    assert "reported a partial source failure" in text
+    assert "readonly NO_OBSERVATION=3" in text
+    assert 'case "$status" in' in text
+    assert '"$NO_OBSERVATION")' in text
+    assert "failed with exit code $status" in text
+    assert "grep -Fq '[fetch] No new records'" not in text
+    assert "grep -Fq '[fetch] ERROR'" not in text
     assert (
         "run_updater Salarios python scripts/fetch_salarios_minimos_banxico.py" in text
     )
@@ -56,17 +59,23 @@ def test_dynamic_workflow_preserves_and_repairs_compatibility_channels():
     assert 'gh release upload latest "$database" "$manifest" --clobber' in text
     assert 'gh release create latest "$database" "$manifest"' in text
     assert "verify_release_assets latest" in text
-    assert 'archive_tag="data-${data_version}-${content_sha:0:12}"' in text
+    assert 'archive_tag="data-${effective_through}-${content_sha:0:12}"' in text
     assert 'verify_release_assets "$archive_tag"' in text
     assert 'gh release upload "$archive_tag"' not in text
+
+
+def test_dynamic_workflow_describes_effective_date_precisely():
+    text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert "Maximum effective date" in text
+    assert "Source-data cut" not in text
+    assert "steps.manifest.outputs.effective_through" in text
 
 
 def test_dynamic_workflow_publishes_resolver_pointer_last():
     text = WORKFLOW.read_text(encoding="utf-8")
 
-    compatibility = text.index(
-        "# Compatibility channel for existing DataUpdater clients"
-    )
+    compatibility = text.index("if gh release view latest")
     archive = text.index("# Human-readable archives are immutable")
     canonical = text.index("# The common publisher owns the canonical immutable release")
     publisher = text.index("bash ../../scripts/publish_dataset_release.sh")
