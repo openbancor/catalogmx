@@ -93,6 +93,10 @@ jobs:
 
           from catalogmx.catalogs.banxico.banks import BankCatalog
           from catalogmx.catalogs.banxico.codigos_plaza import CodigosPlazaCatalog
+          from catalogmx.catalogs.banxico.instituciones_financieras import (
+              InstitucionesFinancieras,
+          )
+          from catalogmx.catalogs.banxico.monedas_divisas import MonedasDivisas
           from catalogmx.data import DatasetResolver
 
           bank = BankCatalog.get_bank_by_code("002")
@@ -102,6 +106,8 @@ jobs:
 
           plazas = CodigosPlazaCatalog.get_all()
           assert plazas
+          assert InstitucionesFinancieras.get_por_codigo("01") is not None
+          assert MonedasDivisas.get_por_codigo("MXN") is not None
 
           resolver = DatasetResolver()
           assert resolver.verify_cached_dataset("banxico.reference")
