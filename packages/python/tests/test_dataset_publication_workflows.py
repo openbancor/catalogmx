@@ -17,12 +17,15 @@ def test_generic_publisher_has_valid_shell_syntax_and_no_live_asset_clobber():
 
     assert "--clobber" not in text
     assert text.count("--latest=false") >= 3
-    assert 'cmp "$artifact" "$verify_dir/$artifact_name"' in text
-    assert 'cmp "$manifest" "$verify_dir/$manifest_name"' in text
+    assert 'cmp "$artifact" "$verify_dir/immutable/$artifact_name"' in text
+    assert 'cmp "$manifest" "$verify_dir/immutable/$manifest_name"' in text
     assert 'expected_pointer=$(printf \'%s\' "$pointer" | jq -ceS \'.\')' in text
-    assert 'previous_pointer=$(printf \'%s\' "$previous_body" | jq -ceS \'.\')' in text
     assert "release_count()" in text
     assert "jq -sc 'length'" in text
+    assert "verify_legacy_channel()" in text
+    assert '"Automated CatalogMX data artifact. Source mirror release:"*' in text
+    assert "cleanup_channel_assets()" in text
+    assert 'releases/assets/${asset_id}' in text
 
 
 def test_banxico_and_catalog_maintenance_share_one_publisher():
