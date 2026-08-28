@@ -68,9 +68,7 @@ def data_update(dataset_id: str) -> None:
     """Force synchronization of one dataset release into the local cache."""
     resolver = DatasetResolver()
     if resolver.mode == "offline":
-        raise click.ClickException(
-            "dataset update is disabled while CATALOGMX_DATA_MODE=offline"
-        )
+        raise click.ClickException("dataset update is disabled while CATALOGMX_DATA_MODE=offline")
     resolver.mode = "refresh"
     root = resolver.fetch_dataset(dataset_id)
     click.echo(f"{dataset_id}: {root}")
@@ -91,9 +89,7 @@ def data_verify(profile: str) -> None:
         if not valid:
             failed.append(dataset_id)
     if failed:
-        raise click.ClickException(
-            "dataset verification failed: " + ", ".join(sorted(failed))
-        )
+        raise click.ClickException("dataset verification failed: " + ", ".join(sorted(failed)))
 
 
 @data.group("cache")
