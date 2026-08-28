@@ -156,6 +156,7 @@ class DatasetResolver:
         release_metadata_base_url: str | None = None,
         contract: Mapping[str, Any] | None = None,
         downloader: Downloader | None = None,
+        cache_ttl_seconds: int | None = None,
     ) -> None:
         self.contract = dict(contract or load_dataset_contract())
         self.cache_root = (
@@ -166,6 +167,20 @@ class DatasetResolver:
         self.mode = mode or os.getenv("CATALOGMX_DATA_MODE", DEFAULT_DATA_MODE)
         if self.mode not in ALLOWED_DATA_MODES:
             raise ValueError(f"CATALOGMX_DATA_MODE must be one of {sorted(ALLOWED_DATA_MODES)}")
+        ttl_value: int | str | None = cache_ttl_seconds
+        if ttl_value is None:
+            ttl_value = os.getenv("CATALOGMX_CACHE_TTL")
+        if ttl_value in {None, ""}:
+            self.cache_ttl_seconds: int | None = None
+        else:
+            try:
+                self.cache_ttl_seconds = int(ttl_value)
+            except (TypeError, ValueError) as exc:
+                raise ValueError(
+                    "CATALOGMX_CACHE_TTL must be a positive integer number of seconds"
+                ) from exc
+            if self.cache_ttl_seconds <= 0:
+                raise ValueError("CATALOGMX_CACHE_TTL must be a positive integer number of seconds")
         self.release_base_url = (
             release_base_url or os.getenv("CATALOGMX_RELEASE_BASE_URL") or DEFAULT_RELEASE_BASE_URL
         ).rstrip("/")
@@ -230,9 +245,23 @@ class DatasetResolver:
             return None
         return root, state
 
-    def _cache_is_stale(self, dataset: Mapping[str, Any], state: Mapping[str, Any]) -> bool:
+    def _cache_ttl(self, dataset: Mapping[str, Any]) -> int | None:
+        """Return the effective cache TTL in seconds.
+
+        ``CATALOGMX_CACHE_TTL`` / ``cache_ttl_seconds`` is an operational
+        override. Without it, each dataset keeps the freshness SLA declared in
+        the generated registry contract.
+        """
+        if self.cache_ttl_seconds is not None:
+            return self.cache_ttl_seconds
         max_age_days = dataset.get("freshness", {}).get("max_age_days")
         if not isinstance(max_age_days, int) or max_age_days <= 0:
+            return None
+        return max_age_days * 86400
+
+    def _cache_is_stale(self, dataset: Mapping[str, Any], state: Mapping[str, Any]) -> bool:
+        ttl_seconds = self._cache_ttl(dataset)
+        if ttl_seconds is None:
             return False
         fetched_at = state.get("fetched_at")
         if not isinstance(fetched_at, str):
@@ -244,7 +273,7 @@ class DatasetResolver:
         if fetched.tzinfo is None:
             fetched = fetched.replace(tzinfo=timezone.utc)
         age = datetime.now(timezone.utc) - fetched.astimezone(timezone.utc)
-        return age.total_seconds() > max_age_days * 86400
+        return age.total_seconds() > ttl_seconds
 
     def _configured_root(self, dataset: Mapping[str, Any]) -> Path | None:
         configured = os.getenv("CATALOGMX_SHARED_DATA")
