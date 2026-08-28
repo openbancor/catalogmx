@@ -3,7 +3,7 @@ name: Update Dynamic Data (Daily)
 # Banxico time-series data has an independent lifecycle from CatalogMX code.
 # Publication is fail-closed: every source updater must either succeed or report
 # a valid no-observation window, the resulting SQLite database must pass
-# structural/content validation, and all compatibility assets are byte-verified
+# structural/content validation, and compatibility assets are byte-verified
 # before the stable resolver pointer is moved. The legacy `latest` asset remains
 # for DataUpdater compatibility.
 
@@ -15,12 +15,15 @@ on:
     paths:
       - '.github/workflows/update-dynamic-data.yml'
       - 'scripts/banxico/build_dynamic_manifest.py'
+      - 'scripts/publish_dataset_release.sh'
+      - 'packages/shared-data/scripts/fetch_*_banxico.py'
+      - 'packages/shared-data/scripts/banxico_sqlite_helper.py'
       - 'packages/shared-data/catalog-registry.json'
       - 'packages/python/catalogmx/data/dataset_contract.json'
   workflow_dispatch:
     inputs:
       force_update:
-        description: 'Force republishing compatibility channels even if semantic data is unchanged'
+        description: 'Force publication verification even if semantic data is unchanged'
         required: false
         default: 'false'
 
@@ -47,7 +50,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Seed from current published database when available
+      - name: Validate publication tooling
+        run: bash -n scripts/publish_dataset_release.sh
+
+      - name: Seed from current published database when valid
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
@@ -55,13 +61,20 @@ jobs:
           set -euo pipefail
           seed_dir=$(mktemp -d)
           trap 'rm -rf "$seed_dir"' EXIT
+
           if gh release view latest >/dev/null 2>&1 && \
              gh release download latest \
                --pattern mexico_dynamic.sqlite3 \
                --dir "$seed_dir" >/dev/null 2>&1; then
-            cp "$seed_dir/mexico_dynamic.sqlite3" \
-              packages/shared-data/mexico_dynamic.sqlite3
-            echo 'Seeded updater from the current published dynamic database.'
+            if python scripts/banxico/build_dynamic_manifest.py \
+                 "$seed_dir/mexico_dynamic.sqlite3" \
+                 --output "$seed_dir/mexico_dynamic.manifest.json" >/dev/null 2>&1; then
+              cp "$seed_dir/mexico_dynamic.sqlite3" \
+                packages/shared-data/mexico_dynamic.sqlite3
+              echo 'Seeded updater from a validated current published database.'
+            else
+              echo 'Published legacy latest database failed validation; using reviewed repository seed.' >&2
+            fi
           else
             echo 'No published legacy latest database available; using reviewed repository seed.'
           fi
@@ -78,10 +91,9 @@ jobs:
 
           # Legacy fetchers use exit 1 for both a real failure and a valid
           # Banxico window with no observations (weekends, holidays, publication
-          # gaps). Until their CLI exit contract is normalized, distinguish the
-          # two states from their explicit messages. Also fail closed if a
-          # multi-series updater reports an internal partial-source error while
-          # returning zero overall.
+          # gaps). Distinguish the two states from their explicit messages until
+          # the legacy fetcher CLI contract is normalized. Also fail closed if a
+          # multi-series updater reports an internal partial-source error.
           run_updater() {
             label="$1"
             shift
@@ -150,16 +162,29 @@ jobs:
           manifest=mexico_dynamic.manifest.json
           local_dir=packages/shared-data
           content_sha='${{ steps.manifest.outputs.content_sha }}'
-          archive_tag='data-${{ steps.manifest.outputs.data_version }}'
+          data_version='${{ steps.manifest.outputs.data_version }}'
+          archive_tag="data-${data_version}-${content_sha:0:12}"
           previous_sha=''
+          previous_release_tag=''
           needs_publication=false
 
           if gh release view "$channel" --json body >/dev/null 2>&1; then
             body=$(gh release view "$channel" --json body --jq '.body')
-            if ! previous_sha=$(printf '%s' "$body" | jq -er '.content_sha256'); then
+            if ! pointer=$(printf '%s' "$body" | jq -ce '
+              select(type == "object")
+              | select(.schema_version == 1)
+              | select(.dataset_id == "banxico.sie_dynamic")
+              | select((.dataset_version | tostring) == "1")
+              | select(.artifact == "mexico_dynamic.sqlite3")
+              | select(.manifest == "mexico_dynamic.manifest.json")
+              | select(.content_sha256 | type == "string" and test("^[0-9a-f]{64}$"))
+              | select(.release_tag == ("data-banxico-sie-dynamic-1-" + .content_sha256))
+            '); then
               echo 'Existing dynamic resolver channel has invalid pointer metadata.' >&2
               exit 1
             fi
+            previous_sha=$(printf '%s' "$pointer" | jq -r '.content_sha256')
+            previous_release_tag=$(printf '%s' "$pointer" | jq -r '.release_tag')
           fi
 
           release_matches() {
@@ -184,6 +209,9 @@ jobs:
           if [ "$previous_sha" != "$content_sha" ]; then
             needs_publication=true
             echo 'Resolver pointer is absent or references different semantic content.'
+          elif ! release_matches "$previous_release_tag"; then
+            needs_publication=true
+            echo 'Resolver immutable release is absent, incomplete, or does not match reviewed bytes.'
           fi
 
           if ! release_matches latest; then
@@ -193,13 +221,13 @@ jobs:
 
           if ! release_matches "$archive_tag"; then
             needs_publication=true
-            echo "Dated archive $archive_tag is absent, incomplete, or stale."
+            echo "Content-addressed archive $archive_tag is absent or incomplete."
           fi
 
           force='${{ github.event.inputs.force_update }}'
           if [ "$force" = 'true' ]; then
             needs_publication=true
-            echo 'Manual force_update requested publication.'
+            echo 'Manual force_update requested publication verification.'
           fi
 
           if [ "$needs_publication" = 'true' ]; then
@@ -209,7 +237,7 @@ jobs:
             echo 'Dynamic semantic content and all publication channels are already verified.'
           fi
 
-      - name: Publish verified resolver release and compatibility channels
+      - name: Publish compatibility data then resolver pointer
         if: steps.changes.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -232,28 +260,11 @@ jobs:
           data_version='${{ steps.manifest.outputs.data_version }}'
           channel=data-banxico-sie-dynamic-1-latest
           immutable="data-banxico-sie-dynamic-1-${content_sha}"
-          archive_tag="data-${data_version}"
+          archive_tag="data-${data_version}-${content_sha:0:12}"
           verify_dir=$(mktemp -d)
-          trap 'rm -rf "$verify_dir"' EXIT
-
-          pointer=$(jq -cn \
-            --arg dataset_id 'banxico.sie_dynamic' \
-            --arg dataset_version '1' \
-            --arg release_tag "$immutable" \
-            --arg content_sha256 "$content_sha" \
-            --arg artifact "$database" \
-            --arg manifest "$manifest" \
-            '{
-              schema_version: 1,
-              dataset_id: $dataset_id,
-              dataset_version: $dataset_version,
-              release_tag: $release_tag,
-              content_sha256: $content_sha256,
-              artifact: $artifact,
-              manifest: $manifest
-            }')
-
           notes_file=$(mktemp)
+          trap 'rm -rf "$verify_dir" "$notes_file"' EXIT
+
           cat > "$notes_file" <<EOF
           # Dynamic Mexico data — ${data_version}
 
@@ -261,7 +272,7 @@ jobs:
 
           - Dataset: \`banxico.sie_dynamic\`
           - Contract version: \`1\`
-          - Data version: \`${data_version}\`
+          - Source-data cut: \`${data_version}\`
           - Semantic SHA-256: \`${content_sha}\`
 
           This data release is independent from CatalogMX package versions.
@@ -282,22 +293,8 @@ jobs:
             [ "$remote_sha" = "$content_sha" ]
           }
 
-          if gh release view "$immutable" >/dev/null 2>&1; then
-            if ! verify_release_assets "$immutable"; then
-              echo 'Existing immutable dynamic release does not match local verified bytes.' >&2
-              exit 1
-            fi
-          else
-            gh release create "$immutable" "$database" "$manifest" \
-              --title "banxico.sie_dynamic 1 ${content_sha}" \
-              --notes-file "$notes_file" \
-              --target "$reviewed_sha" \
-              --latest=false
-            verify_release_assets "$immutable"
-          fi
-
           # Compatibility channel for existing DataUpdater clients. Keep the
-          # historical URL stable while adding the manifest as a second asset.
+          # historical URL stable while adding the verified manifest.
           if gh release view latest >/dev/null 2>&1; then
             gh release upload latest "$database" "$manifest" --clobber
             gh release edit latest \
@@ -314,48 +311,41 @@ jobs:
           fi
           verify_release_assets latest
 
-          # Human-readable dated archive. Re-runs on the same data version are
-          # idempotent and refresh assets only after canonical validation.
+          # Human-readable archives are immutable per semantic content. A new
+          # semantic state creates a new date+hash tag instead of clobbering an
+          # older archive that happened to share the same source-data cut.
           if gh release view "$archive_tag" >/dev/null 2>&1; then
-            gh release upload "$archive_tag" "$database" "$manifest" --clobber
-            gh release edit "$archive_tag" \
-              --title "Data Update ${data_version}" \
-              --notes-file "$notes_file" \
-              --target "$reviewed_sha" \
-              --latest=true
+            if ! verify_release_assets "$archive_tag"; then
+              echo "Existing dynamic archive $archive_tag does not match reviewed bytes." >&2
+              exit 1
+            fi
           else
             gh release create "$archive_tag" "$database" "$manifest" \
-              --title "Data Update ${data_version}" \
+              --title "Data Update ${data_version} (${content_sha:0:12})" \
               --notes-file "$notes_file" \
               --target "$reviewed_sha" \
               --latest=true
+            verify_release_assets "$archive_tag"
           fi
-          verify_release_assets "$archive_tag"
 
-          # Commit the resolver pointer last. If either compatibility channel
-          # fails, the old pointer remains live and the next run retries repair.
-          if gh release view "$channel" >/dev/null 2>&1; then
-            gh release edit "$channel" \
-              --title 'banxico.sie_dynamic 1 (latest)' \
-              --notes "$pointer" \
-              --target "$reviewed_sha" \
-              --latest=false
-          else
-            gh release create "$channel" \
-              --title 'banxico.sie_dynamic 1 (latest)' \
-              --notes "$pointer" \
-              --target "$reviewed_sha" \
-              --latest=false
-          fi
+          # The common publisher owns the canonical immutable release and stable
+          # metadata pointer. It runs last so any compatibility failure leaves the
+          # previous resolver pointer live and makes the next run retry safely.
+          bash ../../scripts/publish_dataset_release.sh \
+            --manifest "$manifest" \
+            --artifact "$database" \
+            --channel "$channel" \
+            --target "$reviewed_sha"
 
           {
             echo '## Dynamic data publication'
             echo
-            echo "- Data version: \`$data_version\`"
+            echo "- Source-data cut: \`$data_version\`"
             echo "- Content SHA-256: \`$content_sha\`"
             echo "- Immutable tag: \`$immutable\`"
             echo "- Resolver channel: \`$channel\`"
             echo "- Legacy channel: \`latest\`"
+            echo "- Archive tag: \`$archive_tag\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Summary
