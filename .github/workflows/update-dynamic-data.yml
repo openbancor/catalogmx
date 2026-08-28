@@ -1,10 +1,11 @@
 name: Update Dynamic Data (Daily)
 
 # Banxico time-series data has an independent lifecycle from CatalogMX code.
-# Publication is fail-closed: every source updater must succeed, the resulting
-# SQLite database must pass structural/content validation, and the immutable
-# release is downloaded and byte-verified before the stable resolver pointer is
-# moved. The legacy `latest` asset remains for DataUpdater compatibility.
+# Publication is fail-closed: every source updater must either succeed or report
+# a valid no-observation window, the resulting SQLite database must pass
+# structural/content validation, and all compatibility assets are byte-verified
+# before the stable resolver pointer is moved. The legacy `latest` asset remains
+# for DataUpdater compatibility.
 
 on:
   schedule:
@@ -74,13 +75,46 @@ jobs:
           cd packages/shared-data
 
           failures=()
-          python scripts/fetch_udis_banxico.py || failures+=(UDIs)
-          python scripts/fetch_tipo_cambio_banxico.py || failures+=(TipoCambio)
-          python scripts/fetch_tipo_cambio_hist_banxico.py || failures+=(TipoCambioHist)
-          python scripts/fetch_tiie_banxico.py || failures+=(TIIE)
-          python scripts/fetch_cetes_banxico.py || failures+=(CETES)
-          python scripts/fetch_inflacion_banxico.py || failures+=(Inflacion)
-          python scripts/fetch_salarios_minimos_banxico.py || failures+=(Salarios)
+
+          # Legacy fetchers use exit 1 for both a real failure and a valid
+          # Banxico window with no observations (weekends, holidays, publication
+          # gaps). Until their CLI exit contract is normalized, distinguish the
+          # two states from their explicit messages. Also fail closed if a
+          # multi-series updater reports an internal partial-source error while
+          # returning zero overall.
+          run_updater() {
+            label="$1"
+            shift
+            log=$(mktemp)
+
+            set +e
+            "$@" 2>&1 | tee "$log"
+            status=${PIPESTATUS[0]}
+            set -e
+
+            if grep -Fq 'Error with' "$log"; then
+              echo "[workflow] $label reported a partial source failure." >&2
+              failures+=("$label")
+            elif [ "$status" -eq 0 ]; then
+              :
+            elif [ "$status" -eq 1 ] && \
+                 grep -Fq '[fetch] No new records' "$log" && \
+                 ! grep -Fq '[fetch] ERROR' "$log"; then
+              echo "[workflow] $label has no new observations; treating as a successful no-op."
+            else
+              failures+=("$label")
+            fi
+
+            rm -f "$log"
+          }
+
+          run_updater UDIs python scripts/fetch_udis_banxico.py
+          run_updater TipoCambio python scripts/fetch_tipo_cambio_banxico.py
+          run_updater TipoCambioHist python scripts/fetch_tipo_cambio_hist_banxico.py
+          run_updater TIIE python scripts/fetch_tiie_banxico.py
+          run_updater CETES python scripts/fetch_cetes_banxico.py
+          run_updater Inflacion python scripts/fetch_inflacion_banxico.py
+          run_updater Salarios python scripts/fetch_salarios_minimos_banxico.py
 
           if [ ${#failures[@]} -ne 0 ]; then
             printf 'Dynamic data source update failed:' >&2
@@ -104,7 +138,7 @@ jobs:
           echo "data_version=$(jq -r '.data_version' mexico_dynamic.manifest.json)" \
             >> "$GITHUB_OUTPUT"
 
-      - name: Decide whether semantic data changed
+      - name: Decide whether publication state needs repair
         id: changes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -112,7 +146,14 @@ jobs:
         run: |
           set -euo pipefail
           channel=data-banxico-sie-dynamic-1-latest
+          database=mexico_dynamic.sqlite3
+          manifest=mexico_dynamic.manifest.json
+          local_dir=packages/shared-data
+          content_sha='${{ steps.manifest.outputs.content_sha }}'
+          archive_tag='data-${{ steps.manifest.outputs.data_version }}'
           previous_sha=''
+          needs_publication=false
+
           if gh release view "$channel" --json body >/dev/null 2>&1; then
             body=$(gh release view "$channel" --json body --jq '.body')
             if ! previous_sha=$(printf '%s' "$body" | jq -er '.content_sha256'); then
@@ -121,13 +162,51 @@ jobs:
             fi
           fi
 
+          release_matches() {
+            tag="$1"
+            verify_dir=$(mktemp -d)
+            if ! gh release view "$tag" >/dev/null 2>&1 || \
+               ! gh release download "$tag" \
+                 --pattern "$database" \
+                 --pattern "$manifest" \
+                 --dir "$verify_dir" >/dev/null 2>&1 || \
+               [ ! -f "$verify_dir/$database" ] || \
+               [ ! -f "$verify_dir/$manifest" ] || \
+               ! cmp -s "$local_dir/$database" "$verify_dir/$database" || \
+               ! cmp -s "$local_dir/$manifest" "$verify_dir/$manifest"; then
+              rm -rf "$verify_dir"
+              return 1
+            fi
+            rm -rf "$verify_dir"
+            return 0
+          }
+
+          if [ "$previous_sha" != "$content_sha" ]; then
+            needs_publication=true
+            echo 'Resolver pointer is absent or references different semantic content.'
+          fi
+
+          if ! release_matches latest; then
+            needs_publication=true
+            echo 'Legacy latest channel is absent, incomplete, or stale.'
+          fi
+
+          if ! release_matches "$archive_tag"; then
+            needs_publication=true
+            echo "Dated archive $archive_tag is absent, incomplete, or stale."
+          fi
+
           force='${{ github.event.inputs.force_update }}'
-          if [ "$force" != 'true' ] && \
-             [ "$previous_sha" = '${{ steps.manifest.outputs.content_sha }}' ]; then
-            echo 'changed=false' >> "$GITHUB_OUTPUT"
-            echo 'Dynamic semantic content is unchanged.'
-          else
+          if [ "$force" = 'true' ]; then
+            needs_publication=true
+            echo 'Manual force_update requested publication.'
+          fi
+
+          if [ "$needs_publication" = 'true' ]; then
             echo 'changed=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            echo 'Dynamic semantic content and all publication channels are already verified.'
           fi
 
       - name: Publish verified resolver release and compatibility channels
@@ -188,10 +267,11 @@ jobs:
           This data release is independent from CatalogMX package versions.
           EOF
 
-          verify_immutable() {
+          verify_release_assets() {
+            tag="$1"
             rm -rf "$verify_dir"
             mkdir -p "$verify_dir"
-            gh release download "$immutable" \
+            gh release download "$tag" \
               --pattern "$database" \
               --pattern "$manifest" \
               --dir "$verify_dir" >/dev/null
@@ -203,7 +283,7 @@ jobs:
           }
 
           if gh release view "$immutable" >/dev/null 2>&1; then
-            if ! verify_immutable; then
+            if ! verify_release_assets "$immutable"; then
               echo 'Existing immutable dynamic release does not match local verified bytes.' >&2
               exit 1
             fi
@@ -213,21 +293,7 @@ jobs:
               --notes-file "$notes_file" \
               --target "$reviewed_sha" \
               --latest=false
-            verify_immutable
-          fi
-
-          if gh release view "$channel" >/dev/null 2>&1; then
-            gh release edit "$channel" \
-              --title 'banxico.sie_dynamic 1 (latest)' \
-              --notes "$pointer" \
-              --target "$reviewed_sha" \
-              --latest=false
-          else
-            gh release create "$channel" \
-              --title 'banxico.sie_dynamic 1 (latest)' \
-              --notes "$pointer" \
-              --target "$reviewed_sha" \
-              --latest=false
+            verify_release_assets "$immutable"
           fi
 
           # Compatibility channel for existing DataUpdater clients. Keep the
@@ -246,6 +312,7 @@ jobs:
               --target "$reviewed_sha" \
               --latest=false
           fi
+          verify_release_assets latest
 
           # Human-readable dated archive. Re-runs on the same data version are
           # idempotent and refresh assets only after canonical validation.
@@ -262,6 +329,23 @@ jobs:
               --notes-file "$notes_file" \
               --target "$reviewed_sha" \
               --latest=true
+          fi
+          verify_release_assets "$archive_tag"
+
+          # Commit the resolver pointer last. If either compatibility channel
+          # fails, the old pointer remains live and the next run retries repair.
+          if gh release view "$channel" >/dev/null 2>&1; then
+            gh release edit "$channel" \
+              --title 'banxico.sie_dynamic 1 (latest)' \
+              --notes "$pointer" \
+              --target "$reviewed_sha" \
+              --latest=false
+          else
+            gh release create "$channel" \
+              --title 'banxico.sie_dynamic 1 (latest)' \
+              --notes "$pointer" \
+              --target "$reviewed_sha" \
+              --latest=false
           fi
 
           {
@@ -280,5 +364,5 @@ jobs:
           if [ '${{ steps.changes.outputs.changed }}' = 'true' ]; then
             echo 'Dynamic data validated and publication was attempted.'
           else
-            echo 'No semantic data change required publication.'
+            echo 'No semantic data or publication-state change required publication.'
           fi
