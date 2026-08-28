@@ -29,9 +29,11 @@ def test_banxico_and_catalog_maintenance_share_one_publisher():
     reference = REFERENCE_WORKFLOW.read_text(encoding="utf-8")
     maintenance = MAINTENANCE_WORKFLOW.read_text(encoding="utf-8")
 
-    invocation = "scripts/publish_dataset_release.sh"
+    invocation = "bash scripts/publish_dataset_release.sh"
     assert invocation in reference
     assert invocation in maintenance
+    assert "\n          scripts/publish_dataset_release.sh" not in reference
+    assert "\n            scripts/publish_dataset_release.sh" not in maintenance
     assert "gh release upload" not in reference
     assert "gh release upload" not in maintenance
     assert "--clobber" not in reference
