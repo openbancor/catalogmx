@@ -1,0 +1,97 @@
+name: Prepare CONAPO IFT Resolver
+
+on:
+  push:
+    branches: [feat/data-resolver-conapo-ift]
+    paths:
+      - 'scripts/prepare_conapo_ift_resolver.py'
+      - '.github/workflows/prepare-conapo-ift-resolver.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prepare-conapo-ift-resolver
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/data-resolver-conapo-ift
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python development tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e 'packages/python[dev]'
+
+      - name: Apply resolver migration
+        run: python scripts/prepare_conapo_ift_resolver.py
+
+      - name: Format and lint changed Python
+        run: |
+          black \
+            scripts/build_reviewed_reference.py \
+            packages/python/tests/test_reviewed_reference_builder.py \
+            packages/python/tests/test_conapo_ift_resolver_contract.py \
+            packages/python/catalogmx/utils/shared_data.py \
+            packages/python/catalogmx/catalogs/conapo/sistema_urbano_nacional.py \
+            packages/python/catalogmx/catalogs/conapo/zonas_metropolitanas.py \
+            packages/python/catalogmx/catalogs/ift/codigos_lada.py \
+            packages/python/catalogmx/catalogs/ift/operadores_moviles.py
+          ruff check --fix \
+            scripts/build_reviewed_reference.py \
+            packages/python/tests/test_reviewed_reference_builder.py \
+            packages/python/tests/test_conapo_ift_resolver_contract.py \
+            packages/python/catalogmx/utils/shared_data.py \
+            packages/python/catalogmx/catalogs/conapo/sistema_urbano_nacional.py \
+            packages/python/catalogmx/catalogs/conapo/zonas_metropolitanas.py \
+            packages/python/catalogmx/catalogs/ift/codigos_lada.py \
+            packages/python/catalogmx/catalogs/ift/operadores_moviles.py
+          black \
+            scripts/build_reviewed_reference.py \
+            packages/python/tests/test_reviewed_reference_builder.py \
+            packages/python/tests/test_conapo_ift_resolver_contract.py \
+            packages/python/catalogmx/utils/shared_data.py \
+            packages/python/catalogmx/catalogs/conapo/sistema_urbano_nacional.py \
+            packages/python/catalogmx/catalogs/conapo/zonas_metropolitanas.py \
+            packages/python/catalogmx/catalogs/ift/codigos_lada.py \
+            packages/python/catalogmx/catalogs/ift/operadores_moviles.py
+
+      - name: Validate prepared branch
+        run: |
+          python scripts/catalog_registry.py validate
+          python scripts/render_dataset_contract.py --check
+          python scripts/build_reviewed_reference.py --dataset conapo.territorial --output-dir "$RUNNER_TEMP/conapo"
+          python scripts/build_reviewed_reference.py --dataset ift.numbering --output-dir "$RUNNER_TEMP/ift"
+          cd packages/python
+          pytest \
+            tests/test_reviewed_reference_builder.py \
+            tests/test_conapo_ift_resolver_contract.py \
+            tests/test_dataset_contract.py \
+            -q
+          cd ../..
+          git diff --check
+
+      - name: Commit prepared migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'catalogmx-resolver-prep[bot]'
+          git config user.email 'catalogmx-resolver-prep[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit.'
+            exit 1
+          fi
+          git commit -m 'feat(data): make CONAPO and IFT resolver-ready'
+          git push origin HEAD:feat/data-resolver-conapo-ift
