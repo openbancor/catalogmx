@@ -1,0 +1,32 @@
+name: Validate fiscal integrity
+
+on:
+  push:
+    branches:
+      - fix/fiscal-integrity-2026
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/fiscal-integrity-2026
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: packages/typescript/package-lock.json
+      - name: Install
+        working-directory: packages/typescript
+        run: npm ci
+      - name: Static checks
+        working-directory: packages/typescript
+        run: |
+          npm run format:check
+          npm run typecheck
+          npm run lint
+      - name: Historical fiscal tests
+        working-directory: packages/typescript
+        run: |
+          npx jest --runInBand tests/imss-vectors.test.ts tests/fiscal-history.test.ts
