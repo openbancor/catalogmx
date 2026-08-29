@@ -26,11 +26,9 @@ Wrangler dry-run. It must not be replaced by a deploy command. Authenticate
 the operator separately with the intended Cloudflare account before the
 resource-creation steps.
 
-Before production import, resolve the source-data exception documented in the
-implementation: `packages/shared-data/sat/cfdi_4.0/c_TasaOCuota.json` contains
-non-JSON `NaN` values and is intentionally not exposed by this N1 build. Keep
-that catalog disabled until its upstream data is corrected and a new fixture,
-test, and catalog allowlist entry are reviewed.
+The CFDI `c_TasaOCuota.json` fixture is normalized to JSON `null` for missing
+spreadsheet cells without changing its fiscal values, so it can be bundled by
+the Worker like the other small CFDI catalogs.
 
 ## 2. Create D1 and apply the schema
 
@@ -213,7 +211,7 @@ build or Wrangler dry-run as production latency evidence.
 
 - [ ] Production D1 id and rate-limit namespace reviewed and substituted.
 - [ ] Migration applied remotely; row counts and FTS exact/query lookups verified.
-- [ ] Corrected/approved handling for `c_TasaOCuota` recorded before exposing it.
+- [ ] `c_TasaOCuota` endpoint smoke-tested with the same catalog version.
 - [ ] API secret installed and a rotation/revocation owner identified.
 - [ ] Route and hostname reviewed.
 - [ ] Deploy receipt, smoke results, and p95 evidence recorded.

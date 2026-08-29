@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deterministic D1 migration/query layer for large postal-code and SAT product/service catalogs, plus production-only deployment instructions.
 - Worker lint, typecheck, Jest coverage, and Wrangler dry-run gates with package coverage above 90%.
 
+### Changed
+- Normalized missing CFDI `c_TasaOCuota` spreadsheet cells to JSON `null` so the complete small-catalog allowlist can be bundled safely.
+
 ## [0.5.1] - 2026-02-04
 
 ### Fixed

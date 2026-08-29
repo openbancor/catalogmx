@@ -22,6 +22,7 @@ import cObjetoImp from '../../shared-data/sat/cfdi_4.0/c_ObjetoImp.json';
 import cPais from '../../shared-data/sat/cfdi_4.0/c_Pais.json';
 import cPeriodicidad from '../../shared-data/sat/cfdi_4.0/c_Periodicidad.json';
 import cRegimenFiscal from '../../shared-data/sat/cfdi_4.0/c_RegimenFiscal.json';
+import cTasaOCuota from '../../shared-data/sat/cfdi_4.0/c_TasaOCuota.json';
 import cTipoDeComprobante from '../../shared-data/sat/cfdi_4.0/c_TipoDeComprobante.json';
 import cTipoFactor from '../../shared-data/sat/cfdi_4.0/c_TipoFactor.json';
 import cTipoRelacion from '../../shared-data/sat/cfdi_4.0/c_TipoRelacion.json';
@@ -61,6 +62,7 @@ const smallData: readonly SmallCatalogSource[] = [
   { path: 'sat/cfdi_4.0/c_Pais.json', data: cPais },
   { path: 'sat/cfdi_4.0/c_Periodicidad.json', data: cPeriodicidad },
   { path: 'sat/cfdi_4.0/c_RegimenFiscal.json', data: cRegimenFiscal },
+  { path: 'sat/cfdi_4.0/c_TasaOCuota.json', data: cTasaOCuota },
   { path: 'sat/cfdi_4.0/c_TipoDeComprobante.json', data: cTipoDeComprobante },
   { path: 'sat/cfdi_4.0/c_TipoFactor.json', data: cTipoFactor },
   { path: 'sat/cfdi_4.0/c_TipoRelacion.json', data: cTipoRelacion },
@@ -91,6 +93,7 @@ export const SAT_CFDI_CATALOGS: Readonly<Record<string, SmallCatalogSource>> = {
   pais: { path: 'sat/cfdi_4.0/c_Pais.json', data: cPais },
   periodicidad: { path: 'sat/cfdi_4.0/c_Periodicidad.json', data: cPeriodicidad },
   'regimen-fiscal': { path: 'sat/cfdi_4.0/c_RegimenFiscal.json', data: cRegimenFiscal },
+  'tasa-o-cuota': { path: 'sat/cfdi_4.0/c_TasaOCuota.json', data: cTasaOCuota },
   'tipo-comprobante': {
     path: 'sat/cfdi_4.0/c_TipoDeComprobante.json',
     data: cTipoDeComprobante,

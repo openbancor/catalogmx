@@ -69,6 +69,16 @@ describe('small catalog endpoints', () => {
     );
   });
 
+  test('serves the normalized SAT CFDI tasa-o-cuota catalog', async () => {
+    const response = await handleCatalogRequest(
+      catalogRequest('/api/v1/catalogs/sat/cfdi/tasa-o-cuota'),
+      authorizedEnv()
+    );
+
+    expect(response.status).toBe(200);
+    expect(Array.isArray((await bodyOf(response)).items)).toBe(true);
+  });
+
   test('serves INEGI states and municipalities with a version header', async () => {
     const states = await handleCatalogRequest(
       catalogRequest('/api/v1/catalogs/inegi/estados'),
