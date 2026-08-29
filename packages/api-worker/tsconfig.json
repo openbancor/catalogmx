@@ -16,5 +16,5 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["jest", "@cloudflare/workers-types", "node"]
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"]
+  "include": ["src/**/*.ts", "tests/**/*.ts", "../typescript/src/types/sql.js.d.ts"]
 }
