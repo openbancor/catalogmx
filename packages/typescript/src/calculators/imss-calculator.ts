@@ -98,9 +98,14 @@ type CuotasIMSS = {
   riesgo_trabajo: CuotaRiesgoTrabajo;
 };
 
-type ModalidadLimitesSalario = {
+type Modalidad40LimitesSalario = {
   maximo_uma: number;
   minimo_regla?: string;
+};
+
+type Modalidad10LimitesSalario = {
+  minimo_uma: number;
+  maximo_uma: number;
 };
 
 type Modalidad40Data = {
@@ -119,7 +124,7 @@ type Modalidad40Data = {
       tasa_total_banda_4_01_uma_en_adelante: number;
     }
   >;
-  limites_salario: ModalidadLimitesSalario;
+  limites_salario: Modalidad40LimitesSalario;
 };
 
 type Modalidad10Data = {
@@ -132,7 +137,7 @@ type Modalidad10Data = {
     cuota_fija_uma_factor: number;
     componentes: Record<string, number | string>;
   };
-  limites_salario: ModalidadLimitesSalario;
+  limites_salario: Modalidad10LimitesSalario;
   beneficios: string[];
 };
 
