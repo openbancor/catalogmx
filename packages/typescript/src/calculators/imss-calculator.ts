@@ -1,10 +1,9 @@
 /**
- * Calculadora de IMSS (Instituto Mexicano del Seguro Social) para México
+ * Calculadora histórica de IMSS (Instituto Mexicano del Seguro Social) para México.
  *
- * Calcula cuotas obrero-patronales y modalidades voluntarias (10, 40)
- * Fuentes oficiales:
- * - Ley del Seguro Social
- * - Sistema Único de Autodeterminación (SUA)
+ * Las cuotas que cambian por ejercicio (principalmente CEAV y Modalidad 40)
+ * se seleccionan por año. La UMA se selecciona por vigencia cuando el llamador
+ * proporciona una fecha, porque cambia el 1 de febrero y no el 1 de enero.
  */
 
 import { loadCatalogData } from '../utils/catalog-loader';
@@ -17,6 +16,9 @@ export interface UMAInfo {
   diaria: number;
   mensual: number;
   anual: number;
+  vigencia_desde?: string;
+  vigencia_hasta?: string;
+  source_id?: string;
 }
 
 export interface CuotasIMSSResult {
@@ -24,6 +26,8 @@ export interface CuotasIMSSResult {
   dias: number;
   salario_base_cotizacion: number;
   year: number;
+  uma_diaria: number;
+  ceav_patron_rate: number;
   cuotas_patron: Record<string, number>;
   cuotas_trabajador: Record<string, number>;
   total_patron: number;
@@ -34,6 +38,7 @@ export interface CuotasIMSSResult {
 export interface Modalidad40Result {
   salario_base_cotizacion: number;
   year: number;
+  uma_mensual: number;
   cuota_mensual: number;
   porcentaje_total: number;
   componentes: Record<string, number>;
@@ -54,8 +59,7 @@ type CuotaBase = {
   patron: number;
   trabajador: number;
   base: string;
-  limite_inferior_uma?: number;
-  limite_superior_uma?: number;
+  umbral_uma?: number;
 };
 
 type CuotaEnfermedadMaternidad = {
@@ -65,7 +69,15 @@ type CuotaEnfermedadMaternidad = {
   gastos_medicos_pensionados: CuotaBase;
 };
 
-type CuotaRiesgoTrabajo = Record<`clase_${ClaseRiesgo}`, number>;
+type CEAVPatronRate = {
+  rango: string;
+  tasa: number;
+};
+
+type CuotaRiesgoTrabajo = Record<`clase_${ClaseRiesgo}`, number> & {
+  minima?: number;
+  maxima?: number;
+};
 
 type CuotasIMSS = {
   enfermedad_maternidad: CuotaEnfermedadMaternidad;
@@ -75,7 +87,10 @@ type CuotasIMSS = {
   };
   retiro_cesantia_vejez: {
     retiro: { patron: number };
-    cesantia_vejez: { patron: number; trabajador: number };
+    cesantia_vejez: {
+      trabajador: number;
+      patron_por_ejercicio: Record<string, CEAVPatronRate[]>;
+    };
   };
   guarderias_prestaciones_sociales: {
     patron: number;
@@ -88,19 +103,24 @@ type ModalidadLimitesSalario = {
   maximo_uma: number;
 };
 
+type Modalidad40YearData = {
+  vigencia_desde: string;
+  vigencia_hasta: string;
+  porcentaje_total: number;
+  componentes: Record<string, number>;
+};
+
 type Modalidad40Data = {
   descripcion: string;
+  verification?: string;
   requisitos: Record<string, number | string | boolean>;
-  cuota_mensual: {
-    formula: string;
-    porcentaje_total: number;
-    componentes: Record<string, number>;
-  };
+  por_ejercicio: Record<string, Modalidad40YearData>;
   limites_salario: ModalidadLimitesSalario;
 };
 
 type Modalidad10Data = {
   descripcion: string;
+  verification?: string;
   requisitos: Record<string, number | string | boolean>;
   cuota_mensual: {
     formula: string;
@@ -112,9 +132,12 @@ type Modalidad10Data = {
   beneficios: string[];
 };
 
-type TopesCotizacion = {
-  salario_base_minimo: number;
-  salario_base_maximo: number;
+type SalarioMinimoData = {
+  general: number;
+  frontera: number;
+  vigencia_desde?: string;
+  vigencia_hasta?: string;
+  source_id?: string;
 };
 
 type RiesgoTrabajoClase = {
@@ -126,17 +149,19 @@ type RiesgoTrabajoClase = {
 
 interface IMSSTablesData {
   _meta: {
+    schema_version?: number;
     description: string;
-    source: string;
     calculation: string;
     updated: string;
+    verification?: Record<string, string>;
+    sources?: Record<string, Record<string, string>>;
   };
   uma: Record<string, UMAInfo>;
-  salario_minimo: Record<string, Record<ZonaSalario, number>>;
+  salario_minimo: Record<string, SalarioMinimoData>;
   cuotas_imss: CuotasIMSS;
   modalidad_40: Modalidad40Data;
   modalidad_10: Modalidad10Data;
-  topes_cotizacion: TopesCotizacion;
+  topes_cotizacion: Record<string, unknown>;
   riesgos_trabajo_clases: RiesgoTrabajoClase[];
 }
 
@@ -166,117 +191,155 @@ export class IMSSCalculator {
 
   private static loadTablesData(): void {
     if (this._tablesData !== null) return;
-
     this._tablesData = loadCatalogData<IMSSTablesData>('imss-tables.json');
   }
 
   private static loadCatalogsData(): void {
     if (this._catalogsData !== null) return;
-
     this._catalogsData = loadCatalogData<IMSSCatalogsData>('imss-catalogs.json');
   }
 
   /**
-   * Obtiene los valores de UMA para un año específico
-   * @param year - Año (2024, 2025, o 2026)
-   * @returns Valores de UMA (diaria, mensual, anual)
+   * UMA publicada para un ejercicio. Para cálculos de enero, donde todavía
+   * puede seguir vigente la UMA del ejercicio previo, usar getUMAForDate().
    */
   static getUMA(year: IMSSYear): UMAInfo {
     this.loadTablesData();
-    const yearStr = year.toString();
-    return this._tablesData!.uma[yearStr];
+    const uma = this._tablesData!.uma[year.toString()];
+    if (!uma) {
+      throw new Error(`No se encontró UMA para ${year}`);
+    }
+    return { ...uma };
   }
 
   /**
-   * Obtiene el salario mínimo para un año y zona específicos
-   * @param year - Año (2024, 2025, o 2026)
-   * @param zona - Zona ("general" o "frontera")
-   * @returns Salario mínimo diario
+   * UMA aplicable en una fecha concreta, respetando la vigencia 1-feb / 31-ene.
    */
+  static getUMAForDate(fecha: string | Date): UMAInfo {
+    this.loadTablesData();
+    const iso = this.toIsoDate(fecha);
+    const uma = Object.values(this._tablesData!.uma).find(
+      (item) =>
+        item.vigencia_desde !== undefined &&
+        item.vigencia_hasta !== undefined &&
+        iso >= item.vigencia_desde &&
+        iso <= item.vigencia_hasta
+    );
+    if (!uma) {
+      throw new Error(`No se encontró UMA vigente para ${iso}`);
+    }
+    return { ...uma };
+  }
+
   static getSalarioMinimo(year: IMSSYear, zona: ZonaSalario = 'general'): number {
     this.loadTablesData();
-    const yearStr = year.toString();
-    return this._tablesData!.salario_minimo[yearStr][zona];
+    const row = this._tablesData!.salario_minimo[year.toString()];
+    if (!row) {
+      throw new Error(`No se encontró salario mínimo para ${year}`);
+    }
+    return row[zona];
   }
 
   /**
-   * Calcula las cuotas obrero-patronales del IMSS
-   * @param salarioDiario - Salario diario del trabajador
-   * @param dias - Número de días (default: 30)
-   * @param year - Año (default: 2026)
-   * @param claseRiesgo - Clase de riesgo de trabajo 1-5 (default: 1 - riesgo mínimo)
-   * @returns Desglose completo de cuotas IMSS
+   * Tasa patronal CEAV aplicable al SBC diario.
+   *
+   * La fila "1 SM" se trata como caso especial. Para los demás salarios,
+   * la reforma de pensiones clasifica el SBC en veces UMA.
+   */
+  static getCEAVPatronRate(
+    salarioDiario: number,
+    year: IMSSYear,
+    fecha?: string | Date
+  ): number {
+    this.loadTablesData();
+    const rates =
+      this._tablesData!.cuotas_imss.retiro_cesantia_vejez.cesantia_vejez
+        .patron_por_ejercicio[year.toString()];
+    if (!rates || rates.length !== 8) {
+      throw new Error(`No se encontró tarifa CEAV patronal para ${year}`);
+    }
+
+    const minimum = this._tablesData!.salario_minimo[year.toString()];
+    if (!minimum) {
+      throw new Error(`No se encontró salario mínimo para ${year}`);
+    }
+    const isMinimumWage =
+      this.almostEqual(salarioDiario, minimum.general) ||
+      this.almostEqual(salarioDiario, minimum.frontera);
+    if (isMinimumWage) return rates[0].tasa;
+
+    const uma = fecha === undefined ? this.getUMA(year) : this.getUMAForDate(fecha);
+    const ratio = salarioDiario / uma.diaria;
+    if (ratio <= 1.5) return rates[1].tasa;
+    if (ratio <= 2.0) return rates[2].tasa;
+    if (ratio <= 2.5) return rates[3].tasa;
+    if (ratio <= 3.0) return rates[4].tasa;
+    if (ratio <= 3.5) return rates[5].tasa;
+    if (ratio <= 4.0) return rates[6].tasa;
+    return rates[7].tasa;
+  }
+
+  /**
+   * Calcula cuotas obrero-patronales.
+   *
+   * `fecha` es opcional para compatibilidad. Cuando se proporciona permite
+   * resolver correctamente la UMA vigente en enero/febrero del mismo ejercicio.
    */
   static calcularCuotasObreroPatronales(
     salarioDiario: number,
     dias: number = 30,
     year: IMSSYear = 2026,
-    claseRiesgo: ClaseRiesgo = 1
+    claseRiesgo: ClaseRiesgo = 1,
+    fecha?: string | Date
   ): CuotasIMSSResult {
     this.loadTablesData();
-    const uma = this.getUMA(year);
+    const uma = fecha === undefined ? this.getUMA(year) : this.getUMAForDate(fecha);
     const cuotas = this._tablesData!.cuotas_imss;
-
-    // Calcular salario base de cotización
     const salarioBase = salarioDiario * dias;
-
-    // Límite de 3 UMAs diario para algunas cuotas
     const umaDiaria = uma.diaria;
-    const tresUmaMensual = umaDiaria * 3 * 30;
 
-    // Inicializar diccionarios de cuotas
     const cuotasPatron: Record<string, number> = {};
     const cuotasTrabajador: Record<string, number> = {};
 
-    // 1. Enfermedad y Maternidad
+    // Enfermedades y maternidad: cuota fija = 20.4% de una UMA por día.
     const em = cuotas.enfermedad_maternidad;
-
-    // Cuota fija (sobre 3 UMAs)
     cuotasPatron.enfermedad_mat_cuota_fija =
-      umaDiaria * 3 * dias * em.prestaciones_en_especie.patron;
+      umaDiaria * dias * em.prestaciones_en_especie.patron;
 
-    // Excedente de 3 UMAs
-    if (salarioDiario > tresUmaMensual / 30) {
-      const excedenteBase = salarioBase - tresUmaMensual;
-      cuotasPatron.enfermedad_mat_excedente =
-        excedenteBase * em.prestaciones_en_especie_excedente.patron;
-      cuotasTrabajador.enfermedad_mat_excedente =
-        excedenteBase * em.prestaciones_en_especie_excedente.trabajador;
-    } else {
-      cuotasPatron.enfermedad_mat_excedente = 0.0;
-      cuotasTrabajador.enfermedad_mat_excedente = 0.0;
-    }
+    // Excedente únicamente sobre la parte del SBC diario que rebasa 3 UMA.
+    const threshold = (em.prestaciones_en_especie_excedente.umbral_uma ?? 3) * umaDiaria;
+    const excedenteBase = Math.max(0, salarioDiario - threshold) * dias;
+    cuotasPatron.enfermedad_mat_excedente =
+      excedenteBase * em.prestaciones_en_especie_excedente.patron;
+    cuotasTrabajador.enfermedad_mat_excedente =
+      excedenteBase * em.prestaciones_en_especie_excedente.trabajador;
 
-    // Prestaciones en dinero
     cuotasPatron.enfermedad_mat_dinero = salarioBase * em.prestaciones_en_dinero.patron;
-    cuotasTrabajador.enfermedad_mat_dinero = salarioBase * em.prestaciones_en_dinero.trabajador;
+    cuotasTrabajador.enfermedad_mat_dinero =
+      salarioBase * em.prestaciones_en_dinero.trabajador;
 
-    // Gastos médicos pensionados
-    cuotasPatron.gastos_medicos_pensionados = salarioBase * em.gastos_medicos_pensionados.patron;
+    cuotasPatron.gastos_medicos_pensionados =
+      salarioBase * em.gastos_medicos_pensionados.patron;
     cuotasTrabajador.gastos_medicos_pensionados =
       salarioBase * em.gastos_medicos_pensionados.trabajador;
 
-    // 2. Invalidez y Vida
     const iv = cuotas.invalidez_vida;
     cuotasPatron.invalidez_vida = salarioBase * iv.patron;
     cuotasTrabajador.invalidez_vida = salarioBase * iv.trabajador;
 
-    // 3. Retiro, Cesantía y Vejez
     const rcv = cuotas.retiro_cesantia_vejez;
     cuotasPatron.retiro = salarioBase * rcv.retiro.patron;
-    cuotasPatron.cesantia_vejez = salarioBase * rcv.cesantia_vejez.patron;
+    const ceavPatronRate = this.getCEAVPatronRate(salarioDiario, year, fecha);
+    cuotasPatron.cesantia_vejez = salarioBase * ceavPatronRate;
     cuotasTrabajador.cesantia_vejez = salarioBase * rcv.cesantia_vejez.trabajador;
 
-    // 4. Guarderías y Prestaciones Sociales
     const gps = cuotas.guarderias_prestaciones_sociales;
     cuotasPatron.guarderias = salarioBase * gps.patron;
 
-    // 5. Riesgos de Trabajo
     const rt = cuotas.riesgo_trabajo;
     const primaRiesgo = rt[`clase_${claseRiesgo}`];
     cuotasPatron.riesgo_trabajo = salarioBase * primaRiesgo;
 
-    // Calcular totales
     const totalPatron = Object.values(cuotasPatron).reduce((sum, val) => sum + val, 0);
     const totalTrabajador = Object.values(cuotasTrabajador).reduce((sum, val) => sum + val, 0);
 
@@ -285,6 +348,8 @@ export class IMSSCalculator {
       dias,
       salario_base_cotizacion: salarioBase,
       year,
+      uma_diaria: umaDiaria,
+      ceav_patron_rate: ceavPatronRate,
       cuotas_patron: cuotasPatron,
       cuotas_trabajador: cuotasTrabajador,
       total_patron: totalPatron,
@@ -293,25 +358,19 @@ export class IMSSCalculator {
     };
   }
 
-  /**
-   * Calcula la Modalidad 40 del IMSS (Continuación voluntaria en el régimen obligatorio)
-   *
-   * La Modalidad 40 permite a trabajadores que causaron baja del régimen obligatorio
-   * continuar cotizando voluntariamente para incrementar su pensión.
-   *
-   * @param salarioBaseCotizacion - Salario base mensual (entre 1 y 25 UMAs)
-   * @param year - Año (default: 2026)
-   * @returns Resultado del cálculo de Modalidad 40
-   */
   static calcularModalidad40(
     salarioBaseCotizacion: number,
-    year: IMSSYear = 2026
+    year: IMSSYear = 2026,
+    fecha?: string | Date
   ): Modalidad40Result {
     this.loadTablesData();
-    const uma = this.getUMA(year);
+    const uma = fecha === undefined ? this.getUMA(year) : this.getUMAForDate(fecha);
     const mod40 = this._tablesData!.modalidad_40;
+    const yearData = mod40.por_ejercicio[year.toString()];
+    if (!yearData) {
+      throw new Error(`No se encontró tarifa de Modalidad 40 para ${year}`);
+    }
 
-    // Validar límites de salario
     const umaMensual = uma.mensual;
     const salarioMinimo = umaMensual * mod40.limites_salario.minimo_uma;
     const salarioMaximo = umaMensual * mod40.limites_salario.maximo_uma;
@@ -322,19 +381,17 @@ export class IMSSCalculator {
       salarioBaseCotizacion = salarioMaximo;
     }
 
-    // Calcular cuota mensual (10.47% total)
-    const porcentajeTotal = mod40.cuota_mensual.porcentaje_total;
+    const porcentajeTotal = yearData.porcentaje_total;
     const cuotaMensual = salarioBaseCotizacion * porcentajeTotal;
-
-    // Obtener desglose de componentes
     const componentes: Record<string, number> = {};
-    for (const [key, value] of Object.entries(mod40.cuota_mensual.componentes)) {
-      componentes[key] = salarioBaseCotizacion * (value as number);
+    for (const [key, value] of Object.entries(yearData.componentes)) {
+      componentes[key] = salarioBaseCotizacion * value;
     }
 
     return {
       salario_base_cotizacion: salarioBaseCotizacion,
       year,
+      uma_mensual: umaMensual,
       cuota_mensual: cuotaMensual,
       porcentaje_total: porcentajeTotal,
       componentes,
@@ -342,24 +399,19 @@ export class IMSSCalculator {
   }
 
   /**
-   * Calcula la Modalidad 10 del IMSS (Incorporación voluntaria - trabajadores independientes)
-   *
-   * La Modalidad 10 permite a trabajadores independientes inscribirse en el IMSS
-   * y acceder a todos los beneficios de seguridad social.
-   *
-   * @param salarioBaseCotizacion - Salario base mensual (entre 1 y 25 UMAs)
-   * @param year - Año (default: 2026)
-   * @returns Resultado del cálculo de Modalidad 10
+   * Modalidad 10 mantiene por ahora el modelo histórico existente.
+   * El dataset la marca como legacy_pending_review para no presentarla como
+   * parámetro fiscal verificado hasta completar su auditoría específica.
    */
   static calcularModalidad10(
     salarioBaseCotizacion: number,
-    year: IMSSYear = 2026
+    year: IMSSYear = 2026,
+    fecha?: string | Date
   ): Modalidad10Result {
     this.loadTablesData();
-    const uma = this.getUMA(year);
+    const uma = fecha === undefined ? this.getUMA(year) : this.getUMAForDate(fecha);
     const mod10 = this._tablesData!.modalidad_10;
 
-    // Validar límites de salario
     const umaMensual = uma.mensual;
     const salarioMinimo = umaMensual * mod10.limites_salario.minimo_uma;
     const salarioMaximo = umaMensual * mod10.limites_salario.maximo_uma;
@@ -370,21 +422,14 @@ export class IMSSCalculator {
       salarioBaseCotizacion = salarioMaximo;
     }
 
-    // Cuota fija: 3.3 UMAs para prestaciones en especie
     const cuotaFijaUma = uma.diaria * mod10.cuota_mensual.cuota_fija_uma_factor;
-
-    // Porcentaje variable: 10.47%
     const porcentajeVariable = mod10.cuota_mensual.porcentaje_variable;
     const cuotaVariable = salarioBaseCotizacion * porcentajeVariable;
-
-    // Cuota mensual total
     const cuotaMensual = cuotaFijaUma + cuotaVariable;
 
-    // Obtener desglose de componentes
     const componentes: Record<string, number> = {
       prestaciones_en_especie_fija: cuotaFijaUma,
     };
-
     for (const [key, value] of Object.entries(mod10.cuota_mensual.componentes)) {
       if (typeof value === 'number') {
         componentes[key] = salarioBaseCotizacion * value;
@@ -402,30 +447,36 @@ export class IMSSCalculator {
     };
   }
 
-  /**
-   * Obtiene todos los catálogos de tipos de trabajador del IMSS
-   * @returns Array de tipos de trabajador
-   */
   static getTiposTrabajador(): Array<Record<string, unknown>> {
     this.loadCatalogsData();
     return [...this._catalogsData!.tipos_trabajador];
   }
 
-  /**
-   * Obtiene todos los catálogos de seguros del IMSS
-   * @returns Array de seguros IMSS
-   */
   static getSegurosIMSS(): Array<Record<string, unknown>> {
     this.loadCatalogsData();
     return [...this._catalogsData!.seguros_imss];
   }
 
-  /**
-   * Obtiene las clases de riesgo de trabajo disponibles
-   * @returns Array de clases de riesgo con sus primas
-   */
   static getClasesRiesgoTrabajo(): RiesgoTrabajoClase[] {
     this.loadTablesData();
     return [...this._tablesData!.riesgos_trabajo_clases];
+  }
+
+  private static toIsoDate(fecha: string | Date): string {
+    if (typeof fecha === 'string') {
+      const match = /^\d{4}-\d{2}-\d{2}/.exec(fecha);
+      if (!match) {
+        throw new Error(`Fecha inválida: ${fecha}`);
+      }
+      return match[0];
+    }
+    if (Number.isNaN(fecha.getTime())) {
+      throw new Error('Fecha inválida');
+    }
+    return fecha.toISOString().slice(0, 10);
+  }
+
+  private static almostEqual(left: number, right: number): boolean {
+    return Math.abs(left - right) < 0.005;
   }
 }
