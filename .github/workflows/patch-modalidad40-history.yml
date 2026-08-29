@@ -1,0 +1,118 @@
+name: Patch modalidad 40 history
+
+on:
+  push:
+    branches:
+      - fix/fiscal-integrity-2026
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.head_commit.message != 'fix(ts): derive modalidad 40 from historical CEAV'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/fiscal-integrity-2026
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Patch data and TypeScript
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          data_path = Path('packages/shared-data/imss-tables.json')
+          data = json.loads(data_path.read_text(encoding='utf-8'))
+          mod40 = data['modalidad_40']
+          mod40.pop('por_ejercicio', None)
+          mod40['calculo'] = {
+              'componentes_constantes': {
+                  'retiro_patron': 0.02,
+                  'cesantia_vejez_trabajador': 0.01125,
+                  'invalidez_vida_patron': 0.0175,
+                  'invalidez_vida_trabajador': 0.00625,
+                  'gastos_medicos_pensionados_patron': 0.0105,
+                  'gastos_medicos_pensionados_trabajador': 0.00375,
+              },
+              'ceav_patronal': {
+                  'source_path': 'cuotas_imss.retiro_cesantia_vejez.cesantia_vejez.patron_por_ejercicio',
+                  'selection': 'sbc_band_and_exercise',
+              },
+          }
+          mod40['referencia_por_ejercicio'] = {
+              '2024': {
+                  'vigencia_desde': '2024-01-01',
+                  'vigencia_hasta': '2024-12-31',
+                  'tasa_total_banda_4_01_uma_en_adelante': 0.12256,
+              },
+              '2025': {
+                  'vigencia_desde': '2025-01-01',
+                  'vigencia_hasta': '2025-12-31',
+                  'tasa_total_banda_4_01_uma_en_adelante': 0.13347,
+              },
+              '2026': {
+                  'vigencia_desde': '2026-01-01',
+                  'vigencia_hasta': '2026-12-31',
+                  'tasa_total_banda_4_01_uma_en_adelante': 0.14438,
+              },
+          }
+          mod40['limites_salario'] = {
+              'maximo_uma': 25,
+              'minimo_regla': 'no_inferior_al_ultimo_sbc_registrado',
+          }
+          data_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          src_path = Path('packages/typescript/src/calculators/imss-calculator.ts')
+          src = src_path.read_text(encoding='utf-8')
+          src = src.replace(
+          """type ModalidadLimitesSalario = {\n  minimo_uma: number;\n  maximo_uma: number;\n};\n\ntype Modalidad40YearData = {\n  vigencia_desde: string;\n  vigencia_hasta: string;\n  porcentaje_total: number;\n  componentes: Record<string, number>;\n};\n\ntype Modalidad40Data = {\n  descripcion: string;\n  verification?: string;\n  requisitos: Record<string, number | string | boolean>;\n  por_ejercicio: Record<string, Modalidad40YearData>;\n  limites_salario: ModalidadLimitesSalario;\n};\n""",
+          """type ModalidadLimitesSalario = {\n  maximo_uma: number;\n  minimo_regla?: string;\n};\n\ntype Modalidad40Data = {\n  descripcion: string;\n  verification?: string;\n  requisitos: Record<string, number | string | boolean>;\n  calculo: {\n    componentes_constantes: Record<string, number>;\n    ceav_patronal: { source_path: string; selection: string };\n  };\n  referencia_por_ejercicio: Record<\n    string,\n    {\n      vigencia_desde: string;\n      vigencia_hasta: string;\n      tasa_total_banda_4_01_uma_en_adelante: number;\n    }\n  >;\n  limites_salario: ModalidadLimitesSalario;\n};\n""")
+
+          old = """    const mod40 = this._tablesData!.modalidad_40;\n    const yearData = mod40.por_ejercicio[year.toString()];\n    if (!yearData) {\n      throw new Error(`No se encontró tarifa de Modalidad 40 para ${year}`);\n    }\n\n    const umaMensual = uma.mensual;\n    const salarioMinimo = umaMensual * mod40.limites_salario.minimo_uma;\n    const salarioMaximo = umaMensual * mod40.limites_salario.maximo_uma;\n\n    if (salarioBaseCotizacion < salarioMinimo) {\n      salarioBaseCotizacion = salarioMinimo;\n    } else if (salarioBaseCotizacion > salarioMaximo) {\n      salarioBaseCotizacion = salarioMaximo;\n    }\n\n    const porcentajeTotal = yearData.porcentaje_total;\n    const cuotaMensual = salarioBaseCotizacion * porcentajeTotal;\n    const componentes: Record<string, number> = {};\n    for (const [key, value] of Object.entries(yearData.componentes)) {\n      componentes[key] = salarioBaseCotizacion * value;\n    }\n"""
+          new = """    const mod40 = this._tablesData!.modalidad_40;\n    const yearReference = mod40.referencia_por_ejercicio[year.toString()];\n    if (!yearReference) {\n      throw new Error(`No se encontró tarifa de Modalidad 40 para ${year}`);\n    }\n\n    const umaMensual = uma.mensual;\n    const salarioMaximo = umaMensual * mod40.limites_salario.maximo_uma;\n    if (salarioBaseCotizacion > salarioMaximo) {\n      salarioBaseCotizacion = salarioMaximo;\n    }\n\n    const ratioUma = salarioBaseCotizacion / umaMensual;\n    const ceavPatronRate = this.getCEAVPatronRateForUmaRatio(ratioUma, year);\n    const componentes: Record<string, number> = {};\n    let porcentajeTotal = ceavPatronRate;\n    componentes.cesantia_vejez_patron = salarioBaseCotizacion * ceavPatronRate;\n    for (const [key, value] of Object.entries(mod40.calculo.componentes_constantes)) {\n      porcentajeTotal += value;\n      componentes[key] = salarioBaseCotizacion * value;\n    }\n    const cuotaMensual = salarioBaseCotizacion * porcentajeTotal;\n"""
+          if old not in src:
+              raise SystemExit('Modalidad 40 implementation block not found')
+          src = src.replace(old, new)
+
+          marker = """  /**\n   * Calcula cuotas obrero-patronales.\n"""
+          helper = """  private static getCEAVPatronRateForUmaRatio(ratioUma: number, year: IMSSYear): number {\n    const rates =\n      this._tablesData!.cuotas_imss.retiro_cesantia_vejez.cesantia_vejez.patron_por_ejercicio[\n        year.toString()\n      ];\n    if (!rates || rates.length !== 8) {\n      throw new Error(`No se encontró tarifa CEAV patronal para ${year}`);\n    }\n    if (ratioUma <= 1.5) return rates[1].tasa;\n    if (ratioUma <= 2.0) return rates[2].tasa;\n    if (ratioUma <= 2.5) return rates[3].tasa;\n    if (ratioUma <= 3.0) return rates[4].tasa;\n    if (ratioUma <= 3.5) return rates[5].tasa;\n    if (ratioUma <= 4.0) return rates[6].tasa;\n    return rates[7].tasa;\n  }\n\n"""
+          if helper not in src:
+              if marker not in src:
+                  raise SystemExit('helper insertion marker not found')
+              src = src.replace(marker, helper + marker)
+          src_path.write_text(src, encoding='utf-8')
+
+          vectors_path = Path('packages/shared-data/tests/imss_vectors.json')
+          vectors = json.loads(vectors_path.read_text(encoding='utf-8'))
+          m40 = vectors['modalidad_40']
+          m40[1]['expected'] = {'cuota_mensual': 1498.08, 'porcentaje_total': 0.12484}
+          m40[2]['expected'] = {'cuota_mensual': 1168.1, 'porcentaje_total': 0.11681}
+          vectors_path.write_text(json.dumps(vectors, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          test_path = Path('packages/typescript/tests/fiscal-history.test.ts')
+          test = test_path.read_text(encoding='utf-8')
+          test = test.replace(
+              "expect(IMSSCalculator.calcularModalidad40(10000, 2024).porcentaje_total).toBe(0.12256);\n    expect(IMSSCalculator.calcularModalidad40(10000, 2025).porcentaje_total).toBe(0.13347);\n    expect(IMSSCalculator.calcularModalidad40(10000, 2026).porcentaje_total).toBe(0.14438);",
+              "expect(IMSSCalculator.calcularModalidad40(10000, 2024).porcentaje_total).toBe(0.11681);\n    expect(IMSSCalculator.calcularModalidad40(12000, 2025).porcentaje_total).toBe(0.12484);\n    expect(IMSSCalculator.calcularModalidad40(15000, 2026).porcentaje_total).toBe(0.14438);"
+          )
+          test_path.write_text(test, encoding='utf-8')
+          PY
+          cd packages/typescript
+          npm ci
+          npx prettier --write src/calculators/imss-calculator.ts tests/fiscal-history.test.ts
+      - name: Commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'catalogmx-data[bot]'
+          git config user.email 'catalogmx-data[bot]@users.noreply.github.com'
+          git add packages/shared-data/imss-tables.json packages/shared-data/tests/imss_vectors.json packages/typescript/src/calculators/imss-calculator.ts packages/typescript/tests/fiscal-history.test.ts
+          git commit -m 'fix(ts): derive modalidad 40 from historical CEAV'
+          git push origin HEAD:fix/fiscal-integrity-2026
