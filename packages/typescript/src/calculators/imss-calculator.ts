@@ -246,15 +246,12 @@ export class IMSSCalculator {
    * La fila "1 SM" se trata como caso especial. Para los demás salarios,
    * la reforma de pensiones clasifica el SBC en veces UMA.
    */
-  static getCEAVPatronRate(
-    salarioDiario: number,
-    year: IMSSYear,
-    fecha?: string | Date
-  ): number {
+  static getCEAVPatronRate(salarioDiario: number, year: IMSSYear, fecha?: string | Date): number {
     this.loadTablesData();
     const rates =
-      this._tablesData!.cuotas_imss.retiro_cesantia_vejez.cesantia_vejez
-        .patron_por_ejercicio[year.toString()];
+      this._tablesData!.cuotas_imss.retiro_cesantia_vejez.cesantia_vejez.patron_por_ejercicio[
+        year.toString()
+      ];
     if (!rates || rates.length !== 8) {
       throw new Error(`No se encontró tarifa CEAV patronal para ${year}`);
     }
@@ -303,8 +300,7 @@ export class IMSSCalculator {
 
     // Enfermedades y maternidad: cuota fija = 20.4% de una UMA por día.
     const em = cuotas.enfermedad_maternidad;
-    cuotasPatron.enfermedad_mat_cuota_fija =
-      umaDiaria * dias * em.prestaciones_en_especie.patron;
+    cuotasPatron.enfermedad_mat_cuota_fija = umaDiaria * dias * em.prestaciones_en_especie.patron;
 
     // Excedente únicamente sobre la parte del SBC diario que rebasa 3 UMA.
     const threshold = (em.prestaciones_en_especie_excedente.umbral_uma ?? 3) * umaDiaria;
@@ -315,11 +311,9 @@ export class IMSSCalculator {
       excedenteBase * em.prestaciones_en_especie_excedente.trabajador;
 
     cuotasPatron.enfermedad_mat_dinero = salarioBase * em.prestaciones_en_dinero.patron;
-    cuotasTrabajador.enfermedad_mat_dinero =
-      salarioBase * em.prestaciones_en_dinero.trabajador;
+    cuotasTrabajador.enfermedad_mat_dinero = salarioBase * em.prestaciones_en_dinero.trabajador;
 
-    cuotasPatron.gastos_medicos_pensionados =
-      salarioBase * em.gastos_medicos_pensionados.patron;
+    cuotasPatron.gastos_medicos_pensionados = salarioBase * em.gastos_medicos_pensionados.patron;
     cuotasTrabajador.gastos_medicos_pensionados =
       salarioBase * em.gastos_medicos_pensionados.trabajador;
 

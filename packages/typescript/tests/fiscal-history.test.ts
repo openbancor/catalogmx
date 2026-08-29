@@ -31,20 +31,8 @@ describe('historical fiscal parameters', () => {
   });
 
   test('uses 2026 CEAV in January while keeping the still-valid 2025 UMA', () => {
-    const january = IMSSCalculator.calcularCuotasObreroPatronales(
-      500,
-      30,
-      2026,
-      2,
-      '2026-01-15'
-    );
-    const february = IMSSCalculator.calcularCuotasObreroPatronales(
-      500,
-      30,
-      2026,
-      2,
-      '2026-02-15'
-    );
+    const january = IMSSCalculator.calcularCuotasObreroPatronales(500, 30, 2026, 2, '2026-01-15');
+    const february = IMSSCalculator.calcularCuotasObreroPatronales(500, 30, 2026, 2, '2026-02-15');
 
     expect(january.uma_diaria).toBe(113.14);
     expect(february.uma_diaria).toBe(117.31);
