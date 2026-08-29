@@ -94,6 +94,15 @@ describe('small catalog endpoints', () => {
 
     expect(response.status).toBe(404);
   });
+
+  test.each(['/api/v1/catalogs/sat/nomina/', '/api/v1/catalogs/unknown/catalog'])(
+    'returns 404 for an unknown catalog route: %s',
+    async (path) => {
+      const response = await handleCatalogRequest(catalogRequest(path), authorizedEnv());
+
+      expect(response.status).toBe(404);
+    }
+  );
 });
 
 describe('large D1-backed catalogs', () => {
@@ -177,5 +186,21 @@ describe('large D1-backed catalogs', () => {
     );
 
     expect(response.status).toBe(503);
+  });
+
+  test.each([
+    '/api/v1/catalogs/sepomex/codigos-postales?cp=bad',
+    '/api/v1/catalogs/sepomex/codigos-postales?cp=06700&q=',
+    `/api/v1/catalogs/sepomex/codigos-postales?cp=06700&q=${'x'.repeat(101)}`,
+    '/api/v1/catalogs/sat/cfdi/clave-prod-serv?clave=bad',
+    '/api/v1/catalogs/sat/cfdi/clave-prod-serv?q=',
+    `/api/v1/catalogs/sat/cfdi/clave-prod-serv?q=${'x'.repeat(101)}`,
+  ])('rejects an invalid large-catalog selector: %s', async (path) => {
+    const response = await handleCatalogRequest(catalogRequest(path), {
+      ...authorizedEnv(),
+      CATALOG_DB: new RecordingD1(),
+    });
+
+    expect(response.status).toBe(400);
   });
 });

@@ -50,6 +50,27 @@ describe('identifier validation adapters', () => {
     });
   });
 
+  test('omits details for a malformed CLABE and omits unknown bank metadata', () => {
+    expect(validateIdentifier('clabe', { value: '12345' })).toEqual({
+      value: '12345',
+      valid: false,
+    });
+    expect(validateIdentifier('clabe', { value: '999000000000000000' })).toMatchObject({
+      value: '999000000000000000',
+      valid: false,
+      details: expect.any(Object),
+    });
+    expect(validateIdentifier('clabe', { value: '999000000000000000' })).not.toHaveProperty(
+      'banco'
+    );
+  });
+
+  test('does not dispatch an unsupported validator kind', () => {
+    expect(() => validateIdentifier('unknown' as never, { value: 'value' })).toThrow(
+      expect.objectContaining({ status: 404, code: 'not_found' })
+    );
+  });
+
   test('preloads small data through the existing CatalogMX loader seam', () => {
     expect(loadCatalogRows('inegi/states.json')).toHaveLength(33);
     expect(loadCatalogRows('sat/nomina_1.2/tipo_nomina.json')).toHaveLength(2);

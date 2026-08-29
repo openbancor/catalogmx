@@ -42,10 +42,26 @@ describe('ISR calculation adapter', () => {
       { base_gravable: 15000, periodo: 'mensual', ejercicio: 2026, rfc: 'BACL891217NJ5' },
       'invalid_request',
     ],
+    [{ base_gravable: 15000, periodo: 123, ejercicio: 2026 }, 'invalid_request'],
+    [{ base_gravable: 15000, periodo: 'mensual', ejercicio: 1899 }, 'invalid_request'],
+    [{ base_gravable: 1_000_000_001, periodo: 'mensual', ejercicio: 2026 }, 'invalid_request'],
   ])('rejects invalid ISR input %j with %s', (body, code) => {
     expect(() => calculateIsr(body)).toThrow(
       expect.objectContaining({ status: code === 'invalid_request' ? 400 : 422, code })
     );
+  });
+
+  test('uses the monthly table path for a supported pre-2026 exercise', () => {
+    const result = calculateIsr({ base_gravable: 15000, periodo: 'semanal', ejercicio: 2025 });
+
+    expect(result.ejercicio).toBe(2025);
+    expect(result.tabla_aplicada.ingreso_tabla).toBeGreaterThan(result.resultado.ingreso_gravable);
+  });
+
+  test('reports an open-ended upper limit for the top fiscal bracket', () => {
+    const result = calculateIsr({ base_gravable: 1_000_000, periodo: 'mensual', ejercicio: 2026 });
+
+    expect(result.tabla_aplicada.limite_superior).toBeNull();
   });
 
   test('serializes deterministic output for identical requests', () => {
@@ -89,6 +105,8 @@ describe('IMSS calculation adapter', () => {
     [{ sdi: 500, dias_cotizados: 0.5, ejercicio: 2026 }, 400],
     [{ sdi: 500, dias_cotizados: 30, ejercicio: 2026, nombre: 'Empleado' }, 400],
     [{ sdi: Number.POSITIVE_INFINITY, dias_cotizados: 30, ejercicio: 2026 }, 400],
+    [{ sdi: 500, dias_cotizados: 0, ejercicio: 2026 }, 400],
+    [{ sdi: 1_000_000_001, dias_cotizados: 30, ejercicio: 2026 }, 400],
   ])('rejects invalid IMSS input %j with status %s', (body, status) => {
     expect(() => calculateImss(body)).toThrow(expect.objectContaining({ status }));
   });
