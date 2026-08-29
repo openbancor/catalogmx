@@ -1,5 +1,5 @@
 export type ApiErrorCode =
-  | 'bad_request'
+  | 'invalid_request'
   | 'unauthorized'
   | 'not_found'
   | 'method_not_allowed'
