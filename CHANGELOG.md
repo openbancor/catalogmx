@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- N1 Cloudflare Worker API under `packages/api-worker` with authenticated RFC, CURP, CLABE, NSS, ISR, IMSS, SAT, INEGI, and SEPOMEX endpoints.
+- Deterministic D1 migration/query layer for large postal-code and SAT product/service catalogs, plus production-only deployment instructions.
+- Worker lint, typecheck, Jest coverage, and Wrangler dry-run gates with package coverage above 90%.
+
 ## [0.5.1] - 2026-02-04
 
 ### Fixed

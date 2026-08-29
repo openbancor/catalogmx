@@ -14,7 +14,7 @@
 
 Create the following focused files:
 
-- `packages/api-worker/package.json`, `package-lock.json`, `tsconfig.json`, `jest.config.cjs`, `.eslintrc.cjs`, `.prettierrc.json`: package scripts, compiler/test/lint configuration, and pinned dependencies.
+- `packages/api-worker/package.json`, `package-lock.json`, `tsconfig.json`, `jest.config.cjs`, `eslint.config.cjs`, `.prettierrc.json`: package scripts, compiler/test/lint configuration, and pinned dependencies.
 - `packages/api-worker/wrangler.toml`: non-production Worker/D1/rate-limit template with an explicit placeholder database id.
 - `packages/api-worker/src/types.ts`: Worker environment, limiter, D1, route, and response types.
 - `packages/api-worker/src/errors.ts`: typed public API errors and stable JSON responses.
@@ -42,7 +42,7 @@ No production Cloudflare resource, secret, D1 import, route, or deployment comma
 - Create: `packages/api-worker/package.json`
 - Create: `packages/api-worker/tsconfig.json`
 - Create: `packages/api-worker/jest.config.cjs`
-- Create: `packages/api-worker/.eslintrc.cjs`
+- Create: `packages/api-worker/eslint.config.cjs`
 - Create: `packages/api-worker/.prettierrc.json`
 - Create: `packages/api-worker/wrangler.toml`
 - Create: `packages/api-worker/tests/helpers.ts`
@@ -60,7 +60,7 @@ Expected: Jest fails because `src/index` does not exist yet; no implementation f
 
 - [ ] **Step 3: Add only package configuration and the test environment**
 
-Configure scripts `lint`, `format:check`, `typecheck`, `test`, `test:coverage`, `build`, and `validate`. Use `wrangler deploy --dry-run --outdir dist` for the Worker bundle, `jest --coverage` with a 90% global threshold, and TypeScript `strict`, `noUnusedLocals`, `noUnusedParameters`, `resolveJsonModule`, and `moduleResolution: bundler`. The test helper exports `TEST_API_KEY`, a SHA-256 record, `authorizedEnv()`, and a typed D1 fake without implementing production behavior.
+Configure scripts `lint`, `format:check`, `typecheck`, `test`, `test:coverage`, `build`, and `validate`. Use `wrangler deploy --dry-run --outdir dist` for the Worker bundle, `jest --coverage` with a 90% global threshold, and TypeScript `strict`, `noUnusedLocals`, `noUnusedParameters`, `resolveJsonModule`, and `moduleResolution: node` so the Worker can consume the existing TypeScript source seam directly. The test helper exports `TEST_API_KEY`, a SHA-256 record, `authorizedEnv()`, and a typed D1 fake without implementing production behavior.
 
 - [ ] **Step 4: Run the test again and keep it red for the missing Worker entrypoint**
 
@@ -73,7 +73,7 @@ Expected: the harness loads, then fails with a missing `src/index` module. This 
 Run:
 
 ```bash
-git add packages/api-worker/package.json packages/api-worker/tsconfig.json packages/api-worker/jest.config.cjs packages/api-worker/.eslintrc.cjs packages/api-worker/.prettierrc.json packages/api-worker/wrangler.toml packages/api-worker/tests/helpers.ts packages/api-worker/tests/router.test.ts
+git add packages/api-worker/package.json packages/api-worker/tsconfig.json packages/api-worker/jest.config.cjs packages/api-worker/eslint.config.cjs packages/api-worker/.prettierrc.json packages/api-worker/wrangler.toml packages/api-worker/tests/helpers.ts packages/api-worker/tests/router.test.ts
 git commit -m "chore(api): scaffold worker package and test harness"
 ```
 
