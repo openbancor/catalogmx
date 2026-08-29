@@ -1,0 +1,2348 @@
+{
+  "content_sha256": "8db603c9697a74cda8cd1c2c944debdf9cf0c8cb77feb56f998d57d10c1a8ff3",
+  "datasets": {
+    "imss_base_rates": {
+      "entries": {
+        "2024": {
+          "exercise": 2024,
+          "notes": "Shared statutory rates; CEAV employer schedule is versioned separately.",
+          "sha256": "f3056d25edc2058301301f13f036f740af94eef5ed7b65ee7a932d2d8ab9f6d3",
+          "source_ids": [
+            "lss"
+          ],
+          "status": "verified",
+          "valid_from": "2024-01-01",
+          "valid_to": "2024-12-31",
+          "values": {
+            "enfermedad_maternidad": {
+              "gastos_medicos_pensionados": {
+                "base": "salario",
+                "descripcion": "Gastos médicos para pensionados",
+                "patron": 0.0105,
+                "trabajador": 0.00375
+              },
+              "prestaciones_en_dinero": {
+                "base": "salario",
+                "descripcion": "Prestaciones en dinero",
+                "patron": 0.007,
+                "trabajador": 0.0025
+              },
+              "prestaciones_en_especie": {
+                "base": "uma_diaria",
+                "descripcion": "Prestaciones en especie (cuota fija)",
+                "patron": 0.204,
+                "trabajador": 0.0
+              },
+              "prestaciones_en_especie_excedente": {
+                "base": "excedente_sbc_diario",
+                "descripcion": "Prestaciones en especie (excedente de 3 UMA)",
+                "patron": 0.011,
+                "trabajador": 0.004,
+                "umbral_uma": 3
+              }
+            },
+            "guarderias_prestaciones_sociales": {
+              "base": "salario",
+              "descripcion": "Guarderías y prestaciones sociales",
+              "patron": 0.01,
+              "trabajador": 0.0
+            },
+            "invalidez_vida": {
+              "base": "salario",
+              "descripcion": "Invalidez y vida",
+              "patron": 0.0175,
+              "trabajador": 0.00625
+            },
+            "retiro": {
+              "base": "salario",
+              "descripcion": "Retiro",
+              "patron": 0.02,
+              "trabajador": 0.0
+            },
+            "riesgo_trabajo": {
+              "base": "salario",
+              "clase_1": 0.0054355,
+              "clase_2": 0.0113065,
+              "clase_3": 0.025984,
+              "clase_4": 0.0465325,
+              "clase_5": 0.0758875,
+              "descripcion": "Riesgos de trabajo (prima media de clase para inscripción inicial; la prima real depende de siniestralidad)",
+              "maxima": 0.15,
+              "minima": 0.005
+            }
+          }
+        },
+        "2025": {
+          "exercise": 2025,
+          "notes": "Shared statutory rates; CEAV employer schedule is versioned separately.",
+          "sha256": "f3056d25edc2058301301f13f036f740af94eef5ed7b65ee7a932d2d8ab9f6d3",
+          "source_ids": [
+            "lss"
+          ],
+          "status": "verified",
+          "valid_from": "2025-01-01",
+          "valid_to": "2025-12-31",
+          "values": {
+            "enfermedad_maternidad": {
+              "gastos_medicos_pensionados": {
+                "base": "salario",
+                "descripcion": "Gastos médicos para pensionados",
+                "patron": 0.0105,
+                "trabajador": 0.00375
+              },
+              "prestaciones_en_dinero": {
+                "base": "salario",
+                "descripcion": "Prestaciones en dinero",
+                "patron": 0.007,
+                "trabajador": 0.0025
+              },
+              "prestaciones_en_especie": {
+                "base": "uma_diaria",
+                "descripcion": "Prestaciones en especie (cuota fija)",
+                "patron": 0.204,
+                "trabajador": 0.0
+              },
+              "prestaciones_en_especie_excedente": {
+                "base": "excedente_sbc_diario",
+                "descripcion": "Prestaciones en especie (excedente de 3 UMA)",
+                "patron": 0.011,
+                "trabajador": 0.004,
+                "umbral_uma": 3
+              }
+            },
+            "guarderias_prestaciones_sociales": {
+              "base": "salario",
+              "descripcion": "Guarderías y prestaciones sociales",
+              "patron": 0.01,
+              "trabajador": 0.0
+            },
+            "invalidez_vida": {
+              "base": "salario",
+              "descripcion": "Invalidez y vida",
+              "patron": 0.0175,
+              "trabajador": 0.00625
+            },
+            "retiro": {
+              "base": "salario",
+              "descripcion": "Retiro",
+              "patron": 0.02,
+              "trabajador": 0.0
+            },
+            "riesgo_trabajo": {
+              "base": "salario",
+              "clase_1": 0.0054355,
+              "clase_2": 0.0113065,
+              "clase_3": 0.025984,
+              "clase_4": 0.0465325,
+              "clase_5": 0.0758875,
+              "descripcion": "Riesgos de trabajo (prima media de clase para inscripción inicial; la prima real depende de siniestralidad)",
+              "maxima": 0.15,
+              "minima": 0.005
+            }
+          }
+        },
+        "2026": {
+          "exercise": 2026,
+          "notes": "Shared statutory rates; CEAV employer schedule is versioned separately.",
+          "sha256": "f3056d25edc2058301301f13f036f740af94eef5ed7b65ee7a932d2d8ab9f6d3",
+          "source_ids": [
+            "lss"
+          ],
+          "status": "verified",
+          "valid_from": "2026-01-01",
+          "valid_to": "2026-12-31",
+          "values": {
+            "enfermedad_maternidad": {
+              "gastos_medicos_pensionados": {
+                "base": "salario",
+                "descripcion": "Gastos médicos para pensionados",
+                "patron": 0.0105,
+                "trabajador": 0.00375
+              },
+              "prestaciones_en_dinero": {
+                "base": "salario",
+                "descripcion": "Prestaciones en dinero",
+                "patron": 0.007,
+                "trabajador": 0.0025
+              },
+              "prestaciones_en_especie": {
+                "base": "uma_diaria",
+                "descripcion": "Prestaciones en especie (cuota fija)",
+                "patron": 0.204,
+                "trabajador": 0.0
+              },
+              "prestaciones_en_especie_excedente": {
+                "base": "excedente_sbc_diario",
+                "descripcion": "Prestaciones en especie (excedente de 3 UMA)",
+                "patron": 0.011,
+                "trabajador": 0.004,
+                "umbral_uma": 3
+              }
+            },
+            "guarderias_prestaciones_sociales": {
+              "base": "salario",
+              "descripcion": "Guarderías y prestaciones sociales",
+              "patron": 0.01,
+              "trabajador": 0.0
+            },
+            "invalidez_vida": {
+              "base": "salario",
+              "descripcion": "Invalidez y vida",
+              "patron": 0.0175,
+              "trabajador": 0.00625
+            },
+            "retiro": {
+              "base": "salario",
+              "descripcion": "Retiro",
+              "patron": 0.02,
+              "trabajador": 0.0
+            },
+            "riesgo_trabajo": {
+              "base": "salario",
+              "clase_1": 0.0054355,
+              "clase_2": 0.0113065,
+              "clase_3": 0.025984,
+              "clase_4": 0.0465325,
+              "clase_5": 0.0758875,
+              "descripcion": "Riesgos de trabajo (prima media de clase para inscripción inicial; la prima real depende de siniestralidad)",
+              "maxima": 0.15,
+              "minima": 0.005
+            }
+          }
+        }
+      },
+      "kind": "rate_schedule",
+      "owner": "IMSS / Congreso de la Unión"
+    },
+    "imss_ceav": {
+      "entries": {
+        "2024": {
+          "exercise": 2024,
+          "sha256": "f32080da06de1279c132355933dd8f6b51385ac4c1c3d626fa3155259478d5cb",
+          "source_ids": [
+            "lss",
+            "reforma_pensiones_2020"
+          ],
+          "status": "verified",
+          "valid_from": "2024-01-01",
+          "valid_to": "2024-12-31",
+          "values": {
+            "employer_rates": [
+              {
+                "rango": "1_sm",
+                "tasa": 0.0315
+              },
+              {
+                "rango": "1_01_sm_a_1_50_uma",
+                "tasa": 0.03413
+              },
+              {
+                "rango": "1_51_a_2_00_uma",
+                "tasa": 0.04
+              },
+              {
+                "rango": "2_01_a_2_50_uma",
+                "tasa": 0.04353
+              },
+              {
+                "rango": "2_51_a_3_00_uma",
+                "tasa": 0.04588
+              },
+              {
+                "rango": "3_01_a_3_50_uma",
+                "tasa": 0.04756
+              },
+              {
+                "rango": "3_51_a_4_00_uma",
+                "tasa": 0.04882
+              },
+              {
+                "rango": "4_01_uma_en_adelante",
+                "tasa": 0.05331
+              }
+            ],
+            "worker_rate": 0.01125
+          }
+        },
+        "2025": {
+          "exercise": 2025,
+          "sha256": "bbf4aa54e27c6c191fe98f4bba338382d9ddca39b68448458b40616f85a554c8",
+          "source_ids": [
+            "lss",
+            "reforma_pensiones_2020"
+          ],
+          "status": "verified",
+          "valid_from": "2025-01-01",
+          "valid_to": "2025-12-31",
+          "values": {
+            "employer_rates": [
+              {
+                "rango": "1_sm",
+                "tasa": 0.0315
+              },
+              {
+                "rango": "1_01_sm_a_1_50_uma",
+                "tasa": 0.03544
+              },
+              {
+                "rango": "1_51_a_2_00_uma",
+                "tasa": 0.04426
+              },
+              {
+                "rango": "2_01_a_2_50_uma",
+                "tasa": 0.04954
+              },
+              {
+                "rango": "2_51_a_3_00_uma",
+                "tasa": 0.05307
+              },
+              {
+                "rango": "3_01_a_3_50_uma",
+                "tasa": 0.05559
+              },
+              {
+                "rango": "3_51_a_4_00_uma",
+                "tasa": 0.05747
+              },
+              {
+                "rango": "4_01_uma_en_adelante",
+                "tasa": 0.06422
+              }
+            ],
+            "worker_rate": 0.01125
+          }
+        },
+        "2026": {
+          "exercise": 2026,
+          "sha256": "f14ec97892d820a9f2efa698e204875f3889cac5a19d26ea4ce36b66d6fd03f7",
+          "source_ids": [
+            "lss",
+            "reforma_pensiones_2020"
+          ],
+          "status": "verified",
+          "valid_from": "2026-01-01",
+          "valid_to": "2026-12-31",
+          "values": {
+            "employer_rates": [
+              {
+                "rango": "1_sm",
+                "tasa": 0.0315
+              },
+              {
+                "rango": "1_01_sm_a_1_50_uma",
+                "tasa": 0.03676
+              },
+              {
+                "rango": "1_51_a_2_00_uma",
+                "tasa": 0.04851
+              },
+              {
+                "rango": "2_01_a_2_50_uma",
+                "tasa": 0.05556
+              },
+              {
+                "rango": "2_51_a_3_00_uma",
+                "tasa": 0.06026
+              },
+              {
+                "rango": "3_01_a_3_50_uma",
+                "tasa": 0.06361
+              },
+              {
+                "rango": "3_51_a_4_00_uma",
+                "tasa": 0.06613
+              },
+              {
+                "rango": "4_01_uma_en_adelante",
+                "tasa": 0.07513
+              }
+            ],
+            "worker_rate": 0.01125
+          }
+        }
+      },
+      "kind": "rate_schedule",
+      "owner": "IMSS / Congreso de la Unión"
+    },
+    "imss_modalidad_10": {
+      "entries": {
+        "2024": {
+          "exercise": 2024,
+          "notes": "Retained for compatibility; source/formula audit is not complete.",
+          "sha256": "0016a47aa0f96aa81d18fe6484e380da055bf9ac7ebdea584631838a66390cb5",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "pending_review",
+          "valid_from": "2024-01-01",
+          "valid_to": "2024-12-31",
+          "values": {
+            "beneficios": [
+              "Seguro de enfermedades y maternidad",
+              "Seguro de riesgos de trabajo",
+              "Seguro de invalidez y vida",
+              "Seguro de retiro, cesantía y vejez",
+              "Guarderías y prestaciones sociales"
+            ],
+            "cuota_mensual": {
+              "componentes": {
+                "cesantia_vejez": 0.04275,
+                "gastos_medicos_pensionados": 0.01425,
+                "guarderias": 0.01,
+                "invalidez_vida": 0.02375,
+                "prestaciones_dinero": 0.0095,
+                "prestaciones_en_especie_fija": "3.3 UMAs"
+              },
+              "cuota_fija_uma_factor": 3.3,
+              "formula": "salario_base_cotizacion × tasa_total + cuota_fija_uma",
+              "porcentaje_variable": 0.1047
+            },
+            "descripcion": "Incorporación voluntaria al régimen obligatorio (trabajadores independientes)",
+            "limites_salario": {
+              "maximo_uma": 25,
+              "minimo_uma": 1
+            },
+            "requisitos": {
+              "edad_maxima": 60,
+              "edad_minima": 16,
+              "mexicano_o_extranjero_residente": true,
+              "no_cotizar_obligatorio": true
+            },
+            "verification": "legacy_pending_review"
+          }
+        },
+        "2025": {
+          "exercise": 2025,
+          "notes": "Retained for compatibility; source/formula audit is not complete.",
+          "sha256": "0016a47aa0f96aa81d18fe6484e380da055bf9ac7ebdea584631838a66390cb5",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "pending_review",
+          "valid_from": "2025-01-01",
+          "valid_to": "2025-12-31",
+          "values": {
+            "beneficios": [
+              "Seguro de enfermedades y maternidad",
+              "Seguro de riesgos de trabajo",
+              "Seguro de invalidez y vida",
+              "Seguro de retiro, cesantía y vejez",
+              "Guarderías y prestaciones sociales"
+            ],
+            "cuota_mensual": {
+              "componentes": {
+                "cesantia_vejez": 0.04275,
+                "gastos_medicos_pensionados": 0.01425,
+                "guarderias": 0.01,
+                "invalidez_vida": 0.02375,
+                "prestaciones_dinero": 0.0095,
+                "prestaciones_en_especie_fija": "3.3 UMAs"
+              },
+              "cuota_fija_uma_factor": 3.3,
+              "formula": "salario_base_cotizacion × tasa_total + cuota_fija_uma",
+              "porcentaje_variable": 0.1047
+            },
+            "descripcion": "Incorporación voluntaria al régimen obligatorio (trabajadores independientes)",
+            "limites_salario": {
+              "maximo_uma": 25,
+              "minimo_uma": 1
+            },
+            "requisitos": {
+              "edad_maxima": 60,
+              "edad_minima": 16,
+              "mexicano_o_extranjero_residente": true,
+              "no_cotizar_obligatorio": true
+            },
+            "verification": "legacy_pending_review"
+          }
+        },
+        "2026": {
+          "exercise": 2026,
+          "notes": "Retained for compatibility; source/formula audit is not complete.",
+          "sha256": "0016a47aa0f96aa81d18fe6484e380da055bf9ac7ebdea584631838a66390cb5",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "pending_review",
+          "valid_from": "2026-01-01",
+          "valid_to": "2026-12-31",
+          "values": {
+            "beneficios": [
+              "Seguro de enfermedades y maternidad",
+              "Seguro de riesgos de trabajo",
+              "Seguro de invalidez y vida",
+              "Seguro de retiro, cesantía y vejez",
+              "Guarderías y prestaciones sociales"
+            ],
+            "cuota_mensual": {
+              "componentes": {
+                "cesantia_vejez": 0.04275,
+                "gastos_medicos_pensionados": 0.01425,
+                "guarderias": 0.01,
+                "invalidez_vida": 0.02375,
+                "prestaciones_dinero": 0.0095,
+                "prestaciones_en_especie_fija": "3.3 UMAs"
+              },
+              "cuota_fija_uma_factor": 3.3,
+              "formula": "salario_base_cotizacion × tasa_total + cuota_fija_uma",
+              "porcentaje_variable": 0.1047
+            },
+            "descripcion": "Incorporación voluntaria al régimen obligatorio (trabajadores independientes)",
+            "limites_salario": {
+              "maximo_uma": 25,
+              "minimo_uma": 1
+            },
+            "requisitos": {
+              "edad_maxima": 60,
+              "edad_minima": 16,
+              "mexicano_o_extranjero_residente": true,
+              "no_cotizar_obligatorio": true
+            },
+            "verification": "legacy_pending_review"
+          }
+        }
+      },
+      "kind": "legacy_calculation_model",
+      "owner": "IMSS"
+    },
+    "imss_modalidad_40": {
+      "entries": {
+        "2024": {
+          "exercise": 2024,
+          "sha256": "aa1b707c788ec09a2beb7bf389943f0fce148093339fdb10c404b1ff0f4b76ce",
+          "source_ids": [
+            "lss",
+            "reforma_pensiones_2020"
+          ],
+          "status": "verified",
+          "valid_from": "2024-01-01",
+          "valid_to": "2024-12-31",
+          "values": {
+            "ceav_employer_rates": [
+              {
+                "rango": "1_sm",
+                "tasa": 0.0315
+              },
+              {
+                "rango": "1_01_sm_a_1_50_uma",
+                "tasa": 0.03413
+              },
+              {
+                "rango": "1_51_a_2_00_uma",
+                "tasa": 0.04
+              },
+              {
+                "rango": "2_01_a_2_50_uma",
+                "tasa": 0.04353
+              },
+              {
+                "rango": "2_51_a_3_00_uma",
+                "tasa": 0.04588
+              },
+              {
+                "rango": "3_01_a_3_50_uma",
+                "tasa": 0.04756
+              },
+              {
+                "rango": "3_51_a_4_00_uma",
+                "tasa": 0.04882
+              },
+              {
+                "rango": "4_01_uma_en_adelante",
+                "tasa": 0.05331
+              }
+            ],
+            "constant_components": {
+              "cesantia_vejez_trabajador": 0.01125,
+              "gastos_medicos_pensionados_patron": 0.0105,
+              "gastos_medicos_pensionados_trabajador": 0.00375,
+              "invalidez_vida_patron": 0.0175,
+              "invalidez_vida_trabajador": 0.00625,
+              "retiro_patron": 0.02
+            },
+            "maximum_sbc_uma": 25,
+            "minimum_rule": "no_inferior_al_ultimo_sbc_registrado",
+            "reference_top_band_total_rate": 0.12256
+          }
+        },
+        "2025": {
+          "exercise": 2025,
+          "sha256": "103b00ae80f4492b31195be9adfe62aa22c5a03d1209ce736e61b0e036713441",
+          "source_ids": [
+            "lss",
+            "reforma_pensiones_2020"
+          ],
+          "status": "verified",
+          "valid_from": "2025-01-01",
+          "valid_to": "2025-12-31",
+          "values": {
+            "ceav_employer_rates": [
+              {
+                "rango": "1_sm",
+                "tasa": 0.0315
+              },
+              {
+                "rango": "1_01_sm_a_1_50_uma",
+                "tasa": 0.03544
+              },
+              {
+                "rango": "1_51_a_2_00_uma",
+                "tasa": 0.04426
+              },
+              {
+                "rango": "2_01_a_2_50_uma",
+                "tasa": 0.04954
+              },
+              {
+                "rango": "2_51_a_3_00_uma",
+                "tasa": 0.05307
+              },
+              {
+                "rango": "3_01_a_3_50_uma",
+                "tasa": 0.05559
+              },
+              {
+                "rango": "3_51_a_4_00_uma",
+                "tasa": 0.05747
+              },
+              {
+                "rango": "4_01_uma_en_adelante",
+                "tasa": 0.06422
+              }
+            ],
+            "constant_components": {
+              "cesantia_vejez_trabajador": 0.01125,
+              "gastos_medicos_pensionados_patron": 0.0105,
+              "gastos_medicos_pensionados_trabajador": 0.00375,
+              "invalidez_vida_patron": 0.0175,
+              "invalidez_vida_trabajador": 0.00625,
+              "retiro_patron": 0.02
+            },
+            "maximum_sbc_uma": 25,
+            "minimum_rule": "no_inferior_al_ultimo_sbc_registrado",
+            "reference_top_band_total_rate": 0.13347
+          }
+        },
+        "2026": {
+          "exercise": 2026,
+          "sha256": "a2873be20c8ef52daa5f57564528d2558057d5ebf8d48296e2ecf7e8fe5265b9",
+          "source_ids": [
+            "lss",
+            "reforma_pensiones_2020"
+          ],
+          "status": "verified",
+          "valid_from": "2026-01-01",
+          "valid_to": "2026-12-31",
+          "values": {
+            "ceav_employer_rates": [
+              {
+                "rango": "1_sm",
+                "tasa": 0.0315
+              },
+              {
+                "rango": "1_01_sm_a_1_50_uma",
+                "tasa": 0.03676
+              },
+              {
+                "rango": "1_51_a_2_00_uma",
+                "tasa": 0.04851
+              },
+              {
+                "rango": "2_01_a_2_50_uma",
+                "tasa": 0.05556
+              },
+              {
+                "rango": "2_51_a_3_00_uma",
+                "tasa": 0.06026
+              },
+              {
+                "rango": "3_01_a_3_50_uma",
+                "tasa": 0.06361
+              },
+              {
+                "rango": "3_51_a_4_00_uma",
+                "tasa": 0.06613
+              },
+              {
+                "rango": "4_01_uma_en_adelante",
+                "tasa": 0.07513
+              }
+            ],
+            "constant_components": {
+              "cesantia_vejez_trabajador": 0.01125,
+              "gastos_medicos_pensionados_patron": 0.0105,
+              "gastos_medicos_pensionados_trabajador": 0.00375,
+              "invalidez_vida_patron": 0.0175,
+              "invalidez_vida_trabajador": 0.00625,
+              "retiro_patron": 0.02
+            },
+            "maximum_sbc_uma": 25,
+            "minimum_rule": "no_inferior_al_ultimo_sbc_registrado",
+            "reference_top_band_total_rate": 0.14438
+          }
+        }
+      },
+      "kind": "derived_rate_schedule",
+      "owner": "IMSS / Congreso de la Unión"
+    },
+    "isr_payroll": {
+      "entries": {
+        "2024": {
+          "exercise": 2024,
+          "notes": "Requires source-by-source Anexo 8/subsidy audit before payroll use.",
+          "sha256": "ce9eda706de4cf912d142d11f1a71788a4a1d15c58b823c46c0b62a8ef582e06",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "pending_review",
+          "valid_from": "2024-01-01",
+          "valid_to": "2024-12-31",
+          "values": {
+            "brackets": {
+              "annual": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 8952.49,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 171.88,
+                  "limiteInferior": 8952.5,
+                  "limiteSuperior": 75984.55,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 4461.94,
+                  "limiteInferior": 75984.56,
+                  "limiteSuperior": 133536.07,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 10723.55,
+                  "limiteInferior": 133536.08,
+                  "limiteSuperior": 155229.8,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 14194.54,
+                  "limiteInferior": 155229.81,
+                  "limiteSuperior": 185852.57,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 19682.13,
+                  "limiteInferior": 185852.58,
+                  "limiteSuperior": 374837.88,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 60049.4,
+                  "limiteInferior": 374837.89,
+                  "limiteSuperior": 590796.0,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 110842.74,
+                  "limiteInferior": 590796.01,
+                  "limiteSuperior": 1127926.84,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 271981.98,
+                  "limiteInferior": 1127926.85,
+                  "limiteSuperior": 1503902.46,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 392294.23,
+                  "limiteInferior": 1503902.47,
+                  "limiteSuperior": 4511707.37,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 1414947.9,
+                  "limiteInferior": 4511707.38,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ],
+              "biweekly": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 368.1,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 7.07,
+                  "limiteInferior": 368.11,
+                  "limiteSuperior": 3124.35,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 183.45,
+                  "limiteInferior": 3124.36,
+                  "limiteSuperior": 5490.84,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 440.69,
+                  "limiteInferior": 5490.85,
+                  "limiteSuperior": 6382.2,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 583.31,
+                  "limiteInferior": 6382.21,
+                  "limiteSuperior": 7641.95,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 808.87,
+                  "limiteInferior": 7641.96,
+                  "limiteSuperior": 15417.6,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 2469.47,
+                  "limiteInferior": 15417.61,
+                  "limiteSuperior": 24290.7,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 4554.23,
+                  "limiteInferior": 24290.71,
+                  "limiteSuperior": 46381.71,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 11181.54,
+                  "limiteInferior": 46381.72,
+                  "limiteSuperior": 61842.57,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 16128.81,
+                  "limiteInferior": 61842.58,
+                  "limiteSuperior": 185527.61,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 58181.52,
+                  "limiteInferior": 185527.62,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ],
+              "daily": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 24.54,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 0.47,
+                  "limiteInferior": 24.55,
+                  "limiteSuperior": 208.29,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 12.23,
+                  "limiteInferior": 208.3,
+                  "limiteSuperior": 366.07,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 29.39,
+                  "limiteInferior": 366.08,
+                  "limiteSuperior": 425.52,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 38.9,
+                  "limiteInferior": 425.53,
+                  "limiteSuperior": 509.4,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 53.94,
+                  "limiteInferior": 509.41,
+                  "limiteSuperior": 1027.84,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 164.61,
+                  "limiteInferior": 1027.85,
+                  "limiteSuperior": 1619.19,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 303.7,
+                  "limiteInferior": 1619.2,
+                  "limiteSuperior": 3092.09,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 745.57,
+                  "limiteInferior": 3092.1,
+                  "limiteSuperior": 4122.78,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 1075.39,
+                  "limiteInferior": 4122.79,
+                  "limiteSuperior": 12368.35,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 3878.9,
+                  "limiteInferior": 12368.36,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ],
+              "description": "Tarifas base",
+              "inflationFactor": 1.0,
+              "monthly": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 746.04,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 14.32,
+                  "limiteInferior": 746.05,
+                  "limiteSuperior": 6332.05,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 371.83,
+                  "limiteInferior": 6332.06,
+                  "limiteSuperior": 11128.01,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 893.63,
+                  "limiteInferior": 11128.02,
+                  "limiteSuperior": 12935.82,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 1182.88,
+                  "limiteInferior": 12935.83,
+                  "limiteSuperior": 15487.71,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 1640.18,
+                  "limiteInferior": 15487.72,
+                  "limiteSuperior": 31236.49,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 5004.12,
+                  "limiteInferior": 31236.5,
+                  "limiteSuperior": 49233.0,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 9236.89,
+                  "limiteInferior": 49233.01,
+                  "limiteSuperior": 93993.9,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 22665.17,
+                  "limiteInferior": 93993.91,
+                  "limiteSuperior": 125325.2,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 32691.18,
+                  "limiteInferior": 125325.21,
+                  "limiteSuperior": 375975.61,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 117912.32,
+                  "limiteInferior": 375975.62,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ],
+              "weekly": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 171.78,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 3.29,
+                  "limiteInferior": 171.79,
+                  "limiteSuperior": 1458.03,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 85.61,
+                  "limiteInferior": 1458.04,
+                  "limiteSuperior": 2562.49,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 205.73,
+                  "limiteInferior": 2562.5,
+                  "limiteSuperior": 2978.64,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 272.3,
+                  "limiteInferior": 2978.65,
+                  "limiteSuperior": 3565.8,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 377.58,
+                  "limiteInferior": 3565.81,
+                  "limiteSuperior": 7194.88,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 1152.27,
+                  "limiteInferior": 7194.89,
+                  "limiteSuperior": 11334.33,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 2125.9,
+                  "limiteInferior": 11334.34,
+                  "limiteSuperior": 21644.63,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 5218.99,
+                  "limiteInferior": 21644.64,
+                  "limiteSuperior": 28859.46,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 7527.73,
+                  "limiteInferior": 28859.47,
+                  "limiteSuperior": 86578.45,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 27152.3,
+                  "limiteInferior": 86578.46,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ]
+            },
+            "subsidy": {
+              "description": "Sistema escalonado con 11 rangos de ingreso",
+              "monthly": [
+                {
+                  "desde": 0.01,
+                  "hasta": 1768.96,
+                  "subsidio": 407.02
+                },
+                {
+                  "desde": 1768.97,
+                  "hasta": 2653.38,
+                  "subsidio": 406.83
+                },
+                {
+                  "desde": 2653.39,
+                  "hasta": 3472.84,
+                  "subsidio": 406.62
+                },
+                {
+                  "desde": 3472.85,
+                  "hasta": 3537.87,
+                  "subsidio": 392.77
+                },
+                {
+                  "desde": 3537.88,
+                  "hasta": 4446.15,
+                  "subsidio": 382.46
+                },
+                {
+                  "desde": 4446.16,
+                  "hasta": 4717.18,
+                  "subsidio": 354.23
+                },
+                {
+                  "desde": 4717.19,
+                  "hasta": 5335.42,
+                  "subsidio": 324.87
+                },
+                {
+                  "desde": 5335.43,
+                  "hasta": 6224.67,
+                  "subsidio": 294.63
+                },
+                {
+                  "desde": 6224.68,
+                  "hasta": 7113.9,
+                  "subsidio": 253.54
+                },
+                {
+                  "desde": 7113.91,
+                  "hasta": 7382.33,
+                  "subsidio": 217.61
+                },
+                {
+                  "desde": 7382.34,
+                  "hasta": null,
+                  "subsidio": 0
+                }
+              ],
+              "type": "tiered"
+            }
+          }
+        },
+        "2025": {
+          "exercise": 2025,
+          "notes": "Requires source-by-source Anexo 8/subsidy audit before payroll use.",
+          "sha256": "50dbcf141f77040413478ba3589dff4ae7d7628457154da2c576007fc85a3c4e",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "pending_review",
+          "valid_from": "2025-01-01",
+          "valid_to": "2025-12-31",
+          "values": {
+            "brackets": {
+              "annual": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 8952.49,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 171.88,
+                  "limiteInferior": 8952.5,
+                  "limiteSuperior": 75984.55,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 4461.94,
+                  "limiteInferior": 75984.56,
+                  "limiteSuperior": 133536.07,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 10723.55,
+                  "limiteInferior": 133536.08,
+                  "limiteSuperior": 155229.8,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 14194.54,
+                  "limiteInferior": 155229.81,
+                  "limiteSuperior": 185852.57,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 19682.13,
+                  "limiteInferior": 185852.58,
+                  "limiteSuperior": 374837.88,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 60049.4,
+                  "limiteInferior": 374837.89,
+                  "limiteSuperior": 590796.0,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 110842.74,
+                  "limiteInferior": 590796.01,
+                  "limiteSuperior": 1127926.84,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 271981.98,
+                  "limiteInferior": 1127926.85,
+                  "limiteSuperior": 1503902.46,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 392294.23,
+                  "limiteInferior": 1503902.47,
+                  "limiteSuperior": 4511707.37,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 1414947.9,
+                  "limiteInferior": 4511707.38,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ],
+              "biweekly": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 368.1,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 7.07,
+                  "limiteInferior": 368.11,
+                  "limiteSuperior": 3124.35,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 183.45,
+                  "limiteInferior": 3124.36,
+                  "limiteSuperior": 5490.84,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 440.69,
+                  "limiteInferior": 5490.85,
+                  "limiteSuperior": 6382.2,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 583.31,
+                  "limiteInferior": 6382.21,
+                  "limiteSuperior": 7641.95,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 808.87,
+                  "limiteInferior": 7641.96,
+                  "limiteSuperior": 15417.6,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 2469.47,
+                  "limiteInferior": 15417.61,
+                  "limiteSuperior": 24290.7,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 4554.23,
+                  "limiteInferior": 24290.71,
+                  "limiteSuperior": 46381.71,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 11181.54,
+                  "limiteInferior": 46381.72,
+                  "limiteSuperior": 61842.57,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 16128.81,
+                  "limiteInferior": 61842.58,
+                  "limiteSuperior": 185527.61,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 58181.52,
+                  "limiteInferior": 185527.62,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ],
+              "daily": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 24.54,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 0.47,
+                  "limiteInferior": 24.55,
+                  "limiteSuperior": 208.29,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 12.23,
+                  "limiteInferior": 208.3,
+                  "limiteSuperior": 366.07,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 29.39,
+                  "limiteInferior": 366.08,
+                  "limiteSuperior": 425.52,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 38.9,
+                  "limiteInferior": 425.53,
+                  "limiteSuperior": 509.4,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 53.94,
+                  "limiteInferior": 509.41,
+                  "limiteSuperior": 1027.84,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 164.61,
+                  "limiteInferior": 1027.85,
+                  "limiteSuperior": 1619.19,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 303.7,
+                  "limiteInferior": 1619.2,
+                  "limiteSuperior": 3092.09,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 745.57,
+                  "limiteInferior": 3092.1,
+                  "limiteSuperior": 4122.78,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 1075.39,
+                  "limiteInferior": 4122.79,
+                  "limiteSuperior": 12368.35,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 3878.9,
+                  "limiteInferior": 12368.36,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ],
+              "description": "Tarifas iguales a 2024 (inflación < 10%)",
+              "inflationFactor": 1.0,
+              "monthly": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 746.04,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 14.32,
+                  "limiteInferior": 746.05,
+                  "limiteSuperior": 6332.05,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 371.83,
+                  "limiteInferior": 6332.06,
+                  "limiteSuperior": 11128.01,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 893.63,
+                  "limiteInferior": 11128.02,
+                  "limiteSuperior": 12935.82,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 1182.88,
+                  "limiteInferior": 12935.83,
+                  "limiteSuperior": 15487.71,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 1640.18,
+                  "limiteInferior": 15487.72,
+                  "limiteSuperior": 31236.49,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 5004.12,
+                  "limiteInferior": 31236.5,
+                  "limiteSuperior": 49233.0,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 9236.89,
+                  "limiteInferior": 49233.01,
+                  "limiteSuperior": 93993.9,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 22665.17,
+                  "limiteInferior": 93993.91,
+                  "limiteSuperior": 125325.2,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 32691.18,
+                  "limiteInferior": 125325.21,
+                  "limiteSuperior": 375975.61,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 117912.32,
+                  "limiteInferior": 375975.62,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ],
+              "weekly": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 171.78,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 3.29,
+                  "limiteInferior": 171.79,
+                  "limiteSuperior": 1458.03,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 85.61,
+                  "limiteInferior": 1458.04,
+                  "limiteSuperior": 2562.49,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 205.73,
+                  "limiteInferior": 2562.5,
+                  "limiteSuperior": 2978.64,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 272.3,
+                  "limiteInferior": 2978.65,
+                  "limiteSuperior": 3565.8,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 377.58,
+                  "limiteInferior": 3565.81,
+                  "limiteSuperior": 7194.88,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 1152.27,
+                  "limiteInferior": 7194.89,
+                  "limiteSuperior": 11334.33,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 2125.9,
+                  "limiteInferior": 11334.34,
+                  "limiteSuperior": 21644.63,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 5218.99,
+                  "limiteInferior": 21644.64,
+                  "limiteSuperior": 28859.46,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 7527.73,
+                  "limiteInferior": 28859.47,
+                  "limiteSuperior": 86578.45,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 27152.3,
+                  "limiteInferior": 86578.46,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ]
+            },
+            "subsidy": {
+              "description": "Cuota fija - Decreto mayo 2024",
+              "monthly": {
+                "amount": 475.0,
+                "maxIncome": 10171.0
+              },
+              "type": "flat"
+            }
+          }
+        },
+        "2026": {
+          "exercise": 2026,
+          "notes": "Known stale: current 2026 brackets do not match RMF 2026 Anexo 8; subsidy also has a January/February UMA-vigencia boundary.",
+          "sha256": "1d5c39b6285eaeae28ea918fbd4b2b2a89104821c0c6517d989dd96901453ae9",
+          "source_ids": [
+            "isr_rmf_2026_anexo_8"
+          ],
+          "status": "pending_review",
+          "valid_from": "2026-01-01",
+          "valid_to": "2026-12-31",
+          "values": {
+            "brackets": {
+              "annual": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 10135.11,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 194.59,
+                  "limiteInferior": 10135.12,
+                  "limiteSuperior": 86022.12,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 5051.37,
+                  "limiteInferior": 86022.13,
+                  "limiteSuperior": 151176.24,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 12140.13,
+                  "limiteInferior": 151176.25,
+                  "limiteSuperior": 175735.68,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 16069.64,
+                  "limiteInferior": 175735.69,
+                  "limiteSuperior": 210403.68,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 22282.1,
+                  "limiteInferior": 210403.69,
+                  "limiteSuperior": 424353.96,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 67981.98,
+                  "limiteInferior": 424353.97,
+                  "limiteSuperior": 668840.16,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 125485.08,
+                  "limiteInferior": 668840.17,
+                  "limiteSuperior": 1276926.0,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 307910.82,
+                  "limiteInferior": 1276926.01,
+                  "limiteSuperior": 1702567.92,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 444116.23,
+                  "limiteInferior": 1702567.93,
+                  "limiteSuperior": 5107703.88,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 1601862.48,
+                  "limiteInferior": 5107703.89,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ],
+              "biweekly": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 416.7,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 7.95,
+                  "limiteInferior": 416.71,
+                  "limiteSuperior": 3537.15,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 207.75,
+                  "limiteInferior": 3537.16,
+                  "limiteSuperior": 6216.15,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 499.2,
+                  "limiteInferior": 6216.16,
+                  "limiteSuperior": 7225.95,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 660.75,
+                  "limiteInferior": 7225.96,
+                  "limiteSuperior": 8651.4,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 916.2,
+                  "limiteInferior": 8651.41,
+                  "limiteSuperior": 17448.75,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 2795.25,
+                  "limiteInferior": 17448.76,
+                  "limiteSuperior": 27501.6,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 5159.7,
+                  "limiteInferior": 27501.61,
+                  "limiteSuperior": 52505.25,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 12660.75,
+                  "limiteInferior": 52505.26,
+                  "limiteSuperior": 70006.95,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 18261.3,
+                  "limiteInferior": 70006.96,
+                  "limiteSuperior": 210020.7,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 65866.05,
+                  "limiteInferior": 210020.71,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ],
+              "daily": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 27.78,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 0.53,
+                  "limiteInferior": 27.79,
+                  "limiteSuperior": 235.81,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 13.85,
+                  "limiteInferior": 235.82,
+                  "limiteSuperior": 414.41,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 33.28,
+                  "limiteInferior": 414.42,
+                  "limiteSuperior": 481.73,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 44.05,
+                  "limiteInferior": 481.74,
+                  "limiteSuperior": 576.76,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 61.08,
+                  "limiteInferior": 576.77,
+                  "limiteSuperior": 1163.25,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 186.35,
+                  "limiteInferior": 1163.26,
+                  "limiteSuperior": 1833.44,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 343.98,
+                  "limiteInferior": 1833.45,
+                  "limiteSuperior": 3500.35,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 844.05,
+                  "limiteInferior": 3500.36,
+                  "limiteSuperior": 4667.13,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 1217.42,
+                  "limiteInferior": 4667.14,
+                  "limiteSuperior": 14001.38,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 4391.07,
+                  "limiteInferior": 14001.39,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ],
+              "description": "Tarifas actualizadas 13.21% por inflación acumulada",
+              "inflationFactor": 1.1321,
+              "monthly": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 844.59,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 16.22,
+                  "limiteInferior": 844.6,
+                  "limiteSuperior": 7168.51,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 420.95,
+                  "limiteInferior": 7168.52,
+                  "limiteSuperior": 12598.02,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 1011.68,
+                  "limiteInferior": 12598.03,
+                  "limiteSuperior": 14644.64,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 1339.14,
+                  "limiteInferior": 14644.65,
+                  "limiteSuperior": 17533.64,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 1856.84,
+                  "limiteInferior": 17533.65,
+                  "limiteSuperior": 35362.83,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 5665.16,
+                  "limiteInferior": 35362.84,
+                  "limiteSuperior": 55736.68,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 10457.09,
+                  "limiteInferior": 55736.69,
+                  "limiteSuperior": 106410.5,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 25659.23,
+                  "limiteInferior": 106410.51,
+                  "limiteSuperior": 141880.66,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 37009.69,
+                  "limiteInferior": 141880.67,
+                  "limiteSuperior": 425641.99,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 133488.54,
+                  "limiteInferior": 425642.0,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ],
+              "weekly": [
+                {
+                  "cuotaFija": 0.0,
+                  "limiteInferior": 0.01,
+                  "limiteSuperior": 194.46,
+                  "tasa": 1.92
+                },
+                {
+                  "cuotaFija": 3.71,
+                  "limiteInferior": 194.47,
+                  "limiteSuperior": 1650.67,
+                  "tasa": 6.4
+                },
+                {
+                  "cuotaFija": 96.95,
+                  "limiteInferior": 1650.68,
+                  "limiteSuperior": 2900.87,
+                  "tasa": 10.88
+                },
+                {
+                  "cuotaFija": 232.96,
+                  "limiteInferior": 2900.88,
+                  "limiteSuperior": 3372.11,
+                  "tasa": 16.0
+                },
+                {
+                  "cuotaFija": 308.35,
+                  "limiteInferior": 3372.12,
+                  "limiteSuperior": 4037.32,
+                  "tasa": 17.92
+                },
+                {
+                  "cuotaFija": 427.56,
+                  "limiteInferior": 4037.33,
+                  "limiteSuperior": 8142.75,
+                  "tasa": 21.36
+                },
+                {
+                  "cuotaFija": 1304.45,
+                  "limiteInferior": 8142.76,
+                  "limiteSuperior": 12834.08,
+                  "tasa": 23.52
+                },
+                {
+                  "cuotaFija": 2407.86,
+                  "limiteInferior": 12834.09,
+                  "limiteSuperior": 24502.45,
+                  "tasa": 30.0
+                },
+                {
+                  "cuotaFija": 5908.35,
+                  "limiteInferior": 24502.46,
+                  "limiteSuperior": 32669.91,
+                  "tasa": 32.0
+                },
+                {
+                  "cuotaFija": 8521.94,
+                  "limiteInferior": 32669.92,
+                  "limiteSuperior": 98009.66,
+                  "tasa": 34.0
+                },
+                {
+                  "cuotaFija": 30737.49,
+                  "limiteInferior": 98009.67,
+                  "limiteSuperior": null,
+                  "tasa": 35.0
+                }
+              ]
+            },
+            "subsidy": {
+              "description": "Cuota fija - 15.02% del UMA mensual",
+              "monthly": {
+                "amount": 536.21,
+                "maxIncome": 11492.66
+              },
+              "type": "flat"
+            }
+          }
+        }
+      },
+      "kind": "rate_schedule",
+      "owner": "SAT / SHCP"
+    },
+    "minimum_wage": {
+      "entries": {
+        "2010": {
+          "exercise": 2010,
+          "sha256": "5a7198473f19fdbf19b11e167ba44d00159cc7f0561cd92751099e37b65a5f93",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2010-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "zona_a": 57.46,
+            "zona_b": 54.47
+          }
+        },
+        "2011": {
+          "exercise": 2011,
+          "sha256": "6dc623e9616f7215eb791d82e68306ec7690dfa0854a1c69118b96960587a848",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2011-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "zona_a": 59.82,
+            "zona_b": 56.7
+          }
+        },
+        "2012": {
+          "exercise": 2012,
+          "sha256": "c45597eb42d49e996b81ee948739c87324dc026e15c6198749ca8861fa17aeed",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2012-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "zona_a": 62.33,
+            "zona_b": 59.08
+          }
+        },
+        "2013": {
+          "exercise": 2013,
+          "sha256": "a477565384315c21aa7aacd867bec79068af18d2a9c7abb3169d29f5ff5d7e9d",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2013-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "zona_a": 64.76,
+            "zona_b": 61.38
+          }
+        },
+        "2014": {
+          "exercise": 2014,
+          "sha256": "278f95994509cc5b4b20980362da230eef1ec38399ef65a487ff73d22950db65",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2014-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "zona_a": 67.29,
+            "zona_b": 63.77
+          }
+        },
+        "2015": {
+          "exercise": 2015,
+          "sha256": "8f695dda50b1fc281512823359f4a3b7993eea61e3431e72151c42d34a062d06",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2015-04-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "zona_general": 70.1
+          }
+        },
+        "2016": {
+          "exercise": 2016,
+          "sha256": "830d765d91b2bd82a031d45fabcbc0a3ede34811538a3ed5b663501132012972",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2016-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "zona_general": 73.04
+          }
+        },
+        "2017": {
+          "exercise": 2017,
+          "sha256": "976cb7acec24310080cac2b7e2153099184b2589f77275791570da02f8f67ea2",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2017-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "zona_general": 80.04
+          }
+        },
+        "2018": {
+          "exercise": 2018,
+          "sha256": "7164a5ca1e57d843d8b6531209474704db18716a74248f4b67d8131b350337e9",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2018-12-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "zona_general": 88.36
+          }
+        },
+        "2019": {
+          "exercise": 2019,
+          "sha256": "604acc3ac6071e11d037d7623ab6957f257e8bfb0663dde6a93123d4e6c69639",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2019-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "resto_pais": 102.68,
+            "zona_frontera_norte": 176.72
+          }
+        },
+        "2020": {
+          "exercise": 2020,
+          "sha256": "529e03e98545a085c45ee2a5c597b6935e3bdec20e07e4b8cd915bd2738bbf41",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2020-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "resto_pais": 123.22,
+            "zona_frontera_norte": 185.56
+          }
+        },
+        "2021": {
+          "exercise": 2021,
+          "sha256": "ca13d824ba0ee909d871cbe99e59dd2f4b7868c75a5466c789dc9861afdaa54c",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2021-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "resto_pais": 141.7,
+            "zona_frontera_norte": 213.39
+          }
+        },
+        "2022": {
+          "exercise": 2022,
+          "sha256": "19db05edd5acf3720a17d403ba8c10f66d02976239cbc95f170eaa49b0a16400",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2022-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "resto_pais": 172.87,
+            "zona_frontera_norte": 260.34
+          }
+        },
+        "2023": {
+          "exercise": 2023,
+          "sha256": "b9545ec59d6cf9da91d9b7a7e23a4f60775039eb45d56fea6d70c78dbababab9",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2023-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "resto_pais": 207.44,
+            "zona_frontera_norte": 312.41
+          }
+        },
+        "2024": {
+          "exercise": 2024,
+          "sha256": "3166bfd0ab397f8acb2ad5df3db285d55f5696111672377915a7c7b8e06cfdf2",
+          "source_ids": [
+            "salario_minimo_2024"
+          ],
+          "status": "verified",
+          "valid_from": "2024-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "resto_pais": 248.93,
+            "zona_frontera_norte": 374.89
+          }
+        },
+        "2025": {
+          "exercise": 2025,
+          "sha256": "d49da4e668929ad400933dec40cf17a8a682fc545033267fbfcf61a8d8b28c45",
+          "source_ids": [
+            "salario_minimo_2025"
+          ],
+          "status": "verified",
+          "valid_from": "2025-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "resto_pais": 278.8,
+            "zona_frontera_norte": 419.88
+          }
+        },
+        "2026": {
+          "exercise": 2026,
+          "sha256": "37ab9b89a6e53bc381a6a3b7261bd23033f5131843f80cad427f42ec8ac4c715",
+          "source_ids": [
+            "salario_minimo_2026"
+          ],
+          "status": "verified",
+          "valid_from": "2026-01-01",
+          "valid_to": null,
+          "values": {
+            "moneda": "MXN",
+            "periodo": "diario",
+            "resto_pais": 315.04,
+            "zona_frontera_norte": 440.87
+          }
+        }
+      },
+      "kind": "regulatory_parameter",
+      "owner": "CONASAMI"
+    },
+    "uma": {
+      "entries": {
+        "2017": {
+          "exercise": 2017,
+          "sha256": "b52a0a1f581c54db562e536f272f3a4bdb7f13f1f91a38a048389972a4a41832",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2017-02-01",
+          "valid_to": "2018-01-31",
+          "values": {
+            "annual": 27538.8,
+            "currency": "MXN",
+            "daily": 75.49,
+            "monthly": 2294.9
+          }
+        },
+        "2018": {
+          "exercise": 2018,
+          "sha256": "a2f59ab2f48189bccf7fe0df732e2d1b118eb50d020b3252e7cd224c066a4e80",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2018-02-01",
+          "valid_to": "2019-01-31",
+          "values": {
+            "annual": 29402.88,
+            "currency": "MXN",
+            "daily": 80.6,
+            "monthly": 2450.24
+          }
+        },
+        "2019": {
+          "exercise": 2019,
+          "sha256": "718e64058dd44963fb4955e2d39da41b20b62b2531bc7105adee3ba07c254e1e",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2019-02-01",
+          "valid_to": "2020-01-31",
+          "values": {
+            "annual": 30822.0,
+            "currency": "MXN",
+            "daily": 84.49,
+            "monthly": 2568.5
+          }
+        },
+        "2020": {
+          "exercise": 2020,
+          "sha256": "b019849ecc07bbde86e67ff0824a8b67da5a2b62904a29bc0b02414286f8aff9",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2020-02-01",
+          "valid_to": "2021-01-31",
+          "values": {
+            "annual": 31693.8,
+            "currency": "MXN",
+            "daily": 86.88,
+            "monthly": 2641.15
+          }
+        },
+        "2021": {
+          "exercise": 2021,
+          "sha256": "c273befbc038c3671d56551fd0fe36c0c17a645caf832e2b0dcf2d32f875f74f",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2021-02-01",
+          "valid_to": "2022-01-31",
+          "values": {
+            "annual": 32693.4,
+            "currency": "MXN",
+            "daily": 89.62,
+            "monthly": 2724.45
+          }
+        },
+        "2022": {
+          "exercise": 2022,
+          "sha256": "3aad697dd41417fb0719461bd3b23fe0375ad0c7fad82ff8bfe6e58284ab19ed",
+          "source_ids": [
+            "legacy_snapshot"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2022-02-01",
+          "valid_to": "2023-01-31",
+          "values": {
+            "annual": 35101.08,
+            "currency": "MXN",
+            "daily": 96.22,
+            "monthly": 2925.09
+          }
+        },
+        "2023": {
+          "exercise": 2023,
+          "sha256": "6b65d7c76aa377e7f22c77a5b55718c51b15875b679062c5cb17e6b56e681a1e",
+          "source_ids": [
+            "uma_2023"
+          ],
+          "status": "legacy_unverified",
+          "valid_from": "2023-02-01",
+          "valid_to": "2024-01-31",
+          "values": {
+            "annual": 37844.4,
+            "currency": "MXN",
+            "daily": 103.74,
+            "monthly": 3153.7
+          }
+        },
+        "2024": {
+          "exercise": 2024,
+          "sha256": "62ff37ea663b96b4683a7d57906bae618ed616868300825bb19287ebaa4b1d1b",
+          "source_ids": [
+            "uma_2024"
+          ],
+          "status": "verified",
+          "valid_from": "2024-02-01",
+          "valid_to": "2025-01-31",
+          "values": {
+            "annual": 39606.36,
+            "currency": "MXN",
+            "daily": 108.57,
+            "monthly": 3300.53
+          }
+        },
+        "2025": {
+          "exercise": 2025,
+          "sha256": "46dec094c8a0b59b6a1760299dc33703ac4446c713aac7a3305663e486f654d8",
+          "source_ids": [
+            "uma_2025"
+          ],
+          "status": "verified",
+          "valid_from": "2025-02-01",
+          "valid_to": "2026-01-31",
+          "values": {
+            "annual": 41273.52,
+            "currency": "MXN",
+            "daily": 113.14,
+            "monthly": 3439.46
+          }
+        },
+        "2026": {
+          "exercise": 2026,
+          "sha256": "cb97a98615c24cb433e62f846314f47cea8fc29ff5f1b6f905038d698cccd92a",
+          "source_ids": [
+            "uma_2026"
+          ],
+          "status": "verified",
+          "valid_from": "2026-02-01",
+          "valid_to": "2027-01-31",
+          "values": {
+            "annual": 42794.64,
+            "currency": "MXN",
+            "daily": 117.31,
+            "monthly": 3566.22
+          }
+        }
+      },
+      "kind": "regulatory_parameter",
+      "owner": "INEGI"
+    }
+  },
+  "manifest_id": "catalogmx.fiscal",
+  "policy": {
+    "legacy_unverified": "Historical snapshot retained; provenance audit not complete.",
+    "pending_review": "Present for compatibility but consumers should reject for audited payroll.",
+    "verified": "Source-audited and safe for the declared exercise/vigencia."
+  },
+  "schema_version": 1,
+  "sources": {
+    "isr_rmf_2026_anexo_8": {
+      "authority": "SAT / Diario Oficial de la Federación",
+      "published_at": "2025-12-28",
+      "title": "Anexo 8 de la Resolución Miscelánea Fiscal para 2026",
+      "url": "https://www.sat.gob.mx/minisitio/NormatividadRMFyRGCE/documentos2026/rmf/anexos/Anexo-8-RMF-2026_DOF-28122025.pdf"
+    },
+    "lss": {
+      "authority": "Cámara de Diputados",
+      "title": "Ley del Seguro Social",
+      "url": "https://www.diputados.gob.mx/LeyesBiblio/pdf/LSS.pdf"
+    },
+    "reforma_pensiones_2020": {
+      "authority": "Diario Oficial de la Federación",
+      "published_at": "2020-12-16",
+      "title": "Decreto de reforma a la Ley del Seguro Social y Ley de los Sistemas de Ahorro para el Retiro",
+      "url": "https://www.dof.gob.mx/nota_detalle.php?codigo=5607729&fecha=16/12/2020"
+    },
+    "salario_minimo_2024": {
+      "authority": "CONASAMI / Diario Oficial de la Federación",
+      "title": "Salarios mínimos generales 2024",
+      "url": "https://www.dof.gob.mx/nota_detalle.php?codigo=5711066"
+    },
+    "salario_minimo_2025": {
+      "authority": "CONASAMI",
+      "title": "Salarios mínimos generales 2025",
+      "url": "https://www.gob.mx/conasami"
+    },
+    "salario_minimo_2026": {
+      "authority": "CONASAMI / Diario Oficial de la Federación",
+      "published_at": "2025-12-09",
+      "title": "Salarios mínimos generales 2026",
+      "url": "https://www.dof.gob.mx/nota_detalle.php?codigo=5775534&fecha=09/12/2025"
+    },
+    "uma_2023": {
+      "authority": "INEGI",
+      "title": "Unidad de Medida y Actualización 2023",
+      "url": "https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2023/UMA/UMA2023.pdf"
+    },
+    "uma_2024": {
+      "authority": "INEGI",
+      "published_at": "2024-01-09",
+      "title": "Unidad de Medida y Actualización 2024",
+      "url": "https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2024/UMA/UMA2024.pdf"
+    },
+    "uma_2025": {
+      "authority": "INEGI",
+      "published_at": "2025-01-09",
+      "title": "Unidad de Medida y Actualización 2025",
+      "url": "https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2025/uma/uma2025.pdf"
+    },
+    "uma_2026": {
+      "authority": "INEGI",
+      "published_at": "2026-01-08",
+      "title": "Unidad de Medida y Actualización 2026",
+      "url": "https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2026/uma/uma2026.pdf"
+    }
+  }
+}
