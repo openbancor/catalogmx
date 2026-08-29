@@ -24,7 +24,7 @@ jobs:
       - name: Commit generated artifacts
         run: |
           set -euo pipefail
-          if git diff --quiet; then
+          if [ -z "$(git status --porcelain -- packages/shared-data/fiscal-manifest.json packages/typescript/src/fiscal/manifest.generated.ts)" ]; then
             exit 0
           fi
           git config user.name 'catalogmx-data[bot]'
