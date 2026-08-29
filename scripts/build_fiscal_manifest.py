@@ -5,6 +5,11 @@ The manifest intentionally distinguishes verified authority data from legacy
 historical snapshots that remain available but have not yet completed a
 source-by-source audit. Hashes cover the canonical JSON value payload for each
 (table, exercise) entry so consumers can pin or reject fiscal inputs.
+
+Normal generation is additive with respect to history: an exercise that already
+exists in the checked-in manifest may be corrected, but it may not silently
+disappear. Deliberate history removal therefore requires changing this policy,
+not merely editing a source JSON file.
 """
 
 from __future__ import annotations
@@ -69,11 +74,30 @@ def build_manifest() -> dict[str, Any]:
     isr = json.loads((SHARED / "isr-tables.json").read_text(encoding="utf-8"))
 
     sources = dict(imss.get("_meta", {}).get("sources", {}))
+    sources["legacy_snapshot"] = {
+        "authority": "CatalogMX",
+        "title": "Tracked historical snapshot pending authority-source audit",
+        "url": "https://github.com/openbancor/catalogmx/tree/master/packages/shared-data",
+    }
+    # Tighten the source URL used by the 2025 verified minimum-wage row. The
+    # canonical JSON only stores values; provenance belongs in this manifest.
+    sources["salario_minimo_2025"] = {
+        "authority": "CONASAMI / Diario Oficial de la Federación",
+        "title": "Salarios mínimos generales 2025",
+        "published_at": "2024-12-19",
+        "url": "https://dof.gob.mx/2024/CONASAMI/CONASAMI_191224.pdf",
+    }
     sources["isr_rmf_2026_anexo_8"] = {
         "authority": "SAT / Diario Oficial de la Federación",
         "title": "Anexo 8 de la Resolución Miscelánea Fiscal para 2026",
         "published_at": "2025-12-28",
         "url": "https://www.sat.gob.mx/minisitio/NormatividadRMFyRGCE/documentos2026/rmf/anexos/Anexo-8-RMF-2026_DOF-28122025.pdf",
+    }
+    sources["subsidio_empleo_2026"] = {
+        "authority": "Diario Oficial de la Federación",
+        "title": "Decreto por el que se modifica el diverso que otorga el subsidio para el empleo",
+        "published_at": "2025-12-31",
+        "url": "https://www.dof.gob.mx/nota_detalle.php?codigo=5777649&fecha=31/12/2025",
     }
 
     datasets: dict[str, dict[str, Any]] = {}
@@ -240,17 +264,19 @@ def build_manifest() -> dict[str, Any]:
             "subsidy": isr.get("subsidies", {}).get(year_text),
         }
         notes = "Requires source-by-source Anexo 8/subsidy audit before payroll use."
+        source_ids = ["legacy_snapshot"]
         if year == 2026:
             notes = (
                 "Known stale: current 2026 brackets do not match RMF 2026 Anexo 8; "
                 "subsidy also has a January/February UMA-vigencia boundary."
             )
+            source_ids = ["isr_rmf_2026_anexo_8", "subsidio_empleo_2026"]
         isr_entries[year_text] = entry(
             year,
             "pending_review",
             f"{year}-01-01",
             f"{year}-12-31",
-            ["isr_rmf_2026_anexo_8"] if year == 2026 else ["legacy_snapshot"],
+            source_ids,
             values,
             notes=notes,
         )
@@ -275,6 +301,39 @@ def build_manifest() -> dict[str, Any]:
     return manifest
 
 
+def ensure_sources_resolve(manifest: dict[str, Any]) -> None:
+    sources = manifest["sources"]
+    unresolved: list[str] = []
+    for dataset_id, dataset in manifest["datasets"].items():
+        for exercise, item in dataset["entries"].items():
+            for source_id in item["source_ids"]:
+                if source_id not in sources:
+                    unresolved.append(f"{dataset_id}:{exercise}:{source_id}")
+    if unresolved:
+        raise SystemExit("Unresolved fiscal source ids: " + ", ".join(unresolved))
+
+
+def ensure_history_is_additive(manifest: dict[str, Any]) -> None:
+    if not MANIFEST_PATH.exists():
+        return
+    previous = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    missing: list[str] = []
+    for dataset_id, old_dataset in previous.get("datasets", {}).items():
+        new_dataset = manifest["datasets"].get(dataset_id)
+        if new_dataset is None:
+            missing.append(f"{dataset_id}:<dataset>")
+            continue
+        old_exercises = set(old_dataset.get("entries", {}))
+        new_exercises = set(new_dataset.get("entries", {}))
+        for exercise in sorted(old_exercises - new_exercises):
+            missing.append(f"{dataset_id}:{exercise}")
+    if missing:
+        raise SystemExit(
+            "Fiscal history removal is not allowed by normal generation: "
+            + ", ".join(missing)
+        )
+
+
 def render_json(manifest: dict[str, Any]) -> str:
     return json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
 
@@ -295,6 +354,8 @@ def main() -> int:
     args = parser.parse_args()
 
     manifest = build_manifest()
+    ensure_sources_resolve(manifest)
+    ensure_history_is_additive(manifest)
     expected_json = render_json(manifest)
     expected_ts = render_typescript(manifest)
 
