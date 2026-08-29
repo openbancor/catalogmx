@@ -25,6 +25,10 @@
       "types": "./dist/cfdi/index.d.ts",
       "default": "./dist/cfdi/index.js"
     },
+    "./fiscal": {
+      "types": "./dist/fiscal/index.d.ts",
+      "default": "./dist/fiscal/index.js"
+    },
     "./utils": {
       "types": "./dist/utils/index.d.ts",
       "default": "./dist/utils/index.js"
