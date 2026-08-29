@@ -14,7 +14,7 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["jest", "@cloudflare/workers-types"]
+    "types": ["jest", "@cloudflare/workers-types", "node"]
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"]
 }
