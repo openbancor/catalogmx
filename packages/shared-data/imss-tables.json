@@ -166,34 +166,106 @@
         "base": "salario",
         "patron_por_ejercicio": {
           "2024": [
-            {"rango": "1_sm", "tasa": 0.0315},
-            {"rango": "1_01_sm_a_1_50_uma", "tasa": 0.03413},
-            {"rango": "1_51_a_2_00_uma", "tasa": 0.04},
-            {"rango": "2_01_a_2_50_uma", "tasa": 0.04353},
-            {"rango": "2_51_a_3_00_uma", "tasa": 0.04588},
-            {"rango": "3_01_a_3_50_uma", "tasa": 0.04756},
-            {"rango": "3_51_a_4_00_uma", "tasa": 0.04882},
-            {"rango": "4_01_uma_en_adelante", "tasa": 0.05331}
+            {
+              "rango": "1_sm",
+              "tasa": 0.0315
+            },
+            {
+              "rango": "1_01_sm_a_1_50_uma",
+              "tasa": 0.03413
+            },
+            {
+              "rango": "1_51_a_2_00_uma",
+              "tasa": 0.04
+            },
+            {
+              "rango": "2_01_a_2_50_uma",
+              "tasa": 0.04353
+            },
+            {
+              "rango": "2_51_a_3_00_uma",
+              "tasa": 0.04588
+            },
+            {
+              "rango": "3_01_a_3_50_uma",
+              "tasa": 0.04756
+            },
+            {
+              "rango": "3_51_a_4_00_uma",
+              "tasa": 0.04882
+            },
+            {
+              "rango": "4_01_uma_en_adelante",
+              "tasa": 0.05331
+            }
           ],
           "2025": [
-            {"rango": "1_sm", "tasa": 0.0315},
-            {"rango": "1_01_sm_a_1_50_uma", "tasa": 0.03544},
-            {"rango": "1_51_a_2_00_uma", "tasa": 0.04426},
-            {"rango": "2_01_a_2_50_uma", "tasa": 0.04954},
-            {"rango": "2_51_a_3_00_uma", "tasa": 0.05307},
-            {"rango": "3_01_a_3_50_uma", "tasa": 0.05559},
-            {"rango": "3_51_a_4_00_uma", "tasa": 0.05747},
-            {"rango": "4_01_uma_en_adelante", "tasa": 0.06422}
+            {
+              "rango": "1_sm",
+              "tasa": 0.0315
+            },
+            {
+              "rango": "1_01_sm_a_1_50_uma",
+              "tasa": 0.03544
+            },
+            {
+              "rango": "1_51_a_2_00_uma",
+              "tasa": 0.04426
+            },
+            {
+              "rango": "2_01_a_2_50_uma",
+              "tasa": 0.04954
+            },
+            {
+              "rango": "2_51_a_3_00_uma",
+              "tasa": 0.05307
+            },
+            {
+              "rango": "3_01_a_3_50_uma",
+              "tasa": 0.05559
+            },
+            {
+              "rango": "3_51_a_4_00_uma",
+              "tasa": 0.05747
+            },
+            {
+              "rango": "4_01_uma_en_adelante",
+              "tasa": 0.06422
+            }
           ],
           "2026": [
-            {"rango": "1_sm", "tasa": 0.0315},
-            {"rango": "1_01_sm_a_1_50_uma", "tasa": 0.03676},
-            {"rango": "1_51_a_2_00_uma", "tasa": 0.04851},
-            {"rango": "2_01_a_2_50_uma", "tasa": 0.05556},
-            {"rango": "2_51_a_3_00_uma", "tasa": 0.06026},
-            {"rango": "3_01_a_3_50_uma", "tasa": 0.06361},
-            {"rango": "3_51_a_4_00_uma", "tasa": 0.06613},
-            {"rango": "4_01_uma_en_adelante", "tasa": 0.07513}
+            {
+              "rango": "1_sm",
+              "tasa": 0.0315
+            },
+            {
+              "rango": "1_01_sm_a_1_50_uma",
+              "tasa": 0.03676
+            },
+            {
+              "rango": "1_51_a_2_00_uma",
+              "tasa": 0.04851
+            },
+            {
+              "rango": "2_01_a_2_50_uma",
+              "tasa": 0.05556
+            },
+            {
+              "rango": "2_51_a_3_00_uma",
+              "tasa": 0.06026
+            },
+            {
+              "rango": "3_01_a_3_50_uma",
+              "tasa": 0.06361
+            },
+            {
+              "rango": "3_51_a_4_00_uma",
+              "tasa": 0.06613
+            },
+            {
+              "rango": "4_01_uma_en_adelante",
+              "tasa": 0.07513
+            }
           ]
         }
       }
@@ -226,51 +298,41 @@
       "edad_minima": 0,
       "edad_maxima": 60
     },
-    "por_ejercicio": {
+    "limites_salario": {
+      "maximo_uma": 25,
+      "minimo_regla": "no_inferior_al_ultimo_sbc_registrado"
+    },
+    "calculo": {
+      "componentes_constantes": {
+        "retiro_patron": 0.02,
+        "cesantia_vejez_trabajador": 0.01125,
+        "invalidez_vida_patron": 0.0175,
+        "invalidez_vida_trabajador": 0.00625,
+        "gastos_medicos_pensionados_patron": 0.0105,
+        "gastos_medicos_pensionados_trabajador": 0.00375
+      },
+      "ceav_patronal": {
+        "source_path": "cuotas_imss.retiro_cesantia_vejez.cesantia_vejez.patron_por_ejercicio",
+        "selection": "sbc_band_and_exercise"
+      }
+    },
+    "referencia_por_ejercicio": {
       "2024": {
         "vigencia_desde": "2024-01-01",
         "vigencia_hasta": "2024-12-31",
-        "porcentaje_total": 0.12256,
-        "componentes": {
-          "retiro_patron": 0.02,
-          "cesantia_vejez_patron": 0.05331,
-          "cesantia_vejez_trabajador": 0.01125,
-          "invalidez_vida_patron": 0.0175,
-          "invalidez_vida_trabajador": 0.00625,
-          "gastos_medicos_pensionados_patron": 0.0105,
-          "gastos_medicos_pensionados_trabajador": 0.00375
-        }
+        "tasa_total_banda_4_01_uma_en_adelante": 0.12256
       },
       "2025": {
         "vigencia_desde": "2025-01-01",
         "vigencia_hasta": "2025-12-31",
-        "porcentaje_total": 0.13347,
-        "componentes": {
-          "retiro_patron": 0.02,
-          "cesantia_vejez_patron": 0.06422,
-          "cesantia_vejez_trabajador": 0.01125,
-          "invalidez_vida_patron": 0.0175,
-          "invalidez_vida_trabajador": 0.00625,
-          "gastos_medicos_pensionados_patron": 0.0105,
-          "gastos_medicos_pensionados_trabajador": 0.00375
-        }
+        "tasa_total_banda_4_01_uma_en_adelante": 0.13347
       },
       "2026": {
         "vigencia_desde": "2026-01-01",
         "vigencia_hasta": "2026-12-31",
-        "porcentaje_total": 0.14438,
-        "componentes": {
-          "retiro_patron": 0.02,
-          "cesantia_vejez_patron": 0.07513,
-          "cesantia_vejez_trabajador": 0.01125,
-          "invalidez_vida_patron": 0.0175,
-          "invalidez_vida_trabajador": 0.00625,
-          "gastos_medicos_pensionados_patron": 0.0105,
-          "gastos_medicos_pensionados_trabajador": 0.00375
-        }
+        "tasa_total_banda_4_01_uma_en_adelante": 0.14438
       }
-    },
-    "limites_salario": {"minimo_uma": 1, "maximo_uma": 25}
+    }
   },
   "modalidad_10": {
     "descripcion": "Incorporación voluntaria al régimen obligatorio (trabajadores independientes)",
@@ -294,7 +356,10 @@
         "guarderias": 0.01
       }
     },
-    "limites_salario": {"minimo_uma": 1, "maximo_uma": 25},
+    "limites_salario": {
+      "minimo_uma": 1,
+      "maximo_uma": 25
+    },
     "beneficios": [
       "Seguro de enfermedades y maternidad",
       "Seguro de riesgos de trabajo",
@@ -304,14 +369,62 @@
     ]
   },
   "topes_cotizacion": {
-    "salario_base_minimo": {"descripcion": "1 salario mínimo aplicable", "tipo": "salario_minimo"},
-    "salario_base_maximo": {"descripcion": "25 UMAs", "uma_factor": 25}
+    "salario_base_minimo": {
+      "descripcion": "1 salario mínimo aplicable",
+      "tipo": "salario_minimo"
+    },
+    "salario_base_maximo": {
+      "descripcion": "25 UMAs",
+      "uma_factor": 25
+    }
   },
   "riesgos_trabajo_clases": [
-    {"clase": 1, "prima": 0.0054355, "descripcion": "Clase I - prima media", "ejemplos": ["Oficinas", "Comercio", "Servicios administrativos"]},
-    {"clase": 2, "prima": 0.0113065, "descripcion": "Clase II - prima media", "ejemplos": ["Manufactura ligera", "Servicios profesionales"]},
-    {"clase": 3, "prima": 0.025984, "descripcion": "Clase III - prima media", "ejemplos": ["Manufactura pesada", "Transporte"]},
-    {"clase": 4, "prima": 0.0465325, "descripcion": "Clase IV - prima media", "ejemplos": ["Construcción", "Industria química"]},
-    {"clase": 5, "prima": 0.0758875, "descripcion": "Clase V - prima media", "ejemplos": ["Minería", "Petróleo", "Explosivos"]}
+    {
+      "clase": 1,
+      "prima": 0.0054355,
+      "descripcion": "Clase I - prima media",
+      "ejemplos": [
+        "Oficinas",
+        "Comercio",
+        "Servicios administrativos"
+      ]
+    },
+    {
+      "clase": 2,
+      "prima": 0.0113065,
+      "descripcion": "Clase II - prima media",
+      "ejemplos": [
+        "Manufactura ligera",
+        "Servicios profesionales"
+      ]
+    },
+    {
+      "clase": 3,
+      "prima": 0.025984,
+      "descripcion": "Clase III - prima media",
+      "ejemplos": [
+        "Manufactura pesada",
+        "Transporte"
+      ]
+    },
+    {
+      "clase": 4,
+      "prima": 0.0465325,
+      "descripcion": "Clase IV - prima media",
+      "ejemplos": [
+        "Construcción",
+        "Industria química"
+      ]
+    },
+    {
+      "clase": 5,
+      "prima": 0.0758875,
+      "descripcion": "Clase V - prima media",
+      "ejemplos": [
+        "Minería",
+        "Petróleo",
+        "Explosivos"
+      ]
+    }
   ]
 }

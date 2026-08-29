@@ -99,22 +99,26 @@ type CuotasIMSS = {
 };
 
 type ModalidadLimitesSalario = {
-  minimo_uma: number;
   maximo_uma: number;
-};
-
-type Modalidad40YearData = {
-  vigencia_desde: string;
-  vigencia_hasta: string;
-  porcentaje_total: number;
-  componentes: Record<string, number>;
+  minimo_regla?: string;
 };
 
 type Modalidad40Data = {
   descripcion: string;
   verification?: string;
   requisitos: Record<string, number | string | boolean>;
-  por_ejercicio: Record<string, Modalidad40YearData>;
+  calculo: {
+    componentes_constantes: Record<string, number>;
+    ceav_patronal: { source_path: string; selection: string };
+  };
+  referencia_por_ejercicio: Record<
+    string,
+    {
+      vigencia_desde: string;
+      vigencia_hasta: string;
+      tasa_total_banda_4_01_uma_en_adelante: number;
+    }
+  >;
   limites_salario: ModalidadLimitesSalario;
 };
 
@@ -276,6 +280,23 @@ export class IMSSCalculator {
     return rates[7].tasa;
   }
 
+  private static getCEAVPatronRateForUmaRatio(ratioUma: number, year: IMSSYear): number {
+    const rates =
+      this._tablesData!.cuotas_imss.retiro_cesantia_vejez.cesantia_vejez.patron_por_ejercicio[
+        year.toString()
+      ];
+    if (!rates || rates.length !== 8) {
+      throw new Error(`No se encontró tarifa CEAV patronal para ${year}`);
+    }
+    if (ratioUma <= 1.5) return rates[1].tasa;
+    if (ratioUma <= 2.0) return rates[2].tasa;
+    if (ratioUma <= 2.5) return rates[3].tasa;
+    if (ratioUma <= 3.0) return rates[4].tasa;
+    if (ratioUma <= 3.5) return rates[5].tasa;
+    if (ratioUma <= 4.0) return rates[6].tasa;
+    return rates[7].tasa;
+  }
+
   /**
    * Calcula cuotas obrero-patronales.
    *
@@ -360,27 +381,27 @@ export class IMSSCalculator {
     this.loadTablesData();
     const uma = fecha === undefined ? this.getUMA(year) : this.getUMAForDate(fecha);
     const mod40 = this._tablesData!.modalidad_40;
-    const yearData = mod40.por_ejercicio[year.toString()];
-    if (!yearData) {
+    const yearReference = mod40.referencia_por_ejercicio[year.toString()];
+    if (!yearReference) {
       throw new Error(`No se encontró tarifa de Modalidad 40 para ${year}`);
     }
 
     const umaMensual = uma.mensual;
-    const salarioMinimo = umaMensual * mod40.limites_salario.minimo_uma;
     const salarioMaximo = umaMensual * mod40.limites_salario.maximo_uma;
-
-    if (salarioBaseCotizacion < salarioMinimo) {
-      salarioBaseCotizacion = salarioMinimo;
-    } else if (salarioBaseCotizacion > salarioMaximo) {
+    if (salarioBaseCotizacion > salarioMaximo) {
       salarioBaseCotizacion = salarioMaximo;
     }
 
-    const porcentajeTotal = yearData.porcentaje_total;
-    const cuotaMensual = salarioBaseCotizacion * porcentajeTotal;
+    const ratioUma = salarioBaseCotizacion / umaMensual;
+    const ceavPatronRate = this.getCEAVPatronRateForUmaRatio(ratioUma, year);
     const componentes: Record<string, number> = {};
-    for (const [key, value] of Object.entries(yearData.componentes)) {
+    let porcentajeTotal = ceavPatronRate;
+    componentes.cesantia_vejez_patron = salarioBaseCotizacion * ceavPatronRate;
+    for (const [key, value] of Object.entries(mod40.calculo.componentes_constantes)) {
+      porcentajeTotal += value;
       componentes[key] = salarioBaseCotizacion * value;
     }
+    const cuotaMensual = salarioBaseCotizacion * porcentajeTotal;
 
     return {
       salario_base_cotizacion: salarioBaseCotizacion,

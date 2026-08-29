@@ -46,8 +46,8 @@ describe('historical fiscal parameters', () => {
   });
 
   test('keeps historical Modalidad 40 rates', () => {
-    expect(IMSSCalculator.calcularModalidad40(10000, 2024).porcentaje_total).toBe(0.12256);
-    expect(IMSSCalculator.calcularModalidad40(10000, 2025).porcentaje_total).toBe(0.13347);
-    expect(IMSSCalculator.calcularModalidad40(10000, 2026).porcentaje_total).toBe(0.14438);
+    expect(IMSSCalculator.calcularModalidad40(10000, 2024).porcentaje_total).toBe(0.11681);
+    expect(IMSSCalculator.calcularModalidad40(12000, 2025).porcentaje_total).toBe(0.12484);
+    expect(IMSSCalculator.calcularModalidad40(15000, 2026).porcentaje_total).toBe(0.14438);
   });
 });

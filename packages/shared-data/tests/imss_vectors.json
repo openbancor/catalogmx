@@ -47,16 +47,16 @@
       "salario_base_cotizacion": 12000.0,
       "year": 2025,
       "expected": {
-        "cuota_mensual": 1601.64,
-        "porcentaje_total": 0.13347
+        "cuota_mensual": 1498.08,
+        "porcentaje_total": 0.12484
       }
     },
     {
       "salario_base_cotizacion": 10000.0,
       "year": 2024,
       "expected": {
-        "cuota_mensual": 1225.6,
-        "porcentaje_total": 0.12256
+        "cuota_mensual": 1168.1,
+        "porcentaje_total": 0.11681
       }
     }
   ],
