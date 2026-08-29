@@ -6,9 +6,9 @@
       "year": 2026,
       "clase_riesgo": 2,
       "expected": {
-        "total_imss": 4115.8614,
-        "total_patron": 3740.3418,
-        "total_trabajador": 375.5196
+        "total_imss": 3412.3662,
+        "total_patron": 3038.3478,
+        "total_trabajador": 374.0184
       }
     },
     {
@@ -17,9 +17,20 @@
       "year": 2025,
       "clase_riesgo": 1,
       "expected": {
-        "total_imss": 1624.4562,
-        "total_patron": 1519.4991,
-        "total_trabajador": 104.9571
+        "total_imss": 1134.910275,
+        "total_patron": 1009.587975,
+        "total_trabajador": 125.3223
+      }
+    },
+    {
+      "salario_diario": 500.0,
+      "dias": 30,
+      "year": 2024,
+      "clase_riesgo": 3,
+      "expected": {
+        "total_imss": 3263.5389,
+        "total_patron": 2886.3741,
+        "total_trabajador": 377.1648
       }
     }
   ],
@@ -28,16 +39,24 @@
       "salario_base_cotizacion": 15000.0,
       "year": 2026,
       "expected": {
-        "cuota_mensual": 1570.5,
-        "porcentaje_total": 0.1047
+        "cuota_mensual": 2165.7,
+        "porcentaje_total": 0.14438
       }
     },
     {
       "salario_base_cotizacion": 12000.0,
       "year": 2025,
       "expected": {
-        "cuota_mensual": 1256.4,
-        "porcentaje_total": 0.1047
+        "cuota_mensual": 1601.64,
+        "porcentaje_total": 0.13347
+      }
+    },
+    {
+      "salario_base_cotizacion": 10000.0,
+      "year": 2024,
+      "expected": {
+        "cuota_mensual": 1225.6,
+        "porcentaje_total": 0.12256
       }
     }
   ],
@@ -46,8 +65,8 @@
       "salario_base_cotizacion": 10000.0,
       "year": 2026,
       "expected": {
-        "cuota_mensual": 1420.362,
-        "cuota_fija_uma": 373.362
+        "cuota_mensual": 1434.123,
+        "cuota_fija_uma": 387.123
       }
     },
     {
