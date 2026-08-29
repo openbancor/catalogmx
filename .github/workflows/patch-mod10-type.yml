@@ -1,0 +1,56 @@
+name: Patch modalidad limit types
+
+on:
+  push:
+    branches:
+      - fix/fiscal-integrity-2026
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/fiscal-integrity-2026
+          fetch-depth: 0
+      - name: Separate limit types
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('packages/typescript/src/calculators/imss-calculator.ts')
+          text = path.read_text(encoding='utf-8')
+          text = text.replace(
+              "type ModalidadLimitesSalario = {\n  maximo_uma: number;\n  minimo_regla?: string;\n};",
+              "type Modalidad40LimitesSalario = {\n  maximo_uma: number;\n  minimo_regla?: string;\n};\n\ntype Modalidad10LimitesSalario = {\n  minimo_uma: number;\n  maximo_uma: number;\n};",
+          )
+          text = text.replace(
+              'limites_salario: ModalidadLimitesSalario;',
+              'limites_salario: Modalidad40LimitesSalario;',
+              1,
+          )
+          text = text.replace(
+              'limites_salario: ModalidadLimitesSalario;',
+              'limites_salario: Modalidad10LimitesSalario;',
+              1,
+          )
+          path.write_text(text, encoding='utf-8')
+          PY
+          cd packages/typescript
+          npx prettier --write src/calculators/imss-calculator.ts
+      - name: Commit if needed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name 'catalogmx-data[bot]'
+          git config user.email 'catalogmx-data[bot]@users.noreply.github.com'
+          git add packages/typescript/src/calculators/imss-calculator.ts
+          git commit -m 'fix(ts): separate modalidad limit contracts'
+          git push origin HEAD:fix/fiscal-integrity-2026
