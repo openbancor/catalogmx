@@ -33,6 +33,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Verify reproducible Python lock
+        run: |
+          python -m pip install uv==0.12.2
+          uv lock --check --project packages/python
+
       - name: Validate catalog registry
         run: python scripts/catalog_registry.py validate
 
@@ -182,13 +187,23 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: packages/api-worker/package-lock.json
+          cache-dependency-path: |
+            packages/api-worker/package-lock.json
+            packages/typescript/package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
       - name: Validate API Worker
         run: npm run validate
+
+      - name: Install TypeScript package dependencies
+        working-directory: packages/typescript
+        run: npm ci
+
+      - name: Validate packed Node and Worker consumers
+        working-directory: .
+        run: node scripts/check_typescript_package.mjs
 
   # Svelte webapp type checking and production build
   webapp-tests:

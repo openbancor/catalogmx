@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { cpSync, mkdirSync } from 'node:fs';
+import { cpSync, mkdirSync, statSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -26,6 +26,6 @@ mkdirSync(destinationRoot, { recursive: true });
 for (const source of runtimeSources) {
   cpSync(resolve(sharedDataRoot, source), resolve(destinationRoot, source), {
     recursive: true,
-    filter: (path) => !path.endsWith('.pdf'),
+    filter: (path) => statSync(path).isDirectory() || path.endsWith('.json'),
   });
 }
