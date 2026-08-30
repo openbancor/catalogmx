@@ -37,6 +37,7 @@
   "modalidad_40": [
     {
       "salario_base_cotizacion": 15000.0,
+      "ultimo_sbc_mensual": 12000.0,
       "year": 2026,
       "expected": {
         "cuota_mensual": 2165.7,
@@ -45,6 +46,7 @@
     },
     {
       "salario_base_cotizacion": 12000.0,
+      "ultimo_sbc_mensual": 10000.0,
       "year": 2025,
       "expected": {
         "cuota_mensual": 1498.08,
@@ -53,6 +55,7 @@
     },
     {
       "salario_base_cotizacion": 10000.0,
+      "ultimo_sbc_mensual": 8000.0,
       "year": 2024,
       "expected": {
         "cuota_mensual": 1168.1,
