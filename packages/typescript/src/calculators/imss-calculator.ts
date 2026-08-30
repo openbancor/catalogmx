@@ -372,7 +372,7 @@ export class IMSSCalculator {
   static calcularModalidad40(
     salarioBaseCotizacionMensual: number,
     ultimoSbcMensual: number,
-    year: IMSSYear = 2026,
+    year: IMSSYear,
     fecha?: string | Date
   ): Modalidad40Result {
     this.loadTablesData();

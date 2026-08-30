@@ -239,7 +239,7 @@ def calcular_cuotas_obrero_patronales(
 def calcular_modalidad_40(
     salario_base_cotizacion: float,
     ultimo_sbc_mensual: float,
-    year: IMSSYear = 2026,
+    year: IMSSYear,
 ) -> Modalidad40Result:
     """Calculate Modalidad 40 using explicit monthly salary amounts.
 
