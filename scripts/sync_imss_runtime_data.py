@@ -14,6 +14,7 @@ DART_DATA = REPO_ROOT / "packages" / "dart" / "lib" / "src" / "data"
 RUNTIME_FILES = ("imss-tables.json", "imss-catalogs.json")
 PYTHON_ONLY_FILES = {
     "cfdi-estado.json": SHARED_DATA / "sat" / "cfdi_4.0" / "estado.json",
+    "clave_prod_serv.db": SHARED_DATA / "sqlite" / "clave_prod_serv.db",
 }
 
 

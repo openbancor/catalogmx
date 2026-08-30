@@ -26,7 +26,8 @@ class EstadoCfdiCatalog:
     @classmethod
     def get_estado(cls, code: str) -> dict | None:
         cls._load_data()
-        return cls._by_code.get(code.upper())
+        item = cls._by_code.get(code.upper())
+        return item.copy() if item is not None else None
 
     @classmethod
     def is_valid(cls, code: str) -> bool:
@@ -35,4 +36,4 @@ class EstadoCfdiCatalog:
     @classmethod
     def get_all(cls) -> list[dict]:
         cls._load_data()
-        return cls._data.copy()
+        return [item.copy() for item in cls._data]

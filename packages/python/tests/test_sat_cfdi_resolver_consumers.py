@@ -228,6 +228,17 @@ def test_simple_code_description_catalogs_preserve_public_shape(
     assert len(EstadoCfdiCatalog.get_all()) == 96
 
 
+def test_estado_cfdi_results_are_defensive_copies() -> None:
+    estado = EstadoCfdiCatalog.get_estado("CMX")
+    assert estado is not None
+    estado["code"] = "MUTATED"
+    all_estados = EstadoCfdiCatalog.get_all()
+    all_estados[0]["code"] = "MUTATED"
+
+    assert EstadoCfdiCatalog.get_estado("CMX") == {"code": "CMX"}
+    assert all(item["code"] != "MUTATED" for item in EstadoCfdiCatalog.get_all())
+
+
 def test_boolean_and_catalogmx_enriched_projections_match_legacy_api(
     cfdi_shared_data: Path,
 ) -> None:

@@ -23,6 +23,7 @@ from catalogmx.calculators.imss import (
     get_uma,
 )
 from catalogmx.catalogs.sat.cfdi_4 import EstadoCfdiCatalog
+from catalogmx.catalogs.sat.cfdi_4 import ClaveProdServCatalog
 
 tables = json.loads(files("catalogmx.data").joinpath("imss-tables.json").read_text())
 catalogs = json.loads(files("catalogmx.data").joinpath("imss-catalogs.json").read_text())
@@ -38,6 +39,8 @@ assert modalidad_40["cuota_mensual"] > 0
 assert modalidad_10["cuota_mensual"] > 0
 assert EstadoCfdiCatalog.get_estado("DIF") == {"code": "DIF"}
 assert EstadoCfdiCatalog.get_estado("cmx") == {"code": "CMX"}
+assert ClaveProdServCatalog.get_clave("84111505")["id"] == "84111505"
+assert ClaveProdServCatalog.search("contabilidad", limit=1)
 """
 
 

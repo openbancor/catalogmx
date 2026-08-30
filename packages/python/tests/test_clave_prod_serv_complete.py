@@ -80,6 +80,39 @@ class TestClaveProdServCatalog:
             ClaveProdServCatalog.close()
             ClaveProdServCatalog._db_path = previous_path
 
+    def test_search_fallback_includes_complement(self, tmp_path):
+        """Fallback search preserves the documented complement search field."""
+        db_path = tmp_path / "clave_prod_serv.db"
+        with sqlite3.connect(db_path) as connection:
+            connection.execute("""
+                CREATE TABLE clave_prod_serv (
+                    clave TEXT PRIMARY KEY,
+                    descripcion TEXT,
+                    incluye_iva INTEGER,
+                    incluye_ieps INTEGER,
+                    complemento TEXT,
+                    palabras_similares TEXT,
+                    fecha_inicio_vigencia TEXT,
+                    fecha_fin_vigencia TEXT
+                )
+                """)
+            connection.execute("""
+                INSERT INTO clave_prod_serv VALUES (
+                    '78101800', 'Transporte de carga', 1, 0,
+                    'Carta Porte', '', '', ''
+                )
+                """)
+
+        previous_path = ClaveProdServCatalog._db_path
+        ClaveProdServCatalog.close()
+        ClaveProdServCatalog._db_path = db_path
+        try:
+            results = ClaveProdServCatalog.search("Carta Porte", limit=10)
+            assert [item["id"] for item in results] == ["78101800"]
+        finally:
+            ClaveProdServCatalog.close()
+            ClaveProdServCatalog._db_path = previous_path
+
     def test_search_simple(self):
         """Test search_simple"""
         try:

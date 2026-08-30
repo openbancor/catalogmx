@@ -10,6 +10,7 @@ Este módulo usa SQLite con FTS5 para búsqueda eficiente de texto completo.
 
 import atexit
 import sqlite3
+from importlib.resources import files
 from pathlib import Path
 from typing import TypedDict
 
@@ -70,7 +71,13 @@ class ClaveProdServCatalog:
         if cls._db_path is None:
             from catalogmx.utils.shared_data import get_shared_data_path
 
-            cls._db_path = get_shared_data_path("sqlite", "clave_prod_serv.db")
+            try:
+                cls._db_path = get_shared_data_path("sqlite", "clave_prod_serv.db")
+            except FileNotFoundError:
+                packaged = files("catalogmx.data").joinpath("clave_prod_serv.db")
+                if not packaged.is_file():
+                    raise
+                cls._db_path = Path(str(packaged))
         return cls._db_path
 
     @classmethod
@@ -231,11 +238,11 @@ class ClaveProdServCatalog:
         keyword_pattern = f"%{keyword}%"
         query = """
             SELECT * FROM clave_prod_serv
-            WHERE descripcion LIKE ? OR palabras_similares LIKE ?
+            WHERE descripcion LIKE ? OR complemento LIKE ? OR palabras_similares LIKE ?
             LIMIT ?
         """
 
-        cursor.execute(query, (keyword_pattern, keyword_pattern, limit))
+        cursor.execute(query, (keyword_pattern, keyword_pattern, keyword_pattern, limit))
         return [cls._row_to_clave(row) for row in cursor.fetchall()]
 
     @classmethod
