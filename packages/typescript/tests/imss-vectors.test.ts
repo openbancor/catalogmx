@@ -17,6 +17,7 @@ type ImssVectors = {
   }>;
   modalidad_40: Array<{
     salario_base_cotizacion: number;
+    ultimo_sbc_mensual: number;
     year: number;
     expected: {
       cuota_mensual: number;
@@ -59,11 +60,28 @@ describe('IMSS shared vectors', () => {
     for (const vector of vectors.modalidad_40) {
       const result = IMSSCalculator.calcularModalidad40(
         vector.salario_base_cotizacion,
+        vector.ultimo_sbc_mensual,
         toIMSSYear(vector.year)
       );
       expect(round(result.cuota_mensual)).toBe(vector.expected.cuota_mensual);
       expect(round(result.porcentaje_total)).toBe(vector.expected.porcentaje_total);
     }
+  });
+
+  test('modalidad 40 rejects an SBC below the last registered SBC', () => {
+    expect(() => IMSSCalculator.calcularModalidad40(10000, 12000, 2026)).toThrow(
+      'no puede ser menor al último SBC'
+    );
+  });
+
+  test('modalidad 40 preserves the special 1 SM CEAV band', () => {
+    const monthlyMinimumWage = 315.04 * (3566.22 / 117.31);
+    const result = IMSSCalculator.calcularModalidad40(
+      monthlyMinimumWage,
+      monthlyMinimumWage,
+      2026
+    );
+    expect(result.porcentaje_total).toBeCloseTo(0.10075, 8);
   });
 
   test('modalidad 10', () => {
