@@ -249,7 +249,7 @@ function roundImssResult(result: CuotasIMSSResult): CuotasIMSSResult {
     salario_base_cotizacion: round(result.salario_base_cotizacion),
     year: result.year,
     uma_diaria: round(result.uma_diaria),
-    ceav_patron_rate: round(result.ceav_patron_rate),
+    ceav_patron_rate: result.ceav_patron_rate,
     cuotas_patron: roundMap(result.cuotas_patron),
     cuotas_trabajador: roundMap(result.cuotas_trabajador),
     total_patron: round(result.total_patron),

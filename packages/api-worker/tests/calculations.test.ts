@@ -100,15 +100,14 @@ describe('IMSS calculation adapter', () => {
     );
   });
 
-  test('retains rounded UMA and CEAV rate in the public result', () => {
+  test('retains rounded UMA and source-precision CEAV rate in the public result', () => {
     const result = calculateImss({ sdi: 500, dias_cotizados: 30, ejercicio: 2026 });
 
     expect(result.resultado.uma_diaria).toBe(
       Number(result.auditoria.interno.uma_diaria.toFixed(2))
     );
-    expect(result.resultado.ceav_patron_rate).toBe(
-      Number(result.auditoria.interno.ceav_patron_rate.toFixed(2))
-    );
+    expect(result.resultado.ceav_patron_rate).toBe(0.07513);
+    expect(result.resultado.ceav_patron_rate).toBe(result.auditoria.interno.ceav_patron_rate);
   });
 
   test('rejects an IMSS daily salary below the 2026 general minimum as invalid input', () => {

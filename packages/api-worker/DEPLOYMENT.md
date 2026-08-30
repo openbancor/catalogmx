@@ -21,6 +21,8 @@ npm ci
 npm run validate
 ```
 
+Node.js 22.0.0 or later is required for this Worker and its Wrangler build.
+
 `validate` runs formatting, lint, typecheck, the coverage gate, and the
 Wrangler dry-run. It must not be replaced by a deploy command. Authenticate
 the operator separately with the intended Cloudflare account before the
