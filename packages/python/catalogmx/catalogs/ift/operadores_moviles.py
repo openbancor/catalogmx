@@ -6,8 +6,9 @@ registrados ante el Instituto Federal de Telecomunicaciones (IFT).
 """
 
 import json
-from pathlib import Path
 from typing import TypedDict
+
+from catalogmx.utils.shared_data import get_shared_data_path
 
 
 class OperadorMovil(TypedDict):
@@ -61,14 +62,7 @@ class OperadoresMovilesCatalog:
         if cls._data is not None:
             return
 
-        # Path: catalogmx/packages/python/catalogmx/catalogs/ift/operadores_moviles.py
-        # Target: catalogmx/packages/shared-data/ift/operadores_moviles.json
-        data_path = (
-            Path(__file__).parent.parent.parent.parent.parent
-            / "shared-data"
-            / "ift"
-            / "operadores_moviles.json"
-        )
+        data_path = get_shared_data_path("ift", "operadores_moviles.json")
 
         with open(data_path, encoding="utf-8") as f:
             json_data = json.load(f)

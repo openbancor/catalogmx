@@ -1,0 +1,224 @@
+name: Catalog Maintenance
+
+# Reference/regulatory catalogs are checked on staggered schedules derived from
+# catalog-registry.json freshness SLAs. Adapters may update compact repository
+# data or build independently versioned release artifacts. Dynamic Banxico
+# time-series data keeps its dedicated daily pipeline.
+
+on:
+  schedule:
+    # Times are UTC. They are intentionally spread across days/hours instead of
+    # hitting every government upstream at the same time.
+    - cron: '10 19 * * *'         # daily slot 0
+    - cron: '20 14 * * 2'         # weekly slot 0 (Tuesday)
+    - cron: '40 16 * * 4'         # weekly slot 1 (Thursday)
+    - cron: '30 14 3 * *'         # monthly slot 0
+    - cron: '50 15 10 * *'        # monthly slot 1
+    - cron: '10 17 17 * *'        # monthly slot 2
+    - cron: '20 19 24 * *'        # monthly slot 3
+    - cron: '35 15 6 1,4,7,10 *'  # quarterly slot 0
+    - cron: '45 18 20 1,4,7,10 *' # quarterly slot 1
+    - cron: '5 16 12 1,7 *'       # semiannual slot 0
+    - cron: '25 18 19 1 *'        # annual slot 0
+
+  workflow_dispatch:
+    inputs:
+      cadence:
+        description: 'Maintenance cadence to run'
+        required: true
+        default: 'monthly'
+        type: choice
+        options:
+          - daily
+          - weekly
+          - monthly
+          - quarterly
+          - semiannual
+          - annual
+      slot:
+        description: 'Slot within the cadence (0-3; must exist for selected cadence)'
+        required: true
+        default: '0'
+        type: choice
+        options:
+          - '0'
+          - '1'
+          - '2'
+          - '3'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: catalog-maintenance
+  cancel-in-progress: false
+
+jobs:
+  maintain:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Resolve maintenance slot
+        id: schedule
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            cadence="${{ inputs.cadence }}"
+            slot="${{ inputs.slot }}"
+          else
+            case "${{ github.event.schedule }}" in
+              '10 19 * * *') cadence=daily; slot=0 ;;
+              '20 14 * * 2') cadence=weekly; slot=0 ;;
+              '40 16 * * 4') cadence=weekly; slot=1 ;;
+              '30 14 3 * *') cadence=monthly; slot=0 ;;
+              '50 15 10 * *') cadence=monthly; slot=1 ;;
+              '10 17 17 * *') cadence=monthly; slot=2 ;;
+              '20 19 24 * *') cadence=monthly; slot=3 ;;
+              '35 15 6 1,4,7,10 *') cadence=quarterly; slot=0 ;;
+              '45 18 20 1,4,7,10 *') cadence=quarterly; slot=1 ;;
+              '5 16 12 1,7 *') cadence=semiannual; slot=0 ;;
+              '25 18 19 1 *') cadence=annual; slot=0 ;;
+              *) echo "Unknown schedule: ${{ github.event.schedule }}"; exit 1 ;;
+            esac
+          fi
+
+          echo "cadence=$cadence" >> "$GITHUB_OUTPUT"
+          echo "slot=$slot" >> "$GITHUB_OUTPUT"
+          echo "Running $cadence maintenance slot $slot"
+
+      - name: Validate catalog registry and publisher
+        run: |
+          python scripts/catalog_registry.py validate
+          bash -n scripts/publish_dataset_release.sh
+
+      - name: Plan maintenance
+        run: |
+          PLAN=$(python scripts/catalog_maintenance.py plan \
+            --cadence "${{ steps.schedule.outputs.cadence }}" \
+            --slot "${{ steps.schedule.outputs.slot }}")
+          echo "$PLAN"
+          {
+            echo "## Catalog maintenance plan"
+            echo
+            echo "Cadence: **${{ steps.schedule.outputs.cadence }}**, slot: **${{ steps.schedule.outputs.slot }}**"
+            echo
+            echo '```text'
+            echo "$PLAN"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Run configured adapters
+        run: |
+          RESULT=$(python scripts/catalog_maintenance.py run \
+            --cadence "${{ steps.schedule.outputs.cadence }}" \
+            --slot "${{ steps.schedule.outputs.slot }}")
+          echo "$RESULT"
+          {
+            echo "## Adapter results"
+            echo
+            echo '```text'
+            echo "$RESULT"
+            echo '```'
+            echo
+            echo "Datasets marked **unconfigured** stay visible in the plan but are not mutated until a reviewed adapter is added."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Validate changed data
+        if: success()
+        shell: bash
+        run: |
+          python scripts/catalog_registry.py validate
+
+          if [ -f packages/shared-data/banxico/banks.json ]; then
+            python -m json.tool packages/shared-data/banxico/banks.json >/dev/null
+          fi
+
+          git diff --check
+
+      - name: Detect repository data changes
+        id: changes
+        shell: bash
+        run: |
+          if git diff --quiet -- packages/shared-data; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No canonical repository data changes detected."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Canonical repository data changed:"
+            git diff --stat -- packages/shared-data
+          fi
+
+      - name: Create or update data refresh pull request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: automation/catalog-refresh
+          delete-branch: true
+          commit-message: 'data: automated catalog refresh'
+          title: 'data: automated catalog refresh'
+          body: |
+            Automated catalog maintenance detected canonical data changes.
+
+            The schedule and selected datasets come from `catalog-registry.json` freshness policy via `scripts/catalog_maintenance.py`. Source-specific adapters update deterministic repository data, and this workflow opens a PR instead of pushing regulatory/reference changes directly to `master`.
+
+            Please review the upstream provenance, semantic diff, generated-data validation, and normal repository CI before merging.
+          add-paths: |
+            packages/shared-data/**
+
+      - name: Publish changed release artifacts
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          manifests=(dist/catalog-artifacts/*/*.manifest.json)
+
+          if [ ${#manifests[@]} -eq 0 ]; then
+            echo "No release artifacts produced."
+            exit 0
+          fi
+
+          reviewed_sha=$(git rev-parse HEAD)
+          master_sha=$(git rev-parse origin/master)
+          if [ "$reviewed_sha" != "$master_sha" ]; then
+            echo "Checked-out publication source is not origin/master" >&2
+            exit 1
+          fi
+
+          for manifest in "${manifests[@]}"; do
+            artifact_dir=$(dirname "$manifest")
+            artifact_name=$(jq -er '.dataset.file' "$manifest")
+            artifact="$artifact_dir/$artifact_name"
+            dataset_id=$(jq -er '.dataset_id' "$manifest")
+            dataset_version=$(jq -er '.dataset_version | tostring' "$manifest")
+
+            if [ ! -f "$artifact" ]; then
+              echo "Manifest $manifest references missing artifact $artifact" >&2
+              exit 1
+            fi
+
+            slug=$(printf '%s-%s' "$dataset_id" "$dataset_version" \
+              | tr '[:upper:]' '[:lower:]' \
+              | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')
+            channel="data-${slug}-latest"
+
+            bash scripts/publish_dataset_release.sh \
+              --manifest "$manifest" \
+              --artifact "$artifact" \
+              --channel "$channel" \
+              --target "$reviewed_sha"
+          done

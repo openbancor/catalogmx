@@ -1,0 +1,412 @@
+name: Python CFDI Consumer Data
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  installed-wheel-cfdi:
+    name: Installed wheel CFDI consumers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build verified CFDI release fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          export FIXTURE_ROOT="$RUNNER_TEMP/cfdi-fixture"
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import shutil
+          import sqlite3
+          from pathlib import Path
+
+          root = Path(os.environ["FIXTURE_ROOT"])
+          releases = root / "releases"
+          metadata = root / "release-metadata"
+          build = root / "build"
+          build.mkdir(parents=True, exist_ok=True)
+          metadata.mkdir(parents=True, exist_ok=True)
+
+          contract = json.loads(
+              Path("packages/python/catalogmx/data/dataset_contract.json").read_text(
+                  encoding="utf-8"
+              )
+          )["datasets"]["sat.cfdi_4"]["artifact"]
+          database = build / contract["file"]
+
+          connection = sqlite3.connect(database)
+          try:
+              simple = {
+                  "cfdi_40_exportaciones": [("01", "No aplica")],
+                  "cfdi_40_formas_pago": [("01", "Efectivo")],
+                  "cfdi_40_metodos_pago": [
+                      ("PUE", "Pago en una sola exhibición")
+                  ],
+                  "cfdi_40_objetos_impuestos": [
+                      ("01", "No objeto de impuesto.")
+                  ],
+                  "cfdi_40_tipos_relaciones": [
+                      ("01", "Nota de crédito de los documentos relacionados")
+                  ],
+                  "cfdi_40_tipos_comprobantes": [("I", "Ingreso")],
+                  "cfdi_40_meses": [("01", "Enero")],
+                  "cfdi_40_periodicidades": [("01", "Diario")],
+              }
+              for table, rows in simple.items():
+                  connection.execute(
+                      f'CREATE TABLE "{table}" ('
+                      "id TEXT PRIMARY KEY, texto TEXT NOT NULL)"
+                  )
+                  connection.executemany(
+                      f'INSERT INTO "{table}" VALUES (?, ?)', rows
+                  )
+
+              connection.execute(
+                  "CREATE TABLE cfdi_40_tipos_factores (id TEXT PRIMARY KEY)"
+              )
+              connection.execute(
+                  "INSERT INTO cfdi_40_tipos_factores VALUES ('Tasa')"
+              )
+
+              connection.execute(
+                  "CREATE TABLE cfdi_40_impuestos ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, "
+                  "retencion INTEGER, traslado INTEGER)"
+              )
+              connection.executemany(
+                  "INSERT INTO cfdi_40_impuestos VALUES (?, ?, ?, ?)",
+                  [("001", "ISR", 1, 0), ("002", "IVA", 1, 1)],
+              )
+
+              connection.execute(
+                  "CREATE TABLE cfdi_40_regimenes_fiscales ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, "
+                  "aplica_fisica INTEGER, aplica_moral INTEGER)"
+              )
+              connection.executemany(
+                  "INSERT INTO cfdi_40_regimenes_fiscales VALUES (?, ?, ?, ?)",
+                  [
+                      ("601", "General de Ley Personas Morales", 0, 1),
+                      (
+                          "605",
+                          "Sueldos y Salarios e Ingresos Asimilados a Salarios",
+                          1,
+                          0,
+                      ),
+                  ],
+              )
+
+              connection.execute(
+                  "CREATE TABLE cfdi_40_usos_cfdi ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, "
+                  "aplica_fisica INTEGER, aplica_moral INTEGER)"
+              )
+              connection.executemany(
+                  "INSERT INTO cfdi_40_usos_cfdi VALUES (?, ?, ?, ?)",
+                  [
+                      ("G01", "Adquisición de mercancías.", 1, 1),
+                      (
+                          "D01",
+                          "Honorarios médicos, dentales y gastos hospitalarios.",
+                          1,
+                          0,
+                      ),
+                  ],
+              )
+
+              connection.execute(
+                  "CREATE TABLE cfdi_40_claves_unidades ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, descripcion TEXT, "
+                  "notas TEXT, vigencia_desde TEXT, vigencia_hasta TEXT, "
+                  "simbolo TEXT)"
+              )
+              connection.executemany(
+                  "INSERT INTO cfdi_40_claves_unidades "
+                  "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                  [
+                      (
+                          "KGM",
+                          "Kilogramo",
+                          "",
+                          "Unidad de masa",
+                          "2022-01-01",
+                          "",
+                          "kg",
+                      ),
+                      (
+                          "OLD",
+                          "Unidad obsoleta",
+                          "",
+                          "",
+                          "2022-01-01",
+                          "2025-12-31",
+                          "",
+                      ),
+                  ],
+              )
+
+              connection.execute(
+                  "CREATE TABLE cfdi_40_monedas ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, decimales INTEGER, "
+                  "porcentaje_variacion TEXT, vigencia_desde TEXT, vigencia_hasta TEXT)"
+              )
+              connection.executemany(
+                  "INSERT INTO cfdi_40_monedas VALUES (?, ?, ?, ?, ?, ?)",
+                  [
+                      ("EUR", "Euro", 2, "0.01", "2022-01-01", ""),
+                      ("MXN", "Peso Mexicano", 2, "0.01", "2022-01-01", ""),
+                      ("USD", "Dolar americano", 2, "0.01", "2022-01-01", ""),
+                  ],
+              )
+
+              connection.execute(
+                  "CREATE TABLE cfdi_40_paises ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, "
+                  "patron_identidad_tributaria TEXT, "
+                  "validacion_identidad_tributaria TEXT, "
+                  "patron_codigo_postal TEXT, agrupaciones TEXT)"
+              )
+              connection.executemany(
+                  "INSERT INTO cfdi_40_paises VALUES (?, ?, ?, ?, ?, ?)",
+                  [
+                      ("CAN", "Canadá", "[0-9]{9}", "", "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]", "TLCAN"),
+                      ("ESP", "España", "", "", "", "Unión Europea"),
+                      ("MEX", "México", "[A-Z&Ñ]{3,4}[0-9]{2}[0-9A-Z]+", "Lista del SAT", "[0-9]{5}", "TLCAN"),
+                      ("USA", "Estados Unidos (los)", "[0-9]{9}", "", "[0-9]{5}(-[0-9]{4})?", "TLCAN"),
+                  ],
+              )
+
+              connection.execute(
+                  "CREATE TABLE cfdi_40_reglas_tasa_cuota ("
+                  "tipo TEXT NOT NULL, minimo TEXT, valor TEXT, "
+                  "impuesto TEXT NOT NULL, factor TEXT NOT NULL, "
+                  "traslado INTEGER, retencion INTEGER, "
+                  "vigencia_desde TEXT, vigencia_hasta TEXT)"
+              )
+              connection.executemany(
+                  "INSERT INTO cfdi_40_reglas_tasa_cuota "
+                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                  [
+                      (
+                          "Fijo",
+                          "",
+                          "0.160000",
+                          "IVA",
+                          "Tasa",
+                          1,
+                          0,
+                          "2022-01-01",
+                          "",
+                      ),
+                      (
+                          "Rango",
+                          "0.000000",
+                          "0.160000",
+                          "IVA",
+                          "Tasa",
+                          0,
+                          1,
+                          "2022-01-01",
+                          "",
+                      ),
+                  ],
+              )
+              connection.commit()
+          finally:
+              connection.close()
+
+          payload = database.read_bytes()
+          file_sha = hashlib.sha256(payload).hexdigest()
+          content_sha = hashlib.sha256(
+              b"catalogmx-cfdi-installed-wheel-consumer-fixture-v4"
+          ).hexdigest()
+          channel = contract["channel"]
+          release_tag = f"{channel.removesuffix('-latest')}-{content_sha}"
+
+          manifest = {
+              "schema_version": 1,
+              "dataset_id": "sat.cfdi_4",
+              "dataset_version": str(contract["version"]),
+              "data_version": "wheel-fixture",
+              "dataset": {
+                  "file": contract["file"],
+                  "format": contract["format"],
+                  "mount_path": contract["mount_path"],
+                  "file_sha256": file_sha,
+                  "content_sha256": content_sha,
+              },
+          }
+          manifest_path = build / contract["manifest"]
+          manifest_path.write_text(
+              json.dumps(manifest, sort_keys=True, indent=2) + "\n",
+              encoding="utf-8",
+          )
+
+          release_dir = releases / release_tag
+          release_dir.mkdir(parents=True, exist_ok=True)
+          shutil.copy2(database, release_dir / database.name)
+          shutil.copy2(manifest_path, release_dir / manifest_path.name)
+
+          pointer = {
+              "schema_version": 1,
+              "dataset_id": "sat.cfdi_4",
+              "dataset_version": str(contract["version"]),
+              "release_tag": release_tag,
+              "content_sha256": content_sha,
+              "artifact": contract["file"],
+              "manifest": contract["manifest"],
+          }
+          (metadata / channel).write_text(
+              json.dumps(
+                  {"tag_name": channel, "body": json.dumps(pointer, sort_keys=True)},
+                  sort_keys=True,
+              ),
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Build and install clean wheel
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip build
+          python -m build --wheel --outdir "$RUNNER_TEMP/wheels" packages/python
+          unzip -l "$RUNNER_TEMP"/wheels/catalogmx-*.whl \
+            > "$RUNNER_TEMP/wheel-contents.txt"
+          if grep -q 'catalogmx/shared-data/' "$RUNNER_TEMP/wheel-contents.txt"; then
+            echo 'Unexpected embedded shared-data tree in wheel' >&2
+            exit 1
+          fi
+          python -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/python" -m pip install --upgrade pip
+          "$RUNNER_TEMP/venv/bin/python" -m pip install \
+            "$RUNNER_TEMP"/wheels/catalogmx-*.whl
+
+      - name: Resolve CFDI public APIs from verified release
+        shell: bash
+        env:
+          CATALOGMX_DATA_MODE: fetch-missing
+        run: |
+          set -euo pipefail
+          export CATALOGMX_RELEASE_BASE_URL="file://$RUNNER_TEMP/cfdi-fixture/releases"
+          export CATALOGMX_RELEASE_METADATA_BASE_URL="file://$RUNNER_TEMP/cfdi-fixture/release-metadata"
+          export CATALOGMX_CACHE_DIR="$RUNNER_TEMP/cfdi-consumer-cache"
+          unset CATALOGMX_SHARED_DATA
+
+          "$RUNNER_TEMP/venv/bin/python" - <<'PY'
+          from catalogmx.catalogs.sat.cfdi_4 import (
+              ClaveUnidadCatalog,
+              ExportacionCatalog,
+              FormaPagoCatalog,
+              ImpuestoCatalog,
+              MetodoPagoCatalog,
+              ObjetoImpCatalog,
+              RegimenFiscalCatalog,
+              TipoComprobanteCatalog,
+              TipoRelacionCatalog,
+              UsoCFDICatalog,
+          )
+          from catalogmx.catalogs.sat.cfdi_4.meses import Meses
+          from catalogmx.catalogs.sat.cfdi_4.periodicidad import Periodicidad
+          from catalogmx.catalogs.sat.cfdi_4.tasa_o_cuota import TasaOCuota
+          from catalogmx.catalogs.sat.cfdi_4.tipo_factor import TipoFactor
+          from catalogmx.catalogs.sat.comercio_exterior import (
+              MonedaCatalog,
+              RegistroIdentTribCatalog,
+          )
+          from catalogmx.data import DatasetResolver
+
+          assert ExportacionCatalog.get_exportacion("01") == {
+              "code": "01",
+              "description": "No aplica",
+          }
+          assert FormaPagoCatalog.get_forma_pago("01")["description"] == "Efectivo"
+          assert MetodoPagoCatalog.get_metodo("PUE")["description"].startswith("Pago")
+          assert ObjetoImpCatalog.get_objeto("01")["description"] == (
+              "No objeto de impuesto"
+          )
+          assert TipoRelacionCatalog.get_tipo("01") is not None
+          assert TipoComprobanteCatalog.get_tipo("I")["description"] == "Ingreso"
+
+          isr = ImpuestoCatalog.get_impuesto("001")
+          assert isr is not None
+          assert isr["name"] == "Impuesto Sobre la Renta"
+          assert isr["retention"] is True
+          assert isr["transfer"] is False
+
+          regimen = RegimenFiscalCatalog.get_regimen("601")
+          assert regimen is not None
+          assert regimen["fisica"] is False
+          assert regimen["moral"] is True
+
+          uso = UsoCFDICatalog.get_uso("G01")
+          assert uso is not None
+          assert uso["description"] == "Adquisición de mercancías"
+          assert uso["applies_to"] == "both"
+
+          assert Meses.get_by_id("01") == {"valor": "01"}
+          assert Periodicidad.get_by_id("01") == {"valor": "01"}
+          assert TipoFactor.get_by_id("Tasa") == {"valor": "Tasa"}
+
+          fixed_rate = TasaOCuota.get_by_range_and_tax(
+              None, 0.16, "002", "tasa", True, False
+          )
+          assert len(fixed_rate) == 1
+          assert fixed_rate[0]["tipo"] == "Fijo"
+          assert fixed_rate[0]["valor_mínimo"] is None
+          assert fixed_rate[0]["valor_máximo"] == "0.160000"
+
+          retained_range = TasaOCuota.get_by_range_and_tax(
+              0, "0.160000", "IVA", "Tasa", False, True
+          )
+          assert len(retained_range) == 1
+          assert retained_range[0]["tipo"] == "Rango"
+
+          unidad = ClaveUnidadCatalog.get_unidad("KGM")
+          assert unidad is not None
+          assert unidad["nombre"] == "Kilogramo"
+          assert unidad["simbolo"] == "kg"
+          assert unidad["fechaDeInicioDeVigencia"] == "01-01-2022"
+
+          moneda = MonedaCatalog.get_moneda("MXN")
+          assert moneda is not None
+          assert moneda["nombre"] == "Peso Mexicano"
+          assert moneda["decimales"] == 2
+          assert moneda["pais"] is None
+          assert [item["codigo"] for item in MonedaCatalog.search("Euro")] == ["EUR"]
+
+          usa_rule = RegistroIdentTribCatalog.get_country_rule("USA")
+          assert usa_rule is not None
+          assert usa_rule["format_pattern"] == "[0-9]{9}"
+          assert RegistroIdentTribCatalog.validate_for_country(
+              "USA", "123456789"
+          )["valid"] is True
+          assert RegistroIdentTribCatalog.validate_for_country(
+              "USA", "12345678"
+          )["valid"] is False
+          assert RegistroIdentTribCatalog.validate_for_country(
+              "ESP", "ES-ANY-VALUE"
+          )["valid"] is True
+          mexico = RegistroIdentTribCatalog.validate_for_country(
+              "MEX", "ABC010101AA0"
+          )
+          assert mexico["requires_external_validation"] is True
+          assert mexico["validation"] == "Lista del SAT"
+
+          resolver = DatasetResolver()
+          assert resolver.verify_cached_dataset("sat.cfdi_4")
+          state = resolver.cache_status("sat.cfdi_4")
+          assert state["cached"] is True
+          assert state["release_tag"].startswith("data-sat-cfdi-4-4-0-")
+          PY

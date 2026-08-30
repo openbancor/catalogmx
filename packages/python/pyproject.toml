@@ -109,8 +109,7 @@ exclude = ["tests*"]
 catalogmx = [
     "py.typed",
     "data/*.sqlite3",
-    "data/*.db",
-    "shared-data/**"
+    "data/*.json"
 ]
 
 [tool.black]

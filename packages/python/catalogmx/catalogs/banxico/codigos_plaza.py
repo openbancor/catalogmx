@@ -10,8 +10,9 @@ Fuente: Banco de México (BANXICO) / Sistema de Pagos Electrónicos Interbancari
 """
 
 import json
-import os
 from typing import TypedDict
+
+from catalogmx.utils.shared_data import get_shared_data_path
 
 try:
     from unidecode import unidecode
@@ -50,9 +51,7 @@ class CodigosPlazaCatalog:
         if cls._data is not None:
             return
 
-        data_path = os.path.join(
-            os.path.dirname(__file__), "../../../../shared-data/banxico/codigos_plaza.json"
-        )
+        data_path = get_shared_data_path("banxico", "codigos_plaza.json")
 
         with open(data_path, encoding="utf-8") as f:
             catalog = json.load(f)

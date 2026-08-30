@@ -1,519 +1,263 @@
-"""
-Tests for DataUpdater module
+"""Compatibility tests for the legacy DataUpdater facade."""
 
-Tests the automatic update system for dynamic data from GitHub Releases.
-"""
+from __future__ import annotations
 
-import os
 import sqlite3
-import tempfile
-from datetime import datetime
 from pathlib import Path
 from unittest import mock
 
 import pytest
 
-from catalogmx.data.updater import DataUpdater, get_database_path, get_version, update_now
+from catalogmx.data import updater as updater_module
+from catalogmx.data.updater import DATASET_ID, DataUpdater
 
 
-class TestDataUpdater:
-    """Test DataUpdater class"""
-
-    def test_init_default(self):
-        """Test initialization with default config"""
-        updater = DataUpdater()
-        assert updater is not None
-
-    def test_init_custom_cache_dir(self):
-        """Test initialization with custom cache directory"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-            assert updater.cache_dir == Path(tmpdir)
-
-    def test_get_local_version_no_cache(self):
-        """Test getting local version when no cache exists"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-            version = updater.get_local_version()
-            assert version is None
-
-    def test_get_local_age_hours_no_cache(self):
-        """Test getting age when no cache exists"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-            age = updater.get_local_age_hours()
-            assert age is None
-
-    @mock.patch("catalogmx.data.updater.urllib.request.urlretrieve")
-    def test_download_latest_success(self, mock_urlretrieve):
-        """Test successful download"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Create a mock SQLite database
-            temp_db = Path(tmpdir) / "test.db"
-            db = sqlite3.connect(temp_db)
-            db.execute("CREATE TABLE _metadata (key TEXT, value TEXT)")
-            db.execute("INSERT INTO _metadata VALUES ('version', '2025-12-04')")
-            db.commit()
-            db.close()
-
-            # Mock urlretrieve to copy our test db
-            def mock_retrieve(url, filename):
-                import shutil
-
-                shutil.copy(temp_db, filename)
-
-            mock_urlretrieve.side_effect = mock_retrieve
-
-            # Test download
-            result = updater.download_latest(verbose=False)
-            assert result is True
-
-            # Verify version was saved
-            version = updater.get_local_version()
-            assert version == "2025-12-04"
-
-    def test_auto_update_with_embedded_fallback(self):
-        """Test auto_update falls back to embedded when download fails"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Disable auto-update to test fallback
-            with mock.patch.dict(os.environ, {"CATALOGMX_AUTO_UPDATE": "false"}):
-                db_path = updater.auto_update(verbose=False)
-
-                # Should return embedded path
-                assert db_path.exists()
-                assert db_path.name == "mexico_dynamic.sqlite3"
-
-    def test_get_database_path_no_auto_update(self):
-        """Test getting database path without auto-update"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Should return embedded path when no cache
-            db_path = updater.get_database_path(auto_update=False)
-            assert db_path.exists()
-
-    def test_clear_cache(self):
-        """Test clearing cache"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Create fake cache files
-            cache_db = updater.cache_db
-            version_file = updater.version_file
-
-            cache_db.parent.mkdir(parents=True, exist_ok=True)
-            cache_db.touch()
-            version_file.touch()
-
-            assert cache_db.exists()
-            assert version_file.exists()
-
-            # Clear cache
-            result = updater.clearCache()
-            assert result is True
-            assert not cache_db.exists()
-            assert not version_file.exists()
-
-    def test_environment_variables(self):
-        """Test configuration via environment variables"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            env_vars = {
-                "CATALOGMX_CACHE_DIR": tmpdir,
-                "CATALOGMX_AUTO_UPDATE": "false",
-                "CATALOGMX_DATA_URL": "https://example.com/test.db",
-            }
-
-            with mock.patch.dict(os.environ, env_vars):
-                # Need to reload module to pick up new env vars
-                from catalogmx.data import updater as updater_module
-                from importlib import reload
-
-                reload(updater_module)
-
-                assert updater_module.CACHE_DIR == Path(tmpdir)
-                assert updater_module.AUTO_UPDATE_ENABLED is False
+def _database(root: Path, version: str = "2026-08-31") -> Path:
+    root.mkdir(parents=True, exist_ok=True)
+    path = root / "mexico_dynamic.sqlite3"
+    with sqlite3.connect(path) as db:
+        db.execute("CREATE TABLE _metadata (key TEXT, value TEXT)")
+        db.execute("INSERT INTO _metadata VALUES ('version', ?)", (version,))
+    return path
 
 
-class TestConvenienceFunctions:
-    """Test convenience functions"""
-
-    def test_get_database_path(self):
-        """Test get_database_path function"""
-        db_path = get_database_path(auto_update=False)
-        assert db_path.exists()
-        assert db_path.name == "mexico_dynamic.sqlite3"
-
-    def test_get_version_no_cache(self):
-        """Test get_version with no cache"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            with mock.patch("catalogmx.data.updater.CACHE_DIR", Path(tmpdir)):
-                version = get_version()
-                # May return None (no cache) or a version (embedded)
-                assert version is None or isinstance(version, str)
-
-    @mock.patch("catalogmx.data.updater.DataUpdater.download_latest")
-    def test_update_now(self, mock_download):
-        """Test update_now function"""
-        mock_download.return_value = True
-
-        result = update_now(force=True, verbose=False)
-        assert result is True
-        mock_download.assert_called_once()
+def test_custom_cache_dir_is_retained_for_compatibility(tmp_path: Path) -> None:
+    updater = DataUpdater(cache_dir=tmp_path)
+    assert updater.cache_dir == tmp_path
+    assert updater.cache_db == tmp_path / "mexico_dynamic.sqlite3"
+    assert updater.version_file == tmp_path / "version.json"
 
 
-class TestDatabaseIntegrity:
-    """Test database integrity and structure"""
+def test_verify_database_reads_dynamic_metadata(tmp_path: Path) -> None:
+    updater = DataUpdater(cache_dir=tmp_path / "cache")
+    database = _database(tmp_path / "artifact", "2026-09-01")
+    assert updater._verify_database(database) == "2026-09-01"
 
-    def test_embedded_database_exists(self):
-        """Test that embedded database exists and is valid"""
-        from catalogmx.data.updater import EMBEDDED_DB
+    invalid = tmp_path / "invalid.sqlite3"
+    invalid.write_text("not sqlite", encoding="utf-8")
+    assert updater._verify_database(invalid) is None
 
-        assert EMBEDDED_DB.exists()
 
-        # Verify it's a valid SQLite database
-        db = sqlite3.connect(EMBEDDED_DB)
-        cursor = db.execute("SELECT value FROM _metadata WHERE key = 'version'")
-        version = cursor.fetchone()
-        db.close()
+def test_auto_update_delegates_to_refresh_resolver_with_legacy_24h_ttl(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "dynamic"
+    database = _database(root)
+    resolver = mock.Mock()
+    resolver.resolve_dataset_root.return_value = root
 
-        assert version is not None
-        assert isinstance(version[0], str)
+    with mock.patch(
+        "catalogmx.data.updater.DatasetResolver", return_value=resolver
+    ) as resolver_type:
+        updater = DataUpdater(cache_dir=tmp_path / "cache")
+        assert updater.auto_update(max_age_hours=24) == database
 
-    def test_embedded_database_has_required_tables(self):
-        """Test that embedded database has all required tables"""
-        from catalogmx.data.updater import EMBEDDED_DB
+    resolver_type.assert_called_once_with(
+        cache_dir=tmp_path / "cache",
+        mode="refresh",
+        cache_ttl_seconds=86400,
+    )
+    resolver.resolve_dataset_root.assert_called_once_with(DATASET_ID)
 
-        db = sqlite3.connect(EMBEDDED_DB)
 
-        # Check for required tables
-        cursor = db.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
-        tables = {row[0] for row in cursor.fetchall()}
+def test_auto_update_disabled_delegates_to_offline_resolver(tmp_path: Path) -> None:
+    root = tmp_path / "dynamic"
+    database = _database(root)
+    resolver = mock.Mock()
+    resolver.resolve_dataset_root.return_value = root
 
-        required_tables = {
-            "_metadata",
-            "udis",
-            "tipo_cambio",
-            "tiie",
-            "cetes",
-            "inflacion",
-            "salarios_minimos",
+    with (
+        mock.patch.object(updater_module, "AUTO_UPDATE_ENABLED", False),
+        mock.patch(
+            "catalogmx.data.updater.DatasetResolver", return_value=resolver
+        ) as resolver_type,
+    ):
+        updater = DataUpdater(cache_dir=tmp_path / "cache")
+        assert updater.auto_update() == database
+
+    resolver_type.assert_called_once_with(
+        cache_dir=tmp_path / "cache",
+        mode="offline",
+        cache_ttl_seconds=None,
+    )
+
+
+def test_explicit_download_uses_common_dataset_fetch(tmp_path: Path) -> None:
+    root = tmp_path / "dynamic"
+    _database(root)
+    resolver = mock.Mock()
+    resolver.fetch_dataset.return_value = root
+
+    with mock.patch("catalogmx.data.updater.DatasetResolver", return_value=resolver):
+        updater = DataUpdater(cache_dir=tmp_path / "cache")
+        assert updater.download_latest(force=True, verbose=False)
+
+    resolver.fetch_dataset.assert_called_once_with(DATASET_ID)
+
+
+def test_explicit_download_fails_closed_on_invalid_database(tmp_path: Path) -> None:
+    root = tmp_path / "dynamic"
+    root.mkdir()
+    (root / "mexico_dynamic.sqlite3").write_text("invalid", encoding="utf-8")
+    resolver = mock.Mock()
+    resolver.fetch_dataset.return_value = root
+
+    with mock.patch("catalogmx.data.updater.DatasetResolver", return_value=resolver):
+        updater = DataUpdater(cache_dir=tmp_path / "cache")
+        assert not updater.download_latest(verbose=False)
+
+
+def test_local_version_comes_from_verified_resolver_cache(tmp_path: Path) -> None:
+    root = tmp_path / "dynamic"
+    _database(root, "2026-08-30")
+    resolver = mock.Mock()
+    resolver.cache_status.return_value = {
+        "cached": True,
+        "root": str(root),
+        "fetched_at": "2026-08-28T10:00:00+00:00",
+    }
+    resolver.verify_cached_dataset.return_value = True
+
+    updater = DataUpdater(cache_dir=tmp_path / "cache")
+    with mock.patch.object(updater, "_resolver", return_value=resolver):
+        assert updater.get_local_version() == "2026-08-30"
+        assert updater.get_local_age_hours() is not None
+
+
+def test_local_version_rejects_unverified_cache(tmp_path: Path) -> None:
+    root = tmp_path / "dynamic"
+    _database(root)
+    resolver = mock.Mock()
+    resolver.cache_status.return_value = {"cached": True, "root": str(root)}
+    resolver.verify_cached_dataset.return_value = False
+
+    updater = DataUpdater(cache_dir=tmp_path / "cache")
+    with mock.patch.object(updater, "_resolver", return_value=resolver):
+        assert updater.get_local_version() is None
+
+
+def test_no_auto_update_uses_declared_bootstrap_when_cache_is_empty(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("CATALOGMX_SHARED_DATA", raising=False)
+    updater = DataUpdater(cache_dir=tmp_path / "empty-cache")
+    path = updater.get_database_path(auto_update=False)
+    assert path == updater_module.EMBEDDED_DB
+    assert updater._verify_database(path) is not None
+
+
+def test_bootstrap_database_has_required_dynamic_tables() -> None:
+    assert updater_module.EMBEDDED_DB.is_file()
+    with sqlite3.connect(f"file:{updater_module.EMBEDDED_DB}?mode=ro", uri=True) as db:
+        tables = {
+            row[0]
+            for row in db.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
+            ).fetchall()
         }
-
-        assert required_tables.issubset(tables), f"Missing tables: {required_tables - tables}"
-
-        db.close()
-
-    def test_embedded_database_has_data(self):
-        """Test that embedded database has actual data"""
-        from catalogmx.data.updater import EMBEDDED_DB
-
-        db = sqlite3.connect(EMBEDDED_DB)
-
-        # Check UDIs count
-        cursor = db.execute("SELECT COUNT(*) FROM udis")
-        udi_count = cursor.fetchone()[0]
-        assert udi_count > 10000, "UDIs table should have 10,000+ records"
-
-        # Check tipo_cambio count
-        cursor = db.execute("SELECT COUNT(*) FROM tipo_cambio")
-        tc_count = cursor.fetchone()[0]
-        assert tc_count > 20000, "tipo_cambio table should have 20,000+ records"
-
-        db.close()
-
-    def test_database_has_indexes(self):
-        """Test that database has proper indexes"""
-        from catalogmx.data.updater import EMBEDDED_DB
-
-        db = sqlite3.connect(EMBEDDED_DB)
-
-        # Check for indexes
-        cursor = db.execute("SELECT name FROM sqlite_master WHERE type='index' ORDER BY name")
-        indexes = {row[0] for row in cursor.fetchall()}
-
-        # Should have at least some indexes
-        assert "idx_udis_anio_mes" in indexes
-        assert "idx_tipo_cambio_fuente" in indexes
-
-        db.close()
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
-
-
-class TestDataUpdaterErrorCases:
-    """Test error handling in DataUpdater"""
-
-    def test_get_local_version_corrupted_json(self):
-        """Test getting local version when JSON is corrupted"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Create corrupted JSON file
-            updater.version_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(updater.version_file, "w") as f:
-                f.write("{ invalid json }")
-
-            version = updater.get_local_version()
-            assert version is None
-
-    def test_get_local_age_hours_corrupted_json(self):
-        """Test getting age when JSON is corrupted"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Create corrupted JSON file
-            updater.version_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(updater.version_file, "w") as f:
-                f.write("not valid json")
-
-            age = updater.get_local_age_hours()
-            assert age is None
-
-    def test_get_local_age_hours_missing_updated_at(self):
-        """Test getting age when updated_at field is missing"""
-        import json
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Create JSON without updated_at field
-            updater.version_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(updater.version_file, "w") as f:
-                json.dump({"version": "2025-01-01"}, f)
-
-            age = updater.get_local_age_hours()
-            assert age is None
-
-    def test_get_local_age_hours_invalid_date_format(self):
-        """Test getting age when date format is invalid"""
-        import json
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Create JSON with invalid date format
-            updater.version_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(updater.version_file, "w") as f:
-                json.dump({"version": "2025-01-01", "updated_at": "not a date"}, f)
-
-            age = updater.get_local_age_hours()
-            assert age is None
-
-    def test_verify_database_invalid(self):
-        """Test _verify_database with invalid database"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Create an invalid database file (not SQLite)
-            fake_db = Path(tmpdir) / "fake.db"
-            with open(fake_db, "w") as f:
-                f.write("not a database")
-
-            version = updater._verify_database(fake_db)
-            assert version is None
-
-    def test_verify_database_missing_metadata(self):
-        """Test _verify_database with database missing metadata"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Create a valid SQLite database but without metadata table
-            test_db = Path(tmpdir) / "test.db"
-            db = sqlite3.connect(test_db)
-            db.execute("CREATE TABLE dummy (id INTEGER)")
-            db.commit()
-            db.close()
-
-            version = updater._verify_database(test_db)
-            assert version is None
-
-    def test_download_latest_with_verbose(self):
-        """Test download_latest with verbose output"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Create a mock SQLite database
-            temp_db = Path(tmpdir) / "test.db"
-            db = sqlite3.connect(temp_db)
-            db.execute("CREATE TABLE _metadata (key TEXT, value TEXT)")
-            db.execute("INSERT INTO _metadata VALUES ('version', '2025-12-27')")
-            db.commit()
-            db.close()
-
-            # Mock urlretrieve to copy our test db
-            with mock.patch(
-                "catalogmx.data.updater.urllib.request.urlretrieve"
-            ) as mock_urlretrieve:
-
-                def mock_retrieve(url, filename):
-                    import shutil
-
-                    shutil.copy(temp_db, filename)
-
-                mock_urlretrieve.side_effect = mock_retrieve
-
-                # Test download with verbose=True (for coverage)
-                result = updater.download_latest(verbose=True, force=True)
-                assert result is True
-
-    def test_download_latest_download_failure(self):
-        """Test download_latest when download fails"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Mock urlretrieve to raise an exception
-            with mock.patch(
-                "catalogmx.data.updater.urllib.request.urlretrieve",
-                side_effect=Exception("Network error"),
-            ):
-                result = updater.download_latest(verbose=False)
-                assert result is False
-
-    def test_download_latest_invalid_database(self):
-        """Test download_latest when downloaded file is not valid database"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Mock urlretrieve to create invalid database
-            with mock.patch(
-                "catalogmx.data.updater.urllib.request.urlretrieve"
-            ) as mock_urlretrieve:
-
-                def mock_retrieve(url, filename):
-                    # Create invalid database
-                    with open(filename, "w") as f:
-                        f.write("not a database")
-
-                mock_urlretrieve.side_effect = mock_retrieve
-
-                result = updater.download_latest(verbose=False)
-                assert result is False
-
-    def test_auto_update_with_old_cache(self):
-        """Test auto_update when cache is old"""
-        import json
-        from datetime import timedelta
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Create old cache
-            updater.version_file.parent.mkdir(parents=True, exist_ok=True)
-            old_date = (datetime.now() - timedelta(hours=48)).isoformat()
-            with open(updater.version_file, "w") as f:
-                json.dump({"version": "2024-01-01", "updated_at": old_date}, f)
-
-            # Create cache db
-            db = sqlite3.connect(updater.cache_db)
-            db.execute("CREATE TABLE _metadata (key TEXT, value TEXT)")
-            db.execute("INSERT INTO _metadata VALUES ('version', '2024-01-01')")
-            db.commit()
-            db.close()
-
-            # Mock download to fail so it uses cache
-            with mock.patch.object(updater, "download_latest", return_value=False):
-                db_path = updater.auto_update(max_age_hours=24, verbose=False)
-
-                # Should return cached path even though it's old (fallback)
-                assert db_path == updater.cache_db
-
-    def test_auto_update_disabled(self):
-        """Test auto_update when AUTO_UPDATE is disabled"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            # Set environment to disable auto-update
-            with mock.patch.dict(os.environ, {"CATALOGMX_AUTO_UPDATE": "0"}):
-                # Need to reload module to pick up env var
-                from catalogmx.data import updater as updater_module
-                from importlib import reload
-
-                reload(updater_module)
-
-                updater = updater_module.DataUpdater(cache_dir=Path(tmpdir))
-
-                # Should return embedded without downloading
-                db_path = updater.auto_update(verbose=False)
-                assert db_path.exists()
-                assert "embedded" in str(db_path) or "catalogmx/data" in str(db_path)
-
-    def test_get_version_info_no_cache(self):
-        """Test get_version_info when no cache exists"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-            info = updater.get_version_info()
-
-            assert info["version"] == "unknown"
-            assert info["source"] in ["embedded", "none"]
-            assert info["age_hours"] == "N/A"
-
-    def test_get_version_info_with_cache(self):
-        """Test get_version_info with valid cache"""
-        import json
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Create cache with version info
-            updater.version_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(updater.version_file, "w") as f:
-                json.dump(
-                    {
-                        "version": "2025-12-27",
-                        "updated_at": datetime.now().isoformat(),
-                        "source": "github_releases",
-                    },
-                    f,
-                )
-
-            info = updater.get_version_info()
-
-            assert info["version"] == "2025-12-27"
-            assert info["source"] == "github_releases"
-            assert isinstance(info["age_hours"], str)
-
-    def test_get_version_info_corrupted_json(self):
-        """Test get_version_info with corrupted JSON"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Create corrupted JSON
-            updater.version_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(updater.version_file, "w") as f:
-                f.write("{ bad json }")
-
-            info = updater.get_version_info()
-
-            assert info["version"] == "error"
-            assert info["source"] == "error"
-
-    def test_clear_cache_no_files(self):
-        """Test clearing cache when no files exist"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Clear non-existent cache (should not fail)
-            result = updater.clear_cache()
-            assert result is True
-
-    def test_get_database_path_with_cache(self):
-        """Test get_database_path when cache exists"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            updater = DataUpdater(cache_dir=Path(tmpdir))
-
-            # Create cache db
-            updater.cache_db.parent.mkdir(parents=True, exist_ok=True)
-            db = sqlite3.connect(updater.cache_db)
-            db.execute("CREATE TABLE _metadata (key TEXT, value TEXT)")
-            db.execute("INSERT INTO _metadata VALUES ('version', '2025-01-01')")
-            db.commit()
-            db.close()
-
-            # Get path without auto-update
-            db_path = updater.get_database_path(auto_update=False)
-
-            assert db_path == updater.cache_db
+    assert {
+        "_metadata",
+        "udis",
+        "tipo_cambio",
+        "tiie",
+        "cetes",
+        "inflacion",
+        "salarios_minimos",
+    }.issubset(tables)
+
+
+def test_clear_cache_delegates_and_removes_obsolete_legacy_files(
+    tmp_path: Path,
+) -> None:
+    updater = DataUpdater(cache_dir=tmp_path)
+    updater.cache_db.write_bytes(b"legacy")
+    updater.version_file.write_text("{}", encoding="utf-8")
+    resolver = mock.Mock()
+
+    with mock.patch.object(updater, "_resolver", return_value=resolver):
+        assert updater.clearCache()
+
+    resolver.clear_cache.assert_called_once_with(DATASET_ID)
+    assert not updater.cache_db.exists()
+    assert not updater.version_file.exists()
+
+
+def test_convenience_functions_delegate_to_singleton() -> None:
+    singleton = mock.Mock()
+    singleton.get_database_path.return_value = Path("/tmp/mexico_dynamic.sqlite3")
+    singleton.get_local_version.return_value = "2026-08-31"
+    singleton.download_latest.return_value = True
+
+    with mock.patch.object(updater_module, "_default_updater", singleton):
+        assert updater_module.get_database_path(False, 12) == Path("/tmp/mexico_dynamic.sqlite3")
+        assert updater_module.get_version() == "2026-08-31"
+        assert updater_module.update_now(force=True, verbose=False)
+
+    singleton.get_database_path.assert_called_once_with(False, 12)
+    singleton.download_latest.assert_called_once_with(force=True, verbose=False)
+
+
+@pytest.mark.parametrize("data_mode", ["offline", "fetch-missing", "refresh"])
+def test_explicit_data_mode_outranks_legacy_auto_update_flag(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, data_mode: str
+) -> None:
+    root = tmp_path / "dynamic"
+    database = _database(root)
+    resolver = mock.Mock()
+    resolver.resolve_dataset_root.return_value = root
+    monkeypatch.setenv("CATALOGMX_DATA_MODE", data_mode)
+
+    with (
+        mock.patch.object(updater_module, "AUTO_UPDATE_ENABLED", True),
+        mock.patch(
+            "catalogmx.data.updater.DatasetResolver", return_value=resolver
+        ) as resolver_type,
+    ):
+        updater = DataUpdater(cache_dir=tmp_path / "cache")
+        assert updater.auto_update() == database
+
+    resolver_type.assert_called_once_with(
+        cache_dir=tmp_path / "cache",
+        mode=data_mode,
+        cache_ttl_seconds=None,
+    )
+
+
+def test_environment_ttl_reaches_default_dynamic_consumer(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("CATALOGMX_CACHE_TTL", "86400")
+    updater = DataUpdater(cache_dir=tmp_path / "cache")
+    resolver = updater._resolver(mode="refresh")
+    assert resolver.cache_ttl_seconds == 86400
+
+
+def test_registry_freshness_applies_when_no_legacy_or_environment_ttl(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("CATALOGMX_CACHE_TTL", raising=False)
+    updater = DataUpdater(cache_dir=tmp_path / "cache")
+    resolver = updater._resolver(mode="refresh")
+    dataset = resolver._dataset(DATASET_ID)
+    assert resolver.cache_ttl_seconds is None
+    assert resolver._cache_ttl(dataset) == 2 * 86400
+
+
+def test_download_latest_honors_explicit_offline_mode(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("CATALOGMX_DATA_MODE", "offline")
+    updater = DataUpdater(cache_dir=tmp_path / "cache")
+    with mock.patch("catalogmx.data.updater.DatasetResolver") as resolver_type:
+        resolver = resolver_type.return_value
+        resolver.fetch_dataset.side_effect = RuntimeError(
+            "cannot fetch or update datasets while CATALOGMX_DATA_MODE=offline"
+        )
+        assert updater.download_latest(verbose=False) is False
+
+    resolver_type.assert_called_once_with(
+        cache_dir=tmp_path / "cache",
+        mode="offline",
+        cache_ttl_seconds=None,
+    )
+    resolver.fetch_dataset.assert_called_once_with(DATASET_ID)

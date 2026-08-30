@@ -1,205 +1,353 @@
 name: Update Dynamic Data (Daily)
 
-# Este workflow actualiza los datos dinámicos de Banxico (UDI, tipo cambio, etc.)
-# y publica el SQLite actualizado en GitHub Releases SIN crear un nuevo release de la librería
+# Banxico time-series data has an independent lifecycle from CatalogMX code.
+# Publication is fail-closed: every source updater must either succeed or report
+# a valid no-observation window, the resulting SQLite database must pass
+# structural/content validation, and compatibility assets are byte-verified
+# before the stable resolver pointer is moved. The legacy `latest` asset remains
+# for DataUpdater compatibility.
 
 on:
   schedule:
-    # Ejecutar diariamente a las 6:30 PM UTC (12:30 PM Ciudad de México)
-    # Esta hora garantiza que el tipo de cambio FIX y TIIE del día ya estén publicados
     - cron: '30 18 * * *'
-
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/update-dynamic-data.yml'
+      - 'scripts/banxico/build_dynamic_manifest.py'
+      - 'scripts/publish_dataset_release.sh'
+      - 'packages/shared-data/scripts/fetch_*_banxico.py'
+      - 'packages/shared-data/scripts/banxico_sqlite_helper.py'
+      - 'packages/shared-data/catalog-registry.json'
+      - 'packages/python/catalogmx/data/dataset_contract.json'
   workflow_dispatch:
     inputs:
       force_update:
-        description: 'Force update even if no changes'
+        description: 'Force publication verification even if semantic data is unchanged'
         required: false
         default: 'false'
 
 permissions:
-  contents: write  # Necesario para crear releases
+  contents: write
+
+concurrency:
+  group: update-dynamic-data
+  cancel-in-progress: false
 
 jobs:
   update-data:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout reviewed master
         uses: actions/checkout@v4
         with:
           ref: master
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Fetch latest data from Banxico and update SQLite
+      - name: Validate publication tooling
+        run: bash -n scripts/publish_dataset_release.sh
+
+      - name: Seed from current published database when valid
         env:
-          BANXICO_TOKEN: ${{ secrets.BANXICO_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
         run: |
-          cd packages/shared-data
+          set -euo pipefail
+          seed_dir=$(mktemp -d)
+          trap 'rm -rf "$seed_dir"' EXIT
 
-          echo "📥 Fetching latest data from Banxico and writing to SQLite..."
-
-          # Fetch all Banxico data - scripts now write directly to SQLite
-          FAILED_SCRIPTS=""
-
-          python scripts/fetch_udis_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS UDIs"
-          python scripts/fetch_tipo_cambio_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS TipoCambio"
-          python scripts/fetch_tipo_cambio_hist_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS TipoCambioHist"
-          python scripts/fetch_tiie_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS TIIE"
-          python scripts/fetch_cetes_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS CETES"
-          python scripts/fetch_inflacion_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS Inflacion"
-          python scripts/fetch_salarios_minimos_banxico.py || FAILED_SCRIPTS="$FAILED_SCRIPTS Salarios"
-
-          if [ -n "$FAILED_SCRIPTS" ]; then
-            echo "⚠️ Some scripts failed:$FAILED_SCRIPTS"
-            echo "⚠️ Continuing with existing data..."
+          if gh release view latest >/dev/null 2>&1 && \
+             gh release download latest \
+               --pattern mexico_dynamic.sqlite3 \
+               --dir "$seed_dir" >/dev/null 2>&1; then
+            if python scripts/banxico/build_dynamic_manifest.py \
+                 "$seed_dir/mexico_dynamic.sqlite3" \
+                 --output "$seed_dir/mexico_dynamic.manifest.json" >/dev/null 2>&1; then
+              cp "$seed_dir/mexico_dynamic.sqlite3" \
+                packages/shared-data/mexico_dynamic.sqlite3
+              echo 'Seeded updater from a validated current published database.'
+            else
+              echo 'Published legacy latest database failed validation; using reviewed repository seed.' >&2
+            fi
+          else
+            echo 'No published legacy latest database available; using reviewed repository seed.'
           fi
 
-          echo "✅ Data fetch complete - SQLite updated directly"
-
-      - name: Check if database changed
-        id: check_changes
+      - name: Fetch all configured official data
+        env:
+          BANXICO_TOKEN: ${{ secrets.BANXICO_TOKEN }}
+        shell: bash
         run: |
+          set -euo pipefail
           cd packages/shared-data
 
-          # Verify database was created/updated
-          if [ ! -f mexico_dynamic.sqlite3 ]; then
-            echo "❌ SQLite database not found!"
+          failures=()
+          readonly NO_OBSERVATION=3
+
+          # Fetchers share an explicit process contract:
+          #   0 = success / already current
+          #   3 = valid official-source window with no observations
+          #   anything else = failure
+          # This keeps orchestration independent from human-readable log text.
+          run_updater() {
+            label="$1"
+            shift
+
+            set +e
+            "$@"
+            status=$?
+            set -e
+
+            case "$status" in
+              0)
+                ;;
+              "$NO_OBSERVATION")
+                echo "[workflow] $label has no new observations; successful no-op."
+                ;;
+              *)
+                echo "[workflow] $label failed with exit code $status." >&2
+                failures+=("$label")
+                ;;
+            esac
+          }
+
+          run_updater UDIs python scripts/fetch_udis_banxico.py
+          run_updater TipoCambio python scripts/fetch_tipo_cambio_banxico.py
+          run_updater TipoCambioHist python scripts/fetch_tipo_cambio_hist_banxico.py
+          run_updater TIIE python scripts/fetch_tiie_banxico.py
+          run_updater CETES python scripts/fetch_cetes_banxico.py
+          run_updater Inflacion python scripts/fetch_inflacion_banxico.py
+          run_updater Salarios python scripts/fetch_salarios_minimos_banxico.py
+
+          if [ ${#failures[@]} -ne 0 ]; then
+            printf 'Dynamic data source update failed:' >&2
+            printf ' %s' "${failures[@]}" >&2
+            printf '\nRefusing to publish a partial refresh.\n' >&2
             exit 1
           fi
 
-          # Get database stats
-          python -c "
-          import sqlite3
-          db = sqlite3.connect('mexico_dynamic.sqlite3')
-          cursor = db.execute('SELECT COUNT(*) FROM udis')
-          print(f'UDIs: {cursor.fetchone()[0]:,}')
-          cursor = db.execute('SELECT COUNT(*) FROM tipo_cambio')
-          print(f'Tipo cambio: {cursor.fetchone()[0]:,}')
-          cursor = db.execute(\"SELECT value FROM _metadata WHERE key = 'version'\")
-          row = cursor.fetchone()
-          version = row[0] if row else 'unknown'
-          print(f'Version: {version}')
-          db.close()
-          "
-
-          # Always publish if database exists (data was updated)
-          echo "has_changes=true" >> $GITHUB_OUTPUT
-          echo "✅ SQLite database ready for publishing"
-
-      - name: Create GitHub Release with data
-        if: steps.check_changes.outputs.has_changes == 'true' || github.event.inputs.force_update == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Validate database and build resolver manifest
+        id: manifest
+        shell: bash
         run: |
+          set -euo pipefail
           cd packages/shared-data
+          python ../../scripts/banxico/build_dynamic_manifest.py \
+            mexico_dynamic.sqlite3 \
+            --output mexico_dynamic.manifest.json
 
-          VERSION=$(date +%Y-%m-%d)
-          TAG="data-${VERSION}"
+          echo "content_sha=$(jq -r '.dataset.content_sha256' mexico_dynamic.manifest.json)" \
+            >> "$GITHUB_OUTPUT"
+          echo "effective_through=$(jq -r '.max_effective_date // .data_version' mexico_dynamic.manifest.json)" \
+            >> "$GITHUB_OUTPUT"
 
-          echo "📦 Creating release: ${TAG}"
+      - name: Decide whether publication state needs repair
+        id: changes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          channel=data-banxico-sie-dynamic-1-latest
+          database=mexico_dynamic.sqlite3
+          manifest=mexico_dynamic.manifest.json
+          local_dir=packages/shared-data
+          content_sha='${{ steps.manifest.outputs.content_sha }}'
+          effective_through='${{ steps.manifest.outputs.effective_through }}'
+          archive_tag="data-${effective_through}-${content_sha:0:12}"
+          previous_sha=''
+          previous_release_tag=''
+          needs_publication=false
 
-          # Get database version from SQLite
-          DB_VERSION=$(python -c "
-          import sqlite3
-          db = sqlite3.connect('mexico_dynamic.sqlite3')
-          cursor = db.execute('SELECT value FROM _metadata WHERE key = \"version\"')
-          print(cursor.fetchone()[0])
-          db.close()
-          ")
+          if gh release view "$channel" --json body >/dev/null 2>&1; then
+            body=$(gh release view "$channel" --json body --jq '.body')
+            if ! pointer=$(printf '%s' "$body" | jq -ce '
+              select(type == "object")
+              | select(.schema_version == 1)
+              | select(.dataset_id == "banxico.sie_dynamic")
+              | select((.dataset_version | tostring) == "1")
+              | select(.artifact == "mexico_dynamic.sqlite3")
+              | select(.manifest == "mexico_dynamic.manifest.json")
+              | select(.content_sha256 | type == "string" and test("^[0-9a-f]{64}$"))
+              | select(.release_tag == ("data-banxico-sie-dynamic-1-" + .content_sha256))
+            '); then
+              echo 'Existing dynamic resolver channel has invalid pointer metadata.' >&2
+              exit 1
+            fi
+            previous_sha=$(printf '%s' "$pointer" | jq -r '.content_sha256')
+            previous_release_tag=$(printf '%s' "$pointer" | jq -r '.release_tag')
+          fi
 
-          # Count records
-          STATS=$(python -c "
-          import sqlite3
-          db = sqlite3.connect('mexico_dynamic.sqlite3')
-          udis = db.execute('SELECT COUNT(*) FROM udis').fetchone()[0]
-          tc = db.execute('SELECT COUNT(*) FROM tipo_cambio').fetchone()[0]
-          tiie = db.execute('SELECT COUNT(*) FROM tiie').fetchone()[0]
-          cetes = db.execute('SELECT COUNT(*) FROM cetes').fetchone()[0]
-          infl = db.execute('SELECT COUNT(*) FROM inflacion').fetchone()[0]
-          sal = db.execute('SELECT COUNT(*) FROM salarios_minimos').fetchone()[0]
-          total = udis + tc + tiie + cetes + infl + sal
-          print(f'- **UDIs**: {udis:,} registros')
-          print(f'- **Tipo de Cambio**: {tc:,} registros')
-          print(f'- **TIIE**: {tiie:,} registros')
-          print(f'- **CETES**: {cetes:,} registros')
-          print(f'- **Inflación**: {infl:,} registros')
-          print(f'- **Salarios Mínimos**: {sal:,} registros')
-          print(f'- **TOTAL**: {total:,} registros')
-          db.close()
-          ")
+          release_matches() {
+            tag="$1"
+            verify_dir=$(mktemp -d)
+            if ! gh release view "$tag" >/dev/null 2>&1 || \
+               ! gh release download "$tag" \
+                 --pattern "$database" \
+                 --pattern "$manifest" \
+                 --dir "$verify_dir" >/dev/null 2>&1 || \
+               [ ! -f "$verify_dir/$database" ] || \
+               [ ! -f "$verify_dir/$manifest" ] || \
+               ! cmp -s "$local_dir/$database" "$verify_dir/$database" || \
+               ! cmp -s "$local_dir/$manifest" "$verify_dir/$manifest"; then
+              rm -rf "$verify_dir"
+              return 1
+            fi
+            rm -rf "$verify_dir"
+            return 0
+          }
 
-          # Create release notes
-          cat > release-notes.md <<EOF
-          # 📊 Actualización de Datos - ${VERSION}
+          if [ "$previous_sha" != "$content_sha" ]; then
+            needs_publication=true
+            echo 'Resolver pointer is absent or references different semantic content.'
+          elif ! release_matches "$previous_release_tag"; then
+            needs_publication=true
+            echo 'Resolver immutable release is absent, incomplete, or does not match reviewed bytes.'
+          fi
 
-          Datos actualizados de Banco de México.
+          if ! release_matches latest; then
+            needs_publication=true
+            echo 'Legacy latest channel is absent, incomplete, or stale.'
+          fi
 
-          ## 📈 Estadísticas
+          if ! release_matches "$archive_tag"; then
+            needs_publication=true
+            echo "Content-addressed archive $archive_tag is absent or incomplete."
+          fi
 
-          ${STATS}
+          force='${{ github.event.inputs.force_update }}'
+          if [ "$force" = 'true' ]; then
+            needs_publication=true
+            echo 'Manual force_update requested publication verification.'
+          fi
 
-          ## 🔧 Uso
+          if [ "$needs_publication" = 'true' ]; then
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            echo 'Dynamic semantic content and all publication channels are already verified.'
+          fi
 
-          La librería \`catalogmx\` descargará automáticamente esta versión si tiene más de 24 horas de antigüedad.
+      - name: Publish compatibility data then resolver pointer
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
 
-          Para forzar actualización manual:
+          git fetch origin master
+          reviewed_sha=$(git rev-parse HEAD)
+          master_sha=$(git rev-parse origin/master)
+          if [ "$reviewed_sha" != "$master_sha" ]; then
+            echo 'Reviewed master advanced during dynamic publication; refusing stale publish.' >&2
+            exit 1
+          fi
 
-          \`\`\`python
-          from catalogmx.data import DataUpdater
+          cd packages/shared-data
+          database=mexico_dynamic.sqlite3
+          manifest=mexico_dynamic.manifest.json
+          content_sha='${{ steps.manifest.outputs.content_sha }}'
+          effective_through='${{ steps.manifest.outputs.effective_through }}'
+          channel=data-banxico-sie-dynamic-1-latest
+          immutable="data-banxico-sie-dynamic-1-${content_sha}"
+          archive_tag="data-${effective_through}-${content_sha:0:12}"
+          verify_dir=$(mktemp -d)
+          notes_file=$(mktemp)
+          trap 'rm -rf "$verify_dir" "$notes_file"' EXIT
 
-          updater = DataUpdater()
-          updater.download_latest(force=True)
-          \`\`\`
+          cat > "$notes_file" <<EOF
+          # Dynamic Mexico data — effective through ${effective_through}
 
-          ## 📅 Fuente de Datos
+          Independently versioned time-series data refreshed from configured official sources.
 
-          - **Banco de México (Banxico)**: API SIE
-          - **Versión de datos**: ${DB_VERSION}
-          - **Fecha de generación**: ${VERSION}
+          - Dataset: \`banxico.sie_dynamic\`
+          - Contract version: \`1\`
+          - Maximum effective date: \`${effective_through}\`
+          - Semantic SHA-256: \`${content_sha}\`
 
-          ---
-
-          **Nota**: Este es un release de DATOS únicamente. No requiere actualizar la librería \`catalogmx\`.
+          This data release is independent from CatalogMX package versions.
           EOF
 
-          # Delete previous 'latest' tag if exists
-          echo "🗑️  Deleting old 'latest' release if exists..."
-          gh release delete latest --yes 2>/dev/null || true
-          git push origin :refs/tags/latest 2>/dev/null || true
+          verify_release_assets() {
+            tag="$1"
+            rm -rf "$verify_dir"
+            mkdir -p "$verify_dir"
+            gh release download "$tag" \
+              --pattern "$database" \
+              --pattern "$manifest" \
+              --dir "$verify_dir" >/dev/null
+            cmp "$database" "$verify_dir/$database"
+            cmp "$manifest" "$verify_dir/$manifest"
+            remote_sha=$(jq -r '.dataset.content_sha256 // empty' \
+              "$verify_dir/$manifest")
+            [ "$remote_sha" = "$content_sha" ]
+          }
 
-          # Delete dated tag if exists (in case of re-run on same day)
-          echo "🗑️  Deleting old '${TAG}' release if exists..."
-          gh release delete "${TAG}" --yes 2>/dev/null || true
-          git push origin :refs/tags/"${TAG}" 2>/dev/null || true
+          if gh release view latest >/dev/null 2>&1; then
+            gh release upload latest "$database" "$manifest" --clobber
+            gh release edit latest \
+              --title "Latest Data (effective through ${effective_through})" \
+              --notes-file "$notes_file" \
+              --target "$reviewed_sha" \
+              --latest=false
+          else
+            gh release create latest "$database" "$manifest" \
+              --title "Latest Data (effective through ${effective_through})" \
+              --notes-file "$notes_file" \
+              --target "$reviewed_sha" \
+              --latest=false
+          fi
+          verify_release_assets latest
 
-          # Create new 'latest' release
-          echo "📦 Creating 'latest' release..."
-          gh release create latest \
-            mexico_dynamic.sqlite3 \
-            --title "Latest Data (${VERSION})" \
-            --notes-file release-notes.md
+          # Human-readable archives are immutable per semantic content. A new
+          # semantic state creates a new effective-date+hash tag instead of
+          # clobbering an older archive with the same maximum effective date.
+          if gh release view "$archive_tag" >/dev/null 2>&1; then
+            if ! verify_release_assets "$archive_tag"; then
+              echo "Existing dynamic archive $archive_tag does not match reviewed bytes." >&2
+              exit 1
+            fi
+          else
+            gh release create "$archive_tag" "$database" "$manifest" \
+              --title "Data effective through ${effective_through} (${content_sha:0:12})" \
+              --notes-file "$notes_file" \
+              --target "$reviewed_sha" \
+              --latest=true
+            verify_release_assets "$archive_tag"
+          fi
 
-          # Also create dated release for archive
-          echo "📦 Creating '${TAG}' release..."
-          gh release create "${TAG}" \
-            mexico_dynamic.sqlite3 \
-            --title "Data Update ${VERSION}" \
-            --notes-file release-notes.md
+          # The common publisher owns the canonical immutable release and stable
+          # metadata pointer. It runs last so any compatibility failure leaves the
+          # previous resolver pointer live and makes the next run retry safely.
+          bash ../../scripts/publish_dataset_release.sh \
+            --manifest "$manifest" \
+            --artifact "$database" \
+            --channel "$channel" \
+            --target "$reviewed_sha"
 
-          echo "✅ Releases created successfully"
-          echo "   - latest (always points to newest data)"
-          echo "   - ${TAG} (archived version)"
+          {
+            echo '## Dynamic data publication'
+            echo
+            echo "- Maximum effective date: \`$effective_through\`"
+            echo "- Content SHA-256: \`$content_sha\`"
+            echo "- Immutable tag: \`$immutable\`"
+            echo "- Resolver channel: \`$channel\`"
+            echo "- Legacy channel: \`latest\`"
+            echo "- Archive tag: \`$archive_tag\`"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Summary
         if: always()
         run: |
-          if [ "${{ steps.check_changes.outputs.has_changes }}" == "true" ]; then
-            echo "✅ Data updated and published to GitHub Releases"
+          if [ '${{ steps.changes.outputs.changed }}' = 'true' ]; then
+            echo 'Dynamic data validated and publication was attempted.'
           else
-            echo "ℹ️ No changes detected, skipping update"
+            echo 'No semantic data or publication-state change required publication.'
           fi

@@ -1,0 +1,237 @@
+name: Python Carta Porte Consumer Data
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  installed-wheel-carta-porte:
+    name: Installed wheel Carta Porte consumers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build verified Carta Porte release fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          export FIXTURE_ROOT="$RUNNER_TEMP/carta-porte-fixture"
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import shutil
+          import sqlite3
+          from pathlib import Path
+
+          root = Path(os.environ["FIXTURE_ROOT"])
+          releases = root / "releases"
+          metadata = root / "release-metadata"
+          build = root / "build"
+          build.mkdir(parents=True, exist_ok=True)
+          metadata.mkdir(parents=True, exist_ok=True)
+
+          contract = json.loads(
+              Path("packages/python/catalogmx/data/dataset_contract.json").read_text(
+                  encoding="utf-8"
+              )
+          )["datasets"]["sat.carta_porte"]["artifact"]
+          database = build / contract["file"]
+
+          connection = sqlite3.connect(database)
+          try:
+              connection.execute(
+                  "CREATE TABLE ccp_31_configuraciones_autotransporte ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, numero_de_ejes INTEGER, "
+                  "numero_de_llantas INTEGER, remolque TEXT, vigencia_desde TEXT, "
+                  "vigencia_hasta TEXT)"
+              )
+              connection.executemany(
+                  "INSERT INTO ccp_31_configuraciones_autotransporte "
+                  "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                  [
+                      ("C2", "Camión Unitario", 2, 6, "0", "2024-07-17", ""),
+                      ("C2R2", "Camión-Remolque", 4, 12, "1", "2024-07-17", ""),
+                  ],
+              )
+
+              connection.execute(
+                  "CREATE TABLE ccp_31_materiales_peligrosos ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, clase_o_div TEXT, "
+                  "peligro_secundario TEXT, nombre_tecnico TEXT, vigencia_desde TEXT, "
+                  "vigencia_hasta TEXT)"
+              )
+              connection.execute(
+                  "INSERT INTO ccp_31_materiales_peligrosos VALUES (?, ?, ?, ?, ?, ?, ?)",
+                  ("0004", "PICRATO AMÓNICO seco", "1.1D", "", "", "2024-07-17", ""),
+              )
+
+              connection.execute(
+                  "CREATE TABLE ccp_31_tipos_embalaje ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, vigencia_desde TEXT, "
+                  "vigencia_hasta TEXT)"
+              )
+              connection.executemany(
+                  "INSERT INTO ccp_31_tipos_embalaje VALUES (?, ?, ?, ?)",
+                  [
+                      ("1A1", "Bidones de Acero de tapa no desmontable", "2024-07-17", ""),
+                      ("5M1", "Sacos de Papel de varias hojas", "2024-07-17", ""),
+                  ],
+              )
+
+              connection.execute(
+                  "CREATE TABLE ccp_31_tipos_permiso ("
+                  "id TEXT PRIMARY KEY, texto TEXT NOT NULL, clave_transporte TEXT, "
+                  "vigencia_desde TEXT, vigencia_hasta TEXT)"
+              )
+              connection.executemany(
+                  "INSERT INTO ccp_31_tipos_permiso VALUES (?, ?, ?, ?, ?)",
+                  [
+                      (
+                          "TPAF01",
+                          "Autotransporte Federal de carga general.",
+                          "01",
+                          "2024-07-17",
+                          "",
+                      ),
+                      (
+                          "TPMR01",
+                          "Permiso para transporte marítimo.",
+                          "02",
+                          "2024-07-17",
+                          "",
+                      ),
+                  ],
+              )
+              connection.commit()
+          finally:
+              connection.close()
+
+          payload = database.read_bytes()
+          file_sha = hashlib.sha256(payload).hexdigest()
+          content_sha = hashlib.sha256(
+              b"catalogmx-carta-porte-installed-wheel-consumer-fixture-v1"
+          ).hexdigest()
+          channel = contract["channel"]
+          release_tag = f"{channel.removesuffix('-latest')}-{content_sha}"
+
+          manifest = {
+              "schema_version": 1,
+              "dataset_id": "sat.carta_porte",
+              "dataset_version": str(contract["version"]),
+              "data_version": "wheel-fixture",
+              "dataset": {
+                  "file": contract["file"],
+                  "format": contract["format"],
+                  "mount_path": contract["mount_path"],
+                  "file_sha256": file_sha,
+                  "content_sha256": content_sha,
+              },
+          }
+          manifest_path = build / contract["manifest"]
+          manifest_path.write_text(
+              json.dumps(manifest, sort_keys=True, indent=2) + "\n",
+              encoding="utf-8",
+          )
+
+          release_dir = releases / release_tag
+          release_dir.mkdir(parents=True, exist_ok=True)
+          shutil.copy2(database, release_dir / database.name)
+          shutil.copy2(manifest_path, release_dir / manifest_path.name)
+
+          pointer = {
+              "schema_version": 1,
+              "dataset_id": "sat.carta_porte",
+              "dataset_version": str(contract["version"]),
+              "release_tag": release_tag,
+              "content_sha256": content_sha,
+              "artifact": contract["file"],
+              "manifest": contract["manifest"],
+          }
+          (metadata / channel).write_text(
+              json.dumps(
+                  {"tag_name": channel, "body": json.dumps(pointer, sort_keys=True)},
+                  sort_keys=True,
+              ),
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Build and install clean wheel
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip build
+          python -m build --wheel --outdir "$RUNNER_TEMP/wheels" packages/python
+          unzip -l "$RUNNER_TEMP"/wheels/catalogmx-*.whl \
+            > "$RUNNER_TEMP/wheel-contents.txt"
+          if grep -q 'catalogmx/shared-data/' "$RUNNER_TEMP/wheel-contents.txt"; then
+            echo 'Unexpected embedded shared-data tree in wheel' >&2
+            exit 1
+          fi
+          python -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/python" -m pip install --upgrade pip
+          "$RUNNER_TEMP/venv/bin/python" -m pip install \
+            "$RUNNER_TEMP"/wheels/catalogmx-*.whl
+
+      - name: Resolve Carta Porte public APIs from verified release
+        shell: bash
+        env:
+          CATALOGMX_DATA_MODE: fetch-missing
+        run: |
+          set -euo pipefail
+          export CATALOGMX_RELEASE_BASE_URL="file://$RUNNER_TEMP/carta-porte-fixture/releases"
+          export CATALOGMX_RELEASE_METADATA_BASE_URL="file://$RUNNER_TEMP/carta-porte-fixture/release-metadata"
+          export CATALOGMX_CACHE_DIR="$RUNNER_TEMP/carta-porte-consumer-cache"
+          unset CATALOGMX_SHARED_DATA
+
+          "$RUNNER_TEMP/venv/bin/python" - <<'PY'
+          from catalogmx.catalogs.sat.carta_porte import (
+              ConfigAutotransporteCatalog,
+              MaterialPeligrosoCatalog,
+              TipoEmbalajeCatalog,
+              TipoPermisoCatalog,
+          )
+          from catalogmx.data import DatasetResolver
+
+          config = ConfigAutotransporteCatalog.get_config("C2")
+          assert config is not None
+          assert config["axes"] == 2
+          assert config["wheels"] == 6
+          assert config["type"] == "Unitario"
+          assert [item["code"] for item in ConfigAutotransporteCatalog.get_by_type("Articulado")] == [
+              "C2R2"
+          ]
+
+          material = MaterialPeligrosoCatalog.get_material("0004")
+          assert material is not None
+          assert material["clase_division"] == "1.1D"
+          assert material["packing_group"] is None
+          assert MaterialPeligrosoCatalog.get_by_packing_group("I") == []
+
+          embalaje = TipoEmbalajeCatalog.get_embalaje("1A1")
+          assert embalaje is not None
+          assert embalaje["material"] == "Acero"
+          assert embalaje["categoria_onu"] is None
+
+          permiso = TipoPermisoCatalog.get_permiso("TPAF01")
+          assert permiso is not None
+          assert permiso["type"] == "Carga"
+          assert permiso["transport"] == "01"
+          assert [item["code"] for item in TipoPermisoCatalog.get_by_transport("02")] == [
+              "TPMR01"
+          ]
+
+          resolver = DatasetResolver()
+          assert resolver.verify_cached_dataset("sat.carta_porte")
+          state = resolver.cache_status("sat.carta_porte")
+          assert state["cached"] is True
+          assert state["release_tag"].startswith("data-sat-carta-porte-3-1-")
+          PY

@@ -1,0 +1,312 @@
+name: Python Wheel Data
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  installed-wheel-data:
+    name: Installed wheel resolver
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build local release fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/reference-build"
+          mkdir -p "$build_dir"
+          python scripts/banxico/build_reference.py --output-dir "$build_dir"
+
+          content_sha=$(jq -r '.dataset.content_sha256' \
+            "$build_dir/banxico_reference.manifest.json")
+          immutable="data-banxico-reference-1-${content_sha}"
+          release_dir="$RUNNER_TEMP/releases/$immutable"
+          metadata_dir="$RUNNER_TEMP/release-metadata"
+          mkdir -p "$release_dir" "$metadata_dir"
+          cp "$build_dir/banxico_reference.tar.gz" "$release_dir/"
+          cp "$build_dir/banxico_reference.manifest.json" "$release_dir/"
+
+          pointer=$(jq -cn \
+            --arg release_tag "$immutable" \
+            --arg content_sha256 "$content_sha" \
+            '{
+              schema_version: 1,
+              dataset_id: "banxico.reference",
+              dataset_version: "1",
+              release_tag: $release_tag,
+              content_sha256: $content_sha256,
+              artifact: "banxico_reference.tar.gz",
+              manifest: "banxico_reference.manifest.json"
+            }')
+          jq -cn \
+            --arg tag_name "data-banxico-reference-1-latest" \
+            --arg body "$pointer" \
+            '{tag_name: $tag_name, body: $body}' \
+            > "$metadata_dir/data-banxico-reference-1-latest"
+
+      - name: Build CONAPO and IFT release fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          contract=packages/python/catalogmx/data/dataset_contract.json
+          metadata_dir="$RUNNER_TEMP/release-metadata"
+          mkdir -p "$metadata_dir"
+          for dataset_id in conapo.territorial ift.numbering; do
+            slug=$(printf '%s' "$dataset_id" | tr '.' '-')
+            build_dir="$RUNNER_TEMP/${slug}-build"
+            mkdir -p "$build_dir"
+            python scripts/build_reviewed_reference.py \
+              --dataset "$dataset_id" \
+              --output-dir "$build_dir"
+            channel=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.channel' "$contract")
+            artifact=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.file' "$contract")
+            manifest=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.manifest' "$contract")
+            version=$(jq -er --arg id "$dataset_id" '.datasets[$id].artifact.version | tostring' "$contract")
+            content_sha=$(jq -er '.dataset.content_sha256' "$build_dir/$manifest")
+            immutable="${channel%-latest}-${content_sha}"
+            release_dir="$RUNNER_TEMP/releases/$immutable"
+            mkdir -p "$release_dir"
+            cp "$build_dir/$artifact" "$release_dir/"
+            cp "$build_dir/$manifest" "$release_dir/"
+            pointer=$(jq -cn \
+              --arg dataset_id "$dataset_id" \
+              --arg dataset_version "$version" \
+              --arg release_tag "$immutable" \
+              --arg content_sha256 "$content_sha" \
+              --arg artifact "$artifact" \
+              --arg manifest "$manifest" \
+              '{schema_version:1,dataset_id:$dataset_id,dataset_version:$dataset_version,release_tag:$release_tag,content_sha256:$content_sha256,artifact:$artifact,manifest:$manifest}')
+            jq -cn \
+              --arg tag_name "$channel" \
+              --arg body "$pointer" \
+              '{tag_name:$tag_name,body:$body}' \
+              > "$metadata_dir/$channel"
+          done
+
+      - name: Build Banxico dynamic release fixture from bootstrap snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/dynamic-build"
+          metadata_dir="$RUNNER_TEMP/release-metadata"
+          mkdir -p "$build_dir" "$metadata_dir"
+          cp packages/python/catalogmx/data/mexico_dynamic.sqlite3 "$build_dir/"
+          python scripts/banxico/build_dynamic_manifest.py \
+            "$build_dir/mexico_dynamic.sqlite3" \
+            --output "$build_dir/mexico_dynamic.manifest.json"
+
+          content_sha=$(jq -er '.dataset.content_sha256' \
+            "$build_dir/mexico_dynamic.manifest.json")
+          channel=data-banxico-sie-dynamic-1-latest
+          immutable="data-banxico-sie-dynamic-1-${content_sha}"
+          release_dir="$RUNNER_TEMP/releases/$immutable"
+          mkdir -p "$release_dir"
+          cp "$build_dir/mexico_dynamic.sqlite3" "$release_dir/"
+          cp "$build_dir/mexico_dynamic.manifest.json" "$release_dir/"
+
+          pointer=$(jq -cn \
+            --arg release_tag "$immutable" \
+            --arg content_sha256 "$content_sha" \
+            '{
+              schema_version: 1,
+              dataset_id: "banxico.sie_dynamic",
+              dataset_version: "1",
+              release_tag: $release_tag,
+              content_sha256: $content_sha256,
+              artifact: "mexico_dynamic.sqlite3",
+              manifest: "mexico_dynamic.manifest.json"
+            }')
+          jq -cn \
+            --arg tag_name "$channel" \
+            --arg body "$pointer" \
+            '{tag_name:$tag_name,body:$body}' \
+            > "$metadata_dir/$channel"
+
+      - name: Build wheel
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build --wheel --outdir "$RUNNER_TEMP/wheels" packages/python
+          unzip -l "$RUNNER_TEMP"/wheels/catalogmx-*.whl | tee "$RUNNER_TEMP/wheel-contents.txt"
+          grep 'catalogmx/data/dataset_contract.json' "$RUNNER_TEMP/wheel-contents.txt"
+          grep 'catalogmx/data/mexico_dynamic.sqlite3' "$RUNNER_TEMP/wheel-contents.txt"
+          if grep -q 'catalogmx/shared-data/' "$RUNNER_TEMP/wheel-contents.txt"; then
+            echo 'Unexpected embedded shared-data tree in wheel' >&2
+            exit 1
+          fi
+
+      - name: Install wheel into clean virtualenv
+        shell: bash
+        run: |
+          python -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/python" -m pip install --upgrade pip
+          "$RUNNER_TEMP/venv/bin/python" -m pip install "$RUNNER_TEMP"/wheels/catalogmx-*.whl
+
+      - name: Use packaged bootstrap in clean offline wheel
+        shell: bash
+        env:
+          CATALOGMX_DATA_MODE: offline
+        run: |
+          export CATALOGMX_CACHE_DIR="$RUNNER_TEMP/bootstrap-empty-cache"
+          unset CATALOGMX_SHARED_DATA
+
+          "$RUNNER_TEMP/venv/bin/python" - <<'PY'
+          import sqlite3
+          from pathlib import Path
+
+          from catalogmx.data import DatasetResolver
+          from catalogmx.data.updater import DataUpdater, EMBEDDED_DB
+
+          resolver = DatasetResolver()
+          root = resolver.resolve_dataset_root("banxico.sie_dynamic")
+          path = root / "mexico_dynamic.sqlite3"
+          assert path == EMBEDDED_DB
+          assert path.is_file()
+          assert "site-packages" in str(path)
+          assert resolver.cache_status("banxico.sie_dynamic")["cached"] is False
+
+          updater = DataUpdater()
+          assert updater.get_database_path(auto_update=False) == path
+          with sqlite3.connect(f"file:{path}?mode=ro", uri=True) as db:
+              source = db.execute(
+                  "SELECT value FROM _metadata WHERE key = 'source'"
+              ).fetchone()
+          assert source == ("banxico",)
+          PY
+
+      - name: Prefer verified dynamic release over packaged bootstrap
+        shell: bash
+        env:
+          CATALOGMX_DATA_MODE: fetch-missing
+          CATALOGMX_CACHE_TTL: '86400'
+        run: |
+          export CATALOGMX_RELEASE_BASE_URL="file://$RUNNER_TEMP/releases"
+          export CATALOGMX_RELEASE_METADATA_BASE_URL="file://$RUNNER_TEMP/release-metadata"
+          export CATALOGMX_CACHE_DIR="$RUNNER_TEMP/dynamic-remote-cache"
+          unset CATALOGMX_SHARED_DATA
+
+          "$RUNNER_TEMP/venv/bin/python" - <<'PY'
+          import os
+          from pathlib import Path
+
+          from catalogmx.data import DatasetResolver
+          from catalogmx.data.updater import EMBEDDED_DB
+
+          cache = Path(os.environ["CATALOGMX_CACHE_DIR"])
+          resolver = DatasetResolver()
+          root = resolver.resolve_dataset_root("banxico.sie_dynamic")
+          path = root / "mexico_dynamic.sqlite3"
+
+          assert path.is_file()
+          assert path != EMBEDDED_DB
+          assert str(root).startswith(str(cache))
+          assert resolver.verify_cached_dataset("banxico.sie_dynamic")
+          state = resolver.cache_status("banxico.sie_dynamic")
+          assert state["cached"] is True
+          assert state["release_tag"].startswith("data-banxico-sie-dynamic-1-")
+          assert resolver.cache_ttl_seconds == 86400
+          PY
+
+      - name: Reuse verified dynamic cache offline
+        shell: bash
+        env:
+          CATALOGMX_DATA_MODE: offline
+        run: |
+          export CATALOGMX_CACHE_DIR="$RUNNER_TEMP/dynamic-remote-cache"
+          unset CATALOGMX_SHARED_DATA
+
+          "$RUNNER_TEMP/venv/bin/python" - <<'PY'
+          import os
+          from pathlib import Path
+
+          from catalogmx.data import DatasetResolver
+          from catalogmx.data.updater import EMBEDDED_DB
+
+          cache = Path(os.environ["CATALOGMX_CACHE_DIR"])
+          resolver = DatasetResolver()
+          root = resolver.resolve_dataset_root("banxico.sie_dynamic")
+          assert root != EMBEDDED_DB.parent
+          assert str(root).startswith(str(cache))
+          assert resolver.verify_cached_dataset("banxico.sie_dynamic")
+          PY
+
+      - name: Resolve Banxico from release fixture
+        shell: bash
+        env:
+          CATALOGMX_DATA_MODE: fetch-missing
+        run: |
+          export CATALOGMX_RELEASE_BASE_URL="file://$RUNNER_TEMP/releases"
+          export CATALOGMX_RELEASE_METADATA_BASE_URL="file://$RUNNER_TEMP/release-metadata"
+          export CATALOGMX_CACHE_DIR="$RUNNER_TEMP/catalogmx-cache"
+          unset CATALOGMX_SHARED_DATA
+
+          "$RUNNER_TEMP/venv/bin/python" - <<'PY'
+          import os
+          from pathlib import Path
+
+          cache = Path(os.environ["CATALOGMX_CACHE_DIR"])
+          import catalogmx
+
+          assert not cache.exists(), "import catalogmx must not create the dataset cache"
+
+          from catalogmx.catalogs.banxico.banks import BankCatalog
+          from catalogmx.catalogs.banxico.codigos_plaza import CodigosPlazaCatalog
+          from catalogmx.catalogs.banxico.instituciones_financieras import (
+              InstitucionesFinancieras,
+          )
+          from catalogmx.catalogs.banxico.monedas_divisas import MonedasDivisas
+          from catalogmx.data import DatasetResolver
+
+          bank = BankCatalog.get_bank_by_code("002")
+          assert bank is not None
+          assert bank["code"] == "002"
+          assert cache.exists()
+
+          plazas = CodigosPlazaCatalog.get_all()
+          assert plazas
+          assert InstitucionesFinancieras.get_por_codigo("01") is not None
+          assert MonedasDivisas.get_por_codigo("MXN") is not None
+
+          resolver = DatasetResolver()
+          assert resolver.verify_cached_dataset("banxico.reference")
+          assert resolver.verify_profile("payglobal") == {"banxico.reference": True}
+          state = resolver.cache_status("banxico.reference")
+          assert state["release_tag"].startswith("data-banxico-reference-1-")
+          PY
+
+      - name: Resolve CONAPO and IFT from release fixtures
+        shell: bash
+        env:
+          CATALOGMX_DATA_MODE: fetch-missing
+        run: |
+          export CATALOGMX_RELEASE_BASE_URL="file://$RUNNER_TEMP/releases"
+          export CATALOGMX_RELEASE_METADATA_BASE_URL="file://$RUNNER_TEMP/release-metadata"
+          export CATALOGMX_CACHE_DIR="$RUNNER_TEMP/catalogmx-cache-secondary"
+          unset CATALOGMX_SHARED_DATA
+
+          "$RUNNER_TEMP/venv/bin/python" - <<'PY'
+          from catalogmx.catalogs.conapo.sistema_urbano_nacional import SistemaUrbanoNacionalCatalog
+          from catalogmx.catalogs.conapo.zonas_metropolitanas import ZonasMetropolitanasCatalog
+          from catalogmx.catalogs.ift.codigos_lada import CodigosLADACatalog
+          from catalogmx.catalogs.ift.operadores_moviles import OperadoresMovilesCatalog
+          from catalogmx.data import DatasetResolver
+
+          assert SistemaUrbanoNacionalCatalog.get_all()
+          assert ZonasMetropolitanasCatalog.get_metropolis()
+          assert CodigosLADACatalog.get_all()
+          assert OperadoresMovilesCatalog.get_all()
+
+          resolver = DatasetResolver()
+          assert resolver.verify_cached_dataset("conapo.territorial")
+          assert resolver.verify_cached_dataset("ift.numbering")
+          assert resolver.verify_profile("mexico-telecom") == {"ift.numbering": True}
+          PY

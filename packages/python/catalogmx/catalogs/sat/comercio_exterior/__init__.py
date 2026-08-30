@@ -1,19 +1,9 @@
-"""
-Catálogos del SAT para Complemento de Comercio Exterior 2.0
+"""APIs de Comercio Exterior 2.0 y compatibilidad relacionada.
 
-Este módulo contiene los catálogos oficiales del SAT necesarios para la emisión
-de CFDI con Complemento de Comercio Exterior versión 2.0 (vigente desde enero 18, 2024).
-
-Catálogos incluidos:
-- c_INCOTERM: 11 Incoterms 2020
-- c_ClavePedimento: ~40 claves de pedimento aduanero
-- c_UnidadAduana: ~30 unidades de medida aduanera
-- c_MotivoTraslado: 6 motivos de traslado
-- c_RegistroIdentTribReceptor: Tipos de identificación tributaria
-- c_Moneda: ~180 monedas ISO 4217
-- c_Pais: ~250 países ISO 3166-1
-- c_Estado: Estados USA y provincias Canadá
-- c_FraccionArancelaria: ~20,000 fracciones arancelarias TIGIE/NICO
+El paquete reúne superficies históricas de CatalogMX usadas al validar el
+Complemento de Comercio Exterior. No todas pertenecen al mismo dataset SAT:
+los catálogos CCE 2.0 propios, dependencias reutilizadas de CFDI 4.0 y algunas
+conveniencias aduaneras/ISO se mantienen como fronteras de fuente distintas.
 """
 
 from .claves_pedimento import ClavePedimentoCatalog

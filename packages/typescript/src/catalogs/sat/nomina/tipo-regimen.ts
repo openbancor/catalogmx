@@ -24,20 +24,18 @@ export class TipoRegimenCatalog {
     return this.getData().find((r) => r.code === code);
   }
 
+  static getByCode(code: string): TipoRegimen | undefined {
+    return this.getRegimen(code);
+  }
+
   static isValid(code: string): boolean {
     return this.getData().some((r) => r.code === code);
   }
 
-  /**
-   * Get description
-   */
   static getDescription(code: string): string | undefined {
     return this.getRegimen(code)?.descripcion;
   }
 
-  /**
-   * Search by description
-   */
   static searchByDescription(keyword: string): TipoRegimen[] {
     const search = keyword.toUpperCase();
     return this.getData().filter((r) => r.descripcion.toUpperCase().includes(search));

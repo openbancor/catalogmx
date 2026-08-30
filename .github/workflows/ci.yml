@@ -21,6 +21,24 @@ jobs:
         run: |
           yamllint -d "{extends: relaxed, rules: {line-length: {max: 200}, truthy: disable}}" .github/workflows/
 
+  # Catalog metadata/provenance validation
+  catalog-registry:
+    name: Catalog Registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate catalog registry
+        run: python scripts/catalog_registry.py validate
+
+      - name: Audit catalog freshness
+        run: python scripts/catalog_registry.py audit
+
   # Python Testing and Linting
   python-tests:
     name: Python ${{ matrix.python-version }} Tests
@@ -147,6 +165,34 @@ jobs:
         if: matrix.node-version == '20'
         continue-on-error: true  # Don't fail if codecov upload fails
 
+  # Svelte webapp type checking and production build
+  webapp-tests:
+    name: Svelte Webapp
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: packages/webapp-svelte
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: packages/webapp-svelte/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type and Svelte check
+        run: npm run check
+
+      - name: Production build
+        run: npm run build
+
   # Dart/Flutter Testing and Analysis
   dart-tests:
     name: Dart ${{ matrix.dart-version }} Tests
@@ -171,6 +217,9 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Restore Flutter-migrated analysis options
+        run: git checkout -- analysis_options.yaml
+
       - name: Verify dependencies
         run: flutter pub deps
 
@@ -193,7 +242,9 @@ jobs:
         continue-on-error: true
 
       - name: Dry run pub.dev publish
-        run: flutter pub publish --dry-run
+        run: |
+          git checkout -- analysis_options.yaml
+          flutter pub publish --dry-run
         if: matrix.dart-version == 'stable'
 
   # Kotlin/JVM Testing
@@ -253,7 +304,7 @@ jobs:
   quality-gate:
     name: Quality Gate
     runs-on: ubuntu-latest
-    needs: [python-tests, typescript-tests, dart-tests, kotlin-tests]
+    needs: [catalog-registry, python-tests, typescript-tests, webapp-tests, dart-tests, kotlin-tests]
     steps:
       - name: All tests passed
         run: echo "✅ All quality checks passed!"

@@ -1,8 +1,6 @@
 """Catálogo de Meses (SAT)"""
 
-import json
-
-from catalogmx.utils.shared_data import get_shared_data_path
+from catalogmx.catalogs.sat.cfdi_4._resolver_views import value_rows
 
 
 class Meses:
@@ -11,10 +9,8 @@ class Meses:
     @classmethod
     def _load_data(cls):
         if cls._data is None:
-            path = get_shared_data_path("sat", "cfdi_4.0", "c_Meses.json")
-            with open(path, encoding="utf-8") as f:
-                json_data = json.load(f)
-                cls._data = {item["valor"]: item for item in json_data["data"]}
+            rows = value_rows("cfdi_40_meses")
+            cls._data = {item["valor"]: item for item in rows}
         return cls._data
 
     @classmethod

@@ -26,7 +26,20 @@ if [ -n "${BANXICO_TOKEN:-}" ]; then
     fetch_inflacion_banxico.py \
     fetch_salarios_minimos_banxico.py; do
     echo "📊 Running ${script}..."
-    python "scripts/${script}" || echo "⚠️  Warning: ${script} failed, continuing..."
+    set +e
+    python "scripts/${script}"
+    status=$?
+    set -e
+    case "$status" in
+      0)
+        ;;
+      3)
+        info "${script}: valid source window contained no new observations"
+        ;;
+      *)
+        echo "⚠️  Warning: ${script} failed with exit code ${status}, continuing..."
+        ;;
+    esac
   done
   popd >/dev/null
 else

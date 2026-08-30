@@ -1,0 +1,779 @@
+{
+  "schema_version": 1,
+  "registry_status": "bootstrap",
+  "inventory_checked_at": "2026-08-28",
+  "legacy_manifest": ".catalog-versions.json",
+  "profiles": {
+    "core": {
+      "description": "Pure validators and calculators; no external dataset requirement.",
+      "datasets": []
+    },
+    "payglobal": {
+      "description": "Bank and routing reference data used by PayGlobal runtime services.",
+      "datasets": [
+        "banxico.reference"
+      ]
+    },
+    "payglobal-e2e": {
+      "description": "PayGlobal runtime data plus identity and CLABE generation references.",
+      "datasets": [
+        "banxico.reference"
+      ]
+    },
+    "banxico-dynamic": {
+      "description": "Banco de México SIE time-series data with independent daily refresh.",
+      "datasets": [
+        "banxico.sie_dynamic"
+      ]
+    },
+    "sat-cfdi": {
+      "description": "SAT CFDI 4.0 canonical reference catalogs.",
+      "datasets": [
+        "sat.cfdi_4"
+      ]
+    },
+    "sat-carta-porte": {
+      "description": "SAT Carta Porte 3.1 canonical reference catalogs.",
+      "datasets": [
+        "sat.carta_porte"
+      ]
+    },
+    "sat-comercio-exterior": {
+      "description": "SAT Comercio Exterior 2.0 plus its shared CFDI 4.0 catalog dependency.",
+      "datasets": [
+        "sat.cfdi_4",
+        "sat.comercio_exterior"
+      ]
+    },
+    "sat-nomina": {
+      "description": "SAT Nomina 1.2 revision E canonical reference catalogs.",
+      "datasets": [
+        "sat.nomina_1_2"
+      ]
+    },
+    "mexico-geo": {
+      "description": "National INEGI AGEEML localities and SEPOMEX postal reference data.",
+      "datasets": [
+        "inegi.ageeml",
+        "sepomex.codigos_postales",
+        "conapo.territorial"
+      ]
+    },
+    "mexico-telecom": {
+      "description": "IFT numbering and reviewed telecom reference snapshots.",
+      "datasets": [
+        "ift.numbering"
+      ]
+    }
+  },
+  "datasets": [
+    {
+      "id": "sat.cfdi_4",
+      "title": "SAT CFDI 4.0 reference catalogs and schemas",
+      "authority": "SAT",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "mixed",
+      "version": "4.0",
+      "effective_from": "2022-01-01",
+      "mandatory_from": "2023-04-01",
+      "local_paths": [
+        "packages/shared-data/sat/cfdi_4.0",
+        "packages/shared-data/sat/xsd",
+        "packages/shared-data/sqlite/clave_prod_serv.db"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_portal",
+          "url": "https://www.sat.gob.mx/consultas/35025/formato-de-factura-electronica-(anexo-20)",
+          "format": "portal"
+        },
+        {
+          "role": "authoritative_catalog",
+          "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/catCFDI.xls",
+          "format": "xls"
+        },
+        {
+          "role": "technical_mirror",
+          "url": "https://github.com/phpcfdi/resources-sat-catalogs",
+          "format": "sqlite_sql"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 31,
+        "upstream_checked_at": "2026-08-26"
+      },
+      "implementation": {
+        "status": "resolver_ready",
+        "official_catalogs": 25,
+        "embedded_convenience_json_files": 14,
+        "canonical_distribution": "release",
+        "release_artifact": "sat_cfdi_40.sqlite3",
+        "legacy_view_path": "packages/shared-data/sat/cfdi_4.0",
+        "legacy_fetch_script": "scripts/fetch_sat_catalogs.py",
+        "consumer_migration_required_before_removal": true,
+        "manifest": "sat_cfdi_40.manifest.json"
+      },
+      "notes": "CFDI 4.0 remains the valid Anexo 20 version. The canonical 25-table SQLite dataset is independently versioned and resolver-ready; legacy embedded convenience views remain only for compatibility while consumers migrate.",
+      "artifact": {
+        "version": "4.0",
+        "channel": "data-sat-cfdi-4-4-0-latest",
+        "file": "sat_cfdi_40.sqlite3",
+        "manifest": "sat_cfdi_40.manifest.json",
+        "format": "file",
+        "mount_path": "sat/cfdi_4.0",
+        "discovery": "release-pointer"
+      }
+    },
+    {
+      "id": "sat.carta_porte",
+      "title": "SAT Carta Porte 3.1 catalogs and schemas",
+      "authority": "SAT",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "mixed",
+      "version": "3.1",
+      "effective_from": "2024-07-17",
+      "local_paths": [
+        "packages/shared-data/sat/carta_porte_3",
+        "packages/shared-data/sat/xsd/resources/www.sat.gob.mx/sitio_internet/cfd/CartaPorte"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_portal",
+          "url": "https://www.sat.gob.mx/portal/public/tramites/complemento-carta-porte",
+          "format": "portal"
+        },
+        {
+          "role": "authoritative_catalog",
+          "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/CatalogosCartaPorte31.xls",
+          "format": "xls"
+        },
+        {
+          "role": "technical_mirror",
+          "url": "https://github.com/phpcfdi/resources-sat-catalogs",
+          "format": "sqlite_sql"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 31,
+        "upstream_checked_at": "2026-08-26"
+      },
+      "implementation": {
+        "status": "resolver_ready",
+        "official_catalogs": 32,
+        "embedded_convenience_json_files": 7,
+        "legacy_view_path": "packages/shared-data/sat/carta_porte_3",
+        "canonical_distribution": "release",
+        "release_artifact": "sat_carta_porte_31.sqlite3",
+        "manifest": "sat_carta_porte_31.manifest.json",
+        "consumer_migration_required_before_removal": true
+      },
+      "notes": "Carta Porte 3.1 is current. The canonical release contains the complete 32-table ccp_31 catalog family and is independently versioned and resolver-ready; legacy convenience JSON views remain compatibility projections rather than the canonical source.",
+      "artifact": {
+        "version": "3.1",
+        "channel": "data-sat-carta-porte-3-1-latest",
+        "file": "sat_carta_porte_31.sqlite3",
+        "manifest": "sat_carta_porte_31.manifest.json",
+        "format": "file",
+        "mount_path": "sat/carta_porte_3.1",
+        "discovery": "release-pointer"
+      }
+    },
+    {
+      "id": "sat.comercio_exterior",
+      "title": "SAT Comercio Exterior 2.0 catalogs",
+      "authority": "SAT",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "mixed",
+      "version": "2.0",
+      "effective_from": "2024-01-18",
+      "local_paths": [
+        "packages/shared-data/sat/comercio_exterior"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_portal",
+          "url": "https://www.sat.gob.mx/consultas/61165/comprobante-de-comercio-exterior",
+          "format": "portal"
+        },
+        {
+          "role": "authoritative_technical_page",
+          "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/complemento_comercio_exterior.htm",
+          "format": "html"
+        },
+        {
+          "role": "technical_mirror",
+          "url": "https://github.com/phpcfdi/resources-sat-catalogs",
+          "format": "sqlite_sql"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 31,
+        "upstream_checked_at": "2026-08-26"
+      },
+      "implementation": {
+        "status": "resolver_ready",
+        "official_catalogs_total": 14,
+        "canonical_owned_catalogs": 10,
+        "shared_cfdi_catalogs": 4,
+        "shared_cfdi_dependency": "sat.cfdi_4",
+        "shared_cfdi_tables": [
+          "cfdi_40_codigos_postales",
+          "cfdi_40_monedas",
+          "cfdi_40_paises",
+          "cfdi_40_regimenes_fiscales"
+        ],
+        "embedded_convenience_json_files": 8,
+        "canonical_distribution": "release",
+        "release_artifact": "sat_comercio_exterior_20.sqlite3",
+        "legacy_view_path": "packages/shared-data/sat/comercio_exterior",
+        "consumer_migration_required_before_removal": true,
+        "manifest": "sat_comercio_exterior_20.manifest.json"
+      },
+      "notes": "Comercio Exterior 2.0 has been effective with CFDI 4.0 since 2024-01-18. Its canonical release contains the 10 CCE-owned tables; the sat-comercio-exterior runtime profile also resolves sat.cfdi_4 for the four shared CFDI catalog concepts. Legacy JSON views remain for compatibility during consumer migration.",
+      "artifact": {
+        "version": "2.0",
+        "channel": "data-sat-comercio-exterior-2-0-latest",
+        "file": "sat_comercio_exterior_20.sqlite3",
+        "manifest": "sat_comercio_exterior_20.manifest.json",
+        "format": "file",
+        "mount_path": "sat/comercio_exterior_2.0",
+        "discovery": "release-pointer"
+      }
+    },
+    {
+      "id": "sat.nomina_1_2",
+      "title": "SAT Nómina 1.2 catalogs",
+      "authority": "SAT",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "mixed",
+      "version": "1.2",
+      "revision": "E",
+      "effective_from": "2026-01-01",
+      "local_paths": [
+        "packages/shared-data/sat/nomina_1.2",
+        "packages/shared-data/sat/xsd/resources/www.sat.gob.mx/sitio_internet/cfd/catalogos/Nomina/catNomina.xsd"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_notice",
+          "url": "https://www.sat.gob.mx/minisitio/Factura/emite_organismospublicos.htm",
+          "format": "html"
+        },
+        {
+          "role": "authoritative_catalog",
+          "url": "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/catNomina.xls",
+          "format": "xls"
+        },
+        {
+          "role": "authoritative_resource",
+          "url": "https://www.sat.gob.mx/sitio_internet/cfd/catalogos/Nomina/catNomina.xsd",
+          "format": "xsd"
+        },
+        {
+          "role": "technical_mirror",
+          "url": "https://github.com/phpcfdi/resources-sat-catalogs",
+          "format": "sqlite_sql"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 31,
+        "upstream_checked_at": "2026-08-26"
+      },
+      "implementation": {
+        "status": "resolver_ready",
+        "xsd_catalog_types": 13,
+        "canonical_catalog_tables": 13,
+        "canonical_distribution": "release",
+        "release_artifact": "sat_nomina_12.sqlite3",
+        "excluded_auxiliary_tables": [
+          "nomina_estados"
+        ],
+        "embedded_convenience_json_files": 13,
+        "legacy_view_path": "packages/shared-data/sat/nomina_1.2",
+        "normalized_catalogs": 13,
+        "missing_normalized_catalogs": [],
+        "consumer_migration_required_before_removal": true,
+        "manifest": "sat_nomina_12.manifest.json"
+      },
+      "notes": "Nómina 1.2 revision E is effective from 2026-01-01. The canonical release contains all 13 catNomina catalog families and is resolver-ready; generated embedded JSON views remain compatibility projections while consumers migrate.",
+      "artifact": {
+        "version": "1.2-revision-e",
+        "channel": "data-sat-nomina-1-2-1-2-revision-e-latest",
+        "file": "sat_nomina_12.sqlite3",
+        "manifest": "sat_nomina_12.manifest.json",
+        "format": "file",
+        "mount_path": "sat/nomina_1.2",
+        "discovery": "release-pointer"
+      }
+    },
+    {
+      "id": "sat.contabilidad_electronica",
+      "title": "SAT Contabilidad Electrónica catalogs",
+      "authority": "SAT",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/sat/contabilidad_electronica"
+      ],
+      "upstream": [],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 180,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "sat.impuestos",
+      "title": "SAT tax reference data",
+      "authority": "SAT",
+      "kind": "regulatory_parameters",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/sat/impuestos",
+        "packages/shared-data/isr-tables.json",
+        "packages/shared-data/resico-tables.json"
+      ],
+      "upstream": [],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 90,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "sat.tigie_nico",
+      "title": "TIGIE/NICO tariff reference data",
+      "authority": "SNICE",
+      "kind": "reference",
+      "status": "planned",
+      "distribution": "optional",
+      "local_paths": [],
+      "upstream": [
+        {
+          "role": "authoritative_portal",
+          "url": "https://www.snice.gob.mx/",
+          "format": "portal"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 90,
+        "upstream_checked_at": null
+      },
+      "notes": "Large regulatory dataset; should be independently versioned and distributed rather than bundled blindly into every language package."
+    },
+    {
+      "id": "banxico.sie_dynamic",
+      "title": "Banco de México SIE time series",
+      "authority": "BANXICO",
+      "kind": "time_series",
+      "status": "managed",
+      "distribution": "release",
+      "local_paths": [
+        "packages/shared-data/mexico_dynamic.sqlite3",
+        "packages/shared-data/schema_dynamic.sql"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_api",
+          "url": "https://www.banxico.org.mx/SieAPIRest/service/v1/",
+          "format": "json_api"
+        }
+      ],
+      "freshness": {
+        "mode": "pipeline",
+        "workflow": ".github/workflows/update-dynamic-data.yml",
+        "max_age_days": 2,
+        "upstream_checked_at": null
+      },
+      "version": "1",
+      "artifact": {
+        "version": "1",
+        "channel": "data-banxico-sie-dynamic-1-latest",
+        "file": "mexico_dynamic.sqlite3",
+        "manifest": "mexico_dynamic.manifest.json",
+        "format": "file",
+        "mount_path": "dynamic",
+        "discovery": "release-pointer"
+      },
+      "implementation": {
+        "status": "resolver_ready",
+        "canonical_distribution": "release",
+        "release_artifact": "mexico_dynamic.sqlite3",
+        "manifest": "mexico_dynamic.manifest.json",
+        "legacy_data_updater_compatibility": true,
+        "bootstrap_snapshot": "packages/python/catalogmx/data/mexico_dynamic.sqlite3",
+        "bootstrap_is_canonical": false
+      },
+      "notes": "Daily Banxico SIE time-series data remains independently released by update-dynamic-data.yml. The release now carries a validated manifest and is addressable through the common DatasetResolver while the legacy DataUpdater API remains a compatibility facade during migration.",
+      "bootstrap": {
+        "kind": "file",
+        "package_path": "data/mexico_dynamic.sqlite3",
+        "role": "offline-fallback"
+      }
+    },
+    {
+      "id": "banxico.reference",
+      "title": "Banco de México banking reference catalogs",
+      "authority": "BANXICO",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "mixed",
+      "version": "1",
+      "source_subpath": "banxico",
+      "artifact": {
+        "version": "1",
+        "channel": "data-banxico-reference-1-latest",
+        "file": "banxico_reference.tar.gz",
+        "manifest": "banxico_reference.manifest.json",
+        "format": "tar.gz",
+        "mount_path": "banxico"
+      },
+      "local_paths": [
+        "packages/shared-data/banxico"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_payment_system_reference",
+          "url": "https://www.banxico.org.mx/cep-scl/listaInstituciones.do",
+          "format": "html"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 31,
+        "upstream_checked_at": "2026-08-27"
+      },
+      "implementation": {
+        "status": "resolver_ready",
+        "canonical_distribution": "release",
+        "release_artifact": "banxico_reference.tar.gz",
+        "tracked_compatibility_views": 5,
+        "publish_from_reviewed_master": true
+      },
+      "notes": "Banco de México remains authoritative for current institution reference fields. CatalogMX keeps reviewed compatibility/enrichment JSON views in Git and publishes the exact reviewed five-file Banxico subset as an independently versioned, checksummed release bundle. Runtime consumers may resolve that bundle without coupling data freshness to the catalogmx package version or mutable master content."
+    },
+    {
+      "id": "inegi.ageeml",
+      "title": "INEGI AGEEML geographic reference data",
+      "authority": "INEGI",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "mixed",
+      "local_paths": [
+        "packages/shared-data/inegi/states.json",
+        "packages/shared-data/inegi/municipios.json",
+        "packages/shared-data/inegi/municipios_completo.json",
+        "packages/shared-data/inegi/localidades.json"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_portal",
+          "url": "https://www.inegi.org.mx/app/ageeml/default.html",
+          "format": "portal"
+        },
+        {
+          "role": "authoritative_predefined_catalog",
+          "url": "https://www.inegi.org.mx/contenidos/app/ageeml/min_con_acento_baja.zip",
+          "format": "zip_csv"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 31,
+        "upstream_checked_at": "2026-08-26",
+        "latest_indexed_cut": "2026/JUN"
+      },
+      "implementation": {
+        "status": "resolver_ready",
+        "canonical_distribution": "release",
+        "legacy_download_script": "scripts/download_inegi_complete.py",
+        "synthetic_fallback_forbidden": true,
+        "consumer_migration_required_before_removal": true,
+        "release_artifact": "inegi_ageeml.sqlite3",
+        "manifest": "inegi_ageeml.manifest.json"
+      },
+      "notes": "AGEEML is a permanently updated national geographic registry. The fail-closed canonical SQLite release preserves active/inactive localities and full 01-32 state coverage and is resolver-ready; synthetic fallback is forbidden. Legacy embedded views remain compatibility data during migration.",
+      "artifact": {
+        "version": "1",
+        "channel": "data-inegi-ageeml-1-latest",
+        "file": "inegi_ageeml.sqlite3",
+        "manifest": "inegi_ageeml.manifest.json",
+        "format": "file",
+        "mount_path": "inegi/ageeml",
+        "discovery": "release-pointer"
+      }
+    },
+    {
+      "id": "inegi.scian_2023",
+      "title": "INEGI SCIAN México 2023 classification",
+      "authority": "INEGI",
+      "kind": "classification",
+      "status": "managed",
+      "distribution": "embedded",
+      "version": "2023",
+      "local_paths": [
+        "packages/shared-data/inegi/scian"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_publication",
+          "url": "https://www.inegi.org.mx/app/biblioteca/ficha.html?upc=889463909675",
+          "format": "publication"
+        },
+        {
+          "role": "authoritative_portal",
+          "url": "https://www.inegi.org.mx/app/scian/",
+          "format": "portal"
+        }
+      ],
+      "freshness": {
+        "mode": "event",
+        "upstream_checked_at": "2026-08-26"
+      },
+      "notes": "SCIAN 2023 is the current INEGI industrial classification. It is versioned independently from the monthly AGEEML geographic registry and therefore must not inherit AGEEML scheduling or update logic."
+    },
+    {
+      "id": "sepomex.codigos_postales",
+      "title": "Correos de México postal codes and settlements",
+      "authority": "SEPOMEX",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "mixed",
+      "local_paths": [
+        "packages/shared-data/sepomex",
+        "packages/shared-data/sqlite/sepomex.db"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_portal",
+          "url": "https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/CodigoPostal_Exportar.aspx",
+          "format": "portal"
+        },
+        {
+          "role": "authoritative_export",
+          "url": "https://www.correosdemexico.gob.mx/datosabiertos/cp/cpdescarga.txt",
+          "format": "pipe_delimited_txt"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 31,
+        "upstream_checked_at": "2026-08-26",
+        "source_reported_updated_at": "2026-08-25"
+      },
+      "implementation": {
+        "status": "resolver_ready",
+        "canonical_distribution": "release",
+        "release_artifact": "sepomex_codigos_postales.sqlite3",
+        "legacy_full_json": "packages/shared-data/sepomex/codigos_postales_completo.json",
+        "legacy_sqlite": "packages/shared-data/sqlite/sepomex.db",
+        "legacy_full_json_bytes": 42189614,
+        "legacy_sqlite_bytes": 13287424,
+        "consumer_migration_required_before_removal": true,
+        "manifest": "sepomex_codigos_postales.manifest.json"
+      },
+      "rights": {
+        "source_terms_checked_at": "2026-08-26",
+        "commercialization_restricted": true,
+        "project_relicenses_source_data": false
+      },
+      "notes": "The official national Correos de México/SEPOMEX export is normalized into a fail-closed canonical SQLite release with full state coverage. The release is resolver-ready; the large embedded JSON and legacy SQLite snapshots remain only for compatibility while consumers migrate.",
+      "artifact": {
+        "version": "1",
+        "channel": "data-sepomex-codigos-postales-1-latest",
+        "file": "sepomex_codigos_postales.sqlite3",
+        "manifest": "sepomex_codigos_postales.manifest.json",
+        "format": "file",
+        "mount_path": "sepomex",
+        "discovery": "release-pointer"
+      }
+    },
+    {
+      "id": "cnbv.reference",
+      "title": "CNBV financial-sector reference data",
+      "authority": "CNBV",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/cnbv"
+      ],
+      "upstream": [],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 90,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "ift.numbering",
+      "title": "IFT numbering and operator reference data",
+      "authority": "IFT",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "mixed",
+      "local_paths": [
+        "packages/shared-data/ift",
+        "packages/shared-data/sqlite/prefijos_telefonicos.db"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_numbering_service",
+          "url": "https://sns.ift.org.mx/sns-frontend/consulta-numeracion/numeracion-geografica.xhtml",
+          "format": "interactive_portal"
+        },
+        {
+          "role": "authoritative_numbering_areas",
+          "url": "https://sns.ift.org.mx/sns-frontend/areas-geograficas-numeracion/areas-numeracion.xhtml",
+          "format": "interactive_portal"
+        },
+        {
+          "role": "authoritative_portal",
+          "url": "https://www.ift.org.mx/usuarios-y-audiencias/recursos-usuarios/recursos/numeracion",
+          "format": "portal"
+        }
+      ],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 90,
+        "upstream_checked_at": "2026-08-28"
+      },
+      "source_subpath": "ift",
+      "implementation": {
+        "status": "resolver_ready",
+        "canonical_distribution": "release",
+        "release_artifact": "ift_numbering.tar.gz",
+        "manifest": "ift_numbering.manifest.json",
+        "reviewed_files": [
+          "codigos_lada.json",
+          "operadores_moviles.json",
+          "operadores_pnn.json"
+        ],
+        "legacy_view_path": "packages/shared-data/ift",
+        "publish_from_reviewed_master": true,
+        "consumer_migration_required_before_removal": true
+      },
+      "artifact": {
+        "version": "1",
+        "channel": "data-ift-numbering-1-latest",
+        "file": "ift_numbering.tar.gz",
+        "manifest": "ift_numbering.manifest.json",
+        "format": "tar.gz",
+        "mount_path": "ift",
+        "discovery": "release-pointer"
+      },
+      "notes": "The IFT SNS is authoritative for numbering assignments. The tracked JSON files also contain CatalogMX compatibility enrichments (for example INEGI mapping, metropolitan overlays and mobile-operator convenience fields), so the runtime artifact is a reviewed snapshot rather than a claimed one-to-one IFT export. Source refresh and enrichment review remain separate from release distribution."
+    },
+    {
+      "id": "conapo.territorial",
+      "title": "CONAPO urban and metropolitan classifications",
+      "authority": "CONAPO",
+      "kind": "reference",
+      "status": "managed",
+      "distribution": "mixed",
+      "local_paths": [
+        "packages/shared-data/conapo"
+      ],
+      "upstream": [
+        {
+          "role": "authoritative_publication",
+          "url": "https://www.gob.mx/conapo/documentos/sistema-urbano-nacional-2020",
+          "format": "publication"
+        },
+        {
+          "role": "authoritative_dataset",
+          "url": "https://www.datos.gob.mx/dataset/sistema_urbano_nacional",
+          "format": "csv"
+        },
+        {
+          "role": "authoritative_metropolitan_dataset",
+          "url": "https://www.datos.gob.mx/dataset/metropolis_mexico_2020",
+          "format": "csv"
+        }
+      ],
+      "freshness": {
+        "mode": "event",
+        "upstream_checked_at": "2026-08-28"
+      },
+      "source_subpath": "conapo",
+      "implementation": {
+        "status": "resolver_ready",
+        "canonical_distribution": "release",
+        "release_artifact": "conapo_territorial.tar.gz",
+        "manifest": "conapo_territorial.manifest.json",
+        "reviewed_files": [
+          "municipios_tipologia.csv",
+          "sun_2020.csv"
+        ],
+        "legacy_view_path": "packages/shared-data/conapo",
+        "publish_from_reviewed_master": true,
+        "consumer_migration_required_before_removal": true
+      },
+      "artifact": {
+        "version": "2020",
+        "channel": "data-conapo-territorial-2020-latest",
+        "file": "conapo_territorial.tar.gz",
+        "manifest": "conapo_territorial.manifest.json",
+        "format": "tar.gz",
+        "mount_path": "conapo",
+        "discovery": "release-pointer"
+      },
+      "notes": "SUN 2020 and Metrópolis de México 2020 remain versioned territorial classifications. CatalogMX distributes the two reviewed CSV compatibility views as a deterministic release bundle so installed runtimes do not depend on a repository checkout. The bundle preserves reviewed project semantics; authority refresh remains a separate review step."
+    },
+    {
+      "id": "imss.reference",
+      "title": "IMSS contribution and reference tables",
+      "authority": "IMSS",
+      "kind": "regulatory_parameters",
+      "status": "managed",
+      "distribution": "embedded",
+      "local_paths": [
+        "packages/shared-data/imss-catalogs.json",
+        "packages/shared-data/imss-tables.json"
+      ],
+      "upstream": [],
+      "freshness": {
+        "mode": "interval",
+        "max_age_days": 90,
+        "upstream_checked_at": null
+      }
+    },
+    {
+      "id": "inegi.denue.filtered",
+      "title": "Filtered DENUE business-directory view",
+      "authority": "INEGI",
+      "kind": "derived",
+      "status": "planned",
+      "distribution": "optional",
+      "local_paths": [],
+      "upstream": [
+        {
+          "role": "authoritative",
+          "url": "https://www.inegi.org.mx/app/mapa/denue/",
+          "format": "dataset"
+        }
+      ],
+      "freshness": {
+        "mode": "event",
+        "upstream_checked_at": null
+      },
+      "derivation": {
+        "type": "filtered_view",
+        "filter_spec": null,
+        "retain_full_upstream_in_core": false
+      },
+      "notes": "DENUE is intentionally modeled as a reproducible filtered derivative, not as a full catalogmx mirror. The filter specification must be defined before materialization."
+    }
+  ]
+}

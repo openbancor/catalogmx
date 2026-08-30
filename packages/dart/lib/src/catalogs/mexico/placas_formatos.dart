@@ -18,24 +18,30 @@ class PlacasFormatosCatalog {
       'mexico/placas_formatos.json',
     );
 
-    // Handle both list and dict formats
     if (jsonData.isNotEmpty && jsonData.first.containsKey('estados')) {
       _data = (jsonData.first['estados'] as List)
-          .map((e) => e as Map<String, dynamic>)
+          .map((e) => Map<String, dynamic>.from(e as Map))
           .toList();
     } else {
       _data = jsonData;
     }
 
-    // Build indices
-    _byEstado = {
-      for (var estado in _data!)
-        (estado['estado'] as String).toUpperCase(): estado,
-    };
-
-    _byCveEstado = {
-      for (var estado in _data!) estado['cve_estado'] as String: estado,
-    };
+    // Current shared data is one row per plate format, so multiple rows may
+    // belong to the same state. Preserve the historical single-row lookup by
+    // returning the first row while validation/search scan all matching rows.
+    _byEstado = <String, Map<String, dynamic>>{};
+    _byCveEstado = <String, Map<String, dynamic>>{};
+    for (final item in _data!) {
+      final state = item['estado']?.toString();
+      if (state != null) {
+        _byEstado!.putIfAbsent(state.toUpperCase(), () => item);
+      }
+      final rawStateCode = item['cve_estado'] ?? item['codigo_estado'];
+      final stateCode = rawStateCode?.toString();
+      if (stateCode != null) {
+        _byCveEstado!.putIfAbsent(stateCode, () => item);
+      }
+    }
   }
 
   /// Obtiene todos los formatos de placas
@@ -44,79 +50,56 @@ class PlacasFormatosCatalog {
     return List.from(_data!);
   }
 
-  /// Obtiene formato de placas por nombre de estado
-  ///
-  /// Args:
-  ///   estado: Nombre del estado
-  ///
-  /// Returns:
-  ///   Información de formatos de placas o null si no existe
+  /// Obtiene el primer formato de placas registrado para un estado.
   static Map<String, dynamic>? getByEstado(String estado) {
     _loadData();
     return _byEstado![estado.toUpperCase()];
   }
 
-  /// Obtiene formato de placas por código de estado
-  ///
-  /// Args:
-  ///   cveEstado: Código INEGI del estado
-  ///
-  /// Returns:
-  ///   Información de formatos de placas o null si no existe
+  /// Obtiene el primer formato por código de estado.
   static Map<String, dynamic>? getByCveEstado(String cveEstado) {
     _loadData();
     return _byCveEstado![cveEstado];
   }
 
-  /// Valida si un formato de placa pertenece a un estado
-  ///
-  /// Args:
-  ///   placa: Placa a validar
-  ///   estado: Nombre del estado
-  ///
-  /// Returns:
-  ///   true si el formato coincide, false en caso contrario
-  static bool validarFormato(String placa, String estado) {
-    final formato = getByEstado(estado);
-    if (formato == null) return false;
-
-    final patrones = formato['patrones'] as List?;
-    if (patrones == null) return false;
-
-    for (var patron in patrones) {
-      final regex = RegExp(patron as String, caseSensitive: false);
-      if (regex.hasMatch(placa)) {
-        return true;
+  static Iterable<String> _patterns(Map<String, dynamic> item) sync* {
+    final patterns = item['patrones'];
+    if (patterns is List) {
+      for (final pattern in patterns) {
+        if (pattern != null) yield pattern.toString();
       }
     }
+    final pattern = item['pattern'];
+    if (pattern != null) yield pattern.toString();
+  }
 
+  /// Valida si algún formato de placa registrado para el estado coincide.
+  static bool validarFormato(String placa, String estado) {
+    _loadData();
+    final normalizedState = estado.toUpperCase();
+    for (final item in _data!) {
+      if ((item['estado']?.toString().toUpperCase() ?? '') != normalizedState) {
+        continue;
+      }
+      for (final pattern in _patterns(item)) {
+        if (RegExp(pattern, caseSensitive: false).hasMatch(placa)) return true;
+      }
+    }
     return false;
   }
 
-  /// Busca estado por formato de placa
-  ///
-  /// Args:
-  ///   placa: Placa a buscar
-  ///
-  /// Returns:
-  ///   Lista de estados que podrían usar ese formato
+  /// Busca formatos/estados compatibles con una placa.
   static List<Map<String, dynamic>> buscarPorPlaca(String placa) {
     _loadData();
     final resultados = <Map<String, dynamic>>[];
-
-    for (var estado in _data!) {
-      final patrones = estado['patrones'] as List?;
-      if (patrones == null) continue;
-
-      for (var patron in patrones) {
-        final regex = RegExp(patron as String, caseSensitive: false);
-        if (regex.hasMatch(placa)) {
-          resultados.add(estado);
+    for (final item in _data!) {
+      for (final pattern in _patterns(item)) {
+        if (RegExp(pattern, caseSensitive: false).hasMatch(placa)) {
+          resultados.add(item);
           break;
         }
       }
     }
-
     return resultados;
   }
 }

@@ -1,7 +1,4 @@
-/**
- * SAT Nómina 1.2 - Tipo de Nómina
- * Payroll types (ordinary and extraordinary)
- */
+/** SAT Nómina 1.2 - Tipo de Nómina. */
 
 import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { TipoNomina } from '../../../types';
@@ -24,23 +21,19 @@ export class TipoNominaCatalog {
     return this.getData().find((t) => t.code === code);
   }
 
+  static getByCode(code: string): TipoNomina | undefined {
+    return this.getTipo(code);
+  }
+
   static isValid(code: string): boolean {
-    return this.getData().some((t) => t.code === code);
+    return this.getTipo(code) !== undefined;
   }
 
-  /**
-   * Check if it's ordinary payroll
-   */
   static isOrdinaria(code: string): boolean {
-    const tipo = this.getTipo(code);
-    return tipo?.descripcion.toUpperCase().includes('ORDINARIA') ?? false;
+    return code === 'O' && this.isValid(code);
   }
 
-  /**
-   * Check if it's extraordinary payroll
-   */
   static isExtraordinaria(code: string): boolean {
-    const tipo = this.getTipo(code);
-    return tipo?.descripcion.toUpperCase().includes('EXTRAORDINARIA') ?? false;
+    return code === 'E' && this.isValid(code);
   }
 }

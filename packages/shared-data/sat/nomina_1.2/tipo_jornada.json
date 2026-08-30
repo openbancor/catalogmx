@@ -2,41 +2,46 @@
   {
     "code": "01",
     "description": "Diurna",
-    "hours": "6:00 a 20:00"
+    "descripcion": "Diurna"
   },
   {
     "code": "02",
     "description": "Nocturna",
-    "hours": "20:00 a 6:00"
+    "descripcion": "Nocturna"
   },
   {
     "code": "03",
     "description": "Mixta",
-    "hours": "Combinación diurna y nocturna"
+    "descripcion": "Mixta"
   },
   {
     "code": "04",
     "description": "Por hora",
-    "hours": "Variable"
+    "descripcion": "Por hora"
   },
   {
     "code": "05",
     "description": "Reducida",
-    "hours": "Menor a 8 horas"
+    "descripcion": "Reducida"
   },
   {
     "code": "06",
     "description": "Continuada",
-    "hours": "Sin interrupción"
+    "descripcion": "Continuada"
   },
   {
     "code": "07",
     "description": "Partida",
-    "hours": "Con período de descanso"
+    "descripcion": "Partida"
+  },
+  {
+    "code": "08",
+    "description": "Por turnos",
+    "descripcion": "Por turnos"
   },
   {
     "code": "99",
-    "description": "Otra jornada",
-    "hours": "No especificada"
+    "description": "Otra Jornada",
+    "descripcion": "Otra Jornada"
   }
 ]

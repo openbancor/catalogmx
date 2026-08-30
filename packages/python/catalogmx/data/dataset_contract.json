@@ -1,0 +1,238 @@
+{
+  "datasets": {
+    "banxico.reference": {
+      "artifact": {
+        "channel": "data-banxico-reference-1-latest",
+        "discovery": "release-pointer",
+        "file": "banxico_reference.tar.gz",
+        "format": "tar.gz",
+        "manifest": "banxico_reference.manifest.json",
+        "mount_path": "banxico",
+        "version": "1"
+      },
+      "freshness": {
+        "max_age_days": 31,
+        "mode": "interval",
+        "upstream_checked_at": "2026-08-27"
+      },
+      "source_subpath": "banxico"
+    },
+    "banxico.sie_dynamic": {
+      "artifact": {
+        "channel": "data-banxico-sie-dynamic-1-latest",
+        "discovery": "release-pointer",
+        "file": "mexico_dynamic.sqlite3",
+        "format": "file",
+        "manifest": "mexico_dynamic.manifest.json",
+        "mount_path": "dynamic",
+        "version": "1"
+      },
+      "bootstrap": {
+        "kind": "file",
+        "package_path": "data/mexico_dynamic.sqlite3",
+        "role": "offline-fallback"
+      },
+      "freshness": {
+        "max_age_days": 2,
+        "mode": "pipeline",
+        "upstream_checked_at": null,
+        "workflow": ".github/workflows/update-dynamic-data.yml"
+      }
+    },
+    "conapo.territorial": {
+      "artifact": {
+        "channel": "data-conapo-territorial-2020-latest",
+        "discovery": "release-pointer",
+        "file": "conapo_territorial.tar.gz",
+        "format": "tar.gz",
+        "manifest": "conapo_territorial.manifest.json",
+        "mount_path": "conapo",
+        "version": "2020"
+      },
+      "freshness": {
+        "mode": "event",
+        "upstream_checked_at": "2026-08-28"
+      },
+      "source_subpath": "conapo"
+    },
+    "ift.numbering": {
+      "artifact": {
+        "channel": "data-ift-numbering-1-latest",
+        "discovery": "release-pointer",
+        "file": "ift_numbering.tar.gz",
+        "format": "tar.gz",
+        "manifest": "ift_numbering.manifest.json",
+        "mount_path": "ift",
+        "version": "1"
+      },
+      "freshness": {
+        "max_age_days": 90,
+        "mode": "interval",
+        "upstream_checked_at": "2026-08-28"
+      },
+      "source_subpath": "ift"
+    },
+    "inegi.ageeml": {
+      "artifact": {
+        "channel": "data-inegi-ageeml-1-latest",
+        "discovery": "release-pointer",
+        "file": "inegi_ageeml.sqlite3",
+        "format": "file",
+        "manifest": "inegi_ageeml.manifest.json",
+        "mount_path": "inegi/ageeml",
+        "version": "1"
+      },
+      "freshness": {
+        "latest_indexed_cut": "2026/JUN",
+        "max_age_days": 31,
+        "mode": "interval",
+        "upstream_checked_at": "2026-08-26"
+      }
+    },
+    "sat.carta_porte": {
+      "artifact": {
+        "channel": "data-sat-carta-porte-3-1-latest",
+        "discovery": "release-pointer",
+        "file": "sat_carta_porte_31.sqlite3",
+        "format": "file",
+        "manifest": "sat_carta_porte_31.manifest.json",
+        "mount_path": "sat/carta_porte_3.1",
+        "version": "3.1"
+      },
+      "freshness": {
+        "max_age_days": 31,
+        "mode": "interval",
+        "upstream_checked_at": "2026-08-26"
+      }
+    },
+    "sat.cfdi_4": {
+      "artifact": {
+        "channel": "data-sat-cfdi-4-4-0-latest",
+        "discovery": "release-pointer",
+        "file": "sat_cfdi_40.sqlite3",
+        "format": "file",
+        "manifest": "sat_cfdi_40.manifest.json",
+        "mount_path": "sat/cfdi_4.0",
+        "version": "4.0"
+      },
+      "freshness": {
+        "max_age_days": 31,
+        "mode": "interval",
+        "upstream_checked_at": "2026-08-26"
+      }
+    },
+    "sat.comercio_exterior": {
+      "artifact": {
+        "channel": "data-sat-comercio-exterior-2-0-latest",
+        "discovery": "release-pointer",
+        "file": "sat_comercio_exterior_20.sqlite3",
+        "format": "file",
+        "manifest": "sat_comercio_exterior_20.manifest.json",
+        "mount_path": "sat/comercio_exterior_2.0",
+        "version": "2.0"
+      },
+      "freshness": {
+        "max_age_days": 31,
+        "mode": "interval",
+        "upstream_checked_at": "2026-08-26"
+      }
+    },
+    "sat.nomina_1_2": {
+      "artifact": {
+        "channel": "data-sat-nomina-1-2-1-2-revision-e-latest",
+        "discovery": "release-pointer",
+        "file": "sat_nomina_12.sqlite3",
+        "format": "file",
+        "manifest": "sat_nomina_12.manifest.json",
+        "mount_path": "sat/nomina_1.2",
+        "version": "1.2-revision-e"
+      },
+      "freshness": {
+        "max_age_days": 31,
+        "mode": "interval",
+        "upstream_checked_at": "2026-08-26"
+      }
+    },
+    "sepomex.codigos_postales": {
+      "artifact": {
+        "channel": "data-sepomex-codigos-postales-1-latest",
+        "discovery": "release-pointer",
+        "file": "sepomex_codigos_postales.sqlite3",
+        "format": "file",
+        "manifest": "sepomex_codigos_postales.manifest.json",
+        "mount_path": "sepomex",
+        "version": "1"
+      },
+      "freshness": {
+        "max_age_days": 31,
+        "mode": "interval",
+        "source_reported_updated_at": "2026-08-25",
+        "upstream_checked_at": "2026-08-26"
+      }
+    }
+  },
+  "profiles": {
+    "banxico-dynamic": {
+      "datasets": [
+        "banxico.sie_dynamic"
+      ],
+      "description": "Banco de México SIE time-series data with independent daily refresh."
+    },
+    "core": {
+      "datasets": [],
+      "description": "Pure validators and calculators; no external dataset requirement."
+    },
+    "mexico-geo": {
+      "datasets": [
+        "inegi.ageeml",
+        "sepomex.codigos_postales",
+        "conapo.territorial"
+      ],
+      "description": "National INEGI AGEEML localities and SEPOMEX postal reference data."
+    },
+    "mexico-telecom": {
+      "datasets": [
+        "ift.numbering"
+      ],
+      "description": "IFT numbering and reviewed telecom reference snapshots."
+    },
+    "payglobal": {
+      "datasets": [
+        "banxico.reference"
+      ],
+      "description": "Bank and routing reference data used by PayGlobal runtime services."
+    },
+    "payglobal-e2e": {
+      "datasets": [
+        "banxico.reference"
+      ],
+      "description": "PayGlobal runtime data plus identity and CLABE generation references."
+    },
+    "sat-carta-porte": {
+      "datasets": [
+        "sat.carta_porte"
+      ],
+      "description": "SAT Carta Porte 3.1 canonical reference catalogs."
+    },
+    "sat-cfdi": {
+      "datasets": [
+        "sat.cfdi_4"
+      ],
+      "description": "SAT CFDI 4.0 canonical reference catalogs."
+    },
+    "sat-comercio-exterior": {
+      "datasets": [
+        "sat.cfdi_4",
+        "sat.comercio_exterior"
+      ],
+      "description": "SAT Comercio Exterior 2.0 plus its shared CFDI 4.0 catalog dependency."
+    },
+    "sat-nomina": {
+      "datasets": [
+        "sat.nomina_1_2"
+      ],
+      "description": "SAT Nomina 1.2 revision E canonical reference catalogs."
+    }
+  },
+  "schema_version": 1
+}

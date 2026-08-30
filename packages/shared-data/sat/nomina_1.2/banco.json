@@ -1,252 +1,850 @@
 [
   {
     "code": "002",
-    "name": "Banamex",
-    "full_name": "Banco Nacional de México, S.A."
+    "name": "BANAMEX",
+    "full_name": "Banco Nacional de México, S.A., Institución de Banca Múltiple, Grupo Financiero Banamex",
+    "razon_social": "Banco Nacional de México, S.A., Institución de Banca Múltiple, Grupo Financiero Banamex",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "006",
-    "name": "Bancomext",
-    "full_name": "Banco Nacional de Comercio Exterior, S.N.C."
+    "name": "BANCOMEXT",
+    "full_name": "Banco Nacional de Comercio Exterior, Sociedad Nacional de Crédito, Institución de Banca de Desarrollo",
+    "razon_social": "Banco Nacional de Comercio Exterior, Sociedad Nacional de Crédito, Institución de Banca de Desarrollo",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "009",
-    "name": "Banobras",
-    "full_name": "Banco Nacional de Obras y Servicios Públicos, S.N.C."
+    "name": "BANOBRAS",
+    "full_name": "Banco Nacional de Obras y Servicios Públicos, Sociedad Nacional de Crédito, Institución de Banca de Desarrollo",
+    "razon_social": "Banco Nacional de Obras y Servicios Públicos, Sociedad Nacional de Crédito, Institución de Banca de Desarrollo",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "012",
-    "name": "BBVA México",
-    "full_name": "BBVA México, S.A."
+    "name": "BBVA BANCOMER",
+    "full_name": "BBVA Bancomer, S.A., Institución de Banca Múltiple, Grupo Financiero BBVA Bancomer",
+    "razon_social": "BBVA Bancomer, S.A., Institución de Banca Múltiple, Grupo Financiero BBVA Bancomer",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "014",
-    "name": "Santander",
-    "full_name": "Banco Santander (México), S.A."
+    "name": "SANTANDER",
+    "full_name": "Banco Santander (México), S.A., Institución de Banca Múltiple, Grupo Financiero Santander",
+    "razon_social": "Banco Santander (México), S.A., Institución de Banca Múltiple, Grupo Financiero Santander",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "019",
-    "name": "Banjercito",
-    "full_name": "Banco Nacional del Ejército, Fuerza Aérea y Armada, S.N.C."
+    "name": "BANJERCITO",
+    "full_name": "Banco Nacional del Ejército, Fuerza Aérea y Armada, Sociedad Nacional de Crédito, Institución de Banca de Desarrollo",
+    "razon_social": "Banco Nacional del Ejército, Fuerza Aérea y Armada, Sociedad Nacional de Crédito, Institución de Banca de Desarrollo",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "021",
     "name": "HSBC",
-    "full_name": "HSBC México, S.A."
+    "full_name": "HSBC México, S.A., institución De Banca Múltiple, Grupo Financiero HSBC",
+    "razon_social": "HSBC México, S.A., institución De Banca Múltiple, Grupo Financiero HSBC",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "030",
-    "name": "Bajío",
-    "full_name": "Banco del Bajío, S.A."
+    "name": "BAJIO",
+    "full_name": "Banco del Bajío, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco del Bajío, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "032",
     "name": "IXE",
-    "full_name": "IXE Banco, S.A."
+    "full_name": "IXE Banco, S.A., Institución de Banca Múltiple, IXE Grupo Financiero",
+    "razon_social": "IXE Banco, S.A., Institución de Banca Múltiple, IXE Grupo Financiero",
+    "valid_from": "2017-01-01",
+    "valid_to": "2017-08-13"
   },
   {
     "code": "036",
-    "name": "Inbursa",
-    "full_name": "Banco Inbursa, S.A."
+    "name": "INBURSA",
+    "full_name": "Banco Inbursa, S.A., Institución de Banca Múltiple, Grupo Financiero Inbursa",
+    "razon_social": "Banco Inbursa, S.A., Institución de Banca Múltiple, Grupo Financiero Inbursa",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "037",
-    "name": "Interacciones",
-    "full_name": "Banco Interacciones, S.A."
+    "name": "INTERACCIONES",
+    "full_name": "Banco Interacciones, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco Interacciones, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "042",
-    "name": "Mifel",
-    "full_name": "Banco Mifel, S.A."
+    "name": "MIFEL",
+    "full_name": "Banca Mifel, S.A., Institución de Banca Múltiple, Grupo Financiero Mifel",
+    "razon_social": "Banca Mifel, S.A., Institución de Banca Múltiple, Grupo Financiero Mifel",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "044",
-    "name": "Scotiabank",
-    "full_name": "Scotiabank Inverlat, S.A."
+    "name": "SCOTIABANK",
+    "full_name": "Scotiabank Inverlat, S.A.",
+    "razon_social": "Scotiabank Inverlat, S.A.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "058",
-    "name": "BanRegio",
-    "full_name": "Banco Regional de Monterrey, S.A."
+    "name": "BANREGIO",
+    "full_name": "Banco Regional de Monterrey, S.A., Institución de Banca Múltiple, Banregio Grupo Financiero",
+    "razon_social": "Banco Regional de Monterrey, S.A., Institución de Banca Múltiple, Banregio Grupo Financiero",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "059",
-    "name": "Invex",
-    "full_name": "Banco Invex, S.A."
+    "name": "INVEX",
+    "full_name": "Banco Invex, S.A., Institución de Banca Múltiple, Invex Grupo Financiero",
+    "razon_social": "Banco Invex, S.A., Institución de Banca Múltiple, Invex Grupo Financiero",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "060",
-    "name": "Bansi",
-    "full_name": "Bansi, S.A."
+    "name": "BANSI",
+    "full_name": "Bansi, S.A., Institución de Banca Múltiple",
+    "razon_social": "Bansi, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "062",
-    "name": "Afirme",
-    "full_name": "Banca Afirme, S.A."
+    "name": "AFIRME",
+    "full_name": "Banca Afirme, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banca Afirme, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "072",
-    "name": "Banorte",
-    "full_name": "Banco Mercantil del Norte, S.A."
+    "name": "BANORTE/IXE",
+    "full_name": "Banco Mercantil del Norte, S.A., Institución de Banca Múltiple, Grupo Financiero Banorte",
+    "razon_social": "Banco Mercantil del Norte, S.A., Institución de Banca Múltiple, Grupo Financiero Banorte",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "102",
-    "name": "ABC Capital",
-    "full_name": "Banco ABC Capital, S.A."
+    "name": "THE ROYAL BANK",
+    "full_name": "The Royal Bank of Scotland México, S.A., Institución de Banca Múltiple",
+    "razon_social": "The Royal Bank of Scotland México, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "103",
-    "name": "American Express",
-    "full_name": "American Express Bank (México), S.A."
+    "name": "AMERICAN EXPRESS",
+    "full_name": "American Express Bank (México), S.A., Institución de Banca Múltiple",
+    "razon_social": "American Express Bank (México), S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "106",
-    "name": "Bank of America",
-    "full_name": "Bank of America México, S.A."
+    "name": "BAMSA",
+    "full_name": "Bank of America México, S.A., Institución de Banca Múltiple, Grupo Financiero Bank of America",
+    "razon_social": "Bank of America México, S.A., Institución de Banca Múltiple, Grupo Financiero Bank of America",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "108",
-    "name": "Bank of Tokyo",
-    "full_name": "Bank of Tokyo-Mitsubishi UFJ (México), S.A."
+    "name": "TOKYO",
+    "full_name": "Bank of Tokyo-Mitsubishi UFJ (México), S.A.",
+    "razon_social": "Bank of Tokyo-Mitsubishi UFJ (México), S.A.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "110",
-    "name": "JP Morgan",
-    "full_name": "Banco J.P. Morgan, S.A."
+    "name": "JP MORGAN",
+    "full_name": "Banco J.P. Morgan, S.A., Institución de Banca Múltiple, J.P. Morgan Grupo Financiero",
+    "razon_social": "Banco J.P. Morgan, S.A., Institución de Banca Múltiple, J.P. Morgan Grupo Financiero",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "112",
-    "name": "Monex",
-    "full_name": "Banco Monex, S.A."
+    "name": "BMONEX",
+    "full_name": "Banco Monex, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco Monex, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "113",
-    "name": "Ve Por Más",
-    "full_name": "Banco Ve Por Más, S.A."
+    "name": "VE POR MAS",
+    "full_name": "Banco Ve Por Mas, S.A. Institución de Banca Múltiple",
+    "razon_social": "Banco Ve Por Mas, S.A. Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "116",
     "name": "ING",
-    "full_name": "ING Bank (México), S.A."
+    "full_name": "ING Bank (México), S.A., Institución de Banca Múltiple, ING Grupo Financiero",
+    "razon_social": "ING Bank (México), S.A., Institución de Banca Múltiple, ING Grupo Financiero",
+    "valid_from": "2017-01-01",
+    "valid_to": "2017-08-13"
   },
   {
     "code": "124",
-    "name": "Deutsche",
-    "full_name": "Deutsche Bank México, S.A."
+    "name": "DEUTSCHE",
+    "full_name": "Deutsche Bank México, S.A., Institución de Banca Múltiple",
+    "razon_social": "Deutsche Bank México, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "126",
-    "name": "Credit Suisse",
-    "full_name": "Banco Credit Suisse (México), S.A."
+    "name": "CREDIT SUISSE",
+    "full_name": "Banco Credit Suisse (México), S.A. Institución de Banca Múltiple, Grupo Financiero Credit Suisse (México)",
+    "razon_social": "Banco Credit Suisse (México), S.A. Institución de Banca Múltiple, Grupo Financiero Credit Suisse (México)",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "127",
-    "name": "Azteca",
-    "full_name": "Banco Azteca, S.A."
+    "name": "AZTECA",
+    "full_name": "Banco Azteca, S.A. Institución de Banca Múltiple.",
+    "razon_social": "Banco Azteca, S.A. Institución de Banca Múltiple.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "128",
-    "name": "Autofin",
-    "full_name": "Banco Autofin México, S.A."
+    "name": "AUTOFIN",
+    "full_name": "Banco Autofin México, S.A. Institución de Banca Múltiple",
+    "razon_social": "Banco Autofin México, S.A. Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "129",
-    "name": "Barclays",
-    "full_name": "Barclays Bank México, S.A."
+    "name": "BARCLAYS",
+    "full_name": "Barclays Bank México, S.A., Institución de Banca Múltiple, Grupo Financiero Barclays México",
+    "razon_social": "Barclays Bank México, S.A., Institución de Banca Múltiple, Grupo Financiero Barclays México",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "130",
-    "name": "Compartamos",
-    "full_name": "Banco Compartamos, S.A."
+    "name": "COMPARTAMOS",
+    "full_name": "Banco Compartamos, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco Compartamos, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "131",
-    "name": "Banco Famsa",
-    "full_name": "Banco Ahorro Famsa, S.A."
+    "name": "BANCO FAMSA",
+    "full_name": "Banco Ahorro Famsa, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco Ahorro Famsa, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "132",
     "name": "BMULTIVA",
-    "full_name": "Banco Multiva, S.A."
+    "full_name": "Banco Multiva, S.A., Institución de Banca Múltiple, Multivalores Grupo Financiero",
+    "razon_social": "Banco Multiva, S.A., Institución de Banca Múltiple, Multivalores Grupo Financiero",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "133",
-    "name": "Actinver",
-    "full_name": "Banco Actinver, S.A."
+    "name": "ACTINVER",
+    "full_name": "Banco Actinver, S.A. Institución de Banca Múltiple, Grupo Financiero Actinver",
+    "razon_social": "Banco Actinver, S.A. Institución de Banca Múltiple, Grupo Financiero Actinver",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "134",
-    "name": "Wal-Mart",
-    "full_name": "Banco Wal-Mart de México Adelante, S.A."
+    "name": "WAL-MART",
+    "full_name": "Banco Wal-Mart de México Adelante, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco Wal-Mart de México Adelante, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": "2017-08-13"
   },
   {
     "code": "135",
-    "name": "Nafin",
-    "full_name": "Nacional Financiera, S.N.C."
+    "name": "NAFIN",
+    "full_name": "Nacional Financiera, Sociedad Nacional de Crédito, Institución de Banca de Desarrollo",
+    "razon_social": "Nacional Financiera, Sociedad Nacional de Crédito, Institución de Banca de Desarrollo",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "136",
-    "name": "Interbanco",
-    "full_name": "Inter Banco, S.A."
+    "name": "INTERCAM BANCO",
+    "full_name": "Intercam Banco, S.A., Institución de Banca Múltiple, Intercam Grupo Financiero",
+    "razon_social": "Intercam Banco, S.A., Institución de Banca Múltiple, Intercam Grupo Financiero",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "137",
-    "name": "Bancoppel",
-    "full_name": "BanCoppel, S.A."
+    "name": "BANCOPPEL",
+    "full_name": "BanCoppel, S.A., Institución de Banca Múltiple",
+    "razon_social": "BanCoppel, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "138",
-    "name": "ABC Banco",
-    "full_name": "ABC Banco, S.A."
+    "name": "ABC CAPITAL",
+    "full_name": "ABC Capital, S.A., Institución de Banca Múltiple",
+    "razon_social": "ABC Capital, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "139",
-    "name": "UBS Bank",
-    "full_name": "UBS Bank México, S.A."
+    "name": "UBS BANK",
+    "full_name": "UBS Bank México, S.A., Institución de Banca Múltiple, UBS Grupo Financiero",
+    "razon_social": "UBS Bank México, S.A., Institución de Banca Múltiple, UBS Grupo Financiero",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "140",
-    "name": "Consubanco",
-    "full_name": "Consubanco, S.A."
+    "name": "CONSUBANCO",
+    "full_name": "Consubanco, S.A. Institución de Banca Múltiple",
+    "razon_social": "Consubanco, S.A. Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "141",
-    "name": "Volkswagen",
-    "full_name": "Volkswagen Bank, S.A."
+    "name": "VOLKSWAGEN",
+    "full_name": "Volkswagen Bank, S.A., Institución de Banca Múltiple",
+    "razon_social": "Volkswagen Bank, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "143",
-    "name": "CIBanco",
-    "full_name": "CIBanco, S.A."
+    "name": "CIBANCO",
+    "full_name": "CIBanco, S.A.",
+    "razon_social": "CIBanco, S.A.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "145",
-    "name": "Bbase",
-    "full_name": "Banco Base, S.A."
+    "name": "BBASE",
+    "full_name": "Banco Base, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco Base, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   },
   {
     "code": "147",
-    "name": "Bankaool",
-    "full_name": "Bankaool, S.A."
+    "name": "BANKAOOL",
+    "full_name": "Bankaool, S.A., Institución de Banca Múltiple",
+    "razon_social": "Bankaool, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-08-13",
+    "valid_to": null
   },
   {
     "code": "148",
-    "name": "PagaTodo",
-    "full_name": "Banco PagaTodo, S.A."
+    "name": "PAGATODO",
+    "full_name": "Banco PagaTodo, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco PagaTodo, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-08-13",
+    "valid_to": null
+  },
+  {
+    "code": "149",
+    "name": "FORJADORES",
+    "full_name": "Banco Forjadores, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco Forjadores, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-08-13",
+    "valid_to": null
   },
   {
     "code": "150",
-    "name": "Inmobiliario",
-    "full_name": "Banco Inmobiliario Mexicano, S.A."
+    "name": "INMOBILIARIO",
+    "full_name": "Banco Inmobiliario Mexicano, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco Inmobiliario Mexicano, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-08-13",
+    "valid_to": null
+  },
+  {
+    "code": "151",
+    "name": "DONDÉ",
+    "full_name": "Fundación Dondé Banco, S.A., Institución de Banca Múltiple",
+    "razon_social": "Fundación Dondé Banco, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-08-13",
+    "valid_to": null
   },
   {
     "code": "152",
-    "name": "Bancrea",
-    "full_name": "Bancrea, S.A."
+    "name": "BANCREA",
+    "full_name": "Banco Bancrea, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco Bancrea, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-08-13",
+    "valid_to": null
+  },
+  {
+    "code": "153",
+    "name": "PROGRESO",
+    "full_name": "Banco Progreso Chihuahua, S.A.",
+    "razon_social": "Banco Progreso Chihuahua, S.A.",
+    "valid_from": "2017-08-13",
+    "valid_to": null
+  },
+  {
+    "code": "154",
+    "name": "BANCO FINTERRA",
+    "full_name": "Banco Finterra, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco Finterra, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-08-13",
+    "valid_to": null
+  },
+  {
+    "code": "155",
+    "name": "ICBC",
+    "full_name": "Industrial and Commercial Bank of China México, S.A., Institución de Banca Múltiple",
+    "razon_social": "Industrial and Commercial Bank of China México, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-08-13",
+    "valid_to": null
+  },
+  {
+    "code": "156",
+    "name": "SABADELL",
+    "full_name": "Banco Sabadell, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco Sabadell, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-08-13",
+    "valid_to": null
+  },
+  {
+    "code": "157",
+    "name": "SHINHAN",
+    "full_name": "Banco Shinhan de México, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco Shinhan de México, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-08-13",
+    "valid_to": null
+  },
+  {
+    "code": "158",
+    "name": "MIZUHO BANK",
+    "full_name": "Mizuho Bank México, S.A., Institución de Banca Múltiple",
+    "razon_social": "Mizuho Bank México, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-08-13",
+    "valid_to": null
+  },
+  {
+    "code": "159",
+    "name": "BANK OF CHINA",
+    "full_name": "Bank of China México, S.A., Institución de Banca Múltiple",
+    "razon_social": "Bank of China México, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-08-13",
+    "valid_to": null
+  },
+  {
+    "code": "160",
+    "name": "BANCO S3",
+    "full_name": "Banco S3 México, S.A., Institución de Banca Múltiple",
+    "razon_social": "Banco S3 México, S.A., Institución de Banca Múltiple",
+    "valid_from": "2017-08-13",
+    "valid_to": null
   },
   {
     "code": "166",
-    "name": "BanBajío",
-    "full_name": "Banco del Bajío, S.A."
+    "name": "BANSEFI",
+    "full_name": "Banco del Ahorro Nacional y Servicios Financieros, Sociedad Nacional de Crédito, Institución de Banca de Desarrollo",
+    "razon_social": "Banco del Ahorro Nacional y Servicios Financieros, Sociedad Nacional de Crédito, Institución de Banca de Desarrollo",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "168",
+    "name": "HIPOTECARIA FEDERAL",
+    "full_name": "Sociedad Hipotecaria Federal, Sociedad Nacional de Crédito, Institución de Banca de Desarrollo",
+    "razon_social": "Sociedad Hipotecaria Federal, Sociedad Nacional de Crédito, Institución de Banca de Desarrollo",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "600",
+    "name": "MONEXCB",
+    "full_name": "Monex Casa de Bolsa, S.A. de C.V. Monex Grupo Financiero",
+    "razon_social": "Monex Casa de Bolsa, S.A. de C.V. Monex Grupo Financiero",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "601",
+    "name": "GBM",
+    "full_name": "GBM Grupo Bursátil Mexicano, S.A. de C.V. Casa de Bolsa",
+    "razon_social": "GBM Grupo Bursátil Mexicano, S.A. de C.V. Casa de Bolsa",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "602",
+    "name": "MASARI",
+    "full_name": "Masari Casa de Bolsa, S.A.",
+    "razon_social": "Masari Casa de Bolsa, S.A.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "605",
+    "name": "VALUE",
+    "full_name": "Value, S.A. de C.V. Casa de Bolsa",
+    "razon_social": "Value, S.A. de C.V. Casa de Bolsa",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "606",
+    "name": "ESTRUCTURADORES",
+    "full_name": "Estructuradores del Mercado de Valores Casa de Bolsa, S.A. de C.V.",
+    "razon_social": "Estructuradores del Mercado de Valores Casa de Bolsa, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "607",
+    "name": "TIBER",
+    "full_name": "Casa de Cambio Tiber, S.A. de C.V.",
+    "razon_social": "Casa de Cambio Tiber, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "608",
+    "name": "VECTOR",
+    "full_name": "Vector Casa de Bolsa, S.A. de C.V.",
+    "razon_social": "Vector Casa de Bolsa, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "610",
+    "name": "B&B",
+    "full_name": "B y B, Casa de Cambio, S.A. de C.V.",
+    "razon_social": "B y B, Casa de Cambio, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "614",
+    "name": "ACCIVAL",
+    "full_name": "Acciones y Valores Banamex, S.A. de C.V., Casa de Bolsa",
+    "razon_social": "Acciones y Valores Banamex, S.A. de C.V., Casa de Bolsa",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "615",
+    "name": "MERRILL LYNCH",
+    "full_name": "Merrill Lynch México, S.A. de C.V. Casa de Bolsa",
+    "razon_social": "Merrill Lynch México, S.A. de C.V. Casa de Bolsa",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "616",
+    "name": "FINAMEX",
+    "full_name": "Casa de Bolsa Finamex, S.A. de C.V.",
+    "razon_social": "Casa de Bolsa Finamex, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "617",
+    "name": "VALMEX",
+    "full_name": "Valores Mexicanos Casa de Bolsa, S.A. de C.V.",
+    "razon_social": "Valores Mexicanos Casa de Bolsa, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "618",
+    "name": "UNICA",
+    "full_name": "Unica Casa de Cambio, S.A. de C.V.",
+    "razon_social": "Unica Casa de Cambio, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "619",
+    "name": "MAPFRE",
+    "full_name": "MAPFRE Tepeyac, S.A.",
+    "razon_social": "MAPFRE Tepeyac, S.A.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "620",
+    "name": "PROFUTURO",
+    "full_name": "Profuturo G.N.P., S.A. de C.V., Afore",
+    "razon_social": "Profuturo G.N.P., S.A. de C.V., Afore",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "621",
+    "name": "CB ACTINVER",
+    "full_name": "Actinver Casa de Bolsa, S.A. de C.V.",
+    "razon_social": "Actinver Casa de Bolsa, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "622",
+    "name": "OACTIN",
+    "full_name": "OPERADORA ACTINVER, S.A. DE C.V.",
+    "razon_social": "OPERADORA ACTINVER, S.A. DE C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "623",
+    "name": "SKANDIA",
+    "full_name": "Skandia Vida, S.A. de C.V.",
+    "razon_social": "Skandia Vida, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "626",
+    "name": "CBDEUTSCHE",
+    "full_name": "Deutsche Securities, S.A. de C.V. CASA DE BOLSA",
+    "razon_social": "Deutsche Securities, S.A. de C.V. CASA DE BOLSA",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "627",
+    "name": "ZURICH",
+    "full_name": "Zurich Compañía de Seguros, S.A.",
+    "razon_social": "Zurich Compañía de Seguros, S.A.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "628",
+    "name": "ZURICHVI",
+    "full_name": "Zurich Vida, Compañía de Seguros, S.A.",
+    "razon_social": "Zurich Vida, Compañía de Seguros, S.A.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "629",
+    "name": "SU CASITA",
+    "full_name": "Hipotecaria Su Casita, S.A. de C.V. SOFOM ENR",
+    "razon_social": "Hipotecaria Su Casita, S.A. de C.V. SOFOM ENR",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "630",
+    "name": "CB INTERCAM",
+    "full_name": "Intercam Casa de Bolsa, S.A. de C.V.",
+    "razon_social": "Intercam Casa de Bolsa, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "631",
+    "name": "CI BOLSA",
+    "full_name": "CI Casa de Bolsa, S.A. de C.V.",
+    "razon_social": "CI Casa de Bolsa, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "632",
+    "name": "BULLTICK CB",
+    "full_name": "Bulltick Casa de Bolsa, S.A., de C.V.",
+    "razon_social": "Bulltick Casa de Bolsa, S.A., de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "633",
+    "name": "STERLING",
+    "full_name": "Sterling Casa de Cambio, S.A. de C.V.",
+    "razon_social": "Sterling Casa de Cambio, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "634",
+    "name": "FINCOMUN",
+    "full_name": "Fincomún, Servicios Financieros Comunitarios, S.A. de C.V.",
+    "razon_social": "Fincomún, Servicios Financieros Comunitarios, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "636",
+    "name": "HDI SEGUROS",
+    "full_name": "HDI Seguros, S.A. de C.V.",
+    "razon_social": "HDI Seguros, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "637",
+    "name": "ORDER",
+    "full_name": "Order Express Casa de Cambio, S.A. de C.V",
+    "razon_social": "Order Express Casa de Cambio, S.A. de C.V",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "638",
+    "name": "AKALA",
+    "full_name": "Akala, S.A. de C.V., Sociedad Financiera Popular",
+    "razon_social": "Akala, S.A. de C.V., Sociedad Financiera Popular",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "640",
+    "name": "CB JPMORGAN",
+    "full_name": "J.P. Morgan Casa de Bolsa, S.A. de C.V. J.P. Morgan Grupo Financiero",
+    "razon_social": "J.P. Morgan Casa de Bolsa, S.A. de C.V. J.P. Morgan Grupo Financiero",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "642",
+    "name": "REFORMA",
+    "full_name": "Operadora de Recursos Reforma, S.A. de C.V., S.F.P.",
+    "razon_social": "Operadora de Recursos Reforma, S.A. de C.V., S.F.P.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "646",
+    "name": "STP",
+    "full_name": "Sistema de Transferencias y Pagos STP, S.A. de C.V.SOFOM ENR",
+    "razon_social": "Sistema de Transferencias y Pagos STP, S.A. de C.V.SOFOM ENR",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "647",
+    "name": "TELECOMM",
+    "full_name": "Telecomunicaciones de México",
+    "razon_social": "Telecomunicaciones de México",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "648",
+    "name": "EVERCORE",
+    "full_name": "Evercore Casa de Bolsa, S.A. de C.V.",
+    "razon_social": "Evercore Casa de Bolsa, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "649",
+    "name": "SKANDIA",
+    "full_name": "Skandia Operadora de Fondos, S.A. de C.V.",
+    "razon_social": "Skandia Operadora de Fondos, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "651",
+    "name": "SEGMTY",
+    "full_name": "Seguros Monterrey New York Life, S.A de C.V",
+    "razon_social": "Seguros Monterrey New York Life, S.A de C.V",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "652",
+    "name": "ASEA",
+    "full_name": "Solución Asea, S.A. de C.V., Sociedad Financiera Popular",
+    "razon_social": "Solución Asea, S.A. de C.V., Sociedad Financiera Popular",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "653",
+    "name": "KUSPIT",
+    "full_name": "Kuspit Casa de Bolsa, S.A. de C.V.",
+    "razon_social": "Kuspit Casa de Bolsa, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "655",
+    "name": "SOFIEXPRESS",
+    "full_name": "J.P. SOFIEXPRESS, S.A. de C.V., S.F.P.",
+    "razon_social": "J.P. SOFIEXPRESS, S.A. de C.V., S.F.P.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "656",
+    "name": "UNAGRA",
+    "full_name": "UNAGRA, S.A. de C.V., S.F.P.",
+    "razon_social": "UNAGRA, S.A. de C.V., S.F.P.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "659",
+    "name": "OPCIONES EMPRESARIALES DEL NOROESTE",
+    "full_name": "OPCIONES EMPRESARIALES DEL NORESTE, S.A. DE C.V., S.F.P.",
+    "razon_social": "OPCIONES EMPRESARIALES DEL NORESTE, S.A. DE C.V., S.F.P.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "670",
+    "name": "LIBERTAD",
+    "full_name": "Libertad Servicios Financieros, S.A. De C.V.",
+    "razon_social": "Libertad Servicios Financieros, S.A. De C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "901",
+    "name": "CLS",
+    "full_name": "Cls Bank International",
+    "razon_social": "Cls Bank International",
+    "valid_from": "2017-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "902",
+    "name": "INDEVAL",
+    "full_name": "SD. Indeval, S.A. de C.V.",
+    "razon_social": "SD. Indeval, S.A. de C.V.",
+    "valid_from": "2017-01-01",
+    "valid_to": null
   }
 ]

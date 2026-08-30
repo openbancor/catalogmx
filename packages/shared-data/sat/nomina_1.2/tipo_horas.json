@@ -1,0 +1,17 @@
+[
+  {
+    "code": "01",
+    "description": "Dobles",
+    "descripcion": "Dobles"
+  },
+  {
+    "code": "02",
+    "description": "Triples",
+    "descripcion": "Triples"
+  },
+  {
+    "code": "03",
+    "description": "Simples",
+    "descripcion": "Simples"
+  }
+]

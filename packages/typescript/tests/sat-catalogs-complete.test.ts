@@ -63,7 +63,7 @@ describe('BancoNominaCatalog', () => {
     const banco = BancoNominaCatalog.getBanco('002');
     expect(banco).toBeDefined();
     expect(banco!.code).toBe('002');
-    expect(banco!.name).toBe('Banamex');
+    expect(banco!.name.toUpperCase()).toContain('BANAMEX');
   });
 
   test('getBanco() returns undefined for invalid code', () => {
@@ -77,25 +77,24 @@ describe('BancoNominaCatalog', () => {
   });
 
   test('getName() returns the bank name for valid code', () => {
-    expect(BancoNominaCatalog.getName('002')).toBe('Banamex');
+    expect(BancoNominaCatalog.getName('002')?.toUpperCase()).toContain('BANAMEX');
   });
 
   test('getName() returns undefined for invalid code', () => {
     expect(BancoNominaCatalog.getName('ZZZZ')).toBeUndefined();
   });
 
-  test('getRazonSocial() returns undefined when data field is missing', () => {
-    // The underlying data uses "full_name" instead of "razon_social",
-    // so this returns undefined for all entries.
-    expect(BancoNominaCatalog.getRazonSocial('002')).toBeUndefined();
+  test('getRazonSocial() exposes the compatibility legal-name alias', () => {
+    expect(BancoNominaCatalog.getRazonSocial('002')).toContain('Banco Nacional');
   });
 
   test('getRazonSocial() returns undefined for invalid code', () => {
     expect(BancoNominaCatalog.getRazonSocial('ZZZZ')).toBeUndefined();
   });
 
-  // Note: searchByName crashes due to data/type mismatch (razon_social is undefined).
-  // This documents the known issue rather than asserting broken behavior.
+  test('searchByName() searches display and legal names', () => {
+    expect(BancoNominaCatalog.searchByName('Banamex').length).toBeGreaterThan(0);
+  });
 });
 
 describe('TipoJornadaCatalog', () => {
@@ -122,11 +121,6 @@ describe('TipoJornadaCatalog', () => {
     expect(TipoJornadaCatalog.isValid('99')).toBe(true);
     expect(TipoJornadaCatalog.isValid('ZZ')).toBe(false);
   });
-
-  // Note: searchByDescription, isDiurna, isNocturna, isMixta reference
-  // "descripcion" but the actual data field is "description". These methods
-  // throw at runtime due to the property mismatch. We test that the catalog
-  // loads correctly and basic lookups work.
 
   test('isDiurna() returns false for invalid code', () => {
     expect(TipoJornadaCatalog.isDiurna('ZZ')).toBe(false);
@@ -164,8 +158,6 @@ describe('TipoContratoCatalog', () => {
     expect(TipoContratoCatalog.isValid('ZZ')).toBe(false);
   });
 
-  // Note: isIndefinido, isDeterminado, searchByDescription reference "descripcion"
-  // but the actual JSON data field is "description". These throw at runtime.
   test('isIndefinido() returns false for invalid code', () => {
     expect(TipoContratoCatalog.isIndefinido('ZZ')).toBe(false);
   });
@@ -198,9 +190,8 @@ describe('TipoRegimenCatalog', () => {
     expect(TipoRegimenCatalog.isValid('ZZ')).toBe(false);
   });
 
-  test('getDescription() returns undefined (data field mismatch)', () => {
-    // Data uses "description" but code reads "descripcion"
-    expect(TipoRegimenCatalog.getDescription('02')).toBeUndefined();
+  test('getDescription() exposes the normalized description alias', () => {
+    expect(TipoRegimenCatalog.getDescription('02')).toContain('Sueldos');
   });
 
   test('getDescription() returns undefined for invalid code', () => {
@@ -279,10 +270,10 @@ describe('PeriodicidadPagoCatalog', () => {
 });
 
 describe('RiesgoPuestoCatalog', () => {
-  test('getAll() returns a non-empty array of 5 risk classes', () => {
+  test('getAll() returns five risk classes plus No aplica', () => {
     const all = RiesgoPuestoCatalog.getAll();
     expect(Array.isArray(all)).toBe(true);
-    expect(all.length).toBe(5);
+    expect(all.length).toBe(6);
   });
 
   test('getRiesgo() returns risk for valid code "1"', () => {
@@ -292,13 +283,13 @@ describe('RiesgoPuestoCatalog', () => {
   });
 
   test('getRiesgo() returns undefined for invalid code', () => {
-    expect(RiesgoPuestoCatalog.getRiesgo('99')).toBeUndefined();
+    expect(RiesgoPuestoCatalog.getRiesgo('ZZ')).toBeUndefined();
   });
 
   test('isValid() returns true/false appropriately', () => {
     expect(RiesgoPuestoCatalog.isValid('1')).toBe(true);
     expect(RiesgoPuestoCatalog.isValid('5')).toBe(true);
-    expect(RiesgoPuestoCatalog.isValid('99')).toBe(false);
+    expect(RiesgoPuestoCatalog.isValid('99')).toBe(true);
   });
 
   test('getPrimaRange() returns range with minima, media, maxima', () => {
@@ -343,7 +334,7 @@ describe('RiesgoPuestoCatalog', () => {
   });
 
   test('getDescription() returns undefined for invalid code', () => {
-    expect(RiesgoPuestoCatalog.getDescription('99')).toBeUndefined();
+    expect(RiesgoPuestoCatalog.getDescription('99')).toBe('No aplica');
   });
 });
 
@@ -372,10 +363,7 @@ describe('TipoNominaCatalog', () => {
 
   test('isOrdinaria() returns true for code "O"', () => {
     expect(TipoNominaCatalog.isOrdinaria('O')).toBe(true);
-    // Note: isOrdinaria('E') also returns true because "extraordinaria"
-    // contains the substring "ORDINARIA". This is a known quirk of the
-    // substring-based implementation.
-    expect(TipoNominaCatalog.isOrdinaria('E')).toBe(true);
+    expect(TipoNominaCatalog.isOrdinaria('E')).toBe(false);
   });
 
   test('isOrdinaria() returns false for invalid code', () => {

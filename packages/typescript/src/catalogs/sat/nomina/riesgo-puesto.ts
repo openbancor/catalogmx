@@ -1,7 +1,4 @@
-/**
- * SAT Nómina 1.2 - Riesgo de Puesto
- * IMSS risk levels with premium ranges
- */
+/** SAT Nómina 1.2 - Riesgo de Puesto. */
 
 import { loadCatalogObject } from '../../../utils/catalog-loader';
 import type { RiesgoPuesto } from '../../../types';
@@ -24,18 +21,29 @@ export class RiesgoPuestoCatalog {
     return this.getData().find((r) => r.code === code);
   }
 
-  static isValid(code: string): boolean {
-    return this.getData().some((r) => r.code === code);
+  static getByCode(code: string): RiesgoPuesto | undefined {
+    return this.getRiesgo(code);
   }
 
-  /**
-   * Get premium range for risk level
-   */
+  static isValid(code: string): boolean {
+    return this.getRiesgo(code) !== undefined;
+  }
+
   static getPrimaRange(
     code: string
   ): { minima: number; media: number; maxima: number } | undefined {
     const riesgo = this.getRiesgo(code);
-    if (!riesgo) return undefined;
+    if (
+      !riesgo ||
+      riesgo.prima_minima === null ||
+      riesgo.prima_minima === undefined ||
+      riesgo.prima_media === null ||
+      riesgo.prima_media === undefined ||
+      riesgo.prima_maxima === null ||
+      riesgo.prima_maxima === undefined
+    ) {
+      return undefined;
+    }
     return {
       minima: riesgo.prima_minima,
       media: riesgo.prima_media,
@@ -43,25 +51,15 @@ export class RiesgoPuestoCatalog {
     };
   }
 
-  /**
-   * Get average premium for risk level
-   */
   static getPrimaMedia(code: string): number | undefined {
-    return this.getRiesgo(code)?.prima_media;
+    return this.getPrimaRange(code)?.media;
   }
 
-  /**
-   * Validate if a premium is within valid range for risk level
-   */
   static validatePrima(code: string, prima: number): boolean {
-    const riesgo = this.getRiesgo(code);
-    if (!riesgo) return false;
-    return prima >= riesgo.prima_minima && prima <= riesgo.prima_maxima;
+    const range = this.getPrimaRange(code);
+    return range ? prima >= range.minima && prima <= range.maxima : false;
   }
 
-  /**
-   * Get description
-   */
   static getDescription(code: string): string | undefined {
     return this.getRiesgo(code)?.descripcion;
   }

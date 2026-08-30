@@ -1,0 +1,807 @@
+[
+  {
+    "code": "001",
+    "description": "Seguridad social",
+    "descripcion": "Seguridad social",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "002",
+    "description": "ISR",
+    "descripcion": "ISR",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "003",
+    "description": "Aportaciones a retiro, cesantía en edad avanzada y vejez.",
+    "descripcion": "Aportaciones a retiro, cesantía en edad avanzada y vejez.",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "004",
+    "description": "Otros",
+    "descripcion": "Otros",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "005",
+    "description": "Aportaciones a Fondo de vivienda",
+    "descripcion": "Aportaciones a Fondo de vivienda",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "006",
+    "description": "Descuento por incapacidad",
+    "descripcion": "Descuento por incapacidad",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "007",
+    "description": "Pensión alimenticia",
+    "descripcion": "Pensión alimenticia",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "008",
+    "description": "Renta",
+    "descripcion": "Renta",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "009",
+    "description": "Préstamos provenientes del Fondo Nacional de la Vivienda para los Trabajadores",
+    "descripcion": "Préstamos provenientes del Fondo Nacional de la Vivienda para los Trabajadores",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "010",
+    "description": "Pago por crédito de vivienda",
+    "descripcion": "Pago por crédito de vivienda",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "011",
+    "description": "Pago de abonos INFONACOT",
+    "descripcion": "Pago de abonos INFONACOT",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "012",
+    "description": "Anticipo de salarios",
+    "descripcion": "Anticipo de salarios",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "013",
+    "description": "Pagos hechos con exceso al trabajador",
+    "descripcion": "Pagos hechos con exceso al trabajador",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "014",
+    "description": "Errores",
+    "descripcion": "Errores",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "015",
+    "description": "Pérdidas",
+    "descripcion": "Pérdidas",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "016",
+    "description": "Averías",
+    "descripcion": "Averías",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "017",
+    "description": "Adquisición de artículos producidos por la empresa o establecimiento",
+    "descripcion": "Adquisición de artículos producidos por la empresa o establecimiento",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "018",
+    "description": "Cuotas para la constitución y fomento de sociedades cooperativas y de cajas de ahorro",
+    "descripcion": "Cuotas para la constitución y fomento de sociedades cooperativas y de cajas de ahorro",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "019",
+    "description": "Cuotas sindicales",
+    "descripcion": "Cuotas sindicales",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "020",
+    "description": "Ausencia (Ausentismo)",
+    "descripcion": "Ausencia (Ausentismo)",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "021",
+    "description": "Cuotas obrero patronales",
+    "descripcion": "Cuotas obrero patronales",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "022",
+    "description": "Impuestos Locales",
+    "descripcion": "Impuestos Locales",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "023",
+    "description": "Aportaciones voluntarias",
+    "descripcion": "Aportaciones voluntarias",
+    "valid_from": "2016-11-01",
+    "valid_to": null
+  },
+  {
+    "code": "024",
+    "description": "Ajuste en Gratificación Anual (Aguinaldo) Exento",
+    "descripcion": "Ajuste en Gratificación Anual (Aguinaldo) Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "025",
+    "description": "Ajuste en Gratificación Anual (Aguinaldo) Gravado",
+    "descripcion": "Ajuste en Gratificación Anual (Aguinaldo) Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "026",
+    "description": "Ajuste en Participación de los Trabajadores en las Utilidades PTU Exento",
+    "descripcion": "Ajuste en Participación de los Trabajadores en las Utilidades PTU Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "027",
+    "description": "Ajuste en Participación de los Trabajadores en las Utilidades PTU Gravado",
+    "descripcion": "Ajuste en Participación de los Trabajadores en las Utilidades PTU Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "028",
+    "description": "Ajuste en Reembolso de Gastos Médicos Dentales y Hospitalarios Exento",
+    "descripcion": "Ajuste en Reembolso de Gastos Médicos Dentales y Hospitalarios Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "029",
+    "description": "Ajuste en Fondo de ahorro Exento",
+    "descripcion": "Ajuste en Fondo de ahorro Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "030",
+    "description": "Ajuste en Caja de ahorro Exento",
+    "descripcion": "Ajuste en Caja de ahorro Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "031",
+    "description": "Ajuste en Contribuciones a Cargo del Trabajador Pagadas por el Patrón Exento",
+    "descripcion": "Ajuste en Contribuciones a Cargo del Trabajador Pagadas por el Patrón Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "032",
+    "description": "Ajuste en Premios por puntualidad Gravado",
+    "descripcion": "Ajuste en Premios por puntualidad Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "033",
+    "description": "Ajuste en Prima de Seguro de vida Exento",
+    "descripcion": "Ajuste en Prima de Seguro de vida Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "034",
+    "description": "Ajuste en Seguro de Gastos Médicos Mayores Exento",
+    "descripcion": "Ajuste en Seguro de Gastos Médicos Mayores Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "035",
+    "description": "Ajuste en Cuotas Sindicales Pagadas por el Patrón Gravado",
+    "descripcion": "Ajuste en Cuotas Sindicales Pagadas por el Patrón Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "036",
+    "description": "Ajuste en Subsidios por incapacidad Exento",
+    "descripcion": "Ajuste en Subsidios por incapacidad Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "037",
+    "description": "Ajuste en Becas para trabajadores y/o hijos Exento",
+    "descripcion": "Ajuste en Becas para trabajadores y/o hijos Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "038",
+    "description": "Ajuste en Horas extra Exento",
+    "descripcion": "Ajuste en Horas extra Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "039",
+    "description": "Ajuste en Horas extra Gravado",
+    "descripcion": "Ajuste en Horas extra Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "040",
+    "description": "Ajuste en Prima dominical Exento",
+    "descripcion": "Ajuste en Prima dominical Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "041",
+    "description": "Ajuste en Prima dominical Gravado",
+    "descripcion": "Ajuste en Prima dominical Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "042",
+    "description": "Ajuste en Prima vacacional Exento",
+    "descripcion": "Ajuste en Prima vacacional Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "043",
+    "description": "Ajuste en Prima vacacional Gravado",
+    "descripcion": "Ajuste en Prima vacacional Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "044",
+    "description": "Ajuste en Prima por antigüedad Exento",
+    "descripcion": "Ajuste en Prima por antigüedad Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "045",
+    "description": "Ajuste en Prima por antigüedad Gravado",
+    "descripcion": "Ajuste en Prima por antigüedad Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "046",
+    "description": "Ajuste en Pagos por separación Exento",
+    "descripcion": "Ajuste en Pagos por separación Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "047",
+    "description": "Ajuste en Pagos por separación Gravado",
+    "descripcion": "Ajuste en Pagos por separación Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "048",
+    "description": "Ajuste en Seguro de retiro Exento",
+    "descripcion": "Ajuste en Seguro de retiro Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "049",
+    "description": "Ajuste en Indemnizaciones Exento",
+    "descripcion": "Ajuste en Indemnizaciones Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "050",
+    "description": "Ajuste en Indemnizaciones Gravado",
+    "descripcion": "Ajuste en Indemnizaciones Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "051",
+    "description": "Ajuste en Reembolso por funeral Exento",
+    "descripcion": "Ajuste en Reembolso por funeral Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "052",
+    "description": "Ajuste en Cuotas de seguridad social pagadas por el patrón Exento",
+    "descripcion": "Ajuste en Cuotas de seguridad social pagadas por el patrón Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "053",
+    "description": "Ajuste en Comisiones Gravado",
+    "descripcion": "Ajuste en Comisiones Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "054",
+    "description": "Ajuste en Vales de despensa Exento",
+    "descripcion": "Ajuste en Vales de despensa Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "055",
+    "description": "Ajuste en Vales de restaurante Exento",
+    "descripcion": "Ajuste en Vales de restaurante Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "056",
+    "description": "Ajuste en Vales de gasolina Exento",
+    "descripcion": "Ajuste en Vales de gasolina Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "057",
+    "description": "Ajuste en Vales de ropa Exento",
+    "descripcion": "Ajuste en Vales de ropa Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "058",
+    "description": "Ajuste en Ayuda para renta Exento",
+    "descripcion": "Ajuste en Ayuda para renta Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "059",
+    "description": "Ajuste en Ayuda para artículos escolares Exento",
+    "descripcion": "Ajuste en Ayuda para artículos escolares Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "060",
+    "description": "Ajuste en Ayuda para anteojos Exento",
+    "descripcion": "Ajuste en Ayuda para anteojos Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "061",
+    "description": "Ajuste en Ayuda para transporte Exento",
+    "descripcion": "Ajuste en Ayuda para transporte Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "062",
+    "description": "Ajuste en Ayuda para gastos de funeral Exento",
+    "descripcion": "Ajuste en Ayuda para gastos de funeral Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "063",
+    "description": "Ajuste en Otros ingresos por salarios Exento",
+    "descripcion": "Ajuste en Otros ingresos por salarios Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": "2026-03-01"
+  },
+  {
+    "code": "064",
+    "description": "Ajuste en Otros ingresos por salarios Gravado",
+    "descripcion": "Ajuste en Otros ingresos por salarios Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "065",
+    "description": "Ajuste en Jubilaciones, pensiones o haberes de retiro en una sola exhibición Exento",
+    "descripcion": "Ajuste en Jubilaciones, pensiones o haberes de retiro en una sola exhibición Exento",
+    "valid_from": "2018-10-15",
+    "valid_to": null
+  },
+  {
+    "code": "066",
+    "description": "Ajuste en Jubilaciones, pensiones o haberes de retiro en una sola exhibición Gravado",
+    "descripcion": "Ajuste en Jubilaciones, pensiones o haberes de retiro en una sola exhibición Gravado",
+    "valid_from": "2018-10-15",
+    "valid_to": null
+  },
+  {
+    "code": "067",
+    "description": "Ajuste en Pagos por separación Acumulable",
+    "descripcion": "Ajuste en Pagos por separación Acumulable",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "068",
+    "description": "Ajuste en Pagos por separación No acumulable",
+    "descripcion": "Ajuste en Pagos por separación No acumulable",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "069",
+    "description": "Ajuste en Jubilaciones, pensiones o haberes de retiro en parcialidades Exento",
+    "descripcion": "Ajuste en Jubilaciones, pensiones o haberes de retiro en parcialidades Exento",
+    "valid_from": "2018-10-15",
+    "valid_to": null
+  },
+  {
+    "code": "070",
+    "description": "Ajuste en Jubilaciones, pensiones o haberes de retiro en parcialidades Gravado",
+    "descripcion": "Ajuste en Jubilaciones, pensiones o haberes de retiro en parcialidades Gravado",
+    "valid_from": "2018-10-15",
+    "valid_to": null
+  },
+  {
+    "code": "071",
+    "description": "Ajuste en Subsidio para el empleo (efectivamente entregado al trabajador)",
+    "descripcion": "Ajuste en Subsidio para el empleo (efectivamente entregado al trabajador)",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "072",
+    "description": "Ajuste en Ingresos en acciones o títulos valor que representan bienes Exento",
+    "descripcion": "Ajuste en Ingresos en acciones o títulos valor que representan bienes Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": "2018-10-14"
+  },
+  {
+    "code": "073",
+    "description": "Ajuste en Ingresos en acciones o títulos valor que representan bienes Gravado",
+    "descripcion": "Ajuste en Ingresos en acciones o títulos valor que representan bienes Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "074",
+    "description": "Ajuste en Alimentación Exento",
+    "descripcion": "Ajuste en Alimentación Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "075",
+    "description": "Ajuste en Alimentación Gravado",
+    "descripcion": "Ajuste en Alimentación Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "076",
+    "description": "Ajuste en Habitación Exento",
+    "descripcion": "Ajuste en Habitación Exento",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "077",
+    "description": "Ajuste en Habitación Gravado",
+    "descripcion": "Ajuste en Habitación Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "078",
+    "description": "Ajuste en Premios por asistencia",
+    "descripcion": "Ajuste en Premios por asistencia",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "079",
+    "description": "Ajuste en Pagos distintos a los listados y que no deben considerarse como ingreso por sueldos, salarios o ingresos asimilados.",
+    "descripcion": "Ajuste en Pagos distintos a los listados y que no deben considerarse como ingreso por sueldos, salarios o ingresos asimilados.",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "080",
+    "description": "Ajuste en Viáticos gravados",
+    "descripcion": "Ajuste en Viáticos gravados",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "081",
+    "description": "Ajuste en Viáticos (entregados al trabajador)",
+    "descripcion": "Ajuste en Viáticos (entregados al trabajador)",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "082",
+    "description": "Ajuste en Fondo de ahorro Gravado",
+    "descripcion": "Ajuste en Fondo de ahorro Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "083",
+    "description": "Ajuste en Caja de ahorro Gravado",
+    "descripcion": "Ajuste en Caja de ahorro Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "084",
+    "description": "Ajuste en Prima de Seguro de vida Gravado",
+    "descripcion": "Ajuste en Prima de Seguro de vida Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "085",
+    "description": "Ajuste en Seguro de Gastos Médicos Mayores Gravado",
+    "descripcion": "Ajuste en Seguro de Gastos Médicos Mayores Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "086",
+    "description": "Ajuste en Subsidios por incapacidad Gravado",
+    "descripcion": "Ajuste en Subsidios por incapacidad Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "087",
+    "description": "Ajuste en Becas para trabajadores y/o hijos Gravado",
+    "descripcion": "Ajuste en Becas para trabajadores y/o hijos Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "088",
+    "description": "Ajuste en Seguro de retiro Gravado",
+    "descripcion": "Ajuste en Seguro de retiro Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "089",
+    "description": "Ajuste en Vales de despensa Gravado",
+    "descripcion": "Ajuste en Vales de despensa Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "090",
+    "description": "Ajuste en Vales de restaurante Gravado",
+    "descripcion": "Ajuste en Vales de restaurante Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "091",
+    "description": "Ajuste en Vales de gasolina Gravado",
+    "descripcion": "Ajuste en Vales de gasolina Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "092",
+    "description": "Ajuste en Vales de ropa Gravado",
+    "descripcion": "Ajuste en Vales de ropa Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "093",
+    "description": "Ajuste en Ayuda para renta Gravado",
+    "descripcion": "Ajuste en Ayuda para renta Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "094",
+    "description": "Ajuste en Ayuda para artículos escolares Gravado",
+    "descripcion": "Ajuste en Ayuda para artículos escolares Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "095",
+    "description": "Ajuste en Ayuda para anteojos Gravado",
+    "descripcion": "Ajuste en Ayuda para anteojos Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "096",
+    "description": "Ajuste en Ayuda para transporte Gravado",
+    "descripcion": "Ajuste en Ayuda para transporte Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "097",
+    "description": "Ajuste en Ayuda para gastos de funeral Gravado",
+    "descripcion": "Ajuste en Ayuda para gastos de funeral Gravado",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "098",
+    "description": "Ajuste a ingresos asimilados a salarios gravados",
+    "descripcion": "Ajuste a ingresos asimilados a salarios gravados",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "099",
+    "description": "Ajuste a ingresos por sueldos y salarios gravados",
+    "descripcion": "Ajuste a ingresos por sueldos y salarios gravados",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "100",
+    "description": "Ajuste en Viáticos exentos",
+    "descripcion": "Ajuste en Viáticos exentos",
+    "valid_from": "2017-01-06",
+    "valid_to": null
+  },
+  {
+    "code": "101",
+    "description": "ISR Retenido de ejercicio anterior",
+    "descripcion": "ISR Retenido de ejercicio anterior",
+    "valid_from": "2017-12-05",
+    "valid_to": null
+  },
+  {
+    "code": "102",
+    "description": "Ajuste a pagos por gratificaciones, primas, compensaciones, recompensas u otros a extrabajadores derivados de jubilación en parcialidades, gravados",
+    "descripcion": "Ajuste a pagos por gratificaciones, primas, compensaciones, recompensas u otros a extrabajadores derivados de jubilación en parcialidades, gravados",
+    "valid_from": "2018-10-15",
+    "valid_to": null
+  },
+  {
+    "code": "103",
+    "description": "Ajuste a pagos que se realicen a extrabajadores que obtengan una jubilación en parcialidades derivados de la ejecución de una resolución judicial o de un laudo gravados",
+    "descripcion": "Ajuste a pagos que se realicen a extrabajadores que obtengan una jubilación en parcialidades derivados de la ejecución de una resolución judicial o de un laudo gravados",
+    "valid_from": "2018-10-15",
+    "valid_to": null
+  },
+  {
+    "code": "104",
+    "description": "Ajuste a pagos que se realicen a extrabajadores que obtengan una jubilación en parcialidades derivados de la ejecución de una resolución judicial o de un laudo exentos",
+    "descripcion": "Ajuste a pagos que se realicen a extrabajadores que obtengan una jubilación en parcialidades derivados de la ejecución de una resolución judicial o de un laudo exentos",
+    "valid_from": "2018-10-15",
+    "valid_to": null
+  },
+  {
+    "code": "105",
+    "description": "Ajuste a pagos que se realicen a extrabajadores que obtengan una jubilación en una sola exhibición derivados de la ejecución de una resolución judicial o de un laudo gravados",
+    "descripcion": "Ajuste a pagos que se realicen a extrabajadores que obtengan una jubilación en una sola exhibición derivados de la ejecución de una resolución judicial o de un laudo gravados",
+    "valid_from": "2018-10-15",
+    "valid_to": null
+  },
+  {
+    "code": "106",
+    "description": "Ajuste a pagos que se realicen a extrabajadores que obtengan una jubilación en una sola exhibición derivados de la ejecución de una resolución judicial o de un laudo exentos",
+    "descripcion": "Ajuste a pagos que se realicen a extrabajadores que obtengan una jubilación en una sola exhibición derivados de la ejecución de una resolución judicial o de un laudo exentos",
+    "valid_from": "2018-10-15",
+    "valid_to": null
+  },
+  {
+    "code": "107",
+    "description": "Ajuste al Subsidio Causado",
+    "descripcion": "Ajuste al Subsidio Causado",
+    "valid_from": "2020-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "108",
+    "description": "Ajuste a días de descanso laborados gravados",
+    "descripcion": "Ajuste a días de descanso laborados gravados",
+    "valid_from": "2026-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "109",
+    "description": "Ajuste a días de descanso laborados exentos",
+    "descripcion": "Ajuste a días de descanso laborados exentos",
+    "valid_from": "2026-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "110",
+    "description": "Ajuste a días de descanso obligatorios laborados gravados",
+    "descripcion": "Ajuste a días de descanso obligatorios laborados gravados",
+    "valid_from": "2026-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "111",
+    "description": "Ajuste a días de descanso obligatorios laborados exentos",
+    "descripcion": "Ajuste a días de descanso obligatorios laborados exentos",
+    "valid_from": "2026-01-01",
+    "valid_to": null
+  },
+  {
+    "code": "112",
+    "description": "Ajuste previsión social Art 93 fracciones VIII y IX LISR gravados",
+    "descripcion": "Ajuste previsión social Art 93 fracciones VIII y IX LISR gravados",
+    "valid_from": "2025-12-17",
+    "valid_to": null
+  },
+  {
+    "code": "113",
+    "description": "Ajuste previsión social Art 93 fracciones VIII y IX LISR exentos",
+    "descripcion": "Ajuste previsión social Art 93 fracciones VIII y IX LISR exentos",
+    "valid_from": "2025-12-17",
+    "valid_to": null
+  },
+  {
+    "code": "114",
+    "description": "Ajuste a premios por concursos científicos, artísticos, literarios u otorgados por la federación Art 93 fracción XXIV LISR gravados",
+    "descripcion": "Ajuste a premios por concursos científicos, artísticos, literarios u otorgados por la federación Art 93 fracción XXIV LISR gravados",
+    "valid_from": "2026-06-12",
+    "valid_to": null
+  },
+  {
+    "code": "115",
+    "description": "Ajuste a premios por concursos científicos, artísticos, literarios u otorgados por la federación Art 93 fracción XXIV LISR exentos",
+    "descripcion": "Ajuste a premios por concursos científicos, artísticos, literarios u otorgados por la federación Art 93 fracción XXIV LISR exentos",
+    "valid_from": "2026-06-12",
+    "valid_to": null
+  }
+]

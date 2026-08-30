@@ -68,12 +68,14 @@ class TestPersonaFisicaDataclass:
         assert persona.edad == 30
 
     def test_edad_property_before_birthday(self):
-        """Test that edad is correct before birthday this year."""
+        """Test that edad is correct before the next 25th birthday."""
         today = date.today()
-        # Set birthday to be in 6 months
-        future_month = (today.month + 6) % 12 or 12
-        year_offset = 1 if future_month < today.month else 0
-        birth_date = date(today.year - 25 - year_offset, future_month, 15)
+        future_birthday = today + timedelta(days=180)
+        birth_date = date(
+            future_birthday.year - 25,
+            future_birthday.month,
+            15,
+        )
 
         persona = PersonaFisica(
             nombre="Ana",
@@ -84,8 +86,7 @@ class TestPersonaFisicaDataclass:
             estado_nacimiento="SONORA",
             estado_nacimiento_code="SR",
         )
-        # Should be 24 if birthday hasn't happened yet
-        assert persona.edad in (24, 25)
+        assert persona.edad == 24
 
     def test_to_dict_contains_all_fields(self):
         """Test that to_dict returns all expected fields."""
@@ -164,9 +165,9 @@ class TestIdentityGenerator:
     def test_init_with_seed_for_reproducibility(self):
         """Test that seed produces reproducible results."""
         gen1 = IdentityGenerator(seed=12345)
-        gen2 = IdentityGenerator(seed=12345)
-
         persona1 = gen1.generate_persona_fisica()
+
+        gen2 = IdentityGenerator(seed=12345)
         persona2 = gen2.generate_persona_fisica()
 
         assert persona1.nombre == persona2.nombre

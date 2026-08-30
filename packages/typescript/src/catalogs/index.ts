@@ -16,10 +16,10 @@ export { CETES28Catalog } from './banxico/cetes-28-sqlite';
 export { InflacionAnualCatalog } from './banxico/inflacion-anual-sqlite';
 export { SalariosMinimosCatalog } from './banxico/salarios-minimos-sqlite';
 
-// IFT (Instituto Federal de Telecomunicaciones)
+// IFT
 export { OperadoresMoviles } from './ift/operadores-moviles';
 
-// CNBV (Comisión Nacional Bancaria y de Valores)
+// CNBV
 export { SectoresCNBVCatalog } from './cnbv/sectores';
 export type { SectorCNBV, ReguladorFinanciero } from './cnbv/sectores';
 
@@ -49,11 +49,9 @@ export {
   ClaveUnidadCatalog,
   ClaveProdServCatalog,
 } from './sat/cfdi_4';
-
-// SAT CFDI 4.0 - Hybrid SQLite/JSON (for large catalogs)
 export { ClaveProdServCatalogHybrid } from './sat/cfdi_4/clave-prod-serv-hybrid';
 
-// SAT Contabilidad Electrónica (Anexo 24)
+// SAT Contabilidad Electrónica
 export { CodigoAgrupadorSATCatalog } from './sat/contabilidad_electronica';
 
 // SAT Comercio Exterior 2.0
@@ -68,7 +66,7 @@ export {
   UnidadAduanaCatalog,
 } from './sat/comercio_exterior';
 
-// SAT Carta Porte 3.0
+// SAT Carta Porte 3.0/3.1 compatibility APIs
 export {
   AeropuertosCatalog,
   PuertosMaritimos,
@@ -88,7 +86,14 @@ export {
   PeriodicidadPagoCatalog,
   RiesgoPuestoCatalog,
   BancoNominaCatalog,
+  OrigenRecursoCatalog,
+  TipoDeduccionCatalog,
+  TipoHorasCatalog,
+  TipoIncapacidadCatalog,
+  TipoOtroPagoCatalog,
+  TipoPercepcionCatalog,
 } from './sat/nomina';
+export type { NominaCatalogItem } from './sat/nomina';
 
 // Mexico - National Catalogs
 export { PlacasFormatosCatalog } from './mexico/placas-formatos';

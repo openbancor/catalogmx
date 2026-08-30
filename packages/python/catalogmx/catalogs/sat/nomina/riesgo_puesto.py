@@ -1,56 +1,29 @@
-"""Catálogo c_RiesgoPuesto"""
+"""SAT Nómina 1.2 c_RiesgoPuesto catalog."""
 
-import json
-from pathlib import Path
+from __future__ import annotations
+
+from ._base import NominaJsonCatalog
 
 
-class RiesgoPuestoCatalog:
-    _data: list[dict] | None = None
-    _by_code: dict[str, dict] | None = None
-
-    @classmethod
-    def _load_data(cls) -> None:
-        if cls._data is None:
-            path = (
-                Path(__file__).parent.parent.parent.parent.parent.parent
-                / "shared-data"
-                / "sat"
-                / "nomina_1.2"
-                / "riesgo_puesto.json"
-            )
-            with open(path, encoding="utf-8") as f:
-                data = json.load(f)
-                # Handle both list and dict formats
-                cls._data = data if isinstance(data, list) else data.get("riesgos", data)
-            cls._by_code = {item["code"]: item for item in cls._data}
+class RiesgoPuestoCatalog(NominaJsonCatalog):
+    filename = "riesgo_puesto.json"
 
     @classmethod
-    def get_riesgo(cls, code: str) -> dict | None:
-        """Obtiene nivel de riesgo por código"""
-        cls._load_data()
-        return cls._by_code.get(code)
+    def get_riesgo(cls, code: str):
+        return cls.get_by_code(code)
 
     @classmethod
-    def is_valid(cls, code: str) -> bool:
-        """Verifica si un código de riesgo es válido"""
-        return cls.get_riesgo(code) is not None
-
-    @classmethod
-    def get_all(cls) -> list[dict]:
-        """Obtiene todos los niveles de riesgo"""
-        cls._load_data()
-        return cls._data.copy()
-
-    @classmethod
-    def get_prima_media(cls, code: str) -> float | None:
-        """Obtiene la prima media del nivel de riesgo"""
-        riesgo = cls.get_riesgo(code)
-        return riesgo.get("prima_media") if riesgo else None
+    def get_prima_media(cls, code: str):
+        item = cls.get_by_code(code)
+        return item.get("prima_media") if item else None
 
     @classmethod
     def validate_prima(cls, code: str, prima: float) -> bool:
-        """Valida que la prima esté en el rango permitido"""
-        riesgo = cls.get_riesgo(code)
-        if not riesgo:
+        item = cls.get_by_code(code)
+        if not item:
             return False
-        return riesgo["prima_min"] <= prima <= riesgo["prima_max"]
+        minimum = item.get("prima_minima")
+        maximum = item.get("prima_maxima")
+        if minimum is None or maximum is None:
+            return False
+        return float(minimum) <= prima <= float(maximum)

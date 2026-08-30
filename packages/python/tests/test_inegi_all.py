@@ -8,6 +8,7 @@ from catalogmx.catalogs.inegi import (
     MunicipiosCompletoCatalog,
     StateCatalog,
 )
+from catalogmx.catalogs.inegi.states import get_state_names, get_states_dict
 
 
 class TestLocalidadesCatalog:
@@ -157,6 +158,69 @@ class TestStateCatalog:
         all_states = StateCatalog.get_all_states()
         assert isinstance(all_states, list)
         assert len(all_states) > 0
+
+    def test_lookup_all_32_states_by_code(self):
+        """Test every state can be looked up by CURP code"""
+        all_states = [
+            state
+            for state in StateCatalog.get_all_states()
+            if state["clave_inegi"] != "99"
+        ]
+        assert len(all_states) == 32
+
+        for state in all_states:
+            result = StateCatalog.get_state_by_code(state["code"])
+            assert result == state
+            assert StateCatalog.validate_state_code(state["code"]) is True
+
+    def test_get_state_by_code_invalid(self):
+        """Test invalid CURP state code returns None"""
+        assert StateCatalog.get_state_by_code("ZZ") is None
+        assert StateCatalog.validate_state_code("ZZ") is False
+
+    def test_get_state_by_name_and_alias(self):
+        """Test state lookup by name and alias"""
+        jalisco = StateCatalog.get_state_by_name("Jalisco")
+        assert jalisco is not None
+        assert jalisco["code"] == "JC"
+
+        cdmx = StateCatalog.get_state_by_name("Distrito Federal")
+        assert cdmx is not None
+        assert cdmx["code"] == "DF"
+
+    def test_get_state_by_inegi_code(self):
+        """Test state lookup by INEGI code"""
+        assert StateCatalog.get_state_by_inegi_code("14")["name"] == "JALISCO"
+        assert StateCatalog.get_state_by_inegi_code(9)["code"] == "DF"
+        assert StateCatalog.get_state_by_inegi_code("00") is None
+
+    def test_state_code_and_inegi_code_maps(self):
+        """Test helper maps include all states"""
+        state_codes = StateCatalog.get_state_codes()
+        inegi_codes = StateCatalog.get_inegi_codes()
+
+        assert len(state_codes) >= 32
+        assert len(inegi_codes) >= 32
+        assert state_codes["JALISCO"] == "JC"
+        assert inegi_codes["JALISCO"] == "14"
+
+    def test_state_convenience_functions(self):
+        """Test module-level state convenience functions"""
+        states_by_code = get_states_dict()
+        state_names = get_state_names()
+
+        assert len(states_by_code) >= 32
+        assert len(state_names) >= 32
+        assert states_by_code["JC"]["name"] == "JALISCO"
+        assert "JALISCO" in state_names
+
+    def test_state_abbreviations_are_available(self):
+        """Test all states include abbreviation data"""
+        all_states = StateCatalog.get_all_states()
+        abbreviations = {state["abbreviation"] for state in all_states}
+
+        assert len(abbreviations) >= 32
+        assert {"JAL", "CDMX", "NL"}.issubset(abbreviations)
 
 
 class TestMunicipiosCatalog:
