@@ -26,59 +26,118 @@ jobs:
           path = Path("packages/webapp-svelte/src/routes/calculadoras/imss/+page.svelte")
           text = path.read_text(encoding="utf-8")
 
-          old_state = """\tlet salarioDiario = $state<number>(500);\n\tlet claseRiesgo = $state<ClaseRiesgo>(1);"""
-          new_state = """\tlet salarioDiario = $state<number>(500);\n\tlet ultimoSbcDiario = $state<number>(500);\n\tlet errorModalidad40 = $state<string | null>(null);\n\tlet claseRiesgo = $state<ClaseRiesgo>(1);"""
-          if old_state in text:
-              text = text.replace(old_state, new_state, 1)
-          elif new_state not in text:
-              raise SystemExit("State marker not found")
+          def replace_once(old: str, new: str, label: str) -> None:
+              global text
+              if old in text:
+                  text = text.replace(old, new, 1)
+              elif new not in text:
+                  raise SystemExit(f"{label} marker not found")
 
-          old_result = """\tinterface Modalidad40Result {\n\t\tsalarioDiario: number;\n\t\tsalarioMensual: number;\n\t\tcuotaMensual: number;\n\t\tcuotaAnual: number;\n\t\tporcentajeTotal: number;\n\t}"""
-          new_result = """\tinterface Modalidad40Result {\n\t\tsalarioDiario: number;\n\t\tsalarioMensual: number;\n\t\tultimoSbcDiario: number;\n\t\tultimoSbcMensual: number;\n\t\tcuotaMensual: number;\n\t\tcuotaAnual: number;\n\t\tporcentajeTotal: number;\n\t}"""
-          if old_result in text:
-              text = text.replace(old_result, new_result, 1)
-          elif new_result not in text:
-              raise SystemExit("Modalidad 40 result interface marker not found")
+          replace_once(
+              "\tlet salarioDiario = $state<number>(500);\n\tlet claseRiesgo = $state<ClaseRiesgo>(1);",
+              "\tlet salarioDiario = $state<number>(500);\n\tlet ultimoSbcDiario = $state<number>(500);\n\tlet errorModalidad40 = $state<string | null>(null);\n\tlet claseRiesgo = $state<ClaseRiesgo>(1);",
+              "state",
+          )
 
           start = text.index("\tfunction calculateModalidad40() {")
           end = text.index("\n\tfunction calculateModalidad10()", start)
-          new_calculator = """\tfunction calculateModalidad40() {\n\t\terrorModalidad40 = null;\n\t\tresultadoMod40 = null;\n\n\t\tif (!ultimoSbcDiario || ultimoSbcDiario <= 0) {\n\t\t\terrorModalidad40 = 'Captura el último SBC diario registrado.';\n\t\t\treturn;\n\t\t}\n\t\tif (salarioDiario < ultimoSbcDiario) {\n\t\t\terrorModalidad40 = 'El SBC elegido no puede ser menor al último SBC registrado.';\n\t\t\treturn;\n\t\t}\n\n\t\tconst uma = IMSSCalculator.getUMA(year);\n\t\tconst factorMensual = uma.mensual / uma.diaria;\n\t\tconst salarioMensual = salarioDiario * factorMensual;\n\t\tconst ultimoSbcMensual = ultimoSbcDiario * factorMensual;\n\n\t\ttry {\n\t\t\tconst result = IMSSCalculator.calcularModalidad40(\n\t\t\t\tsalarioMensual,\n\t\t\t\tultimoSbcMensual,\n\t\t\t\tyear\n\t\t\t);\n\n\t\t\tresultadoMod40 = {\n\t\t\t\tsalarioDiario: result.salario_base_cotizacion / factorMensual,\n\t\t\t\tsalarioMensual: result.salario_base_cotizacion,\n\t\t\t\tultimoSbcDiario,\n\t\t\t\tultimoSbcMensual: result.ultimo_sbc_mensual,\n\t\t\t\tcuotaMensual: result.cuota_mensual,\n\t\t\t\tcuotaAnual: result.cuota_mensual * 12,\n\t\t\t\tporcentajeTotal: result.porcentaje_total\n\t\t\t};\n\t\t} catch (error) {\n\t\t\terrorModalidad40 =\n\t\t\t\terror instanceof Error ? error.message : 'No fue posible calcular Modalidad 40.';\n\t\t}\n\t}\n"""
-          text = text[:start] + new_calculator + text[end:]
+          text = text[:start] + """\tfunction calculateModalidad40() {
+          \t\terrorModalidad40 = null;
+          \t\tresultadoMod40 = null;
 
-          old_invalid = """\t\tif (!salarioDiario || salarioDiario <= 0) {\n\t\t\tresultadoCuotas = null;\n\t\t\tresultadoMod40 = null;\n\t\t\tresultadoMod10 = null;\n\t\t\treturn;\n\t\t}"""
-          new_invalid = """\t\tif (!salarioDiario || salarioDiario <= 0) {\n\t\t\tresultadoCuotas = null;\n\t\t\tresultadoMod40 = null;\n\t\t\tresultadoMod10 = null;\n\t\t\terrorModalidad40 = null;\n\t\t\treturn;\n\t\t}"""
-          if old_invalid in text:
-              text = text.replace(old_invalid, new_invalid, 1)
-          elif new_invalid not in text:
-              raise SystemExit("General validation marker not found")
+          \t\tif (!ultimoSbcDiario || ultimoSbcDiario <= 0) {
+          \t\t\terrorModalidad40 = 'Captura el último SBC diario registrado.';
+          \t\t\treturn;
+          \t\t}
+          \t\tif (salarioDiario < ultimoSbcDiario) {
+          \t\t\terrorModalidad40 = 'El SBC elegido no puede ser menor al último SBC registrado.';
+          \t\t\treturn;
+          \t\t}
 
-          old_label = "\t\t\t\t\t\t\tSalario diario integrado (SDI)"
-          new_label = "\t\t\t\t\t\t\t{tipoCalculo === 'modalidad40' ? 'SBC diario elegido' : 'Salario diario integrado (SDI)'}"
-          if old_label in text:
-              text = text.replace(old_label, new_label, 1)
-          elif new_label not in text:
-              raise SystemExit("Salary label marker not found")
+          \t\tconst uma = IMSSCalculator.getUMA(year);
+          \t\tconst factorMensual = uma.mensual / uma.diaria;
 
-          old_helper = "\t\t\t\t\t\t\tSalario mensual: {formatCurrency(salarioDiario * 30)}"
-          new_helper = """\t\t\t\t\t\t\t{#if tipoCalculo === 'modalidad40'}\n\t\t\t\t\t\t\t\tEquivalente mensual M40: {formatCurrency(\n\t\t\t\t\t\t\t\t\tsalarioDiario *\n\t\t\t\t\t\t\t\t\t\t(IMSSCalculator.getUMA(year).mensual / IMSSCalculator.getUMA(year).diaria)\n\t\t\t\t\t\t\t\t)}\n\t\t\t\t\t\t\t{:else}\n\t\t\t\t\t\t\t\tSalario mensual: {formatCurrency(salarioDiario * 30)}\n\t\t\t\t\t\t\t{/if}"""
-          if old_helper in text:
-              text = text.replace(old_helper, new_helper, 1)
-          elif new_helper not in text:
-              raise SystemExit("Monthly salary helper marker not found")
+          \t\ttry {
+          \t\t\tconst result = IMSSCalculator.calcularModalidad40(
+          \t\t\t\tsalarioDiario * factorMensual,
+          \t\t\t\tultimoSbcDiario * factorMensual,
+          \t\t\t\tyear
+          \t\t\t);
 
-          m40_marker = """\t\t\t\t\t{#if tipoCalculo === 'modalidad40'}\n\t\t\t\t\t\t<div class=\"p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800\">"""
-          m40_replacement = """\t\t\t\t\t{#if tipoCalculo === 'modalidad40'}\n\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t<label for=\"ultimoSbcDiario\" class=\"block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2\">\n\t\t\t\t\t\t\t\tÚltimo SBC diario registrado\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t\t<div class=\"relative\">\n\t\t\t\t\t\t\t\t<span class=\"absolute left-3 top-1/2 -translate-y-1/2 text-slate-500\">$</span>\n\t\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\t\tid=\"ultimoSbcDiario\"\n\t\t\t\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\t\t\t\tbind:value={ultimoSbcDiario}\n\t\t\t\t\t\t\t\t\tmin=\"0.01\"\n\t\t\t\t\t\t\t\t\tmax={IMSSCalculator.getUMA(year).diaria * 25}\n\t\t\t\t\t\t\t\t\tstep=\"0.01\"\n\t\t\t\t\t\t\t\t\tclass=\"input pl-8 tabular-nums\"\n\t\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<p class=\"text-xs text-slate-500 mt-1\">\n\t\t\t\t\t\t\t\tEquivalente mensual: {formatCurrency(\n\t\t\t\t\t\t\t\t\tultimoSbcDiario *\n\t\t\t\t\t\t\t\t\t\t(IMSSCalculator.getUMA(year).mensual / IMSSCalculator.getUMA(year).diaria)\n\t\t\t\t\t\t\t\t)}. El SBC elegido no puede ser menor; el tope es 25 UMA.\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t{#if errorModalidad40}\n\t\t\t\t\t\t\t<div class=\"p-3 rounded-lg border border-red-200 bg-red-50 text-sm text-red-800 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300\">\n\t\t\t\t\t\t\t\t{errorModalidad40}\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t{/if}\n\n\t\t\t\t\t\t<div class=\"p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800\">"""
-          if m40_marker in text:
-              text = text.replace(m40_marker, m40_replacement, 1)
-          elif m40_replacement not in text:
-              raise SystemExit("Modalidad 40 form marker not found")
+          \t\t\tresultadoMod40 = {
+          \t\t\t\tsalarioDiario: result.salario_base_cotizacion / factorMensual,
+          \t\t\t\tsalarioMensual: result.salario_base_cotizacion,
+          \t\t\t\tcuotaMensual: result.cuota_mensual,
+          \t\t\t\tcuotaAnual: result.cuota_mensual * 12,
+          \t\t\t\tporcentajeTotal: result.porcentaje_total
+          \t\t\t};
+          \t\t} catch (error) {
+          \t\t\terrorModalidad40 =
+          \t\t\t\terror instanceof Error ? error.message : 'No fue posible calcular Modalidad 40.';
+          \t\t}
+          \t}
+          """ + text[end:]
 
-          result_marker = """\t\t\t\t\t\t\t<div class=\"flex justify-between py-2 border-b border-slate-100 dark:border-slate-800\">\n\t\t\t\t\t\t\t\t<span class=\"text-slate-600 dark:text-slate-400\">Tasa total</span>"""
-          result_insert = """\t\t\t\t\t\t\t<div class=\"flex justify-between py-2 border-b border-slate-100 dark:border-slate-800\">\n\t\t\t\t\t\t\t\t<span class=\"text-slate-600 dark:text-slate-400\">Último SBC mensual registrado</span>\n\t\t\t\t\t\t\t\t<span class=\"font-medium text-slate-900 dark:text-slate-100 tabular-nums\">\n\t\t\t\t\t\t\t\t\t{formatCurrency(resultadoMod40.ultimoSbcMensual)}\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"flex justify-between py-2 border-b border-slate-100 dark:border-slate-800\">\n\t\t\t\t\t\t\t\t<span class=\"text-slate-600 dark:text-slate-400\">Tasa total</span>"""
-          if result_marker in text:
-              text = text.replace(result_marker, result_insert, 1)
-          elif result_insert not in text:
-              raise SystemExit("Modalidad 40 result display marker not found")
+          replace_once(
+              "\t\t\tresultadoMod10 = null;\n\t\t\treturn;",
+              "\t\t\tresultadoMod10 = null;\n\t\t\terrorModalidad40 = null;\n\t\t\treturn;",
+              "general validation",
+          )
+
+          replace_once(
+              "\t\t\t\t\t\t\tSalario diario integrado (SDI)",
+              "\t\t\t\t\t\t\t{tipoCalculo === 'modalidad40' ? 'SBC diario elegido' : 'Salario diario integrado (SDI)'}",
+              "salary label",
+          )
+
+          replace_once(
+              "\t\t\t\t\t\t\tSalario mensual: {formatCurrency(salarioDiario * 30)}",
+              """\t\t\t\t\t\t\t{#if tipoCalculo === 'modalidad40'}
+          \t\t\t\t\t\t\t\tEquivalente mensual M40: {formatCurrency(
+          \t\t\t\t\t\t\t\t\tsalarioDiario *
+          \t\t\t\t\t\t\t\t\t\t(IMSSCalculator.getUMA(year).mensual / IMSSCalculator.getUMA(year).diaria)
+          \t\t\t\t\t\t\t\t)}
+          \t\t\t\t\t\t\t{:else}
+          \t\t\t\t\t\t\t\tSalario mensual: {formatCurrency(salarioDiario * 30)}
+          \t\t\t\t\t\t\t{/if}""",
+              "monthly helper",
+          )
+
+          marker = """\t\t\t\t\t{#if tipoCalculo === 'modalidad40'}
+          \t\t\t\t\t\t<div class=\"p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800\">"""
+          replacement = """\t\t\t\t\t{#if tipoCalculo === 'modalidad40'}
+          \t\t\t\t\t\t<div>
+          \t\t\t\t\t\t\t<label for=\"ultimoSbcDiario\" class=\"block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2\">
+          \t\t\t\t\t\t\t\tÚltimo SBC diario registrado
+          \t\t\t\t\t\t\t</label>
+          \t\t\t\t\t\t\t<div class=\"relative\">
+          \t\t\t\t\t\t\t\t<span class=\"absolute left-3 top-1/2 -translate-y-1/2 text-slate-500\">$</span>
+          \t\t\t\t\t\t\t\t<input
+          \t\t\t\t\t\t\t\t\tid=\"ultimoSbcDiario\"
+          \t\t\t\t\t\t\t\t\ttype=\"number\"
+          \t\t\t\t\t\t\t\t\tbind:value={ultimoSbcDiario}
+          \t\t\t\t\t\t\t\t\tmin=\"0.01\"
+          \t\t\t\t\t\t\t\t\tmax={IMSSCalculator.getUMA(year).diaria * 25}
+          \t\t\t\t\t\t\t\t\tstep=\"0.01\"
+          \t\t\t\t\t\t\t\t\tclass=\"input pl-8 tabular-nums\"
+          \t\t\t\t\t\t\t\t/>
+          \t\t\t\t\t\t\t</div>
+          \t\t\t\t\t\t\t<p class=\"text-xs text-slate-500 mt-1\">
+          \t\t\t\t\t\t\t\tEquivalente mensual: {formatCurrency(
+          \t\t\t\t\t\t\t\t\tultimoSbcDiario *
+          \t\t\t\t\t\t\t\t\t\t(IMSSCalculator.getUMA(year).mensual / IMSSCalculator.getUMA(year).diaria)
+          \t\t\t\t\t\t\t\t)}. El SBC elegido no puede ser menor; el tope es 25 UMA.
+          \t\t\t\t\t\t\t</p>
+          \t\t\t\t\t\t</div>
+
+          \t\t\t\t\t\t{#if errorModalidad40}
+          \t\t\t\t\t\t\t<div class=\"p-3 rounded-lg border border-red-200 bg-red-50 text-sm text-red-800 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300\">
+          \t\t\t\t\t\t\t\t{errorModalidad40}
+          \t\t\t\t\t\t\t</div>
+          \t\t\t\t\t\t{/if}
+
+          \t\t\t\t\t\t<div class=\"p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800\">"""
+          replace_once(marker, replacement, "M40 form")
 
           path.write_text(text, encoding="utf-8")
 
@@ -88,11 +147,10 @@ jobs:
           cache: npm
           cache-dependency-path: packages/webapp-svelte/package-lock.json
 
-      - name: Format and validate the Svelte webapp
+      - name: Validate the Svelte webapp
         working-directory: packages/webapp-svelte
         run: |
           npm ci
-          npx prettier --write src/routes/calculadoras/imss/+page.svelte
           npm run check
           npm run build
 
