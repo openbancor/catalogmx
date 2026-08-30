@@ -6,9 +6,9 @@ Tests total employer cost calculations including all contributions and reserves
 import pytest
 
 from catalogmx.calculators.costo_trabajador import (
-    obtener_dias_vacaciones,
-    calcular_costo_total,
     DIAS_VACACIONES_POR_ANTIGUEDAD,
+    calcular_costo_total,
+    obtener_dias_vacaciones,
 )
 
 
@@ -317,18 +317,26 @@ class TestCalcularCostoTotal:
 class TestEdgeCases:
     """Edge cases and boundary condition tests"""
 
-    def test_zero_salary(self):
-        """Test worker cost calculation with zero salary (expect division by zero for factor)"""
-        # Zero salary causes division by zero when calculating factor_costo
-        # This is an edge case that should be handled in production code
-        with pytest.raises(ZeroDivisionError):
-            calcular_costo_total(0)
+    def test_rejects_invalid_monthly_gross_salary(self):
+        """Reject an unsafe monthly salary at the public calculator boundary."""
+        from catalogmx.calculators.imss import get_salario_minimo
 
-    def test_very_small_salary(self):
-        """Test worker cost calculation with very small salary"""
-        result = calcular_costo_total(0.01)
-        assert result["salario_bruto_mensual"] == 0.01
-        assert result["factor_costo"] > 0
+        minimum_monthly_salary = get_salario_minimo(2026, "general") * 30
+        invalid_salaries = [
+            float("nan"),
+            float("inf"),
+            float("-inf"),
+            0.0,
+            -1.0,
+            minimum_monthly_salary - 0.01,
+        ]
+
+        for salario_mensual_bruto in invalid_salaries:
+            with pytest.raises(
+                ValueError,
+                match="El salario mensual bruto debe ser un número finito mayor o igual al salario mínimo mensual aplicable.",
+            ):
+                calcular_costo_total(salario_mensual_bruto)
 
     def test_negative_antiguedad(self):
         """Test worker cost calculation with negative seniority (should use minimum vacation days)"""

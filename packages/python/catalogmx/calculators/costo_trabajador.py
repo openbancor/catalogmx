@@ -9,10 +9,15 @@ Official sources:
 - State payroll tax laws
 """
 
+import math
 from typing import TypedDict
 
 from catalogmx.calculators.impuestos import ImpuestosLocalesCalculator
-from catalogmx.calculators.imss import IMSSYear, calcular_cuotas_obrero_patronales
+from catalogmx.calculators.imss import (
+    IMSSYear,
+    calcular_cuotas_obrero_patronales,
+    get_salario_minimo,
+)
 
 
 class CostoTotalResult(TypedDict):
@@ -69,6 +74,19 @@ DIAS_VACACIONES_POR_ANTIGUEDAD = {
     34: 32,
     35: 32,
 }
+
+
+def _assert_salario_mensual_bruto(salario_mensual_bruto: float, year: IMSSYear) -> None:
+    """Reject an unsafe gross salary before calculating downstream contributions."""
+    message = "El salario mensual bruto debe ser un número finito mayor o igual al salario mínimo mensual aplicable."
+    if not isinstance(salario_mensual_bruto, (int, float)) or isinstance(
+        salario_mensual_bruto, bool
+    ):
+        raise ValueError(message)
+    if not math.isfinite(salario_mensual_bruto):
+        raise ValueError(message)
+    if salario_mensual_bruto < get_salario_minimo(year, "general") * 30:
+        raise ValueError(message)
 
 
 def obtener_dias_vacaciones(antiguedad_anos: int) -> int:
@@ -142,6 +160,8 @@ def calcular_costo_total(
         >>> print(f"Factor: {result['factor_costo']:.2f}x")
         Factor: 1.35x
     """
+    _assert_salario_mensual_bruto(salario_mensual_bruto, year)
+
     # 1. Calculate daily wage (assuming 30-day month for calculation purposes)
     salario_diario = salario_mensual_bruto / 30.0
 
