@@ -9,6 +9,7 @@ type ImssVectors = {
     dias: number;
     year: number;
     clase_riesgo: number;
+    fecha?: string;
     expected: {
       total_imss: number;
       total_patron: number;
@@ -48,7 +49,8 @@ describe('IMSS shared vectors', () => {
         vector.salario_diario,
         vector.dias,
         toIMSSYear(vector.year),
-        toClaseRiesgo(vector.clase_riesgo)
+        toClaseRiesgo(vector.clase_riesgo),
+        vector.fecha
       );
       expect(round(result.total_imss)).toBe(vector.expected.total_imss);
       expect(round(result.total_patron)).toBe(vector.expected.total_patron);
@@ -82,6 +84,15 @@ describe('IMSS shared vectors', () => {
       2026
     );
     expect(result.porcentaje_total).toBeCloseTo(0.10075, 8);
+  });
+
+  test('modalidad 40 rejects non-finite requested salary', () => {
+    expect(() => IMSSCalculator.calcularModalidad40(Number.NaN, 10000, 2026)).toThrow(
+      'debe ser mayor que cero'
+    );
+    expect(() =>
+      IMSSCalculator.calcularModalidad40(Number.POSITIVE_INFINITY, 10000, 2026)
+    ).toThrow('debe ser mayor que cero');
   });
 
   test('modalidad 10', () => {
