@@ -882,10 +882,11 @@ describe('IMSS Calculator coverage - uncovered lines', () => {
     expect(clases[0]).toHaveProperty('prima');
   });
 
-  // Modalidad 40 salary bounds
-  test('calcularModalidad40 clamps salary to minimum (line 319-320)', () => {
+  // Modalidad 40 salary bounds. The legal minimum depends on the worker's
+  // last registered SBC, which this API does not receive; do not invent 1 UMA.
+  test('calcularModalidad40 preserves input when prior SBC is unknown', () => {
     const result = IMSSCalculator.calcularModalidad40(1, 2025);
-    expect(result.salario_base_cotizacion).toBeGreaterThan(1);
+    expect(result.salario_base_cotizacion).toBe(1);
   });
 
   test('calcularModalidad40 clamps salary to maximum (line 321-322)', () => {
