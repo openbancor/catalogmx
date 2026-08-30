@@ -241,16 +241,13 @@ export class IMSSCalculator {
     return { ...uma };
   }
 
-  private static assertFechaMatchesExercise(
-  year: IMSSYear,
-  fecha?: string | Date
-): void {
-  if (fecha === undefined) return;
-  const iso = this.toIsoDate(fecha);
-  if (Number(iso.slice(0, 4)) !== year) {
-    throw new RangeError(`La fecha ${iso} no pertenece al ejercicio ${year}`);
+  private static assertFechaMatchesExercise(year: IMSSYear, fecha?: string | Date): void {
+    if (fecha === undefined) return;
+    const iso = this.toIsoDate(fecha);
+    if (Number(iso.slice(0, 4)) !== year) {
+      throw new RangeError(`La fecha ${iso} no pertenece al ejercicio ${year}`);
+    }
   }
-}
 
   static getSalarioMinimo(year: IMSSYear, zona: ZonaSalario = 'general'): number {
     this.loadTablesData();
