@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from catalogmx.calculators import get_uma_for_date
 from catalogmx.calculators.imss import (
     calcular_cuotas_obrero_patronales,
     calcular_modalidad_10,
@@ -20,6 +21,11 @@ VECTORS_PATH = (
 
 def _round(value: float) -> float:
     return round(value, 6)
+
+
+def test_public_date_aware_uma_helper() -> None:
+    assert get_uma_for_date("2026-01-31")["diaria"] == 113.14
+    assert get_uma_for_date("2026-02-01")["diaria"] == 117.31
 
 
 def test_imss_cuotas_obrero_patronales_vectors_shared() -> None:
