@@ -9,9 +9,11 @@ const publicReference = /modalidad\s*10|modalidad10|\bm10\b|\bpti\b/i;
 const forbiddenOptionValue = 'modalidad10';
 const forbiddenCalculatorName = 'calcularmodalidad10';
 const publicAttributeNames = new Set([
+	'action',
 	'aria-label',
 	'alt',
 	'content',
+	'formaction',
 	'href',
 	'label',
 	'placeholder',
@@ -64,7 +66,39 @@ function staticString(node) {
 		const right = staticString(node.right);
 		return left !== null && right !== null ? left + right : null;
 	}
+	if (node.type === 'ConditionalExpression' && typeof node.test?.value === 'boolean') {
+		return staticString(node.test.value ? node.consequent : node.alternate);
+	}
 	return null;
+}
+
+function combineStaticValues(left, right) {
+	return left.flatMap((prefix) => right.map((suffix) => prefix + suffix));
+}
+
+function staticStringValues(node) {
+	if (!node) return [];
+	if (node.type === 'ConditionalExpression') {
+		if (typeof node.test?.value === 'boolean') {
+			return staticStringValues(node.test.value ? node.consequent : node.alternate);
+		}
+		return [...staticStringValues(node.consequent), ...staticStringValues(node.alternate)];
+	}
+	if (node.type === 'TemplateLiteral') {
+		let values = [node.quasis[0].value.cooked ?? ''];
+		for (let index = 0; index < node.expressions.length; index += 1) {
+			const expressionValues = staticStringValues(node.expressions[index]);
+			if (expressionValues.length === 0) return [];
+			const suffix = node.quasis[index + 1].value.cooked ?? '';
+			values = combineStaticValues(values, expressionValues).map((value) => value + suffix);
+		}
+		return values;
+	}
+	if (node.type === 'BinaryExpression' && node.operator === '+') {
+		return combineStaticValues(staticStringValues(node.left), staticStringValues(node.right));
+	}
+	const value = staticString(node);
+	return value === null ? [] : [value];
 }
 
 function isForbiddenScriptValue(value) {
@@ -128,36 +162,49 @@ function isVerifiedIssueAnchor(node) {
 	return node.type === 'Element' && node.name === 'a' && hasIssueHref(node) && hasExactPendingAuditLinkText(node);
 }
 
-function staticAttributeValue(attribute) {
-	if (attribute.type !== 'Attribute' || !Array.isArray(attribute.value)) {
-		return null;
-	}
-
-	let value = '';
-	for (const part of attribute.value) {
+function staticPartValues(parts) {
+	if (!Array.isArray(parts)) return [];
+	let values = [''];
+	for (const part of parts) {
+		let partValues;
 		if (part.type === 'Text') {
-			value += part.data;
+			partValues = [part.data];
 		} else if (isInlineExpression(part)) {
-			const expression = staticString(part.expression);
-			if (expression === null) return null;
-			value += expression;
+			partValues = staticStringValues(part.expression);
 		} else {
-			return null;
+			return [];
 		}
+		if (partValues.length === 0) return [];
+		values = combineStaticValues(values, partValues);
 	}
-	return value;
+	return values;
 }
 
-function staticPublicAttributeValue(attribute) {
-	return publicAttributeNames.has(attribute.name) ? staticAttributeValue(attribute) : null;
+function staticAttributeValues(attribute) {
+	return attribute.type === 'Attribute' ? staticPartValues(attribute.value) : [];
+}
+
+function staticPublicAttributeValues(attribute) {
+	return publicAttributeNames.has(attribute.name) ? staticAttributeValues(attribute) : [];
 }
 
 function hasStaticHiddenClass(node) {
 	const classAttribute = node.attributes?.find(
 		(attribute) => attribute.type === 'Attribute' && attribute.name === 'class'
 	);
-	const className = classAttribute ? staticAttributeValue(classAttribute) : null;
-	return className?.split(/\s+/).includes('hidden') ?? false;
+	const hiddenClassNames = new Set(['hidden', 'invisible', 'opacity-0']);
+	const hasHiddenClass = classAttribute
+		? staticAttributeValues(classAttribute).some((className) =>
+				className.split(/\s+/).some((name) => hiddenClassNames.has(name))
+			)
+		: false;
+	const hasHiddenDirective = node.attributes?.some(
+		(attribute) =>
+			attribute.type === 'Class' &&
+			hiddenClassNames.has(attribute.name) &&
+			(attribute.expression?.value !== false)
+	);
+	return hasHiddenClass || hasHiddenDirective;
 }
 
 function hasStaticHiddenAttribute(node) {
@@ -180,16 +227,34 @@ function hasStaticHiddenStyle(node) {
 	const styleAttribute = node.attributes?.find(
 		(attribute) => attribute.type === 'Attribute' && attribute.name === 'style'
 	);
-	const style = styleAttribute ? staticAttributeValue(styleAttribute) : null;
-	const normalizedStyle = style?.replace(/\s+/g, '').toLowerCase();
-	return normalizedStyle?.includes('display:none') || normalizedStyle?.includes('visibility:hidden');
+	const hiddenStyle = styleAttribute
+		? staticAttributeValues(styleAttribute).some((style) => {
+			const normalizedStyle = style.replace(/\s+/g, '').toLowerCase();
+			return normalizedStyle.includes('display:none') || normalizedStyle.includes('visibility:hidden');
+		})
+		: false;
+	const hiddenStyleDirective = node.attributes?.some((attribute) => {
+		if (attribute.type !== 'StyleDirective' || !['display', 'visibility'].includes(attribute.name)) {
+			return false;
+		}
+		const values = staticPartValues(attribute.value);
+		return (
+			values.length === 0 ||
+			values.some((value) =>
+				attribute.name === 'display' ? value.trim().toLowerCase() === 'none' : value.trim().toLowerCase() === 'hidden'
+			)
+		);
+	});
+	return hiddenStyle || hiddenStyleDirective;
 }
 
 function hasStaticAriaHidden(node) {
 	const ariaHiddenAttribute = node.attributes?.find(
 		(attribute) => attribute.type === 'Attribute' && attribute.name === 'aria-hidden'
 	);
-	return ariaHiddenAttribute ? staticAttributeValue(ariaHiddenAttribute)?.toLowerCase() === 'true' : false;
+	return ariaHiddenAttribute
+		? staticAttributeValues(ariaHiddenAttribute).some((value) => value.toLowerCase() === 'true')
+		: false;
 }
 
 function isInElseBranch(node, ifBlock, parents) {
@@ -226,7 +291,7 @@ function staticRenderedTextOutsideVerifiedIssueAnchors(node) {
 	if (Array.isArray(node)) return node.map(staticRenderedTextOutsideVerifiedIssueAnchors).join('');
 	if (node.type === 'Element' && isVerifiedIssueAnchor(node)) return '';
 	if (node.type === 'Text') return node.data;
-	if (isInlineExpression(node)) return staticString(node.expression) ?? '';
+	if (isInlineExpression(node)) return staticStringValues(node.expression).join(' ');
 	return ['children', 'else', 'fallback', 'pending', 'then', 'catch']
 		.map((key) => staticRenderedTextOutsideVerifiedIssueAnchors(node[key]))
 		.join('');
@@ -262,8 +327,7 @@ function assertPublicRouteContract(source, route) {
 		}
 		if (!isVerifiedIssueAnchor(element)) {
 			for (const attribute of element.attributes ?? []) {
-				const value = staticPublicAttributeValue(attribute);
-				if (value !== null && publicReference.test(value)) {
+				if (staticPublicAttributeValues(attribute).some((value) => publicReference.test(value))) {
 					violations.add('atributo público que ofrece o enruta Modalidad 10/PTI');
 				}
 			}
@@ -301,6 +365,18 @@ function runSelfTests() {
 	assert.throws(() => assertPublicRouteContract(`<script>const key = 'calcularModalidad' + '10';</script>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<p>M10 disponible</p>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<p>Modalidad <strong>10</strong> disponible</p>${clean}`, route));
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<p>{enabled ? 'Seguro' : 'Modalidad 10 disponible'}</p>${clean}`,
+			route
+		)
+	);
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<CalculatorCard title={enabled ? 'Seguro' : 'Modalidad 10 disponible'} />${clean}`,
+			route
+		)
+	);
 	assert.throws(() => assertPublicRouteContract(`Modalidad 10 disponible${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`{@html 'Modalidad 10 disponible'}${clean}`, route));
 	assert.throws(() =>
@@ -334,6 +410,9 @@ function runSelfTests() {
 		)
 	);
 	assert.throws(() => assertPublicRouteContract(`<div hidden>${honestAnchor}</div>`, route));
+	assert.throws(() => assertPublicRouteContract(`<div class="invisible">${honestAnchor}</div>`, route));
+	assert.throws(() => assertPublicRouteContract(`<div class="opacity-0">${honestAnchor}</div>`, route));
+	assert.throws(() => assertPublicRouteContract(`<div class:hidden={true}>${honestAnchor}</div>`, route));
 	assert.throws(() => assertPublicRouteContract(`<div hidden={true}>${honestAnchor}</div>`, route));
 	assert.throws(() => assertPublicRouteContract(`<div hidden="hidden">${honestAnchor}</div>`, route));
 	assert.throws(() => assertPublicRouteContract(`<div hidden="">${honestAnchor}</div>`, route));
@@ -342,6 +421,13 @@ function runSelfTests() {
 	assert.throws(() => assertPublicRouteContract(`<div style="visibility: hidden">${honestAnchor}</div>`, route));
 	assert.throws(() => assertPublicRouteContract(`<div aria-hidden="true">${honestAnchor}</div>`, route));
 	assert.throws(() => assertPublicRouteContract(`<div aria-hidden={true}>${honestAnchor}</div>`, route));
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<div aria-hidden={enabled ? 'false' : 'true'}>${honestAnchor}</div>`,
+			route
+		)
+	);
+	assert.throws(() => assertPublicRouteContract(`<div style:display="none">${honestAnchor}</div>`, route));
 	assert.throws(() =>
 		assertPublicRouteContract(
 			`{#if enabled}Seguro{:else}Modalidad 10 disponible{/if}${clean}`,
@@ -358,6 +444,8 @@ function runSelfTests() {
 		)
 	);
 	assert.throws(() => assertPublicRouteContract(`<a href="/calculadoras/modalidad10">Otra calculadora</a>${clean}`, route));
+	assert.throws(() => assertPublicRouteContract(`<form action="/calculadoras/modalidad10">Enviar</form>${clean}`, route));
+	assert.throws(() => assertPublicRouteContract(`<button formaction="/calculadoras/modalidad10">Enviar</button>${clean}`, route));
 	assert.throws(() =>
 		assertPublicRouteContract(
 			`<a href={'/calculadoras/' + 'modalidad10'}>Otra calculadora</a>${clean}`,
