@@ -13,6 +13,12 @@ on:
       - 'packages/typescript/src/fiscal/**'
       - 'packages/typescript/tests/fiscal-history.test.ts'
       - 'packages/typescript/tests/imss-vectors.test.ts'
+      - 'packages/python/catalogmx/calculators/imss.py'
+      - 'packages/python/tests/test_imss_vectors_shared.py'
+      - 'packages/dart/lib/src/calculators/imss.dart'
+      - 'packages/dart/test/imss_vectors_test.dart'
+      - 'packages/webapp-svelte/static/data/imss-tables.json'
+      - 'packages/webapp-svelte/src/routes/calculadoras/imss/+page.svelte'
       - 'scripts/build_fiscal_manifest.py'
       - '.github/workflows/validate-fiscal-integrity.yml'
   push:
@@ -29,6 +35,12 @@ on:
       - 'packages/typescript/src/fiscal/**'
       - 'packages/typescript/tests/fiscal-history.test.ts'
       - 'packages/typescript/tests/imss-vectors.test.ts'
+      - 'packages/python/catalogmx/calculators/imss.py'
+      - 'packages/python/tests/test_imss_vectors_shared.py'
+      - 'packages/dart/lib/src/calculators/imss.dart'
+      - 'packages/dart/test/imss_vectors_test.dart'
+      - 'packages/webapp-svelte/static/data/imss-tables.json'
+      - 'packages/webapp-svelte/src/routes/calculadoras/imss/+page.svelte'
       - 'scripts/build_fiscal_manifest.py'
       - '.github/workflows/validate-fiscal-integrity.yml'
 
@@ -37,25 +49,77 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
       - name: Verify generated fiscal manifest
         run: python scripts/build_fiscal_manifest.py --check
+
+      - name: Verify fiscal history against prior revision
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE_SHA="${{ github.event.before }}"
+          fi
+
+          if [ -z "$BASE_SHA" ] || ! git cat-file -e "$BASE_SHA:packages/shared-data/fiscal-manifest.json" 2>/dev/null; then
+            echo "Prior revision does not contain fiscal-manifest.json; additive-history baseline starts after this PR lands."
+            exit 0
+          fi
+
+          BASELINE="$RUNNER_TEMP/fiscal-manifest-baseline.json"
+          git show "$BASE_SHA:packages/shared-data/fiscal-manifest.json" > "$BASELINE"
+          python - "$BASELINE" packages/shared-data/fiscal-manifest.json <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          previous = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
+          current = json.loads(Path(sys.argv[2]).read_text(encoding='utf-8'))
+          missing = []
+          for dataset_id, old_dataset in previous.get('datasets', {}).items():
+              new_dataset = current.get('datasets', {}).get(dataset_id)
+              if new_dataset is None:
+                  missing.append(f'{dataset_id}:<dataset>')
+                  continue
+              old_exercises = set(old_dataset.get('entries', {}))
+              new_exercises = set(new_dataset.get('entries', {}))
+              missing.extend(
+                  f'{dataset_id}:{exercise}'
+                  for exercise in sorted(old_exercises - new_exercises)
+              )
+          if missing:
+              raise SystemExit(
+                  'Fiscal history removal is not allowed: ' + ', '.join(missing)
+              )
+          PY
+
+      - name: Verify browser IMSS asset is synchronized
+        run: cmp packages/shared-data/imss-tables.json packages/webapp-svelte/static/data/imss-tables.json
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: npm
           cache-dependency-path: packages/typescript/package-lock.json
+
       - name: Install TypeScript package
         working-directory: packages/typescript
         run: npm ci
+
       - name: Verify fiscal TypeScript surface
         working-directory: packages/typescript
         run: |
           npm run format:check
           npm run typecheck
           npm run lint
+
       - name: Historical fiscal regressions
         working-directory: packages/typescript
         run: npx jest --runInBand tests/imss-vectors.test.ts tests/fiscal-history.test.ts
