@@ -371,7 +371,7 @@ def build_manifest() -> FiscalManifest:
         "entries": {
             str(year): entry(
                 year,
-                "pending_review",
+                "legacy_unverified",
                 f"{year}-01-01",
                 f"{year}-12-31",
                 ["legacy_snapshot"],

@@ -1,5 +1,5 @@
 {
-  "content_sha256": "11664befd6b5fe7169d6bfa00c6ed870fbae1f785dc434f8ca7a4bc64cc439dd",
+  "content_sha256": "1098da43c43bd01d1ba9701c7a71f29af9f73b02852075064fa5dcf5fcebfebe",
   "datasets": {
     "imss_base_rates": {
       "entries": {
@@ -369,11 +369,11 @@
         "2024": {
           "exercise": 2024,
           "notes": "Retained for compatibility; source/formula audit is not complete.",
-          "sha256": "0016a47aa0f96aa81d18fe6484e380da055bf9ac7ebdea584631838a66390cb5",
+          "sha256": "dfaf0aeb49627964678be2ce1f13bb28d9fc1be68a342dccf08049dc977f0c0e",
           "source_ids": [
             "legacy_snapshot"
           ],
-          "status": "pending_review",
+          "status": "legacy_unverified",
           "valid_from": "2024-01-01",
           "valid_to": "2024-12-31",
           "values": {
@@ -408,17 +408,17 @@
               "mexicano_o_extranjero_residente": true,
               "no_cotizar_obligatorio": true
             },
-            "verification": "legacy_pending_review"
+            "verification": "legacy_unverified"
           }
         },
         "2025": {
           "exercise": 2025,
           "notes": "Retained for compatibility; source/formula audit is not complete.",
-          "sha256": "0016a47aa0f96aa81d18fe6484e380da055bf9ac7ebdea584631838a66390cb5",
+          "sha256": "dfaf0aeb49627964678be2ce1f13bb28d9fc1be68a342dccf08049dc977f0c0e",
           "source_ids": [
             "legacy_snapshot"
           ],
-          "status": "pending_review",
+          "status": "legacy_unverified",
           "valid_from": "2025-01-01",
           "valid_to": "2025-12-31",
           "values": {
@@ -453,17 +453,17 @@
               "mexicano_o_extranjero_residente": true,
               "no_cotizar_obligatorio": true
             },
-            "verification": "legacy_pending_review"
+            "verification": "legacy_unverified"
           }
         },
         "2026": {
           "exercise": 2026,
           "notes": "Retained for compatibility; source/formula audit is not complete.",
-          "sha256": "0016a47aa0f96aa81d18fe6484e380da055bf9ac7ebdea584631838a66390cb5",
+          "sha256": "dfaf0aeb49627964678be2ce1f13bb28d9fc1be68a342dccf08049dc977f0c0e",
           "source_ids": [
             "legacy_snapshot"
           ],
-          "status": "pending_review",
+          "status": "legacy_unverified",
           "valid_from": "2026-01-01",
           "valid_to": "2026-12-31",
           "values": {
@@ -498,7 +498,7 @@
               "mexicano_o_extranjero_residente": true,
               "no_cotizar_obligatorio": true
             },
-            "verification": "legacy_pending_review"
+            "verification": "legacy_unverified"
           }
         }
       },

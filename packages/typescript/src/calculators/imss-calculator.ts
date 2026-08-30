@@ -484,7 +484,7 @@ export class IMSSCalculator {
 
   /**
    * Modalidad 10 mantiene por ahora el modelo histórico existente.
-   * El dataset la marca como legacy_pending_review para no presentarla como
+   * El dataset la marca como legacy_unverified para no presentarla como
    * parámetro fiscal verificado hasta completar su auditoría específica.
    */
   static calcularModalidad10(

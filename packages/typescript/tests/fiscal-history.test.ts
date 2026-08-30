@@ -102,7 +102,7 @@ describe('historical fiscal parameters', () => {
 
     expect(fiscalEntry('isr_payroll', 2026)?.status).toBe('pending_review');
     expect(() => assertFiscalDataVerified('isr_payroll', 2026)).toThrow('pending_review');
-    expect(fiscalEntry('imss_modalidad_10', 2026)?.status).toBe('pending_review');
+    expect(fiscalEntry('imss_modalidad_10', 2026)?.status).toBe('legacy_unverified');
   });
 
   test('does not allow callers to mutate verification status', () => {

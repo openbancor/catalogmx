@@ -65,3 +65,10 @@ def test_assert_fiscal_data_verified_rejects_missing_and_pending_entries():
         match="Fiscal data isr_payroll exercise 2026 is pending_review, not verified",
     ):
         assert_fiscal_data_verified("isr_payroll", 2026)
+
+
+def test_modalidad_10_uses_the_documented_legacy_status():
+    entry = fiscal_entry("imss_modalidad_10", 2026)
+
+    assert entry is not None
+    assert entry["status"] == "legacy_unverified"

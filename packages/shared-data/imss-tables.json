@@ -7,7 +7,7 @@
     "verification": {
       "cuotas_obrero_patronales": "verified",
       "modalidad_40": "verified",
-      "modalidad_10": "legacy_pending_review"
+      "modalidad_10": "legacy_unverified"
     },
     "sources": {
       "lss": {
@@ -335,7 +335,7 @@
   },
   "modalidad_10": {
     "descripcion": "Incorporación voluntaria al régimen obligatorio (trabajadores independientes)",
-    "verification": "legacy_pending_review",
+    "verification": "legacy_unverified",
     "requisitos": {
       "edad_minima": 16,
       "edad_maxima": 60,
