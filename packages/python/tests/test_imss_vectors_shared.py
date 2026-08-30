@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from catalogmx.calculators.imss import (
     calcular_cuotas_obrero_patronales,
     calcular_modalidad_10,
@@ -28,6 +30,7 @@ def test_imss_cuotas_obrero_patronales_vectors_shared() -> None:
             dias=case["dias"],
             year=case["year"],
             clase_riesgo=case["clase_riesgo"],
+            fecha=case.get("fecha"),
         )
         expected = case["expected"]
         assert _round(result["total_imss"]) == expected["total_imss"]
@@ -58,3 +61,10 @@ def test_imss_modalidad_10_vectors_shared() -> None:
         expected = case["expected"]
         assert _round(result["cuota_mensual"]) == expected["cuota_mensual"]
         assert _round(result["cuota_fija_uma"]) == expected["cuota_fija_uma"]
+
+
+def test_modalidad_40_rejects_non_finite_requested_salary() -> None:
+    with pytest.raises(ValueError, match="debe ser mayor que cero"):
+        calcular_modalidad_40(float("nan"), 10000, 2026)
+    with pytest.raises(ValueError, match="debe ser mayor que cero"):
+        calcular_modalidad_40(float("inf"), 10000, 2026)
