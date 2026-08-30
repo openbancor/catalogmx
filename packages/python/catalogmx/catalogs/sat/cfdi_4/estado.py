@@ -1,6 +1,7 @@
 """Catálogo c_Estado compartido por CFDI y Nómina 1.2."""
 
-from catalogmx.catalogs.sat.cfdi_4._resolver_views import code_description_rows
+import json
+from importlib.resources import files
 
 
 class EstadoCfdiCatalog:
@@ -12,7 +13,14 @@ class EstadoCfdiCatalog:
     @classmethod
     def _load_data(cls) -> None:
         if cls._data is None:
-            cls._data = code_description_rows("cfdi_40_estados")
+            # SAT defines c_Estado in catCFDI.xsd as an identifier set.  The
+            # technical-mirror SQLite release is missing the DIF identifier,
+            # so this catalog intentionally consumes the reviewed XSD-derived
+            # package artifact also used to generate the TypeScript view.
+            path = files("catalogmx.data").joinpath("cfdi-estado.json")
+            with path.open(encoding="utf-8") as handle:
+                document = json.load(handle)
+            cls._data = [{"code": str(item["code"])} for item in document["data"]]
             cls._by_code = {item["code"]: item for item in cls._data}
 
     @classmethod

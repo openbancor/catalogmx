@@ -1,0 +1,299 @@
+{
+  "_meta": {
+    "catalog": "c_Estado",
+    "authority": "SAT",
+    "source": "http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd",
+    "source_sha256": "46fe267a4b8f2782a3ae9c6086501a9fcf3c4033c309aaffae3382f95882c537",
+    "xsd_name": "c_Estado"
+  },
+  "data": [
+    {
+      "code": "AGU"
+    },
+    {
+      "code": "BCN"
+    },
+    {
+      "code": "BCS"
+    },
+    {
+      "code": "CAM"
+    },
+    {
+      "code": "CHP"
+    },
+    {
+      "code": "CHH"
+    },
+    {
+      "code": "COA"
+    },
+    {
+      "code": "COL"
+    },
+    {
+      "code": "DIF"
+    },
+    {
+      "code": "CMX"
+    },
+    {
+      "code": "DUR"
+    },
+    {
+      "code": "GUA"
+    },
+    {
+      "code": "GRO"
+    },
+    {
+      "code": "HID"
+    },
+    {
+      "code": "JAL"
+    },
+    {
+      "code": "MEX"
+    },
+    {
+      "code": "MIC"
+    },
+    {
+      "code": "MOR"
+    },
+    {
+      "code": "NAY"
+    },
+    {
+      "code": "NLE"
+    },
+    {
+      "code": "OAX"
+    },
+    {
+      "code": "PUE"
+    },
+    {
+      "code": "QUE"
+    },
+    {
+      "code": "ROO"
+    },
+    {
+      "code": "SLP"
+    },
+    {
+      "code": "SIN"
+    },
+    {
+      "code": "SON"
+    },
+    {
+      "code": "TAB"
+    },
+    {
+      "code": "TAM"
+    },
+    {
+      "code": "TLA"
+    },
+    {
+      "code": "VER"
+    },
+    {
+      "code": "YUC"
+    },
+    {
+      "code": "ZAC"
+    },
+    {
+      "code": "AL"
+    },
+    {
+      "code": "AK"
+    },
+    {
+      "code": "AZ"
+    },
+    {
+      "code": "AR"
+    },
+    {
+      "code": "CA"
+    },
+    {
+      "code": "NC"
+    },
+    {
+      "code": "SC"
+    },
+    {
+      "code": "CO"
+    },
+    {
+      "code": "CT"
+    },
+    {
+      "code": "ND"
+    },
+    {
+      "code": "SD"
+    },
+    {
+      "code": "DE"
+    },
+    {
+      "code": "FL"
+    },
+    {
+      "code": "GA"
+    },
+    {
+      "code": "HI"
+    },
+    {
+      "code": "ID"
+    },
+    {
+      "code": "IL"
+    },
+    {
+      "code": "IN"
+    },
+    {
+      "code": "IA"
+    },
+    {
+      "code": "KS"
+    },
+    {
+      "code": "KY"
+    },
+    {
+      "code": "LA"
+    },
+    {
+      "code": "ME"
+    },
+    {
+      "code": "MD"
+    },
+    {
+      "code": "MA"
+    },
+    {
+      "code": "MI"
+    },
+    {
+      "code": "MN"
+    },
+    {
+      "code": "MS"
+    },
+    {
+      "code": "MO"
+    },
+    {
+      "code": "MT"
+    },
+    {
+      "code": "NE"
+    },
+    {
+      "code": "NV"
+    },
+    {
+      "code": "NJ"
+    },
+    {
+      "code": "NY"
+    },
+    {
+      "code": "NH"
+    },
+    {
+      "code": "NM"
+    },
+    {
+      "code": "OH"
+    },
+    {
+      "code": "OK"
+    },
+    {
+      "code": "OR"
+    },
+    {
+      "code": "PA"
+    },
+    {
+      "code": "RI"
+    },
+    {
+      "code": "TN"
+    },
+    {
+      "code": "TX"
+    },
+    {
+      "code": "UT"
+    },
+    {
+      "code": "VT"
+    },
+    {
+      "code": "VA"
+    },
+    {
+      "code": "WV"
+    },
+    {
+      "code": "WA"
+    },
+    {
+      "code": "WI"
+    },
+    {
+      "code": "WY"
+    },
+    {
+      "code": "ON"
+    },
+    {
+      "code": "QC"
+    },
+    {
+      "code": "NS"
+    },
+    {
+      "code": "NB"
+    },
+    {
+      "code": "MB"
+    },
+    {
+      "code": "BC"
+    },
+    {
+      "code": "PE"
+    },
+    {
+      "code": "SK"
+    },
+    {
+      "code": "AB"
+    },
+    {
+      "code": "NL"
+    },
+    {
+      "code": "NT"
+    },
+    {
+      "code": "YT"
+    },
+    {
+      "code": "UN"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Synchronize package-local IMSS runtime data from canonical shared-data."""
+"""Synchronize package-local runtime data from canonical shared-data."""
 
 from __future__ import annotations
 
@@ -12,6 +12,9 @@ PYTHON_DATA = REPO_ROOT / "packages" / "python" / "catalogmx" / "data"
 DART_DATA = REPO_ROOT / "packages" / "dart" / "lib" / "src" / "data"
 
 RUNTIME_FILES = ("imss-tables.json", "imss-catalogs.json")
+PYTHON_ONLY_FILES = {
+    "cfdi-estado.json": SHARED_DATA / "sat" / "cfdi_4.0" / "estado.json",
+}
 
 
 def _dart_source(sources: dict[str, bytes]) -> bytes:
@@ -37,6 +40,10 @@ def expected_outputs() -> dict[Path, bytes]:
     sources = {name: (SHARED_DATA / name).read_bytes() for name in RUNTIME_FILES}
     return {
         **{PYTHON_DATA / name: content for name, content in sources.items()},
+        **{
+            PYTHON_DATA / name: source.read_bytes()
+            for name, source in PYTHON_ONLY_FILES.items()
+        },
         DART_DATA / "imss_runtime_data.generated.dart": _dart_source(sources),
     }
 
@@ -55,7 +62,7 @@ def synchronize(*, check: bool) -> None:
 
     if stale:
         raise SystemExit(
-            "IMSS runtime data is stale; run scripts/sync_imss_runtime_data.py: "
+            "package runtime data is stale; run scripts/sync_imss_runtime_data.py: "
             + ", ".join(stale)
         )
 

@@ -22,6 +22,7 @@ from catalogmx.calculators.imss import (
     calcular_modalidad_40,
     get_uma,
 )
+from catalogmx.catalogs.sat.cfdi_4 import EstadoCfdiCatalog
 
 tables = json.loads(files("catalogmx.data").joinpath("imss-tables.json").read_text())
 catalogs = json.loads(files("catalogmx.data").joinpath("imss-catalogs.json").read_text())
@@ -35,6 +36,8 @@ assert catalogs["tipos_trabajador"]
 assert cuotas["total_imss"] > 0
 assert modalidad_40["cuota_mensual"] > 0
 assert modalidad_10["cuota_mensual"] > 0
+assert EstadoCfdiCatalog.get_estado("DIF") == {"code": "DIF"}
+assert EstadoCfdiCatalog.get_estado("cmx") == {"code": "CMX"}
 """
 
 

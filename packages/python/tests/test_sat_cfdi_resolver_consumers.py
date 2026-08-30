@@ -206,7 +206,6 @@ def test_simple_code_description_catalogs_preserve_public_shape(
 ) -> None:
     cases = [
         (ExportacionCatalog.get_exportacion, "01", "No aplica"),
-        (EstadoCfdiCatalog.get_estado, "cmx", "Ciudad de México"),
         (FormaPagoCatalog.get_forma_pago, "01", "Efectivo"),
         (MetodoPagoCatalog.get_metodo, "pue", "Pago en una sola exhibición"),
         (ObjetoImpCatalog.get_objeto, "01", "No objeto de impuesto"),
@@ -223,6 +222,10 @@ def test_simple_code_description_catalogs_preserve_public_shape(
             "code": code.upper() if code.isalpha() else code,
             "description": description,
         }
+
+    assert EstadoCfdiCatalog.get_estado("cmx") == {"code": "CMX"}
+    assert EstadoCfdiCatalog.get_estado("DIF") == {"code": "DIF"}
+    assert len(EstadoCfdiCatalog.get_all()) == 96
 
 
 def test_boolean_and_catalogmx_enriched_projections_match_legacy_api(
