@@ -1,32 +1,61 @@
-name: Validate fiscal integrity
+name: Fiscal Data Integrity
 
 on:
+  pull_request:
+    paths:
+      - 'packages/shared-data/imss-tables.json'
+      - 'packages/shared-data/isr-tables.json'
+      - 'packages/shared-data/mexico/uma.json'
+      - 'packages/shared-data/mexico/salarios_minimos.json'
+      - 'packages/shared-data/fiscal-manifest.json'
+      - 'packages/shared-data/tests/imss_vectors.json'
+      - 'packages/typescript/src/calculators/imss-calculator.ts'
+      - 'packages/typescript/src/fiscal/**'
+      - 'packages/typescript/tests/fiscal-history.test.ts'
+      - 'packages/typescript/tests/imss-vectors.test.ts'
+      - 'scripts/build_fiscal_manifest.py'
+      - '.github/workflows/validate-fiscal-integrity.yml'
   push:
     branches:
-      - fix/fiscal-integrity-2026
+      - master
+    paths:
+      - 'packages/shared-data/imss-tables.json'
+      - 'packages/shared-data/isr-tables.json'
+      - 'packages/shared-data/mexico/uma.json'
+      - 'packages/shared-data/mexico/salarios_minimos.json'
+      - 'packages/shared-data/fiscal-manifest.json'
+      - 'packages/shared-data/tests/imss_vectors.json'
+      - 'packages/typescript/src/calculators/imss-calculator.ts'
+      - 'packages/typescript/src/fiscal/**'
+      - 'packages/typescript/tests/fiscal-history.test.ts'
+      - 'packages/typescript/tests/imss-vectors.test.ts'
+      - 'scripts/build_fiscal_manifest.py'
+      - '.github/workflows/validate-fiscal-integrity.yml'
 
 jobs:
-  validate:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          ref: fix/fiscal-integrity-2026
+          python-version: '3.12'
+      - name: Verify generated fiscal manifest
+        run: python scripts/build_fiscal_manifest.py --check
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: npm
           cache-dependency-path: packages/typescript/package-lock.json
-      - name: Install
+      - name: Install TypeScript package
         working-directory: packages/typescript
         run: npm ci
-      - name: Static checks
+      - name: Verify fiscal TypeScript surface
         working-directory: packages/typescript
         run: |
           npm run format:check
           npm run typecheck
           npm run lint
-      - name: Historical fiscal tests
+      - name: Historical fiscal regressions
         working-directory: packages/typescript
-        run: |
-          npx jest --runInBand tests/imss-vectors.test.ts tests/fiscal-history.test.ts
+        run: npx jest --runInBand tests/imss-vectors.test.ts tests/fiscal-history.test.ts
