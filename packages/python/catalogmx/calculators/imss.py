@@ -1,14 +1,14 @@
 """
-IMSS (Instituto Mexicano del Seguro Social) Calculator for Mexico
-Calculates employer/employee contributions and voluntary modalities (10, 40)
-Uses centralized JSON tables from shared-data
+IMSS (Instituto Mexicano del Seguro Social) calculator for Mexico.
 
-Official sources:
-- Ley del Seguro Social
-- Sistema Único de Autodeterminación (SUA)
+The calculator consumes the centralized shared-data tables. Exercise-specific
+CEAV rates are selected from the historical schedule instead of a flat legacy
+rate. Modalidad 40 uses monthly amounts and requires the last registered monthly
+SBC so an eligibility-sensitive calculation cannot silently assume its floor.
 """
 
 import json
+import math
 from pathlib import Path
 from typing import Literal, TypedDict
 
@@ -18,12 +18,14 @@ ClaseRiesgo = Literal[1, 2, 3, 4, 5]
 
 
 class CuotasIMSSResult(TypedDict):
-    """IMSS contributions breakdown result"""
+    """IMSS contributions breakdown result."""
 
     salario_diario: float
     dias: int
     salario_base_cotizacion: float
     year: int
+    uma_diaria: float
+    ceav_patron_rate: float
     cuotas_patron: dict[str, float]
     cuotas_trabajador: dict[str, float]
     total_patron: float
@@ -32,17 +34,19 @@ class CuotasIMSSResult(TypedDict):
 
 
 class Modalidad40Result(TypedDict):
-    """Modalidad 40 calculation result"""
+    """Modalidad 40 calculation result."""
 
     salario_base_cotizacion: float
+    ultimo_sbc_mensual: float
     year: int
+    uma_mensual: float
     cuota_mensual: float
     porcentaje_total: float
     componentes: dict[str, float]
 
 
 class Modalidad10Result(TypedDict):
-    """Modalidad 10 calculation result"""
+    """Legacy Modalidad 10 calculation result pending source review."""
 
     salario_base_cotizacion: float
     year: int
@@ -54,20 +58,19 @@ class Modalidad10Result(TypedDict):
 
 
 class UMAInfo(TypedDict):
-    """UMA (Unidad de Medida y Actualización) information"""
+    """UMA (Unidad de Medida y Actualización) information."""
 
     diaria: float
     mensual: float
     anual: float
 
 
-# Load IMSS tables from centralized JSON
 _IMSS_TABLES: dict | None = None
 _IMSS_CATALOGS: dict | None = None
 
 
 def _load_imss_tables() -> dict:
-    """Load IMSS tables from shared JSON file"""
+    """Load IMSS tables from the shared JSON file."""
     global _IMSS_TABLES
     if _IMSS_TABLES is None:
         json_path = (
@@ -82,7 +85,7 @@ def _load_imss_tables() -> dict:
 
 
 def _load_imss_catalogs() -> dict:
-    """Load IMSS catalogs from shared JSON file"""
+    """Load IMSS catalogs from the shared JSON file."""
     global _IMSS_CATALOGS
     if _IMSS_CATALOGS is None:
         json_path = (
@@ -97,23 +100,9 @@ def _load_imss_catalogs() -> dict:
 
 
 def get_uma(year: IMSSYear) -> UMAInfo:
-    """
-    Get UMA (Unidad de Medida y Actualización) values for a specific year
-
-    Args:
-        year: Year (2024, 2025, or 2026)
-
-    Returns:
-        UMA values (diaria, mensual, anual)
-
-    Examples:
-        >>> uma = get_uma(2026)
-        >>> print(f"UMA diaria 2026: ${uma['diaria']}")
-        UMA diaria 2026: $113.14
-    """
+    """Return the UMA published for an exercise."""
     tables = _load_imss_tables()
-    year_str = str(year)
-    uma_data = tables["uma"][year_str]
+    uma_data = tables["uma"][str(year)]
     return UMAInfo(
         diaria=uma_data["diaria"],
         mensual=uma_data["mensual"],
@@ -122,24 +111,47 @@ def get_uma(year: IMSSYear) -> UMAInfo:
 
 
 def get_salario_minimo(year: IMSSYear, zona: ZonaSalario = "general") -> float:
-    """
-    Get minimum wage for a specific year and zone
-
-    Args:
-        year: Year (2024, 2025, or 2026)
-        zona: Zone type ("general" or "frontera")
-
-    Returns:
-        Daily minimum wage amount
-
-    Examples:
-        >>> salario = get_salario_minimo(2026, "general")
-        >>> print(f"Salario mínimo general 2026: ${salario}")
-        Salario mínimo general 2026: $278.80
-    """
+    """Return the daily minimum wage for an exercise and zone."""
     tables = _load_imss_tables()
-    year_str = str(year)
-    return tables["salario_minimo"][year_str][zona]
+    return float(tables["salario_minimo"][str(year)][zona])
+
+
+def _almost_equal(left: float, right: float) -> bool:
+    return abs(left - right) < 0.005
+
+
+def _get_ceav_patron_rate(salario_diario: float, year: IMSSYear) -> float:
+    """Select the employer CEAV rate, preserving the special 1-SM row."""
+    tables = _load_imss_tables()
+    rates = tables["cuotas_imss"]["retiro_cesantia_vejez"]["cesantia_vejez"][
+        "patron_por_ejercicio"
+    ][str(year)]
+    if len(rates) != 8:
+        raise ValueError(f"No se encontró tarifa CEAV patronal para {year}")
+
+    minimum = tables["salario_minimo"][str(year)]
+    if _almost_equal(salario_diario, float(minimum["general"])) or _almost_equal(
+        salario_diario, float(minimum["frontera"])
+    ):
+        return float(rates[0]["tasa"])
+
+    uma_diaria = get_uma(year)["diaria"]
+    ratio = salario_diario / uma_diaria
+    if ratio <= 1.5:
+        index = 1
+    elif ratio <= 2.0:
+        index = 2
+    elif ratio <= 2.5:
+        index = 3
+    elif ratio <= 3.0:
+        index = 4
+    elif ratio <= 3.5:
+        index = 5
+    elif ratio <= 4.0:
+        index = 6
+    else:
+        index = 7
+    return float(rates[index]["tasa"])
 
 
 def calcular_cuotas_obrero_patronales(
@@ -148,94 +160,66 @@ def calcular_cuotas_obrero_patronales(
     year: IMSSYear = 2026,
     clase_riesgo: ClaseRiesgo = 1,
 ) -> CuotasIMSSResult:
-    """
-    Calculate IMSS employer and employee contributions
-
-    Args:
-        salario_diario: Daily wage
-        dias: Number of days (default: 30)
-        year: Year (default: 2026)
-        clase_riesgo: Work risk class 1-5 (default: 1 - minimum risk)
-
-    Returns:
-        Complete breakdown of IMSS contributions
-
-    Examples:
-        >>> result = calcular_cuotas_obrero_patronales(500.0, 30, 2026)
-        >>> print(f"Total patrón: ${result['total_patron']:.2f}")
-        >>> print(f"Total trabajador: ${result['total_trabajador']:.2f}")
-    """
+    """Calculate IMSS employer and employee contributions."""
     tables = _load_imss_tables()
     uma = get_uma(year)
     cuotas = tables["cuotas_imss"]
-
-    # Calculate base salary for contributions
     salario_base = salario_diario * dias
-
-    # Límite de 3 UMAs diario para algunas cuotas
     uma_diaria = uma["diaria"]
-    tres_uma_mensual = uma_diaria * 3 * 30
 
-    # Initialize contribution dictionaries
     cuotas_patron: dict[str, float] = {}
     cuotas_trabajador: dict[str, float] = {}
 
-    # 1. Enfermedad y Maternidad
     em = cuotas["enfermedad_maternidad"]
 
-    # Cuota fija (sobre 3 UMAs)
+    # Fixed sickness/maternity quota: 20.4% of one UMA per insured day.
     cuotas_patron["enfermedad_mat_cuota_fija"] = (
-        uma_diaria * 3 * dias * em["prestaciones_en_especie"]["patron"]
+        uma_diaria * dias * float(em["prestaciones_en_especie"]["patron"])
     )
 
-    # Excedente de 3 UMAs
-    if salario_diario > tres_uma_mensual / 30:
-        excedente_base = salario_base - tres_uma_mensual
-        cuotas_patron["enfermedad_mat_excedente"] = (
-            excedente_base * em["prestaciones_en_especie_excedente"]["patron"]
-        )
-        cuotas_trabajador["enfermedad_mat_excedente"] = (
-            excedente_base * em["prestaciones_en_especie_excedente"]["trabajador"]
-        )
-    else:
-        cuotas_patron["enfermedad_mat_excedente"] = 0.0
-        cuotas_trabajador["enfermedad_mat_excedente"] = 0.0
-
-    # Prestaciones en dinero
-    cuotas_patron["enfermedad_mat_dinero"] = salario_base * em["prestaciones_en_dinero"]["patron"]
-    cuotas_trabajador["enfermedad_mat_dinero"] = (
-        salario_base * em["prestaciones_en_dinero"]["trabajador"]
+    # Excess applies only to the daily SBC portion above the configured UMA threshold.
+    threshold_factor = float(em["prestaciones_en_especie_excedente"].get("umbral_uma", 3))
+    threshold = threshold_factor * uma_diaria
+    excedente_base = max(0.0, salario_diario - threshold) * dias
+    cuotas_patron["enfermedad_mat_excedente"] = excedente_base * float(
+        em["prestaciones_en_especie_excedente"]["patron"]
+    )
+    cuotas_trabajador["enfermedad_mat_excedente"] = excedente_base * float(
+        em["prestaciones_en_especie_excedente"]["trabajador"]
     )
 
-    # Gastos médicos pensionados
-    cuotas_patron["gastos_medicos_pensionados"] = (
-        salario_base * em["gastos_medicos_pensionados"]["patron"]
+    cuotas_patron["enfermedad_mat_dinero"] = salario_base * float(
+        em["prestaciones_en_dinero"]["patron"]
     )
-    cuotas_trabajador["gastos_medicos_pensionados"] = (
-        salario_base * em["gastos_medicos_pensionados"]["trabajador"]
+    cuotas_trabajador["enfermedad_mat_dinero"] = salario_base * float(
+        em["prestaciones_en_dinero"]["trabajador"]
+    )
+    cuotas_patron["gastos_medicos_pensionados"] = salario_base * float(
+        em["gastos_medicos_pensionados"]["patron"]
+    )
+    cuotas_trabajador["gastos_medicos_pensionados"] = salario_base * float(
+        em["gastos_medicos_pensionados"]["trabajador"]
     )
 
-    # 2. Invalidez y Vida
     iv = cuotas["invalidez_vida"]
-    cuotas_patron["invalidez_vida"] = salario_base * iv["patron"]
-    cuotas_trabajador["invalidez_vida"] = salario_base * iv["trabajador"]
+    cuotas_patron["invalidez_vida"] = salario_base * float(iv["patron"])
+    cuotas_trabajador["invalidez_vida"] = salario_base * float(iv["trabajador"])
 
-    # 3. Retiro, Cesantía y Vejez
     rcv = cuotas["retiro_cesantia_vejez"]
-    cuotas_patron["retiro"] = salario_base * rcv["retiro"]["patron"]
-    cuotas_patron["cesantia_vejez"] = salario_base * rcv["cesantia_vejez"]["patron"]
-    cuotas_trabajador["cesantia_vejez"] = salario_base * rcv["cesantia_vejez"]["trabajador"]
+    cuotas_patron["retiro"] = salario_base * float(rcv["retiro"]["patron"])
+    ceav_patron_rate = _get_ceav_patron_rate(salario_diario, year)
+    cuotas_patron["cesantia_vejez"] = salario_base * ceav_patron_rate
+    cuotas_trabajador["cesantia_vejez"] = salario_base * float(
+        rcv["cesantia_vejez"]["trabajador"]
+    )
 
-    # 4. Guarderías y Prestaciones Sociales
     gps = cuotas["guarderias_prestaciones_sociales"]
-    cuotas_patron["guarderias"] = salario_base * gps["patron"]
+    cuotas_patron["guarderias"] = salario_base * float(gps["patron"])
 
-    # 5. Riesgos de Trabajo
     rt = cuotas["riesgo_trabajo"]
-    prima_riesgo = rt[f"clase_{clase_riesgo}"]
+    prima_riesgo = float(rt[f"clase_{clase_riesgo}"])
     cuotas_patron["riesgo_trabajo"] = salario_base * prima_riesgo
 
-    # Calculate totals
     total_patron = sum(cuotas_patron.values())
     total_trabajador = sum(cuotas_trabajador.values())
 
@@ -244,6 +228,8 @@ def calcular_cuotas_obrero_patronales(
         dias=dias,
         salario_base_cotizacion=salario_base,
         year=year,
+        uma_diaria=uma_diaria,
+        ceav_patron_rate=ceav_patron_rate,
         cuotas_patron=cuotas_patron,
         cuotas_trabajador=cuotas_trabajador,
         total_patron=total_patron,
@@ -253,53 +239,53 @@ def calcular_cuotas_obrero_patronales(
 
 
 def calcular_modalidad_40(
-    salario_base_cotizacion: float, year: IMSSYear = 2026
+    salario_base_cotizacion: float,
+    ultimo_sbc_mensual: float,
+    year: IMSSYear = 2026,
 ) -> Modalidad40Result:
-    """
-    Calculate Modalidad 40 voluntary IMSS contributions
-    (Continuación voluntaria en el régimen obligatorio)
+    """Calculate Modalidad 40 using explicit monthly salary amounts.
 
-    Modalidad 40 allows workers who left formal employment to continue
-    contributing to IMSS to increase their pension amount.
-
-    Args:
-        salario_base_cotizacion: Monthly base salary (between 1 and 25 UMAs)
-        year: Year (default: 2026)
-
-    Returns:
-        Modalidad 40 calculation result
-
-    Examples:
-        >>> result = calcular_modalidad_40(15000, 2026)
-        >>> print(f"Cuota mensual: ${result['cuota_mensual']:.2f}")
+    The requested monthly SBC must be at least the last registered monthly SBC.
+    The upper limit remains 25 monthly UMA. The last SBC is mandatory so this
+    function cannot silently represent an ineligible salary as a valid enrollment.
     """
     tables = _load_imss_tables()
     uma = get_uma(year)
     mod40 = tables["modalidad_40"]
+    if str(year) not in mod40["referencia_por_ejercicio"]:
+        raise ValueError(f"No se encontró tarifa de Modalidad 40 para {year}")
 
-    # Validate salary limits
     uma_mensual = uma["mensual"]
-    salario_minimo = uma_mensual * mod40["limites_salario"]["minimo_uma"]
-    salario_maximo = uma_mensual * mod40["limites_salario"]["maximo_uma"]
+    salario_maximo = uma_mensual * float(mod40["limites_salario"]["maximo_uma"])
 
-    if salario_base_cotizacion < salario_minimo:
-        salario_base_cotizacion = salario_minimo
-    elif salario_base_cotizacion > salario_maximo:
+    if not math.isfinite(ultimo_sbc_mensual) or ultimo_sbc_mensual <= 0:
+        raise ValueError("El último SBC mensual debe ser mayor que cero")
+    if ultimo_sbc_mensual > salario_maximo:
+        raise ValueError("El último SBC mensual excede el tope de 25 UMA")
+    if salario_base_cotizacion < ultimo_sbc_mensual:
+        raise ValueError("El SBC de Modalidad 40 no puede ser menor al último SBC registrado")
+    if salario_base_cotizacion > salario_maximo:
         salario_base_cotizacion = salario_maximo
 
-    # Calculate monthly contribution (10.47% total)
-    porcentaje_total = mod40["cuota_mensual"]["porcentaje_total"]
-    cuota_mensual = salario_base_cotizacion * porcentaje_total
+    dias_uma_mensual = uma_mensual / uma["diaria"]
+    salario_diario_equivalente = salario_base_cotizacion / dias_uma_mensual
+    ceav_patron_rate = _get_ceav_patron_rate(salario_diario_equivalente, year)
 
-    # Get component breakdown
-    componentes = {
-        key: salario_base_cotizacion * value
-        for key, value in mod40["cuota_mensual"]["componentes"].items()
+    componentes: dict[str, float] = {
+        "cesantia_vejez_patron": salario_base_cotizacion * ceav_patron_rate,
     }
+    porcentaje_total = ceav_patron_rate
+    for key, value in mod40["calculo"]["componentes_constantes"].items():
+        rate = float(value)
+        porcentaje_total += rate
+        componentes[key] = salario_base_cotizacion * rate
 
+    cuota_mensual = salario_base_cotizacion * porcentaje_total
     return Modalidad40Result(
         salario_base_cotizacion=salario_base_cotizacion,
+        ultimo_sbc_mensual=ultimo_sbc_mensual,
         year=year,
+        uma_mensual=uma_mensual,
         cuota_mensual=cuota_mensual,
         porcentaje_total=porcentaje_total,
         componentes=componentes,
@@ -309,50 +295,26 @@ def calcular_modalidad_40(
 def calcular_modalidad_10(
     salario_base_cotizacion: float, year: IMSSYear = 2026
 ) -> Modalidad10Result:
-    """
-    Calculate Modalidad 10 voluntary IMSS contributions
-    (Incorporación voluntaria al régimen obligatorio - trabajadores independientes)
-
-    Modalidad 10 allows independent workers to enroll in IMSS and access
-    all social security benefits including healthcare, retirement, and more.
-
-    Args:
-        salario_base_cotizacion: Monthly base salary (between 1 and 25 UMAs)
-        year: Year (default: 2026)
-
-    Returns:
-        Modalidad 10 calculation result
-
-    Examples:
-        >>> result = calcular_modalidad_10(10000, 2026)
-        >>> print(f"Cuota mensual: ${result['cuota_mensual']:.2f}")
-    """
+    """Calculate the legacy Modalidad 10 model pending its dedicated audit."""
     tables = _load_imss_tables()
     uma = get_uma(year)
     mod10 = tables["modalidad_10"]
 
-    # Validate salary limits
     uma_mensual = uma["mensual"]
-    salario_minimo = uma_mensual * mod10["limites_salario"]["minimo_uma"]
-    salario_maximo = uma_mensual * mod10["limites_salario"]["maximo_uma"]
+    salario_minimo = uma_mensual * float(mod10["limites_salario"]["minimo_uma"])
+    salario_maximo = uma_mensual * float(mod10["limites_salario"]["maximo_uma"])
 
     if salario_base_cotizacion < salario_minimo:
         salario_base_cotizacion = salario_minimo
     elif salario_base_cotizacion > salario_maximo:
         salario_base_cotizacion = salario_maximo
 
-    # Fixed fee: 3.3 UMAs for healthcare
-    cuota_fija_uma = uma["diaria"] * mod10["cuota_mensual"]["cuota_fija_uma_factor"]
-
-    # Variable percentage: 10.47%
-    porcentaje_variable = mod10["cuota_mensual"]["porcentaje_variable"]
+    cuota_fija_uma = uma["diaria"] * float(mod10["cuota_mensual"]["cuota_fija_uma_factor"])
+    porcentaje_variable = float(mod10["cuota_mensual"]["porcentaje_variable"])
     cuota_variable = salario_base_cotizacion * porcentaje_variable
-
-    # Total monthly contribution
     cuota_mensual = cuota_fija_uma + cuota_variable
 
-    # Get component breakdown
-    componentes = {
+    componentes: dict[str, float] = {
         "prestaciones_en_especie_fija": cuota_fija_uma,
     }
     for key, value in mod10["cuota_mensual"]["componentes"].items():
