@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import re
+
 import pytest
 
+from catalogmx._fiscal_ids import FISCAL_DATASET_IDS
 from catalogmx.fiscal import (
     assert_fiscal_data_verified,
     fiscal_entry,
@@ -17,7 +20,8 @@ def test_exposes_the_generated_fiscal_manifest_with_defensive_nested_data():
     manifest = fiscal_manifest()
 
     assert manifest["manifest_id"] == "catalogmx.fiscal"
-    assert manifest["content_sha256"].isalnum()
+    assert re.fullmatch(r"^[0-9a-f]{64}$", manifest["content_sha256"])
+    assert FISCAL_DATASET_IDS == tuple(manifest["datasets"])
 
     manifest["datasets"]["uma"]["entries"]["2026"]["status"] = "pending_review"
 

@@ -7,16 +7,9 @@ from copy import deepcopy
 from importlib import resources
 from typing import Literal, TypeAlias, TypedDict, cast
 
+from catalogmx._fiscal_ids import FiscalDatasetId
+
 FiscalDataStatus: TypeAlias = Literal["verified", "pending_review", "legacy_unverified"]
-FiscalDatasetId: TypeAlias = Literal[
-    "imss_base_rates",
-    "imss_ceav",
-    "imss_modalidad_10",
-    "imss_modalidad_40",
-    "isr_payroll",
-    "minimum_wage",
-    "uma",
-]
 JsonScalar: TypeAlias = str | int | float | bool | None
 JsonValue: TypeAlias = JsonScalar | list["JsonValue"] | dict[str, "JsonValue"]
 

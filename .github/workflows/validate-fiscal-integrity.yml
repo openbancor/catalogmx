@@ -14,12 +14,18 @@ on:
       - 'packages/typescript/tests/fiscal-history.test.ts'
       - 'packages/typescript/tests/imss-vectors.test.ts'
       - 'packages/python/catalogmx/calculators/imss.py'
+      - 'packages/python/catalogmx/data/fiscal-manifest.json'
+      - 'packages/python/catalogmx/_fiscal_ids.py'
+      - 'packages/python/catalogmx/fiscal.py'
+      - 'packages/python/catalogmx/py.typed'
       - 'packages/python/tests/test_imss_vectors_shared.py'
+      - 'packages/python/tests/test_fiscal_manifest.py'
       - 'packages/dart/lib/src/calculators/imss.dart'
       - 'packages/dart/test/imss_vectors_test.dart'
       - 'packages/webapp-svelte/static/data/imss-tables.json'
       - 'packages/webapp-svelte/src/routes/calculadoras/imss/+page.svelte'
       - 'scripts/build_fiscal_manifest.py'
+      - 'scripts/check_python_fiscal_wheel_types.py'
       - '.github/workflows/validate-fiscal-integrity.yml'
   push:
     branches:
@@ -36,12 +42,18 @@ on:
       - 'packages/typescript/tests/fiscal-history.test.ts'
       - 'packages/typescript/tests/imss-vectors.test.ts'
       - 'packages/python/catalogmx/calculators/imss.py'
+      - 'packages/python/catalogmx/data/fiscal-manifest.json'
+      - 'packages/python/catalogmx/_fiscal_ids.py'
+      - 'packages/python/catalogmx/fiscal.py'
+      - 'packages/python/catalogmx/py.typed'
       - 'packages/python/tests/test_imss_vectors_shared.py'
+      - 'packages/python/tests/test_fiscal_manifest.py'
       - 'packages/dart/lib/src/calculators/imss.dart'
       - 'packages/dart/test/imss_vectors_test.dart'
       - 'packages/webapp-svelte/static/data/imss-tables.json'
       - 'packages/webapp-svelte/src/routes/calculadoras/imss/+page.svelte'
       - 'scripts/build_fiscal_manifest.py'
+      - 'scripts/check_python_fiscal_wheel_types.py'
       - '.github/workflows/validate-fiscal-integrity.yml'
 
 jobs:
@@ -58,6 +70,12 @@ jobs:
 
       - name: Verify generated fiscal manifest
         run: python scripts/build_fiscal_manifest.py --check
+
+      - name: Verify fiscal Python wheel types
+        run: |
+          python -m pip install build
+          python -m build --wheel --outdir "$RUNNER_TEMP/wheels" packages/python
+          python scripts/check_python_fiscal_wheel_types.py "$RUNNER_TEMP"/wheels/catalogmx-*.whl
 
       - name: Verify fiscal history against prior revision
         shell: bash
