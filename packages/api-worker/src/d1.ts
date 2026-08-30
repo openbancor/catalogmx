@@ -65,7 +65,7 @@ export async function queryProductServices(
               cps.palabras_similares, cps.estimulo_franja_fronteriza
        FROM clave_prod_serv_fts AS fts
        JOIN clave_prod_serv AS cps ON cps.rowid = fts.rowid
-       WHERE fts MATCH ?
+       WHERE clave_prod_serv_fts MATCH ?
        ORDER BY cps.clave
        LIMIT ? OFFSET ?`
     )

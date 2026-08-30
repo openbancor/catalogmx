@@ -189,7 +189,8 @@ describe('large D1-backed catalogs', () => {
     );
 
     expect(response.status).toBe(200);
-    expect(database.queries[0].sql).toContain('WHERE fts MATCH ?');
+    expect(database.queries[0].sql).toContain('WHERE clave_prod_serv_fts MATCH ?');
+    expect(database.queries[0].sql).not.toContain('WHERE fts MATCH ?');
     expect(database.queries[0].values).toEqual(['"gatos"', 2, 0]);
     expect(missing.status).toBe(400);
   });

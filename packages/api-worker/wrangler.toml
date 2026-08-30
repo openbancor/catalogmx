@@ -5,12 +5,12 @@ compatibility_date = "2026-08-28"
 [[d1_databases]]
 binding = "CATALOG_DB"
 database_name = "catalogmx-api-v1"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "cd0f3077-c4d2-4d1e-8458-6f2647dcbff8"
 migrations_dir = "migrations"
 
 [[ratelimits]]
 name = "API_RATE_LIMITER"
-namespace_id = "1001"
+namespace_id = "2026083001"
 
 [ratelimits.simple]
 limit = 100
