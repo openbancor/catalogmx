@@ -1,0 +1,37 @@
+name: PR96 Prettier Once
+
+on:
+  push:
+    branches:
+      - fix/fiscal-integrity-2026
+    paths:
+      - '.github/workflows/pr96-prettier-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/fiscal-integrity-2026
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: packages/typescript/package-lock.json
+      - name: Install and format
+        working-directory: packages/typescript
+        run: |
+          npm ci
+          npx prettier --write src/calculators/imss-calculator.ts
+      - name: Commit formatting only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/typescript/src/calculators/imss-calculator.ts
+          git diff --cached --check
+          git commit -m "style(ts): format IMSS integrity guards"
+          git push origin HEAD:fix/fiscal-integrity-2026
