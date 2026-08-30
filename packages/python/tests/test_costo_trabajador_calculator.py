@@ -342,13 +342,24 @@ class TestEdgeCases:
             ):
                 calcular_costo_total(salario_mensual_bruto)
 
-    def test_negative_antiguedad(self):
-        """Test worker cost calculation with negative seniority (should use minimum vacation days)"""
-        result = calcular_costo_total(15000, antiguedad_anos=-5)
-        # Should use minimum vacation days (12)
-        salario_diario = 15000 / 30.0
-        expected_vacaciones = (salario_diario * 12) / 12.0
-        assert abs(result["reserva_vacaciones"] - expected_vacaciones) < 0.01
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [
+            ("antiguedad_anos", -1),
+            ("antiguedad_anos", 1.5),
+            ("antiguedad_anos", True),
+            ("dias_aguinaldo", 14),
+            ("dias_aguinaldo", 15.5),
+            ("dias_aguinaldo", True),
+            ("porcentaje_ptu", float("nan")),
+            ("porcentaje_ptu", -1),
+            ("porcentaje_ptu", 101),
+            ("incluir_ptu", 1),
+        ],
+    )
+    def test_rejects_invalid_fiscal_inputs(self, field, value):
+        with pytest.raises(ValueError, match=field):
+            calcular_costo_total(15000, **{field: value})
 
     def test_zero_antiguedad(self):
         """Test worker cost calculation with zero seniority"""
@@ -367,9 +378,9 @@ class TestEdgeCases:
         assert abs(result["reserva_vacaciones"] - expected_vacaciones) < 0.01
 
     def test_zero_dias_aguinaldo(self):
-        """Test worker cost calculation with zero aguinaldo days"""
-        result = calcular_costo_total(15000, dias_aguinaldo=0)
-        assert result["reserva_aguinaldo"] == 0
+        """Reject an aguinaldo below the statutory 15-day minimum."""
+        with pytest.raises(ValueError, match="dias_aguinaldo"):
+            calcular_costo_total(15000, dias_aguinaldo=0)
 
     def test_cien_dias_aguinaldo(self):
         """Test worker cost calculation with 100 aguinaldo days (very generous)"""

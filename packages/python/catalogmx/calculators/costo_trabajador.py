@@ -95,6 +95,23 @@ def _assert_salario_mensual_bruto(salario_mensual_bruto: float, year: IMSSYear) 
         raise ValueError(message)
 
 
+def _assert_fiscal_inputs(
+    antiguedad_anos: int,
+    dias_aguinaldo: int,
+    incluir_ptu: bool,
+    porcentaje_ptu: float,
+) -> None:
+    """Reject values that could fabricate negative, NaN, or defaulted reserves."""
+    if type(antiguedad_anos) is not int or antiguedad_anos < 0:
+        raise ValueError("antiguedad_anos debe ser un entero no negativo")
+    if type(dias_aguinaldo) is not int or dias_aguinaldo < 15:
+        raise ValueError("dias_aguinaldo debe ser un entero mayor o igual a 15")
+    if type(incluir_ptu) is not bool:
+        raise ValueError("incluir_ptu debe ser booleano")
+    if not _is_finite_number(porcentaje_ptu) or not 0 <= porcentaje_ptu <= 100:
+        raise ValueError("porcentaje_ptu debe ser un número finito entre 0 y 100")
+
+
 def obtener_dias_vacaciones(antiguedad_anos: int) -> int:
     """
     Get vacation days based on seniority according to LFT 2023
@@ -167,6 +184,7 @@ def calcular_costo_total(
         Factor: 1.35x
     """
     _assert_salario_mensual_bruto(salario_mensual_bruto, year)
+    _assert_fiscal_inputs(antiguedad_anos, dias_aguinaldo, incluir_ptu, porcentaje_ptu)
 
     # 1. Calculate daily wage (assuming 30-day month for calculation purposes)
     salario_diario = salario_mensual_bruto / 30.0
