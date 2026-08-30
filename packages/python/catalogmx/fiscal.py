@@ -83,9 +83,7 @@ def _load_manifest() -> FiscalManifest:
     global _MANIFEST
     if _MANIFEST is None:
         resource = resources.files("catalogmx.data").joinpath("fiscal-manifest.json")
-        _MANIFEST = cast(
-            FiscalManifest, json.loads(resource.read_text(encoding="utf-8"))
-        )
+        _MANIFEST = cast(FiscalManifest, json.loads(resource.read_text(encoding="utf-8")))
     return _MANIFEST
 
 
@@ -94,9 +92,7 @@ def fiscal_manifest() -> FiscalManifest:
     return deepcopy(_load_manifest())
 
 
-def fiscal_entry(
-    dataset_id: FiscalDatasetId, exercise: int
-) -> FiscalManifestEntry | None:
+def fiscal_entry(dataset_id: FiscalDatasetId, exercise: int) -> FiscalManifestEntry | None:
     """Return one fiscal dataset entry for an exercise, if it exists."""
     entry = _load_manifest()["datasets"][dataset_id]["entries"].get(str(exercise))
     return deepcopy(entry) if entry is not None else None
@@ -117,9 +113,7 @@ def fiscal_manifest_for_exercise(exercise: int) -> FiscalManifestForExercise:
     }
 
 
-def fiscal_sources(
-    dataset_id: FiscalDatasetId, exercise: int
-) -> list[FiscalSourceReference]:
+def fiscal_sources(dataset_id: FiscalDatasetId, exercise: int) -> list[FiscalSourceReference]:
     """Resolve the provenance records referenced by a fiscal entry."""
     entry = fiscal_entry(dataset_id, exercise)
     if entry is None:
@@ -131,9 +125,7 @@ def fiscal_sources(
     ]
 
 
-def assert_fiscal_data_verified(
-    dataset_id: FiscalDatasetId, exercise: int
-) -> FiscalManifestEntry:
+def assert_fiscal_data_verified(dataset_id: FiscalDatasetId, exercise: int) -> FiscalManifestEntry:
     """Require source-audited fiscal data for an exercise."""
     entry = fiscal_entry(dataset_id, exercise)
     if entry is None:
