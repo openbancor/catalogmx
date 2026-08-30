@@ -15,10 +15,12 @@ const bundledPaths = [
   'sat/cfdi_4.0/c_TasaOCuota.json',
   'sat/cfdi_4.0/c_TipoFactor.json',
   'sat/cfdi_4.0/clave_unidad.json',
+  'sat/cfdi_4.0/estado.json',
   'sat/cfdi_4.0/exportacion.json',
   'sat/cfdi_4.0/forma_pago.json',
   'sat/cfdi_4.0/impuesto.json',
   'sat/cfdi_4.0/metodo_pago.json',
+  'sat/cfdi_4.0/nomina_clave_prod_serv.json',
   'sat/cfdi_4.0/objeto_imp.json',
   'sat/cfdi_4.0/regimen_fiscal.json',
   'sat/cfdi_4.0/tipo_comprobante.json',
@@ -37,6 +39,7 @@ const bundledPaths = [
   'sat/nomina_1.2/tipo_otro_pago.json',
   'sat/nomina_1.2/tipo_percepcion.json',
   'sat/nomina_1.2/tipo_regimen.json',
+  'sat/comercio_exterior/paises.json',
 ];
 
 const entries = bundledPaths.map((path) => ({

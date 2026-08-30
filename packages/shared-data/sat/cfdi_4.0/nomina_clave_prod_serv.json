@@ -1,0 +1,19 @@
+{
+  "_meta": {
+    "profile": "cfdi.nomina",
+    "authority": "SAT",
+    "payroll_guide": "https://www.sat.gob.mx/cs/Satellite?blobcol=urldata&blobkey=id&blobtable=MungoBlobs&blobwhere=1461173081850&ssbinary=true",
+    "payroll_guide_sha256": "b1da7fc079ec8c88ad584955aa17307aefa423cf51abee9f6a1c3e94b5fb68c6",
+    "source": "sat/cfdi_4.0/clave_prod_serv.json",
+    "source_sha256": "486008563cdf4b50b3c03ed7e0d38184ea8fb26e07aca548d1fe2e277ac2bfa3",
+    "scope": "Nómina-only projection; not a partial ClaveProdServCatalog"
+  },
+  "data": [
+    {
+      "code": "84111505",
+      "description": "Servicios de contabilidad de sueldos y salarios",
+      "valid_from": "07-01-2019",
+      "valid_to": ""
+    }
+  ]
+}

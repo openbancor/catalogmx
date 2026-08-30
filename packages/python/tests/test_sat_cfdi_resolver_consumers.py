@@ -9,6 +9,7 @@ import pytest
 
 from catalogmx.catalogs.sat.cfdi_4 import (
     ClaveUnidadCatalog,
+    EstadoCfdiCatalog,
     ExportacionCatalog,
     FormaPagoCatalog,
     ImpuestoCatalog,
@@ -48,16 +49,21 @@ def _create_cfdi_database(path: Path) -> None:
     try:
         simple = {
             "cfdi_40_exportaciones": [("01", "No aplica")],
+            "cfdi_40_estados": [("CMX", "Ciudad de México")],
             "cfdi_40_formas_pago": [("01", "Efectivo")],
             "cfdi_40_metodos_pago": [("PUE", "Pago en una sola exhibición")],
             "cfdi_40_objetos_impuestos": [("01", "No objeto de impuesto.")],
-            "cfdi_40_tipos_relaciones": [("01", "Nota de crédito de los documentos relacionados")],
+            "cfdi_40_tipos_relaciones": [
+                ("01", "Nota de crédito de los documentos relacionados")
+            ],
             "cfdi_40_tipos_comprobantes": [("I", "Ingreso")],
             "cfdi_40_meses": [("01", "Enero")],
             "cfdi_40_periodicidades": [("01", "Diario")],
         }
         for table, rows in simple.items():
-            connection.execute(f'CREATE TABLE "{table}" (id TEXT PRIMARY KEY, texto TEXT NOT NULL)')
+            connection.execute(
+                f'CREATE TABLE "{table}" (id TEXT PRIMARY KEY, texto TEXT NOT NULL)'
+            )
             connection.executemany(f'INSERT INTO "{table}" VALUES (?, ?)', rows)
 
         connection.execute("CREATE TABLE cfdi_40_tipos_factores (id TEXT PRIMARY KEY)")
@@ -162,6 +168,7 @@ def _create_cfdi_database(path: Path) -> None:
 def _reset_caches() -> None:
     for catalog in (
         ExportacionCatalog,
+        EstadoCfdiCatalog,
         FormaPagoCatalog,
         ImpuestoCatalog,
         MetodoPagoCatalog,
@@ -199,6 +206,7 @@ def test_simple_code_description_catalogs_preserve_public_shape(
 ) -> None:
     cases = [
         (ExportacionCatalog.get_exportacion, "01", "No aplica"),
+        (EstadoCfdiCatalog.get_estado, "cmx", "Ciudad de México"),
         (FormaPagoCatalog.get_forma_pago, "01", "Efectivo"),
         (MetodoPagoCatalog.get_metodo, "pue", "Pago en una sola exhibición"),
         (ObjetoImpCatalog.get_objeto, "01", "No objeto de impuesto"),
@@ -275,7 +283,9 @@ def test_tasa_o_cuota_uses_normalized_canonical_rules(cfdi_shared_data: Path) ->
     assert len(fixed) == 1
     assert fixed[0]["tipo"] == "Fijo"
 
-    retained_range = TasaOCuota.get_by_range_and_tax(0, "0.160000", "IVA", "Tasa", False, True)
+    retained_range = TasaOCuota.get_by_range_and_tax(
+        0, "0.160000", "IVA", "Tasa", False, True
+    )
     assert len(retained_range) == 1
     assert retained_range[0]["tipo"] == "Rango"
 
@@ -304,7 +314,13 @@ def test_clave_unidad_preserves_keys_and_date_format_while_using_canonical_value
 
 
 def test_migrated_modules_have_no_runtime_json_fallback() -> None:
-    root = Path(__file__).resolve().parents[1] / "catalogmx" / "catalogs" / "sat" / "cfdi_4"
+    root = (
+        Path(__file__).resolve().parents[1]
+        / "catalogmx"
+        / "catalogs"
+        / "sat"
+        / "cfdi_4"
+    )
     for filename in MIGRATED_MODULES:
         source = (root / filename).read_text(encoding="utf-8")
         assert "get_shared_data_path" not in source, filename

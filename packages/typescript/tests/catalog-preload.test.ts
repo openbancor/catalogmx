@@ -1,5 +1,8 @@
 import { FormaPagoCatalog } from '../src/catalogs/sat/cfdi_4/forma-pago';
+import { EstadoCfdiCatalog } from '../src/catalogs/sat/cfdi_4/estado';
+import { NominaCfdiCatalog } from '../src/catalogs/sat/cfdi_4/nomina-cfdi';
 import { TipoRegimenCatalog } from '../src/catalogs/sat/nomina/tipo-regimen';
+import { PaisCatalog } from '../src/catalogs/sat/comercio_exterior/pais';
 import { preloadSmallCatalogData } from '../src/catalogs/preload';
 import { clearCatalogCache, clearCatalogJsonData } from '../src/utils/catalog-backend';
 
@@ -14,5 +17,9 @@ describe('browser and Worker catalog preload', () => {
 
     expect(TipoRegimenCatalog.isValid('02')).toBe(true);
     expect(FormaPagoCatalog.isValid('03')).toBe(true);
+    expect(EstadoCfdiCatalog.isValid('CMX')).toBe(true);
+    expect(PaisCatalog.isValid('MEX')).toBe(true);
+    expect(NominaCfdiCatalog.isValidClaveProdServ('84111505')).toBe(true);
+    expect(NominaCfdiCatalog.isValidClaveProdServ('84111504')).toBe(false);
   });
 });
