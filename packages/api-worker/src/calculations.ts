@@ -22,6 +22,7 @@ const ISR_PERIOD_FACTORS: Record<IsrPeriod, number> = {
 
 const MAX_AMOUNT = 1_000_000_000;
 const MAX_DAYS = 366;
+const IMSS_YEARS: readonly IMSSYear[] = [2024, 2025, 2026];
 
 export interface IsrCalculationResponse {
   retencion_mensual: number;
@@ -134,12 +135,17 @@ export function calculateImss(body: Record<string, unknown>): ImssCalculationRes
     throw new ApiError(400, 'invalid_request', 'dias_cotizados must be positive');
   }
   const ejercicio = requireYear(body.ejercicio);
+  const year = requireImssYear(ejercicio);
 
   preloadSmallData();
-  const year = ejercicio as IMSSYear;
   const uma = IMSSCalculator.getUMA(year);
-  if (!uma) {
-    throw new ApiError(422, 'unsupported_fiscal_data', 'IMSS table is not available');
+  const salarioMinimo = IMSSCalculator.getSalarioMinimo(year);
+  if (sdi < salarioMinimo) {
+    throw new ApiError(
+      400,
+      'invalid_request',
+      'sdi cannot be lower than the applicable general minimum wage'
+    );
   }
 
   const interno = IMSSCalculator.calcularCuotasObreroPatronales(sdi, diasCotizados, year, 1);
@@ -201,6 +207,13 @@ function requireYear(value: unknown): number {
   return year;
 }
 
+function requireImssYear(year: number): IMSSYear {
+  if (!IMSS_YEARS.includes(year as IMSSYear)) {
+    throw new ApiError(422, 'unsupported_fiscal_data', 'IMSS table is not available');
+  }
+  return year as IMSSYear;
+}
+
 function requireIsrPeriod(value: unknown): IsrPeriod {
   if (typeof value !== 'string') {
     throw new ApiError(400, 'invalid_request', 'periodo must be a supported string');
@@ -235,6 +248,8 @@ function roundImssResult(result: CuotasIMSSResult): CuotasIMSSResult {
     dias: round(result.dias),
     salario_base_cotizacion: round(result.salario_base_cotizacion),
     year: result.year,
+    uma_diaria: round(result.uma_diaria),
+    ceav_patron_rate: round(result.ceav_patron_rate),
     cuotas_patron: roundMap(result.cuotas_patron),
     cuotas_trabajador: roundMap(result.cuotas_trabajador),
     total_patron: round(result.total_patron),
