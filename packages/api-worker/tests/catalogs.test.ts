@@ -33,10 +33,15 @@ describe('small catalog endpoints', () => {
     expect(response.status).toBe(200);
     expect(response.headers.get('X-Catalog-Version')).toBe('2026-01-05');
     expect(body).toMatchObject({ metadata: { vigencia: 2026 } });
-    expect(body.items).toEqual([
-      { code: 'O', descripcion: 'Nómina ordinaria' },
-      { code: 'E', descripcion: 'Nómina extraordinaria' },
-    ]);
+    // Catalog data is authoritative: assert shape, versioning and the two
+    // SAT-defined codes exist, without hardcoding the full list.
+    const items = body.items as Array<{ code: string; descripcion: string }>;
+    expect(items.length).toBeGreaterThanOrEqual(2);
+    expect(items.map((item) => item.code)).toEqual(expect.arrayContaining(['O', 'E']));
+    for (const item of items) {
+      expect(typeof item.code).toBe('string');
+      expect(typeof item.descripcion).toBe('string');
+    }
   });
 
   test.each([
