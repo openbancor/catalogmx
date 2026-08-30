@@ -1,4 +1,10 @@
 import { IMSSCalculator } from '../src/calculators/imss-calculator';
+import {
+  assertFiscalDataVerified,
+  fiscalEntry,
+  fiscalManifest,
+  fiscalSources,
+} from '../src/fiscal';
 
 describe('historical fiscal parameters', () => {
   test('keeps official UMA history and the January/February 2026 boundary', () => {
@@ -49,5 +55,20 @@ describe('historical fiscal parameters', () => {
     expect(IMSSCalculator.calcularModalidad40(10000, 2024).porcentaje_total).toBe(0.11681);
     expect(IMSSCalculator.calcularModalidad40(12000, 2025).porcentaje_total).toBe(0.12484);
     expect(IMSSCalculator.calcularModalidad40(15000, 2026).porcentaje_total).toBe(0.14438);
+  });
+  test('exposes provenance and verification status programmatically', () => {
+    const manifest = fiscalManifest();
+    expect(manifest.manifest_id).toBe('catalogmx.fiscal');
+    expect(manifest.content_sha256).toMatch(/^[0-9a-f]{64}$/);
+
+    const uma2026 = assertFiscalDataVerified('uma', 2026);
+    expect(uma2026.valid_from).toBe('2026-02-01');
+    expect(uma2026.values).toMatchObject({ daily: 117.31, monthly: 3566.22 });
+    expect(uma2026.sha256).toMatch(/^[0-9a-f]{64}$/);
+    expect(fiscalSources('uma', 2026)[0]?.source?.authority).toBe('INEGI');
+
+    expect(fiscalEntry('isr_payroll', 2026)?.status).toBe('pending_review');
+    expect(() => assertFiscalDataVerified('isr_payroll', 2026)).toThrow('pending_review');
+    expect(fiscalEntry('imss_modalidad_10', 2026)?.status).toBe('pending_review');
   });
 });

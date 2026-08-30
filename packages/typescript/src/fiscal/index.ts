@@ -1,7 +1,7 @@
-import { FISCAL_MANIFEST } from './manifest.generated';
+import { FISCAL_DATASET_IDS, FISCAL_MANIFEST } from './manifest.generated';
 
 export type FiscalDataStatus = 'verified' | 'pending_review' | 'legacy_unverified';
-export type FiscalDatasetId = keyof typeof FISCAL_MANIFEST.datasets;
+export type FiscalDatasetId = (typeof FISCAL_DATASET_IDS)[number];
 
 export interface FiscalSource {
   authority?: string;
