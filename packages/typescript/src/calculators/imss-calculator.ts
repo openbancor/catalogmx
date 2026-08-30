@@ -498,7 +498,10 @@ export class IMSSCalculator {
     if (Number.isNaN(fecha.getTime())) {
       throw new Error('Fecha inválida');
     }
-    return fecha.toISOString().slice(0, 10);
+    const year = fecha.getFullYear();
+    const month = String(fecha.getMonth() + 1).padStart(2, '0');
+    const day = String(fecha.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   private static almostEqual(left: number, right: number): boolean {
