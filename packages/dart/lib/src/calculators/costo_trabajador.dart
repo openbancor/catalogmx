@@ -165,6 +165,18 @@ CostoTotalResult calcularCostoTotal({
   double porcentajePtu = 10.0,
   IMSSYear year = IMSSYear.year2026,
 }) {
+  if (antiguedadAnos < 0) {
+    throw ArgumentError('antiguedadAnos debe ser un entero no negativo');
+  }
+  if (diasAguinaldo < 15) {
+    throw ArgumentError('diasAguinaldo debe ser un entero mayor o igual a 15');
+  }
+  if (!porcentajePtu.isFinite || porcentajePtu < 0 || porcentajePtu > 100) {
+    throw ArgumentError(
+      'porcentajePtu debe ser un número finito entre 0 y 100',
+    );
+  }
+
   // 1. Calculate daily wage (assuming 30-day month for calculation purposes)
   final salarioDiario = salarioMensualBruto / 30.0;
 
