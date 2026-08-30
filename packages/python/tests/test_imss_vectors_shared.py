@@ -40,6 +40,7 @@ def test_imss_modalidad_40_vectors_shared() -> None:
     for case in data["modalidad_40"]:
         result = calcular_modalidad_40(
             salario_base_cotizacion=case["salario_base_cotizacion"],
+            ultimo_sbc_mensual=case["ultimo_sbc_mensual"],
             year=case["year"],
         )
         expected = case["expected"]
