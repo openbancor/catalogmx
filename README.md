@@ -770,6 +770,7 @@ open packages/python/htmlcov/index.html
 - **[API Reference](docs/api/)** - Complete API documentation
 - **[Testing Guide](docs/testing-coverage.md)** - Test suite and coverage
 - **[Modern Packaging](docs/modern-packaging.md)** - Using uv and pyproject.toml
+- **[0.7 Fiscal Migration](docs/guides/v0.7-fiscal-migration.md)** - IMSS and packaged catalog compatibility changes
 - **[Documentation Index](docs/DOCUMENTATION_INDEX.md)** - Complete documentation hub
 
 ### For Developers
