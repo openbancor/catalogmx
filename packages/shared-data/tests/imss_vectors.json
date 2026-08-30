@@ -32,6 +32,18 @@
         "total_patron": 2886.3741,
         "total_trabajador": 377.1648
       }
+    },
+    {
+      "salario_diario": 500.0,
+      "dias": 30,
+      "year": 2026,
+      "clase_riesgo": 2,
+      "fecha": "2026-01-15",
+      "expected": {
+        "total_imss": 3392.4753,
+        "total_patron": 3016.9557,
+        "total_trabajador": 375.5196
+      }
     }
   ],
   "modalidad_40": [
