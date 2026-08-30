@@ -37,6 +37,7 @@ export interface CuotasIMSSResult {
 
 export interface Modalidad40Result {
   salario_base_cotizacion: number;
+  ultimo_sbc_mensual: number;
   year: number;
   uma_mensual: number;
   cuota_mensual: number;
@@ -285,23 +286,6 @@ export class IMSSCalculator {
     return rates[7].tasa;
   }
 
-  private static getCEAVPatronRateForUmaRatio(ratioUma: number, year: IMSSYear): number {
-    const rates =
-      this._tablesData!.cuotas_imss.retiro_cesantia_vejez.cesantia_vejez.patron_por_ejercicio[
-        year.toString()
-      ];
-    if (!rates || rates.length !== 8) {
-      throw new Error(`No se encontró tarifa CEAV patronal para ${year}`);
-    }
-    if (ratioUma <= 1.5) return rates[1].tasa;
-    if (ratioUma <= 2.0) return rates[2].tasa;
-    if (ratioUma <= 2.5) return rates[3].tasa;
-    if (ratioUma <= 3.0) return rates[4].tasa;
-    if (ratioUma <= 3.5) return rates[5].tasa;
-    if (ratioUma <= 4.0) return rates[6].tasa;
-    return rates[7].tasa;
-  }
-
   /**
    * Calcula cuotas obrero-patronales.
    *
@@ -378,8 +362,16 @@ export class IMSSCalculator {
     };
   }
 
+  /**
+   * Calcula la cuota mensual de Modalidad 40 usando montos mensuales.
+   *
+   * La continuación voluntaria sólo permite un SBC igual o mayor al último
+   * SBC registrado. Por ello `ultimoSbcMensual` es obligatorio: omitir ese dato
+   * convertiría una proyección en una validación de elegibilidad falsa.
+   */
   static calcularModalidad40(
-    salarioBaseCotizacion: number,
+    salarioBaseCotizacionMensual: number,
+    ultimoSbcMensual: number,
     year: IMSSYear = 2026,
     fecha?: string | Date
   ): Modalidad40Result {
@@ -393,23 +385,37 @@ export class IMSSCalculator {
 
     const umaMensual = uma.mensual;
     const salarioMaximo = umaMensual * mod40.limites_salario.maximo_uma;
-    if (salarioBaseCotizacion > salarioMaximo) {
-      salarioBaseCotizacion = salarioMaximo;
+    if (!Number.isFinite(ultimoSbcMensual) || ultimoSbcMensual <= 0) {
+      throw new RangeError('El último SBC mensual debe ser mayor que cero');
+    }
+    if (ultimoSbcMensual > salarioMaximo) {
+      throw new RangeError('El último SBC mensual excede el tope de 25 UMA');
+    }
+    if (salarioBaseCotizacionMensual < ultimoSbcMensual) {
+      throw new RangeError('El SBC de Modalidad 40 no puede ser menor al último SBC registrado');
+    }
+    if (salarioBaseCotizacionMensual > salarioMaximo) {
+      salarioBaseCotizacionMensual = salarioMaximo;
     }
 
-    const ratioUma = salarioBaseCotizacion / umaMensual;
-    const ceavPatronRate = this.getCEAVPatronRateForUmaRatio(ratioUma, year);
+    // El API conserva montos mensuales; para seleccionar CEAV convertimos al
+    // equivalente diario con el mismo factor implícito en la UMA mensual.
+    const diasUmaMensual = umaMensual / uma.diaria;
+    const salarioDiarioEquivalente = salarioBaseCotizacionMensual / diasUmaMensual;
+    const ceavPatronRate = this.getCEAVPatronRate(salarioDiarioEquivalente, year, fecha);
+
     const componentes: Record<string, number> = {};
     let porcentajeTotal = ceavPatronRate;
-    componentes.cesantia_vejez_patron = salarioBaseCotizacion * ceavPatronRate;
+    componentes.cesantia_vejez_patron = salarioBaseCotizacionMensual * ceavPatronRate;
     for (const [key, value] of Object.entries(mod40.calculo.componentes_constantes)) {
       porcentajeTotal += value;
-      componentes[key] = salarioBaseCotizacion * value;
+      componentes[key] = salarioBaseCotizacionMensual * value;
     }
-    const cuotaMensual = salarioBaseCotizacion * porcentajeTotal;
+    const cuotaMensual = salarioBaseCotizacionMensual * porcentajeTotal;
 
     return {
-      salario_base_cotizacion: salarioBaseCotizacion,
+      salario_base_cotizacion: salarioBaseCotizacionMensual,
+      ultimo_sbc_mensual: ultimoSbcMensual,
       year,
       uma_mensual: umaMensual,
       cuota_mensual: cuotaMensual,
