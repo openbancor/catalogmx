@@ -208,9 +208,7 @@ def calcular_cuotas_obrero_patronales(
         uma_diaria * dias * float(em["prestaciones_en_especie"]["patron"])
     )
 
-    threshold_factor = float(
-        em["prestaciones_en_especie_excedente"].get("umbral_uma", 3)
-    )
+    threshold_factor = float(em["prestaciones_en_especie_excedente"].get("umbral_uma", 3))
     threshold = threshold_factor * uma_diaria
     excedente_base = max(0.0, salario_diario - threshold) * dias
     cuotas_patron["enfermedad_mat_excedente"] = excedente_base * float(
@@ -286,10 +284,7 @@ def calcular_modalidad_40(
     uma_mensual = uma["mensual"]
     salario_maximo = uma_mensual * float(mod40["limites_salario"]["maximo_uma"])
 
-    if (
-        not math.isfinite(salario_base_cotizacion)
-        or salario_base_cotizacion <= 0
-    ):
+    if not math.isfinite(salario_base_cotizacion) or salario_base_cotizacion <= 0:
         raise ValueError("El SBC mensual de Modalidad 40 debe ser mayor que cero")
     if not math.isfinite(ultimo_sbc_mensual) or ultimo_sbc_mensual <= 0:
         raise ValueError("El último SBC mensual debe ser mayor que cero")
@@ -304,9 +299,7 @@ def calcular_modalidad_40(
 
     dias_uma_mensual = uma_mensual / uma["diaria"]
     salario_diario_equivalente = salario_base_cotizacion / dias_uma_mensual
-    ceav_patron_rate = _get_ceav_patron_rate(
-        salario_diario_equivalente, year, fecha
-    )
+    ceav_patron_rate = _get_ceav_patron_rate(salario_diario_equivalente, year, fecha)
 
     componentes: dict[str, float] = {
         "cesantia_vejez_patron": salario_base_cotizacion * ceav_patron_rate,
@@ -348,9 +341,7 @@ def calcular_modalidad_10(
     elif salario_base_cotizacion > salario_maximo:
         salario_base_cotizacion = salario_maximo
 
-    cuota_fija_uma = uma["diaria"] * float(
-        mod10["cuota_mensual"]["cuota_fija_uma_factor"]
-    )
+    cuota_fija_uma = uma["diaria"] * float(mod10["cuota_mensual"]["cuota_fija_uma_factor"])
     porcentaje_variable = float(mod10["cuota_mensual"]["porcentaje_variable"])
     cuota_variable = salario_base_cotizacion * porcentaje_variable
     cuota_mensual = cuota_fija_uma + cuota_variable
