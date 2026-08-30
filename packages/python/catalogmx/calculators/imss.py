@@ -162,6 +162,36 @@ def _almost_equal(left: float, right: float) -> bool:
     return abs(left - right) < 0.005
 
 
+def _assert_zona_salario(zona: object) -> None:
+    """Reject unknown salary zones at runtime."""
+    if zona not in ("general", "frontera"):
+        raise ValueError("La zona salarial debe ser 'general' o 'frontera'.")
+
+
+def _assert_salario_diario(salario_diario: float, salario_minimo: float) -> None:
+    """Reject an invalid daily SBC before it selects a CEAV band."""
+    if not isinstance(salario_diario, (int, float)) or isinstance(salario_diario, bool):
+        raise ValueError("El salario diario debe ser un número finito mayor que cero.")
+    if not math.isfinite(salario_diario) or salario_diario <= 0:
+        raise ValueError("El salario diario debe ser un número finito mayor que cero.")
+    if salario_diario < salario_minimo:
+        raise ValueError("El salario diario no puede ser menor al salario mínimo aplicable.")
+
+
+def _assert_dias(dias: float) -> None:
+    """Reject non-finite or non-positive contribution days."""
+    if not isinstance(dias, (int, float)) or isinstance(dias, bool):
+        raise ValueError("Los días deben ser un número finito mayor que cero.")
+    if not math.isfinite(dias) or dias <= 0:
+        raise ValueError("Los días deben ser un número finito mayor que cero.")
+
+
+def _assert_clase_riesgo(clase_riesgo: object) -> None:
+    """Reject invalid occupational risk classes at runtime."""
+    if type(clase_riesgo) is not int or clase_riesgo not in (1, 2, 3, 4, 5):
+        raise ValueError("La clase de riesgo debe ser un entero entre 1 y 5.")
+
+
 def get_ceav_patron_rate(
     salario_diario: float,
     year: IMSSYear,
@@ -171,6 +201,7 @@ def get_ceav_patron_rate(
 ) -> float:
     """Select the employer CEAV rate for the applicable minimum-wage zone."""
     _assert_fecha_matches_exercise(year, fecha)
+    _assert_zona_salario(zona)
     tables = _load_imss_tables()
     rates = tables["cuotas_imss"]["retiro_cesantia_vejez"]["cesantia_vejez"][
         "patron_por_ejercicio"
@@ -179,6 +210,7 @@ def get_ceav_patron_rate(
         raise ValueError(f"No se encontró tarifa CEAV patronal para {year}")
 
     minimum = tables["salario_minimo"][str(year)]
+    _assert_salario_diario(salario_diario, float(minimum[zona]))
     if _almost_equal(salario_diario, float(minimum[zona])):
         return float(rates[0]["tasa"])
 
@@ -212,6 +244,10 @@ def calcular_cuotas_obrero_patronales(
     """Calculate IMSS employer and employee contributions."""
     _assert_fecha_matches_exercise(year, fecha)
     tables = _load_imss_tables()
+    _assert_zona_salario(zona)
+    _assert_salario_diario(salario_diario, float(tables["salario_minimo"][str(year)][zona]))
+    _assert_dias(dias)
+    _assert_clase_riesgo(clase_riesgo)
     uma = get_uma(year) if fecha is None else get_uma_for_date(fecha)
     cuotas = tables["cuotas_imss"]
     salario_base = salario_diario * dias

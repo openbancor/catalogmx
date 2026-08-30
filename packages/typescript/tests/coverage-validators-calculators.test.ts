@@ -894,8 +894,8 @@ describe('IMSS Calculator coverage - uncovered lines', () => {
   });
 
   // Cuotas with salary below 3 UMAs (else branch lines 245-248)
-  test('calcularCuotasObreroPatronales with low salary (lines 245-248)', () => {
-    const result = IMSSCalculator.calcularCuotasObreroPatronales(50, 30, 2025, 1);
+  test('calcularCuotasObreroPatronales below the 3 UMA excess threshold (lines 245-248)', () => {
+    const result = IMSSCalculator.calcularCuotasObreroPatronales(278.8, 30, 2025, 1);
     expect(result.cuotas_patron.enfermedad_mat_excedente).toBe(0);
     expect(result.cuotas_trabajador.enfermedad_mat_excedente).toBe(0);
   });

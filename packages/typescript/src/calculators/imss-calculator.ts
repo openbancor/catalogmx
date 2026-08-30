@@ -260,6 +260,33 @@ export class IMSSCalculator {
     }
   }
 
+  private static assertZonaSalario(zona: unknown): asserts zona is ZonaSalario {
+    if (zona !== 'general' && zona !== 'frontera') {
+      throw new RangeError("La zona salarial debe ser 'general' o 'frontera'.");
+    }
+  }
+
+  private static assertSalarioDiario(salarioDiario: number, salarioMinimo: number): void {
+    if (!Number.isFinite(salarioDiario) || salarioDiario <= 0) {
+      throw new RangeError('El salario diario debe ser un número finito mayor que cero.');
+    }
+    if (salarioDiario < salarioMinimo) {
+      throw new RangeError('El salario diario no puede ser menor al salario mínimo aplicable.');
+    }
+  }
+
+  private static assertDias(dias: number): void {
+    if (!Number.isFinite(dias) || dias <= 0) {
+      throw new RangeError('Los días deben ser un número finito mayor que cero.');
+    }
+  }
+
+  private static assertClaseRiesgo(claseRiesgo: number): void {
+    if (!Number.isInteger(claseRiesgo) || claseRiesgo < 1 || claseRiesgo > 5) {
+      throw new RangeError('La clase de riesgo debe ser un entero entre 1 y 5.');
+    }
+  }
+
   static getSalarioMinimo(year: IMSSYear, zona: ZonaSalario = 'general'): number {
     this.loadTablesData();
     const row = this._tablesData!.salario_minimo[year.toString()];
@@ -282,6 +309,7 @@ export class IMSSCalculator {
     fecha?: string | Date
   ): number {
     this.assertFechaMatchesExercise(year, fecha);
+    this.assertZonaSalario(zona);
     this.loadTablesData();
     const rates =
       this._tablesData!.cuotas_imss.retiro_cesantia_vejez.cesantia_vejez.patron_por_ejercicio[
@@ -295,6 +323,7 @@ export class IMSSCalculator {
     if (!minimum) {
       throw new Error(`No se encontró salario mínimo para ${year}`);
     }
+    this.assertSalarioDiario(salarioDiario, minimum[zona]);
     if (this.almostEqual(salarioDiario, minimum[zona])) return rates[0].tasa;
 
     const uma = fecha === undefined ? this.getUMA(year) : this.getUMAForDate(fecha);
@@ -324,6 +353,10 @@ export class IMSSCalculator {
   ): CuotasIMSSResult {
     this.assertFechaMatchesExercise(year, fecha);
     this.loadTablesData();
+    this.assertZonaSalario(zona);
+    this.assertSalarioDiario(salarioDiario, this.getSalarioMinimo(year, zona));
+    this.assertDias(dias);
+    this.assertClaseRiesgo(claseRiesgo);
     const uma = fecha === undefined ? this.getUMA(year) : this.getUMAForDate(fecha);
     const cuotas = this._tablesData!.cuotas_imss;
     const salarioBase = salarioDiario * dias;

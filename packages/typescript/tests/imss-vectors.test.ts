@@ -88,6 +88,70 @@ describe('IMSS shared vectors', () => {
     expect(IMSSCalculator.getCEAVPatronRate(440.87, 2026, 'frontera')).toBeCloseTo(0.0315, 8);
   });
 
+  test.each([
+    [Number.NaN, 'general'],
+    [Number.POSITIVE_INFINITY, 'general'],
+    [0, 'general'],
+    [-1, 'general'],
+    [315.03, 'general'],
+    [440.86, 'frontera'],
+  ] as const)('CEAV selector rejects an invalid daily SBC for %s/%s', (salarioDiario, zona) => {
+    expect(() => IMSSCalculator.getCEAVPatronRate(salarioDiario, 2026, zona)).toThrow(RangeError);
+  });
+
+  test('CEAV selector rejects an invalid wage zone at runtime', () => {
+    expect(() =>
+      IMSSCalculator.getCEAVPatronRate(315.04, 2026, 'otra' as unknown as 'general')
+    ).toThrow(RangeError);
+  });
+
+  test.each([
+    [Number.NaN, 'general'],
+    [Number.POSITIVE_INFINITY, 'general'],
+    [0, 'general'],
+    [-1, 'general'],
+    [315.03, 'general'],
+    [440.86, 'frontera'],
+  ] as const)(
+    'ordinary IMSS contributions reject an invalid daily SBC: %s/%s',
+    (salarioDiario, zona) => {
+      expect(() =>
+        IMSSCalculator.calcularCuotasObreroPatronales(salarioDiario, 30, 2026, 1, undefined, zona)
+      ).toThrow(RangeError);
+    }
+  );
+
+  test.each([Number.NaN, Number.POSITIVE_INFINITY, 0, -1])(
+    'ordinary IMSS contributions reject invalid days: %s',
+    (dias) => {
+      expect(() => IMSSCalculator.calcularCuotasObreroPatronales(315.04, dias, 2026)).toThrow(
+        RangeError
+      );
+    }
+  );
+
+  test.each([0, 6, 1.5])(
+    'ordinary IMSS contributions reject invalid risk classes: %s',
+    (claseRiesgo) => {
+      expect(() =>
+        IMSSCalculator.calcularCuotasObreroPatronales(315.04, 30, 2026, claseRiesgo as ClaseRiesgo)
+      ).toThrow(RangeError);
+    }
+  );
+
+  test('ordinary IMSS contributions reject an invalid wage zone at runtime', () => {
+    expect(() =>
+      IMSSCalculator.calcularCuotasObreroPatronales(
+        315.04,
+        30,
+        2026,
+        1,
+        undefined,
+        'otra' as unknown as 'general'
+      )
+    ).toThrow(RangeError);
+  });
+
   test('modalidad 40 preserves the special 1 SM CEAV band', () => {
     const monthlyMinimumWage = 315.04 * (3566.22 / 117.31);
     const result = IMSSCalculator.calcularModalidad40(monthlyMinimumWage, monthlyMinimumWage, 2026);

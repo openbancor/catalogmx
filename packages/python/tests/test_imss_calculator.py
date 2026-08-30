@@ -6,6 +6,7 @@ from catalogmx.calculators.imss import (
     calcular_cuotas_obrero_patronales,
     calcular_modalidad_10,
     calcular_modalidad_40,
+    get_ceav_patron_rate,
     get_salario_minimo,
     get_uma,
 )
@@ -54,14 +55,73 @@ class TestCuotasObreroPatronales:
 
     def test_fixed_sickness_maternity_quota_uses_one_uma(self) -> None:
         result = calcular_cuotas_obrero_patronales(500.0, 30, 2026, clase_riesgo=2)
-        assert result["cuotas_patron"]["enfermedad_mat_cuota_fija"] == pytest.approx(
-            717.9372
-        )
+        assert result["cuotas_patron"]["enfermedad_mat_cuota_fija"] == pytest.approx(717.9372)
 
     def test_ceav_uses_special_minimum_wage_row(self) -> None:
         salario_minimo = get_salario_minimo(2026, "general")
         result = calcular_cuotas_obrero_patronales(salario_minimo, 30, 2026)
         assert result["ceav_patron_rate"] == 0.0315
+
+    @pytest.mark.parametrize(
+        ("salario_diario", "zona"),
+        [
+            (float("nan"), "general"),
+            (float("inf"), "general"),
+            (0.0, "general"),
+            (-1.0, "general"),
+            (315.03, "general"),
+            (440.86, "frontera"),
+        ],
+    )
+    def test_ceav_selector_rejects_invalid_daily_sbc(
+        self, salario_diario: float, zona: str
+    ) -> None:
+        with pytest.raises(ValueError):
+            get_ceav_patron_rate(salario_diario, 2026, zona=zona)  # type: ignore[arg-type]
+
+    @pytest.mark.parametrize(
+        ("salario_diario", "zona", "expected_rate"),
+        [(315.04, "general", 0.0315), (440.87, "frontera", 0.0315)],
+    )
+    def test_ceav_selector_preserves_each_zone_minimum_wage_row(
+        self, salario_diario: float, zona: str, expected_rate: float
+    ) -> None:
+        assert get_ceav_patron_rate(salario_diario, 2026, zona=zona) == expected_rate  # type: ignore[arg-type]
+
+    def test_ceav_selector_rejects_invalid_wage_zone_at_runtime(self) -> None:
+        with pytest.raises(ValueError):
+            get_ceav_patron_rate(315.04, 2026, zona="otra")  # type: ignore[arg-type]
+
+    @pytest.mark.parametrize(
+        ("salario_diario", "zona"),
+        [
+            (float("nan"), "general"),
+            (float("inf"), "general"),
+            (0.0, "general"),
+            (-1.0, "general"),
+            (315.03, "general"),
+            (440.86, "frontera"),
+        ],
+    )
+    def test_ordinary_contributions_reject_invalid_daily_sbc(
+        self, salario_diario: float, zona: str
+    ) -> None:
+        with pytest.raises(ValueError):
+            calcular_cuotas_obrero_patronales(salario_diario, 30, 2026, zona=zona)  # type: ignore[arg-type]
+
+    @pytest.mark.parametrize("dias", [float("nan"), float("inf"), 0.0, -1.0])
+    def test_ordinary_contributions_reject_invalid_days(self, dias: float) -> None:
+        with pytest.raises(ValueError):
+            calcular_cuotas_obrero_patronales(315.04, dias, 2026)  # type: ignore[arg-type]
+
+    @pytest.mark.parametrize("clase_riesgo", [0, 6, 1.5])
+    def test_ordinary_contributions_reject_invalid_risk_class(self, clase_riesgo: float) -> None:
+        with pytest.raises(ValueError):
+            calcular_cuotas_obrero_patronales(315.04, 30, 2026, clase_riesgo=clase_riesgo)  # type: ignore[arg-type]
+
+    def test_ordinary_contributions_reject_invalid_wage_zone_at_runtime(self) -> None:
+        with pytest.raises(ValueError):
+            calcular_cuotas_obrero_patronales(315.04, 30, 2026, zona="otra")  # type: ignore[arg-type]
 
     @pytest.mark.parametrize(
         ("year", "expected_rate"),
@@ -72,7 +132,7 @@ class TestCuotasObreroPatronales:
         assert result["ceav_patron_rate"] == expected_rate
 
     def test_excess_quota_is_zero_below_threshold(self) -> None:
-        result = calcular_cuotas_obrero_patronales(300.0, 30, 2026)
+        result = calcular_cuotas_obrero_patronales(get_salario_minimo(2026), 30, 2026)
         assert result["cuotas_patron"]["enfermedad_mat_excedente"] == 0.0
         assert result["cuotas_trabajador"]["enfermedad_mat_excedente"] == 0.0
 
@@ -135,9 +195,7 @@ class TestModalidad40:
 
     def test_preserves_special_one_minimum_wage_ceav_band(self) -> None:
         uma = get_uma(2026)
-        monthly_minimum = get_salario_minimo(2026, "general") * (
-            uma["mensual"] / uma["diaria"]
-        )
+        monthly_minimum = get_salario_minimo(2026, "general") * (uma["mensual"] / uma["diaria"])
         result = calcular_modalidad_40(monthly_minimum, monthly_minimum, 2026)
         assert result["porcentaje_total"] == pytest.approx(0.10075)
 
