@@ -8,7 +8,16 @@ const pendingAuditLinkText = 'Modalidad 10/PTI: pendiente de auditoría';
 const publicReference = /modalidad\s*10|modalidad10|\bm10\b|\bpti\b/i;
 const forbiddenOptionValue = 'modalidad10';
 const forbiddenCalculatorName = 'calcularmodalidad10';
-const publicAttributeNames = new Set(['href', 'aria-label', 'value']);
+const publicAttributeNames = new Set([
+	'aria-label',
+	'alt',
+	'content',
+	'href',
+	'label',
+	'placeholder',
+	'title',
+	'value'
+]);
 
 const routes = [
 	{
@@ -72,16 +81,21 @@ function isForbiddenCalculatorIdentifier(name) {
 	return normalized === forbiddenOptionValue || normalized === forbiddenCalculatorName;
 }
 
-function collectElements(node, elements) {
+function collectPublicNodes(node, nodes, parents, parent = null) {
 	if (!node || typeof node !== 'object') return;
 	if (Array.isArray(node)) {
-		for (const child of node) collectElements(child, elements);
+		for (const child of node) collectPublicNodes(child, nodes, parents, parent);
 		return;
 	}
 
-	if (node.type === 'Element') elements.push(node);
-	for (const child of node.children ?? []) {
-		collectElements(child, elements);
+	if (typeof node.type === 'string') {
+		parents.set(node, parent);
+		if (Array.isArray(node.attributes)) nodes.push(node);
+	}
+	for (const [key, value] of Object.entries(node)) {
+		if (key !== 'loc' && key !== 'metadata') {
+			collectPublicNodes(value, nodes, parents, node);
+		}
 	}
 }
 
@@ -107,15 +121,11 @@ function hasExactPendingAuditLinkText(node) {
 }
 
 function isVerifiedIssueAnchor(node) {
-	return node.name === 'a' && hasIssueHref(node) && hasExactPendingAuditLinkText(node);
+	return node.type === 'Element' && node.name === 'a' && hasIssueHref(node) && hasExactPendingAuditLinkText(node);
 }
 
-function staticPublicAttributeValue(attribute) {
-	if (
-		attribute.type !== 'Attribute' ||
-		!publicAttributeNames.has(attribute.name) ||
-		!Array.isArray(attribute.value)
-	) {
+function staticAttributeValue(attribute) {
+	if (attribute.type !== 'Attribute' || !Array.isArray(attribute.value)) {
 		return null;
 	}
 
@@ -132,6 +142,38 @@ function staticPublicAttributeValue(attribute) {
 		}
 	}
 	return value;
+}
+
+function staticPublicAttributeValue(attribute) {
+	return publicAttributeNames.has(attribute.name) ? staticAttributeValue(attribute) : null;
+}
+
+function hasStaticHiddenClass(node) {
+	const classAttribute = node.attributes?.find(
+		(attribute) => attribute.type === 'Attribute' && attribute.name === 'class'
+	);
+	const className = classAttribute ? staticAttributeValue(classAttribute) : null;
+	return className?.split(/\s+/).includes('hidden') ?? false;
+}
+
+function isInElseBranch(node, ifBlock, parents) {
+	let current = node;
+	while (current && parents.get(current) !== ifBlock) {
+		current = parents.get(current);
+	}
+	return current?.type === 'ElseBlock';
+}
+
+function isStaticallyVisibleIssueAnchor(node, parents) {
+	if (!isVerifiedIssueAnchor(node)) return false;
+	for (let current = node; current; current = parents.get(current)) {
+		if (current.type === 'Head' || hasStaticHiddenClass(current)) return false;
+		if (current.type === 'IfBlock' && typeof current.expression?.value === 'boolean') {
+			const inElseBranch = isInElseBranch(node, current, parents);
+			if (current.expression.value === inElseBranch) return false;
+		}
+	}
+	return true;
 }
 
 function staticRenderedTextOutsideVerifiedIssueAnchors(node) {
@@ -160,7 +202,8 @@ function assertPublicRouteContract(source, route) {
 	}
 
 	const elements = [];
-	collectElements(ast.html.children, elements);
+	const parents = new Map();
+	collectPublicNodes(ast.html, elements, parents);
 
 	for (const element of elements) {
 		if (publicReference.test(staticRenderedTextOutsideVerifiedIssueAnchors(element))) {
@@ -183,7 +226,7 @@ function assertPublicRouteContract(source, route) {
 	);
 	if (route.requiresPendingAuditNotice) {
 		assert.ok(
-			elements.some(isVerifiedIssueAnchor),
+			elements.some((element) => isStaticallyVisibleIssueAnchor(element, parents)),
 			`${route.name} debe enlazar el issue #97 con texto visible "${pendingAuditLinkText}"`
 		);
 	}
@@ -207,6 +250,39 @@ function runSelfTests() {
 	assert.throws(() => assertPublicRouteContract(`<script>const key = 'calcularModalidad' + '10';</script>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<p>M10 disponible</p>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<p>Modalidad <strong>10</strong> disponible</p>${clean}`, route));
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<svelte:head><meta name="description" content="Modalidad 10 disponible" /></svelte:head>${clean}`,
+			route
+		)
+	);
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<CalculatorCard title="Modalidad 10 disponible" />${clean}`,
+			route
+		)
+	);
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<CalculatorCard href="/calculadoras/modalidad10" />${clean}`,
+			route
+		)
+	);
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`{#if true}<p>Otro cálculo</p>{:else}<p>Modalidad 10 disponible</p>{/if}${clean}`,
+			route
+		)
+	);
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<div class="hidden">${honestAnchor}</div>`,
+			route
+		)
+	);
+	assert.throws(() =>
+		assertPublicRouteContract(`{#if false}${honestAnchor}{/if}`, route)
+	);
 	assert.throws(() =>
 		assertPublicRouteContract(
 			`<select><option value="modalidad10">Otra modalidad</option></select>${clean}`,
