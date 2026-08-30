@@ -45,6 +45,7 @@ from catalogmx.calculators.imss import (
     calcular_modalidad_40,
     get_salario_minimo,
     get_uma,
+    get_uma_for_date,
 )
 from catalogmx.calculators.isr import (
     ISRCalculationResult,
@@ -81,6 +82,7 @@ __all__ = [
     "calcular_modalidad_40",
     "calcular_modalidad_10",
     "get_uma",
+    "get_uma_for_date",
     "get_salario_minimo",
     "IMSSYear",
     "ZonaSalario",
