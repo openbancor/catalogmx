@@ -71,14 +71,13 @@
 			id: 'imss',
 			name: 'IMSS',
 			description: 'Cuotas de Seguro Social',
-			longDescription: 'Calcula cuotas IMSS obrero-patronales, Modalidad 40 y Modalidad 10',
+			longDescription: 'Calcula cuotas IMSS obrero-patronales y Modalidad 40',
 			href: `${base}/calculadoras/imss`,
 			icon: Shield,
 			color: 'bg-teal-500',
 			features: [
 				'Cuotas obrero-patronales',
 				'Modalidad 40 (voluntaria)',
-				'Modalidad 10 (independientes)',
 				'5 clases de riesgo de trabajo'
 			],
 			status: 'available'

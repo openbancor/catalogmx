@@ -148,8 +148,11 @@
 
 		if (tipoCalculo === 'cuotas') {
 			calculateCuotas();
-		} else {
+		} else if (tipoCalculo === 'modalidad40') {
 			calculateModalidad40();
+		} else {
+			const unsupportedCalculation: never = tipoCalculo;
+			throw new Error(`Tipo de cálculo IMSS no compatible: ${unsupportedCalculation}`);
 		}
 	}
 
@@ -193,7 +196,7 @@
 					Calculadora IMSS
 				</h1>
 				<p class="text-lg text-slate-600 dark:text-slate-300">
-					Cuotas obrero-patronales y modalidades voluntarias
+					Cuotas obrero-patronales y Modalidad 40 voluntaria
 				</p>
 			</div>
 		</div>
@@ -209,8 +212,8 @@
 		<div class="mt-4 flex items-start gap-2 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
 			<Info class="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
 			<p class="text-sm text-amber-900 dark:text-amber-300">
-				La Modalidad 10/PTI administrativa está pendiente de auditoría y no está disponible en esta calculadora. Sigue su estado en
-				<a class="font-medium underline" href="https://github.com/openbancor/catalogmx/issues/97">el issue #97</a>.
+				La modalidad administrativa para personas trabajadoras independientes no está disponible en esta calculadora;
+				<a class="font-medium underline" href="https://github.com/openbancor/catalogmx/issues/97">pendiente de auditoría</a>.
 			</p>
 		</div>
 	</div>
