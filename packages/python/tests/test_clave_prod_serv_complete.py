@@ -3,6 +3,8 @@ Comprehensive tests for ClaveProdServ catalog (SQLite-based)
 Covers all methods including search, prefix, filters, and statistics
 """
 
+import sqlite3
+
 from catalogmx.catalogs.sat.cfdi_4 import ClaveProdServCatalog
 
 
@@ -42,6 +44,41 @@ class TestClaveProdServCatalog:
             assert isinstance(result, list)
         except FileNotFoundError:
             pass
+
+    def test_search_does_not_mutate_packaged_database(self, tmp_path):
+        """Catalog searches must work when packaged data is read-only."""
+        db_path = tmp_path / "clave_prod_serv.db"
+        with sqlite3.connect(db_path) as connection:
+            connection.execute("""
+                CREATE TABLE clave_prod_serv (
+                    clave TEXT PRIMARY KEY,
+                    descripcion TEXT,
+                    incluye_iva INTEGER,
+                    incluye_ieps INTEGER,
+                    complemento TEXT,
+                    palabras_similares TEXT,
+                    fecha_inicio_vigencia TEXT,
+                    fecha_fin_vigencia TEXT
+                )
+                """)
+            connection.execute("""
+                INSERT INTO clave_prod_serv VALUES (
+                    '43211500', 'Computadoras personales', 1, 0, '',
+                    'computadora pc laptop', '', ''
+                )
+                """)
+
+        original_bytes = db_path.read_bytes()
+        previous_path = ClaveProdServCatalog._db_path
+        ClaveProdServCatalog.close()
+        ClaveProdServCatalog._db_path = db_path
+        try:
+            results = ClaveProdServCatalog.search("computadora", limit=10)
+            assert [item["id"] for item in results] == ["43211500"]
+            assert db_path.read_bytes() == original_bytes
+        finally:
+            ClaveProdServCatalog.close()
+            ClaveProdServCatalog._db_path = previous_path
 
     def test_search_simple(self):
         """Test search_simple"""

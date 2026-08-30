@@ -30,6 +30,7 @@ let preferSqlite = !isNodeRuntime();
 
 export function setCatalogSqliteAdapter(adapter: CatalogSqliteDatabase | null): void {
   sqliteAdapter = adapter;
+  catalogCache.clear();
 }
 
 export function getCatalogSqliteAdapter(): CatalogSqliteDatabase | null {
@@ -38,6 +39,7 @@ export function getCatalogSqliteAdapter(): CatalogSqliteDatabase | null {
 
 export function setCatalogPreferSqlite(value: boolean): void {
   preferSqlite = value;
+  catalogCache.clear();
 }
 
 export function setCatalogJsonData(relativePath: string, data: unknown): void {
@@ -48,10 +50,13 @@ export function setCatalogJsonData(relativePath: string, data: unknown): void {
 
 export function clearCatalogJsonData(relativePath?: string): void {
   if (relativePath) {
-    jsonDataStore.delete(normalizePath(relativePath));
+    const normalized = normalizePath(relativePath);
+    jsonDataStore.delete(normalized);
+    catalogCache.delete(normalized);
     return;
   }
   jsonDataStore.clear();
+  catalogCache.clear();
 }
 
 export function clearCatalogCache(): void {
