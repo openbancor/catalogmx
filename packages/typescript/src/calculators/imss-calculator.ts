@@ -16,10 +16,13 @@ export interface UMAInfo {
   diaria: number;
   mensual: number;
   anual: number;
+}
+
+type UMATableRow = UMAInfo & {
   vigencia_desde?: string;
   vigencia_hasta?: string;
   source_id?: string;
-}
+};
 
 export interface CuotasIMSSResult {
   salario_diario: number;
@@ -166,7 +169,7 @@ interface IMSSTablesData {
     verification?: Record<string, string>;
     sources?: Record<string, Record<string, string>>;
   };
-  uma: Record<string, UMAInfo>;
+  uma: Record<string, UMATableRow>;
   salario_minimo: Record<string, SalarioMinimoData>;
   cuotas_imss: CuotasIMSS;
   modalidad_40: Modalidad40Data;
@@ -209,6 +212,14 @@ export class IMSSCalculator {
     this._catalogsData = loadCatalogData<IMSSCatalogsData>('imss-catalogs.json');
   }
 
+  private static toPublicUMA(uma: UMATableRow): UMAInfo {
+    return {
+      diaria: uma.diaria,
+      mensual: uma.mensual,
+      anual: uma.anual,
+    };
+  }
+
   /**
    * UMA publicada para un ejercicio. Para cálculos de enero, donde todavía
    * puede seguir vigente la UMA del ejercicio previo, usar getUMAForDate().
@@ -219,7 +230,7 @@ export class IMSSCalculator {
     if (!uma) {
       throw new Error(`No se encontró UMA para ${year}`);
     }
-    return { ...uma };
+    return this.toPublicUMA(uma);
   }
 
   /**
@@ -238,7 +249,7 @@ export class IMSSCalculator {
     if (!uma) {
       throw new Error(`No se encontró UMA vigente para ${iso}`);
     }
-    return { ...uma };
+    return this.toPublicUMA(uma);
   }
 
   private static assertFechaMatchesExercise(year: IMSSYear, fecha?: string | Date): void {

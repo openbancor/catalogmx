@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -182,8 +183,19 @@ def build_manifest() -> dict[str, Any]:
     }
 
     wage_entries: dict[str, Any] = {}
-    for row in sorted(wage_rows, key=lambda item: item["año"]):
+    sorted_wage_rows = sorted(wage_rows, key=lambda item: item["año"])
+    for index, row in enumerate(sorted_wage_rows):
         year = int(row["año"])
+        next_valid_from = (
+            sorted_wage_rows[index + 1].get("vigencia_inicio")
+            if index + 1 < len(sorted_wage_rows)
+            else None
+        )
+        valid_to = None
+        if next_valid_from:
+            successor_boundary = date.fromisoformat(next_valid_from) - timedelta(days=1)
+            exercise_boundary = date(year, 12, 31)
+            valid_to = min(successor_boundary, exercise_boundary).isoformat()
         values = {
             key: row[key]
             for key in (
@@ -208,7 +220,7 @@ def build_manifest() -> dict[str, Any]:
             year,
             status,
             row.get("vigencia_inicio"),
-            None,
+            valid_to,
             [source_id],
             values,
         )

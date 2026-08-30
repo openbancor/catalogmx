@@ -10,7 +10,7 @@ export const FISCAL_DATASET_IDS = [
 ] as const;
 
 export const FISCAL_MANIFEST_JSON = String.raw`{
-  "content_sha256": "3bf1ea0e7d356aa0acbe32862fc539019f26cba7d4f9a5a9a99d4dd0ba229810",
+  "content_sha256": "11664befd6b5fe7169d6bfa00c6ed870fbae1f785dc434f8ca7a4bc64cc439dd",
   "datasets": {
     "imss_base_rates": {
       "entries": {
@@ -1861,7 +1861,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2010-01-01",
-          "valid_to": null,
+          "valid_to": "2010-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -1877,7 +1877,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2011-01-01",
-          "valid_to": null,
+          "valid_to": "2011-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -1893,7 +1893,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2012-01-01",
-          "valid_to": null,
+          "valid_to": "2012-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -1909,7 +1909,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2013-01-01",
-          "valid_to": null,
+          "valid_to": "2013-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -1925,7 +1925,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2014-01-01",
-          "valid_to": null,
+          "valid_to": "2014-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -1941,7 +1941,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2015-04-01",
-          "valid_to": null,
+          "valid_to": "2015-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -1956,7 +1956,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2016-01-01",
-          "valid_to": null,
+          "valid_to": "2016-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -1971,7 +1971,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2017-01-01",
-          "valid_to": null,
+          "valid_to": "2017-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -1986,7 +1986,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2018-12-01",
-          "valid_to": null,
+          "valid_to": "2018-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -2001,7 +2001,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2019-01-01",
-          "valid_to": null,
+          "valid_to": "2019-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -2017,7 +2017,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2020-01-01",
-          "valid_to": null,
+          "valid_to": "2020-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -2033,7 +2033,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2021-01-01",
-          "valid_to": null,
+          "valid_to": "2021-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -2049,7 +2049,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2022-01-01",
-          "valid_to": null,
+          "valid_to": "2022-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -2065,7 +2065,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "legacy_unverified",
           "valid_from": "2023-01-01",
-          "valid_to": null,
+          "valid_to": "2023-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -2081,7 +2081,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "verified",
           "valid_from": "2024-01-01",
-          "valid_to": null,
+          "valid_to": "2024-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",
@@ -2097,7 +2097,7 @@ export const FISCAL_MANIFEST_JSON = String.raw`{
           ],
           "status": "verified",
           "valid_from": "2025-01-01",
-          "valid_to": null,
+          "valid_to": "2025-12-31",
           "values": {
             "moneda": "MXN",
             "periodo": "diario",

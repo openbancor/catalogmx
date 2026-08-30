@@ -43,6 +43,12 @@ const toIMSSYear = (year: number): IMSSYear => year as IMSSYear;
 const toClaseRiesgo = (value: number): ClaseRiesgo => value as ClaseRiesgo;
 
 describe('IMSS shared vectors', () => {
+  test('UMA public helpers expose the cross-runtime value shape only', () => {
+    const expected = { diaria: 117.31, mensual: 3566.22, anual: 42794.64 };
+    expect(IMSSCalculator.getUMA(2026)).toEqual(expected);
+    expect(IMSSCalculator.getUMAForDate('2026-02-01')).toEqual(expected);
+  });
+
   test('cuotas obrero patronales', () => {
     for (const vector of vectors.cuotas_obrero_patronales) {
       const result = IMSSCalculator.calcularCuotasObreroPatronales(
@@ -78,11 +84,7 @@ describe('IMSS shared vectors', () => {
 
   test('modalidad 40 preserves the special 1 SM CEAV band', () => {
     const monthlyMinimumWage = 315.04 * (3566.22 / 117.31);
-    const result = IMSSCalculator.calcularModalidad40(
-      monthlyMinimumWage,
-      monthlyMinimumWage,
-      2026
-    );
+    const result = IMSSCalculator.calcularModalidad40(monthlyMinimumWage, monthlyMinimumWage, 2026);
     expect(result.porcentaje_total).toBeCloseTo(0.10075, 8);
   });
 
@@ -90,9 +92,9 @@ describe('IMSS shared vectors', () => {
     expect(() => IMSSCalculator.calcularModalidad40(Number.NaN, 10000, 2026)).toThrow(
       'debe ser mayor que cero'
     );
-    expect(() =>
-      IMSSCalculator.calcularModalidad40(Number.POSITIVE_INFINITY, 10000, 2026)
-    ).toThrow('debe ser mayor que cero');
+    expect(() => IMSSCalculator.calcularModalidad40(Number.POSITIVE_INFINITY, 10000, 2026)).toThrow(
+      'debe ser mayor que cero'
+    );
   });
 
   test('modalidad 10', () => {

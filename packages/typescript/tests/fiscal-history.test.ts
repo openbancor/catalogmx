@@ -41,20 +41,20 @@ describe('historical fiscal parameters', () => {
   });
 
   test('rejects invalid calendar dates and dates from another exercise', () => {
-  expect(() => IMSSCalculator.getUMAForDate('2026-02-31')).toThrow('Fecha inválida');
-  expect(() =>
-    IMSSCalculator.calcularCuotasObreroPatronales(500, 30, 2026, 2, '2025-12-31')
-  ).toThrow('no pertenece al ejercicio 2026');
-  expect(() => IMSSCalculator.getCEAVPatronRate(315.04, 2026, '2025-12-31')).toThrow(
-    'no pertenece al ejercicio 2026'
-  );
-  expect(() => IMSSCalculator.calcularModalidad40(15000, 12000, 2026, '2025-12-31')).toThrow(
-    'no pertenece al ejercicio 2026'
-  );
-  expect(() => IMSSCalculator.calcularModalidad10(10000, 2026, '2025-12-31')).toThrow(
-    'no pertenece al ejercicio 2026'
-  );
-});
+    expect(() => IMSSCalculator.getUMAForDate('2026-02-31')).toThrow('Fecha inválida');
+    expect(() =>
+      IMSSCalculator.calcularCuotasObreroPatronales(500, 30, 2026, 2, '2025-12-31')
+    ).toThrow('no pertenece al ejercicio 2026');
+    expect(() => IMSSCalculator.getCEAVPatronRate(315.04, 2026, '2025-12-31')).toThrow(
+      'no pertenece al ejercicio 2026'
+    );
+    expect(() => IMSSCalculator.calcularModalidad40(15000, 12000, 2026, '2025-12-31')).toThrow(
+      'no pertenece al ejercicio 2026'
+    );
+    expect(() => IMSSCalculator.calcularModalidad10(10000, 2026, '2025-12-31')).toThrow(
+      'no pertenece al ejercicio 2026'
+    );
+  });
 
   test('keeps CEAV patronal rates by exercise instead of overwriting history', () => {
     expect(IMSSCalculator.getCEAVPatronRate(500, 2024)).toBe(0.05331);
@@ -95,6 +95,10 @@ describe('historical fiscal parameters', () => {
     expect(uma2026.values).toMatchObject({ daily: 117.31, monthly: 3566.22 });
     expect(uma2026.sha256).toMatch(/^[0-9a-f]{64}$/);
     expect(fiscalSources('uma', 2026)[0]?.source?.authority).toBe('INEGI');
+
+    expect(assertFiscalDataVerified('minimum_wage', 2024).valid_to).toBe('2024-12-31');
+    expect(assertFiscalDataVerified('minimum_wage', 2025).valid_to).toBe('2025-12-31');
+    expect(assertFiscalDataVerified('minimum_wage', 2026).valid_to).toBeNull();
 
     expect(fiscalEntry('isr_payroll', 2026)?.status).toBe('pending_review');
     expect(() => assertFiscalDataVerified('isr_payroll', 2026)).toThrow('pending_review');
