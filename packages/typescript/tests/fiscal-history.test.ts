@@ -52,10 +52,11 @@ describe('historical fiscal parameters', () => {
   });
 
   test('keeps historical Modalidad 40 rates', () => {
-    expect(IMSSCalculator.calcularModalidad40(10000, 2024).porcentaje_total).toBe(0.11681);
-    expect(IMSSCalculator.calcularModalidad40(12000, 2025).porcentaje_total).toBe(0.12484);
-    expect(IMSSCalculator.calcularModalidad40(15000, 2026).porcentaje_total).toBe(0.14438);
+    expect(IMSSCalculator.calcularModalidad40(10000, 8000, 2024).porcentaje_total).toBe(0.11681);
+    expect(IMSSCalculator.calcularModalidad40(12000, 10000, 2025).porcentaje_total).toBe(0.12484);
+    expect(IMSSCalculator.calcularModalidad40(15000, 12000, 2026).porcentaje_total).toBe(0.14438);
   });
+
   test('exposes provenance and verification status programmatically', () => {
     const manifest = fiscalManifest();
     expect(manifest.manifest_id).toBe('catalogmx.fiscal');
@@ -70,5 +71,18 @@ describe('historical fiscal parameters', () => {
     expect(fiscalEntry('isr_payroll', 2026)?.status).toBe('pending_review');
     expect(() => assertFiscalDataVerified('isr_payroll', 2026)).toThrow('pending_review');
     expect(fiscalEntry('imss_modalidad_10', 2026)?.status).toBe('pending_review');
+  });
+
+  test('does not allow callers to mutate verification status', () => {
+    const manifest = fiscalManifest();
+    const pending = fiscalEntry('isr_payroll', 2026);
+    expect(pending).toBeDefined();
+    expect(Object.isFrozen(manifest)).toBe(true);
+    expect(Object.isFrozen(manifest.datasets.isr_payroll.entries)).toBe(true);
+    expect(Object.isFrozen(pending)).toBe(true);
+
+    expect(Reflect.set(pending as object, 'status', 'verified')).toBe(false);
+    expect(fiscalEntry('isr_payroll', 2026)?.status).toBe('pending_review');
+    expect(() => assertFiscalDataVerified('isr_payroll', 2026)).toThrow('pending_review');
   });
 });
