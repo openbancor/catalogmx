@@ -3,7 +3,7 @@
 	import { Calculator, Info, Shield, Users } from 'lucide-svelte';
 	import { IMSSCalculator } from '$lib/catalogmx';
 
-	type TipoCalculo = 'cuotas' | 'modalidad40' | 'modalidad10';
+	type TipoCalculo = 'cuotas' | 'modalidad40';
 	type ClaseRiesgo = 1 | 2 | 3 | 4 | 5;
 	type ZonaSalario = 'general' | 'frontera';
 	type Year = 2024 | 2025 | 2026;
@@ -19,8 +19,7 @@
 
 	const tiposCalculo = [
 		{ value: 'cuotas', label: 'Cuotas Obrero-Patronales', icon: Users },
-		{ value: 'modalidad40', label: 'Modalidad 40 (Voluntaria)', icon: Shield },
-		{ value: 'modalidad10', label: 'Modalidad 10 (Independiente)', icon: Shield }
+		{ value: 'modalidad40', label: 'Modalidad 40 (Voluntaria)', icon: Shield }
 	] as const;
 
 	const clasesRiesgo = IMSSCalculator.getClasesRiesgoTrabajo().map((c) => ({
@@ -54,18 +53,8 @@
 		porcentajeTotal: number;
 	}
 
-	interface Modalidad10Result {
-		salarioDiario: number;
-		salarioMensual: number;
-		cuotaFijaUMA: number;
-		cuotaVariable: number;
-		cuotaMensual: number;
-		cuotaAnual: number;
-	}
-
 	let resultadoCuotas = $state<CuotasResult | null>(null);
 	let resultadoMod40 = $state<Modalidad40Result | null>(null);
-	let resultadoMod10 = $state<Modalidad10Result | null>(null);
 
 	function calculateCuotas() {
 		const uma = IMSSCalculator.getUMA(year).diaria;
@@ -149,35 +138,18 @@
 		}
 	}
 
-	function calculateModalidad10() {
-		const salarioMensual = salarioDiario * 30;
-		const result = IMSSCalculator.calcularModalidad10(salarioMensual, year);
-
-		resultadoMod10 = {
-			salarioDiario,
-			salarioMensual: result.salario_base_cotizacion,
-			cuotaFijaUMA: result.cuota_fija_uma,
-			cuotaVariable: result.cuota_variable,
-			cuotaMensual: result.cuota_mensual,
-			cuotaAnual: result.cuota_mensual * 12
-		};
-	}
-
 	function calculate() {
 		if (!salarioDiario || salarioDiario <= 0) {
 			resultadoCuotas = null;
 			resultadoMod40 = null;
-			resultadoMod10 = null;
 			errorModalidad40 = null;
 			return;
 		}
 
 		if (tipoCalculo === 'cuotas') {
 			calculateCuotas();
-		} else if (tipoCalculo === 'modalidad40') {
-			calculateModalidad40();
 		} else {
-			calculateModalidad10();
+			calculateModalidad40();
 		}
 	}
 
@@ -198,7 +170,7 @@
 
 <svelte:head>
 	<title>Calculadora IMSS - catalogmx</title>
-	<meta name="description" content="Calcula cuotas IMSS obrero-patronales, Modalidad 40 y Modalidad 10. Cuotas actualizadas 2024-2026." />
+	<meta name="description" content="Calcula cuotas IMSS obrero-patronales y Modalidad 40 con los parámetros públicos verificados." />
 </svelte:head>
 
 <!-- Hero -->
@@ -232,6 +204,14 @@
 				<p class="font-medium mb-1">Cuotas IMSS {year}</p>
 				<p>UMA {year}: {formatCurrency(IMSSCalculator.getUMA(year).diaria)} diarios. Tope de cotización: 25 UMAs.</p>
 			</div>
+		</div>
+
+		<div class="mt-4 flex items-start gap-2 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+			<Info class="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+			<p class="text-sm text-amber-900 dark:text-amber-300">
+				La Modalidad 10/PTI administrativa está pendiente de auditoría y no está disponible en esta calculadora. Sigue su estado en
+				<a class="font-medium underline" href="https://github.com/openbancor/catalogmx/issues/97">el issue #97</a>.
+			</p>
 		</div>
 	</div>
 </section>
@@ -312,18 +292,16 @@
 						</select>
 					</div>
 
-					{#if tipoCalculo !== 'modalidad10'}
-						<div>
-							<label for="zonaSalario" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-								Zona salarial aplicable
-							</label>
-							<select id="zonaSalario" bind:value={zonaSalario} class="input">
-								<option value="general">General</option>
-								<option value="frontera">Zona Libre de la Frontera Norte</option>
-							</select>
-							<p class="text-xs text-slate-500 mt-1">Se usa para identificar correctamente la fila especial CEAV de 1 salario mínimo.</p>
-						</div>
-					{/if}
+					<div>
+						<label for="zonaSalario" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+							Zona salarial aplicable
+						</label>
+						<select id="zonaSalario" bind:value={zonaSalario} class="input">
+							<option value="general">General</option>
+							<option value="frontera">Zona Libre de la Frontera Norte</option>
+						</select>
+						<p class="text-xs text-slate-500 mt-1">Se usa para identificar correctamente la fila especial CEAV de 1 salario mínimo.</p>
+					</div>
 
 					{#if tipoCalculo === 'cuotas'}
 						<!-- Clase de riesgo -->
@@ -382,14 +360,6 @@
 						<div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
 							<p class="text-sm text-blue-800 dark:text-blue-300">
 								<strong>Modalidad 40:</strong> Continuación voluntaria para personas que dejaron de cotizar. Permite mantener o aumentar semanas cotizadas para mejorar la pensión.
-							</p>
-						</div>
-					{/if}
-
-					{#if tipoCalculo === 'modalidad10'}
-						<div class="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
-							<p class="text-sm text-purple-800 dark:text-purple-300">
-								<strong>Modalidad 10:</strong> Incorporación voluntaria para trabajadores independientes, freelancers y profesionistas que no tienen patrón.
 							</p>
 						</div>
 					{/if}
@@ -495,41 +465,6 @@
 						</div>
 					</div>
 
-				{:else if tipoCalculo === 'modalidad10' && resultadoMod10}
-					<div class="space-y-4">
-						<div class="p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg border border-purple-200 dark:border-purple-800">
-							<div class="text-sm font-medium text-purple-700 dark:text-purple-300 mb-1">
-								Cuota mensual Modalidad 10
-							</div>
-							<div class="text-3xl font-bold text-purple-900 dark:text-purple-100 tabular-nums">
-								{formatCurrency(resultadoMod10.cuotaMensual)}
-							</div>
-							<div class="text-sm text-purple-600 dark:text-purple-400 mt-1">
-								Cuota anual: {formatCurrency(resultadoMod10.cuotaAnual)}
-							</div>
-						</div>
-
-						<div class="space-y-2 text-sm">
-							<div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
-								<span class="text-slate-600 dark:text-slate-400">Cuota fija (UMA)</span>
-								<span class="font-medium text-slate-900 dark:text-slate-100 tabular-nums">
-									{formatCurrency(resultadoMod10.cuotaFijaUMA)}
-								</span>
-							</div>
-							<div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
-								<span class="text-slate-600 dark:text-slate-400">Cuota variable</span>
-								<span class="font-medium text-slate-900 dark:text-slate-100 tabular-nums">
-									{formatCurrency(resultadoMod10.cuotaVariable)}
-								</span>
-							</div>
-							<div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
-								<span class="text-slate-600 dark:text-slate-400">SBC mensual aplicable</span>
-								<span class="font-medium text-slate-900 dark:text-slate-100 tabular-nums">
-									{formatCurrency(resultadoMod10.salarioMensual)}
-								</span>
-							</div>
-						</div>
-					</div>
 
 				{:else}
 					<div class="flex items-center justify-center h-64 text-slate-400 dark:text-slate-500">
