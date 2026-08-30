@@ -47,6 +47,7 @@ jobs:
         run: |
           pip install -e '.[dev]'
           ruff check --fix tests/test_imss_vectors_shared.py
+          black catalogmx/calculators/imss.py tests/test_imss_vectors_shared.py
           ruff check catalogmx/ tests/test_imss_vectors_shared.py
           black --check catalogmx/ tests/test_imss_vectors_shared.py
           mypy catalogmx/
