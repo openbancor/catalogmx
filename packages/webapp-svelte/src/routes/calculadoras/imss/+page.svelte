@@ -10,6 +10,8 @@
 	// State
 	let tipoCalculo = $state<TipoCalculo>('cuotas');
 	let salarioDiario = $state<number>(500);
+	let ultimoSbcDiario = $state<number>(500);
+	let errorModalidad40 = $state<string | null>(null);
 	let claseRiesgo = $state<ClaseRiesgo>(1);
 	let year = $state<Year>(2025);
 
@@ -106,16 +108,39 @@
 	}
 
 	function calculateModalidad40() {
-		const salarioMensual = salarioDiario * 30;
-		const result = IMSSCalculator.calcularModalidad40(salarioMensual, year);
+		errorModalidad40 = null;
+		resultadoMod40 = null;
 
-		resultadoMod40 = {
-			salarioDiario,
-			salarioMensual: result.salario_base_cotizacion,
-			cuotaMensual: result.cuota_mensual,
-			cuotaAnual: result.cuota_mensual * 12,
-			porcentajeTotal: result.porcentaje_total
-		};
+		if (!ultimoSbcDiario || ultimoSbcDiario <= 0) {
+			errorModalidad40 = 'Captura el último SBC diario registrado.';
+			return;
+		}
+		if (salarioDiario < ultimoSbcDiario) {
+			errorModalidad40 = 'El SBC elegido no puede ser menor al último SBC registrado.';
+			return;
+		}
+
+		const uma = IMSSCalculator.getUMA(year);
+		const factorMensual = uma.mensual / uma.diaria;
+
+		try {
+			const result = IMSSCalculator.calcularModalidad40(
+				salarioDiario * factorMensual,
+				ultimoSbcDiario * factorMensual,
+				year
+			);
+
+			resultadoMod40 = {
+				salarioDiario: result.salario_base_cotizacion / factorMensual,
+				salarioMensual: result.salario_base_cotizacion,
+				cuotaMensual: result.cuota_mensual,
+				cuotaAnual: result.cuota_mensual * 12,
+				porcentajeTotal: result.porcentaje_total
+			};
+		} catch (error) {
+			errorModalidad40 =
+				error instanceof Error ? error.message : 'No fue posible calcular Modalidad 40.';
+		}
 	}
 
 	function calculateModalidad10() {
@@ -137,6 +162,7 @@
 			resultadoCuotas = null;
 			resultadoMod40 = null;
 			resultadoMod10 = null;
+			errorModalidad40 = null;
 			return;
 		}
 
@@ -238,7 +264,7 @@
 					<!-- Salario diario -->
 					<div>
 						<label for="salarioDiario" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-							Salario diario integrado (SDI)
+							{tipoCalculo === 'modalidad40' ? 'SBC diario elegido' : 'Salario diario integrado (SDI)'}
 						</label>
 						<div class="relative">
 							<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">$</span>
@@ -253,7 +279,14 @@
 							/>
 						</div>
 						<p class="text-xs text-slate-500 mt-1">
-							Salario mensual: {formatCurrency(salarioDiario * 30)}
+							{#if tipoCalculo === 'modalidad40'}
+								Equivalente mensual M40: {formatCurrency(
+									salarioDiario *
+										(IMSSCalculator.getUMA(year).mensual / IMSSCalculator.getUMA(year).diaria)
+								)}
+							{:else}
+								Salario mensual: {formatCurrency(salarioDiario * 30)}
+							{/if}
 						</p>
 					</div>
 
@@ -297,6 +330,36 @@
 					{/if}
 
 					{#if tipoCalculo === 'modalidad40'}
+						<div>
+							<label for="ultimoSbcDiario" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+								Último SBC diario registrado
+							</label>
+							<div class="relative">
+								<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">$</span>
+								<input
+									id="ultimoSbcDiario"
+									type="number"
+									bind:value={ultimoSbcDiario}
+									min="0.01"
+									max={IMSSCalculator.getUMA(year).diaria * 25}
+									step="0.01"
+									class="input pl-8 tabular-nums"
+								/>
+							</div>
+							<p class="text-xs text-slate-500 mt-1">
+								Equivalente mensual: {formatCurrency(
+									ultimoSbcDiario *
+										(IMSSCalculator.getUMA(year).mensual / IMSSCalculator.getUMA(year).diaria)
+								)}. El SBC elegido no puede ser menor; el tope es 25 UMA.
+							</p>
+						</div>
+
+						{#if errorModalidad40}
+							<div class="p-3 rounded-lg border border-red-200 bg-red-50 text-sm text-red-800 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300">
+								{errorModalidad40}
+							</div>
+						{/if}
+
 						<div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
 							<p class="text-sm text-blue-800 dark:text-blue-300">
 								<strong>Modalidad 40:</strong> Continuación voluntaria para personas que dejaron de cotizar. Permite mantener o aumentar semanas cotizadas para mejorar la pensión.
