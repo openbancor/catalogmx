@@ -5,6 +5,7 @@
 
 	type TipoCalculo = 'cuotas' | 'modalidad40' | 'modalidad10';
 	type ClaseRiesgo = 1 | 2 | 3 | 4 | 5;
+	type ZonaSalario = 'general' | 'frontera';
 	type Year = 2024 | 2025 | 2026;
 
 	// State
@@ -13,6 +14,7 @@
 	let ultimoSbcDiario = $state<number>(500);
 	let errorModalidad40 = $state<string | null>(null);
 	let claseRiesgo = $state<ClaseRiesgo>(1);
+	let zonaSalario = $state<ZonaSalario>('general');
 	let year = $state<Year>(2025);
 
 	const tiposCalculo = [
@@ -72,7 +74,9 @@
 			salarioDiario,
 			30,
 			year,
-			claseRiesgo
+			claseRiesgo,
+			undefined,
+			zonaSalario
 		);
 		const labels: Record<string, string> = {
 			enfermedad_mat_cuota_fija: 'E&M - Cuota fija (UMA)',
@@ -127,7 +131,9 @@
 			const result = IMSSCalculator.calcularModalidad40(
 				salarioDiario * factorMensual,
 				ultimoSbcDiario * factorMensual,
-				year
+				year,
+				undefined,
+				zonaSalario
 			);
 
 			resultadoMod40 = {
@@ -305,6 +311,19 @@
 							{/each}
 						</select>
 					</div>
+
+					{#if tipoCalculo !== 'modalidad10'}
+						<div>
+							<label for="zonaSalario" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+								Zona salarial aplicable
+							</label>
+							<select id="zonaSalario" bind:value={zonaSalario} class="input">
+								<option value="general">General</option>
+								<option value="frontera">Zona Libre de la Frontera Norte</option>
+							</select>
+							<p class="text-xs text-slate-500 mt-1">Se usa para identificar correctamente la fila especial CEAV de 1 salario mínimo.</p>
+						</div>
+					{/if}
 
 					{#if tipoCalculo === 'cuotas'}
 						<!-- Clase de riesgo -->

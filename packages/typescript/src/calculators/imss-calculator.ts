@@ -275,7 +275,12 @@ export class IMSSCalculator {
    * La fila "1 SM" se trata como caso especial. Para los demás salarios,
    * la reforma de pensiones clasifica el SBC en veces UMA.
    */
-  static getCEAVPatronRate(salarioDiario: number, year: IMSSYear, fecha?: string | Date): number {
+  static getCEAVPatronRate(
+    salarioDiario: number,
+    year: IMSSYear,
+    zona: ZonaSalario,
+    fecha?: string | Date
+  ): number {
     this.assertFechaMatchesExercise(year, fecha);
     this.loadTablesData();
     const rates =
@@ -290,10 +295,7 @@ export class IMSSCalculator {
     if (!minimum) {
       throw new Error(`No se encontró salario mínimo para ${year}`);
     }
-    const isMinimumWage =
-      this.almostEqual(salarioDiario, minimum.general) ||
-      this.almostEqual(salarioDiario, minimum.frontera);
-    if (isMinimumWage) return rates[0].tasa;
+    if (this.almostEqual(salarioDiario, minimum[zona])) return rates[0].tasa;
 
     const uma = fecha === undefined ? this.getUMA(year) : this.getUMAForDate(fecha);
     const ratio = salarioDiario / uma.diaria;
@@ -317,7 +319,8 @@ export class IMSSCalculator {
     dias: number = 30,
     year: IMSSYear = 2026,
     claseRiesgo: ClaseRiesgo = 1,
-    fecha?: string | Date
+    fecha?: string | Date,
+    zona: ZonaSalario = 'general'
   ): CuotasIMSSResult {
     this.assertFechaMatchesExercise(year, fecha);
     this.loadTablesData();
@@ -352,7 +355,7 @@ export class IMSSCalculator {
 
     const rcv = cuotas.retiro_cesantia_vejez;
     cuotasPatron.retiro = salarioBase * rcv.retiro.patron;
-    const ceavPatronRate = this.getCEAVPatronRate(salarioDiario, year, fecha);
+    const ceavPatronRate = this.getCEAVPatronRate(salarioDiario, year, zona, fecha);
     cuotasPatron.cesantia_vejez = salarioBase * ceavPatronRate;
     cuotasTrabajador.cesantia_vejez = salarioBase * rcv.cesantia_vejez.trabajador;
 
@@ -392,7 +395,8 @@ export class IMSSCalculator {
     salarioBaseCotizacionMensual: number,
     ultimoSbcMensual: number,
     year: IMSSYear,
-    fecha?: string | Date
+    fecha?: string | Date,
+    zona: ZonaSalario = 'general'
   ): Modalidad40Result {
     this.assertFechaMatchesExercise(year, fecha);
     this.loadTablesData();
@@ -423,7 +427,7 @@ export class IMSSCalculator {
 
     const diasUmaMensual = umaMensual / uma.diaria;
     const salarioDiarioEquivalente = salarioBaseCotizacionMensual / diasUmaMensual;
-    const ceavPatronRate = this.getCEAVPatronRate(salarioDiarioEquivalente, year, fecha);
+    const ceavPatronRate = this.getCEAVPatronRate(salarioDiarioEquivalente, year, zona, fecha);
 
     const componentes: Record<string, number> = {};
     let porcentajeTotal = ceavPatronRate;

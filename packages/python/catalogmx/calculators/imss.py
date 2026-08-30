@@ -162,10 +162,14 @@ def _almost_equal(left: float, right: float) -> bool:
     return abs(left - right) < 0.005
 
 
-def _get_ceav_patron_rate(
-    salario_diario: float, year: IMSSYear, fecha: DateInput | None = None
+def get_ceav_patron_rate(
+    salario_diario: float,
+    year: IMSSYear,
+    fecha: DateInput | None = None,
+    *,
+    zona: ZonaSalario,
 ) -> float:
-    """Select the employer CEAV rate, preserving the special 1-SM row."""
+    """Select the employer CEAV rate for the applicable minimum-wage zone."""
     _assert_fecha_matches_exercise(year, fecha)
     tables = _load_imss_tables()
     rates = tables["cuotas_imss"]["retiro_cesantia_vejez"]["cesantia_vejez"][
@@ -175,9 +179,7 @@ def _get_ceav_patron_rate(
         raise ValueError(f"No se encontró tarifa CEAV patronal para {year}")
 
     minimum = tables["salario_minimo"][str(year)]
-    if _almost_equal(salario_diario, float(minimum["general"])) or _almost_equal(
-        salario_diario, float(minimum["frontera"])
-    ):
+    if _almost_equal(salario_diario, float(minimum[zona])):
         return float(rates[0]["tasa"])
 
     uma = get_uma(year) if fecha is None else get_uma_for_date(fecha)
@@ -205,6 +207,7 @@ def calcular_cuotas_obrero_patronales(
     year: IMSSYear = 2026,
     clase_riesgo: ClaseRiesgo = 1,
     fecha: DateInput | None = None,
+    zona: ZonaSalario = "general",
 ) -> CuotasIMSSResult:
     """Calculate IMSS employer and employee contributions."""
     _assert_fecha_matches_exercise(year, fecha)
@@ -251,7 +254,7 @@ def calcular_cuotas_obrero_patronales(
 
     rcv = cuotas["retiro_cesantia_vejez"]
     cuotas_patron["retiro"] = salario_base * float(rcv["retiro"]["patron"])
-    ceav_patron_rate = _get_ceav_patron_rate(salario_diario, year, fecha)
+    ceav_patron_rate = get_ceav_patron_rate(salario_diario, year, fecha, zona=zona)
     cuotas_patron["cesantia_vejez"] = salario_base * ceav_patron_rate
     cuotas_trabajador["cesantia_vejez"] = salario_base * float(rcv["cesantia_vejez"]["trabajador"])
 
@@ -285,6 +288,7 @@ def calcular_modalidad_40(
     ultimo_sbc_mensual: float,
     year: IMSSYear,
     fecha: DateInput | None = None,
+    zona: ZonaSalario = "general",
 ) -> Modalidad40Result:
     """Calculate Modalidad 40 using explicit monthly salary amounts."""
     _assert_fecha_matches_exercise(year, fecha)
@@ -310,7 +314,7 @@ def calcular_modalidad_40(
 
     dias_uma_mensual = uma_mensual / uma["diaria"]
     salario_diario_equivalente = salario_base_cotizacion / dias_uma_mensual
-    ceav_patron_rate = _get_ceav_patron_rate(salario_diario_equivalente, year, fecha)
+    ceav_patron_rate = get_ceav_patron_rate(salario_diario_equivalente, year, fecha, zona=zona)
 
     componentes: dict[str, float] = {
         "cesantia_vejez_patron": salario_base_cotizacion * ceav_patron_rate,

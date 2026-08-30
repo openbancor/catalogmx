@@ -82,6 +82,12 @@ describe('IMSS shared vectors', () => {
     );
   });
 
+  test('CEAV selector uses only the applicable wage zone', () => {
+    expect(IMSSCalculator.getCEAVPatronRate(315.04, 2026, 'general')).toBeCloseTo(0.0315, 8);
+    expect(IMSSCalculator.getCEAVPatronRate(440.87, 2026, 'general')).toBeCloseTo(0.06613, 8);
+    expect(IMSSCalculator.getCEAVPatronRate(440.87, 2026, 'frontera')).toBeCloseTo(0.0315, 8);
+  });
+
   test('modalidad 40 preserves the special 1 SM CEAV band', () => {
     const monthlyMinimumWage = 315.04 * (3566.22 / 117.31);
     const result = IMSSCalculator.calcularModalidad40(monthlyMinimumWage, monthlyMinimumWage, 2026);

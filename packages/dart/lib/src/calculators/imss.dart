@@ -268,11 +268,13 @@ class IMSSCalculator {
     return (left - right).abs() < 0.005;
   }
 
-  static double _getCEAVPatronRate(
+  /// Select the employer CEAV rate for the applicable minimum-wage zone.
+  static double getCEAVPatronRate(
     double salarioDiario,
-    IMSSYear year, [
+    IMSSYear year, {
+    required ZonaSalario zona,
     DateTime? fecha,
-  ]) {
+  }) {
     _assertFechaMatchesExercise(year, fecha);
     final tables = _loadIMSSTables();
     final cuotas = tables['cuotas_imss']! as Map<String, dynamic>;
@@ -288,10 +290,8 @@ class IMSSCalculator {
 
     final minimum = tables['salario_minimo']![year.value.toString()]!
         as Map<String, dynamic>;
-    final general = (minimum['general']! as num).toDouble();
-    final frontera = (minimum['frontera']! as num).toDouble();
-    if (_almostEqual(salarioDiario, general) ||
-        _almostEqual(salarioDiario, frontera)) {
+    final applicableMinimum = (minimum[zona.value]! as num).toDouble();
+    if (_almostEqual(salarioDiario, applicableMinimum)) {
       return ((rates[0] as Map<String, dynamic>)['tasa']! as num).toDouble();
     }
 
@@ -323,6 +323,7 @@ class IMSSCalculator {
     IMSSYear year = IMSSYear.year2026,
     ClaseRiesgo claseRiesgo = ClaseRiesgo.clase1,
     DateTime? fecha,
+    ZonaSalario zona = ZonaSalario.general,
   }) {
     _assertFechaMatchesExercise(year, fecha);
     final tables = _loadIMSSTables();
@@ -377,7 +378,12 @@ class IMSSCalculator {
     final ceav = rcv['cesantia_vejez']! as Map<String, dynamic>;
     cuotasPatron['retiro'] =
         salarioBase * (retiro['patron']! as num).toDouble();
-    final ceavPatronRate = _getCEAVPatronRate(salarioDiario, year, fecha);
+    final ceavPatronRate = getCEAVPatronRate(
+      salarioDiario,
+      year,
+      zona: zona,
+      fecha: fecha,
+    );
     cuotasPatron['cesantia_vejez'] = salarioBase * ceavPatronRate;
     cuotasTrabajador['cesantia_vejez'] =
         salarioBase * (ceav['trabajador']! as num).toDouble();
@@ -418,6 +424,7 @@ class IMSSCalculator {
     required double ultimoSbcMensual,
     IMSSYear year = IMSSYear.year2026,
     DateTime? fecha,
+    ZonaSalario zona = ZonaSalario.general,
   }) {
     _assertFechaMatchesExercise(year, fecha);
     final tables = _loadIMSSTables();
@@ -456,10 +463,11 @@ class IMSSCalculator {
 
     final diasUmaMensual = uma.mensual / uma.diaria;
     final salarioDiarioEquivalente = salarioBaseCotizacion / diasUmaMensual;
-    final ceavPatronRate = _getCEAVPatronRate(
+    final ceavPatronRate = getCEAVPatronRate(
       salarioDiarioEquivalente,
       year,
-      fecha,
+      zona: zona,
+      fecha: fecha,
     );
 
     final componentes = <String, double>{

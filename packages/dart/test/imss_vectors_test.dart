@@ -89,6 +89,21 @@ void main() {
     );
   });
 
+  test('Public CEAV selector uses only the applicable wage zone', () {
+    expect(
+        IMSSCalculator.getCEAVPatronRate(315.04, IMSSYear.year2026,
+            zona: ZonaSalario.general),
+        closeTo(0.0315, 0.00000001));
+    expect(
+        IMSSCalculator.getCEAVPatronRate(440.87, IMSSYear.year2026,
+            zona: ZonaSalario.general),
+        closeTo(0.06613, 0.00000001));
+    expect(
+        IMSSCalculator.getCEAVPatronRate(440.87, IMSSYear.year2026,
+            zona: ZonaSalario.frontera),
+        closeTo(0.0315, 0.00000001));
+  });
+
   test('Modalidad 40 preserves the special one-minimum-wage CEAV row', () {
     final uma = IMSSCalculator.getUMA(IMSSYear.year2026);
     final monthlyMinimum = 315.04 * (uma.mensual / uma.diaria);

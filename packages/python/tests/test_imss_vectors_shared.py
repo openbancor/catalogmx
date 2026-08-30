@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from catalogmx.calculators import get_uma_for_date
+from catalogmx.calculators import get_ceav_patron_rate, get_uma_for_date
 from catalogmx.calculators.imss import (
     calcular_cuotas_obrero_patronales,
     calcular_modalidad_10,
@@ -26,6 +26,12 @@ def test_public_date_aware_uma_helper_rejects_non_date_strings() -> None:
     for invalid in ("2026-01-31junk", "2026-01-31T23:59:00", "2026-02-31"):
         with pytest.raises(ValueError, match="Fecha inválida"):
             get_uma_for_date(invalid)
+
+
+def test_public_ceav_selector_uses_only_applicable_wage_zone() -> None:
+    assert get_ceav_patron_rate(315.04, 2026, zona="general") == pytest.approx(0.0315)
+    assert get_ceav_patron_rate(440.87, 2026, zona="general") == pytest.approx(0.06613)
+    assert get_ceav_patron_rate(440.87, 2026, zona="frontera") == pytest.approx(0.0315)
 
 
 def test_imss_cuotas_obrero_patronales_vectors_shared() -> None:
