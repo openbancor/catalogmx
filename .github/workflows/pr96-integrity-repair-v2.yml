@@ -218,9 +218,9 @@ jobs:
               )
               for fn in (
                   'static double _getCEAVPatronRate(',
-                  'static Map<String, dynamic> calcularCuotasObreroPatronales(',
-                  'static Map<String, dynamic> calcularModalidad40(',
-                  'static Map<String, dynamic> calcularModalidad10(',
+                  'static CuotasIMSSResult calcularCuotasObreroPatronales(',
+                  'static Modalidad40Result calcularModalidad40(',
+                  'static Modalidad10Result calcularModalidad10(',
               ):
                   dart = insert_before_after(
                       dart,
