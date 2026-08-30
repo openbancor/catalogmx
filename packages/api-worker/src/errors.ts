@@ -1,3 +1,5 @@
+import { CATALOG_VERSION } from './data';
+
 export type ApiErrorCode =
   | 'invalid_request'
   | 'unauthorized'
@@ -35,6 +37,7 @@ export function jsonResponse(
   const responseHeaders: Record<string, string> = {
     'Cache-Control': 'no-store',
     'Content-Type': 'application/json',
+    'X-Catalog-Version': CATALOG_VERSION,
     ...headers,
   };
   return new Response(JSON.stringify(payload), { status, headers: responseHeaders });
