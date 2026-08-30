@@ -223,6 +223,30 @@ class IMSSCalculator {
     return UMAInfo.fromJson(tables['uma']![year.value.toString()]!);
   }
 
+  /// Get the UMA legally in force on a concrete date.
+  static UMAInfo getUMAForDate(DateTime fecha) {
+    final tables = _loadIMSSTables();
+    final rows = tables['uma']! as Map<String, dynamic>;
+    final target = DateTime(fecha.year, fecha.month, fecha.day);
+
+    for (final raw in rows.values) {
+      final row = raw as Map<String, dynamic>;
+      final desdeText = row['vigencia_desde'] as String?;
+      final hastaText = row['vigencia_hasta'] as String?;
+      if (desdeText == null || hastaText == null) continue;
+
+      final desde = DateTime.parse(desdeText);
+      final hasta = DateTime.parse(hastaText);
+      if (!target.isBefore(desde) && !target.isAfter(hasta)) {
+        return UMAInfo.fromJson(row);
+      }
+    }
+
+    throw StateError(
+      'No se encontró UMA vigente para ${target.toIso8601String().substring(0, 10)}',
+    );
+  }
+
   /// Get minimum wage for a specific exercise and zone.
   static double getSalarioMinimo(
     IMSSYear year, [
@@ -238,7 +262,11 @@ class IMSSCalculator {
     return (left - right).abs() < 0.005;
   }
 
-  static double _getCEAVPatronRate(double salarioDiario, IMSSYear year) {
+  static double _getCEAVPatronRate(
+    double salarioDiario,
+    IMSSYear year, [
+    DateTime? fecha,
+  ]) {
     final tables = _loadIMSSTables();
     final cuotas = tables['cuotas_imss']! as Map<String, dynamic>;
     final rcv = cuotas['retiro_cesantia_vejez']! as Map<String, dynamic>;
@@ -247,7 +275,8 @@ class IMSSCalculator {
     final rates = schedules[year.value.toString()]! as List<dynamic>;
     if (rates.length != 8) {
       throw StateError(
-          'No se encontró tarifa CEAV patronal para ${year.value}');
+        'No se encontró tarifa CEAV patronal para ${year.value}',
+      );
     }
 
     final minimum = tables['salario_minimo']![year.value.toString()]!
@@ -259,7 +288,8 @@ class IMSSCalculator {
       return ((rates[0] as Map<String, dynamic>)['tasa']! as num).toDouble();
     }
 
-    final ratio = salarioDiario / getUMA(year).diaria;
+    final uma = fecha == null ? getUMA(year) : getUMAForDate(fecha);
+    final ratio = salarioDiario / uma.diaria;
     final int index;
     if (ratio <= 1.5) {
       index = 1;
@@ -285,9 +315,10 @@ class IMSSCalculator {
     int dias = 30,
     IMSSYear year = IMSSYear.year2026,
     ClaseRiesgo claseRiesgo = ClaseRiesgo.clase1,
+    DateTime? fecha,
   }) {
     final tables = _loadIMSSTables();
-    final uma = getUMA(year);
+    final uma = fecha == null ? getUMA(year) : getUMAForDate(fecha);
     final cuotas = tables['cuotas_imss']! as Map<String, dynamic>;
     final salarioBase = salarioDiario * dias;
     final umaDiaria = uma.diaria;
@@ -338,7 +369,7 @@ class IMSSCalculator {
     final ceav = rcv['cesantia_vejez']! as Map<String, dynamic>;
     cuotasPatron['retiro'] =
         salarioBase * (retiro['patron']! as num).toDouble();
-    final ceavPatronRate = _getCEAVPatronRate(salarioDiario, year);
+    final ceavPatronRate = _getCEAVPatronRate(salarioDiario, year, fecha);
     cuotasPatron['cesantia_vejez'] = salarioBase * ceavPatronRate;
     cuotasTrabajador['cesantia_vejez'] =
         salarioBase * (ceav['trabajador']! as num).toDouble();
@@ -376,9 +407,10 @@ class IMSSCalculator {
     double salarioBaseCotizacion, {
     required double ultimoSbcMensual,
     IMSSYear year = IMSSYear.year2026,
+    DateTime? fecha,
   }) {
     final tables = _loadIMSSTables();
-    final uma = getUMA(year);
+    final uma = fecha == null ? getUMA(year) : getUMAForDate(fecha);
     final mod40 = tables['modalidad_40']! as Map<String, dynamic>;
     final references =
         mod40['referencia_por_ejercicio']! as Map<String, dynamic>;
@@ -391,6 +423,11 @@ class IMSSCalculator {
     final limits = mod40['limites_salario']! as Map<String, dynamic>;
     final salarioMaximo =
         uma.mensual * (limits['maximo_uma']! as num).toDouble();
+    if (!salarioBaseCotizacion.isFinite || salarioBaseCotizacion <= 0) {
+      throw ArgumentError(
+        'El SBC mensual de Modalidad 40 debe ser mayor que cero',
+      );
+    }
     if (!ultimoSbcMensual.isFinite || ultimoSbcMensual <= 0) {
       throw ArgumentError('El último SBC mensual debe ser mayor que cero');
     }
@@ -408,7 +445,8 @@ class IMSSCalculator {
 
     final diasUmaMensual = uma.mensual / uma.diaria;
     final salarioDiarioEquivalente = salarioBaseCotizacion / diasUmaMensual;
-    final ceavPatronRate = _getCEAVPatronRate(salarioDiarioEquivalente, year);
+    final ceavPatronRate =
+        _getCEAVPatronRate(salarioDiarioEquivalente, year, fecha);
 
     final componentes = <String, double>{
       'cesantia_vejez_patron': salarioBaseCotizacion * ceavPatronRate,
@@ -438,9 +476,10 @@ class IMSSCalculator {
   static Modalidad10Result calcularModalidad10(
     double salarioBaseCotizacion, {
     IMSSYear year = IMSSYear.year2026,
+    DateTime? fecha,
   }) {
     final tables = _loadIMSSTables();
-    final uma = getUMA(year);
+    final uma = fecha == null ? getUMA(year) : getUMAForDate(fecha);
     final mod10 = tables['modalidad_10']! as Map<String, dynamic>;
     final limits = mod10['limites_salario']! as Map<String, dynamic>;
 
