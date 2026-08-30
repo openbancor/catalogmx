@@ -71,7 +71,7 @@ jobs:
 
       - name: Check format with black
         run: |
-          black --check catalogmx/
+          black --check --diff catalogmx/
 
       - name: Type check with mypy
         run: |
