@@ -1,0 +1,95 @@
+name: PR96 CEAV Zone V3 Once
+
+on:
+  push:
+    branches:
+      - fix/fiscal-integrity-2026
+    paths:
+      - '.github/workflows/pr96-ceav-zone-v3-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/fiscal-integrity-2026
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Reuse the validated V2 product patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          source = Path('.github/workflows/pr96-ceav-zone-v2-once.yml').read_text(encoding='utf-8').splitlines()
+          start = None
+          for index, line in enumerate(source):
+              if line.strip() == '- name: Apply CEAV zone/parity fixes':
+                  start = index + 2
+                  break
+          if start is None or source[start - 1].strip() != 'run: |':
+              raise SystemExit('could not locate V2 apply block')
+          end = None
+          for index in range(start, len(source)):
+              if source[index].startswith('      - name:'):
+                  end = index
+                  break
+          if end is None:
+              raise SystemExit('could not locate end of V2 apply block')
+          script = textwrap.dedent('\n'.join(source[start:end])) + '\n'
+          Path('/tmp/apply-ceav.sh').write_text(script, encoding='utf-8')
+          PY
+          bash /tmp/apply-ceav.sh
+      - name: Validate TypeScript
+        working-directory: packages/typescript
+        run: |
+          npm ci
+          npx prettier --write src/calculators/imss-calculator.ts tests/imss-vectors.test.ts
+          npm run format:check
+          npm run typecheck
+          npm run lint
+          npx jest tests/imss-vectors.test.ts --runInBand
+      - name: Validate Python
+        working-directory: packages/python
+        run: |
+          pip install -e '.[dev]'
+          ruff check --fix catalogmx/calculators/imss.py catalogmx/calculators/__init__.py tests/test_imss_vectors_shared.py
+          black catalogmx/calculators/imss.py catalogmx/calculators/__init__.py tests/test_imss_vectors_shared.py
+          ruff check catalogmx/calculators/imss.py catalogmx/calculators/__init__.py tests/test_imss_vectors_shared.py
+          black --check catalogmx/calculators/imss.py catalogmx/calculators/__init__.py tests/test_imss_vectors_shared.py
+          python -m py_compile catalogmx/calculators/imss.py catalogmx/calculators/__init__.py tests/test_imss_vectors_shared.py
+          pytest tests/test_imss_vectors_shared.py -v
+      - name: Validate Dart
+        working-directory: packages/dart
+        run: |
+          flutter pub get
+          git checkout -- analysis_options.yaml
+          dart format lib/src/calculators/imss.dart test/imss_vectors_test.dart
+          dart analyze
+          dart format --output=none --set-exit-if-changed lib/src/calculators/imss.dart test/imss_vectors_test.dart
+          flutter test test/imss_vectors_test.dart
+      - name: Validate Svelte
+        working-directory: packages/webapp-svelte
+        run: |
+          npm ci
+          npm run check
+          npm run build
+      - name: Commit CEAV zone/parity fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/typescript/src/calculators/imss-calculator.ts packages/typescript/tests/imss-vectors.test.ts packages/python/catalogmx/calculators/imss.py packages/python/catalogmx/calculators/__init__.py packages/python/tests/test_imss_vectors_shared.py packages/dart/lib/src/calculators/imss.dart packages/dart/test/imss_vectors_test.dart packages/webapp-svelte/src/routes/calculadoras/imss/+page.svelte
+          git diff --cached --check
+          git commit -m "fix(imss): make CEAV zone explicit across runtimes"
+          git push origin HEAD:fix/fiscal-integrity-2026
