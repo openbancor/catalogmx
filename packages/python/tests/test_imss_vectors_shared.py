@@ -10,13 +10,7 @@ from catalogmx.calculators.imss import (
     calcular_modalidad_40,
 )
 
-
-VECTORS_PATH = (
-    Path(__file__).resolve().parents[2]
-    / "shared-data"
-    / "tests"
-    / "imss_vectors.json"
-)
+VECTORS_PATH = Path(__file__).resolve().parents[2] / "shared-data" / "tests" / "imss_vectors.json"
 
 
 def _round(value: float) -> float:
@@ -26,6 +20,12 @@ def _round(value: float) -> float:
 def test_public_date_aware_uma_helper() -> None:
     assert get_uma_for_date("2026-01-31")["diaria"] == 113.14
     assert get_uma_for_date("2026-02-01")["diaria"] == 117.31
+
+
+def test_public_date_aware_uma_helper_rejects_non_date_strings() -> None:
+    for invalid in ("2026-01-31junk", "2026-01-31T23:59:00", "2026-02-31"):
+        with pytest.raises(ValueError, match="Fecha inválida"):
+            get_uma_for_date(invalid)
 
 
 def test_imss_cuotas_obrero_patronales_vectors_shared() -> None:

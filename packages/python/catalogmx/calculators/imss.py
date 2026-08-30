@@ -9,6 +9,7 @@ SBC so an eligibility-sensitive calculation cannot silently assume its floor.
 
 import json
 import math
+import re
 from datetime import date, datetime
 from pathlib import Path
 from typing import Literal, TypedDict
@@ -118,9 +119,11 @@ def _to_iso_date(fecha: DateInput) -> str:
         return fecha.date().isoformat()
     if isinstance(fecha, date):
         return fecha.isoformat()
+    if not isinstance(fecha, str) or re.fullmatch(r"\d{4}-\d{2}-\d{2}", fecha) is None:
+        raise ValueError(f"Fecha inválida: {fecha}")
     try:
-        return date.fromisoformat(fecha[:10]).isoformat()
-    except (TypeError, ValueError) as exc:
+        return date.fromisoformat(fecha).isoformat()
+    except ValueError as exc:
         raise ValueError(f"Fecha inválida: {fecha}") from exc
 
 
