@@ -140,9 +140,7 @@ def get_uma_for_date(fecha: DateInput) -> UMAInfo:
     raise ValueError(f"No se encontró UMA vigente para {iso}")
 
 
-def _assert_fecha_matches_exercise(
-    year: IMSSYear, fecha: DateInput | None
-) -> None:
+def _assert_fecha_matches_exercise(year: IMSSYear, fecha: DateInput | None) -> None:
     """Reject an effective date whose calendar year differs from the exercise."""
     if fecha is None:
         return

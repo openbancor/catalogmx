@@ -84,10 +84,7 @@ void main() {
 
   test('Modalidad 40 rejects a salary below the last registered SBC', () {
     expect(
-      () => IMSSCalculator.calcularModalidad40(
-        10000,
-        ultimoSbcMensual: 12000,
-      ),
+      () => IMSSCalculator.calcularModalidad40(10000, ultimoSbcMensual: 12000),
       throwsArgumentError,
     );
   });
@@ -103,33 +100,33 @@ void main() {
   });
 
   test('IMSS calculations reject dates from another exercise', () {
-  final wrongDate = DateTime(2025, 12, 31);
-  expect(
-    () => IMSSCalculator.calcularCuotasObreroPatronales(
-      500,
-      year: IMSSYear.year2026,
-      fecha: wrongDate,
-    ),
-    throwsArgumentError,
-  );
-  expect(
-    () => IMSSCalculator.calcularModalidad40(
-      15000,
-      ultimoSbcMensual: 12000,
-      year: IMSSYear.year2026,
-      fecha: wrongDate,
-    ),
-    throwsArgumentError,
-  );
-  expect(
-    () => IMSSCalculator.calcularModalidad10(
-      10000,
-      year: IMSSYear.year2026,
-      fecha: wrongDate,
-    ),
-    throwsArgumentError,
-  );
-});
+    final wrongDate = DateTime(2025, 12, 31);
+    expect(
+      () => IMSSCalculator.calcularCuotasObreroPatronales(
+        500,
+        year: IMSSYear.year2026,
+        fecha: wrongDate,
+      ),
+      throwsArgumentError,
+    );
+    expect(
+      () => IMSSCalculator.calcularModalidad40(
+        15000,
+        ultimoSbcMensual: 12000,
+        year: IMSSYear.year2026,
+        fecha: wrongDate,
+      ),
+      throwsArgumentError,
+    );
+    expect(
+      () => IMSSCalculator.calcularModalidad10(
+        10000,
+        year: IMSSYear.year2026,
+        fecha: wrongDate,
+      ),
+      throwsArgumentError,
+    );
+  });
 
   test('Modalidad 40 rejects non-finite requested salary', () {
     expect(
