@@ -45,9 +45,9 @@ describe('historical fiscal parameters', () => {
     expect(() =>
       IMSSCalculator.calcularCuotasObreroPatronales(500, 30, 2026, 2, '2025-12-31')
     ).toThrow('no pertenece al ejercicio 2026');
-    expect(() => IMSSCalculator.getCEAVPatronRate(315.04, 2026, '2025-12-31')).toThrow(
-      'no pertenece al ejercicio 2026'
-    );
+    expect(() =>
+      IMSSCalculator.getCEAVPatronRate(315.04, 2026, 'general', '2025-12-31')
+    ).toThrow('no pertenece al ejercicio 2026');
     expect(() => IMSSCalculator.calcularModalidad40(15000, 12000, 2026, '2025-12-31')).toThrow(
       'no pertenece al ejercicio 2026'
     );
@@ -57,11 +57,11 @@ describe('historical fiscal parameters', () => {
   });
 
   test('keeps CEAV patronal rates by exercise instead of overwriting history', () => {
-    expect(IMSSCalculator.getCEAVPatronRate(500, 2024)).toBe(0.05331);
-    expect(IMSSCalculator.getCEAVPatronRate(500, 2025)).toBe(0.06422);
-    expect(IMSSCalculator.getCEAVPatronRate(500, 2026)).toBe(0.07513);
+    expect(IMSSCalculator.getCEAVPatronRate(500, 2024, 'general')).toBe(0.05331);
+    expect(IMSSCalculator.getCEAVPatronRate(500, 2025, 'general')).toBe(0.06422);
+    expect(IMSSCalculator.getCEAVPatronRate(500, 2026, 'general')).toBe(0.07513);
 
-    expect(IMSSCalculator.getCEAVPatronRate(315.04, 2026)).toBe(0.0315);
+    expect(IMSSCalculator.getCEAVPatronRate(315.04, 2026, 'general')).toBe(0.0315);
   });
 
   test('uses 2026 CEAV in January while keeping the still-valid 2025 UMA', () => {
