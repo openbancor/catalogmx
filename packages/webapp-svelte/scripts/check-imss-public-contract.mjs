@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { parse } from 'svelte/compiler';
 
 const issueUrl = 'https://github.com/openbancor/catalogmx/issues/97';
-const pendingAuditText = 'pendiente de auditoría';
+const pendingAuditLinkText = 'Modalidad 10/PTI: pendiente de auditoría';
 const publicReference = /modalidad\s*10|modalidad10|\bm10\b|\bpti\b/i;
 const forbiddenOptionValue = 'modalidad10';
 const forbiddenCalculatorName = 'calcularmodalidad10';
@@ -104,20 +104,16 @@ function hasIssueHref(node) {
 	);
 }
 
-function hasExactPendingAuditText(node) {
+function hasExactPendingAuditLinkText(node) {
 	return (
 		node.children?.length === 1 &&
 		node.children[0].type === 'Text' &&
-		node.children[0].data === pendingAuditText
+		node.children[0].data === pendingAuditLinkText
 	);
 }
 
-function containsVerifiedIssueLink(node) {
-	const elements = [];
-	collectElements(node.children, null, elements, new Map());
-	return elements.some(
-		(element) => element.name === 'a' && hasIssueHref(element) && hasExactPendingAuditText(element)
-	);
+function isVerifiedIssueAnchor(node) {
+	return node.name === 'a' && hasIssueHref(node) && hasExactPendingAuditLinkText(node);
 }
 
 function hasPublicReferenceDescendant(node) {
@@ -126,9 +122,9 @@ function hasPublicReferenceDescendant(node) {
 	return elements.some((element) => publicReference.test(staticRenderedText(element)));
 }
 
-function isWithinVerifiedNotice(node, parents, notices) {
+function isWithinVerifiedIssueAnchor(node, parents) {
 	for (let current = node; current; current = parents.get(current)) {
-		if (notices.has(current)) return true;
+		if (isVerifiedIssueAnchor(current)) return true;
 	}
 	return false;
 }
@@ -151,17 +147,12 @@ function assertPublicRouteContract(source, route) {
 	const elements = [];
 	const parents = new Map();
 	collectElements(ast.html.children, null, elements, parents);
-	const verifiedNotices = new Set(
-		elements.filter(
-			(element) => publicReference.test(staticRenderedText(element)) && containsVerifiedIssueLink(element)
-		)
-	);
 
 	for (const element of elements) {
 		if (
 			publicReference.test(staticRenderedText(element)) &&
 			!hasPublicReferenceDescendant(element) &&
-			!isWithinVerifiedNotice(element, parents, verifiedNotices)
+			!isWithinVerifiedIssueAnchor(element, parents)
 		) {
 			violations.add('contenido público que ofrece o calcula Modalidad 10/PTI');
 		}
@@ -174,18 +165,17 @@ function assertPublicRouteContract(source, route) {
 	);
 	if (route.requiresPendingAuditNotice) {
 		assert.ok(
-			elements.some(
-				(element) => element.name === 'a' && hasIssueHref(element) && hasExactPendingAuditText(element)
-			),
-			`${route.name} debe enlazar el issue #97 con texto visible "pendiente de auditoría"`
+			elements.some(isVerifiedIssueAnchor),
+			`${route.name} debe enlazar el issue #97 con texto visible "${pendingAuditLinkText}"`
 		);
 	}
 }
 
 function runSelfTests() {
 	const route = { name: 'fixture', requiresPendingAuditNotice: true };
-	const clean = `<p>Esta modalidad administrativa no está disponible. <a href="${issueUrl}">pendiente de auditoría</a>.</p>`;
-	const honestNotice = `<p>Modalidad <strong>10</strong> pendiente de auditoría: <a href="${issueUrl}">pendiente de auditoría</a>.</p>`;
+	const honestAnchor = `<a href="${issueUrl}">${pendingAuditLinkText}</a>`;
+	const clean = `<p>Esta modalidad administrativa no está disponible. ${honestAnchor}.</p>`;
+	const honestNotice = `<p>${honestAnchor}</p>`;
 
 	assert.doesNotThrow(() => assertPublicRouteContract(clean, route));
 	assert.doesNotThrow(() => assertPublicRouteContract(honestNotice, route));
@@ -196,18 +186,30 @@ function runSelfTests() {
 	assert.throws(() => assertPublicRouteContract(`<script>const key = 'calcularModalidad' + '10';</script>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<p>M10 disponible</p>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<p>Modalidad <strong>10</strong> disponible</p>${clean}`, route));
-	assert.throws(() => assertPublicRouteContract(`<script>const label = 'M' + '10';</script><p>{label}</p>${clean}`, route));
-	assert.throws(() => assertPublicRouteContract(`<script>const label = \`Modalidad \${10}\`;</script><p>{label}</p>${clean}`, route));
-	assert.throws(() => assertPublicRouteContract(`<a href="${issueUrl}">Modalidad 10/PTI pendiente de auditoría</a>`, route));
 	assert.throws(() =>
 		assertPublicRouteContract(
-			`<script>let suffix = ' adicional';</script><a href="${issueUrl}">pendiente de auditoría{suffix}</a>`,
+			`<section><p>Modalidad <strong>10</strong> disponible y actualizada.</p><a href="${issueUrl}">pendiente de auditoría</a></section>`,
 			route
 		)
 	);
 	assert.throws(() =>
 		assertPublicRouteContract(
-			`<!-- <a href="${issueUrl}">pendiente de auditoría</a> -->`,
+			`<section><p>Modalidad <strong>10</strong> disponible y actualizada.</p>${honestAnchor}</section>`,
+			route
+		)
+	);
+	assert.throws(() => assertPublicRouteContract(`<script>const label = 'M' + '10';</script><p>{label}</p>${clean}`, route));
+	assert.throws(() => assertPublicRouteContract(`<script>const label = \`Modalidad \${10}\`;</script><p>{label}</p>${clean}`, route));
+	assert.throws(() => assertPublicRouteContract(`<a href="${issueUrl}">Modalidad 10/PTI pendiente de auditoría</a>`, route));
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<script>let suffix = ' adicional';</script><a href="${issueUrl}">${pendingAuditLinkText}{suffix}</a>`,
+			route
+		)
+	);
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<!-- <a href="${issueUrl}">${pendingAuditLinkText}</a> -->`,
 			route
 		)
 	);

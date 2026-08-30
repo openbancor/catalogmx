@@ -213,7 +213,7 @@
 			<Info class="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
 			<p class="text-sm text-amber-900 dark:text-amber-300">
 				La modalidad administrativa para personas trabajadoras independientes no está disponible en esta calculadora;
-				<a class="font-medium underline" href="https://github.com/openbancor/catalogmx/issues/97">pendiente de auditoría</a>.
+				<a class="font-medium underline" href="https://github.com/openbancor/catalogmx/issues/97">Modalidad 10/PTI: pendiente de auditoría</a>.
 			</p>
 		</div>
 	</div>
