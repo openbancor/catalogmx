@@ -20,14 +20,17 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-      - name: Format exactly as CI does
+      - name: Reproduce Dart CI package context
         working-directory: packages/dart
-        run: dart format lib/src/calculators/imss.dart
+        run: |
+          flutter pub get
+          git checkout -- analysis_options.yaml
+          dart format lib/src/calculators/imss.dart
       - name: Commit formatter-only change
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add packages/dart/lib/src/calculators/imss.dart
           git diff --cached --check
-          git commit -m "style(dart): format IMSS guards in package context"
+          git commit -m "style(dart): format IMSS guards in CI package context"
           git push origin HEAD:fix/fiscal-integrity-2026
