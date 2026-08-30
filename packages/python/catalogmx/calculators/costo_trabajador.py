@@ -76,14 +76,20 @@ DIAS_VACACIONES_POR_ANTIGUEDAD = {
 }
 
 
+def _is_finite_number(value: object) -> bool:
+    """Return whether a runtime value is a finite non-boolean numeric value."""
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value)
+    except (OverflowError, TypeError):
+        return False
+
+
 def _assert_salario_mensual_bruto(salario_mensual_bruto: float, year: IMSSYear) -> None:
     """Reject an unsafe gross salary before calculating downstream contributions."""
     message = "El salario mensual bruto debe ser un número finito mayor o igual al salario mínimo mensual aplicable."
-    if not isinstance(salario_mensual_bruto, (int, float)) or isinstance(
-        salario_mensual_bruto, bool
-    ):
-        raise ValueError(message)
-    if not math.isfinite(salario_mensual_bruto):
+    if not _is_finite_number(salario_mensual_bruto):
         raise ValueError(message)
     if salario_mensual_bruto < get_salario_minimo(year, "general") * 30:
         raise ValueError(message)

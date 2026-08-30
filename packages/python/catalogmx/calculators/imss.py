@@ -162,6 +162,16 @@ def _almost_equal(left: float, right: float) -> bool:
     return abs(left - right) < 0.005
 
 
+def _is_finite_number(value: object) -> bool:
+    """Return whether a runtime value is a finite non-boolean numeric value."""
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value)
+    except (OverflowError, TypeError):
+        return False
+
+
 def _assert_zona_salario(zona: object) -> None:
     """Reject unknown salary zones at runtime."""
     if zona not in ("general", "frontera"):
@@ -170,9 +180,7 @@ def _assert_zona_salario(zona: object) -> None:
 
 def _assert_salario_diario(salario_diario: float, salario_minimo: float) -> None:
     """Reject an invalid daily SBC before it selects a CEAV band."""
-    if not isinstance(salario_diario, (int, float)) or isinstance(salario_diario, bool):
-        raise ValueError("El salario diario debe ser un número finito mayor que cero.")
-    if not math.isfinite(salario_diario) or salario_diario <= 0:
+    if not _is_finite_number(salario_diario) or salario_diario <= 0:
         raise ValueError("El salario diario debe ser un número finito mayor que cero.")
     if salario_diario < salario_minimo:
         raise ValueError("El salario diario no puede ser menor al salario mínimo aplicable.")
@@ -180,9 +188,7 @@ def _assert_salario_diario(salario_diario: float, salario_minimo: float) -> None
 
 def _assert_dias(dias: float) -> None:
     """Reject non-finite or non-positive contribution days."""
-    if not isinstance(dias, (int, float)) or isinstance(dias, bool):
-        raise ValueError("Los días deben ser un número finito mayor que cero.")
-    if not math.isfinite(dias) or dias <= 0:
+    if not _is_finite_number(dias) or dias <= 0:
         raise ValueError("Los días deben ser un número finito mayor que cero.")
 
 

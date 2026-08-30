@@ -109,7 +109,7 @@ class TestCuotasObreroPatronales:
         with pytest.raises(ValueError):
             calcular_cuotas_obrero_patronales(salario_diario, 30, 2026, zona=zona)  # type: ignore[arg-type]
 
-    @pytest.mark.parametrize("salario_diario", [None, "315.04", True])
+    @pytest.mark.parametrize("salario_diario", [None, "315.04", True, 10**1000])
     def test_ordinary_contributions_reject_nonnumeric_or_boolean_daily_sbc(
         self, salario_diario: object
     ) -> None:
@@ -121,7 +121,7 @@ class TestCuotasObreroPatronales:
         with pytest.raises(ValueError):
             calcular_cuotas_obrero_patronales(315.04, dias, 2026)  # type: ignore[arg-type]
 
-    @pytest.mark.parametrize("dias", [None, "30", True])
+    @pytest.mark.parametrize("dias", [None, "30", True, 10**1000])
     def test_ordinary_contributions_reject_nonnumeric_or_boolean_days(self, dias: object) -> None:
         with pytest.raises(ValueError):
             calcular_cuotas_obrero_patronales(315.04, dias, 2026)  # type: ignore[arg-type]

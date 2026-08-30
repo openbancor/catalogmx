@@ -326,9 +326,13 @@ class TestEdgeCases:
             float("nan"),
             float("inf"),
             float("-inf"),
+            None,
+            "9451.20",
+            True,
             0.0,
             -1.0,
             minimum_monthly_salary - 0.01,
+            10**1000,
         ]
 
         for salario_mensual_bruto in invalid_salaries:
