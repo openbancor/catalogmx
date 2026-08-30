@@ -109,6 +109,18 @@ function staticStringValues(node, bindings = new Map(), seen = new Set()) {
 			staticStringValues(node.right, bindings, seen)
 		);
 	}
+	if (node.type === 'LogicalExpression') {
+		const leftValues = staticStringValues(node.left, bindings, seen);
+		const rightValues = staticStringValues(node.right, bindings, seen);
+		if (typeof node.left?.value === 'boolean') {
+			if (node.operator === '&&') return node.left.value ? rightValues : leftValues;
+			if (node.operator === '||') return node.left.value ? leftValues : rightValues;
+		}
+		return [...leftValues, ...rightValues];
+	}
+	if (node.type === 'SequenceExpression') {
+		return staticStringValues(node.expressions.at(-1), bindings, seen);
+	}
 	const value = staticString(node);
 	return value === null ? [] : [value];
 }
@@ -125,6 +137,15 @@ function createStaticEvaluator(ast) {
 			}
 		}
 	}
+	walk(ast.html, (node) => {
+		if (
+			node.type === 'ConstTag' &&
+			node.expression?.type === 'AssignmentExpression' &&
+			node.expression.left?.type === 'Identifier'
+		) {
+			bindings.set(node.expression.left.name, node.expression.right);
+		}
+	});
 	return (node) => staticStringValues(node, bindings);
 }
 
@@ -160,27 +181,6 @@ function collectPublicNodes(node, nodes, parents, parent = null) {
 	}
 }
 
-function locallyHiddenClassNames(css) {
-	const classes = new Set();
-	walk(css, (node) => {
-		if (
-			node.type !== 'Rule' ||
-			!node.block?.children?.some(
-				(declaration) =>
-					declaration.type === 'Declaration' &&
-					((declaration.property === 'display' && declaration.value.replace(/\s+/g, '') === 'none') ||
-						(declaration.property === 'visibility' && declaration.value.replace(/\s+/g, '') === 'hidden'))
-			)
-		) {
-			return;
-		}
-		walk(node.prelude, (selector) => {
-			if (selector.type === 'ClassSelector') classes.add(selector.name);
-		});
-	});
-	return classes;
-}
-
 function isInlineExpression(node) {
 	return (
 		node.type === 'ExpressionTag' ||
@@ -207,7 +207,21 @@ function hasExactPendingAuditLinkText(node) {
 }
 
 function isVerifiedIssueAnchor(node) {
-	return node.type === 'Element' && node.name === 'a' && hasIssueHref(node) && hasExactPendingAuditLinkText(node);
+	return (
+		node.type === 'Element' &&
+		node.name === 'a' &&
+		node.attributes?.length === 2 &&
+		node.attributes.some(
+			(attribute) =>
+				attribute.type === 'Attribute' &&
+				attribute.name === 'class' &&
+				attribute.value?.length === 1 &&
+				attribute.value[0].type === 'Text' &&
+				attribute.value[0].data === 'font-medium underline'
+		) &&
+		hasIssueHref(node) &&
+		hasExactPendingAuditLinkText(node)
+	);
 }
 
 function staticPartValues(parts, evaluateStatic) {
@@ -236,102 +250,37 @@ function staticPublicAttributeValues(attribute, evaluateStatic) {
 	return publicAttributeNames.has(attribute.name) ? staticAttributeValues(attribute, evaluateStatic) : [];
 }
 
-function hasStaticHiddenClass(node, evaluateStatic, locallyHiddenClasses) {
-	const classAttribute = node.attributes?.find(
-		(attribute) => attribute.type === 'Attribute' && attribute.name === 'class'
+function hasExactClass(node, name, className) {
+	return (
+		node?.type === 'Element' &&
+		node.name === name &&
+		node.attributes?.length === 1 &&
+		node.attributes[0].type === 'Attribute' &&
+		node.attributes[0].name === 'class' &&
+		node.attributes[0].value?.length === 1 &&
+		node.attributes[0].value[0].type === 'Text' &&
+		node.attributes[0].value[0].data === className
 	);
-	const hiddenClassNames = new Set(['hidden', 'invisible', 'opacity-0', 'sr-only', ...locallyHiddenClasses]);
-	const hasHiddenClass = classAttribute
-		? staticAttributeValues(classAttribute, evaluateStatic).some((className) =>
-				className.split(/\s+/).some((name) => hiddenClassNames.has(name))
-			)
-		: false;
-	const hasHiddenDirective = node.attributes?.some(
-		(attribute) =>
-			attribute.type === 'Class' &&
-			hiddenClassNames.has(attribute.name) &&
-			(attribute.expression?.value !== false)
-	);
-	return hasHiddenClass || hasHiddenDirective;
 }
 
-function hasStaticHiddenAttribute(node) {
-	const hiddenAttribute = node.attributes?.find(
-		(attribute) => attribute.type === 'Attribute' && attribute.name === 'hidden'
-	);
-	if (!hiddenAttribute) return false;
-	if (hiddenAttribute.value === true) return true;
-	if (
-		hiddenAttribute.value?.length === 1 &&
-		isInlineExpression(hiddenAttribute.value[0]) &&
-		typeof hiddenAttribute.value[0].expression?.value === 'boolean'
-	) {
-		return hiddenAttribute.value[0].expression.value;
-	}
-	return true;
-}
-
-function hasStaticHiddenStyle(node, evaluateStatic) {
-	const styleAttribute = node.attributes?.find(
-		(attribute) => attribute.type === 'Attribute' && attribute.name === 'style'
-	);
-	const hiddenStyle = styleAttribute
-		? staticAttributeValues(styleAttribute, evaluateStatic).some((style) => {
-			const normalizedStyle = style.replace(/\s+/g, '').toLowerCase();
-			return normalizedStyle.includes('display:none') || normalizedStyle.includes('visibility:hidden');
-		})
-		: false;
-	const hiddenStyleDirective = node.attributes?.some((attribute) => {
-		if (attribute.type !== 'StyleDirective' || !['display', 'visibility'].includes(attribute.name)) {
-			return false;
-		}
-		const values = staticPartValues(attribute.value, evaluateStatic);
-		return (
-			values.length === 0 ||
-			values.some((value) =>
-				attribute.name === 'display' ? value.trim().toLowerCase() === 'none' : value.trim().toLowerCase() === 'hidden'
-			)
-		);
-	});
-	return hiddenStyle || hiddenStyleDirective;
-}
-
-function hasStaticAriaHidden(node, evaluateStatic) {
-	const ariaHiddenAttribute = node.attributes?.find(
-		(attribute) => attribute.type === 'Attribute' && attribute.name === 'aria-hidden'
-	);
-	return ariaHiddenAttribute
-		? staticAttributeValues(ariaHiddenAttribute, evaluateStatic).some((value) => value.toLowerCase() === 'true')
-		: false;
-}
-
-function isInElseBranch(node, ifBlock, parents) {
-	let current = node;
-	while (current && parents.get(current) !== ifBlock) {
-		current = parents.get(current);
-	}
-	return current?.type === 'ElseBlock';
-}
-
-function isStaticallyVisibleIssueAnchor(node, parents, evaluateStatic, hiddenClasses) {
+function isCanonicalPendingAuditNotice(node, parents) {
 	if (!isVerifiedIssueAnchor(node)) return false;
-	for (let current = node; current; current = parents.get(current)) {
-		if (
-			current.type === 'Head' ||
-			(current.type === 'Element' && current.name === 'template') ||
-			hasStaticHiddenClass(current, evaluateStatic, hiddenClasses) ||
-			hasStaticHiddenAttribute(current) ||
-			hasStaticHiddenStyle(current, evaluateStatic) ||
-			hasStaticAriaHidden(current, evaluateStatic)
-		) {
-			return false;
-		}
-		if (current.type === 'IfBlock' && typeof current.expression?.value === 'boolean') {
-			const inElseBranch = isInElseBranch(node, current, parents);
-			if (current.expression.value === inElseBranch) return false;
-		}
-	}
-	return true;
+	const paragraph = parents.get(node);
+	const alert = parents.get(paragraph);
+	const container = parents.get(alert);
+	const section = parents.get(container);
+	const root = parents.get(section);
+	return (
+		hasExactClass(paragraph, 'p', 'text-sm text-amber-900 dark:text-amber-300') &&
+		hasExactClass(
+			alert,
+			'div',
+			'mt-4 flex items-start gap-2 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800'
+		) &&
+		hasExactClass(container, 'div', 'max-w-5xl mx-auto px-4 sm:px-6 lg:px-8') &&
+		hasExactClass(section, 'section', 'py-8 md:py-12 border-b border-slate-200 dark:border-slate-800') &&
+		root?.type === 'Fragment'
+	);
 }
 
 function staticRenderedTextOutsideVerifiedIssueAnchors(node, evaluateStatic) {
@@ -346,9 +295,15 @@ function staticRenderedTextOutsideVerifiedIssueAnchors(node, evaluateStatic) {
 }
 
 function eventHandlerHasPublicReference(attribute, evaluateStatic) {
-	if (attribute.type !== 'Attribute' || !attribute.name.startsWith('on')) return false;
+	const expression =
+		attribute.type === 'EventHandler'
+			? attribute.expression
+			: attribute.type === 'Attribute' && attribute.name.startsWith('on')
+				? attribute.value
+				: null;
+	if (!expression) return false;
 	let found = false;
-	walk(attribute.value, (node) => {
+	walk(expression, (node) => {
 		if (evaluateStatic(node).some((value) => publicReference.test(value))) found = true;
 	});
 	return found;
@@ -357,9 +312,27 @@ function eventHandlerHasPublicReference(attribute, evaluateStatic) {
 function spreadPublicAttributeValues(attribute, evaluateStatic) {
 	if (attribute.type !== 'Spread' || attribute.expression?.type !== 'ObjectExpression') return [];
 	return attribute.expression.properties.flatMap((property) => {
-		if (property.type !== 'Property' || property.computed) return [];
-		const name = property.key.type === 'Identifier' ? property.key.name : property.key.value;
-		return publicAttributeNames.has(name) ? evaluateStatic(property.value) : [];
+		if (property.type !== 'Property') return [];
+		const names = property.computed
+			? evaluateStatic(property.key)
+			: [property.key.type === 'Identifier' ? property.key.name : property.key.value];
+		return names.some((name) => publicAttributeNames.has(name)) ? evaluateStatic(property.value) : [];
+	});
+}
+
+function spreadEventHandlerHasPublicReference(attribute, evaluateStatic) {
+	if (attribute.type !== 'Spread' || attribute.expression?.type !== 'ObjectExpression') return false;
+	return attribute.expression.properties.some((property) => {
+		if (property.type !== 'Property') return false;
+		const names = property.computed
+			? evaluateStatic(property.key)
+			: [property.key.type === 'Identifier' ? property.key.name : property.key.value];
+		if (!names.some((name) => typeof name === 'string' && name.startsWith('on'))) return false;
+		let found = false;
+		walk(property.value, (node) => {
+			if (evaluateStatic(node).some((value) => publicReference.test(value))) found = true;
+		});
+		return found;
 	});
 }
 
@@ -367,7 +340,6 @@ function assertPublicRouteContract(source, route) {
 	const ast = parse(source);
 	const violations = new Set();
 	const evaluateStatic = createStaticEvaluator(ast);
-	const hiddenClasses = locallyHiddenClassNames(ast.css);
 
 	for (const script of [ast.instance, ast.module]) {
 		walk(script, (node) => {
@@ -398,7 +370,8 @@ function assertPublicRouteContract(source, route) {
 				if (
 					staticPublicAttributeValues(attribute, evaluateStatic).some((value) => publicReference.test(value)) ||
 					spreadPublicAttributeValues(attribute, evaluateStatic).some((value) => publicReference.test(value)) ||
-					eventHandlerHasPublicReference(attribute, evaluateStatic)
+					eventHandlerHasPublicReference(attribute, evaluateStatic) ||
+					spreadEventHandlerHasPublicReference(attribute, evaluateStatic)
 				) {
 					violations.add('atributo público que ofrece o enruta Modalidad 10/PTI');
 				}
@@ -413,7 +386,7 @@ function assertPublicRouteContract(source, route) {
 	);
 	if (route.requiresPendingAuditNotice) {
 		assert.ok(
-			elements.some((element) => isStaticallyVisibleIssueAnchor(element, parents, evaluateStatic, hiddenClasses)),
+			elements.some((element) => isCanonicalPendingAuditNotice(element, parents)),
 			`${route.name} debe enlazar el issue #97 con texto visible "${pendingAuditLinkText}"`
 		);
 	}
@@ -421,9 +394,9 @@ function assertPublicRouteContract(source, route) {
 
 function runSelfTests() {
 	const route = { name: 'fixture', requiresPendingAuditNotice: true };
-	const honestAnchor = `<a href="${issueUrl}">${pendingAuditLinkText}</a>`;
-	const clean = `<p>Esta modalidad administrativa no está disponible. ${honestAnchor}.</p>`;
-	const honestNotice = `<p>${honestAnchor}</p>`;
+	const honestAnchor = `<a class="font-medium underline" href="${issueUrl}">${pendingAuditLinkText}</a>`;
+	const honestNotice = `<section class="py-8 md:py-12 border-b border-slate-200 dark:border-slate-800"><div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"><div class="mt-4 flex items-start gap-2 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800"><p class="text-sm text-amber-900 dark:text-amber-300">La modalidad administrativa para personas trabajadoras independientes no está disponible en esta calculadora;${honestAnchor}.</p></div></div></section>`;
+	const clean = honestNotice;
 
 	assert.doesNotThrow(() => assertPublicRouteContract(clean, route));
 	assert.doesNotThrow(() => assertPublicRouteContract(honestNotice, route));
@@ -442,6 +415,41 @@ function runSelfTests() {
 			route
 		)
 	);
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<button on:click={() => location.href = '/calculadoras/modalidad10'}>Ir</button>${clean}`,
+			route
+		)
+	);
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<button {...{ onclick: () => location.href = '/calculadoras/modalidad10' }}>Ir</button>${clean}`,
+			route
+		)
+	);
+	assert.throws(() => assertPublicRouteContract(`<a {...{ ['href']: '/calculadoras/modalidad10' }}>Ir</a>${clean}`, route));
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<p>{enabled && 'Modalidad 10 disponible'}</p>${clean}`,
+			route
+		)
+	);
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<p>{('Seguro', 'Modalidad 10 disponible')}</p>${clean}`,
+			route
+		)
+	);
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<p>{@const target = '/calculadoras/modalidad10'}<button onclick={() => location.href = target}>Ir</button></p>${clean}`,
+			route
+		)
+	);
+	assert.throws(() => assertPublicRouteContract(`<div class="opacity-0">${honestAnchor}</div>`, route));
+	assert.throws(() => assertPublicRouteContract(`<div style="opacity: 0">${honestAnchor}</div>`, route));
+	assert.throws(() => assertPublicRouteContract(`<div class="h-0 overflow-hidden">${honestAnchor}</div>`, route));
+	assert.throws(() => assertPublicRouteContract(`<div class="scale-0">${honestAnchor}</div>`, route));
 	assert.throws(() =>
 		assertPublicRouteContract(
 			`<button onclick={() => enabled ? location.href = '/seguro' : location.href = '/calculadoras/modalidad10'}>Ir</button>${clean}`,
