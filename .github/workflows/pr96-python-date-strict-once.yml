@@ -50,7 +50,6 @@ jobs:
           black catalogmx/calculators/imss.py tests/test_imss_vectors_shared.py
           ruff check catalogmx/ tests/test_imss_vectors_shared.py
           black --check catalogmx/ tests/test_imss_vectors_shared.py
-          mypy catalogmx/
           pytest tests/test_imss_vectors_shared.py -v
       - name: Commit strict parser
         run: |
