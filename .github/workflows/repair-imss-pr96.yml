@@ -18,64 +18,42 @@ jobs:
           ref: fix/fiscal-integrity-2026
           fetch-depth: 0
 
-      - name: Patch stale Modalidad 40 tests and requirements
+      - name: Make the new Modalidad 40 signature unambiguous
         shell: python
         run: |
-          import json
           from pathlib import Path
 
-          test_path = Path("packages/typescript/tests/coverage-validators-calculators.test.ts")
-          text = test_path.read_text(encoding="utf-8")
-          start_marker = "  // Modalidad 40 salary bounds."
-          second_test_marker = "  test('calcularModalidad40 clamps salary to maximum (line 321-322)', () => {"
-          replacement_lines = [
-              "  test('calcularModalidad40 rejects salary below last registered SBC', () => {",
-              "    expect(() => IMSSCalculator.calcularModalidad40(1, 5000, 2025)).toThrow(",
-              "      'no puede ser menor al último SBC'",
-              "    );",
-              "  });",
-              "",
-              "  test('calcularModalidad40 clamps salary to maximum', () => {",
-              "    const result = IMSSCalculator.calcularModalidad40(999999, 10000, 2025);",
-              "    expect(result.salario_base_cotizacion).toBeLessThan(999999);",
-              "  });",
-          ]
-          replacement = "\n".join(replacement_lines)
-          if start_marker in text:
-              start = text.index(start_marker)
-              second_start = text.index(second_test_marker, start)
-              end = text.index("\n  });", second_start) + len("\n  });")
-              text = text[:start] + replacement + text[end:]
-              test_path.write_text(text, encoding="utf-8")
-          elif replacement not in text:
-              raise SystemExit("Expected Modalidad 40 coverage block was not found")
+          ts_path = Path("packages/typescript/src/calculators/imss-calculator.ts")
+          ts = ts_path.read_text(encoding="utf-8")
+          old_ts = "    year: IMSSYear = 2026,\n    fecha?: string | Date\n  ): Modalidad40Result {"
+          new_ts = "    year: IMSSYear,\n    fecha?: string | Date\n  ): Modalidad40Result {"
+          if old_ts in ts:
+              ts = ts.replace(old_ts, new_ts, 1)
+              ts_path.write_text(ts, encoding="utf-8")
+          elif new_ts not in ts:
+              raise SystemExit("Expected TypeScript Modalidad 40 signature was not found")
 
-          tables_path = Path("packages/shared-data/imss-tables.json")
-          tables = json.loads(tables_path.read_text(encoding="utf-8"))
-          requisitos = tables["modalidad_40"]["requisitos"]
-          requisitos.pop("plazo_inscripcion_dias", None)
-          requisitos.pop("edad_minima", None)
-          requisitos.pop("edad_maxima", None)
-          requisitos["semanas_minimas_periodo_anios"] = 5
-          requisitos["plazo_ejercicio_derecho_anios"] = 5
-          tables_path.write_text(
-              json.dumps(tables, ensure_ascii=False, indent=2) + "\n",
-              encoding="utf-8",
-          )
+          py_path = Path("packages/python/catalogmx/calculators/imss.py")
+          py = py_path.read_text(encoding="utf-8")
+          old_py = "    year: IMSSYear = 2026,\n) -> Modalidad40Result:"
+          new_py = "    year: IMSSYear,\n) -> Modalidad40Result:"
+          if old_py in py:
+              py = py.replace(old_py, new_py, 1)
+              py_path.write_text(py, encoding="utf-8")
+          elif new_py not in py:
+              raise SystemExit("Expected Python Modalidad 40 signature was not found")
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Verify fiscal manifest and format/test Python IMSS
+      - name: Format and test Python IMSS
         run: |
-          python scripts/build_fiscal_manifest.py --check
           python -m pip install --upgrade pip
           python -m pip install -e "./packages/python[dev]"
           black packages/python/catalogmx/calculators/imss.py
-          ruff check --fix packages/python/catalogmx/calculators/imss.py
-          black packages/python/catalogmx/calculators/imss.py
+          ruff check packages/python/catalogmx/calculators/imss.py
           cd packages/python
           pytest tests/test_imss_calculator.py tests/test_imss_vectors_shared.py -q
 
@@ -88,36 +66,18 @@ jobs:
         run: |
           cd packages/typescript
           npm install
-          npx prettier --write src/calculators/imss-calculator.ts src/fiscal/index.ts
+          npx prettier --write src/calculators/imss-calculator.ts
           npm run typecheck
           npx jest --runInBand tests/imss-vectors.test.ts tests/fiscal-history.test.ts tests/coverage-validators-calculators.test.ts
 
-      - name: Set up Flutter stable
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-
-      - name: Format and test Dart IMSS
-        run: |
-          cd packages/dart
-          flutter pub get
-          dart format lib/src/calculators/imss.dart test/imss_vectors_test.dart
-          dart analyze lib/src/calculators/imss.dart test/imss_vectors_test.dart
-          flutter test test/imss_vectors_test.dart
-
-      - name: Commit repaired and formatted files
+      - name: Commit API hardening
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
-            packages/shared-data/imss-tables.json \
-            packages/typescript/tests/coverage-validators-calculators.test.ts \
             packages/typescript/src/calculators/imss-calculator.ts \
-            packages/typescript/src/fiscal/index.ts \
-            packages/python/catalogmx/calculators/imss.py \
-            packages/dart/lib/src/calculators/imss.dart \
-            packages/dart/test/imss_vectors_test.dart
+            packages/python/catalogmx/calculators/imss.py
           if ! git diff --cached --quiet; then
-            git commit -m "chore(imss): finish audited cross-runtime repairs"
+            git commit -m "fix(imss): require explicit M40 exercise after SBC"
             git push origin HEAD:fix/fiscal-integrity-2026
           fi
