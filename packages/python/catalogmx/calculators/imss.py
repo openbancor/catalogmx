@@ -286,7 +286,10 @@ def calcular_modalidad_40(
     uma_mensual = uma["mensual"]
     salario_maximo = uma_mensual * float(mod40["limites_salario"]["maximo_uma"])
 
-    if not math.isfinite(salario_base_cotizacion) or salario_base_cotizacion <= 0:
+    if (
+        not math.isfinite(salario_base_cotizacion)
+        or salario_base_cotizacion <= 0
+    ):
         raise ValueError("El SBC mensual de Modalidad 40 debe ser mayor que cero")
     if not math.isfinite(ultimo_sbc_mensual) or ultimo_sbc_mensual <= 0:
         raise ValueError("El último SBC mensual debe ser mayor que cero")
