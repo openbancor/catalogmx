@@ -59,6 +59,7 @@ void main() {
       final vector = raw as Map<String, dynamic>;
       final result = IMSSCalculator.calcularModalidad40(
         (vector['salario_base_cotizacion'] as num).toDouble(),
+        ultimoSbcMensual: (vector['ultimo_sbc_mensual'] as num).toDouble(),
         year: _yearFromInt(vector['year'] as int),
       );
       final expected = vector['expected'] as Map<String, dynamic>;
@@ -76,5 +77,25 @@ void main() {
       expect(_round(result.cuotaMensual), expected['cuota_mensual']);
       expect(_round(result.cuotaFijaUma), expected['cuota_fija_uma']);
     }
+  });
+
+  test('Modalidad 40 rejects a salary below the last registered SBC', () {
+    expect(
+      () => IMSSCalculator.calcularModalidad40(
+        10000,
+        ultimoSbcMensual: 12000,
+      ),
+      throwsArgumentError,
+    );
+  });
+
+  test('Modalidad 40 preserves the special one-minimum-wage CEAV row', () {
+    final uma = IMSSCalculator.getUMA(IMSSYear.year2026);
+    final monthlyMinimum = 315.04 * (uma.mensual / uma.diaria);
+    final result = IMSSCalculator.calcularModalidad40(
+      monthlyMinimum,
+      ultimoSbcMensual: monthlyMinimum,
+    );
+    expect(result.porcentajeTotal, closeTo(0.10075, 0.00000001));
   });
 }
