@@ -36,7 +36,25 @@ export interface FiscalManifest {
   datasets: Record<FiscalDatasetId, FiscalDatasetManifest>;
 }
 
-const MANIFEST = FISCAL_MANIFEST as unknown as FiscalManifest;
+export type DeepReadonly<T> = T extends (...args: never[]) => unknown
+  ? T
+  : T extends readonly (infer U)[]
+    ? readonly DeepReadonly<U>[]
+    : T extends object
+      ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
+      : T;
+
+function deepFreeze<T>(value: T): DeepReadonly<T> {
+  if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {
+    for (const nested of Object.values(value as Record<string, unknown>)) {
+      deepFreeze(nested);
+    }
+    Object.freeze(value);
+  }
+  return value as DeepReadonly<T>;
+}
+
+const MANIFEST = deepFreeze(FISCAL_MANIFEST as unknown as FiscalManifest);
 
 /**
  * Return the immutable, build-time fiscal manifest.
@@ -44,7 +62,7 @@ const MANIFEST = FISCAL_MANIFEST as unknown as FiscalManifest;
  * The manifest is statically bundled and therefore works in Workers/browser
  * runtimes without fs, network access or repository-relative paths.
  */
-export function fiscalManifest(): Readonly<FiscalManifest> {
+export function fiscalManifest(): DeepReadonly<FiscalManifest> {
   return MANIFEST;
 }
 
@@ -52,7 +70,7 @@ export function fiscalManifest(): Readonly<FiscalManifest> {
 export function fiscalEntry(
   datasetId: FiscalDatasetId,
   exercise: number
-): FiscalManifestEntry | undefined {
+): DeepReadonly<FiscalManifestEntry> | undefined {
   return MANIFEST.datasets[datasetId].entries[String(exercise)];
 }
 
@@ -64,9 +82,9 @@ export function fiscalEntry(
 export function fiscalManifestForExercise(exercise: number): {
   exercise: number;
   content_sha256: string;
-  entries: Partial<Record<FiscalDatasetId, FiscalManifestEntry>>;
+  entries: Partial<Record<FiscalDatasetId, DeepReadonly<FiscalManifestEntry>>>;
 } {
-  const entries: Partial<Record<FiscalDatasetId, FiscalManifestEntry>> = {};
+  const entries: Partial<Record<FiscalDatasetId, DeepReadonly<FiscalManifestEntry>>> = {};
 
   for (const datasetId of Object.keys(MANIFEST.datasets) as FiscalDatasetId[]) {
     const candidate = fiscalEntry(datasetId, exercise);
@@ -84,7 +102,7 @@ export function fiscalManifestForExercise(exercise: number): {
 export function fiscalSources(
   datasetId: FiscalDatasetId,
   exercise: number
-): Array<{ id: string; source: FiscalSource | undefined }> {
+): Array<{ id: string; source: DeepReadonly<FiscalSource> | undefined }> {
   const candidate = fiscalEntry(datasetId, exercise);
   if (!candidate) return [];
   return candidate.source_ids.map((id) => ({ id, source: MANIFEST.sources[id] }));
@@ -100,7 +118,7 @@ export function fiscalSources(
 export function assertFiscalDataVerified(
   datasetId: FiscalDatasetId,
   exercise: number
-): FiscalManifestEntry {
+): DeepReadonly<FiscalManifestEntry> {
   const candidate = fiscalEntry(datasetId, exercise);
   if (!candidate) {
     throw new Error(`No fiscal data for ${datasetId} exercise ${exercise}`);
