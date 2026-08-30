@@ -28,6 +28,22 @@ describe('historical fiscal parameters', () => {
     expect(IMSSCalculator.getUMAForDate('2026-02-01').diaria).toBe(117.31);
   });
 
+  test('preserves the local calendar date for Date inputs at the UMA boundary', () => {
+    const previousTimezone = process.env.TZ;
+    try {
+      process.env.TZ = 'America/Mexico_City';
+      const january31Evening = new Date(2026, 0, 31, 20, 0, 0);
+      expect(january31Evening.toISOString().startsWith('2026-02-01')).toBe(true);
+      expect(IMSSCalculator.getUMAForDate(january31Evening).diaria).toBe(113.14);
+    } finally {
+      if (previousTimezone === undefined) {
+        delete process.env.TZ;
+      } else {
+        process.env.TZ = previousTimezone;
+      }
+    }
+  });
+
   test('keeps CEAV patronal rates by exercise instead of overwriting history', () => {
     expect(IMSSCalculator.getCEAVPatronRate(500, 2024)).toBe(0.05331);
     expect(IMSSCalculator.getCEAVPatronRate(500, 2025)).toBe(0.06422);
