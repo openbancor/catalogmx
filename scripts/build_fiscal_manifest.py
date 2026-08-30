@@ -19,14 +19,57 @@ import hashlib
 import json
 from datetime import date, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal, TypeAlias, TypedDict, cast
 
 ROOT = Path(__file__).resolve().parents[1]
 SHARED = ROOT / "packages" / "shared-data"
 MANIFEST_PATH = SHARED / "fiscal-manifest.json"
+PYTHON_MANIFEST_PATH = (
+    ROOT / "packages" / "python" / "catalogmx" / "data" / "fiscal-manifest.json"
+)
 TS_PATH = ROOT / "packages" / "typescript" / "src" / "fiscal" / "manifest.generated.ts"
 
 VERIFIED_YEARS = {2024, 2025, 2026}
+
+FiscalDataStatus: TypeAlias = Literal["verified", "pending_review", "legacy_unverified"]
+JsonScalar: TypeAlias = str | int | float | bool | None
+JsonValue: TypeAlias = JsonScalar | list["JsonValue"] | dict[str, "JsonValue"]
+
+
+class FiscalSource(TypedDict, total=False):
+    authority: str
+    title: str
+    published_at: str
+    url: str
+
+
+class _FiscalManifestEntryRequired(TypedDict):
+    exercise: int
+    status: FiscalDataStatus
+    valid_from: str | None
+    valid_to: str | None
+    source_ids: list[str]
+    values: JsonValue
+    sha256: str
+
+
+class FiscalManifestEntry(_FiscalManifestEntryRequired, total=False):
+    notes: str
+
+
+class FiscalDataset(TypedDict):
+    owner: str
+    kind: str
+    entries: dict[str, FiscalManifestEntry]
+
+
+class FiscalManifest(TypedDict):
+    schema_version: int
+    manifest_id: str
+    policy: dict[FiscalDataStatus, str]
+    sources: dict[str, FiscalSource]
+    datasets: dict[str, FiscalDataset]
+    content_sha256: str
 
 
 def canonical_bytes(value: Any) -> bytes:
@@ -44,15 +87,15 @@ def digest(value: Any) -> str:
 
 def entry(
     exercise: int,
-    status: str,
+    status: FiscalDataStatus,
     valid_from: str | None,
     valid_to: str | None,
     source_ids: list[str],
-    values: Any,
+    values: JsonValue,
     *,
     notes: str | None = None,
-) -> dict[str, Any]:
-    result: dict[str, Any] = {
+) -> FiscalManifestEntry:
+    result: FiscalManifestEntry = {
         "exercise": exercise,
         "status": status,
         "valid_from": valid_from,
@@ -113,22 +156,34 @@ def ensure_imss_parameter_parity(
                     )
 
     if errors:
-        raise SystemExit(
-            "IMSS canonical/runtime parameter drift: " + "; ".join(errors)
-        )
+        raise SystemExit("IMSS canonical/runtime parameter drift: " + "; ".join(errors))
 
 
-def build_manifest() -> dict[str, Any]:
-    uma_rows = json.loads((SHARED / "mexico" / "uma.json").read_text(encoding="utf-8"))
-    wage_rows = json.loads(
-        (SHARED / "mexico" / "salarios_minimos.json").read_text(encoding="utf-8")
+def build_manifest() -> FiscalManifest:
+    uma_rows = cast(
+        list[dict[str, Any]],
+        json.loads((SHARED / "mexico" / "uma.json").read_text(encoding="utf-8")),
     )
-    imss = json.loads((SHARED / "imss-tables.json").read_text(encoding="utf-8"))
-    isr = json.loads((SHARED / "isr-tables.json").read_text(encoding="utf-8"))
+    wage_rows = cast(
+        list[dict[str, Any]],
+        json.loads(
+            (SHARED / "mexico" / "salarios_minimos.json").read_text(encoding="utf-8")
+        ),
+    )
+    imss = cast(
+        dict[str, Any],
+        json.loads((SHARED / "imss-tables.json").read_text(encoding="utf-8")),
+    )
+    isr = cast(
+        dict[str, Any],
+        json.loads((SHARED / "isr-tables.json").read_text(encoding="utf-8")),
+    )
 
     ensure_imss_parameter_parity(uma_rows, wage_rows, imss)
 
-    sources = dict(imss.get("_meta", {}).get("sources", {}))
+    sources = cast(
+        dict[str, FiscalSource], dict(imss.get("_meta", {}).get("sources", {}))
+    )
     sources["legacy_snapshot"] = {
         "authority": "CatalogMX",
         "title": "Tracked historical snapshot pending authority-source audit",
@@ -155,9 +210,9 @@ def build_manifest() -> dict[str, Any]:
         "url": "https://www.dof.gob.mx/nota_detalle.php?codigo=5777649&fecha=31/12/2025",
     }
 
-    datasets: dict[str, dict[str, Any]] = {}
+    datasets: dict[str, FiscalDataset] = {}
 
-    uma_entries: dict[str, Any] = {}
+    uma_entries: dict[str, FiscalManifestEntry] = {}
     for row in sorted(uma_rows, key=lambda item: item["año"]):
         year = int(row["año"])
         values = {
@@ -166,11 +221,13 @@ def build_manifest() -> dict[str, Any]:
             "annual": row["valor_anual"],
             "currency": row["moneda"],
         }
-        status = "verified" if year in VERIFIED_YEARS else "legacy_unverified"
+        uma_status: FiscalDataStatus = (
+            "verified" if year in VERIFIED_YEARS else "legacy_unverified"
+        )
         source_id = f"uma_{year}" if f"uma_{year}" in sources else "legacy_snapshot"
         uma_entries[str(year)] = entry(
             year,
-            status,
+            uma_status,
             row.get("vigencia_inicio"),
             row.get("vigencia_fin"),
             [source_id],
@@ -182,7 +239,7 @@ def build_manifest() -> dict[str, Any]:
         "entries": uma_entries,
     }
 
-    wage_entries: dict[str, Any] = {}
+    wage_entries: dict[str, FiscalManifestEntry] = {}
     sorted_wage_rows = sorted(wage_rows, key=lambda item: item["año"])
     for index, row in enumerate(sorted_wage_rows):
         year = int(row["año"])
@@ -210,7 +267,9 @@ def build_manifest() -> dict[str, Any]:
             )
             if key in row
         }
-        status = "verified" if year in VERIFIED_YEARS else "legacy_unverified"
+        wage_status: FiscalDataStatus = (
+            "verified" if year in VERIFIED_YEARS else "legacy_unverified"
+        )
         source_id = (
             f"salario_minimo_{year}"
             if f"salario_minimo_{year}" in sources
@@ -218,7 +277,7 @@ def build_manifest() -> dict[str, Any]:
         )
         wage_entries[str(year)] = entry(
             year,
-            status,
+            wage_status,
             row.get("vigencia_inicio"),
             valid_to,
             [source_id],
@@ -231,7 +290,7 @@ def build_manifest() -> dict[str, Any]:
     }
 
     ceav = imss["cuotas_imss"]["retiro_cesantia_vejez"]["cesantia_vejez"]
-    ceav_entries: dict[str, Any] = {}
+    ceav_entries: dict[str, FiscalManifestEntry] = {}
     for year_text, rates in sorted(ceav["patron_por_ejercicio"].items()):
         year = int(year_text)
         values = {
@@ -279,7 +338,7 @@ def build_manifest() -> dict[str, Any]:
     }
 
     mod40 = imss["modalidad_40"]
-    mod40_entries: dict[str, Any] = {}
+    mod40_entries: dict[str, FiscalManifestEntry] = {}
     for year_text, reference in sorted(mod40["referencia_por_ejercicio"].items()):
         year = int(year_text)
         values = {
@@ -322,7 +381,7 @@ def build_manifest() -> dict[str, Any]:
         },
     }
 
-    isr_entries: dict[str, Any] = {}
+    isr_entries: dict[str, FiscalManifestEntry] = {}
     for year_text, brackets in sorted(isr.get("brackets", {}).items()):
         year = int(year_text)
         values = {
@@ -352,24 +411,27 @@ def build_manifest() -> dict[str, Any]:
         "entries": isr_entries,
     }
 
-    manifest: dict[str, Any] = {
-        "schema_version": 1,
-        "manifest_id": "catalogmx.fiscal",
-        "policy": {
-            "verified": "Source-audited and safe for the declared exercise/vigencia.",
-            "pending_review": "Present for compatibility but consumers should reject for audited payroll.",
-            "legacy_unverified": "Historical snapshot retained; provenance audit not complete.",
+    manifest = cast(
+        FiscalManifest,
+        {
+            "schema_version": 1,
+            "manifest_id": "catalogmx.fiscal",
+            "policy": {
+                "verified": "Source-audited and safe for the declared exercise/vigencia.",
+                "pending_review": "Present for compatibility but consumers should reject for audited payroll.",
+                "legacy_unverified": "Historical snapshot retained; provenance audit not complete.",
+            },
+            "sources": sources,
+            "datasets": datasets,
         },
-        "sources": sources,
-        "datasets": datasets,
-    }
+    )
     # Hash the complete provenance-bearing payload, not only the numeric tables.
     # A source/provenance change therefore changes the manifest identity too.
     manifest["content_sha256"] = digest(manifest)
     return manifest
 
 
-def ensure_sources_resolve(manifest: dict[str, Any]) -> None:
+def ensure_sources_resolve(manifest: FiscalManifest) -> None:
     sources = manifest["sources"]
     unresolved: list[str] = []
     for dataset_id, dataset in manifest["datasets"].items():
@@ -381,7 +443,7 @@ def ensure_sources_resolve(manifest: dict[str, Any]) -> None:
         raise SystemExit("Unresolved fiscal source ids: " + ", ".join(unresolved))
 
 
-def ensure_history_is_additive(manifest: dict[str, Any]) -> None:
+def ensure_history_is_additive(manifest: FiscalManifest) -> None:
     if not MANIFEST_PATH.exists():
         return
     previous = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
@@ -402,11 +464,11 @@ def ensure_history_is_additive(manifest: dict[str, Any]) -> None:
         )
 
 
-def render_json(manifest: dict[str, Any]) -> str:
+def render_json(manifest: FiscalManifest) -> str:
     return json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
 
 
-def render_typescript(manifest: dict[str, Any]) -> str:
+def render_typescript(manifest: FiscalManifest) -> str:
     payload = json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2)
     if "`" in payload or "${" in payload:
         raise SystemExit("Fiscal manifest contains template-literal control text")
@@ -414,12 +476,8 @@ def render_typescript(manifest: dict[str, Any]) -> str:
     ids = "\n".join(f"  '{dataset_id}'," for dataset_id in dataset_ids)
     return (
         "// Generated by scripts/build_fiscal_manifest.py. DO NOT EDIT.\n"
-        "export const FISCAL_DATASET_IDS = [\n"
-        + ids
-        + "\n] as const;\n\n"
-        "export const FISCAL_MANIFEST_JSON = String.raw`"
-        + payload
-        + "`;\n\n"
+        "export const FISCAL_DATASET_IDS = [\n" + ids + "\n] as const;\n\n"
+        "export const FISCAL_MANIFEST_JSON = String.raw`" + payload + "`;\n\n"
         "export const FISCAL_MANIFEST = JSON.parse(FISCAL_MANIFEST_JSON);\n"
     )
 
@@ -437,8 +495,16 @@ def main() -> int:
 
     if args.check:
         errors: list[str] = []
-        if not MANIFEST_PATH.exists() or MANIFEST_PATH.read_text(encoding="utf-8") != expected_json:
+        if (
+            not MANIFEST_PATH.exists()
+            or MANIFEST_PATH.read_text(encoding="utf-8") != expected_json
+        ):
             errors.append(str(MANIFEST_PATH.relative_to(ROOT)))
+        if (
+            not PYTHON_MANIFEST_PATH.exists()
+            or PYTHON_MANIFEST_PATH.read_text(encoding="utf-8") != expected_json
+        ):
+            errors.append(str(PYTHON_MANIFEST_PATH.relative_to(ROOT)))
         if not TS_PATH.exists() or TS_PATH.read_text(encoding="utf-8") != expected_ts:
             errors.append(str(TS_PATH.relative_to(ROOT)))
         if errors:
@@ -446,8 +512,10 @@ def main() -> int:
         return 0
 
     MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
+    PYTHON_MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
     TS_PATH.parent.mkdir(parents=True, exist_ok=True)
     MANIFEST_PATH.write_text(expected_json, encoding="utf-8")
+    PYTHON_MANIFEST_PATH.write_text(expected_json, encoding="utf-8")
     TS_PATH.write_text(expected_ts, encoding="utf-8")
     return 0
 
