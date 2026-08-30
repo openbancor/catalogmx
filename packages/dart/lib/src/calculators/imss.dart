@@ -209,7 +209,8 @@ class IMSSCalculator {
     for (final path in candidates) {
       final file = File(path);
       if (!file.existsSync()) continue;
-      _imssCatalogs = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+      _imssCatalogs =
+          jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
       return _imssCatalogs!;
     }
 
@@ -228,7 +229,8 @@ class IMSSCalculator {
     ZonaSalario zona = ZonaSalario.general,
   ]) {
     final tables = _loadIMSSTables();
-    return (tables['salario_minimo']![year.value.toString()]![zona.value]! as num)
+    return (tables['salario_minimo']![year.value.toString()]![zona.value]!
+            as num)
         .toDouble();
   }
 
@@ -244,7 +246,8 @@ class IMSSCalculator {
     final schedules = ceav['patron_por_ejercicio']! as Map<String, dynamic>;
     final rates = schedules[year.value.toString()]! as List<dynamic>;
     if (rates.length != 8) {
-      throw StateError('No se encontró tarifa CEAV patronal para ${year.value}');
+      throw StateError(
+          'No se encontró tarifa CEAV patronal para ${year.value}');
     }
 
     final minimum = tables['salario_minimo']![year.value.toString()]!
@@ -273,8 +276,7 @@ class IMSSCalculator {
     } else {
       index = 7;
     }
-    return ((rates[index] as Map<String, dynamic>)['tasa']! as num)
-        .toDouble();
+    return ((rates[index] as Map<String, dynamic>)['tasa']! as num).toDouble();
   }
 
   /// Calculate IMSS employer and employee contributions.
@@ -347,8 +349,7 @@ class IMSSCalculator {
         salarioBase * (gps['patron']! as num).toDouble();
 
     final rt = cuotas['riesgo_trabajo']! as Map<String, dynamic>;
-    final primaRiesgo =
-        (rt['clase_${claseRiesgo.value}']! as num).toDouble();
+    final primaRiesgo = (rt['clase_${claseRiesgo.value}']! as num).toDouble();
     cuotasPatron['riesgo_trabajo'] = salarioBase * primaRiesgo;
 
     final totalPatron = cuotasPatron.values.fold(0.0, (sum, val) => sum + val);
@@ -464,8 +465,7 @@ class IMSSCalculator {
     final componentes = <String, double>{
       'prestaciones_en_especie_fija': cuotaFijaUma,
     };
-    final componentesData =
-        cuotaData['componentes']! as Map<String, dynamic>;
+    final componentesData = cuotaData['componentes']! as Map<String, dynamic>;
     for (final entry in componentesData.entries) {
       if (entry.value is num) {
         componentes[entry.key] =

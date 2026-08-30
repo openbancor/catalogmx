@@ -294,9 +294,8 @@
     "requisitos": {
       "baja_imss": "Tener baja del régimen obligatorio",
       "semanas_minimas": 52,
-      "plazo_inscripcion_dias": 365,
-      "edad_minima": 0,
-      "edad_maxima": 60
+      "semanas_minimas_periodo_anios": 5,
+      "plazo_ejercicio_derecho_anios": 5
     },
     "limites_salario": {
       "maximo_uma": 25,

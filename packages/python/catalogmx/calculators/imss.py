@@ -209,9 +209,7 @@ def calcular_cuotas_obrero_patronales(
     cuotas_patron["retiro"] = salario_base * float(rcv["retiro"]["patron"])
     ceav_patron_rate = _get_ceav_patron_rate(salario_diario, year)
     cuotas_patron["cesantia_vejez"] = salario_base * ceav_patron_rate
-    cuotas_trabajador["cesantia_vejez"] = salario_base * float(
-        rcv["cesantia_vejez"]["trabajador"]
-    )
+    cuotas_trabajador["cesantia_vejez"] = salario_base * float(rcv["cesantia_vejez"]["trabajador"])
 
     gps = cuotas["guarderias_prestaciones_sociales"]
     cuotas_patron["guarderias"] = salario_base * float(gps["patron"])
