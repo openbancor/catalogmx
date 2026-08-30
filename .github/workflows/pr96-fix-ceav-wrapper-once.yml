@@ -1,0 +1,39 @@
+name: PR96 Fix CEAV Wrapper Once
+
+on:
+  push:
+    branches:
+      - fix/fiscal-integrity-2026
+    paths:
+      - '.github/workflows/pr96-fix-ceav-wrapper-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-wrapper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/fiscal-integrity-2026
+      - name: Insert missing TypeScript replacement
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('.github/workflows/pr96-ceav-zone-once.yml')
+          s = p.read_text(encoding='utf-8')
+          old = "          assert s.count(old) == 1, s.count(old)\n          p.write_text(s, encoding='utf-8')\n\n          # TypeScript regressions\n"
+          new = "          assert s.count(old) == 1, s.count(old)\n          s = s.replace(old, new, 1)\n          p.write_text(s, encoding='utf-8')\n\n          # TypeScript regressions\n"
+          if s.count(old) != 1:
+              raise SystemExit(f'expected one missing replacement site, found {s.count(old)}')
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          PY
+      - name: Commit wrapper correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/workflows/pr96-ceav-zone-once.yml
+          git diff --cached --check
+          git commit -m "ci: fix CEAV zone repair wrapper"
+          git push origin HEAD:fix/fiscal-integrity-2026
