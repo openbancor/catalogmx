@@ -45,9 +45,10 @@ jobs:
           if ts.count(marker) != 1:
               raise SystemExit(f'expected one getUMA doc marker, found {ts.count(marker)}')
           ts = ts.replace(marker, helper + marker, 1)
-          if ts.count('    return { ...uma };\n') != 2:
-              raise SystemExit(f'expected two UMA spread returns, found {ts.count("    return { ...uma };\\n")}')
-          ts = ts.replace('    return { ...uma };\n', '    return this.toPublicUMA(uma);\n', 2)
+          spread_return = '    return { ...uma };\n'
+          if ts.count(spread_return) != 2:
+              raise SystemExit(f'expected two UMA spread returns, found {ts.count(spread_return)}')
+          ts = ts.replace(spread_return, '    return this.toPublicUMA(uma);\n', 2)
           ts_path.write_text(ts, encoding='utf-8')
 
           vector_path = Path('packages/typescript/tests/imss-vectors.test.ts')
@@ -56,7 +57,10 @@ jobs:
           vector_test = '''  test('UMA public helpers expose the cross-runtime value shape only', () => {\n    const expected = { diaria: 117.31, mensual: 3566.22, anual: 42794.64 };\n    expect(IMSSCalculator.getUMA(2026)).toEqual(expected);\n    expect(IMSSCalculator.getUMAForDate('2026-02-01')).toEqual(expected);\n  });\n\n'''
           if vectors.count(vector_marker) != 1:
               raise SystemExit(f'expected one IMSS describe marker, found {vectors.count(vector_marker)}')
-          vector_path.write_text(vectors.replace(vector_marker, vector_marker + vector_test, 1), encoding='utf-8')
+          vector_path.write_text(
+              vectors.replace(vector_marker, vector_marker + vector_test, 1),
+              encoding='utf-8',
+          )
 
           manifest_script_path = Path('scripts/build_fiscal_manifest.py')
           script = manifest_script_path.read_text(encoding='utf-8')
@@ -74,7 +78,10 @@ jobs:
           new_entry = '''            row.get("vigencia_inicio"),\n            valid_to,\n            [source_id],\n            values,\n        )\n    datasets["minimum_wage"] = {\n'''
           if script.count(old_entry) != 1:
               raise SystemExit(f'expected one minimum-wage entry block, found {script.count(old_entry)}')
-          manifest_script_path.write_text(script.replace(old_entry, new_entry, 1), encoding='utf-8')
+          manifest_script_path.write_text(
+              script.replace(old_entry, new_entry, 1),
+              encoding='utf-8',
+          )
 
           fiscal_test_path = Path('packages/typescript/tests/fiscal-history.test.ts')
           fiscal_tests = fiscal_test_path.read_text(encoding='utf-8')
@@ -82,7 +89,10 @@ jobs:
           fiscal_regression = '''    expect(assertFiscalDataVerified('minimum_wage', 2024).valid_to).toBe('2024-12-31');\n    expect(assertFiscalDataVerified('minimum_wage', 2025).valid_to).toBe('2025-12-31');\n    expect(assertFiscalDataVerified('minimum_wage', 2026).valid_to).toBeNull();\n\n'''
           if fiscal_tests.count(fiscal_marker) != 1:
               raise SystemExit(f'expected one fiscal provenance marker, found {fiscal_tests.count(fiscal_marker)}')
-          fiscal_test_path.write_text(\n              fiscal_tests.replace(fiscal_marker, fiscal_marker + fiscal_regression, 1),\n              encoding='utf-8',\n          )
+          fiscal_test_path.write_text(
+              fiscal_tests.replace(fiscal_marker, fiscal_marker + fiscal_regression, 1),
+              encoding='utf-8',
+          )
           PY
       - name: Regenerate fiscal manifest
         run: |
