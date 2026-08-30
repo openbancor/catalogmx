@@ -6,7 +6,8 @@
 library;
 
 import 'dart:convert';
-import 'dart:io';
+
+import '../data/imss_runtime_data.generated.dart';
 
 /// Supported years.
 enum IMSSYear {
@@ -178,43 +179,14 @@ class IMSSCalculator {
 
   static Map<String, dynamic> _loadIMSSTables() {
     if (_imssTables != null) return _imssTables!;
-
-    final candidates = [
-      '../shared-data/imss-tables.json',
-      '../../shared-data/imss-tables.json',
-      '../../../shared-data/imss-tables.json',
-      'packages/shared-data/imss-tables.json',
-    ];
-
-    for (final path in candidates) {
-      final file = File(path);
-      if (!file.existsSync()) continue;
-      _imssTables = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
-      return _imssTables!;
-    }
-
-    throw Exception('IMSS tables JSON file not found');
+    _imssTables = jsonDecode(imssTablesJson) as Map<String, dynamic>;
+    return _imssTables!;
   }
 
   static Map<String, dynamic> _loadIMSSCatalogs() {
     if (_imssCatalogs != null) return _imssCatalogs!;
-
-    final candidates = [
-      '../shared-data/imss-catalogs.json',
-      '../../shared-data/imss-catalogs.json',
-      '../../../shared-data/imss-catalogs.json',
-      'packages/shared-data/imss-catalogs.json',
-    ];
-
-    for (final path in candidates) {
-      final file = File(path);
-      if (!file.existsSync()) continue;
-      _imssCatalogs =
-          jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
-      return _imssCatalogs!;
-    }
-
-    throw Exception('IMSS catalogs JSON file not found');
+    _imssCatalogs = jsonDecode(imssCatalogsJson) as Map<String, dynamic>;
+    return _imssCatalogs!;
   }
 
   /// Get UMA values for a specific exercise.

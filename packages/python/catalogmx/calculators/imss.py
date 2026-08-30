@@ -11,7 +11,7 @@ import json
 import math
 import re
 from datetime import date, datetime
-from pathlib import Path
+from importlib.resources import files
 from typing import Literal, TypedDict
 
 IMSSYear = Literal[2024, 2025, 2026]
@@ -73,31 +73,21 @@ _IMSS_CATALOGS: dict | None = None
 
 
 def _load_imss_tables() -> dict:
-    """Load IMSS tables from the shared JSON file."""
+    """Load IMSS tables shipped inside the installed distribution."""
     global _IMSS_TABLES
     if _IMSS_TABLES is None:
-        json_path = (
-            Path(__file__).parent.parent.parent.parent.parent
-            / "packages"
-            / "shared-data"
-            / "imss-tables.json"
-        )
-        with open(json_path, encoding="utf-8") as f:
+        json_path = files("catalogmx.data").joinpath("imss-tables.json")
+        with json_path.open(encoding="utf-8") as f:
             _IMSS_TABLES = json.load(f)
     return _IMSS_TABLES
 
 
 def _load_imss_catalogs() -> dict:
-    """Load IMSS catalogs from the shared JSON file."""
+    """Load IMSS catalogs shipped inside the installed distribution."""
     global _IMSS_CATALOGS
     if _IMSS_CATALOGS is None:
-        json_path = (
-            Path(__file__).parent.parent.parent.parent.parent
-            / "packages"
-            / "shared-data"
-            / "imss-catalogs.json"
-        )
-        with open(json_path, encoding="utf-8") as f:
+        json_path = files("catalogmx.data").joinpath("imss-catalogs.json")
+        with json_path.open(encoding="utf-8") as f:
             _IMSS_CATALOGS = json.load(f)
     return _IMSS_CATALOGS
 
@@ -183,7 +173,9 @@ def _assert_salario_diario(salario_diario: float, salario_minimo: float) -> None
     if not _is_finite_number(salario_diario) or salario_diario <= 0:
         raise ValueError("El salario diario debe ser un número finito mayor que cero.")
     if salario_diario < salario_minimo:
-        raise ValueError("El salario diario no puede ser menor al salario mínimo aplicable.")
+        raise ValueError(
+            "El salario diario no puede ser menor al salario mínimo aplicable."
+        )
 
 
 def _assert_dias(dias: float) -> None:
@@ -251,7 +243,9 @@ def calcular_cuotas_obrero_patronales(
     _assert_fecha_matches_exercise(year, fecha)
     tables = _load_imss_tables()
     _assert_zona_salario(zona)
-    _assert_salario_diario(salario_diario, float(tables["salario_minimo"][str(year)][zona]))
+    _assert_salario_diario(
+        salario_diario, float(tables["salario_minimo"][str(year)][zona])
+    )
     _assert_dias(dias)
     _assert_clase_riesgo(clase_riesgo)
     uma = get_uma(year) if fecha is None else get_uma_for_date(fecha)
@@ -267,7 +261,9 @@ def calcular_cuotas_obrero_patronales(
         uma_diaria * dias * float(em["prestaciones_en_especie"]["patron"])
     )
 
-    threshold_factor = float(em["prestaciones_en_especie_excedente"].get("umbral_uma", 3))
+    threshold_factor = float(
+        em["prestaciones_en_especie_excedente"].get("umbral_uma", 3)
+    )
     threshold = threshold_factor * uma_diaria
     excedente_base = max(0.0, salario_diario - threshold) * dias
     cuotas_patron["enfermedad_mat_excedente"] = excedente_base * float(
@@ -298,7 +294,9 @@ def calcular_cuotas_obrero_patronales(
     cuotas_patron["retiro"] = salario_base * float(rcv["retiro"]["patron"])
     ceav_patron_rate = get_ceav_patron_rate(salario_diario, year, fecha, zona=zona)
     cuotas_patron["cesantia_vejez"] = salario_base * ceav_patron_rate
-    cuotas_trabajador["cesantia_vejez"] = salario_base * float(rcv["cesantia_vejez"]["trabajador"])
+    cuotas_trabajador["cesantia_vejez"] = salario_base * float(
+        rcv["cesantia_vejez"]["trabajador"]
+    )
 
     gps = cuotas["guarderias_prestaciones_sociales"]
     cuotas_patron["guarderias"] = salario_base * float(gps["patron"])
@@ -350,13 +348,17 @@ def calcular_modalidad_40(
     if ultimo_sbc_mensual > salario_maximo:
         raise ValueError("El último SBC mensual excede el tope de 25 UMA")
     if salario_base_cotizacion < ultimo_sbc_mensual:
-        raise ValueError("El SBC de Modalidad 40 no puede ser menor al último SBC registrado")
+        raise ValueError(
+            "El SBC de Modalidad 40 no puede ser menor al último SBC registrado"
+        )
     if salario_base_cotizacion > salario_maximo:
         salario_base_cotizacion = salario_maximo
 
     dias_uma_mensual = uma_mensual / uma["diaria"]
     salario_diario_equivalente = salario_base_cotizacion / dias_uma_mensual
-    ceav_patron_rate = get_ceav_patron_rate(salario_diario_equivalente, year, fecha, zona=zona)
+    ceav_patron_rate = get_ceav_patron_rate(
+        salario_diario_equivalente, year, fecha, zona=zona
+    )
 
     componentes: dict[str, float] = {
         "cesantia_vejez_patron": salario_base_cotizacion * ceav_patron_rate,
@@ -399,7 +401,9 @@ def calcular_modalidad_10(
     elif salario_base_cotizacion > salario_maximo:
         salario_base_cotizacion = salario_maximo
 
-    cuota_fija_uma = uma["diaria"] * float(mod10["cuota_mensual"]["cuota_fija_uma_factor"])
+    cuota_fija_uma = uma["diaria"] * float(
+        mod10["cuota_mensual"]["cuota_fija_uma_factor"]
+    )
     porcentaje_variable = float(mod10["cuota_mensual"]["porcentaje_variable"])
     cuota_variable = salario_base_cotizacion * porcentaje_variable
     cuota_mensual = cuota_fija_uma + cuota_variable

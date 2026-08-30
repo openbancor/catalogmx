@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'packages/shared-data/imss-tables.json'
+      - 'packages/shared-data/imss-catalogs.json'
       - 'packages/shared-data/isr-tables.json'
       - 'packages/shared-data/mexico/uma.json'
       - 'packages/shared-data/mexico/salarios_minimos.json'
@@ -14,24 +15,36 @@ on:
       - 'packages/typescript/tests/fiscal-history.test.ts'
       - 'packages/typescript/tests/imss-vectors.test.ts'
       - 'packages/python/catalogmx/calculators/imss.py'
+      - 'packages/python/catalogmx/data/imss-*.json'
       - 'packages/python/catalogmx/data/fiscal-manifest.json'
       - 'packages/python/catalogmx/_fiscal_ids.py'
       - 'packages/python/catalogmx/fiscal.py'
       - 'packages/python/catalogmx/py.typed'
       - 'packages/python/tests/test_imss_vectors_shared.py'
+      - 'packages/python/tests/test_imss_packaged_runtime_data.py'
       - 'packages/python/tests/test_fiscal_manifest.py'
+      - 'packages/python/pyproject.toml'
+      - 'packages/python/uv.lock'
       - 'packages/dart/lib/src/calculators/imss.dart'
+      - 'packages/dart/lib/src/data/imss_runtime_data.generated.dart'
       - 'packages/dart/test/imss_vectors_test.dart'
+      - 'packages/dart/test/imss_package_runtime_test.dart'
+      - 'packages/dart/tool/check_imss_package_runtime.dart'
+      - 'packages/dart/pubspec.yaml'
       - 'packages/webapp-svelte/static/data/imss-tables.json'
       - 'packages/webapp-svelte/src/routes/calculadoras/imss/+page.svelte'
       - 'scripts/build_fiscal_manifest.py'
       - 'scripts/check_python_fiscal_wheel_types.py'
+      - 'scripts/check_python_imss_wheel_runtime.py'
+      - 'scripts/sync_imss_runtime_data.py'
+      - '.github/workflows/ci.yml'
       - '.github/workflows/validate-fiscal-integrity.yml'
   push:
     branches:
       - master
     paths:
       - 'packages/shared-data/imss-tables.json'
+      - 'packages/shared-data/imss-catalogs.json'
       - 'packages/shared-data/isr-tables.json'
       - 'packages/shared-data/mexico/uma.json'
       - 'packages/shared-data/mexico/salarios_minimos.json'
@@ -42,18 +55,29 @@ on:
       - 'packages/typescript/tests/fiscal-history.test.ts'
       - 'packages/typescript/tests/imss-vectors.test.ts'
       - 'packages/python/catalogmx/calculators/imss.py'
+      - 'packages/python/catalogmx/data/imss-*.json'
       - 'packages/python/catalogmx/data/fiscal-manifest.json'
       - 'packages/python/catalogmx/_fiscal_ids.py'
       - 'packages/python/catalogmx/fiscal.py'
       - 'packages/python/catalogmx/py.typed'
       - 'packages/python/tests/test_imss_vectors_shared.py'
+      - 'packages/python/tests/test_imss_packaged_runtime_data.py'
       - 'packages/python/tests/test_fiscal_manifest.py'
+      - 'packages/python/pyproject.toml'
+      - 'packages/python/uv.lock'
       - 'packages/dart/lib/src/calculators/imss.dart'
+      - 'packages/dart/lib/src/data/imss_runtime_data.generated.dart'
       - 'packages/dart/test/imss_vectors_test.dart'
+      - 'packages/dart/test/imss_package_runtime_test.dart'
+      - 'packages/dart/tool/check_imss_package_runtime.dart'
+      - 'packages/dart/pubspec.yaml'
       - 'packages/webapp-svelte/static/data/imss-tables.json'
       - 'packages/webapp-svelte/src/routes/calculadoras/imss/+page.svelte'
       - 'scripts/build_fiscal_manifest.py'
       - 'scripts/check_python_fiscal_wheel_types.py'
+      - 'scripts/check_python_imss_wheel_runtime.py'
+      - 'scripts/sync_imss_runtime_data.py'
+      - '.github/workflows/ci.yml'
       - '.github/workflows/validate-fiscal-integrity.yml'
 
 jobs:
@@ -68,6 +92,9 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Verify package-local IMSS runtime data
+        run: python scripts/sync_imss_runtime_data.py --check
+
       - name: Verify generated fiscal manifest
         run: python scripts/build_fiscal_manifest.py --check
 
@@ -76,6 +103,7 @@ jobs:
           python -m pip install build
           python -m build --wheel --outdir "$RUNNER_TEMP/wheels" packages/python
           python scripts/check_python_fiscal_wheel_types.py "$RUNNER_TEMP"/wheels/catalogmx-*.whl
+          python scripts/check_python_imss_wheel_runtime.py "$RUNNER_TEMP"/wheels/catalogmx-*.whl
 
       - name: Verify fiscal history against prior revision
         shell: bash
@@ -120,6 +148,29 @@ jobs:
 
       - name: Verify browser IMSS asset is synchronized
         run: cmp packages/shared-data/imss-tables.json packages/webapp-svelte/static/data/imss-tables.json
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install Dart package
+        working-directory: packages/dart
+        run: flutter pub get
+
+      - name: Verify package-local Dart IMSS runtime
+        working-directory: packages/dart
+        run: |
+          dart analyze
+          dart format --output=none --set-exit-if-changed \
+            lib/src/calculators/imss.dart \
+            lib/src/data/imss_runtime_data.generated.dart \
+            test/imss_package_runtime_test.dart \
+            tool/check_imss_package_runtime.dart
+          flutter test test/imss_package_runtime_test.dart test/imss_vectors_test.dart
+          TEMP_DIR="$(mktemp -d)"
+          cd "$TEMP_DIR"
+          dart --packages="$GITHUB_WORKSPACE/packages/dart/.dart_tool/package_config.json" run "$GITHUB_WORKSPACE/packages/dart/tool/check_imss_package_runtime.dart"
 
       - uses: actions/setup-node@v4
         with:
