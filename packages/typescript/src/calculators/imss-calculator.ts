@@ -241,6 +241,17 @@ export class IMSSCalculator {
     return { ...uma };
   }
 
+  private static assertFechaMatchesExercise(
+  year: IMSSYear,
+  fecha?: string | Date
+): void {
+  if (fecha === undefined) return;
+  const iso = this.toIsoDate(fecha);
+  if (Number(iso.slice(0, 4)) !== year) {
+    throw new RangeError(`La fecha ${iso} no pertenece al ejercicio ${year}`);
+  }
+}
+
   static getSalarioMinimo(year: IMSSYear, zona: ZonaSalario = 'general'): number {
     this.loadTablesData();
     const row = this._tablesData!.salario_minimo[year.toString()];
@@ -257,6 +268,7 @@ export class IMSSCalculator {
    * la reforma de pensiones clasifica el SBC en veces UMA.
    */
   static getCEAVPatronRate(salarioDiario: number, year: IMSSYear, fecha?: string | Date): number {
+    this.assertFechaMatchesExercise(year, fecha);
     this.loadTablesData();
     const rates =
       this._tablesData!.cuotas_imss.retiro_cesantia_vejez.cesantia_vejez.patron_por_ejercicio[
@@ -299,6 +311,7 @@ export class IMSSCalculator {
     claseRiesgo: ClaseRiesgo = 1,
     fecha?: string | Date
   ): CuotasIMSSResult {
+    this.assertFechaMatchesExercise(year, fecha);
     this.loadTablesData();
     const uma = fecha === undefined ? this.getUMA(year) : this.getUMAForDate(fecha);
     const cuotas = this._tablesData!.cuotas_imss;
@@ -373,6 +386,7 @@ export class IMSSCalculator {
     year: IMSSYear,
     fecha?: string | Date
   ): Modalidad40Result {
+    this.assertFechaMatchesExercise(year, fecha);
     this.loadTablesData();
     const uma = fecha === undefined ? this.getUMA(year) : this.getUMAForDate(fecha);
     const mod40 = this._tablesData!.modalidad_40;
@@ -433,6 +447,7 @@ export class IMSSCalculator {
     year: IMSSYear = 2026,
     fecha?: string | Date
   ): Modalidad10Result {
+    this.assertFechaMatchesExercise(year, fecha);
     this.loadTablesData();
     const uma = fecha === undefined ? this.getUMA(year) : this.getUMAForDate(fecha);
     const mod10 = this._tablesData!.modalidad_10;
@@ -489,11 +504,22 @@ export class IMSSCalculator {
 
   private static toIsoDate(fecha: string | Date): string {
     if (typeof fecha === 'string') {
-      const match = /^\d{4}-\d{2}-\d{2}/.exec(fecha);
+      const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(fecha);
       if (!match) {
         throw new Error(`Fecha inválida: ${fecha}`);
       }
-      return match[0];
+      const year = Number(match[1]);
+      const month = Number(match[2]);
+      const day = Number(match[3]);
+      const parsed = new Date(Date.UTC(year, month - 1, day));
+      if (
+        parsed.getUTCFullYear() !== year ||
+        parsed.getUTCMonth() !== month - 1 ||
+        parsed.getUTCDate() !== day
+      ) {
+        throw new Error(`Fecha inválida: ${fecha}`);
+      }
+      return fecha;
     }
     if (Number.isNaN(fecha.getTime())) {
       throw new Error('Fecha inválida');

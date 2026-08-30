@@ -65,6 +65,58 @@ def entry(
     return result
 
 
+def ensure_imss_parameter_parity(
+    uma_rows: list[dict[str, Any]],
+    wage_rows: list[dict[str, Any]],
+    imss: dict[str, Any],
+) -> None:
+    """Ensure canonical fiscal parameters match the IMSS runtime copy."""
+    canonical_uma = {int(row["año"]): row for row in uma_rows}
+    canonical_wages = {int(row["año"]): row for row in wage_rows}
+    errors: list[str] = []
+
+    for year in sorted(VERIFIED_YEARS):
+        runtime_uma = imss.get("uma", {}).get(str(year))
+        source_uma = canonical_uma.get(year)
+        if runtime_uma is None or source_uma is None:
+            errors.append(f"UMA {year}: missing canonical/runtime row")
+        else:
+            for source_key, runtime_key in (
+                ("valor_diario", "diaria"),
+                ("valor_mensual", "mensual"),
+                ("valor_anual", "anual"),
+                ("vigencia_inicio", "vigencia_desde"),
+                ("vigencia_fin", "vigencia_hasta"),
+            ):
+                if source_uma.get(source_key) != runtime_uma.get(runtime_key):
+                    errors.append(
+                        f"UMA {year}:{runtime_key} canonical={source_uma.get(source_key)!r} "
+                        f"runtime={runtime_uma.get(runtime_key)!r}"
+                    )
+
+        runtime_wage = imss.get("salario_minimo", {}).get(str(year))
+        source_wage = canonical_wages.get(year)
+        if runtime_wage is None or source_wage is None:
+            errors.append(f"Salario mínimo {year}: missing canonical/runtime row")
+        else:
+            for source_key, runtime_key in (
+                ("resto_pais", "general"),
+                ("zona_frontera_norte", "frontera"),
+                ("vigencia_inicio", "vigencia_desde"),
+            ):
+                if source_wage.get(source_key) != runtime_wage.get(runtime_key):
+                    errors.append(
+                        f"Salario mínimo {year}:{runtime_key} "
+                        f"canonical={source_wage.get(source_key)!r} "
+                        f"runtime={runtime_wage.get(runtime_key)!r}"
+                    )
+
+    if errors:
+        raise SystemExit(
+            "IMSS canonical/runtime parameter drift: " + "; ".join(errors)
+        )
+
+
 def build_manifest() -> dict[str, Any]:
     uma_rows = json.loads((SHARED / "mexico" / "uma.json").read_text(encoding="utf-8"))
     wage_rows = json.loads(
@@ -72,6 +124,8 @@ def build_manifest() -> dict[str, Any]:
     )
     imss = json.loads((SHARED / "imss-tables.json").read_text(encoding="utf-8"))
     isr = json.loads((SHARED / "isr-tables.json").read_text(encoding="utf-8"))
+
+    ensure_imss_parameter_parity(uma_rows, wage_rows, imss)
 
     sources = dict(imss.get("_meta", {}).get("sources", {}))
     sources["legacy_snapshot"] = {

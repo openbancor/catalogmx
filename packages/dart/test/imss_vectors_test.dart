@@ -102,6 +102,35 @@ void main() {
     expect(result.porcentajeTotal, closeTo(0.10075, 0.00000001));
   });
 
+  test('IMSS calculations reject dates from another exercise', () {
+  final wrongDate = DateTime(2025, 12, 31);
+  expect(
+    () => IMSSCalculator.calcularCuotasObreroPatronales(
+      500,
+      year: IMSSYear.year2026,
+      fecha: wrongDate,
+    ),
+    throwsArgumentError,
+  );
+  expect(
+    () => IMSSCalculator.calcularModalidad40(
+      15000,
+      ultimoSbcMensual: 12000,
+      year: IMSSYear.year2026,
+      fecha: wrongDate,
+    ),
+    throwsArgumentError,
+  );
+  expect(
+    () => IMSSCalculator.calcularModalidad10(
+      10000,
+      year: IMSSYear.year2026,
+      fecha: wrongDate,
+    ),
+    throwsArgumentError,
+  );
+});
+
   test('Modalidad 40 rejects non-finite requested salary', () {
     expect(
       () => IMSSCalculator.calcularModalidad40(

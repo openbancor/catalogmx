@@ -40,6 +40,22 @@ describe('historical fiscal parameters', () => {
     expect(IMSSCalculator.getUMAForDate(january31Evening).diaria).toBe(113.14);
   });
 
+  test('rejects invalid calendar dates and dates from another exercise', () => {
+  expect(() => IMSSCalculator.getUMAForDate('2026-02-31')).toThrow('Fecha inválida');
+  expect(() =>
+    IMSSCalculator.calcularCuotasObreroPatronales(500, 30, 2026, 2, '2025-12-31')
+  ).toThrow('no pertenece al ejercicio 2026');
+  expect(() => IMSSCalculator.getCEAVPatronRate(315.04, 2026, '2025-12-31')).toThrow(
+    'no pertenece al ejercicio 2026'
+  );
+  expect(() => IMSSCalculator.calcularModalidad40(15000, 12000, 2026, '2025-12-31')).toThrow(
+    'no pertenece al ejercicio 2026'
+  );
+  expect(() => IMSSCalculator.calcularModalidad10(10000, 2026, '2025-12-31')).toThrow(
+    'no pertenece al ejercicio 2026'
+  );
+});
+
   test('keeps CEAV patronal rates by exercise instead of overwriting history', () => {
     expect(IMSSCalculator.getCEAVPatronRate(500, 2024)).toBe(0.05331);
     expect(IMSSCalculator.getCEAVPatronRate(500, 2025)).toBe(0.06422);

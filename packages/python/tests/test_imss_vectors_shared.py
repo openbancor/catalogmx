@@ -74,3 +74,12 @@ def test_modalidad_40_rejects_non_finite_requested_salary() -> None:
         calcular_modalidad_40(float("nan"), 10000, 2026)
     with pytest.raises(ValueError, match="debe ser mayor que cero"):
         calcular_modalidad_40(float("inf"), 10000, 2026)
+
+
+def test_imss_date_must_match_selected_exercise() -> None:
+    with pytest.raises(ValueError, match="no pertenece al ejercicio 2026"):
+        calcular_cuotas_obrero_patronales(500, 30, 2026, 2, "2025-12-31")
+    with pytest.raises(ValueError, match="no pertenece al ejercicio 2026"):
+        calcular_modalidad_40(15000, 12000, 2026, "2025-12-31")
+    with pytest.raises(ValueError, match="no pertenece al ejercicio 2026"):
+        calcular_modalidad_10(10000, 2026, "2025-12-31")

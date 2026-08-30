@@ -258,6 +258,17 @@ class IMSSCalculator {
         .toDouble();
   }
 
+  static void _assertFechaMatchesExercise(
+  IMSSYear year,
+  DateTime? fecha,
+) {
+  if (fecha != null && fecha.year != year.value) {
+    throw ArgumentError(
+      'La fecha no pertenece al ejercicio ${year.value}',
+    );
+  }
+}
+
   static bool _almostEqual(double left, double right) {
     return (left - right).abs() < 0.005;
   }
@@ -267,6 +278,7 @@ class IMSSCalculator {
     IMSSYear year, [
     DateTime? fecha,
   ]) {
+    _assertFechaMatchesExercise(year, fecha);
     final tables = _loadIMSSTables();
     final cuotas = tables['cuotas_imss']! as Map<String, dynamic>;
     final rcv = cuotas['retiro_cesantia_vejez']! as Map<String, dynamic>;
@@ -317,6 +329,7 @@ class IMSSCalculator {
     ClaseRiesgo claseRiesgo = ClaseRiesgo.clase1,
     DateTime? fecha,
   }) {
+    _assertFechaMatchesExercise(year, fecha);
     final tables = _loadIMSSTables();
     final uma = fecha == null ? getUMA(year) : getUMAForDate(fecha);
     final cuotas = tables['cuotas_imss']! as Map<String, dynamic>;
@@ -409,6 +422,7 @@ class IMSSCalculator {
     IMSSYear year = IMSSYear.year2026,
     DateTime? fecha,
   }) {
+    _assertFechaMatchesExercise(year, fecha);
     final tables = _loadIMSSTables();
     final uma = fecha == null ? getUMA(year) : getUMAForDate(fecha);
     final mod40 = tables['modalidad_40']! as Map<String, dynamic>;
@@ -478,6 +492,7 @@ class IMSSCalculator {
     IMSSYear year = IMSSYear.year2026,
     DateTime? fecha,
   }) {
+    _assertFechaMatchesExercise(year, fecha);
     final tables = _loadIMSSTables();
     final uma = fecha == null ? getUMA(year) : getUMAForDate(fecha);
     final mod10 = tables['modalidad_10']! as Map<String, dynamic>;

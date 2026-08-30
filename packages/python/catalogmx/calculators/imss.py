@@ -140,6 +140,17 @@ def get_uma_for_date(fecha: DateInput) -> UMAInfo:
     raise ValueError(f"No se encontró UMA vigente para {iso}")
 
 
+def _assert_fecha_matches_exercise(
+    year: IMSSYear, fecha: DateInput | None
+) -> None:
+    """Reject an effective date whose calendar year differs from the exercise."""
+    if fecha is None:
+        return
+    iso = _to_iso_date(fecha)
+    if int(iso[:4]) != year:
+        raise ValueError(f"La fecha {iso} no pertenece al ejercicio {year}")
+
+
 def get_salario_minimo(year: IMSSYear, zona: ZonaSalario = "general") -> float:
     """Return the daily minimum wage for an exercise and zone."""
     tables = _load_imss_tables()
@@ -154,6 +165,7 @@ def _get_ceav_patron_rate(
     salario_diario: float, year: IMSSYear, fecha: DateInput | None = None
 ) -> float:
     """Select the employer CEAV rate, preserving the special 1-SM row."""
+    _assert_fecha_matches_exercise(year, fecha)
     tables = _load_imss_tables()
     rates = tables["cuotas_imss"]["retiro_cesantia_vejez"]["cesantia_vejez"][
         "patron_por_ejercicio"
@@ -194,6 +206,7 @@ def calcular_cuotas_obrero_patronales(
     fecha: DateInput | None = None,
 ) -> CuotasIMSSResult:
     """Calculate IMSS employer and employee contributions."""
+    _assert_fecha_matches_exercise(year, fecha)
     tables = _load_imss_tables()
     uma = get_uma(year) if fecha is None else get_uma_for_date(fecha)
     cuotas = tables["cuotas_imss"]
@@ -273,6 +286,7 @@ def calcular_modalidad_40(
     fecha: DateInput | None = None,
 ) -> Modalidad40Result:
     """Calculate Modalidad 40 using explicit monthly salary amounts."""
+    _assert_fecha_matches_exercise(year, fecha)
     tables = _load_imss_tables()
     uma = get_uma(year) if fecha is None else get_uma_for_date(fecha)
     mod40 = tables["modalidad_40"]
@@ -324,6 +338,7 @@ def calcular_modalidad_10(
     fecha: DateInput | None = None,
 ) -> Modalidad10Result:
     """Calculate the legacy Modalidad 10 model pending its dedicated audit."""
+    _assert_fecha_matches_exercise(year, fecha)
     tables = _load_imss_tables()
     uma = get_uma(year) if fecha is None else get_uma_for_date(fecha)
     mod10 = tables["modalidad_10"]
