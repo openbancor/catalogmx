@@ -8,7 +8,7 @@ const pendingAuditLinkText = 'Modalidad 10/PTI: pendiente de auditoría';
 const publicReference = /modalidad\s*10|modalidad10|\bm10\b|\bpti\b/i;
 const forbiddenOptionValue = 'modalidad10';
 const forbiddenCalculatorName = 'calcularmodalidad10';
-const publicAttributeNames = new Set(['href', 'aria-label']);
+const publicAttributeNames = new Set(['href', 'aria-label', 'value']);
 
 const routes = [
 	{
@@ -207,6 +207,12 @@ function runSelfTests() {
 	assert.throws(() => assertPublicRouteContract(`<script>const key = 'calcularModalidad' + '10';</script>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<p>M10 disponible</p>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<p>Modalidad <strong>10</strong> disponible</p>${clean}`, route));
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<select><option value="modalidad10">Otra modalidad</option></select>${clean}`,
+			route
+		)
+	);
 	assert.throws(() => assertPublicRouteContract(`<a href="/calculadoras/modalidad10">Otra calculadora</a>${clean}`, route));
 	assert.throws(() =>
 		assertPublicRouteContract(
