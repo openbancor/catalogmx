@@ -239,9 +239,7 @@ def calcular_cuotas_obrero_patronales(
     cuotas_patron["retiro"] = salario_base * float(rcv["retiro"]["patron"])
     ceav_patron_rate = _get_ceav_patron_rate(salario_diario, year, fecha)
     cuotas_patron["cesantia_vejez"] = salario_base * ceav_patron_rate
-    cuotas_trabajador["cesantia_vejez"] = salario_base * float(
-        rcv["cesantia_vejez"]["trabajador"]
-    )
+    cuotas_trabajador["cesantia_vejez"] = salario_base * float(rcv["cesantia_vejez"]["trabajador"])
 
     gps = cuotas["guarderias_prestaciones_sociales"]
     cuotas_patron["guarderias"] = salario_base * float(gps["patron"])
@@ -291,9 +289,7 @@ def calcular_modalidad_40(
     if ultimo_sbc_mensual > salario_maximo:
         raise ValueError("El último SBC mensual excede el tope de 25 UMA")
     if salario_base_cotizacion < ultimo_sbc_mensual:
-        raise ValueError(
-            "El SBC de Modalidad 40 no puede ser menor al último SBC registrado"
-        )
+        raise ValueError("El SBC de Modalidad 40 no puede ser menor al último SBC registrado")
     if salario_base_cotizacion > salario_maximo:
         salario_base_cotizacion = salario_maximo
 
