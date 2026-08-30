@@ -48,6 +48,9 @@ void main() {
         dias: vector['dias'] as int,
         year: _yearFromInt(vector['year'] as int),
         claseRiesgo: _riesgoFromInt(vector['clase_riesgo'] as int),
+        fecha: vector['fecha'] == null
+            ? null
+            : DateTime.parse(vector['fecha'] as String),
       );
       final expected = vector['expected'] as Map<String, dynamic>;
       expect(_round(result.totalIMSS), expected['total_imss']);
@@ -97,5 +100,22 @@ void main() {
       ultimoSbcMensual: monthlyMinimum,
     );
     expect(result.porcentajeTotal, closeTo(0.10075, 0.00000001));
+  });
+
+  test('Modalidad 40 rejects non-finite requested salary', () {
+    expect(
+      () => IMSSCalculator.calcularModalidad40(
+        double.nan,
+        ultimoSbcMensual: 10000,
+      ),
+      throwsArgumentError,
+    );
+    expect(
+      () => IMSSCalculator.calcularModalidad40(
+        double.infinity,
+        ultimoSbcMensual: 10000,
+      ),
+      throwsArgumentError,
+    );
   });
 }
