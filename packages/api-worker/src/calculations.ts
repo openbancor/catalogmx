@@ -5,6 +5,7 @@ import {
   ISRCalculator,
 } from '../../typescript/src/calculators';
 import type { ISRCalculationResult } from '../../typescript/src/types';
+import * as fiscal from '../../typescript/src/fiscal';
 import { ApiError } from './errors';
 import { preloadSmallData } from './data';
 
@@ -81,6 +82,16 @@ export function calculateIsr(body: Record<string, unknown>): IsrCalculationRespo
   const baseGravable = requireNumber(body.base_gravable, 'base_gravable', MAX_AMOUNT);
   const periodo = requireIsrPeriod(body.periodo);
   const ejercicio = requireYear(body.ejercicio);
+
+  try {
+    fiscal.assertFiscalDataVerified('isr_payroll', ejercicio);
+  } catch {
+    throw new ApiError(
+      422,
+      'unsupported_fiscal_data',
+      `ISR fiscal data for ${ejercicio} is not verified`
+    );
+  }
 
   preloadSmallData();
   const tabla = ISRCalculator.getTabla(ejercicio, periodo);

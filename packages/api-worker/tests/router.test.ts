@@ -79,7 +79,7 @@ describe('CatalogMX API Worker routing', () => {
     expect(response.status).toBe(400);
   });
 
-  test('routes calculation and catalog endpoint families', async () => {
+  test('fails closed for pending ISR data while routing catalog endpoints', async () => {
     const database = new RecordingD1();
     const isr = await workerFetch(
       request('/api/v1/calc/isr', {
@@ -93,7 +93,8 @@ describe('CatalogMX API Worker routing', () => {
       { ...authorizedEnv(), CATALOG_DB: database }
     );
 
-    expect(isr.status).toBe(200);
+    expect(isr.status).toBe(422);
+    expect(await bodyOf(isr)).toMatchObject({ error: { code: 'unsupported_fiscal_data' } });
     expect(catalog.status).toBe(200);
   });
 

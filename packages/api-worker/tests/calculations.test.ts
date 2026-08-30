@@ -1,6 +1,25 @@
 import { calculateImss, calculateIsr } from '../src/calculations';
+import * as fiscal from '../../typescript/src/fiscal';
 
 describe('ISR calculation adapter', () => {
+  beforeEach(() => {
+    // Exercise the calculation adapter independently from the release gate.
+    // The first test restores this mock and verifies the shipped manifest.
+    jest.spyOn(fiscal, 'assertFiscalDataVerified').mockReturnValue({} as never);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  test('fails closed against the shipped manifest while ISR remains pending review', () => {
+    jest.restoreAllMocks();
+    expect(fiscal.fiscalEntry('isr_payroll', 2026)?.status).toBe('pending_review');
+
+    expect(() =>
+      calculateIsr({ base_gravable: 15000, periodo: 'mensual', ejercicio: 2026 })
+    ).toThrow(expect.objectContaining({ status: 422, code: 'unsupported_fiscal_data' }));
+  });
   test.each(['diario', 'semanal', 'quincenal', 'mensual', 'anual'] as const)(
     'delegates the %s period to the loaded fiscal table',
     (periodo) => {
