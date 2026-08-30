@@ -29,19 +29,15 @@ describe('historical fiscal parameters', () => {
   });
 
   test('preserves the local calendar date for Date inputs at the UMA boundary', () => {
-    const previousTimezone = process.env.TZ;
-    try {
-      process.env.TZ = 'America/Mexico_City';
-      const january31Evening = new Date(2026, 0, 31, 20, 0, 0);
-      expect(january31Evening.toISOString().startsWith('2026-02-01')).toBe(true);
-      expect(IMSSCalculator.getUMAForDate(january31Evening).diaria).toBe(113.14);
-    } finally {
-      if (previousTimezone === undefined) {
-        delete process.env.TZ;
-      } else {
-        process.env.TZ = previousTimezone;
-      }
-    }
+    // Mimics Jan 31 at 20:00 in a UTC-06 locale: the instant is already Feb 1
+    // in UTC, but the caller's local calendar date is still Jan 31.
+    const january31Evening = new Date('2026-02-01T02:00:00.000Z');
+    january31Evening.getFullYear = () => 2026;
+    january31Evening.getMonth = () => 0;
+    january31Evening.getDate = () => 31;
+
+    expect(january31Evening.toISOString().startsWith('2026-02-01')).toBe(true);
+    expect(IMSSCalculator.getUMAForDate(january31Evening).diaria).toBe(113.14);
   });
 
   test('keeps CEAV patronal rates by exercise instead of overwriting history', () => {
