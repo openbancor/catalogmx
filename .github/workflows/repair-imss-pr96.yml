@@ -26,32 +26,28 @@ jobs:
 
           test_path = Path("packages/typescript/tests/coverage-validators-calculators.test.ts")
           text = test_path.read_text(encoding="utf-8")
-          old = """  // Modalidad 40 salary bounds. The legal minimum depends on the worker's
-          // last registered SBC, which this API does not receive; do not invent 1 UMA.
-          test('calcularModalidad40 preserves input when prior SBC is unknown', () => {
-            const result = IMSSCalculator.calcularModalidad40(1, 2025);
-            expect(result.salario_base_cotizacion).toBe(1);
-          });
-
-          test('calcularModalidad40 clamps salary to maximum (line 321-322)', () => {
-            const result = IMSSCalculator.calcularModalidad40(999999, 2025);
-            expect(result.salario_base_cotizacion).toBeLessThan(999999);
-          });
-          """
-          new = """  test('calcularModalidad40 rejects salary below last registered SBC', () => {
-            expect(() => IMSSCalculator.calcularModalidad40(1, 5000, 2025)).toThrow(
-              'no puede ser menor al último SBC'
-            );
-          });
-
-          test('calcularModalidad40 clamps salary to maximum', () => {
-            const result = IMSSCalculator.calcularModalidad40(999999, 10000, 2025);
-            expect(result.salario_base_cotizacion).toBeLessThan(999999);
-          });
-          """
-          if old in text:
-              test_path.write_text(text.replace(old, new, 1), encoding="utf-8")
-          elif new not in text:
+          start_marker = "  // Modalidad 40 salary bounds."
+          second_test_marker = "  test('calcularModalidad40 clamps salary to maximum (line 321-322)', () => {"
+          replacement_lines = [
+              "  test('calcularModalidad40 rejects salary below last registered SBC', () => {",
+              "    expect(() => IMSSCalculator.calcularModalidad40(1, 5000, 2025)).toThrow(",
+              "      'no puede ser menor al último SBC'",
+              "    );",
+              "  });",
+              "",
+              "  test('calcularModalidad40 clamps salary to maximum', () => {",
+              "    const result = IMSSCalculator.calcularModalidad40(999999, 10000, 2025);",
+              "    expect(result.salario_base_cotizacion).toBeLessThan(999999);",
+              "  });",
+          ]
+          replacement = "\n".join(replacement_lines)
+          if start_marker in text:
+              start = text.index(start_marker)
+              second_start = text.index(second_test_marker, start)
+              end = text.index("\n  });", second_start) + len("\n  });")
+              text = text[:start] + replacement + text[end:]
+              test_path.write_text(text, encoding="utf-8")
+          elif replacement not in text:
               raise SystemExit("Expected Modalidad 40 coverage block was not found")
 
           tables_path = Path("packages/shared-data/imss-tables.json")
