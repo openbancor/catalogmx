@@ -308,11 +308,9 @@ export class IMSSCalculator {
     const cuotasPatron: Record<string, number> = {};
     const cuotasTrabajador: Record<string, number> = {};
 
-    // Enfermedades y maternidad: cuota fija = 20.4% de una UMA por día.
     const em = cuotas.enfermedad_maternidad;
     cuotasPatron.enfermedad_mat_cuota_fija = umaDiaria * dias * em.prestaciones_en_especie.patron;
 
-    // Excedente únicamente sobre la parte del SBC diario que rebasa 3 UMA.
     const threshold = (em.prestaciones_en_especie_excedente.umbral_uma ?? 3) * umaDiaria;
     const excedenteBase = Math.max(0, salarioDiario - threshold) * dias;
     cuotasPatron.enfermedad_mat_excedente =
@@ -385,6 +383,9 @@ export class IMSSCalculator {
 
     const umaMensual = uma.mensual;
     const salarioMaximo = umaMensual * mod40.limites_salario.maximo_uma;
+    if (!Number.isFinite(salarioBaseCotizacionMensual) || salarioBaseCotizacionMensual <= 0) {
+      throw new RangeError('El SBC mensual de Modalidad 40 debe ser mayor que cero');
+    }
     if (!Number.isFinite(ultimoSbcMensual) || ultimoSbcMensual <= 0) {
       throw new RangeError('El último SBC mensual debe ser mayor que cero');
     }
@@ -398,8 +399,6 @@ export class IMSSCalculator {
       salarioBaseCotizacionMensual = salarioMaximo;
     }
 
-    // El API conserva montos mensuales; para seleccionar CEAV convertimos al
-    // equivalente diario con el mismo factor implícito en la UMA mensual.
     const diasUmaMensual = umaMensual / uma.diaria;
     const salarioDiarioEquivalente = salarioBaseCotizacionMensual / diasUmaMensual;
     const ceavPatronRate = this.getCEAVPatronRate(salarioDiarioEquivalente, year, fecha);
