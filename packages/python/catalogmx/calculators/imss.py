@@ -9,12 +9,14 @@ SBC so an eligibility-sensitive calculation cannot silently assume its floor.
 
 import json
 import math
+from datetime import date, datetime
 from pathlib import Path
 from typing import Literal, TypedDict
 
 IMSSYear = Literal[2024, 2025, 2026]
 ZonaSalario = Literal["general", "frontera"]
 ClaseRiesgo = Literal[1, 2, 3, 4, 5]
+DateInput = str | date | datetime
 
 
 class CuotasIMSSResult(TypedDict):
@@ -110,6 +112,34 @@ def get_uma(year: IMSSYear) -> UMAInfo:
     )
 
 
+def _to_iso_date(fecha: DateInput) -> str:
+    """Normalize a supported date input to YYYY-MM-DD."""
+    if isinstance(fecha, datetime):
+        return fecha.date().isoformat()
+    if isinstance(fecha, date):
+        return fecha.isoformat()
+    try:
+        return date.fromisoformat(fecha[:10]).isoformat()
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"Fecha inválida: {fecha}") from exc
+
+
+def get_uma_for_date(fecha: DateInput) -> UMAInfo:
+    """Return the UMA legally in force on a concrete date."""
+    tables = _load_imss_tables()
+    iso = _to_iso_date(fecha)
+    for uma_data in tables["uma"].values():
+        desde = uma_data.get("vigencia_desde")
+        hasta = uma_data.get("vigencia_hasta")
+        if desde and hasta and desde <= iso <= hasta:
+            return UMAInfo(
+                diaria=uma_data["diaria"],
+                mensual=uma_data["mensual"],
+                anual=uma_data["anual"],
+            )
+    raise ValueError(f"No se encontró UMA vigente para {iso}")
+
+
 def get_salario_minimo(year: IMSSYear, zona: ZonaSalario = "general") -> float:
     """Return the daily minimum wage for an exercise and zone."""
     tables = _load_imss_tables()
@@ -120,7 +150,9 @@ def _almost_equal(left: float, right: float) -> bool:
     return abs(left - right) < 0.005
 
 
-def _get_ceav_patron_rate(salario_diario: float, year: IMSSYear) -> float:
+def _get_ceav_patron_rate(
+    salario_diario: float, year: IMSSYear, fecha: DateInput | None = None
+) -> float:
     """Select the employer CEAV rate, preserving the special 1-SM row."""
     tables = _load_imss_tables()
     rates = tables["cuotas_imss"]["retiro_cesantia_vejez"]["cesantia_vejez"][
@@ -135,8 +167,8 @@ def _get_ceav_patron_rate(salario_diario: float, year: IMSSYear) -> float:
     ):
         return float(rates[0]["tasa"])
 
-    uma_diaria = get_uma(year)["diaria"]
-    ratio = salario_diario / uma_diaria
+    uma = get_uma(year) if fecha is None else get_uma_for_date(fecha)
+    ratio = salario_diario / uma["diaria"]
     if ratio <= 1.5:
         index = 1
     elif ratio <= 2.0:
@@ -159,10 +191,11 @@ def calcular_cuotas_obrero_patronales(
     dias: int = 30,
     year: IMSSYear = 2026,
     clase_riesgo: ClaseRiesgo = 1,
+    fecha: DateInput | None = None,
 ) -> CuotasIMSSResult:
     """Calculate IMSS employer and employee contributions."""
     tables = _load_imss_tables()
-    uma = get_uma(year)
+    uma = get_uma(year) if fecha is None else get_uma_for_date(fecha)
     cuotas = tables["cuotas_imss"]
     salario_base = salario_diario * dias
     uma_diaria = uma["diaria"]
@@ -171,14 +204,13 @@ def calcular_cuotas_obrero_patronales(
     cuotas_trabajador: dict[str, float] = {}
 
     em = cuotas["enfermedad_maternidad"]
-
-    # Fixed sickness/maternity quota: 20.4% of one UMA per insured day.
     cuotas_patron["enfermedad_mat_cuota_fija"] = (
         uma_diaria * dias * float(em["prestaciones_en_especie"]["patron"])
     )
 
-    # Excess applies only to the daily SBC portion above the configured UMA threshold.
-    threshold_factor = float(em["prestaciones_en_especie_excedente"].get("umbral_uma", 3))
+    threshold_factor = float(
+        em["prestaciones_en_especie_excedente"].get("umbral_uma", 3)
+    )
     threshold = threshold_factor * uma_diaria
     excedente_base = max(0.0, salario_diario - threshold) * dias
     cuotas_patron["enfermedad_mat_excedente"] = excedente_base * float(
@@ -207,9 +239,11 @@ def calcular_cuotas_obrero_patronales(
 
     rcv = cuotas["retiro_cesantia_vejez"]
     cuotas_patron["retiro"] = salario_base * float(rcv["retiro"]["patron"])
-    ceav_patron_rate = _get_ceav_patron_rate(salario_diario, year)
+    ceav_patron_rate = _get_ceav_patron_rate(salario_diario, year, fecha)
     cuotas_patron["cesantia_vejez"] = salario_base * ceav_patron_rate
-    cuotas_trabajador["cesantia_vejez"] = salario_base * float(rcv["cesantia_vejez"]["trabajador"])
+    cuotas_trabajador["cesantia_vejez"] = salario_base * float(
+        rcv["cesantia_vejez"]["trabajador"]
+    )
 
     gps = cuotas["guarderias_prestaciones_sociales"]
     cuotas_patron["guarderias"] = salario_base * float(gps["patron"])
@@ -240,15 +274,11 @@ def calcular_modalidad_40(
     salario_base_cotizacion: float,
     ultimo_sbc_mensual: float,
     year: IMSSYear,
+    fecha: DateInput | None = None,
 ) -> Modalidad40Result:
-    """Calculate Modalidad 40 using explicit monthly salary amounts.
-
-    The requested monthly SBC must be at least the last registered monthly SBC.
-    The upper limit remains 25 monthly UMA. The last SBC is mandatory so this
-    function cannot silently represent an ineligible salary as a valid enrollment.
-    """
+    """Calculate Modalidad 40 using explicit monthly salary amounts."""
     tables = _load_imss_tables()
-    uma = get_uma(year)
+    uma = get_uma(year) if fecha is None else get_uma_for_date(fecha)
     mod40 = tables["modalidad_40"]
     if str(year) not in mod40["referencia_por_ejercicio"]:
         raise ValueError(f"No se encontró tarifa de Modalidad 40 para {year}")
@@ -256,18 +286,24 @@ def calcular_modalidad_40(
     uma_mensual = uma["mensual"]
     salario_maximo = uma_mensual * float(mod40["limites_salario"]["maximo_uma"])
 
+    if not math.isfinite(salario_base_cotizacion) or salario_base_cotizacion <= 0:
+        raise ValueError("El SBC mensual de Modalidad 40 debe ser mayor que cero")
     if not math.isfinite(ultimo_sbc_mensual) or ultimo_sbc_mensual <= 0:
         raise ValueError("El último SBC mensual debe ser mayor que cero")
     if ultimo_sbc_mensual > salario_maximo:
         raise ValueError("El último SBC mensual excede el tope de 25 UMA")
     if salario_base_cotizacion < ultimo_sbc_mensual:
-        raise ValueError("El SBC de Modalidad 40 no puede ser menor al último SBC registrado")
+        raise ValueError(
+            "El SBC de Modalidad 40 no puede ser menor al último SBC registrado"
+        )
     if salario_base_cotizacion > salario_maximo:
         salario_base_cotizacion = salario_maximo
 
     dias_uma_mensual = uma_mensual / uma["diaria"]
     salario_diario_equivalente = salario_base_cotizacion / dias_uma_mensual
-    ceav_patron_rate = _get_ceav_patron_rate(salario_diario_equivalente, year)
+    ceav_patron_rate = _get_ceav_patron_rate(
+        salario_diario_equivalente, year, fecha
+    )
 
     componentes: dict[str, float] = {
         "cesantia_vejez_patron": salario_base_cotizacion * ceav_patron_rate,
@@ -291,11 +327,13 @@ def calcular_modalidad_40(
 
 
 def calcular_modalidad_10(
-    salario_base_cotizacion: float, year: IMSSYear = 2026
+    salario_base_cotizacion: float,
+    year: IMSSYear = 2026,
+    fecha: DateInput | None = None,
 ) -> Modalidad10Result:
     """Calculate the legacy Modalidad 10 model pending its dedicated audit."""
     tables = _load_imss_tables()
-    uma = get_uma(year)
+    uma = get_uma(year) if fecha is None else get_uma_for_date(fecha)
     mod10 = tables["modalidad_10"]
 
     uma_mensual = uma["mensual"]
@@ -307,7 +345,9 @@ def calcular_modalidad_10(
     elif salario_base_cotizacion > salario_maximo:
         salario_base_cotizacion = salario_maximo
 
-    cuota_fija_uma = uma["diaria"] * float(mod10["cuota_mensual"]["cuota_fija_uma_factor"])
+    cuota_fija_uma = uma["diaria"] * float(
+        mod10["cuota_mensual"]["cuota_fija_uma_factor"]
+    )
     porcentaje_variable = float(mod10["cuota_mensual"]["porcentaje_variable"])
     cuota_variable = salario_base_cotizacion * porcentaje_variable
     cuota_mensual = cuota_fija_uma + cuota_variable
