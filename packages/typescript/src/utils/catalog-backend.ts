@@ -183,6 +183,9 @@ function quoteIdent(value: string): string {
 
 export function resolveSharedDataPath(relativePath: string): string {
   const path = getNodePath();
+  const fs = getNodeFs();
+  const packagedPath = path.resolve(__dirname, '../shared-data', relativePath);
+  if (fs.existsSync(packagedPath)) return packagedPath;
   return path.resolve(__dirname, '../../../shared-data', relativePath);
 }
 

@@ -21,6 +21,10 @@
       "types": "./dist/catalogs/index.d.ts",
       "default": "./dist/catalogs/index.js"
     },
+    "./catalogs/preload": {
+      "types": "./dist/catalogs/preload.d.ts",
+      "default": "./dist/catalogs/preload.js"
+    },
     "./cfdi": {
       "types": "./dist/cfdi/index.d.ts",
       "default": "./dist/cfdi/index.js"
@@ -39,8 +43,10 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "npm run check:catalog-data && tsc && node scripts/copy-shared-data.mjs",
+    "check:catalog-data": "node scripts/generate-bundled-catalog-data.mjs --check",
     "clean": "rm -rf dist",
+    "generate:catalog-data": "node scripts/generate-bundled-catalog-data.mjs",
     "prebuild": "npm run clean",
     "test": "jest",
     "test:watch": "jest --watch",
