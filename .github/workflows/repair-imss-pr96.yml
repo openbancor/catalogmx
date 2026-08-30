@@ -18,13 +18,14 @@ jobs:
           ref: fix/fiscal-integrity-2026
           fetch-depth: 0
 
-      - name: Patch stale Modalidad 40 coverage tests
+      - name: Patch stale Modalidad 40 tests and requirements
         shell: python
         run: |
+          import json
           from pathlib import Path
 
-          path = Path("packages/typescript/tests/coverage-validators-calculators.test.ts")
-          text = path.read_text(encoding="utf-8")
+          test_path = Path("packages/typescript/tests/coverage-validators-calculators.test.ts")
+          text = test_path.read_text(encoding="utf-8")
           old = """  // Modalidad 40 salary bounds. The legal minimum depends on the worker's
           // last registered SBC, which this API does not receive; do not invent 1 UMA.
           test('calcularModalidad40 preserves input when prior SBC is unknown', () => {
@@ -48,17 +49,32 @@ jobs:
             expect(result.salario_base_cotizacion).toBeLessThan(999999);
           });
           """
-          if old not in text:
-              raise SystemExit("Expected stale Modalidad 40 coverage block was not found")
-          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          if old in text:
+              test_path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          elif new not in text:
+              raise SystemExit("Expected Modalidad 40 coverage block was not found")
+
+          tables_path = Path("packages/shared-data/imss-tables.json")
+          tables = json.loads(tables_path.read_text(encoding="utf-8"))
+          requisitos = tables["modalidad_40"]["requisitos"]
+          requisitos.pop("plazo_inscripcion_dias", None)
+          requisitos.pop("edad_minima", None)
+          requisitos.pop("edad_maxima", None)
+          requisitos["semanas_minimas_periodo_anios"] = 5
+          requisitos["plazo_ejercicio_derecho_anios"] = 5
+          tables_path.write_text(
+              json.dumps(tables, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Format and test Python IMSS
+      - name: Verify fiscal manifest and format/test Python IMSS
         run: |
+          python scripts/build_fiscal_manifest.py --check
           python -m pip install --upgrade pip
           python -m pip install -e "./packages/python[dev]"
           black packages/python/catalogmx/calculators/imss.py
@@ -98,6 +114,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
+            packages/shared-data/imss-tables.json \
             packages/typescript/tests/coverage-validators-calculators.test.ts \
             packages/typescript/src/calculators/imss-calculator.ts \
             packages/typescript/src/fiscal/index.ts \
@@ -105,6 +122,6 @@ jobs:
             packages/dart/lib/src/calculators/imss.dart \
             packages/dart/test/imss_vectors_test.dart
           if ! git diff --cached --quiet; then
-            git commit -m "chore(imss): format audited cross-runtime fixes"
+            git commit -m "chore(imss): finish audited cross-runtime repairs"
             git push origin HEAD:fix/fiscal-integrity-2026
           fi
