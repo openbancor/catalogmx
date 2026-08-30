@@ -13,6 +13,8 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createServer } from "node:net";
 
+import { terminateChild } from "./process_shutdown.mjs";
+
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const typescriptDir = join(repoRoot, "packages", "typescript");
 const wranglerBin = join(
@@ -85,11 +87,7 @@ async function exerciseWorker(wrangler, config, cwd) {
     }
     throw new Error(`Worker did not become ready:\n${output}`);
   } finally {
-    child.kill("SIGTERM");
-    await new Promise((resolveExit) => {
-      if (child.exitCode !== null) resolveExit();
-      else child.once("exit", resolveExit);
-    });
+    await terminateChild(child);
   }
 }
 

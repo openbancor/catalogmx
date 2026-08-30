@@ -203,7 +203,9 @@ jobs:
 
       - name: Validate packed Node and Worker consumers
         working-directory: .
-        run: node scripts/check_typescript_package.mjs
+        run: |
+          node --test scripts/process_shutdown.test.mjs
+          node scripts/check_typescript_package.mjs
 
   # Svelte webapp type checking and production build
   webapp-tests:

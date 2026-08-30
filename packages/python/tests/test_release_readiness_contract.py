@@ -12,6 +12,7 @@ def test_packed_typescript_contract_is_blocking_ci() -> None:
     assert checker.is_file()
     assert "catalogmx/catalogs" in checker.read_text()
     assert "catalogmx/cfdi" in checker.read_text()
+    assert "node --test scripts/process_shutdown.test.mjs" in workflow
     assert "node scripts/check_typescript_package.mjs" in workflow
     assert "api-worker-tests" in workflow
 
