@@ -8,6 +8,7 @@ const pendingAuditLinkText = 'Modalidad 10/PTI: pendiente de auditoría';
 const publicReference = /modalidad\s*10|modalidad10|\bm10\b|\bpti\b/i;
 const forbiddenOptionValue = 'modalidad10';
 const forbiddenCalculatorName = 'calcularmodalidad10';
+const publicAttributeNames = new Set(['href', 'aria-label']);
 
 const routes = [
 	{
@@ -71,28 +72,21 @@ function isForbiddenCalculatorIdentifier(name) {
 	return normalized === forbiddenOptionValue || normalized === forbiddenCalculatorName;
 }
 
-function collectElements(node, parentElement, elements, parents) {
+function collectElements(node, elements) {
 	if (!node || typeof node !== 'object') return;
 	if (Array.isArray(node)) {
-		for (const child of node) collectElements(child, parentElement, elements, parents);
+		for (const child of node) collectElements(child, elements);
 		return;
 	}
 
-	const currentElement = node.type === 'Element' ? node : parentElement;
-	if (node.type === 'Element') {
-		elements.push(node);
-		parents.set(node, parentElement);
-	}
+	if (node.type === 'Element') elements.push(node);
 	for (const child of node.children ?? []) {
-		collectElements(child, currentElement, elements, parents);
+		collectElements(child, elements);
 	}
 }
 
-function staticRenderedText(node) {
-	if (!node || typeof node !== 'object') return '';
-	if (node.type === 'Text') return node.data;
-	if (node.type === 'ExpressionTag') return staticString(node.expression) ?? '';
-	return (node.children ?? []).map(staticRenderedText).join('');
+function isInlineExpression(node) {
+	return node.type === 'ExpressionTag' || node.type === 'MustacheTag';
 }
 
 function hasIssueHref(node) {
@@ -116,45 +110,69 @@ function isVerifiedIssueAnchor(node) {
 	return node.name === 'a' && hasIssueHref(node) && hasExactPendingAuditLinkText(node);
 }
 
-function hasPublicReferenceDescendant(node) {
-	const elements = [];
-	collectElements(node.children, null, elements, new Map());
-	return elements.some((element) => publicReference.test(staticRenderedText(element)));
+function staticPublicAttributeValue(attribute) {
+	if (
+		attribute.type !== 'Attribute' ||
+		!publicAttributeNames.has(attribute.name) ||
+		!Array.isArray(attribute.value)
+	) {
+		return null;
+	}
+
+	let value = '';
+	for (const part of attribute.value) {
+		if (part.type === 'Text') {
+			value += part.data;
+		} else if (isInlineExpression(part)) {
+			const expression = staticString(part.expression);
+			if (expression === null) return null;
+			value += expression;
+		} else {
+			return null;
+		}
+	}
+	return value;
 }
 
-function isWithinVerifiedIssueAnchor(node, parents) {
-	for (let current = node; current; current = parents.get(current)) {
-		if (isVerifiedIssueAnchor(current)) return true;
-	}
-	return false;
+function staticRenderedTextOutsideVerifiedIssueAnchors(node) {
+	if (!node || typeof node !== 'object') return '';
+	if (node.type === 'Element' && isVerifiedIssueAnchor(node)) return '';
+	if (node.type === 'Text') return node.data;
+	if (isInlineExpression(node)) return staticString(node.expression) ?? '';
+	return (node.children ?? []).map(staticRenderedTextOutsideVerifiedIssueAnchors).join('');
 }
 
 function assertPublicRouteContract(source, route) {
 	const ast = parse(source);
 	const violations = new Set();
 
-	walk(ast.instance, (node) => {
-		if (node.type === 'Identifier' && isForbiddenCalculatorIdentifier(node.name)) {
-			violations.add(`identificador o llamada prohibida: ${node.name}`);
-		}
+	for (const script of [ast.instance, ast.module]) {
+		walk(script, (node) => {
+			if (node.type === 'Identifier' && isForbiddenCalculatorIdentifier(node.name)) {
+				violations.add(`identificador o llamada prohibida: ${node.name}`);
+			}
 
-		const value = staticString(node);
-		if (value !== null && isForbiddenScriptValue(value)) {
-			violations.add('literal o composición de script prohibida');
-		}
-	});
+			const value = staticString(node);
+			if (value !== null && isForbiddenScriptValue(value)) {
+				violations.add('literal o composición de script prohibida');
+			}
+		});
+	}
 
 	const elements = [];
-	const parents = new Map();
-	collectElements(ast.html.children, null, elements, parents);
+	collectElements(ast.html.children, elements);
 
 	for (const element of elements) {
-		if (
-			publicReference.test(staticRenderedText(element)) &&
-			!hasPublicReferenceDescendant(element) &&
-			!isWithinVerifiedIssueAnchor(element, parents)
-		) {
+		if (publicReference.test(staticRenderedTextOutsideVerifiedIssueAnchors(element))) {
 			violations.add('contenido público que ofrece o calcula Modalidad 10/PTI');
+		}
+		if (!isVerifiedIssueAnchor(element)) {
+			for (const attribute of element.attributes ?? []) {
+				const value = staticPublicAttributeValue(attribute);
+				if (value !== null && publicReference.test(value)) {
+					violations.add('atributo público que ofrece o enruta Modalidad 10/PTI');
+				}
+			}
 		}
 	}
 
@@ -183,9 +201,27 @@ function runSelfTests() {
 	assert.throws(() => assertPublicRouteContract(`<script>const value = 'modalidad10';</script>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<script>const value = "modalidad10";</script>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<script>const calcularModalidad10 = true;</script>${clean}`, route));
+	assert.throws(() =>
+		assertPublicRouteContract(`<script module>const calcularModalidad10 = true;</script>${clean}`, route)
+	);
 	assert.throws(() => assertPublicRouteContract(`<script>const key = 'calcularModalidad' + '10';</script>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<p>M10 disponible</p>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<p>Modalidad <strong>10</strong> disponible</p>${clean}`, route));
+	assert.throws(() => assertPublicRouteContract(`<a href="/calculadoras/modalidad10">Otra calculadora</a>${clean}`, route));
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<a href={'/calculadoras/' + 'modalidad10'}>Otra calculadora</a>${clean}`,
+			route
+		)
+	);
+	assert.throws(() => assertPublicRouteContract(`<button aria-label="Calcular Modalidad 10">Calcular</button>${clean}`, route));
+	assert.throws(() => assertPublicRouteContract(`<p>{'Modalidad ' + '10 disponible'}</p>${clean}`, route));
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`<p>Modalidad 10 disponible ${honestAnchor}</p>`,
+			route
+		)
+	);
 	assert.throws(() =>
 		assertPublicRouteContract(
 			`<section><p>Modalidad <strong>10</strong> disponible y actualizada.</p><a href="${issueUrl}">pendiente de auditoría</a></section>`,
