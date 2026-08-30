@@ -100,7 +100,11 @@ function collectPublicNodes(node, nodes, parents, parent = null) {
 }
 
 function isInlineExpression(node) {
-	return node.type === 'ExpressionTag' || node.type === 'MustacheTag';
+	return (
+		node.type === 'ExpressionTag' ||
+		node.type === 'MustacheTag' ||
+		node.type === 'RawMustacheTag'
+	);
 }
 
 function hasIssueHref(node) {
@@ -156,6 +160,28 @@ function hasStaticHiddenClass(node) {
 	return className?.split(/\s+/).includes('hidden') ?? false;
 }
 
+function hasStaticHiddenAttribute(node) {
+	return node.attributes?.some(
+		(attribute) => attribute.type === 'Attribute' && attribute.name === 'hidden' && attribute.value === true
+	);
+}
+
+function hasStaticHiddenStyle(node) {
+	const styleAttribute = node.attributes?.find(
+		(attribute) => attribute.type === 'Attribute' && attribute.name === 'style'
+	);
+	const style = styleAttribute ? staticAttributeValue(styleAttribute) : null;
+	const normalizedStyle = style?.replace(/\s+/g, '').toLowerCase();
+	return normalizedStyle?.includes('display:none') || normalizedStyle?.includes('visibility:hidden');
+}
+
+function hasStaticAriaHidden(node) {
+	const ariaHiddenAttribute = node.attributes?.find(
+		(attribute) => attribute.type === 'Attribute' && attribute.name === 'aria-hidden'
+	);
+	return ariaHiddenAttribute ? staticAttributeValue(ariaHiddenAttribute)?.toLowerCase() === 'true' : false;
+}
+
 function isInElseBranch(node, ifBlock, parents) {
 	let current = node;
 	while (current && parents.get(current) !== ifBlock) {
@@ -167,7 +193,16 @@ function isInElseBranch(node, ifBlock, parents) {
 function isStaticallyVisibleIssueAnchor(node, parents) {
 	if (!isVerifiedIssueAnchor(node)) return false;
 	for (let current = node; current; current = parents.get(current)) {
-		if (current.type === 'Head' || hasStaticHiddenClass(current)) return false;
+		if (
+			current.type === 'Head' ||
+			(current.type === 'Element' && current.name === 'template') ||
+			hasStaticHiddenClass(current) ||
+			hasStaticHiddenAttribute(current) ||
+			hasStaticHiddenStyle(current) ||
+			hasStaticAriaHidden(current)
+		) {
+			return false;
+		}
 		if (current.type === 'IfBlock' && typeof current.expression?.value === 'boolean') {
 			const inElseBranch = isInElseBranch(node, current, parents);
 			if (current.expression.value === inElseBranch) return false;
@@ -204,6 +239,9 @@ function assertPublicRouteContract(source, route) {
 	const elements = [];
 	const parents = new Map();
 	collectPublicNodes(ast.html, elements, parents);
+	if (publicReference.test(staticRenderedTextOutsideVerifiedIssueAnchors(ast.html))) {
+		violations.add('contenido público que ofrece o calcula Modalidad 10/PTI');
+	}
 
 	for (const element of elements) {
 		if (publicReference.test(staticRenderedTextOutsideVerifiedIssueAnchors(element))) {
@@ -250,6 +288,8 @@ function runSelfTests() {
 	assert.throws(() => assertPublicRouteContract(`<script>const key = 'calcularModalidad' + '10';</script>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<p>M10 disponible</p>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<p>Modalidad <strong>10</strong> disponible</p>${clean}`, route));
+	assert.throws(() => assertPublicRouteContract(`Modalidad 10 disponible${clean}`, route));
+	assert.throws(() => assertPublicRouteContract(`{@html 'Modalidad 10 disponible'}${clean}`, route));
 	assert.throws(() =>
 		assertPublicRouteContract(
 			`<svelte:head><meta name="description" content="Modalidad 10 disponible" /></svelte:head>${clean}`,
@@ -280,6 +320,11 @@ function runSelfTests() {
 			route
 		)
 	);
+	assert.throws(() => assertPublicRouteContract(`<div hidden>${honestAnchor}</div>`, route));
+	assert.throws(() => assertPublicRouteContract(`<template>${honestAnchor}</template>`, route));
+	assert.throws(() => assertPublicRouteContract(`<div style="display:none">${honestAnchor}</div>`, route));
+	assert.throws(() => assertPublicRouteContract(`<div style="visibility: hidden">${honestAnchor}</div>`, route));
+	assert.throws(() => assertPublicRouteContract(`<div aria-hidden="true">${honestAnchor}</div>`, route));
 	assert.throws(() =>
 		assertPublicRouteContract(`{#if false}${honestAnchor}{/if}`, route)
 	);
