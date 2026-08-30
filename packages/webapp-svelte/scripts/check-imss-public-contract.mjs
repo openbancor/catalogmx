@@ -47,7 +47,7 @@ function walk(node, visit) {
 
 function staticString(node) {
 	if (!node) return null;
-	if (node.type === 'Literal' && ['string', 'number'].includes(typeof node.value)) {
+	if (node.type === 'Literal' && ['string', 'number', 'boolean'].includes(typeof node.value)) {
 		return String(node.value);
 	}
 	if (node.type === 'TemplateLiteral') {
@@ -161,9 +161,19 @@ function hasStaticHiddenClass(node) {
 }
 
 function hasStaticHiddenAttribute(node) {
-	return node.attributes?.some(
-		(attribute) => attribute.type === 'Attribute' && attribute.name === 'hidden' && attribute.value === true
+	const hiddenAttribute = node.attributes?.find(
+		(attribute) => attribute.type === 'Attribute' && attribute.name === 'hidden'
 	);
+	if (!hiddenAttribute) return false;
+	if (hiddenAttribute.value === true) return true;
+	if (
+		hiddenAttribute.value?.length === 1 &&
+		isInlineExpression(hiddenAttribute.value[0]) &&
+		typeof hiddenAttribute.value[0].expression?.value === 'boolean'
+	) {
+		return hiddenAttribute.value[0].expression.value;
+	}
+	return true;
 }
 
 function hasStaticHiddenStyle(node) {
@@ -213,10 +223,13 @@ function isStaticallyVisibleIssueAnchor(node, parents) {
 
 function staticRenderedTextOutsideVerifiedIssueAnchors(node) {
 	if (!node || typeof node !== 'object') return '';
+	if (Array.isArray(node)) return node.map(staticRenderedTextOutsideVerifiedIssueAnchors).join('');
 	if (node.type === 'Element' && isVerifiedIssueAnchor(node)) return '';
 	if (node.type === 'Text') return node.data;
 	if (isInlineExpression(node)) return staticString(node.expression) ?? '';
-	return (node.children ?? []).map(staticRenderedTextOutsideVerifiedIssueAnchors).join('');
+	return ['children', 'else', 'fallback', 'pending', 'then', 'catch']
+		.map((key) => staticRenderedTextOutsideVerifiedIssueAnchors(node[key]))
+		.join('');
 }
 
 function assertPublicRouteContract(source, route) {
@@ -321,10 +334,20 @@ function runSelfTests() {
 		)
 	);
 	assert.throws(() => assertPublicRouteContract(`<div hidden>${honestAnchor}</div>`, route));
+	assert.throws(() => assertPublicRouteContract(`<div hidden={true}>${honestAnchor}</div>`, route));
+	assert.throws(() => assertPublicRouteContract(`<div hidden="hidden">${honestAnchor}</div>`, route));
+	assert.throws(() => assertPublicRouteContract(`<div hidden="">${honestAnchor}</div>`, route));
 	assert.throws(() => assertPublicRouteContract(`<template>${honestAnchor}</template>`, route));
 	assert.throws(() => assertPublicRouteContract(`<div style="display:none">${honestAnchor}</div>`, route));
 	assert.throws(() => assertPublicRouteContract(`<div style="visibility: hidden">${honestAnchor}</div>`, route));
 	assert.throws(() => assertPublicRouteContract(`<div aria-hidden="true">${honestAnchor}</div>`, route));
+	assert.throws(() => assertPublicRouteContract(`<div aria-hidden={true}>${honestAnchor}</div>`, route));
+	assert.throws(() =>
+		assertPublicRouteContract(
+			`{#if enabled}Seguro{:else}Modalidad 10 disponible{/if}${clean}`,
+			route
+		)
+	);
 	assert.throws(() =>
 		assertPublicRouteContract(`{#if false}${honestAnchor}{/if}`, route)
 	);
