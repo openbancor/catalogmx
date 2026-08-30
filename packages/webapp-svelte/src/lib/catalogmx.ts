@@ -31,7 +31,12 @@ import { setCatalogJsonData } from 'catalogmx/utils';
 import { getDatabase } from './db';
 
 export async function initCatalogmxSqlite(): Promise<void> {
-  await Promise.all([getDatabase(), preloadCatalogJson()]);
+  const results = await Promise.allSettled([getDatabase(), preloadCatalogJson()]);
+  for (const result of results) {
+    if (result.status === 'rejected') {
+      console.warn('catalogmx initialization failed:', result.reason);
+    }
+  }
 }
 
 async function preloadCatalogJson(): Promise<void> {

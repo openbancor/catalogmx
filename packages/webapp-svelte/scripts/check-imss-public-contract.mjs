@@ -347,8 +347,8 @@ function assertPublicRouteContract(source, route) {
 				violations.add(`identificador o llamada prohibida: ${node.name}`);
 			}
 
-			const value = staticString(node);
-			if (value !== null && isForbiddenScriptValue(value)) {
+			const values = evaluateStatic(node);
+			if (values.some((value) => isForbiddenScriptValue(value))) {
 				violations.add('literal o composición de script prohibida');
 			}
 		});
@@ -408,6 +408,7 @@ function runSelfTests() {
 		assertPublicRouteContract(`<script module>const calcularModalidad10 = true;</script>${clean}`, route)
 	);
 	assert.throws(() => assertPublicRouteContract(`<script>const key = 'calcularModalidad' + '10';</script>${clean}`, route));
+	assert.throws(() => assertPublicRouteContract(`<script>const suffix = '10'; const key = 'modalidad' + suffix;</script>${clean}`, route));
 	assert.throws(() => assertPublicRouteContract(`<p>M10 disponible</p>${clean}`, route));
 	assert.throws(() =>
 		assertPublicRouteContract(

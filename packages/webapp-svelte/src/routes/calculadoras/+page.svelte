@@ -7,17 +7,12 @@
 			id: 'isr',
 			name: 'ISR',
 			description: 'Impuesto Sobre la Renta',
-			longDescription: 'Calcula el ISR con las tarifas oficiales 2024-2026 y subsidio al empleo',
+			longDescription: 'Tarifas históricas conservadas mientras concluye la auditoría de fuentes fiscales',
 			href: `${base}/calculadoras/isr`,
 			icon: Receipt,
 			color: 'bg-red-500',
-			features: [
-				'Tarifas ISR 2024, 2025, 2026',
-				'Subsidio al empleo',
-				'Múltiples periodos (mensual, anual, quincenal, semanal)',
-				'Cálculo de tasa efectiva'
-			],
-			status: 'available'
+			features: ['Datos en revisión', 'Cálculo público temporalmente deshabilitado'],
+			status: 'audit'
 		},
 		{
 			id: 'resico',
@@ -185,7 +180,7 @@
 			</div>
 			<p class="text-lg text-slate-600 dark:text-slate-300">
 				Herramientas para calcular impuestos, cuotas de seguridad social, costos laborales y más.
-				Todas basadas en datos oficiales y tarifas actualizadas 2024-2026.
+				Cada herramienta disponible identifica el alcance y vigencia de sus datos.
 			</p>
 		</div>
 	</div>
@@ -199,9 +194,9 @@
 				{@const Icon = calc.icon}
 				<div class="card p-6 relative overflow-hidden flex flex-col">
 					<!-- Status badge -->
-					{#if calc.status === 'coming-soon'}
+					{#if calc.status !== 'available'}
 						<div class="absolute top-4 right-4">
-							<span class="badge badge-warning">Próximamente</span>
+							<span class="badge badge-warning">{calc.status === 'audit' ? 'En auditoría' : 'Próximamente'}</span>
 						</div>
 					{/if}
 
@@ -242,6 +237,10 @@
 						<a href={calc.href} class="btn btn-primary w-full">
 							<Calculator class="h-4 w-4" />
 							Abrir calculadora
+						</a>
+					{:else if calc.status === 'audit'}
+						<a href={calc.href} class="btn btn-secondary w-full">
+							Ver estado de auditoría
 						</a>
 					{:else}
 						<button class="btn btn-secondary w-full" disabled>

@@ -87,4 +87,6 @@ packages/dart/coverage/
 
 # Local files
 .playwright-mcp/
+packages/webapp-svelte/playwright-report/
+packages/webapp-svelte/test-results/
 mexico.sqlite3

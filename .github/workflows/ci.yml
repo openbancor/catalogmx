@@ -235,6 +235,12 @@ jobs:
       - name: Production build
         run: npm run build
 
+      - name: Install Chromium for browser contract tests
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser contract tests
+        run: npm run test:e2e
+
   # Dart/Flutter Testing and Analysis
   dart-tests:
     name: Dart ${{ matrix.dart-version }} Tests

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import { Calculator, Info, Shield, Users } from 'lucide-svelte';
-	import { IMSSCalculator } from '$lib/catalogmx';
+	import { onMount } from 'svelte';
+	import { IMSSCalculator, initCatalogmxSqlite } from '$lib/catalogmx';
 
 	type TipoCalculo = 'cuotas' | 'modalidad40';
 	type ClaseRiesgo = 1 | 2 | 3 | 4 | 5;
@@ -12,22 +13,21 @@
 	let tipoCalculo = $state<TipoCalculo>('cuotas');
 	let salarioDiario = $state<number>(500);
 	let ultimoSbcDiario = $state<number>(500);
+	let errorCuotas = $state<string | null>(null);
 	let errorModalidad40 = $state<string | null>(null);
 	let claseRiesgo = $state<ClaseRiesgo>(1);
 	let zonaSalario = $state<ZonaSalario>('general');
 	let year = $state<Year>(2025);
+	let catalogsReady = $state(false);
 
 	const tiposCalculo = [
 		{ value: 'cuotas', label: 'Cuotas Obrero-Patronales', icon: Users },
 		{ value: 'modalidad40', label: 'Modalidad 40 (Voluntaria)', icon: Shield }
 	] as const;
 
-	const clasesRiesgo = IMSSCalculator.getClasesRiesgoTrabajo().map((c) => ({
-		value: c.clase as ClaseRiesgo,
-		label: `Clase ${c.clase} - ${c.descripcion.replace(`Clase ${c.clase} - `, '')}`,
-		prima: c.prima,
-		ejemplos: c.ejemplos
-	}));
+	let clasesRiesgo = $state<
+		Array<{ value: ClaseRiesgo; label: string; prima: number; ejemplos: string[] }>
+	>([]);
 
 	const years = [2024, 2025, 2026] as const;
 
@@ -57,16 +57,19 @@
 	let resultadoMod40 = $state<Modalidad40Result | null>(null);
 
 	function calculateCuotas() {
-		const uma = IMSSCalculator.getUMA(year).diaria;
-		const salarioMensual = salarioDiario * 30;
-		const result = IMSSCalculator.calcularCuotasObreroPatronales(
-			salarioDiario,
-			30,
-			year,
-			claseRiesgo,
-			undefined,
-			zonaSalario
-		);
+		errorCuotas = null;
+		resultadoCuotas = null;
+		try {
+			const uma = IMSSCalculator.getUMA(year).diaria;
+			const salarioMensual = salarioDiario * 30;
+			const result = IMSSCalculator.calcularCuotasObreroPatronales(
+				salarioDiario,
+				30,
+				year,
+				claseRiesgo,
+				undefined,
+				zonaSalario
+			);
 		const labels: Record<string, string> = {
 			enfermedad_mat_cuota_fija: 'E&M - Cuota fija (UMA)',
 			enfermedad_mat_excedente: 'E&M - Excedente 3 UMA',
@@ -79,25 +82,29 @@
 			riesgo_trabajo: `Riesgo de trabajo (Clase ${claseRiesgo})`
 		};
 
-		const keys = new Set([
-			...Object.keys(result.cuotas_patron),
-			...Object.keys(result.cuotas_trabajador)
-		]);
-		const desglose: CuotasResult['desglose'] = Array.from(keys).map((key) => ({
-			concepto: labels[key] ?? key.replace(/_/g, ' '),
-			patron: result.cuotas_patron[key] ?? 0,
-			trabajador: result.cuotas_trabajador[key] ?? 0
-		}));
+			const keys = new Set([
+				...Object.keys(result.cuotas_patron),
+				...Object.keys(result.cuotas_trabajador)
+			]);
+			const desglose: CuotasResult['desglose'] = Array.from(keys).map((key) => ({
+				concepto: labels[key] ?? key.replace(/_/g, ' '),
+				patron: result.cuotas_patron[key] ?? 0,
+				trabajador: result.cuotas_trabajador[key] ?? 0
+			}));
 
-		resultadoCuotas = {
-			salarioDiario,
-			salarioMensual,
-			uma,
-			cuotasPatron: result.total_patron,
-			cuotasTrabajador: result.total_trabajador,
-			cuotaTotal: result.total_imss,
-			desglose
-		};
+			resultadoCuotas = {
+				salarioDiario,
+				salarioMensual,
+				uma,
+				cuotasPatron: result.total_patron,
+				cuotasTrabajador: result.total_trabajador,
+				cuotaTotal: result.total_imss,
+				desglose
+			};
+		} catch (error) {
+			errorCuotas =
+				error instanceof Error ? error.message : 'No fue posible calcular las cuotas IMSS.';
+		}
 	}
 
 	function calculateModalidad40() {
@@ -142,13 +149,16 @@
 		if (!salarioDiario || salarioDiario <= 0) {
 			resultadoCuotas = null;
 			resultadoMod40 = null;
+			errorCuotas = null;
 			errorModalidad40 = null;
 			return;
 		}
 
 		if (tipoCalculo === 'cuotas') {
+			errorModalidad40 = null;
 			calculateCuotas();
 		} else if (tipoCalculo === 'modalidad40') {
+			errorCuotas = null;
 			calculateModalidad40();
 		} else {
 			const unsupportedCalculation: never = tipoCalculo;
@@ -167,7 +177,18 @@
 
 	// Auto-calculate when inputs change
 	$effect(() => {
-		calculate();
+		if (catalogsReady) calculate();
+	});
+
+	onMount(async () => {
+		await initCatalogmxSqlite();
+		clasesRiesgo = IMSSCalculator.getClasesRiesgoTrabajo().map((item) => ({
+			value: item.clase as ClaseRiesgo,
+			label: `Clase ${item.clase} - ${item.descripcion.replace(`Clase ${item.clase} - `, '')}`,
+			prima: item.prima,
+			ejemplos: item.ejemplos
+		}));
+		catalogsReady = true;
 	});
 </script>
 
@@ -261,7 +282,7 @@
 								id="salarioDiario"
 								type="number"
 								bind:value={salarioDiario}
-								min="0"
+								min={IMSSCalculator.getSalarioMinimo(year, zonaSalario)}
 								step="0.01"
 								class="input pl-8 tabular-nums"
 								placeholder="500.00"
@@ -277,6 +298,15 @@
 								Salario mensual: {formatCurrency(salarioDiario * 30)}
 							{/if}
 						</p>
+						{#if tipoCalculo === 'cuotas' && errorCuotas}
+							<div
+								data-testid="cuotas-error"
+								aria-live="polite"
+								class="mt-3 p-3 rounded-lg border border-red-200 bg-red-50 text-sm text-red-800 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300"
+							>
+								{errorCuotas}
+							</div>
+						{/if}
 					</div>
 
 					<!-- Año -->
