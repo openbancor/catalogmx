@@ -86,6 +86,7 @@ describe('IMSS shared vectors', () => {
     expect(IMSSCalculator.getCEAVPatronRate(315.04, 2026, 'general')).toBeCloseTo(0.0315, 8);
     expect(IMSSCalculator.getCEAVPatronRate(440.87, 2026, 'general')).toBeCloseTo(0.06613, 8);
     expect(IMSSCalculator.getCEAVPatronRate(440.87, 2026, 'frontera')).toBeCloseTo(0.0315, 8);
+    expect(IMSSCalculator.getCEAVPatronRate(315.041, 2026, 'general')).toBeCloseTo(0.06026, 8);
   });
 
   test.each([
@@ -121,7 +122,7 @@ describe('IMSS shared vectors', () => {
     }
   );
 
-  test.each([Number.NaN, Number.POSITIVE_INFINITY, 0, -1])(
+  test.each([Number.NaN, Number.POSITIVE_INFINITY, 0, -1, 1.5])(
     'ordinary IMSS contributions reject invalid days: %s',
     (dias) => {
       expect(() => IMSSCalculator.calcularCuotasObreroPatronales(315.04, dias, 2026)).toThrow(
@@ -152,19 +153,38 @@ describe('IMSS shared vectors', () => {
     ).toThrow(RangeError);
   });
 
+  test.each([117.31 * 26, 1e307, 1e308])(
+    'ordinary IMSS contributions cap a daily SBC of %s at 25 UMA',
+    (uncappedSalary) => {
+      const cappedSalary = IMSSCalculator.getUMA(2026).diaria * 25;
+      const expected = IMSSCalculator.calcularCuotasObreroPatronales(cappedSalary, 30, 2026);
+      const result = IMSSCalculator.calcularCuotasObreroPatronales(uncappedSalary, 30, 2026);
+
+      expect(result).toEqual(expected);
+    }
+  );
+
   test('modalidad 40 preserves the special 1 SM CEAV band', () => {
     const monthlyMinimumWage = 315.04 * (3566.22 / 117.31);
     const result = IMSSCalculator.calcularModalidad40(monthlyMinimumWage, monthlyMinimumWage, 2026);
     expect(result.porcentaje_total).toBeCloseTo(0.10075, 8);
   });
 
-  test('modalidad 40 rejects non-finite requested salary', () => {
-    expect(() => IMSSCalculator.calcularModalidad40(Number.NaN, 10000, 2026)).toThrow(
-      'debe ser mayor que cero'
-    );
-    expect(() => IMSSCalculator.calcularModalidad40(Number.POSITIVE_INFINITY, 10000, 2026)).toThrow(
-      'debe ser mayor que cero'
-    );
+  test.each([
+    [true, 10000],
+    [15000, true],
+    [Number.NaN, 10000],
+    [15000, Number.NaN],
+    [Number.POSITIVE_INFINITY, 10000],
+    [15000, Number.POSITIVE_INFINITY],
+  ])('modalidad 40 rejects invalid requested or last SBC: %s/%s', (requested, last) => {
+    expect(() =>
+      IMSSCalculator.calcularModalidad40(
+        requested as unknown as number,
+        last as unknown as number,
+        2026
+      )
+    ).toThrow(RangeError);
   });
 
   test('modalidad 10', () => {
@@ -176,5 +196,18 @@ describe('IMSS shared vectors', () => {
       expect(round(result.cuota_mensual)).toBe(vector.expected.cuota_mensual);
       expect(round(result.cuota_fija_uma)).toBe(vector.expected.cuota_fija_uma);
     }
+  });
+
+  test.each([Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY, true])(
+    'modalidad 10 rejects invalid monthly SBC: %s',
+    (salary) => {
+      expect(() => IMSSCalculator.calcularModalidad10(salary as unknown as number, 2026)).toThrow(
+        RangeError
+      );
+    }
+  );
+
+  test('invalid calendar dates use the public RangeError contract', () => {
+    expect(() => IMSSCalculator.getUMAForDate('2026-02-31')).toThrow(RangeError);
   });
 });

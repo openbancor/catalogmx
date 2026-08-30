@@ -148,10 +148,6 @@ def get_salario_minimo(year: IMSSYear, zona: ZonaSalario = "general") -> float:
     return float(tables["salario_minimo"][str(year)][zona])
 
 
-def _almost_equal(left: float, right: float) -> bool:
-    return abs(left - right) < 0.005
-
-
 def _is_finite_number(value: object) -> bool:
     """Return whether a runtime value is a finite non-boolean numeric value."""
     if not isinstance(value, (int, float)) or isinstance(value, bool):
@@ -176,10 +172,10 @@ def _assert_salario_diario(salario_diario: float, salario_minimo: float) -> None
         raise ValueError("El salario diario no puede ser menor al salario mínimo aplicable.")
 
 
-def _assert_dias(dias: float) -> None:
-    """Reject non-finite or non-positive contribution days."""
-    if not _is_finite_number(dias) or dias <= 0:
-        raise ValueError("Los días deben ser un número finito mayor que cero.")
+def _assert_dias(dias: object) -> None:
+    """Reject non-integer or non-positive contribution days."""
+    if type(dias) is not int or not _is_finite_number(dias) or dias <= 0:
+        raise ValueError("Los días deben ser un entero mayor que cero.")
 
 
 def _assert_clase_riesgo(clase_riesgo: object) -> None:
@@ -207,7 +203,7 @@ def get_ceav_patron_rate(
 
     minimum = tables["salario_minimo"][str(year)]
     _assert_salario_diario(salario_diario, float(minimum[zona]))
-    if _almost_equal(salario_diario, float(minimum[zona])):
+    if salario_diario == float(minimum[zona]):
         return float(rates[0]["tasa"])
 
     uma = get_uma(year) if fecha is None else get_uma_for_date(fecha)
@@ -246,6 +242,7 @@ def calcular_cuotas_obrero_patronales(
     _assert_clase_riesgo(clase_riesgo)
     uma = get_uma(year) if fecha is None else get_uma_for_date(fecha)
     cuotas = tables["cuotas_imss"]
+    salario_diario = min(salario_diario, uma["diaria"] * 25)
     salario_base = salario_diario * dias
     uma_diaria = uma["diaria"]
 
@@ -333,9 +330,9 @@ def calcular_modalidad_40(
     uma_mensual = uma["mensual"]
     salario_maximo = uma_mensual * float(mod40["limites_salario"]["maximo_uma"])
 
-    if not math.isfinite(salario_base_cotizacion) or salario_base_cotizacion <= 0:
+    if not _is_finite_number(salario_base_cotizacion) or salario_base_cotizacion <= 0:
         raise ValueError("El SBC mensual de Modalidad 40 debe ser mayor que cero")
-    if not math.isfinite(ultimo_sbc_mensual) or ultimo_sbc_mensual <= 0:
+    if not _is_finite_number(ultimo_sbc_mensual) or ultimo_sbc_mensual <= 0:
         raise ValueError("El último SBC mensual debe ser mayor que cero")
     if ultimo_sbc_mensual > salario_maximo:
         raise ValueError("El último SBC mensual excede el tope de 25 UMA")
@@ -383,6 +380,9 @@ def calcular_modalidad_10(
     uma_mensual = uma["mensual"]
     salario_minimo = uma_mensual * float(mod10["limites_salario"]["minimo_uma"])
     salario_maximo = uma_mensual * float(mod10["limites_salario"]["maximo_uma"])
+
+    if not _is_finite_number(salario_base_cotizacion) or salario_base_cotizacion <= 0:
+        raise ValueError("El SBC mensual de Modalidad 10 debe ser mayor que cero")
 
     if salario_base_cotizacion < salario_minimo:
         salario_base_cotizacion = salario_minimo

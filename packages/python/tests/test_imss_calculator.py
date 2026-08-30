@@ -88,6 +88,9 @@ class TestCuotasObreroPatronales:
     ) -> None:
         assert get_ceav_patron_rate(salario_diario, 2026, zona=zona) == expected_rate  # type: ignore[arg-type]
 
+    def test_ceav_selector_does_not_round_salary_to_minimum_wage(self) -> None:
+        assert get_ceav_patron_rate(315.041, 2026, zona="general") == 0.06026
+
     def test_ceav_selector_rejects_invalid_wage_zone_at_runtime(self) -> None:
         with pytest.raises(ValueError):
             get_ceav_patron_rate(315.04, 2026, zona="otra")  # type: ignore[arg-type]
@@ -116,7 +119,7 @@ class TestCuotasObreroPatronales:
         with pytest.raises(ValueError):
             calcular_cuotas_obrero_patronales(salario_diario, 30, 2026)  # type: ignore[arg-type]
 
-    @pytest.mark.parametrize("dias", [float("nan"), float("inf"), 0.0, -1.0])
+    @pytest.mark.parametrize("dias", [float("nan"), float("inf"), 0.0, -1.0, 1.5])
     def test_ordinary_contributions_reject_invalid_days(self, dias: float) -> None:
         with pytest.raises(ValueError):
             calcular_cuotas_obrero_patronales(315.04, dias, 2026)  # type: ignore[arg-type]
@@ -152,6 +155,17 @@ class TestCuotasObreroPatronales:
         result = calcular_cuotas_obrero_patronales(500.0, 15, 2026)
         assert result["salario_base_cotizacion"] == 7500.0
         assert result["dias"] == 15
+
+    @pytest.mark.parametrize("uncapped_salary", [117.31 * 26, 1e307, 1e308])
+    def test_daily_sbc_is_capped_at_25_uma_before_every_calculation(
+        self, uncapped_salary: float
+    ) -> None:
+        uma = get_uma(2026)
+        capped_salary = uma["diaria"] * 25
+        expected = calcular_cuotas_obrero_patronales(capped_salary, 30, 2026)
+        result = calcular_cuotas_obrero_patronales(uncapped_salary, 30, 2026)
+
+        assert result == expected
 
     def test_risk_class_changes_employer_contribution(self) -> None:
         low = calcular_cuotas_obrero_patronales(500.0, 30, 2026, clase_riesgo=1)
@@ -236,3 +250,24 @@ class TestModalidad10Legacy:
         high = calcular_modalidad_10(uma["mensual"] * 30, 2026)
         assert low["salario_base_cotizacion"] == uma["mensual"]
         assert high["salario_base_cotizacion"] == uma["mensual"] * 25
+
+    @pytest.mark.parametrize("value", [float("nan"), float("inf"), float("-inf"), True])
+    def test_legacy_model_rejects_non_finite_or_boolean_salary(self, value: object) -> None:
+        with pytest.raises(ValueError, match="SBC mensual de Modalidad 10"):
+            calcular_modalidad_10(value, 2026)
+
+
+@pytest.mark.parametrize(
+    ("requested", "last"),
+    [
+        (True, 10000),
+        (15000, True),
+        (float("nan"), 10000),
+        (15000, float("nan")),
+        (float("inf"), 10000),
+        (15000, float("inf")),
+    ],
+)
+def test_modalidad_40_rejects_boolean_or_non_finite_sbc(requested: object, last: object) -> None:
+    with pytest.raises(ValueError, match="SBC mensual"):
+        calcular_modalidad_40(requested, last, 2026)  # type: ignore[arg-type]

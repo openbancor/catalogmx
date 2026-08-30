@@ -102,6 +102,44 @@ void main() {
         IMSSCalculator.getCEAVPatronRate(440.87, IMSSYear.year2026,
             zona: ZonaSalario.frontera),
         closeTo(0.0315, 0.00000001));
+    expect(
+        IMSSCalculator.getCEAVPatronRate(315.041, IMSSYear.year2026,
+            zona: ZonaSalario.general),
+        closeTo(0.06026, 0.00000001));
+  });
+
+  test('CEAV and ordinary contributions reject invalid daily SBC', () {
+    for (final salary in <double>[
+      double.nan,
+      double.infinity,
+      double.negativeInfinity,
+      0,
+      -1,
+      315.03,
+    ]) {
+      expect(
+        () => IMSSCalculator.getCEAVPatronRate(
+          salary,
+          IMSSYear.year2026,
+          zona: ZonaSalario.general,
+        ),
+        throwsArgumentError,
+      );
+      expect(
+        () => IMSSCalculator.calcularCuotasObreroPatronales(salary),
+        throwsArgumentError,
+      );
+    }
+  });
+
+  test('Ordinary contributions cap daily SBC at 25 UMA', () {
+    final cap = IMSSCalculator.getUMA(IMSSYear.year2026).diaria * 25;
+    final expected = IMSSCalculator.calcularCuotasObreroPatronales(cap);
+
+    for (final salary in <double>[117.31 * 26, 1e307, 1e308]) {
+      final result = IMSSCalculator.calcularCuotasObreroPatronales(salary);
+      expect(result.toJson(), expected.toJson());
+    }
   });
 
   test('Modalidad 40 preserves the special one-minimum-wage CEAV row', () {
@@ -158,5 +196,34 @@ void main() {
       ),
       throwsArgumentError,
     );
+    expect(
+      () => IMSSCalculator.calcularModalidad40(
+        15000,
+        ultimoSbcMensual: double.nan,
+      ),
+      throwsArgumentError,
+    );
+    expect(
+      () => IMSSCalculator.calcularModalidad40(
+        15000,
+        ultimoSbcMensual: double.infinity,
+      ),
+      throwsArgumentError,
+    );
+  });
+
+  test('Modalidad 10 rejects non-finite or non-positive salary', () {
+    for (final salary in <double>[
+      double.nan,
+      double.infinity,
+      double.negativeInfinity,
+      0,
+      -1,
+    ]) {
+      expect(
+        () => IMSSCalculator.calcularModalidad10(salary),
+        throwsArgumentError,
+      );
+    }
   });
 }

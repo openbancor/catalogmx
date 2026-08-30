@@ -236,8 +236,20 @@ class IMSSCalculator {
     }
   }
 
-  static bool _almostEqual(double left, double right) {
-    return (left - right).abs() < 0.005;
+  static void _assertSalarioDiario(
+    double salarioDiario,
+    double salarioMinimo,
+  ) {
+    if (!salarioDiario.isFinite || salarioDiario <= 0) {
+      throw ArgumentError(
+        'El salario diario debe ser un número finito mayor que cero.',
+      );
+    }
+    if (salarioDiario < salarioMinimo) {
+      throw ArgumentError(
+        'El salario diario no puede ser menor al salario mínimo aplicable.',
+      );
+    }
   }
 
   /// Select the employer CEAV rate for the applicable minimum-wage zone.
@@ -263,7 +275,8 @@ class IMSSCalculator {
     final minimum = tables['salario_minimo']![year.value.toString()]!
         as Map<String, dynamic>;
     final applicableMinimum = (minimum[zona.value]! as num).toDouble();
-    if (_almostEqual(salarioDiario, applicableMinimum)) {
+    _assertSalarioDiario(salarioDiario, applicableMinimum);
+    if (salarioDiario == applicableMinimum) {
       return ((rates[0] as Map<String, dynamic>)['tasa']! as num).toDouble();
     }
 
@@ -301,6 +314,11 @@ class IMSSCalculator {
     final tables = _loadIMSSTables();
     final uma = fecha == null ? getUMA(year) : getUMAForDate(fecha);
     final cuotas = tables['cuotas_imss']! as Map<String, dynamic>;
+    _assertSalarioDiario(salarioDiario, getSalarioMinimo(year, zona));
+    if (dias <= 0) {
+      throw ArgumentError('Los días deben ser un entero mayor que cero.');
+    }
+    salarioDiario = salarioDiario.clamp(0, uma.diaria * 25).toDouble();
     final salarioBase = salarioDiario * dias;
     final umaDiaria = uma.diaria;
 
@@ -482,6 +500,11 @@ class IMSSCalculator {
         uma.mensual * (limits['minimo_uma']! as num).toDouble();
     final salarioMaximo =
         uma.mensual * (limits['maximo_uma']! as num).toDouble();
+    if (!salarioBaseCotizacion.isFinite || salarioBaseCotizacion <= 0) {
+      throw ArgumentError(
+        'El SBC mensual de Modalidad 10 debe ser mayor que cero',
+      );
+    }
     if (salarioBaseCotizacion < salarioMinimo) {
       salarioBaseCotizacion = salarioMinimo;
     } else if (salarioBaseCotizacion > salarioMaximo) {

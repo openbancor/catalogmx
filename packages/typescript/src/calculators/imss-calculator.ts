@@ -276,8 +276,8 @@ export class IMSSCalculator {
   }
 
   private static assertDias(dias: number): void {
-    if (!Number.isFinite(dias) || dias <= 0) {
-      throw new RangeError('Los días deben ser un número finito mayor que cero.');
+    if (!Number.isInteger(dias) || dias <= 0) {
+      throw new RangeError('Los días deben ser un entero mayor que cero.');
     }
   }
 
@@ -324,7 +324,7 @@ export class IMSSCalculator {
       throw new Error(`No se encontró salario mínimo para ${year}`);
     }
     this.assertSalarioDiario(salarioDiario, minimum[zona]);
-    if (this.almostEqual(salarioDiario, minimum[zona])) return rates[0].tasa;
+    if (salarioDiario === minimum[zona]) return rates[0].tasa;
 
     const uma = fecha === undefined ? this.getUMA(year) : this.getUMAForDate(fecha);
     const ratio = salarioDiario / uma.diaria;
@@ -359,6 +359,7 @@ export class IMSSCalculator {
     this.assertClaseRiesgo(claseRiesgo);
     const uma = fecha === undefined ? this.getUMA(year) : this.getUMAForDate(fecha);
     const cuotas = this._tablesData!.cuotas_imss;
+    salarioDiario = Math.min(salarioDiario, uma.diaria * 25);
     const salarioBase = salarioDiario * dias;
     const umaDiaria = uma.diaria;
 
@@ -501,6 +502,10 @@ export class IMSSCalculator {
     const salarioMinimo = umaMensual * mod10.limites_salario.minimo_uma;
     const salarioMaximo = umaMensual * mod10.limites_salario.maximo_uma;
 
+    if (!Number.isFinite(salarioBaseCotizacion) || salarioBaseCotizacion <= 0) {
+      throw new RangeError('El SBC mensual de Modalidad 10 debe ser mayor que cero');
+    }
+
     if (salarioBaseCotizacion < salarioMinimo) {
       salarioBaseCotizacion = salarioMinimo;
     } else if (salarioBaseCotizacion > salarioMaximo) {
@@ -551,7 +556,7 @@ export class IMSSCalculator {
     if (typeof fecha === 'string') {
       const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(fecha);
       if (!match) {
-        throw new Error(`Fecha inválida: ${fecha}`);
+        throw new RangeError(`Fecha inválida: ${fecha}`);
       }
       const year = Number(match[1]);
       const month = Number(match[2]);
@@ -562,20 +567,16 @@ export class IMSSCalculator {
         parsed.getUTCMonth() !== month - 1 ||
         parsed.getUTCDate() !== day
       ) {
-        throw new Error(`Fecha inválida: ${fecha}`);
+        throw new RangeError(`Fecha inválida: ${fecha}`);
       }
       return fecha;
     }
     if (Number.isNaN(fecha.getTime())) {
-      throw new Error('Fecha inválida');
+      throw new RangeError('Fecha inválida');
     }
     const year = fecha.getFullYear();
     const month = String(fecha.getMonth() + 1).padStart(2, '0');
     const day = String(fecha.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
-  }
-
-  private static almostEqual(left: number, right: number): boolean {
-    return Math.abs(left - right) < 0.005;
   }
 }
