@@ -41,7 +41,9 @@ export function setCatalogPreferSqlite(value: boolean): void {
 }
 
 export function setCatalogJsonData(relativePath: string, data: unknown): void {
-  jsonDataStore.set(normalizePath(relativePath), data);
+  const normalized = normalizePath(relativePath);
+  jsonDataStore.set(normalized, freezeJsonClone(data));
+  catalogCache.delete(normalized);
 }
 
 export function clearCatalogJsonData(relativePath?: string): void {
@@ -105,7 +107,9 @@ export function loadCatalogRows<T>(relativePath: string): T[] {
     return catalogCache.get(normalized) as T[];
   }
 
-  const rows = tryLoadFromSqlite<T>(normalized) ?? extractRecords<T>(loadCatalogJson(normalized));
+  const rows = freezeJsonClone(
+    tryLoadFromSqlite<T>(normalized) ?? extractRecords<T>(loadCatalogJson(normalized))
+  );
   catalogCache.set(normalized, rows);
   return rows;
 }
@@ -171,6 +175,21 @@ function extractRecords<T>(data: unknown): T[] {
     (current[1] as unknown[]).length > (max[1] as unknown[]).length ? current : max
   );
   return records as T[];
+}
+
+function freezeJsonClone<T>(value: T): T {
+  if (value === null || typeof value !== 'object') return value;
+  const clone = (
+    Array.isArray(value)
+      ? value.map((item) => freezeJsonClone(item))
+      : Object.fromEntries(
+          Object.entries(value as Record<string, unknown>).map(([key, item]) => [
+            key,
+            freezeJsonClone(item),
+          ])
+        )
+  ) as T;
+  return Object.freeze(clone);
 }
 
 function normalizePath(value: string): string {

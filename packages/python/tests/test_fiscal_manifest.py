@@ -9,6 +9,7 @@ import pytest
 from catalogmx._fiscal_ids import FISCAL_DATASET_IDS
 from catalogmx.fiscal import (
     assert_fiscal_data_verified,
+    fiscal_dataset_ids,
     fiscal_entry,
     fiscal_manifest,
     fiscal_manifest_for_exercise,
@@ -72,3 +73,4 @@ def test_modalidad_10_uses_the_documented_legacy_status():
 
     assert entry is not None
     assert entry["status"] == "legacy_unverified"
+    assert "imss_modalidad_10" in fiscal_dataset_ids()

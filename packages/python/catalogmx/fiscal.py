@@ -92,6 +92,11 @@ def fiscal_manifest() -> FiscalManifest:
     return deepcopy(_load_manifest())
 
 
+def fiscal_dataset_ids() -> tuple[FiscalDatasetId, ...]:
+    """List the dataset identifiers carried by the generated manifest."""
+    return tuple(_load_manifest()["datasets"])
+
+
 def fiscal_entry(dataset_id: FiscalDatasetId, exercise: int) -> FiscalManifestEntry | None:
     """Return one fiscal dataset entry for an exercise, if it exists."""
     entry = _load_manifest()["datasets"][dataset_id]["entries"].get(str(exercise))
@@ -149,6 +154,7 @@ __all__ = [
     "JsonValue",
     "assert_fiscal_data_verified",
     "fiscal_entry",
+    "fiscal_dataset_ids",
     "fiscal_manifest",
     "fiscal_manifest_for_exercise",
     "fiscal_sources",

@@ -66,6 +66,11 @@ export function fiscalManifest(): DeepReadonly<FiscalManifest> {
   return MANIFEST;
 }
 
+/** List the dataset identifiers carried by the generated manifest. */
+export function fiscalDatasetIds(): readonly FiscalDatasetId[] {
+  return [...FISCAL_DATASET_IDS];
+}
+
 /** Return one fiscal dataset entry for an exercise, if present. */
 export function fiscalEntry(
   datasetId: FiscalDatasetId,

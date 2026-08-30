@@ -1,6 +1,7 @@
 import { IMSSCalculator } from '../src/calculators/imss-calculator';
 import {
   assertFiscalDataVerified,
+  fiscalDatasetIds,
   fiscalEntry,
   fiscalManifest,
   fiscalSources,
@@ -45,9 +46,9 @@ describe('historical fiscal parameters', () => {
     expect(() =>
       IMSSCalculator.calcularCuotasObreroPatronales(500, 30, 2026, 2, '2025-12-31')
     ).toThrow('no pertenece al ejercicio 2026');
-    expect(() =>
-      IMSSCalculator.getCEAVPatronRate(315.04, 2026, 'general', '2025-12-31')
-    ).toThrow('no pertenece al ejercicio 2026');
+    expect(() => IMSSCalculator.getCEAVPatronRate(315.04, 2026, 'general', '2025-12-31')).toThrow(
+      'no pertenece al ejercicio 2026'
+    );
     expect(() => IMSSCalculator.calcularModalidad40(15000, 12000, 2026, '2025-12-31')).toThrow(
       'no pertenece al ejercicio 2026'
     );
@@ -103,6 +104,7 @@ describe('historical fiscal parameters', () => {
     expect(fiscalEntry('isr_payroll', 2026)?.status).toBe('pending_review');
     expect(() => assertFiscalDataVerified('isr_payroll', 2026)).toThrow('pending_review');
     expect(fiscalEntry('imss_modalidad_10', 2026)?.status).toBe('legacy_unverified');
+    expect(fiscalDatasetIds()).toContain('imss_modalidad_10');
   });
 
   test('does not allow callers to mutate verification status', () => {
