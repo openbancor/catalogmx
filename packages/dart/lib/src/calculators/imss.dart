@@ -60,10 +60,10 @@ class UMAInfo {
   final double anual;
 
   Map<String, dynamic> toJson() => {
-    'diaria': diaria,
-    'mensual': mensual,
-    'anual': anual,
-  };
+        'diaria': diaria,
+        'mensual': mensual,
+        'anual': anual,
+      };
 }
 
 /// IMSS contributions breakdown result.
@@ -95,18 +95,18 @@ class CuotasIMSSResult {
   final double totalIMSS;
 
   Map<String, dynamic> toJson() => {
-    'salario_diario': salarioDiario,
-    'dias': dias,
-    'salario_base_cotizacion': salarioBaseCotizacion,
-    'year': year,
-    'uma_diaria': umaDiaria,
-    'ceav_patron_rate': ceavPatronRate,
-    'cuotas_patron': cuotasPatron,
-    'cuotas_trabajador': cuotasTrabajador,
-    'total_patron': totalPatron,
-    'total_trabajador': totalTrabajador,
-    'total_imss': totalIMSS,
-  };
+        'salario_diario': salarioDiario,
+        'dias': dias,
+        'salario_base_cotizacion': salarioBaseCotizacion,
+        'year': year,
+        'uma_diaria': umaDiaria,
+        'ceav_patron_rate': ceavPatronRate,
+        'cuotas_patron': cuotasPatron,
+        'cuotas_trabajador': cuotasTrabajador,
+        'total_patron': totalPatron,
+        'total_trabajador': totalTrabajador,
+        'total_imss': totalIMSS,
+      };
 }
 
 /// Modalidad 40 calculation result.
@@ -130,14 +130,14 @@ class Modalidad40Result {
   final Map<String, double> componentes;
 
   Map<String, dynamic> toJson() => {
-    'salario_base_cotizacion': salarioBaseCotizacion,
-    'ultimo_sbc_mensual': ultimoSbcMensual,
-    'year': year,
-    'uma_mensual': umaMensual,
-    'cuota_mensual': cuotaMensual,
-    'porcentaje_total': porcentajeTotal,
-    'componentes': componentes,
-  };
+        'salario_base_cotizacion': salarioBaseCotizacion,
+        'ultimo_sbc_mensual': ultimoSbcMensual,
+        'year': year,
+        'uma_mensual': umaMensual,
+        'cuota_mensual': cuotaMensual,
+        'porcentaje_total': porcentajeTotal,
+        'componentes': componentes,
+      };
 }
 
 /// Legacy Modalidad 10 result pending its dedicated source audit.
@@ -161,14 +161,14 @@ class Modalidad10Result {
   final Map<String, double> componentes;
 
   Map<String, dynamic> toJson() => {
-    'salario_base_cotizacion': salarioBaseCotizacion,
-    'year': year,
-    'cuota_mensual': cuotaMensual,
-    'cuota_fija_uma': cuotaFijaUma,
-    'cuota_variable': cuotaVariable,
-    'porcentaje_variable': porcentajeVariable,
-    'componentes': componentes,
-  };
+        'salario_base_cotizacion': salarioBaseCotizacion,
+        'year': year,
+        'cuota_mensual': cuotaMensual,
+        'cuota_fija_uma': cuotaFijaUma,
+        'cuota_variable': cuotaVariable,
+        'porcentaje_variable': porcentajeVariable,
+        'componentes': componentes,
+      };
 }
 
 /// IMSS calculator class.
@@ -286,9 +286,8 @@ class IMSSCalculator {
       );
     }
 
-    final minimum =
-        tables['salario_minimo']![year.value.toString()]!
-            as Map<String, dynamic>;
+    final minimum = tables['salario_minimo']![year.value.toString()]!
+        as Map<String, dynamic>;
     final general = (minimum['general']! as num).toDouble();
     final frontera = (minimum['frontera']! as num).toDouble();
     if (_almostEqual(salarioDiario, general) ||
@@ -350,8 +349,7 @@ class IMSSCalculator {
         (salarioDiario > threshold ? salarioDiario - threshold : 0.0) * dias;
     cuotasPatron['enfermedad_mat_excedente'] =
         excedenteBase * (prestacionesExcedente['patron']! as num).toDouble();
-    cuotasTrabajador['enfermedad_mat_excedente'] =
-        excedenteBase *
+    cuotasTrabajador['enfermedad_mat_excedente'] = excedenteBase *
         (prestacionesExcedente['trabajador']! as num).toDouble();
 
     final prestacionesDinero =
@@ -513,8 +511,8 @@ class IMSSCalculator {
     final cuotaData = mod10['cuota_mensual']! as Map<String, dynamic>;
     final cuotaFijaUma =
         uma.diaria * (cuotaData['cuota_fija_uma_factor']! as num).toDouble();
-    final porcentajeVariable = (cuotaData['porcentaje_variable']! as num)
-        .toDouble();
+    final porcentajeVariable =
+        (cuotaData['porcentaje_variable']! as num).toDouble();
     final cuotaVariable = salarioBaseCotizacion * porcentajeVariable;
     final cuotaMensual = cuotaFijaUma + cuotaVariable;
 
