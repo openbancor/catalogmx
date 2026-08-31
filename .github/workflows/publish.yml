@@ -42,7 +42,7 @@ jobs:
       - name: Set up Dart/Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          flutter-version: '3.44.6'
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -240,7 +240,60 @@ jobs:
         run: |
           python -m twine check packages/python/dist/*
 
+      - name: Check existing PyPI artifacts
+        id: existing
+        env:
+          VERSION: ${{ needs.preflight.outputs.version }}
+        run: |
+          set -euo pipefail
+          metadata_file=$(mktemp)
+          if ! curl --fail --silent --show-error "https://pypi.org/pypi/catalogmx/json" > "$metadata_file"; then
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python - "$metadata_file" packages/python/dist "$VERSION" <<'PY'
+          import hashlib
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          metadata_path, dist_dir, version = sys.argv[1:]
+          metadata = json.loads(Path(metadata_path).read_text())
+          releases = metadata.get("releases", {}).get(version, [])
+          remote = {
+              item["filename"]: item["digests"]["sha256"]
+              for item in releases
+              if item.get("filename") and item.get("digests", {}).get("sha256")
+          }
+          local_paths = sorted(Path(dist_dir).glob("*"))
+          if not local_paths:
+              raise SystemExit("no Python distributions found")
+
+          mismatches = []
+          all_present = True
+          for path in local_paths:
+              digest = hashlib.sha256(path.read_bytes()).hexdigest()
+              expected = remote.get(path.name)
+              if expected is None:
+                  all_present = False
+                  continue
+              if expected != digest:
+                  mismatches.append(f"{path.name}: local {digest}, PyPI {expected}")
+
+          if mismatches:
+              raise SystemExit("PyPI has a different immutable artifact: " + "; ".join(mismatches))
+
+          output = Path(os.environ["GITHUB_OUTPUT"])
+          output.write_text(f"exists={'true' if all_present else 'false'}\n")
+          if all_present:
+              print(f"PyPI catalogmx {version} matches the verified artifacts; skipping immutable upload")
+          else:
+              print(f"PyPI catalogmx {version} is incomplete; uploading only missing artifacts")
+          PY
+
       - name: Publish to PyPI
+        if: steps.existing.outputs.exists != 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: packages/python/dist/
@@ -311,7 +364,7 @@ jobs:
       - name: Set up Flutter
         uses: flutter-actions/setup-flutter@6e2468fd827c4a7337cd4b835a6049b78bc0bd1f
         with:
-          channel: stable
+          version: '3.44.6'
 
       - name: Check existing pub.dev version
         id: existing
