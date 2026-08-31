@@ -372,7 +372,16 @@ jobs:
         run: |
           npm_package="release/catalogmx-${VERSION}.tgz"
           local_shasum=$(shasum -a 1 "$npm_package" | awk '{print $1}')
-          remote_shasum=$(npm view "catalogmx@${VERSION}" dist.shasum 2>/dev/null || true)
+          npm_error=$(mktemp)
+          if ! remote_shasum=$(npm view "catalogmx@${VERSION}" dist.shasum 2>"$npm_error"); then
+            if grep -q 'E404' "$npm_error"; then
+              remote_shasum=""
+            else
+              cat "$npm_error" >&2
+              echo "NPM registry evidence unavailable; refusing to publish without an immutable digest check" >&2
+              exit 1
+            fi
+          fi
           if [ -n "$remote_shasum" ]; then
             if [ "$remote_shasum" != "$local_shasum" ]; then
               echo "NPM already contains ${VERSION} with a different artifact"
@@ -445,12 +454,22 @@ jobs:
               raise SystemExit("pub.dev version has no archive URL")
           archive = urllib.request.urlopen(archive_url).read()
           package_root = Path("packages/dart")
+          ignored = {".gitignore", ".pubignore", "pubspec.lock"}
+          expected = {
+              str(path.relative_to(package_root))
+              for path in package_root.rglob("*")
+              if path.is_file()
+              and path.name not in ignored
+              and not any(part.startswith(".") for part in path.relative_to(package_root).parts)
+          }
+          remote_names = set()
           mismatches = []
           with tarfile.open(fileobj=BytesIO(archive), mode="r:gz") as package:
               for member in package.getmembers():
                   if not member.isfile():
                       continue
                   relative = Path(member.name.lstrip("./"))
+                  remote_names.add(str(relative))
                   local = package_root / relative
                   if not local.is_file():
                       mismatches.append(f"missing local file: {relative}")
@@ -459,6 +478,13 @@ jobs:
                   local_digest = hashlib.sha256(local.read_bytes()).hexdigest()
                   if remote_digest != local_digest:
                       mismatches.append(f"{relative}: local {local_digest}, pub.dev {remote_digest}")
+
+          missing_remote = sorted(expected - remote_names)
+          unexpected_remote = sorted(remote_names - expected)
+          if missing_remote:
+              mismatches.append("missing from pub.dev: " + ", ".join(missing_remote))
+          if unexpected_remote:
+              mismatches.append("unexpected files on pub.dev: " + ", ".join(unexpected_remote))
 
           if mismatches:
               raise SystemExit("pub.dev has a different immutable artifact: " + "; ".join(mismatches))
@@ -536,9 +562,15 @@ jobs:
           )
           present=0
           for file in "${files[@]}"; do
-            if curl --fail --silent --show-error --location -o /dev/null "${base}/${file}"; then
-              present=$((present + 1))
+            if ! http_code=$(curl --silent --show-error --location -o /dev/null --write-out '%{http_code}' "${base}/${file}"); then
+              echo "Maven Central evidence unavailable; refusing to publish without an immutable artifact check" >&2
+              exit 1
             fi
+            case "$http_code" in
+              200) present=$((present + 1)) ;;
+              404) ;;
+              *) echo "Unexpected Maven Central response for ${file}: HTTP ${http_code}" >&2; exit 1 ;;
+            esac
           done
           if [ "$present" -eq 0 ]; then
             echo "exists=false" >> "$GITHUB_OUTPUT"
