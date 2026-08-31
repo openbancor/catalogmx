@@ -10,24 +10,24 @@ The existing `v0.6.0` tag and its failed legacy workflow are historical and are 
 
 ## Architecture
 
-`.github/workflows/publish.yml` remains the single release workflow. Tag pushes default to the three non-Maven registries. A manual `workflow_dispatch` input named `publish_maven` enables the Maven job later, using the same tag and the existing immutable-artifact checks. The preflight job always builds and verifies all package artifacts, but Maven credentials are checked only by the Maven job when that job is enabled.
+`.github/workflows/publish.yml` remains the single release workflow. Tag pushes default to the three non-Maven registries. Manual `workflow_dispatch` inputs named `publish_pypi` and `publish_maven` control recovery of an existing tag: PyPI can be explicitly skipped after its version is confirmed present, while Maven can be enabled later using the same tag and immutable-artifact checks. The preflight job always builds and verifies all package artifacts, but registry credentials are checked only by the corresponding publication job when it is enabled.
 
 The GitHub Release is created after PyPI, npm, and pub.dev succeed, provided Maven either succeeds or is intentionally skipped. Its body reports the three published registries and says Maven is pending when skipped. A later manual run can update the same release after the Maven job succeeds, even when recovering an existing tag from the default branch.
 
 ## Workflow behavior
 
 - `push` tags matching `v*.*.*` set `publish_maven=false`.
-- `workflow_dispatch` exposes required `version` and `source_ref` inputs plus a required boolean `publish_maven`, defaulting to `false`; `source_ref` must be exactly `v${version}` and resolve to an existing tag. This supports recovering a failed existing tag without rewriting it or building bytes from a different branch.
-- Preflight outputs the selected Maven mode and does not require Maven secrets.
+- `workflow_dispatch` exposes required `version` and `source_ref` inputs plus required boolean `publish_pypi` and `publish_maven` inputs, both defaulting to `false`; `source_ref` must be exactly `v${version}` and resolve to an existing tag. This supports recovering a failed existing tag without rewriting it or building bytes from a different branch.
+- Preflight outputs both selected modes. When PyPI is disabled, it verifies that the requested version already exists on PyPI before allowing npm/pub.dev recovery to proceed.
 - `publish-maven` runs only when the output is `true`, uses environment `maven`, and fails closed if any of the four Maven secrets is absent.
-- `create-release` requires successful PyPI, npm, and pub.dev jobs plus either successful or skipped Maven. It writes an explicit Maven status to the release notes.
+- `publish-npm` and `publish-pubdev` can continue when PyPI is intentionally skipped, but not when preflight or any enabled upstream job fails. `create-release` requires successful npm and pub.dev plus successful or intentionally skipped PyPI/Maven. It writes explicit registry status to the release notes.
 - Existing registry checks remain authoritative: an existing version with different bytes fails, while an exact match is skipped.
 
 ## Security and failure handling
 
 OIDC remains the authentication mechanism for PyPI, npm, and pub.dev. Maven secrets are scoped to the `maven` environment and are not exposed to tag-triggered runs while Maven is deferred. A failure in any of the three requested registries prevents the GitHub Release. A skipped Maven job is not a failure, but is visible in the release notes and summary.
 
-The npm publish path uses an explicit `./release/...tgz` path. Without the `./` prefix, npm interprets a relative string such as `release/catalogmx-0.7.0.tgz` as a GitHub package spec and attempts an SSH Git lookup.
+The npm publish path uses an explicit `./release/...tgz` path. Without the `./` prefix, npm interprets a relative string such as `release/catalogmx-0.7.0.tgz` as a GitHub package spec and attempts an SSH Git lookup. Maven Central publication polls until all files are visible and compares their SHA-256 digests with the verified build before reporting success.
 
 Manual recovery checkouts use `source_ref` and archive `HEAD`, so all verified artifacts and the release metadata come from the same immutable tag commit.
 

@@ -4,18 +4,18 @@
 
 **Goal:** Publish catalogmx 0.7.0 to PyPI, npm, and pub.dev while making Maven Central an explicit, later opt-in step.
 
-**Architecture:** Keep `.github/workflows/publish.yml` as the release pipeline. Tag pushes skip Maven by default; a manual run against an existing version tag can opt into Maven. The GitHub Release is gated on the three requested registries and records whether Maven was skipped or completed.
+**Architecture:** Keep `.github/workflows/publish.yml` as the release pipeline. Tag pushes publish the three registries by default and skip Maven; a manual run against an existing version tag can explicitly skip an already-published PyPI version or opt into Maven. The GitHub Release is gated on npm/pub.dev plus the selected PyPI/Maven outcomes and records deferred Maven status.
 
 **Tech Stack:** GitHub Actions YAML, GitHub Environments, PyPI/npm/pub.dev OIDC, Gradle Maven Central publishing, `gh`, `actionlint` when available.
 
 ---
 
-### Task 1: Add an explicit release mode
+### Task 1: Add explicit release modes
 
 **Files:**
 - Modify: `.github/workflows/publish.yml:3-15,90-105`
 
-- [ ] **Step 1: Add the manual Maven input and preflight output.**
+- [ ] **Step 1: Add manual PyPI/Maven inputs and preflight outputs.**
 
 Add this trigger input after the existing tag trigger:
 
@@ -30,6 +30,11 @@ Add this trigger input after the existing tag trigger:
         description: Existing version tag to build (for example, v0.7.0)
         required: true
         type: string
+      publish_pypi:
+        description: Publish PyPI for this existing version tag
+        required: true
+        default: false
+        type: boolean
       publish_maven:
         description: Publish Maven Central for this existing version tag
         required: true
@@ -42,6 +47,7 @@ Add `publish_maven` to the preflight outputs and a step that emits `true` only f
 ```yaml
     outputs:
       version: ${{ steps.get-version.outputs.version }}
+      publish_pypi: ${{ steps.release-mode.outputs.publish_pypi }}
       publish_maven: ${{ steps.release-mode.outputs.publish_maven }}
 ```
 
@@ -56,11 +62,15 @@ Add `publish_maven` to the preflight outputs and a step that emits `true` only f
           fi
 ```
 
-- [ ] **Step 2: Remove the Maven environment and credential gate from preflight.**
+- [ ] **Step 2: Verify the existing PyPI version for skip-mode recovery.**
+
+When `publish_pypi=false`, query PyPI metadata and fail unless the requested version exists. This prevents a release from claiming PyPI completion when the skip was accidental.
+
+- [ ] **Step 3: Remove the Maven environment and credential gate from preflight.**
 
 Delete `environment: maven` from `preflight` and delete the `Check Maven Central credentials` step. This keeps Maven secrets unavailable to normal tag runs while preserving all Maven build and artifact verification steps.
 
-- [ ] **Step 3: Verify the trigger and preflight structure.**
+- [ ] **Step 4: Verify the trigger and preflight structure.**
 
 Run:
 
@@ -71,7 +81,7 @@ rg -n "workflow_dispatch|publish_maven|environment: maven|Check Maven Central cr
 
 Expected: the input, output, and mode step exist; `environment: maven` and the credential check appear only in the Maven job after Task 2.
 
-- [ ] **Step 4: Commit the release-mode change.**
+- [ ] **Step 5: Commit the release-mode change.**
 
 ```bash
 git add .github/workflows/publish.yml
@@ -144,6 +154,10 @@ Replace the unconditional Maven success line in `Post-release summary` with a co
 git add .github/workflows/publish.yml
 git commit -m "ci(release): report Maven as pending when deferred"
 ```
+
+- [ ] **Step 5: Add post-publication Maven Central verification.**
+
+After a new Maven upload, poll Central until the JAR, sources, javadoc, POM, and module metadata are visible, then compare their SHA-256 digests with the verified build outputs. An existing matching release remains a skip.
 
 ### Task 3: Make failed-tag recovery safe
 

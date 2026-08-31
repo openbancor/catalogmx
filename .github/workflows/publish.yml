@@ -14,6 +14,11 @@ on:
         description: Existing version tag to build (for example, v0.7.0)
         required: true
         type: string
+      publish_pypi:
+        description: Publish PyPI for this existing version tag
+        required: true
+        default: false
+        type: boolean
       publish_maven:
         description: Publish Maven Central for this existing version tag
         required: true
@@ -27,6 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get-version.outputs.version }}
+      publish_pypi: ${{ steps.release-mode.outputs.publish_pypi }}
       publish_maven: ${{ steps.release-mode.outputs.publish_maven }}
 
     steps:
@@ -70,9 +76,14 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Publishing version: $VERSION"
 
-      - name: Select Maven release mode
+      - name: Select release modes
         id: release-mode
         run: |
+          if [[ "${{ github.event_name }}" == "push" || ("${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.publish_pypi }}" == "true") ]]; then
+            echo "publish_pypi=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish_pypi=false" >> "$GITHUB_OUTPUT"
+          fi
           if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.publish_maven }}" == "true" ]]; then
             echo "publish_maven=true" >> "$GITHUB_OUTPUT"
           else
@@ -83,6 +94,30 @@ jobs:
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
+
+      - name: Verify existing PyPI release for recovery
+        if: steps.release-mode.outputs.publish_pypi != 'true'
+        env:
+          VERSION: ${{ steps.get-version.outputs.version }}
+        run: |
+          set -euo pipefail
+          metadata_file=$(mktemp)
+          http_code=$(curl --silent --show-error --location --output "$metadata_file" --write-out '%{http_code}' "https://pypi.org/pypi/catalogmx/json")
+          if [ "$http_code" != "200" ]; then
+            echo "Cannot verify existing PyPI release: HTTP $http_code" >&2
+            exit 1
+          fi
+          python - "$metadata_file" "$VERSION" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          metadata_path, version = sys.argv[1:]
+          metadata = json.loads(Path(metadata_path).read_text())
+          if version not in metadata.get("releases", {}):
+              raise SystemExit(f"PyPI catalogmx {version} is not published; refusing recovery")
+          print(f"PyPI catalogmx {version} is already published; recovery will skip its upload")
+          PY
 
       - name: Set up Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
@@ -282,6 +317,7 @@ jobs:
     name: Publish to PyPI
     runs-on: ubuntu-latest
     needs: preflight
+    if: needs.preflight.outputs.publish_pypi == 'true'
     outputs:
       version: ${{ needs.preflight.outputs.version }}
     environment: pypi
@@ -381,9 +417,13 @@ jobs:
   publish-npm:
     name: Publish to NPM
     runs-on: ubuntu-latest
-    needs: publish-pypi
+    needs: [preflight, publish-pypi]
+    if: >-
+      always() &&
+      needs.preflight.result == 'success' &&
+      (needs.publish-pypi.result == 'success' || needs.publish-pypi.result == 'skipped')
     outputs:
-      version: ${{ needs.publish-pypi.outputs.version }}
+      version: ${{ needs.preflight.outputs.version }}
     environment: npm
     permissions:
       contents: read
@@ -400,12 +440,12 @@ jobs:
       - name: Download verified release artifacts
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
-          name: catalogmx-npm-${{ needs.publish-pypi.outputs.version }}
+          name: catalogmx-npm-${{ needs.preflight.outputs.version }}
           path: release
 
       - name: Publish to NPM
         env:
-          VERSION: ${{ needs.publish-pypi.outputs.version }}
+          VERSION: ${{ needs.preflight.outputs.version }}
         run: |
           npm_package="./release/catalogmx-${VERSION}.tgz"
           test -f "$npm_package"
@@ -434,9 +474,13 @@ jobs:
   publish-pubdev:
     name: Publish to pub.dev
     runs-on: ubuntu-latest
-    needs: publish-npm
+    needs: [preflight, publish-npm]
+    if: >-
+      always() &&
+      needs.preflight.result == 'success' &&
+      needs.publish-npm.result == 'success'
     outputs:
-      version: ${{ needs.publish-npm.outputs.version }}
+      version: ${{ needs.preflight.outputs.version }}
     environment: pubdev
     permissions:
       contents: read
@@ -450,11 +494,11 @@ jobs:
       - name: Download verified Dart source
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
-          name: catalogmx-dart-${{ needs.publish-npm.outputs.version }}
+          name: catalogmx-dart-${{ needs.preflight.outputs.version }}
           path: release
 
       - name: Restore verified Dart source
-        run: tar -xzf "release/catalogmx-dart-${{ needs.publish-npm.outputs.version }}.tar.gz" -C .
+        run: tar -xzf "release/catalogmx-dart-${{ needs.preflight.outputs.version }}.tar.gz" -C .
 
       - name: Set up Dart
         uses: dart-lang/setup-dart@7654d458321ee25acccccfdb86cd48bd95768ff1
@@ -467,7 +511,7 @@ jobs:
       - name: Check existing pub.dev version
         id: existing
         env:
-          VERSION: ${{ needs.publish-npm.outputs.version }}
+          VERSION: ${{ needs.preflight.outputs.version }}
         run: |
           python - "$VERSION" <<'PY'
           import hashlib
@@ -667,6 +711,62 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.MAVEN_SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
 
+      - name: Verify newly published Maven Central release
+        if: steps.existing.outputs.exists != 'true'
+        env:
+          VERSION: ${{ steps.get-version.outputs.version }}
+        run: |
+          set -euo pipefail
+          base="https://repo1.maven.org/maven2/com/openbancor/catalogmx/${VERSION}"
+          files=(
+            "catalogmx-${VERSION}.jar"
+            "catalogmx-${VERSION}-sources.jar"
+            "catalogmx-${VERSION}-javadoc.jar"
+            "catalogmx-${VERSION}.pom"
+            "catalogmx-${VERSION}.module"
+          )
+          deadline=$((SECONDS + 600))
+          while :; do
+            ready=true
+            for file in "${files[@]}"; do
+              http_code=$(curl --silent --show-error --location -o /dev/null --write-out '%{http_code}' "${base}/${file}")
+              case "$http_code" in
+                200) ;;
+                404) ready=false ;;
+                *) echo "Unexpected Maven Central response for ${file}: HTTP ${http_code}" >&2; exit 1 ;;
+              esac
+            done
+            if [ "$ready" = true ]; then
+              break
+            fi
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              echo "Maven Central release ${VERSION} did not become visible within 10 minutes" >&2
+              exit 1
+            fi
+            sleep 15
+          done
+
+          verified_dir=$(mktemp -d)
+          for file in "${files[@]}"; do
+            curl --fail --silent --show-error --location "${base}/${file}" -o "${verified_dir}/${file}"
+          done
+          declare -A local_files=(
+            ["catalogmx-${VERSION}.jar"]="packages/kotlin/build/libs/catalogmx-${VERSION}.jar"
+            ["catalogmx-${VERSION}-sources.jar"]="packages/kotlin/build/libs/catalogmx-${VERSION}-sources.jar"
+            ["catalogmx-${VERSION}-javadoc.jar"]="packages/kotlin/build/libs/catalogmx-${VERSION}-javadoc.jar"
+            ["catalogmx-${VERSION}.pom"]="packages/kotlin/build/publications/maven/pom-default.xml"
+            ["catalogmx-${VERSION}.module"]="packages/kotlin/build/publications/maven/module.json"
+          )
+          for file in "${files[@]}"; do
+            remote_sha=$(shasum -a 256 "${verified_dir}/${file}" | awk '{print $1}')
+            local_sha=$(shasum -a 256 "${local_files[$file]}" | awk '{print $1}')
+            if [ "$remote_sha" != "$local_sha" ]; then
+              echo "Maven Central ${file} differs from the verified artifact" >&2
+              exit 1
+            fi
+          done
+          echo "Maven Central ${VERSION} is visible and matches the verified artifacts"
+
   # Create GitHub Release
   create-release:
     name: Create GitHub Release
@@ -674,7 +774,7 @@ jobs:
     needs: [publish-pypi, publish-npm, publish-pubdev, publish-maven]
     if: >-
       always() &&
-      needs.publish-pypi.result == 'success' &&
+      (needs.publish-pypi.result == 'success' || needs.publish-pypi.result == 'skipped') &&
       needs.publish-npm.result == 'success' &&
       needs.publish-pubdev.result == 'success' &&
       (needs.publish-maven.result == 'success' || needs.publish-maven.result == 'skipped')
@@ -713,8 +813,13 @@ jobs:
           # Save to file for multiline output
           echo "$CHANGELOG" > changelog.txt
 
-      - name: Annotate Maven publication status
+      - name: Annotate registry publication status
         run: |
+          if [ "${{ needs.publish-pypi.result }}" = "skipped" ]; then
+            printf '\n\nPyPI: existing version verified; upload skipped during recovery.\n' >> changelog.txt
+          else
+            printf '\n\nPyPI: published or already matched the verified artifacts.\n' >> changelog.txt
+          fi
           if [ "${{ needs.publish-maven.result }}" = "skipped" ]; then
             printf '\n\nMaven Central: pending separate opt-in publication.\n' >> changelog.txt
           else
@@ -737,7 +842,11 @@ jobs:
         run: |
           VERSION=${{ steps.get-version.outputs.version }}
           echo "🎉 Successfully published catalogmx v${VERSION} to:"
-          echo "  📦 PyPI:    https://pypi.org/project/catalogmx/${VERSION}/"
+          if [ "${{ needs.publish-pypi.result }}" = "skipped" ]; then
+            echo "  📦 PyPI:    already present (recovery verified): https://pypi.org/project/catalogmx/${VERSION}/"
+          else
+            echo "  📦 PyPI:    https://pypi.org/project/catalogmx/${VERSION}/"
+          fi
           echo "  📦 NPM:     https://www.npmjs.com/package/catalogmx/v/${VERSION}"
           echo "  📦 pub.dev: https://pub.dev/packages/catalogmx/versions/${VERSION}"
           if [ "${{ needs.publish-maven.result }}" = "skipped" ]; then
