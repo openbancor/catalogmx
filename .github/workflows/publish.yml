@@ -3,13 +3,7 @@ name: Publish to PyPI, NPM, pub.dev, and Maven Central
 on:
   push:
     tags:
-      - 'v*.*.*'  # Triggers on version tags like v0.5.0
-  workflow_dispatch:  # Allow manual triggering
-    inputs:
-      version:
-        description: 'Version to publish (e.g., 0.5.0)'
-        required: true
-        type: string
+      - 'v*.*.*'
 
 jobs:
   # Preflight checks before publishing
@@ -22,15 +16,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Get version from tag or input
+      - name: Get version from tag
         id: get-version
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            VERSION="${{ github.event.inputs.version }}"
-          else
-            VERSION=${GITHUB_REF#refs/tags/v}
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid release tag: $GITHUB_REF_NAME"
+            exit 1
           fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Publishing version: $VERSION"
 
       - name: Set up Python
@@ -39,9 +33,10 @@ jobs:
           python-version: '3.12'
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
+          package-manager-cache: false
 
       - name: Set up Dart/Flutter
         uses: subosito/flutter-action@v2
@@ -92,7 +87,7 @@ jobs:
       - name: Python - Check coverage threshold
         working-directory: packages/python
         run: |
-          coverage report --fail-under=85
+          coverage report --fail-under=90
 
       - name: Python - Check code formatting
         working-directory: packages/python
@@ -106,11 +101,15 @@ jobs:
 
       - name: TypeScript - Install dependencies
         working-directory: packages/typescript
-        run: npm install
+        run: npm ci
 
       - name: TypeScript - Run linting
         working-directory: packages/typescript
         run: npm run lint
+
+      - name: TypeScript - Check formatting
+        working-directory: packages/typescript
+        run: npm run format:check
 
       - name: TypeScript - Type checking
         working-directory: packages/typescript
@@ -163,6 +162,7 @@ jobs:
     needs: preflight
     environment: pypi
     permissions:
+      contents: read
       id-token: write  # Required for trusted publishing
 
     steps:
@@ -181,7 +181,7 @@ jobs:
       - name: Build Python package
         working-directory: packages/python
         run: |
-          rm -rf dist/ build/ *.egg-info
+          rm -rf dist/ build/ ./*.egg-info
           python -m build
 
       - name: Verify distribution
@@ -201,19 +201,23 @@ jobs:
     runs-on: ubuntu-latest
     needs: preflight
     environment: npm
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
 
       - name: Install dependencies
         working-directory: packages/typescript
-        run: npm install
+        run: npm ci
 
       - name: Build TypeScript package
         working-directory: packages/typescript
@@ -222,36 +226,17 @@ jobs:
       - name: Publish to NPM
         working-directory: packages/typescript
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   # Publish to pub.dev
   publish-pubdev:
     name: Publish to pub.dev
-    runs-on: ubuntu-latest
     needs: preflight
-    environment: pubdev
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Dart/Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-
-      - name: Get dependencies
-        working-directory: packages/dart
-        run: flutter pub get
-
-      - name: Setup pub.dev credentials
-        run: |
-          mkdir -p ~/.pub-cache
-          echo '${{ secrets.PUB_CREDENTIALS }}' > ~/.pub-cache/credentials.json
-
-      - name: Publish to pub.dev
-        working-directory: packages/dart
-        run: flutter pub publish --force
+    permissions:
+      id-token: write
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    with:
+      environment: pubdev
+      working-directory: packages/dart
 
   # Publish to Maven Central
   publish-maven:
@@ -278,12 +263,13 @@ jobs:
 
       - name: Publish to Maven Central
         working-directory: packages/kotlin
-        run: ./gradlew publish
+        run: ./gradlew publishAndReleaseToMavenCentral --no-daemon
         env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signAllPublications: 'true'
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.MAVEN_SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
 
   # Create GitHub Release
   create-release:
@@ -299,12 +285,8 @@ jobs:
       - name: Get version
         id: get-version
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            VERSION="${{ github.event.inputs.version }}"
-          else
-            VERSION=${GITHUB_REF#refs/tags/v}
-          fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Extract changelog
         id: changelog
@@ -330,7 +312,7 @@ jobs:
           echo "$CHANGELOG" > changelog.txt
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.get-version.outputs.version }}
           name: catalogmx v${{ steps.get-version.outputs.version }}

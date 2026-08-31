@@ -2,6 +2,12 @@
 
 All notable changes to the Dart/Flutter version of catalogmx will be documented in this file.
 
+## [0.7.0] - 2026-08-30
+
+### Changed
+- Synchronized fiscal catalog and IMSS release metadata across all supported runtimes.
+- Migrated automated publishing to short-lived pub.dev OIDC credentials.
+
 ## [0.6.0] - 2026-03-05
 
 ### Changed
