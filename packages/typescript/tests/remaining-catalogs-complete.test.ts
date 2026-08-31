@@ -1082,6 +1082,30 @@ describe('catalog-backend utils', () => {
     // Store is cleared
   });
 
+  test('clearCatalogJsonData invalidates cached rows for a specific path', () => {
+    const path = 'test/clear-cached-specific.json';
+    setCatalogJsonData(path, [{ source: 'preloaded' }]);
+    expect(loadCatalogRows(path)).toEqual([{ source: 'preloaded' }]);
+
+    clearCatalogJsonData(path);
+
+    expect(() => loadCatalogRows(path)).toThrow(/Catalog file not found/);
+  });
+
+  test('clearCatalogJsonData invalidates all cached rows', () => {
+    const firstPath = 'test/clear-cached-all-first.json';
+    const secondPath = 'test/clear-cached-all-second.json';
+    setCatalogJsonData(firstPath, [{ source: 'first' }]);
+    setCatalogJsonData(secondPath, [{ source: 'second' }]);
+    loadCatalogRows(firstPath);
+    loadCatalogRows(secondPath);
+
+    clearCatalogJsonData();
+
+    expect(() => loadCatalogRows(firstPath)).toThrow(/Catalog file not found/);
+    expect(() => loadCatalogRows(secondPath)).toThrow(/Catalog file not found/);
+  });
+
   test('clearCatalogCache clears the cache', () => {
     // This should not throw
     clearCatalogCache();
@@ -1177,10 +1201,56 @@ describe('catalog-backend utils', () => {
     // Should not throw
   });
 
+  test('changing the SQLite adapter invalidates cached rows', () => {
+    const adapter = (source: string) => ({
+      prepare: (sql: string) => ({
+        all: () => [{ source }],
+        get: () => (sql.includes('sqlite_master') ? { ok: 1 } : undefined),
+        run: () => ({}),
+      }),
+      exec: () => {},
+      close: () => {},
+    });
+
+    setCatalogPreferSqlite(true);
+    setCatalogSqliteAdapter(adapter('adapter-a') as any);
+    expect(loadCatalogRows('test/adapter-change.json')).toEqual([{ source: 'adapter-a' }]);
+
+    setCatalogSqliteAdapter(adapter('adapter-b') as any);
+    expect(loadCatalogRows('test/adapter-change.json')).toEqual([{ source: 'adapter-b' }]);
+
+    setCatalogSqliteAdapter(null);
+    setCatalogPreferSqlite(false);
+  });
+
   test('setCatalogPreferSqlite does not throw', () => {
     setCatalogPreferSqlite(false);
     setCatalogPreferSqlite(true);
     // Restore
+    setCatalogPreferSqlite(false);
+  });
+
+  test('changing the SQLite preference invalidates cached rows', () => {
+    const path = 'test/preference-change.json';
+    const adapter = {
+      prepare: (sql: string) => ({
+        all: () => [{ source: 'sqlite' }],
+        get: () => (sql.includes('sqlite_master') ? { ok: 1 } : undefined),
+        run: () => ({}),
+      }),
+      exec: () => {},
+      close: () => {},
+    };
+    setCatalogJsonData(path, [{ source: 'json' }]);
+    setCatalogSqliteAdapter(adapter as any);
+    setCatalogPreferSqlite(false);
+    expect(loadCatalogRows(path)).toEqual([{ source: 'json' }]);
+
+    setCatalogPreferSqlite(true);
+    expect(loadCatalogRows(path)).toEqual([{ source: 'sqlite' }]);
+
+    clearCatalogJsonData(path);
+    setCatalogSqliteAdapter(null);
     setCatalogPreferSqlite(false);
   });
 

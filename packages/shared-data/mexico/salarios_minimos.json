@@ -1,5 +1,18 @@
 [
   {
+    "año": 2026,
+    "vigencia_inicio": "2026-01-01",
+    "zona_frontera_norte": 440.87,
+    "resto_pais": 315.04,
+    "moneda": "MXN",
+    "periodo": "diario",
+    "notas": "Salario mínimo general 2026; UMA equivalente corresponde a la UMA oficial vigente desde 2026-02-01",
+    "uma_equivalente_diario": 117.31,
+    "uma_equivalente_mensual": 3566.22,
+    "uma_equivalente_anual": 42794.64,
+    "fuente_uma_equivalente": "uma_oficial"
+  },
+  {
     "año": 2025,
     "vigencia_inicio": "2025-01-01",
     "zona_frontera_norte": 419.88,
@@ -8,8 +21,8 @@
     "periodo": "diario",
     "notas": "Salario mínimo 2025",
     "uma_equivalente_diario": 113.14,
-    "uma_equivalente_mensual": 3441.9,
-    "uma_equivalente_anual": 41302.8,
+    "uma_equivalente_mensual": 3439.46,
+    "uma_equivalente_anual": 41273.52,
     "fuente_uma_equivalente": "uma_oficial"
   },
   {

@@ -1,16 +1,15 @@
-/// IMSS (Instituto Mexicano del Seguro Social) Calculator for Mexico
-/// Calculates employer/employee contributions and voluntary modalities (10, 40)
-/// Uses centralized JSON tables from shared-data
+/// IMSS (Instituto Mexicano del Seguro Social) calculator for Mexico.
 ///
-/// Official sources:
-/// - Ley del Seguro Social
-/// - Sistema Único de Autodeterminación (SUA)
+/// Uses centralized shared-data tables. Exercise-specific CEAV rates are
+/// selected from the historical schedule. Modalidad 40 uses monthly amounts
+/// and requires the last registered monthly SBC.
 library;
 
 import 'dart:convert';
-import 'dart:io';
 
-/// Supported years
+import '../data/imss_runtime_data.generated.dart';
+
+/// Supported years.
 enum IMSSYear {
   year2024(2024),
   year2025(2025),
@@ -20,7 +19,7 @@ enum IMSSYear {
   final int value;
 }
 
-/// Salary zone types
+/// Salary zone types.
 enum ZonaSalario {
   general('general'),
   frontera('frontera');
@@ -29,7 +28,7 @@ enum ZonaSalario {
   final String value;
 }
 
-/// Work risk classes (1-5, where 1 is minimum risk)
+/// Work risk classes (1-5, where 1 is minimum risk).
 enum ClaseRiesgo {
   clase1(1),
   clase2(2),
@@ -41,7 +40,7 @@ enum ClaseRiesgo {
   final int value;
 }
 
-/// UMA (Unidad de Medida y Actualización) information
+/// UMA (Unidad de Medida y Actualización) information.
 class UMAInfo {
   const UMAInfo({
     required this.diaria,
@@ -68,13 +67,15 @@ class UMAInfo {
       };
 }
 
-/// IMSS contributions breakdown result
+/// IMSS contributions breakdown result.
 class CuotasIMSSResult {
   const CuotasIMSSResult({
     required this.salarioDiario,
     required this.dias,
     required this.salarioBaseCotizacion,
     required this.year,
+    required this.umaDiaria,
+    required this.ceavPatronRate,
     required this.cuotasPatron,
     required this.cuotasTrabajador,
     required this.totalPatron,
@@ -86,6 +87,8 @@ class CuotasIMSSResult {
   final int dias;
   final double salarioBaseCotizacion;
   final int year;
+  final double umaDiaria;
+  final double ceavPatronRate;
   final Map<String, double> cuotasPatron;
   final Map<String, double> cuotasTrabajador;
   final double totalPatron;
@@ -97,6 +100,8 @@ class CuotasIMSSResult {
         'dias': dias,
         'salario_base_cotizacion': salarioBaseCotizacion,
         'year': year,
+        'uma_diaria': umaDiaria,
+        'ceav_patron_rate': ceavPatronRate,
         'cuotas_patron': cuotasPatron,
         'cuotas_trabajador': cuotasTrabajador,
         'total_patron': totalPatron,
@@ -105,32 +110,38 @@ class CuotasIMSSResult {
       };
 }
 
-/// Modalidad 40 calculation result
+/// Modalidad 40 calculation result.
 class Modalidad40Result {
   const Modalidad40Result({
     required this.salarioBaseCotizacion,
+    required this.ultimoSbcMensual,
     required this.year,
+    required this.umaMensual,
     required this.cuotaMensual,
     required this.porcentajeTotal,
     required this.componentes,
   });
 
   final double salarioBaseCotizacion;
+  final double ultimoSbcMensual;
   final int year;
+  final double umaMensual;
   final double cuotaMensual;
   final double porcentajeTotal;
   final Map<String, double> componentes;
 
   Map<String, dynamic> toJson() => {
         'salario_base_cotizacion': salarioBaseCotizacion,
+        'ultimo_sbc_mensual': ultimoSbcMensual,
         'year': year,
+        'uma_mensual': umaMensual,
         'cuota_mensual': cuotaMensual,
         'porcentaje_total': porcentajeTotal,
         'componentes': componentes,
       };
 }
 
-/// Modalidad 10 calculation result
+/// Legacy Modalidad 10 result pending its dedicated source audit.
 class Modalidad10Result {
   const Modalidad10Result({
     required this.salarioBaseCotizacion,
@@ -161,194 +172,234 @@ class Modalidad10Result {
       };
 }
 
-/// IMSS Calculator class
+/// IMSS calculator class.
 class IMSSCalculator {
   static Map<String, dynamic>? _imssTables;
   static Map<String, dynamic>? _imssCatalogs;
 
-  /// Load IMSS tables from centralized JSON file
   static Map<String, dynamic> _loadIMSSTables() {
     if (_imssTables != null) return _imssTables!;
-
-    final candidates = [
-      '../shared-data/imss-tables.json',
-      '../../shared-data/imss-tables.json',
-      '../../../shared-data/imss-tables.json',
-      'packages/shared-data/imss-tables.json',
-    ];
-
-    for (final path in candidates) {
-      final file = File(path);
-      if (!file.existsSync()) {
-        continue;
-      }
-      final jsonString = file.readAsStringSync();
-      _imssTables = jsonDecode(jsonString) as Map<String, dynamic>;
-      return _imssTables!;
-    }
-
-    throw Exception('IMSS tables JSON file not found');
+    _imssTables = jsonDecode(imssTablesJson) as Map<String, dynamic>;
+    return _imssTables!;
   }
 
-  /// Load IMSS catalogs from centralized JSON file
   static Map<String, dynamic> _loadIMSSCatalogs() {
     if (_imssCatalogs != null) return _imssCatalogs!;
-
-    final candidates = [
-      '../shared-data/imss-catalogs.json',
-      '../../shared-data/imss-catalogs.json',
-      '../../../shared-data/imss-catalogs.json',
-      'packages/shared-data/imss-catalogs.json',
-    ];
-
-    for (final path in candidates) {
-      final file = File(path);
-      if (!file.existsSync()) {
-        continue;
-      }
-      final jsonString = file.readAsStringSync();
-      _imssCatalogs = jsonDecode(jsonString) as Map<String, dynamic>;
-      return _imssCatalogs!;
-    }
-
-    throw Exception('IMSS catalogs JSON file not found');
+    _imssCatalogs = jsonDecode(imssCatalogsJson) as Map<String, dynamic>;
+    return _imssCatalogs!;
   }
 
-  /// Get UMA values for a specific year
-  ///
-  /// Examples:
-  /// ```dart
-  /// final uma = IMSSCalculator.getUMA(IMSSYear.year2026);
-  /// print('UMA diaria 2026: \$${uma.diaria}');
-  /// ```
+  /// Get UMA values for a specific exercise.
   static UMAInfo getUMA(IMSSYear year) {
     final tables = _loadIMSSTables();
-    final yearStr = year.value.toString();
-    return UMAInfo.fromJson(tables['uma']![yearStr]!);
+    return UMAInfo.fromJson(tables['uma']![year.value.toString()]!);
   }
 
-  /// Get minimum wage for a specific year and zone
-  ///
-  /// Examples:
-  /// ```dart
-  /// final salario = IMSSCalculator.getSalarioMinimo(IMSSYear.year2026, ZonaSalario.general);
-  /// print('Salario mínimo general 2026: \$${salario}');
-  /// ```
-  static double getSalarioMinimo(IMSSYear year,
-      [ZonaSalario zona = ZonaSalario.general]) {
+  /// Get the UMA legally in force on a concrete date.
+  static UMAInfo getUMAForDate(DateTime fecha) {
     final tables = _loadIMSSTables();
-    final yearStr = year.value.toString();
-    return (tables['salario_minimo']![yearStr]![zona.value]! as num).toDouble();
+    final rows = tables['uma']! as Map<String, dynamic>;
+    final target = DateTime(fecha.year, fecha.month, fecha.day);
+
+    for (final raw in rows.values) {
+      final row = raw as Map<String, dynamic>;
+      final desdeText = row['vigencia_desde'] as String?;
+      final hastaText = row['vigencia_hasta'] as String?;
+      if (desdeText == null || hastaText == null) continue;
+
+      final desde = DateTime.parse(desdeText);
+      final hasta = DateTime.parse(hastaText);
+      if (!target.isBefore(desde) && !target.isAfter(hasta)) {
+        return UMAInfo.fromJson(row);
+      }
+    }
+
+    throw StateError(
+      'No se encontró UMA vigente para ${target.toIso8601String().substring(0, 10)}',
+    );
   }
 
-  /// Calculate IMSS employer and employee contributions
-  ///
-  /// Parameters:
-  /// - [salarioDiario]: Daily wage
-  /// - [dias]: Number of days (default: 30)
-  /// - [year]: Year (default: 2026)
-  /// - [claseRiesgo]: Work risk class 1-5 (default: 1 - minimum risk)
-  ///
-  /// Returns: Complete breakdown of IMSS contributions
-  ///
-  /// Examples:
-  /// ```dart
-  /// final result = IMSSCalculator.calcularCuotasObreroPatronales(500.0, 30, IMSSYear.year2026);
-  /// print('Total patrón: \$${result.totalPatron.toStringAsFixed(2)}');
-  /// print('Total trabajador: \$${result.totalTrabajador.toStringAsFixed(2)}');
-  /// ```
+  /// Get minimum wage for a specific exercise and zone.
+  static double getSalarioMinimo(
+    IMSSYear year, [
+    ZonaSalario zona = ZonaSalario.general,
+  ]) {
+    final tables = _loadIMSSTables();
+    return (tables['salario_minimo']![year.value.toString()]![zona.value]!
+            as num)
+        .toDouble();
+  }
+
+  static void _assertFechaMatchesExercise(IMSSYear year, DateTime? fecha) {
+    if (fecha != null && fecha.year != year.value) {
+      throw ArgumentError('La fecha no pertenece al ejercicio ${year.value}');
+    }
+  }
+
+  static void _assertSalarioDiario(
+    double salarioDiario,
+    double salarioMinimo,
+  ) {
+    if (!salarioDiario.isFinite || salarioDiario <= 0) {
+      throw ArgumentError(
+        'El salario diario debe ser un número finito mayor que cero.',
+      );
+    }
+    if (salarioDiario < salarioMinimo) {
+      throw ArgumentError(
+        'El salario diario no puede ser menor al salario mínimo aplicable.',
+      );
+    }
+  }
+
+  /// Select the employer CEAV rate for the applicable minimum-wage zone.
+  static double getCEAVPatronRate(
+    double salarioDiario,
+    IMSSYear year, {
+    required ZonaSalario zona,
+    DateTime? fecha,
+  }) {
+    _assertFechaMatchesExercise(year, fecha);
+    final tables = _loadIMSSTables();
+    final cuotas = tables['cuotas_imss']! as Map<String, dynamic>;
+    final rcv = cuotas['retiro_cesantia_vejez']! as Map<String, dynamic>;
+    final ceav = rcv['cesantia_vejez']! as Map<String, dynamic>;
+    final schedules = ceav['patron_por_ejercicio']! as Map<String, dynamic>;
+    final rates = schedules[year.value.toString()]! as List<dynamic>;
+    if (rates.length != 8) {
+      throw StateError(
+        'No se encontró tarifa CEAV patronal para ${year.value}',
+      );
+    }
+
+    final minimum = tables['salario_minimo']![year.value.toString()]!
+        as Map<String, dynamic>;
+    final applicableMinimum = (minimum[zona.value]! as num).toDouble();
+    _assertSalarioDiario(salarioDiario, applicableMinimum);
+    if (salarioDiario == applicableMinimum) {
+      return ((rates[0] as Map<String, dynamic>)['tasa']! as num).toDouble();
+    }
+
+    final uma = fecha == null ? getUMA(year) : getUMAForDate(fecha);
+    final ratio = salarioDiario / uma.diaria;
+    final int index;
+    if (ratio <= 1.5) {
+      index = 1;
+    } else if (ratio <= 2.0) {
+      index = 2;
+    } else if (ratio <= 2.5) {
+      index = 3;
+    } else if (ratio <= 3.0) {
+      index = 4;
+    } else if (ratio <= 3.5) {
+      index = 5;
+    } else if (ratio <= 4.0) {
+      index = 6;
+    } else {
+      index = 7;
+    }
+    return ((rates[index] as Map<String, dynamic>)['tasa']! as num).toDouble();
+  }
+
+  /// Calculate IMSS employer and employee contributions.
   static CuotasIMSSResult calcularCuotasObreroPatronales(
     double salarioDiario, {
     int dias = 30,
     IMSSYear year = IMSSYear.year2026,
     ClaseRiesgo claseRiesgo = ClaseRiesgo.clase1,
+    DateTime? fecha,
+    ZonaSalario zona = ZonaSalario.general,
   }) {
+    _assertFechaMatchesExercise(year, fecha);
     final tables = _loadIMSSTables();
-    final uma = getUMA(year);
-    final cuotas = tables['cuotas_imss']!;
-
-    // Calculate base salary for contributions
+    final uma = fecha == null ? getUMA(year) : getUMAForDate(fecha);
+    final cuotas = tables['cuotas_imss']! as Map<String, dynamic>;
+    _assertSalarioDiario(salarioDiario, getSalarioMinimo(year, zona));
+    if (dias <= 0) {
+      throw ArgumentError('Los días deben ser un entero mayor que cero.');
+    }
+    salarioDiario = salarioDiario.clamp(0, uma.diaria * 25).toDouble();
     final salarioBase = salarioDiario * dias;
-
-    // Límite de 3 UMAs diario para algunas cuotas
     final umaDiaria = uma.diaria;
-    final tresUmaMensual = umaDiaria * 3 * 30;
 
-    // Initialize contribution maps
     final cuotasPatron = <String, double>{};
     final cuotasTrabajador = <String, double>{};
+    final em = cuotas['enfermedad_maternidad']! as Map<String, dynamic>;
+    final prestacionesEspecie =
+        em['prestaciones_en_especie']! as Map<String, dynamic>;
+    final prestacionesExcedente =
+        em['prestaciones_en_especie_excedente']! as Map<String, dynamic>;
 
-    // 1. Enfermedad y Maternidad
-    final em = cuotas['enfermedad_maternidad']!;
+    cuotasPatron['enfermedad_mat_cuota_fija'] =
+        umaDiaria * dias * (prestacionesEspecie['patron']! as num).toDouble();
 
-    // Cuota fija (sobre 3 UMAs)
-    cuotasPatron['enfermedad_mat_cuota_fija'] = umaDiaria *
-        3 *
-        dias *
-        (em['prestaciones_en_especie']!['patron']! as num).toDouble();
+    final thresholdFactor =
+        (prestacionesExcedente['umbral_uma'] as num?)?.toDouble() ?? 3.0;
+    final threshold = thresholdFactor * umaDiaria;
+    final excedenteBase =
+        (salarioDiario > threshold ? salarioDiario - threshold : 0.0) * dias;
+    cuotasPatron['enfermedad_mat_excedente'] =
+        excedenteBase * (prestacionesExcedente['patron']! as num).toDouble();
+    cuotasTrabajador['enfermedad_mat_excedente'] = excedenteBase *
+        (prestacionesExcedente['trabajador']! as num).toDouble();
 
-    // Excedente de 3 UMAs
-    if (salarioDiario > tresUmaMensual / 30) {
-      final excedenteBase = salarioBase - tresUmaMensual;
-      cuotasPatron['enfermedad_mat_excedente'] = excedenteBase *
-          (em['prestaciones_en_especie_excedente']!['patron']! as num)
-              .toDouble();
-      cuotasTrabajador['enfermedad_mat_excedente'] = excedenteBase *
-          (em['prestaciones_en_especie_excedente']!['trabajador']! as num)
-              .toDouble();
-    } else {
-      cuotasPatron['enfermedad_mat_excedente'] = 0.0;
-      cuotasTrabajador['enfermedad_mat_excedente'] = 0.0;
-    }
+    final prestacionesDinero =
+        em['prestaciones_en_dinero']! as Map<String, dynamic>;
+    cuotasPatron['enfermedad_mat_dinero'] =
+        salarioBase * (prestacionesDinero['patron']! as num).toDouble();
+    cuotasTrabajador['enfermedad_mat_dinero'] =
+        salarioBase * (prestacionesDinero['trabajador']! as num).toDouble();
 
-    // Prestaciones en dinero
-    cuotasPatron['enfermedad_mat_dinero'] = salarioBase *
-        (em['prestaciones_en_dinero']!['patron']! as num).toDouble();
-    cuotasTrabajador['enfermedad_mat_dinero'] = salarioBase *
-        (em['prestaciones_en_dinero']!['trabajador']! as num).toDouble();
+    final gastosPensionados =
+        em['gastos_medicos_pensionados']! as Map<String, dynamic>;
+    cuotasPatron['gastos_medicos_pensionados'] =
+        salarioBase * (gastosPensionados['patron']! as num).toDouble();
+    cuotasTrabajador['gastos_medicos_pensionados'] =
+        salarioBase * (gastosPensionados['trabajador']! as num).toDouble();
 
-    // Gastos médicos pensionados
-    cuotasPatron['gastos_medicos_pensionados'] = salarioBase *
-        (em['gastos_medicos_pensionados']!['patron']! as num).toDouble();
-    cuotasTrabajador['gastos_medicos_pensionados'] = salarioBase *
-        (em['gastos_medicos_pensionados']!['trabajador']! as num).toDouble();
-
-    // 2. Invalidez y Vida
-    final iv = cuotas['invalidez_vida']!;
+    final iv = cuotas['invalidez_vida']! as Map<String, dynamic>;
     cuotasPatron['invalidez_vida'] =
         salarioBase * (iv['patron']! as num).toDouble();
     cuotasTrabajador['invalidez_vida'] =
         salarioBase * (iv['trabajador']! as num).toDouble();
 
-    // 3. Retiro, Cesantía y Vejez
-    final rcv = cuotas['retiro_cesantia_vejez']!;
+    final rcv = cuotas['retiro_cesantia_vejez']! as Map<String, dynamic>;
+    final retiro = rcv['retiro']! as Map<String, dynamic>;
+    final ceav = rcv['cesantia_vejez']! as Map<String, dynamic>;
     cuotasPatron['retiro'] =
-        salarioBase * (rcv['retiro']!['patron']! as num).toDouble();
-    cuotasPatron['cesantia_vejez'] =
-        salarioBase * (rcv['cesantia_vejez']!['patron']! as num).toDouble();
+        salarioBase * (retiro['patron']! as num).toDouble();
+    final ceavPatronRate = getCEAVPatronRate(
+      salarioDiario,
+      year,
+      zona: zona,
+      fecha: fecha,
+    );
+    cuotasPatron['cesantia_vejez'] = salarioBase * ceavPatronRate;
     cuotasTrabajador['cesantia_vejez'] =
-        salarioBase * (rcv['cesantia_vejez']!['trabajador']! as num).toDouble();
+        salarioBase * (ceav['trabajador']! as num).toDouble();
 
-    // 4. Guarderías y Prestaciones Sociales
-    final gps = cuotas['guarderias_prestaciones_sociales']!;
+    final gps =
+        cuotas['guarderias_prestaciones_sociales']! as Map<String, dynamic>;
     cuotasPatron['guarderias'] =
         salarioBase * (gps['patron']! as num).toDouble();
 
-    // 5. Riesgos de Trabajo
-    final rt = cuotas['riesgo_trabajo']!;
+    final rt = cuotas['riesgo_trabajo']! as Map<String, dynamic>;
     final primaRiesgo = (rt['clase_${claseRiesgo.value}']! as num).toDouble();
     cuotasPatron['riesgo_trabajo'] = salarioBase * primaRiesgo;
 
-    // Calculate totals
     final totalPatron = cuotasPatron.values.fold(0.0, (sum, val) => sum + val);
-    final totalTrabajador =
-        cuotasTrabajador.values.fold(0.0, (sum, val) => sum + val);
+    final totalTrabajador = cuotasTrabajador.values.fold(
+      0.0,
+      (sum, val) => sum + val,
+    );
 
     return CuotasIMSSResult(
       salarioDiario: salarioDiario,
       dias: dias,
       salarioBaseCotizacion: salarioBase,
       year: year.value,
+      umaDiaria: umaDiaria,
+      ceavPatronRate: ceavPatronRate,
       cuotasPatron: cuotasPatron,
       cuotasTrabajador: cuotasTrabajador,
       totalPatron: totalPatron,
@@ -357,124 +408,121 @@ class IMSSCalculator {
     );
   }
 
-  /// Calculate Modalidad 40 voluntary IMSS contributions
-  /// (Continuación voluntaria en el régimen obligatorio)
-  ///
-  /// Modalidad 40 allows workers who left formal employment to continue
-  /// contributing to IMSS to increase their pension amount.
-  ///
-  /// Parameters:
-  /// - [salarioBaseCotizacion]: Monthly base salary (between 1 and 25 UMAs)
-  /// - [year]: Year (default: 2026)
-  ///
-  /// Returns: Modalidad 40 calculation result
-  ///
-  /// Examples:
-  /// ```dart
-  /// final result = IMSSCalculator.calcularModalidad40(15000.0, IMSSYear.year2026);
-  /// print('Cuota mensual: \$${result.cuotaMensual.toStringAsFixed(2)}');
-  /// ```
+  /// Calculate Modalidad 40 using explicit monthly salary amounts.
   static Modalidad40Result calcularModalidad40(
     double salarioBaseCotizacion, {
+    required double ultimoSbcMensual,
     IMSSYear year = IMSSYear.year2026,
+    DateTime? fecha,
+    ZonaSalario zona = ZonaSalario.general,
   }) {
+    _assertFechaMatchesExercise(year, fecha);
     final tables = _loadIMSSTables();
-    final uma = getUMA(year);
-    final mod40 = tables['modalidad_40']!;
+    final uma = fecha == null ? getUMA(year) : getUMAForDate(fecha);
+    final mod40 = tables['modalidad_40']! as Map<String, dynamic>;
+    final references =
+        mod40['referencia_por_ejercicio']! as Map<String, dynamic>;
+    if (!references.containsKey(year.value.toString())) {
+      throw StateError(
+        'No se encontró tarifa de Modalidad 40 para ${year.value}',
+      );
+    }
 
-    // Validate salary limits
-    final umaMensual = uma.mensual;
-    final salarioMinimo = umaMensual *
-        (mod40['limites_salario']!['minimo_uma']! as num).toDouble();
-    final salarioMaximo = umaMensual *
-        (mod40['limites_salario']!['maximo_uma']! as num).toDouble();
-
-    if (salarioBaseCotizacion < salarioMinimo) {
-      salarioBaseCotizacion = salarioMinimo;
-    } else if (salarioBaseCotizacion > salarioMaximo) {
+    final limits = mod40['limites_salario']! as Map<String, dynamic>;
+    final salarioMaximo =
+        uma.mensual * (limits['maximo_uma']! as num).toDouble();
+    if (!salarioBaseCotizacion.isFinite || salarioBaseCotizacion <= 0) {
+      throw ArgumentError(
+        'El SBC mensual de Modalidad 40 debe ser mayor que cero',
+      );
+    }
+    if (!ultimoSbcMensual.isFinite || ultimoSbcMensual <= 0) {
+      throw ArgumentError('El último SBC mensual debe ser mayor que cero');
+    }
+    if (ultimoSbcMensual > salarioMaximo) {
+      throw ArgumentError('El último SBC mensual excede el tope de 25 UMA');
+    }
+    if (salarioBaseCotizacion < ultimoSbcMensual) {
+      throw ArgumentError(
+        'El SBC de Modalidad 40 no puede ser menor al último SBC registrado',
+      );
+    }
+    if (salarioBaseCotizacion > salarioMaximo) {
       salarioBaseCotizacion = salarioMaximo;
     }
 
-    // Calculate monthly contribution (10.47% total)
-    final porcentajeTotal =
-        (mod40['cuota_mensual']!['porcentaje_total']! as num).toDouble();
-    final cuotaMensual = salarioBaseCotizacion * porcentajeTotal;
+    final diasUmaMensual = uma.mensual / uma.diaria;
+    final salarioDiarioEquivalente = salarioBaseCotizacion / diasUmaMensual;
+    final ceavPatronRate = getCEAVPatronRate(
+      salarioDiarioEquivalente,
+      year,
+      zona: zona,
+      fecha: fecha,
+    );
 
-    // Get component breakdown
-    final componentes = <String, double>{};
-    final componentesData =
-        mod40['cuota_mensual']!['componentes']! as Map<String, dynamic>;
-    for (final entry in componentesData.entries) {
-      componentes[entry.key] =
-          salarioBaseCotizacion * (entry.value as num).toDouble();
+    final componentes = <String, double>{
+      'cesantia_vejez_patron': salarioBaseCotizacion * ceavPatronRate,
+    };
+    var porcentajeTotal = ceavPatronRate;
+    final calculo = mod40['calculo']! as Map<String, dynamic>;
+    final constantes =
+        calculo['componentes_constantes']! as Map<String, dynamic>;
+    for (final entry in constantes.entries) {
+      final rate = (entry.value as num).toDouble();
+      porcentajeTotal += rate;
+      componentes[entry.key] = salarioBaseCotizacion * rate;
     }
 
     return Modalidad40Result(
       salarioBaseCotizacion: salarioBaseCotizacion,
+      ultimoSbcMensual: ultimoSbcMensual,
       year: year.value,
-      cuotaMensual: cuotaMensual,
+      umaMensual: uma.mensual,
+      cuotaMensual: salarioBaseCotizacion * porcentajeTotal,
       porcentajeTotal: porcentajeTotal,
       componentes: componentes,
     );
   }
 
-  /// Calculate Modalidad 10 voluntary IMSS contributions
-  /// (Incorporación voluntaria al régimen obligatorio - trabajadores independientes)
-  ///
-  /// Modalidad 10 allows independent workers to enroll in IMSS and access
-  /// all social security benefits including healthcare, retirement, and more.
-  ///
-  /// Parameters:
-  /// - [salarioBaseCotizacion]: Monthly base salary (between 1 and 25 UMAs)
-  /// - [year]: Year (default: 2026)
-  ///
-  /// Returns: Modalidad 10 calculation result
-  ///
-  /// Examples:
-  /// ```dart
-  /// final result = IMSSCalculator.calcularModalidad10(10000.0, IMSSYear.year2026);
-  /// print('Cuota mensual: \$${result.cuotaMensual.toStringAsFixed(2)}');
-  /// ```
+  /// Calculate the legacy Modalidad 10 model pending its dedicated audit.
   static Modalidad10Result calcularModalidad10(
     double salarioBaseCotizacion, {
     IMSSYear year = IMSSYear.year2026,
+    DateTime? fecha,
   }) {
+    _assertFechaMatchesExercise(year, fecha);
     final tables = _loadIMSSTables();
-    final uma = getUMA(year);
-    final mod10 = tables['modalidad_10']!;
+    final uma = fecha == null ? getUMA(year) : getUMAForDate(fecha);
+    final mod10 = tables['modalidad_10']! as Map<String, dynamic>;
+    final limits = mod10['limites_salario']! as Map<String, dynamic>;
 
-    // Validate salary limits
-    final umaMensual = uma.mensual;
-    final salarioMinimo = umaMensual *
-        (mod10['limites_salario']!['minimo_uma']! as num).toDouble();
-    final salarioMaximo = umaMensual *
-        (mod10['limites_salario']!['maximo_uma']! as num).toDouble();
-
+    final salarioMinimo =
+        uma.mensual * (limits['minimo_uma']! as num).toDouble();
+    final salarioMaximo =
+        uma.mensual * (limits['maximo_uma']! as num).toDouble();
+    if (!salarioBaseCotizacion.isFinite || salarioBaseCotizacion <= 0) {
+      throw ArgumentError(
+        'El SBC mensual de Modalidad 10 debe ser mayor que cero',
+      );
+    }
     if (salarioBaseCotizacion < salarioMinimo) {
       salarioBaseCotizacion = salarioMinimo;
     } else if (salarioBaseCotizacion > salarioMaximo) {
       salarioBaseCotizacion = salarioMaximo;
     }
 
-    // Fixed fee: 3.3 UMAs for healthcare
-    final cuotaFijaUma = uma.diaria *
-        (mod10['cuota_mensual']!['cuota_fija_uma_factor']! as num).toDouble();
-
-    // Variable percentage: 10.47%
+    final cuotaData = mod10['cuota_mensual']! as Map<String, dynamic>;
+    final cuotaFijaUma =
+        uma.diaria * (cuotaData['cuota_fija_uma_factor']! as num).toDouble();
     final porcentajeVariable =
-        (mod10['cuota_mensual']!['porcentaje_variable']! as num).toDouble();
+        (cuotaData['porcentaje_variable']! as num).toDouble();
     final cuotaVariable = salarioBaseCotizacion * porcentajeVariable;
-
-    // Total monthly contribution
     final cuotaMensual = cuotaFijaUma + cuotaVariable;
 
-    // Get component breakdown
     final componentes = <String, double>{
       'prestaciones_en_especie_fija': cuotaFijaUma,
     };
-
-    final componentesData =
-        mod10['cuota_mensual']!['componentes']! as Map<String, dynamic>;
+    final componentesData = cuotaData['componentes']! as Map<String, dynamic>;
     for (final entry in componentesData.entries) {
       if (entry.value is num) {
         componentes[entry.key] =
@@ -493,19 +541,19 @@ class IMSSCalculator {
     );
   }
 
-  /// Get all worker types from IMSS catalogs
+  /// Get all worker types from IMSS catalogs.
   static List<Map<String, dynamic>> getTiposTrabajador() {
     final catalogs = _loadIMSSCatalogs();
     return List<Map<String, dynamic>>.from(catalogs['tipos_trabajador']!);
   }
 
-  /// Get all IMSS insurance types
+  /// Get all IMSS insurance types.
   static List<Map<String, dynamic>> getSegurosIMSS() {
     final catalogs = _loadIMSSCatalogs();
     return List<Map<String, dynamic>>.from(catalogs['seguros_imss']!);
   }
 
-  /// Get all work risk classes with their premiums
+  /// Get all work risk classes with their premiums.
   static List<Map<String, dynamic>> getClasesRiesgoTrabajo() {
     final tables = _loadIMSSTables();
     return List<Map<String, dynamic>>.from(tables['riesgos_trabajo_clases']!);

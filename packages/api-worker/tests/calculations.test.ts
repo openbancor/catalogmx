@@ -1,6 +1,25 @@
 import { calculateImss, calculateIsr } from '../src/calculations';
+import * as fiscal from '../../typescript/src/fiscal';
 
 describe('ISR calculation adapter', () => {
+  beforeEach(() => {
+    // Exercise the calculation adapter independently from the release gate.
+    // The first test restores this mock and verifies the shipped manifest.
+    jest.spyOn(fiscal, 'assertFiscalDataVerified').mockReturnValue({} as never);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  test('fails closed against the shipped manifest while ISR remains pending review', () => {
+    jest.restoreAllMocks();
+    expect(fiscal.fiscalEntry('isr_payroll', 2026)?.status).toBe('pending_review');
+
+    expect(() =>
+      calculateIsr({ base_gravable: 15000, periodo: 'mensual', ejercicio: 2026 })
+    ).toThrow(expect.objectContaining({ status: 422, code: 'unsupported_fiscal_data' }));
+  });
   test.each(['diario', 'semanal', 'quincenal', 'mensual', 'anual'] as const)(
     'delegates the %s period to the loaded fiscal table',
     (periodo) => {
@@ -98,6 +117,28 @@ describe('IMSS calculation adapter', () => {
     expect(result.resultado.total_imss).toBe(
       Number(result.auditoria.interno.total_imss.toFixed(2))
     );
+  });
+
+  test('retains rounded UMA and source-precision CEAV rate in the public result', () => {
+    const result = calculateImss({ sdi: 500, dias_cotizados: 30, ejercicio: 2026 });
+
+    expect(result.resultado.uma_diaria).toBe(
+      Number(result.auditoria.interno.uma_diaria.toFixed(2))
+    );
+    expect(result.resultado.ceav_patron_rate).toBe(0.07513);
+    expect(result.resultado.ceav_patron_rate).toBe(result.auditoria.interno.ceav_patron_rate);
+  });
+
+  test('rejects an IMSS daily salary below the 2026 general minimum as invalid input', () => {
+    expect(() => calculateImss({ sdi: 315.03, dias_cotizados: 30, ejercicio: 2026 })).toThrow(
+      expect.objectContaining({ status: 400, code: 'invalid_request' })
+    );
+  });
+
+  test('accepts the exact 2026 general minimum daily salary', () => {
+    const result = calculateImss({ sdi: 315.04, dias_cotizados: 30, ejercicio: 2026 });
+
+    expect(result.resultado.salario_diario).toBe(315.04);
   });
 
   test.each([

@@ -7,11 +7,40 @@ to work with Mexican identification codes without dealing with class constructor
 """
 
 import datetime
+from typing import TypedDict
 
 from .validators.clabe import CLABEValidator, generate_clabe, generate_clabe_random
 from .validators.curp import CURPGenerator, CURPValidator
 from .validators.nss import NSSValidator
 from .validators.rfc import RFCGeneratorFisicas, RFCGeneratorMorales, RFCValidator
+
+
+class CURPInfo(TypedDict):
+    fecha_nacimiento: str
+    sexo: str
+    sexo_code: str
+    estado_code: str
+    differentiator: str
+    check_digit: str
+    check_digit_valid: bool
+
+
+class CLABEInfo(TypedDict):
+    bank_code: str
+    branch_code: str
+    account_number: str
+    check_digit: str
+    is_valid: bool
+
+
+class NSSInfo(TypedDict):
+    subdelegation: str
+    registration_year: str
+    birth_year: str
+    sequential: str
+    check_digit: str
+    is_valid: bool
+
 
 # ============================================================================
 # RFC Helper Functions
@@ -250,7 +279,7 @@ def validate_curp(curp: str, check_digit: bool = True) -> bool:
         return False
 
 
-def get_curp_info(curp: str) -> dict | None:
+def get_curp_info(curp: str) -> CURPInfo | None:
     """
     Extract information from a CURP code.
 
@@ -343,7 +372,7 @@ def is_valid_clabe(clabe: str) -> bool:
     return validate_clabe(clabe)
 
 
-def get_clabe_info(clabe: str) -> dict | None:
+def get_clabe_info(clabe: str) -> CLABEInfo | None:
     """
     Extract information from a CLABE number.
 
@@ -414,7 +443,7 @@ def is_valid_nss(nss: str) -> bool:
     return validate_nss(nss)
 
 
-def get_nss_info(nss: str) -> dict | None:
+def get_nss_info(nss: str) -> NSSInfo | None:
     """
     Extract information from an NSS number.
 

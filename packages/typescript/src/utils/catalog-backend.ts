@@ -30,6 +30,7 @@ let preferSqlite = !isNodeRuntime();
 
 export function setCatalogSqliteAdapter(adapter: CatalogSqliteDatabase | null): void {
   sqliteAdapter = adapter;
+  catalogCache.clear();
 }
 
 export function getCatalogSqliteAdapter(): CatalogSqliteDatabase | null {
@@ -38,18 +39,24 @@ export function getCatalogSqliteAdapter(): CatalogSqliteDatabase | null {
 
 export function setCatalogPreferSqlite(value: boolean): void {
   preferSqlite = value;
+  catalogCache.clear();
 }
 
 export function setCatalogJsonData(relativePath: string, data: unknown): void {
-  jsonDataStore.set(normalizePath(relativePath), data);
+  const normalized = normalizePath(relativePath);
+  jsonDataStore.set(normalized, freezeJsonClone(data));
+  catalogCache.delete(normalized);
 }
 
 export function clearCatalogJsonData(relativePath?: string): void {
   if (relativePath) {
-    jsonDataStore.delete(normalizePath(relativePath));
+    const normalized = normalizePath(relativePath);
+    jsonDataStore.delete(normalized);
+    catalogCache.delete(normalized);
     return;
   }
   jsonDataStore.clear();
+  catalogCache.clear();
 }
 
 export function clearCatalogCache(): void {
@@ -105,7 +112,9 @@ export function loadCatalogRows<T>(relativePath: string): T[] {
     return catalogCache.get(normalized) as T[];
   }
 
-  const rows = tryLoadFromSqlite<T>(normalized) ?? extractRecords<T>(loadCatalogJson(normalized));
+  const rows = freezeJsonClone(
+    tryLoadFromSqlite<T>(normalized) ?? extractRecords<T>(loadCatalogJson(normalized))
+  );
   catalogCache.set(normalized, rows);
   return rows;
 }
@@ -173,6 +182,21 @@ function extractRecords<T>(data: unknown): T[] {
   return records as T[];
 }
 
+function freezeJsonClone<T>(value: T): T {
+  if (value === null || typeof value !== 'object') return value;
+  const clone = (
+    Array.isArray(value)
+      ? value.map((item) => freezeJsonClone(item))
+      : Object.fromEntries(
+          Object.entries(value as Record<string, unknown>).map(([key, item]) => [
+            key,
+            freezeJsonClone(item),
+          ])
+        )
+  ) as T;
+  return Object.freeze(clone);
+}
+
 function normalizePath(value: string): string {
   return value.replace(/\\/g, '/');
 }
@@ -183,6 +207,9 @@ function quoteIdent(value: string): string {
 
 export function resolveSharedDataPath(relativePath: string): string {
   const path = getNodePath();
+  const fs = getNodeFs();
+  const packagedPath = path.resolve(__dirname, '../shared-data', relativePath);
+  if (fs.existsSync(packagedPath)) return packagedPath;
   return path.resolve(__dirname, '../../../shared-data', relativePath);
 }
 

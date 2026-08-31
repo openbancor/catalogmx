@@ -9,10 +9,15 @@ Official sources:
 - State payroll tax laws
 """
 
+import math
 from typing import TypedDict
 
 from catalogmx.calculators.impuestos import ImpuestosLocalesCalculator
-from catalogmx.calculators.imss import IMSSYear, calcular_cuotas_obrero_patronales
+from catalogmx.calculators.imss import (
+    IMSSYear,
+    calcular_cuotas_obrero_patronales,
+    get_salario_minimo,
+)
 
 
 class CostoTotalResult(TypedDict):
@@ -69,6 +74,42 @@ DIAS_VACACIONES_POR_ANTIGUEDAD = {
     34: 32,
     35: 32,
 }
+
+
+def _is_finite_number(value: object) -> bool:
+    """Return whether a runtime value is a finite non-boolean numeric value."""
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value)
+    except (OverflowError, TypeError):
+        return False
+
+
+def _assert_salario_mensual_bruto(salario_mensual_bruto: float, year: IMSSYear) -> None:
+    """Reject an unsafe gross salary before calculating downstream contributions."""
+    message = "El salario mensual bruto debe ser un número finito mayor o igual al salario mínimo mensual aplicable."
+    if not _is_finite_number(salario_mensual_bruto):
+        raise ValueError(message)
+    if salario_mensual_bruto < get_salario_minimo(year, "general") * 30:
+        raise ValueError(message)
+
+
+def _assert_fiscal_inputs(
+    antiguedad_anos: int,
+    dias_aguinaldo: int,
+    incluir_ptu: bool,
+    porcentaje_ptu: float,
+) -> None:
+    """Reject values that could fabricate negative, NaN, or defaulted reserves."""
+    if type(antiguedad_anos) is not int or antiguedad_anos < 0:
+        raise ValueError("antiguedad_anos debe ser un entero no negativo")
+    if type(dias_aguinaldo) is not int or dias_aguinaldo < 15:
+        raise ValueError("dias_aguinaldo debe ser un entero mayor o igual a 15")
+    if type(incluir_ptu) is not bool:
+        raise ValueError("incluir_ptu debe ser booleano")
+    if not _is_finite_number(porcentaje_ptu) or not 0 <= porcentaje_ptu <= 100:
+        raise ValueError("porcentaje_ptu debe ser un número finito entre 0 y 100")
 
 
 def obtener_dias_vacaciones(antiguedad_anos: int) -> int:
@@ -142,6 +183,9 @@ def calcular_costo_total(
         >>> print(f"Factor: {result['factor_costo']:.2f}x")
         Factor: 1.35x
     """
+    _assert_salario_mensual_bruto(salario_mensual_bruto, year)
+    _assert_fiscal_inputs(antiguedad_anos, dias_aguinaldo, incluir_ptu, porcentaje_ptu)
+
     # 1. Calculate daily wage (assuming 30-day month for calculation purposes)
     salario_diario = salario_mensual_bruto / 30.0
 

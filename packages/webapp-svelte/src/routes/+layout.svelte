@@ -268,8 +268,9 @@
 					</div>
 				</div>
 			</section>
+		{:else}
+			{@render children()}
 		{/if}
-		{@render children()}
 	</main>
 
 	<!-- Footer -->

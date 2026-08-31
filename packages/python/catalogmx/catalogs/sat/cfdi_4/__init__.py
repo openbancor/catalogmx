@@ -19,6 +19,7 @@ Catálogos incluidos:
 from .clave_prod_serv import ClaveProdServCatalog
 from .clave_unidad import ClaveUnidadCatalog
 from .codigo_postal import CodigoPostalCatalog
+from .estado import EstadoCfdiCatalog
 from .exportacion import ExportacionCatalog
 from .forma_pago import FormaPagoCatalog
 from .impuesto import ImpuestoCatalog
@@ -42,4 +43,5 @@ __all__ = [
     "ClaveUnidadCatalog",
     "ClaveProdServCatalog",
     "CodigoPostalCatalog",
+    "EstadoCfdiCatalog",
 ]

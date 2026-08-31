@@ -56,4 +56,36 @@ void main() {
       expect(_round(result.factorCosto), expected['factor_costo']);
     }
   });
+
+  test('Worker cost rejects invalid fiscal options', () {
+    expect(
+      () => calcularCostoTotal(
+        salarioMensualBruto: 15000,
+        antiguedadAnos: -1,
+      ),
+      throwsArgumentError,
+    );
+    expect(
+      () => calcularCostoTotal(
+        salarioMensualBruto: 15000,
+        diasAguinaldo: 14,
+      ),
+      throwsArgumentError,
+    );
+    for (final percentage in <double>[
+      double.nan,
+      double.infinity,
+      double.negativeInfinity,
+      -1,
+      101,
+    ]) {
+      expect(
+        () => calcularCostoTotal(
+          salarioMensualBruto: 15000,
+          porcentajePtu: percentage,
+        ),
+        throwsArgumentError,
+      );
+    }
+  });
 }

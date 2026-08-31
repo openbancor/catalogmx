@@ -1,15 +1,16 @@
+import org.gradle.api.tasks.bundling.AbstractArchiveTask
+
 plugins {
     kotlin("jvm") version "1.9.22"
     kotlin("plugin.serialization") version "1.9.22"
     id("org.jetbrains.dokka") version "1.9.10"
     id("io.gitlab.arturbosch.detekt") version "1.23.4"
+    id("com.vanniktech.maven.publish") version "0.34.0"
     jacoco
-    `maven-publish`
-    signing
 }
 
 group = "com.openbancor"
-version = "0.6.0"
+version = "0.7.0"
 description = "Mexican financial and government catalog data library for Kotlin/JVM"
 
 repositories {
@@ -42,11 +43,6 @@ dependencies {
     testImplementation("io.github.serpro69:kotlin-faker:1.15.0")
 }
 
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
 kotlin {
     jvmToolchain {
         languageVersion.set(JavaLanguageVersion.of(System.getenv("JAVA_VERSION")?.toIntOrNull() ?: 17))
@@ -76,63 +72,46 @@ tasks.jacocoTestCoverageVerification {
     }
 }
 
+tasks.withType<AbstractArchiveTask>().configureEach {
+    isPreserveFileTimestamps = false
+    isReproducibleFileOrder = true
+}
+
 detekt {
     buildUponDefaultConfig = true
     config.setFrom("$projectDir/detekt.yml")
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
+mavenPublishing {
+    coordinates("com.openbancor", "catalogmx", project.version.toString())
+    publishToMavenCentral()
 
-            pom {
-                name.set("catalogmx")
-                description.set(project.description)
-                url.set("https://github.com/openbancor/catalogmx")
+    pom {
+        name.set("catalogmx")
+        description.set(project.description)
+        url.set("https://github.com/openbancor/catalogmx")
 
-                licenses {
-                    license {
-                        name.set("MIT License")
-                        url.set("https://opensource.org/licenses/MIT")
-                    }
-                }
-
-                developers {
-                    developer {
-                        id.set("openbancor")
-                        name.set("OpenBancor")
-                        email.set("dev@openbancor.com")
-                    }
-                }
-
-                scm {
-                    connection.set("scm:git:git://github.com/openbancor/catalogmx.git")
-                    developerConnection.set("scm:git:ssh://github.com/openbancor/catalogmx.git")
-                    url.set("https://github.com/openbancor/catalogmx")
-                }
+        licenses {
+            license {
+                name.set("BSD 2-Clause License")
+                url.set("https://opensource.org/license/bsd-2-clause")
+                distribution.set("repo")
             }
         }
-    }
 
-    repositories {
-        maven {
-            name = "OSSRH"
-            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = System.getenv("OSSRH_USERNAME")
-                password = System.getenv("OSSRH_PASSWORD")
+        developers {
+            developer {
+                id.set("openbancor")
+                name.set("OpenBancor")
+                email.set("dev@openbancor.com")
             }
         }
-    }
-}
 
-signing {
-    val signingKey = System.getenv("GPG_PRIVATE_KEY")
-    val signingPassword = System.getenv("GPG_PASSPHRASE")
-    if (signingKey != null && signingPassword != null) {
-        useInMemoryPgpKeys(signingKey, signingPassword)
-        sign(publishing.publications["maven"])
+        scm {
+            connection.set("scm:git:git://github.com/openbancor/catalogmx.git")
+            developerConnection.set("scm:git:ssh://git@github.com/openbancor/catalogmx.git")
+            url.set("https://github.com/openbancor/catalogmx")
+        }
     }
 }
 

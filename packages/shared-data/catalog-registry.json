@@ -94,6 +94,16 @@
           "format": "xls"
         },
         {
+          "role": "authoritative_schema",
+          "url": "http://www.sat.gob.mx/sitio_internet/cfd/catalogos/catCFDI.xsd",
+          "format": "xsd"
+        },
+        {
+          "role": "authoritative_payroll_guide",
+          "url": "https://www.sat.gob.mx/cs/Satellite?blobcol=urldata&blobkey=id&blobtable=MungoBlobs&blobwhere=1461173081850&ssbinary=true",
+          "format": "pdf"
+        },
+        {
           "role": "technical_mirror",
           "url": "https://github.com/phpcfdi/resources-sat-catalogs",
           "format": "sqlite_sql"
@@ -107,7 +117,7 @@
       "implementation": {
         "status": "resolver_ready",
         "official_catalogs": 25,
-        "embedded_convenience_json_files": 14,
+        "embedded_convenience_json_files": 16,
         "canonical_distribution": "release",
         "release_artifact": "sat_cfdi_40.sqlite3",
         "legacy_view_path": "packages/shared-data/sat/cfdi_4.0",
@@ -115,7 +125,7 @@
         "consumer_migration_required_before_removal": true,
         "manifest": "sat_cfdi_40.manifest.json"
       },
-      "notes": "CFDI 4.0 remains the valid Anexo 20 version. The canonical 25-table SQLite dataset is independently versioned and resolver-ready; legacy embedded convenience views remain only for compatibility while consumers migrate.",
+      "notes": "CFDI 4.0 remains the valid Anexo 20 version. The canonical 25-table SQLite dataset is independently versioned and resolver-ready; 16 embedded convenience views remain for compatibility, including the c_Estado XSD projection and the explicit Nómina-only ClaveProdServ profile required by the SAT filling guide.",
       "artifact": {
         "version": "4.0",
         "channel": "data-sat-cfdi-4-4-0-latest",

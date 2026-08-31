@@ -1,30 +1,33 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import { Calculator, Info, Shield, Users } from 'lucide-svelte';
-	import { IMSSCalculator } from '$lib/catalogmx';
+	import { onMount } from 'svelte';
+	import { IMSSCalculator, initCatalogmxSqlite } from '$lib/catalogmx';
 
-	type TipoCalculo = 'cuotas' | 'modalidad40' | 'modalidad10';
+	type TipoCalculo = 'cuotas' | 'modalidad40';
 	type ClaseRiesgo = 1 | 2 | 3 | 4 | 5;
+	type ZonaSalario = 'general' | 'frontera';
 	type Year = 2024 | 2025 | 2026;
 
 	// State
 	let tipoCalculo = $state<TipoCalculo>('cuotas');
 	let salarioDiario = $state<number>(500);
+	let ultimoSbcDiario = $state<number>(500);
+	let errorCuotas = $state<string | null>(null);
+	let errorModalidad40 = $state<string | null>(null);
 	let claseRiesgo = $state<ClaseRiesgo>(1);
+	let zonaSalario = $state<ZonaSalario>('general');
 	let year = $state<Year>(2025);
+	let catalogsReady = $state(false);
 
 	const tiposCalculo = [
 		{ value: 'cuotas', label: 'Cuotas Obrero-Patronales', icon: Users },
-		{ value: 'modalidad40', label: 'Modalidad 40 (Voluntaria)', icon: Shield },
-		{ value: 'modalidad10', label: 'Modalidad 10 (Independiente)', icon: Shield }
+		{ value: 'modalidad40', label: 'Modalidad 40 (Voluntaria)', icon: Shield }
 	] as const;
 
-	const clasesRiesgo = IMSSCalculator.getClasesRiesgoTrabajo().map((c) => ({
-		value: c.clase as ClaseRiesgo,
-		label: `Clase ${c.clase} - ${c.descripcion.replace(`Clase ${c.clase} - `, '')}`,
-		prima: c.prima,
-		ejemplos: c.ejemplos
-	}));
+	let clasesRiesgo = $state<
+		Array<{ value: ClaseRiesgo; label: string; prima: number; ejemplos: string[] }>
+	>([]);
 
 	const years = [2024, 2025, 2026] as const;
 
@@ -50,28 +53,23 @@
 		porcentajeTotal: number;
 	}
 
-	interface Modalidad10Result {
-		salarioDiario: number;
-		salarioMensual: number;
-		cuotaFijaUMA: number;
-		cuotaVariable: number;
-		cuotaMensual: number;
-		cuotaAnual: number;
-	}
-
 	let resultadoCuotas = $state<CuotasResult | null>(null);
 	let resultadoMod40 = $state<Modalidad40Result | null>(null);
-	let resultadoMod10 = $state<Modalidad10Result | null>(null);
 
 	function calculateCuotas() {
-		const uma = IMSSCalculator.getUMA(year).diaria;
-		const salarioMensual = salarioDiario * 30;
-		const result = IMSSCalculator.calcularCuotasObreroPatronales(
-			salarioDiario,
-			30,
-			year,
-			claseRiesgo
-		);
+		errorCuotas = null;
+		resultadoCuotas = null;
+		try {
+			const uma = IMSSCalculator.getUMA(year).diaria;
+			const salarioMensual = salarioDiario * 30;
+			const result = IMSSCalculator.calcularCuotasObreroPatronales(
+				salarioDiario,
+				30,
+				year,
+				claseRiesgo,
+				undefined,
+				zonaSalario
+			);
 		const labels: Record<string, string> = {
 			enfermedad_mat_cuota_fija: 'E&M - Cuota fija (UMA)',
 			enfermedad_mat_excedente: 'E&M - Excedente 3 UMA',
@@ -84,68 +82,87 @@
 			riesgo_trabajo: `Riesgo de trabajo (Clase ${claseRiesgo})`
 		};
 
-		const keys = new Set([
-			...Object.keys(result.cuotas_patron),
-			...Object.keys(result.cuotas_trabajador)
-		]);
-		const desglose: CuotasResult['desglose'] = Array.from(keys).map((key) => ({
-			concepto: labels[key] ?? key.replace(/_/g, ' '),
-			patron: result.cuotas_patron[key] ?? 0,
-			trabajador: result.cuotas_trabajador[key] ?? 0
-		}));
+			const keys = new Set([
+				...Object.keys(result.cuotas_patron),
+				...Object.keys(result.cuotas_trabajador)
+			]);
+			const desglose: CuotasResult['desglose'] = Array.from(keys).map((key) => ({
+				concepto: labels[key] ?? key.replace(/_/g, ' '),
+				patron: result.cuotas_patron[key] ?? 0,
+				trabajador: result.cuotas_trabajador[key] ?? 0
+			}));
 
-		resultadoCuotas = {
-			salarioDiario,
-			salarioMensual,
-			uma,
-			cuotasPatron: result.total_patron,
-			cuotasTrabajador: result.total_trabajador,
-			cuotaTotal: result.total_imss,
-			desglose
-		};
+			resultadoCuotas = {
+				salarioDiario,
+				salarioMensual,
+				uma,
+				cuotasPatron: result.total_patron,
+				cuotasTrabajador: result.total_trabajador,
+				cuotaTotal: result.total_imss,
+				desglose
+			};
+		} catch (error) {
+			errorCuotas =
+				error instanceof Error ? error.message : 'No fue posible calcular las cuotas IMSS.';
+		}
 	}
 
 	function calculateModalidad40() {
-		const salarioMensual = salarioDiario * 30;
-		const result = IMSSCalculator.calcularModalidad40(salarioMensual, year);
+		errorModalidad40 = null;
+		resultadoMod40 = null;
 
-		resultadoMod40 = {
-			salarioDiario,
-			salarioMensual: result.salario_base_cotizacion,
-			cuotaMensual: result.cuota_mensual,
-			cuotaAnual: result.cuota_mensual * 12,
-			porcentajeTotal: result.porcentaje_total
-		};
-	}
+		if (!ultimoSbcDiario || ultimoSbcDiario <= 0) {
+			errorModalidad40 = 'Captura el último SBC diario registrado.';
+			return;
+		}
+		if (salarioDiario < ultimoSbcDiario) {
+			errorModalidad40 = 'El SBC elegido no puede ser menor al último SBC registrado.';
+			return;
+		}
 
-	function calculateModalidad10() {
-		const salarioMensual = salarioDiario * 30;
-		const result = IMSSCalculator.calcularModalidad10(salarioMensual, year);
+		const uma = IMSSCalculator.getUMA(year);
+		const factorMensual = uma.mensual / uma.diaria;
 
-		resultadoMod10 = {
-			salarioDiario,
-			salarioMensual: result.salario_base_cotizacion,
-			cuotaFijaUMA: result.cuota_fija_uma,
-			cuotaVariable: result.cuota_variable,
-			cuotaMensual: result.cuota_mensual,
-			cuotaAnual: result.cuota_mensual * 12
-		};
+		try {
+			const result = IMSSCalculator.calcularModalidad40(
+				salarioDiario * factorMensual,
+				ultimoSbcDiario * factorMensual,
+				year,
+				undefined,
+				zonaSalario
+			);
+
+			resultadoMod40 = {
+				salarioDiario: result.salario_base_cotizacion / factorMensual,
+				salarioMensual: result.salario_base_cotizacion,
+				cuotaMensual: result.cuota_mensual,
+				cuotaAnual: result.cuota_mensual * 12,
+				porcentajeTotal: result.porcentaje_total
+			};
+		} catch (error) {
+			errorModalidad40 =
+				error instanceof Error ? error.message : 'No fue posible calcular Modalidad 40.';
+		}
 	}
 
 	function calculate() {
 		if (!salarioDiario || salarioDiario <= 0) {
 			resultadoCuotas = null;
 			resultadoMod40 = null;
-			resultadoMod10 = null;
+			errorCuotas = null;
+			errorModalidad40 = null;
 			return;
 		}
 
 		if (tipoCalculo === 'cuotas') {
+			errorModalidad40 = null;
 			calculateCuotas();
 		} else if (tipoCalculo === 'modalidad40') {
+			errorCuotas = null;
 			calculateModalidad40();
 		} else {
-			calculateModalidad10();
+			const unsupportedCalculation: never = tipoCalculo;
+			throw new Error(`Tipo de cálculo IMSS no compatible: ${unsupportedCalculation}`);
 		}
 	}
 
@@ -160,13 +177,24 @@
 
 	// Auto-calculate when inputs change
 	$effect(() => {
-		calculate();
+		if (catalogsReady) calculate();
+	});
+
+	onMount(async () => {
+		await initCatalogmxSqlite();
+		clasesRiesgo = IMSSCalculator.getClasesRiesgoTrabajo().map((item) => ({
+			value: item.clase as ClaseRiesgo,
+			label: `Clase ${item.clase} - ${item.descripcion.replace(`Clase ${item.clase} - `, '')}`,
+			prima: item.prima,
+			ejemplos: item.ejemplos
+		}));
+		catalogsReady = true;
 	});
 </script>
 
 <svelte:head>
 	<title>Calculadora IMSS - catalogmx</title>
-	<meta name="description" content="Calcula cuotas IMSS obrero-patronales, Modalidad 40 y Modalidad 10. Cuotas actualizadas 2024-2026." />
+	<meta name="description" content="Calcula cuotas IMSS obrero-patronales y Modalidad 40 con los parámetros públicos verificados." />
 </svelte:head>
 
 <!-- Hero -->
@@ -189,7 +217,7 @@
 					Calculadora IMSS
 				</h1>
 				<p class="text-lg text-slate-600 dark:text-slate-300">
-					Cuotas obrero-patronales y modalidades voluntarias
+					Cuotas obrero-patronales y Modalidad 40 voluntaria
 				</p>
 			</div>
 		</div>
@@ -200,6 +228,14 @@
 				<p class="font-medium mb-1">Cuotas IMSS {year}</p>
 				<p>UMA {year}: {formatCurrency(IMSSCalculator.getUMA(year).diaria)} diarios. Tope de cotización: 25 UMAs.</p>
 			</div>
+		</div>
+
+		<div class="mt-4 flex items-start gap-2 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+			<Info class="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+			<p class="text-sm text-amber-900 dark:text-amber-300">
+				La modalidad administrativa para personas trabajadoras independientes no está disponible en esta calculadora;
+				<a class="font-medium underline" href="https://github.com/openbancor/catalogmx/issues/97">Modalidad 10/PTI: pendiente de auditoría</a>.
+			</p>
 		</div>
 	</div>
 </section>
@@ -238,7 +274,7 @@
 					<!-- Salario diario -->
 					<div>
 						<label for="salarioDiario" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-							Salario diario integrado (SDI)
+							{tipoCalculo === 'modalidad40' ? 'SBC diario elegido' : 'Salario diario integrado (SDI)'}
 						</label>
 						<div class="relative">
 							<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">$</span>
@@ -246,15 +282,31 @@
 								id="salarioDiario"
 								type="number"
 								bind:value={salarioDiario}
-								min="0"
+								min={IMSSCalculator.getSalarioMinimo(year, zonaSalario)}
 								step="0.01"
 								class="input pl-8 tabular-nums"
 								placeholder="500.00"
 							/>
 						</div>
 						<p class="text-xs text-slate-500 mt-1">
-							Salario mensual: {formatCurrency(salarioDiario * 30)}
+							{#if tipoCalculo === 'modalidad40'}
+								Equivalente mensual M40: {formatCurrency(
+									salarioDiario *
+										(IMSSCalculator.getUMA(year).mensual / IMSSCalculator.getUMA(year).diaria)
+								)}
+							{:else}
+								Salario mensual: {formatCurrency(salarioDiario * 30)}
+							{/if}
 						</p>
+						{#if tipoCalculo === 'cuotas' && errorCuotas}
+							<div
+								data-testid="cuotas-error"
+								aria-live="polite"
+								class="mt-3 p-3 rounded-lg border border-red-200 bg-red-50 text-sm text-red-800 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300"
+							>
+								{errorCuotas}
+							</div>
+						{/if}
 					</div>
 
 					<!-- Año -->
@@ -271,6 +323,17 @@
 								<option value={y}>{y}</option>
 							{/each}
 						</select>
+					</div>
+
+					<div>
+						<label for="zonaSalario" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+							Zona salarial aplicable
+						</label>
+						<select id="zonaSalario" bind:value={zonaSalario} class="input">
+							<option value="general">General</option>
+							<option value="frontera">Zona Libre de la Frontera Norte</option>
+						</select>
+						<p class="text-xs text-slate-500 mt-1">Se usa para identificar correctamente la fila especial CEAV de 1 salario mínimo.</p>
 					</div>
 
 					{#if tipoCalculo === 'cuotas'}
@@ -297,17 +360,39 @@
 					{/if}
 
 					{#if tipoCalculo === 'modalidad40'}
+						<div>
+							<label for="ultimoSbcDiario" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+								Último SBC diario registrado
+							</label>
+							<div class="relative">
+								<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">$</span>
+								<input
+									id="ultimoSbcDiario"
+									type="number"
+									bind:value={ultimoSbcDiario}
+									min="0.01"
+									max={IMSSCalculator.getUMA(year).diaria * 25}
+									step="0.01"
+									class="input pl-8 tabular-nums"
+								/>
+							</div>
+							<p class="text-xs text-slate-500 mt-1">
+								Equivalente mensual: {formatCurrency(
+									ultimoSbcDiario *
+										(IMSSCalculator.getUMA(year).mensual / IMSSCalculator.getUMA(year).diaria)
+								)}. El SBC elegido no puede ser menor; el tope es 25 UMA.
+							</p>
+						</div>
+
+						{#if errorModalidad40}
+							<div class="p-3 rounded-lg border border-red-200 bg-red-50 text-sm text-red-800 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300">
+								{errorModalidad40}
+							</div>
+						{/if}
+
 						<div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
 							<p class="text-sm text-blue-800 dark:text-blue-300">
 								<strong>Modalidad 40:</strong> Continuación voluntaria para personas que dejaron de cotizar. Permite mantener o aumentar semanas cotizadas para mejorar la pensión.
-							</p>
-						</div>
-					{/if}
-
-					{#if tipoCalculo === 'modalidad10'}
-						<div class="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
-							<p class="text-sm text-purple-800 dark:text-purple-300">
-								<strong>Modalidad 10:</strong> Incorporación voluntaria para trabajadores independientes, freelancers y profesionistas que no tienen patrón.
 							</p>
 						</div>
 					{/if}
@@ -413,41 +498,6 @@
 						</div>
 					</div>
 
-				{:else if tipoCalculo === 'modalidad10' && resultadoMod10}
-					<div class="space-y-4">
-						<div class="p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg border border-purple-200 dark:border-purple-800">
-							<div class="text-sm font-medium text-purple-700 dark:text-purple-300 mb-1">
-								Cuota mensual Modalidad 10
-							</div>
-							<div class="text-3xl font-bold text-purple-900 dark:text-purple-100 tabular-nums">
-								{formatCurrency(resultadoMod10.cuotaMensual)}
-							</div>
-							<div class="text-sm text-purple-600 dark:text-purple-400 mt-1">
-								Cuota anual: {formatCurrency(resultadoMod10.cuotaAnual)}
-							</div>
-						</div>
-
-						<div class="space-y-2 text-sm">
-							<div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
-								<span class="text-slate-600 dark:text-slate-400">Cuota fija (UMA)</span>
-								<span class="font-medium text-slate-900 dark:text-slate-100 tabular-nums">
-									{formatCurrency(resultadoMod10.cuotaFijaUMA)}
-								</span>
-							</div>
-							<div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
-								<span class="text-slate-600 dark:text-slate-400">Cuota variable</span>
-								<span class="font-medium text-slate-900 dark:text-slate-100 tabular-nums">
-									{formatCurrency(resultadoMod10.cuotaVariable)}
-								</span>
-							</div>
-							<div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
-								<span class="text-slate-600 dark:text-slate-400">SBC mensual aplicable</span>
-								<span class="font-medium text-slate-900 dark:text-slate-100 tabular-nums">
-									{formatCurrency(resultadoMod10.salarioMensual)}
-								</span>
-							</div>
-						</div>
-					</div>
 
 				{:else}
 					<div class="flex items-center justify-center h-64 text-slate-400 dark:text-slate-500">

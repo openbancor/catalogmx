@@ -43,8 +43,10 @@ from catalogmx.calculators.imss import (
     calcular_cuotas_obrero_patronales,
     calcular_modalidad_10,
     calcular_modalidad_40,
+    get_ceav_patron_rate,
     get_salario_minimo,
     get_uma,
+    get_uma_for_date,
 )
 from catalogmx.calculators.isr import (
     ISRCalculationResult,
@@ -81,6 +83,8 @@ __all__ = [
     "calcular_modalidad_40",
     "calcular_modalidad_10",
     "get_uma",
+    "get_uma_for_date",
+    "get_ceav_patron_rate",
     "get_salario_minimo",
     "IMSSYear",
     "ZonaSalario",

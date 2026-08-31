@@ -6,9 +6,9 @@ Tests total employer cost calculations including all contributions and reserves
 import pytest
 
 from catalogmx.calculators.costo_trabajador import (
-    obtener_dias_vacaciones,
-    calcular_costo_total,
     DIAS_VACACIONES_POR_ANTIGUEDAD,
+    calcular_costo_total,
+    obtener_dias_vacaciones,
 )
 
 
@@ -317,26 +317,49 @@ class TestCalcularCostoTotal:
 class TestEdgeCases:
     """Edge cases and boundary condition tests"""
 
-    def test_zero_salary(self):
-        """Test worker cost calculation with zero salary (expect division by zero for factor)"""
-        # Zero salary causes division by zero when calculating factor_costo
-        # This is an edge case that should be handled in production code
-        with pytest.raises(ZeroDivisionError):
-            calcular_costo_total(0)
+    def test_rejects_invalid_monthly_gross_salary(self):
+        """Reject an unsafe monthly salary at the public calculator boundary."""
+        from catalogmx.calculators.imss import get_salario_minimo
 
-    def test_very_small_salary(self):
-        """Test worker cost calculation with very small salary"""
-        result = calcular_costo_total(0.01)
-        assert result["salario_bruto_mensual"] == 0.01
-        assert result["factor_costo"] > 0
+        minimum_monthly_salary = get_salario_minimo(2026, "general") * 30
+        invalid_salaries = [
+            float("nan"),
+            float("inf"),
+            float("-inf"),
+            None,
+            "9451.20",
+            True,
+            0.0,
+            -1.0,
+            minimum_monthly_salary - 0.01,
+            10**1000,
+        ]
 
-    def test_negative_antiguedad(self):
-        """Test worker cost calculation with negative seniority (should use minimum vacation days)"""
-        result = calcular_costo_total(15000, antiguedad_anos=-5)
-        # Should use minimum vacation days (12)
-        salario_diario = 15000 / 30.0
-        expected_vacaciones = (salario_diario * 12) / 12.0
-        assert abs(result["reserva_vacaciones"] - expected_vacaciones) < 0.01
+        for salario_mensual_bruto in invalid_salaries:
+            with pytest.raises(
+                ValueError,
+                match="El salario mensual bruto debe ser un número finito mayor o igual al salario mínimo mensual aplicable.",
+            ):
+                calcular_costo_total(salario_mensual_bruto)
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [
+            ("antiguedad_anos", -1),
+            ("antiguedad_anos", 1.5),
+            ("antiguedad_anos", True),
+            ("dias_aguinaldo", 14),
+            ("dias_aguinaldo", 15.5),
+            ("dias_aguinaldo", True),
+            ("porcentaje_ptu", float("nan")),
+            ("porcentaje_ptu", -1),
+            ("porcentaje_ptu", 101),
+            ("incluir_ptu", 1),
+        ],
+    )
+    def test_rejects_invalid_fiscal_inputs(self, field, value):
+        with pytest.raises(ValueError, match=field):
+            calcular_costo_total(15000, **{field: value})
 
     def test_zero_antiguedad(self):
         """Test worker cost calculation with zero seniority"""
@@ -355,9 +378,9 @@ class TestEdgeCases:
         assert abs(result["reserva_vacaciones"] - expected_vacaciones) < 0.01
 
     def test_zero_dias_aguinaldo(self):
-        """Test worker cost calculation with zero aguinaldo days"""
-        result = calcular_costo_total(15000, dias_aguinaldo=0)
-        assert result["reserva_aguinaldo"] == 0
+        """Reject an aguinaldo below the statutory 15-day minimum."""
+        with pytest.raises(ValueError, match="dias_aguinaldo"):
+            calcular_costo_total(15000, dias_aguinaldo=0)
 
     def test_cien_dias_aguinaldo(self):
         """Test worker cost calculation with 100 aguinaldo days (very generous)"""

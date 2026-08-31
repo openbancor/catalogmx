@@ -6,7 +6,7 @@ CatalogMX separates the CFDI 4.0 library/API surface from the lifecycle of the S
 
 The SAT Anexo 20 page and SAT catalog workbook remain authoritative. CatalogMX uses `phpcfdi/resources-sat-catalogs` as a reviewed technical ingestion mirror because it publishes a versioned SQLite representation with the complete catalog families and checksummed release assets.
 
-The technical mirror currently represents CFDI 4.0 as 25 `cfdi_40_*` tables. The existing `packages/shared-data/sat/cfdi_4.0` directory contains 14 convenience JSON files and is therefore a partial compatibility view, not the complete canonical dataset.
+The technical mirror currently represents CFDI 4.0 as 25 `cfdi_40_*` tables. The existing `packages/shared-data/sat/cfdi_4.0` directory contains 16 convenience JSON files and is therefore a partial compatibility view, not the complete canonical dataset. The small `c_Estado` view is generated deterministically from the reviewed SAT `catCFDI.xsd` because Nómina 1.2 references that CFDI-owned type. A separate Nómina-only projection exposes `84111505`, the value mandated by SAT's filling guide, without pretending to preload the complete `c_ClaveProdServ` catalog in edge runtimes.
 
 ## Canonical artifact
 

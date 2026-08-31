@@ -10,6 +10,7 @@ Este módulo usa SQLite con FTS5 para búsqueda eficiente de texto completo.
 
 import atexit
 import sqlite3
+from importlib.resources import files
 from pathlib import Path
 from typing import TypedDict
 
@@ -70,7 +71,13 @@ class ClaveProdServCatalog:
         if cls._db_path is None:
             from catalogmx.utils.shared_data import get_shared_data_path
 
-            cls._db_path = get_shared_data_path("sqlite", "clave_prod_serv.db")
+            try:
+                cls._db_path = get_shared_data_path("sqlite", "clave_prod_serv.db")
+            except FileNotFoundError:
+                packaged = files("catalogmx.data").joinpath("clave_prod_serv.db")
+                if not packaged.is_file():
+                    raise
+                cls._db_path = Path(str(packaged))
         return cls._db_path
 
     @classmethod
@@ -83,9 +90,9 @@ class ClaveProdServCatalog:
                     f"Database not found at {db_path}. "
                     "Please ensure the clave_prod_serv.db file exists."
                 )
-            cls._connection = sqlite3.connect(str(db_path))
+            database_uri = f"{db_path.resolve().as_uri()}?mode=ro"
+            cls._connection = sqlite3.connect(database_uri, uri=True)
             cls._connection.row_factory = sqlite3.Row
-            cls._ensure_schema(cls._connection)
         return cls._connection
 
     @classmethod
@@ -94,71 +101,6 @@ class ClaveProdServCatalog:
         if cls._connection is not None:
             cls._connection.close()
             cls._connection = None
-
-    @classmethod
-    def _ensure_schema(cls, conn: sqlite3.Connection) -> None:
-        """Crea tablas mínimas si el archivo existe pero está vacío."""
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS clave_prod_serv (
-                clave TEXT PRIMARY KEY,
-                descripcion TEXT,
-                incluye_iva INTEGER,
-                incluye_ieps INTEGER,
-                complemento TEXT,
-                palabras_similares TEXT,
-                fecha_inicio_vigencia TEXT,
-                fecha_fin_vigencia TEXT
-            )
-            """)
-        cursor.execute("""
-            CREATE VIRTUAL TABLE IF NOT EXISTS clave_prod_serv_fts USING fts5(
-                clave,
-                descripcion,
-                complemento,
-                palabras_similares,
-                content='clave_prod_serv',
-                content_rowid='rowid'
-            )
-            """)
-        cursor.execute("SELECT COUNT(*) FROM clave_prod_serv")
-        (count,) = cursor.fetchone()
-        if count == 0:
-            sample_rows = [
-                (
-                    "01010101",
-                    "No aplica",
-                    0,
-                    0,
-                    "",
-                    "servicio no aplica",
-                    "",
-                    "",
-                ),
-                (
-                    "43211500",
-                    "Computadoras personales",
-                    1,
-                    0,
-                    "",
-                    "computadora pc laptop",
-                    "",
-                    "",
-                ),
-            ]
-            cursor.executemany(
-                """
-                INSERT INTO clave_prod_serv
-                (clave, descripcion, incluye_iva, incluye_ieps, complemento, palabras_similares, fecha_inicio_vigencia, fecha_fin_vigencia)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                sample_rows,
-            )
-            cursor.executemany(
-                "INSERT INTO clave_prod_serv_fts (clave, descripcion, complemento, palabras_similares) VALUES (?, ?, ?, ?)",
-                [(row[0], row[1], row[4], row[5]) for row in sample_rows],
-            )
-            conn.commit()
 
     @classmethod
     def _row_to_clave(cls, row: sqlite3.Row) -> ClaveProdServ:
@@ -256,7 +198,14 @@ class ClaveProdServCatalog:
         conn = cls._get_connection()
         cursor = conn.cursor()
 
-        # Use FTS5 for fast full-text search
+        has_fts = cursor.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
+            ("clave_prod_serv_fts",),
+        ).fetchone()
+        if not has_fts:
+            return cls.search_simple(keyword, limit)
+
+        # Use FTS5 when the published artifact includes its search index.
         query = """
             SELECT cps.*
             FROM clave_prod_serv_fts fts
@@ -289,11 +238,11 @@ class ClaveProdServCatalog:
         keyword_pattern = f"%{keyword}%"
         query = """
             SELECT * FROM clave_prod_serv
-            WHERE descripcion LIKE ? OR palabras_similares LIKE ?
+            WHERE descripcion LIKE ? OR complemento LIKE ? OR palabras_similares LIKE ?
             LIMIT ?
         """
 
-        cursor.execute(query, (keyword_pattern, keyword_pattern, limit))
+        cursor.execute(query, (keyword_pattern, keyword_pattern, keyword_pattern, limit))
         return [cls._row_to_clave(row) for row in cursor.fetchall()]
 
     @classmethod

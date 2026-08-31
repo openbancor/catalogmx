@@ -2,7 +2,6 @@
 include LICENSE
 include README.md
 include CHANGELOG.rst
-include CONTRIBUTING.rst
 
 # Include SQLite database files (auto-updating data)
 recursive-include catalogmx/data *.sqlite3 *.db

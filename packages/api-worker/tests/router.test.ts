@@ -67,6 +67,7 @@ describe('CatalogMX API Worker routing', () => {
     );
 
     expect(response.status).toBe(200);
+    expect(response.headers.get('X-Catalog-Version')).toBe('2026-01-05');
     expect(await bodyOf(response)).toMatchObject({ value: 'BACL891217NJ5', valid: true });
   });
 
@@ -77,9 +78,10 @@ describe('CatalogMX API Worker routing', () => {
     );
 
     expect(response.status).toBe(400);
+    expect(response.headers.get('X-Catalog-Version')).toBe('2026-01-05');
   });
 
-  test('routes calculation and catalog endpoint families', async () => {
+  test('fails closed for pending ISR data while routing catalog endpoints', async () => {
     const database = new RecordingD1();
     const isr = await workerFetch(
       request('/api/v1/calc/isr', {
@@ -93,7 +95,9 @@ describe('CatalogMX API Worker routing', () => {
       { ...authorizedEnv(), CATALOG_DB: database }
     );
 
-    expect(isr.status).toBe(200);
+    expect(isr.status).toBe(422);
+    expect(isr.headers.get('X-Catalog-Version')).toBe('2026-01-05');
+    expect(await bodyOf(isr)).toMatchObject({ error: { code: 'unsupported_fiscal_data' } });
     expect(catalog.status).toBe(200);
   });
 
@@ -107,6 +111,7 @@ describe('CatalogMX API Worker routing', () => {
     );
 
     expect(response.status).toBe(200);
+    expect(response.headers.get('X-Catalog-Version')).toBe('2026-01-05');
     expect(await bodyOf(response)).toMatchObject({ regla_aplicada: { clase_riesgo: 1 } });
   });
 

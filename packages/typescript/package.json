@@ -1,6 +1,6 @@
 {
   "name": "catalogmx",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Enterprise Mexican library: validators, generators, tax calculators, CFDI tooling and official SAT/INEGI/SEPOMEX/Banxico/IFT/CNBV catalogs. Works in Node.js and browsers.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,9 +21,17 @@
       "types": "./dist/catalogs/index.d.ts",
       "default": "./dist/catalogs/index.js"
     },
+    "./catalogs/preload": {
+      "types": "./dist/catalogs/preload.d.ts",
+      "default": "./dist/catalogs/preload.js"
+    },
     "./cfdi": {
       "types": "./dist/cfdi/index.d.ts",
       "default": "./dist/cfdi/index.js"
+    },
+    "./fiscal": {
+      "types": "./dist/fiscal/index.d.ts",
+      "default": "./dist/fiscal/index.js"
     },
     "./utils": {
       "types": "./dist/utils/index.d.ts",
@@ -35,9 +43,15 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "npm run check:catalog-data && tsc && node scripts/copy-shared-data.mjs",
+    "check:catalog-data": "node scripts/generate-bundled-catalog-data.mjs --check",
     "clean": "rm -rf dist",
-    "prebuild": "npm run clean",
+    "generate:catalog-data": "node scripts/generate-bundled-catalog-data.mjs",
+    "prebuild": "npm run clean && npm run generate:catalog-data",
+    "prelint": "npm run generate:catalog-data",
+    "pretest": "npm run generate:catalog-data",
+    "pretest:coverage": "npm run generate:catalog-data",
+    "pretypecheck": "npm run generate:catalog-data",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",

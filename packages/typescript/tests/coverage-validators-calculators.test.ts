@@ -882,20 +882,20 @@ describe('IMSS Calculator coverage - uncovered lines', () => {
     expect(clases[0]).toHaveProperty('prima');
   });
 
-  // Modalidad 40 salary bounds
-  test('calcularModalidad40 clamps salary to minimum (line 319-320)', () => {
-    const result = IMSSCalculator.calcularModalidad40(1, 2025);
-    expect(result.salario_base_cotizacion).toBeGreaterThan(1);
+  test('calcularModalidad40 rejects salary below last registered SBC', () => {
+    expect(() => IMSSCalculator.calcularModalidad40(1, 5000, 2025)).toThrow(
+      'no puede ser menor al último SBC'
+    );
   });
 
-  test('calcularModalidad40 clamps salary to maximum (line 321-322)', () => {
-    const result = IMSSCalculator.calcularModalidad40(999999, 2025);
+  test('calcularModalidad40 clamps salary to maximum', () => {
+    const result = IMSSCalculator.calcularModalidad40(999999, 10000, 2025);
     expect(result.salario_base_cotizacion).toBeLessThan(999999);
   });
 
   // Cuotas with salary below 3 UMAs (else branch lines 245-248)
-  test('calcularCuotasObreroPatronales with low salary (lines 245-248)', () => {
-    const result = IMSSCalculator.calcularCuotasObreroPatronales(50, 30, 2025, 1);
+  test('calcularCuotasObreroPatronales below the 3 UMA excess threshold (lines 245-248)', () => {
+    const result = IMSSCalculator.calcularCuotasObreroPatronales(278.8, 30, 2025, 1);
     expect(result.cuotas_patron.enfermedad_mat_excedente).toBe(0);
     expect(result.cuotas_trabajador.enfermedad_mat_excedente).toBe(0);
   });

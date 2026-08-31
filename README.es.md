@@ -491,4 +491,4 @@ Bancos:              110
 
 ---
 
-**catalogmx** v0.5.0 | Febrero 2026 | Hecho para la comunidad de desarrolladores mexicanos
+**catalogmx** v0.7.0 | Agosto 2026 | Hecho para la comunidad de desarrolladores mexicanos

@@ -1,7 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 
-import { calcularCostoTotal, type CostoTotalResult } from '../src/calculators/worker-cost-calculator';
+import {
+  calcularCostoTotal,
+  type CostoTotalResult,
+} from '../src/calculators/worker-cost-calculator';
 import type { IMSSYear } from '../src/calculators/imss-calculator';
 
 type WorkerCostVector = {
@@ -17,7 +20,10 @@ type WorkerCostVector = {
   expected: CostoTotalResult;
 };
 
-const vectorsPath = path.resolve(__dirname, '../../shared-data/tests/costo_trabajador_vectors.json');
+const vectorsPath = path.resolve(
+  __dirname,
+  '../../shared-data/tests/costo_trabajador_vectors.json'
+);
 const vectors: WorkerCostVector[] = JSON.parse(fs.readFileSync(vectorsPath, 'utf-8'));
 
 const round = (value: number) => Number(value.toFixed(6));
@@ -40,5 +46,26 @@ describe('Worker cost shared vectors', () => {
         expect(round(actual)).toBe(expectedValue);
       }
     }
+  });
+
+  test.each([
+    ['antiguedad_anos', -1],
+    ['antiguedad_anos', 1.5],
+    ['antiguedad_anos', true],
+    ['dias_aguinaldo', 14],
+    ['dias_aguinaldo', 15.5],
+    ['dias_aguinaldo', true],
+    ['incluir_ptu', 1],
+    ['porcentaje_ptu', Number.NaN],
+    ['porcentaje_ptu', Number.POSITIVE_INFINITY],
+    ['porcentaje_ptu', -1],
+    ['porcentaje_ptu', 101],
+  ])('rejects invalid fiscal option %s=%s', (name, value) => {
+    expect(() =>
+      calcularCostoTotal({
+        salario_mensual_bruto: 15000,
+        [name]: value,
+      } as unknown as Parameters<typeof calcularCostoTotal>[0])
+    ).toThrow(RangeError);
   });
 });

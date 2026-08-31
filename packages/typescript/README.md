@@ -74,6 +74,13 @@ Published packages:
 
 - `validateClabe()` and `formatClabe()` are pure functions and work in Node.js, browsers, and edge/workers environments.
 - `decodeClabe()` enriches CLABE data with bank/plaza catalogs and requires catalog data loading (SQLite/JSON backend).
+- The npm tarball contains runtime JSON for Node catalog consumers. Browser and
+  Worker consumers must call `preloadSmallCatalogData()` from
+  `catalogmx/catalogs/preload` before using the bundled small SAT Nómina, CFDI,
+  or bank catalogs. Large product/service and full postal catalogs continue to
+  use SQLite/D1-backed adapters. `NominaCfdiCatalog` is a separate SAT
+  Nómina-only profile for the mandated product/service key `84111505`; it is
+  not a partially preloaded `ClaveProdServCatalog`.
 
 ### 📚 Official Catalog Inventory
 

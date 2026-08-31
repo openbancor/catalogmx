@@ -25,5 +25,8 @@
     "ts-jest": "^29.4.1",
     "typescript": "^5.9.2",
     "wrangler": "^4.127.1"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }

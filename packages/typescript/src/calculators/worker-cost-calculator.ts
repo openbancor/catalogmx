@@ -98,6 +98,26 @@ export interface CalcularCostoTotalOptions {
   year?: IMSSYear;
 }
 
+function assertFiscalInputs(
+  antiguedadAnos: number,
+  diasAguinaldo: number,
+  incluirPtu: boolean,
+  porcentajePtu: number
+): void {
+  if (!Number.isInteger(antiguedadAnos) || antiguedadAnos < 0) {
+    throw new RangeError('antiguedad_anos debe ser un entero no negativo');
+  }
+  if (!Number.isInteger(diasAguinaldo) || diasAguinaldo < 15) {
+    throw new RangeError('dias_aguinaldo debe ser un entero mayor o igual a 15');
+  }
+  if (typeof incluirPtu !== 'boolean') {
+    throw new RangeError('incluir_ptu debe ser booleano');
+  }
+  if (!Number.isFinite(porcentajePtu) || porcentajePtu < 0 || porcentajePtu > 100) {
+    throw new RangeError('porcentaje_ptu debe ser un número finito entre 0 y 100');
+  }
+}
+
 /**
  * Calculate the total cost of employing a worker in Mexico
  *
@@ -140,6 +160,8 @@ export function calcularCostoTotal(options: CalcularCostoTotalOptions): CostoTot
     porcentaje_ptu = 10.0,
     year = 2026,
   } = options;
+
+  assertFiscalInputs(antiguedad_anos, dias_aguinaldo, incluir_ptu, porcentaje_ptu);
 
   // 1. Calculate daily wage (assuming 30-day month for calculation purposes)
   const salario_diario = salario_mensual_bruto / 30.0;

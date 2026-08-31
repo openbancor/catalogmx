@@ -8,8 +8,8 @@
 [![PyPI Version](https://img.shields.io/pypi/v/catalogmx)](https://pypi.org/project/catalogmx/)
 [![NPM Version](https://img.shields.io/npm/v/catalogmx)](https://www.npmjs.com/package/catalogmx)
 [![pub.dev Version](https://img.shields.io/pub/v/catalogmx)](https://pub.dev/packages/catalogmx)
-[![Test Coverage](https://img.shields.io/badge/coverage-93.78%25-brightgreen)](https://github.com/openbancor/catalogmx)
-[![Tests Passing](https://img.shields.io/badge/tests-1206%20passing-brightgreen)](https://github.com/openbancor/catalogmx)
+[![Test Coverage](https://img.shields.io/badge/coverage-93.19%25-brightgreen)](https://github.com/openbancor/catalogmx)
+[![Tests Passing](https://img.shields.io/badge/tests-3801%20passing-brightgreen)](https://github.com/openbancor/catalogmx)
 [![License](https://img.shields.io/badge/license-BSD--2--Clause-blue.svg)](LICENSE)
 
 **Languages**: [English](#) | [Español](README.es.md)
@@ -28,7 +28,7 @@
 - **470,000+ Verified Records**: Complete databases with 157K postal codes, 300K localities, 2.4K municipalities
 - **Multi-Platform Support**: Python 3.10+, TypeScript 5.0+, and Dart/Flutter 3.0+ with identical APIs
 - **Type-Safe Implementation**: Full type hints (PEP 604), TypeScript declarations, and Dart null-safety
-- **Enterprise Quality**: 93.78% test coverage (1,206 tests across all platforms), comprehensive documentation, production-ready
+- **Enterprise Quality**: 93.19% Python coverage and 3,800+ passing tests across all platforms, comprehensive documentation, production-ready
 
 ---
 
@@ -117,7 +117,7 @@ dart pub add catalogmx
 **Manual (pubspec.yaml):**
 ```yaml
 dependencies:
-  catalogmx: ^0.5.0
+  catalogmx: ^0.7.0
 ```
 
 **Development:**
@@ -402,7 +402,7 @@ Published packages:
 
 ### Quality Assurance
 
-- **Test Coverage**: 93.78% (926 Python tests + 221 TypeScript tests)
+- **Test Coverage**: 93.19% (1,885 Python tests; TypeScript and Dart suites are also green)
 - **50+ Modules**: 100% test coverage
 - **CI/CD**: Automated testing on Python 3.10-3.13 and Node 18+
 - **Production Validated**: Used in production environments
@@ -729,8 +729,8 @@ def validate_rfc_view(request, rfc_code):
 
 ### Test Coverage
 
-- **Overall Coverage**: 93.78% (Python), ~90% (TypeScript), ~85% (Dart)
-- **Total Tests**: 926 (Python) + 221 (TypeScript) + 59 (Dart) = 1,206
+- **Overall Coverage**: 93.19% (Python; TypeScript and Dart coverage are reported independently)
+- **Total Tests**: 1,885 (Python) + 1,501 (TypeScript) + 415 (Dart) = 3,801
 - **Modules at 100%**: 50+ modules including all core validators
 - **CI/CD**: Automated testing on Python 3.10-3.13, Node.js 18+, and Dart stable/beta
 
@@ -755,7 +755,7 @@ open packages/python/htmlcov/index.html
 
 ### Quality Metrics
 
-- **Test Success Rate**: 100% (1,206 tests across all platforms)
+- **Test Success Rate**: 100% (3,801 tests across all platforms)
 - **Code Quality**: Python (Black + Ruff), TypeScript (ESLint + Prettier), Dart (dart analyze + format)
 - **Type Safety**: Full mypy compliance (Python), TypeScript strict mode, Dart null-safety
 - **Documentation**: Comprehensive inline and external docs
@@ -770,6 +770,7 @@ open packages/python/htmlcov/index.html
 - **[API Reference](docs/api/)** - Complete API documentation
 - **[Testing Guide](docs/testing-coverage.md)** - Test suite and coverage
 - **[Modern Packaging](docs/modern-packaging.md)** - Using uv and pyproject.toml
+- **[0.7 Fiscal Migration](docs/guides/v0.7-fiscal-migration.md)** - IMSS and packaged catalog compatibility changes
 - **[Documentation Index](docs/DOCUMENTATION_INDEX.md)** - Complete documentation hub
 
 ### For Developers
@@ -788,13 +789,13 @@ open packages/python/htmlcov/index.html
 
 ## Roadmap
 
-### Current Version: 0.5.0 (Production Ready)
+### Current Version: 0.7.0 (Production Ready)
 
 **Delivered:**
 - 58 official catalogs with 470K+ records
 - 4 production validators (RFC, CURP, CLABE, NSS)
 - Multi-platform: Python 3.10+, TypeScript 5.0+, Dart/Flutter 3.0+
-- 93.78% test coverage (1,206 tests)
+- 93.19% Python test coverage (3,801 tests across all platforms)
 - SQLite hybrid architecture with lazy loading
 - Comprehensive publishing infrastructure (PyPI, NPM, pub.dev)
 - CI/CD automation with GitHub Actions
@@ -875,4 +876,4 @@ BSD 2-Clause License. See [LICENSE](LICENSE) for details.
 
 ---
 
-**catalogmx v0.5.0** | **Python + TypeScript + Dart** | **1,206 Tests** | **93.78% Coverage** | **Production Ready** | **BSD-2-Clause**
+**catalogmx v0.7.0** | **Python + TypeScript + Dart** | **3,801 Tests** | **93.19% Python Coverage** | **Production Ready** | **BSD-2-Clause**
