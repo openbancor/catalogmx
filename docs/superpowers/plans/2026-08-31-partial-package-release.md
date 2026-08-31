@@ -80,6 +80,7 @@ git commit -m "ci(release): make Maven publication opt-in"
 Add this job-level condition to `publish-maven`:
 
 ```yaml
+    needs: [publish-pubdev, preflight]
     if: needs.preflight.outputs.publish_maven == 'true'
 ```
 
