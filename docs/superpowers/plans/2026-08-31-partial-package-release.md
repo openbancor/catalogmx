@@ -4,24 +4,37 @@
 
 **Goal:** Publish catalogmx 0.7.0 to PyPI, npm, and pub.dev while making Maven Central an explicit, later opt-in step.
 
-**Architecture:** Keep `.github/workflows/publish.yml` as the release pipeline. Tag pushes skip Maven by default; a manual run against an existing version tag can opt into Maven. The GitHub Release is gated on the three requested registries and records whether Maven was skipped or completed.
+**Architecture:** Keep `.github/workflows/publish.yml` as the release pipeline. Tag pushes publish the three registries by default and skip Maven; a manual run against an existing version tag can explicitly skip PyPI only when it supplies the original tag-run artifact and verifies its hashes, or opt into Maven. The GitHub Release is gated on npm/pub.dev plus the selected PyPI/Maven outcomes and records deferred Maven status.
 
 **Tech Stack:** GitHub Actions YAML, GitHub Environments, PyPI/npm/pub.dev OIDC, Gradle Maven Central publishing, `gh`, `actionlint` when available.
 
 ---
 
-### Task 1: Add an explicit release mode
+### Task 1: Add explicit release modes
 
 **Files:**
 - Modify: `.github/workflows/publish.yml:3-15,90-105`
 
-- [ ] **Step 1: Add the manual Maven input and preflight output.**
+- [ ] **Step 1: Add manual PyPI/Maven inputs and preflight outputs.**
 
 Add this trigger input after the existing tag trigger:
 
 ```yaml
   workflow_dispatch:
     inputs:
+      version:
+        description: Version to publish from the selected ref (for example, 0.7.0)
+        required: true
+        type: string
+      source_ref:
+        description: Existing version tag to build (for example, v0.7.0)
+        required: true
+        type: string
+      publish_pypi:
+        description: Publish PyPI for this existing version tag
+        required: true
+        default: false
+        type: boolean
       publish_maven:
         description: Publish Maven Central for this existing version tag
         required: true
@@ -34,6 +47,7 @@ Add `publish_maven` to the preflight outputs and a step that emits `true` only f
 ```yaml
     outputs:
       version: ${{ steps.get-version.outputs.version }}
+      publish_pypi: ${{ steps.release-mode.outputs.publish_pypi }}
       publish_maven: ${{ steps.release-mode.outputs.publish_maven }}
 ```
 
@@ -48,11 +62,15 @@ Add `publish_maven` to the preflight outputs and a step that emits `true` only f
           fi
 ```
 
-- [ ] **Step 2: Remove the Maven environment and credential gate from preflight.**
+- [ ] **Step 2: Verify the existing PyPI version for skip-mode recovery.**
+
+When `publish_pypi=false`, require `pypi_artifact_run_id`, verify that the run is a successful preflight for the exact immutable tag, download its Python artifact, and compare all PyPI files and SHA-256 digests. This prevents a release from claiming PyPI completion when the skip was accidental or points at different bytes.
+
+- [ ] **Step 3: Remove the Maven environment and credential gate from preflight.**
 
 Delete `environment: maven` from `preflight` and delete the `Check Maven Central credentials` step. This keeps Maven secrets unavailable to normal tag runs while preserving all Maven build and artifact verification steps.
 
-- [ ] **Step 3: Verify the trigger and preflight structure.**
+- [ ] **Step 4: Verify the trigger and preflight structure.**
 
 Run:
 
@@ -63,7 +81,7 @@ rg -n "workflow_dispatch|publish_maven|environment: maven|Check Maven Central cr
 
 Expected: the input, output, and mode step exist; `environment: maven` and the credential check appear only in the Maven job after Task 2.
 
-- [ ] **Step 4: Commit the release-mode change.**
+- [ ] **Step 5: Commit the release-mode change.**
 
 ```bash
 git add .github/workflows/publish.yml
@@ -137,7 +155,35 @@ git add .github/workflows/publish.yml
 git commit -m "ci(release): report Maven as pending when deferred"
 ```
 
-### Task 3: Validate, review, merge, and publish
+- [ ] **Step 5: Add post-publication Maven Central verification.**
+
+After a new Maven upload, poll Central until the JAR, sources, javadoc, POM, and module metadata are visible, then compare their SHA-256 digests with the verified build outputs. An existing matching release remains a skip.
+
+### Task 3: Make failed-tag recovery safe
+
+**Files:**
+- Modify: `.github/workflows/publish.yml:5-55,375-400,520-535,640-660`
+
+- [ ] **Step 1: Accept an explicit version for manual runs.**
+
+For `workflow_dispatch`, read `inputs.version`, validate `^[0-9]+\\.[0-9]+\\.[0-9]+$`, require `inputs.source_ref == v${version}`, verify that the tag exists, and check that the checkout commit equals that tag. Tag pushes continue to derive the version from `GITHUB_REF`.
+
+- [ ] **Step 2: Use the verified version and source SHA outputs in downstream jobs.**
+
+The Maven job and GitHub Release job must use the version output from preflight/pub.dev instead of parsing `GITHUB_REF`, and all downstream checkouts must use the source SHA emitted by preflight, so a run started from `master` can recover the existing `v0.7.0` tag without changing it or using a different commit.
+
+- [ ] **Step 3: Fix npm tarball path resolution.**
+
+Set `npm_package="./release/catalogmx-${VERSION}.tgz"` and assert `test -f "$npm_package"` before calculating its digest or publishing. The explicit `./` prevents npm from treating the path as a GitHub package spec.
+
+- [ ] **Step 4: Commit the recovery fix.**
+
+```bash
+git add .github/workflows/publish.yml docs/superpowers/specs/2026-08-31-partial-package-release-design.md docs/superpowers/plans/2026-08-31-partial-package-release.md
+git commit -m "fix(release): recover existing tags with verified npm artifact"
+```
+
+### Task 4: Validate, review, merge, and publish
 
 **Files:**
 - Test: `.github/workflows/publish.yml`
@@ -175,10 +221,23 @@ Record the merged commit SHA, fetch `origin/master`, and confirm it contains bot
 
 - [ ] **Step 6: Create and push `v0.7.0`, then monitor the run.**
 
+For a new release, create and push the tag only after merge:
+
 ```bash
 git tag -a v0.7.0 <merged-sha> -m "Release v0.7.0"
 git push origin v0.7.0
 gh run list --workflow publish.yml --limit 1
 ```
 
+For the already-existing `v0.7.0` tag, run the merged workflow from the `master` ref with `version=0.7.0`, `source_ref=v0.7.0`, `publish_pypi=false`, `pypi_artifact_run_id=33440964241`, and `publish_maven=false`; do not force-update the tag:
+
+```bash
+gh workflow run publish.yml --ref master -f version=0.7.0 -f source_ref=v0.7.0 -f publish_pypi=false -f pypi_artifact_run_id=33440964241 -f publish_maven=false
+```
+
 Expected: PyPI, npm, and pub.dev succeed; Maven is `skipped`; the GitHub Release says Maven is pending. Do not run the Maven opt-in until its four secrets and Central Portal namespace are ready.
+
+### Recovery evidence captured
+
+- The original tag run is `33440964241`, with a successful `Preflight Checks` job at the exact `v0.7.0` commit and an unexpired `catalogmx-python-0.7.0` artifact.
+- Its wheel and source distribution SHA-256 digests match the immutable PyPI `0.7.0` release. The recovery dispatch must pass this run ID as `pypi_artifact_run_id`.
