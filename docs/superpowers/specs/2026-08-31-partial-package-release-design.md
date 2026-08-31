@@ -21,7 +21,7 @@ The GitHub Release is created after PyPI, npm, and pub.dev succeed, provided Mav
 - Preflight outputs the selected modes and the validated source SHA. When PyPI is disabled, it downloads the verified artifact from the identified tag run and requires every PyPI file and SHA-256 digest to match before allowing npm/pub.dev recovery to proceed. Downstream jobs check out that SHA rather than re-resolving the tag.
 - `publish-maven` runs only when the output is `true`, uses environment `maven`, and fails closed if any of the four Maven secrets is absent.
 - `publish-npm` and `publish-pubdev` can continue when PyPI is intentionally skipped, but not when preflight or any enabled upstream job fails. `create-release` requires successful npm and pub.dev plus successful or intentionally skipped PyPI/Maven. It writes explicit registry status to the release notes.
-- Existing registry checks remain authoritative: an existing version with different bytes fails, while an exact match is skipped.
+- Existing registry checks remain authoritative: an existing version with different or malformed bytes fails, while an exact match is skipped. A new PyPI upload is polled and rechecked against the verified distributions before the release job can proceed.
 
 ## Security and failure handling
 

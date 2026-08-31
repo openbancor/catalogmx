@@ -502,6 +502,65 @@ jobs:
           skip-existing: true
           verbose: true
 
+      - name: Verify PyPI release after publication
+        if: steps.existing.outputs.exists != 'true'
+        env:
+          VERSION: ${{ needs.preflight.outputs.version }}
+        run: |
+          set -euo pipefail
+          metadata_file=$(mktemp)
+          deadline=$((SECONDS + 300))
+          while :; do
+            http_code=$(curl --silent --show-error --location --output "$metadata_file" --write-out '%{http_code}' "https://pypi.org/pypi/catalogmx/json")
+            case "$http_code" in
+              200) break ;;
+              404) ;;
+              *) echo "Unexpected PyPI metadata response: HTTP ${http_code}" >&2; exit 1 ;;
+            esac
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              echo "PyPI release ${VERSION} did not become visible within 5 minutes" >&2
+              exit 1
+            fi
+            sleep 10
+          done
+          python - "$metadata_file" packages/python/dist "$VERSION" <<'PY'
+          import hashlib
+          import json
+          import sys
+          from pathlib import Path
+
+          metadata_path, dist_dir, version = sys.argv[1:]
+          releases = json.loads(Path(metadata_path).read_text()).get("releases", {}).get(version, [])
+          remote = {}
+          for item in releases:
+              filename = item.get("filename")
+              if not filename:
+                  raise SystemExit("PyPI release contains a file without a filename")
+              if filename in remote:
+                  raise SystemExit(f"PyPI release contains duplicate filename: {filename}")
+              digest = item.get("digests", {}).get("sha256")
+              if not digest:
+                  raise SystemExit(f"PyPI release file lacks a SHA-256 digest: {filename}")
+              remote[filename] = digest
+          local_paths = sorted(path for path in Path(dist_dir).iterdir() if path.is_file())
+          if not local_paths:
+              raise SystemExit("no Python distributions found")
+          local_names = {path.name for path in local_paths}
+          if set(remote) != local_names:
+              raise SystemExit(
+                  f"PyPI post-publication files do not match the verified artifact: "
+                  f"remote={sorted(remote)}, local={sorted(local_names)}"
+              )
+          mismatches = []
+          for path in local_paths:
+              digest = hashlib.sha256(path.read_bytes()).hexdigest()
+              if remote[path.name] != digest:
+                  mismatches.append(f"{path.name}: local {digest}, PyPI {remote[path.name]}")
+          if mismatches:
+              raise SystemExit("PyPI post-publication digest mismatch: " + "; ".join(mismatches))
+          print(f"PyPI catalogmx {version} is visible and matches the verified artifacts")
+          PY
+
   # Publish to NPM
   publish-npm:
     name: Publish to NPM
