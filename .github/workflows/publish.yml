@@ -39,6 +39,7 @@ jobs:
       actions: read
     outputs:
       version: ${{ steps.get-version.outputs.version }}
+      source_sha: ${{ steps.get-version.outputs.source_sha }}
       publish_pypi: ${{ steps.release-mode.outputs.publish_pypi }}
       publish_maven: ${{ steps.release-mode.outputs.publish_maven }}
 
@@ -81,6 +82,7 @@ jobs:
             exit 1
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "source_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           echo "Publishing version: $VERSION"
 
       - name: Select release modes
@@ -116,11 +118,13 @@ jobs:
           fi
           run_api="repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}"
           event=$(gh api "$run_api" --jq '.event')
+          workflow_name=$(gh api "$run_api" --jq '.name')
+          workflow_path=$(gh api "$run_api" --jq '.path')
           head_branch=$(gh api "$run_api" --jq '.head_branch')
           head_sha=$(gh api "$run_api" --jq '.head_sha')
           preflight_conclusion=$(gh api "${run_api}/jobs?per_page=100" --paginate --jq '.jobs[] | select(.name == "Preflight Checks") | .conclusion' | head -n 1)
           expected_sha=$(git rev-parse HEAD)
-          if [ "$event" != "push" ] || [ "$head_branch" != "$SOURCE_REF" ] || [ "$head_sha" != "$expected_sha" ]; then
+          if [ "$event" != "push" ] || [ "$workflow_name" != "Publish to PyPI, NPM, pub.dev, and Maven Central" ] || [ "$workflow_path" != ".github/workflows/publish.yml" ] || [ "$head_branch" != "$SOURCE_REF" ] || [ "$head_sha" != "$expected_sha" ]; then
             echo "Recovery artifact run ${RUN_ID} is not the tag push for ${SOURCE_REF} at ${expected_sha}" >&2
             exit 1
           fi
@@ -555,7 +559,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          ref: ${{ inputs.source_ref || github.ref }}
+          ref: ${{ needs.preflight.outputs.source_sha }}
 
       - name: Download verified Dart source
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
@@ -659,7 +663,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          ref: ${{ inputs.source_ref || github.ref }}
+          ref: ${{ needs.preflight.outputs.source_sha }}
 
       - name: Get version
         id: get-version
@@ -837,7 +841,7 @@ jobs:
   create-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: [publish-pypi, publish-npm, publish-pubdev, publish-maven]
+    needs: [preflight, publish-pypi, publish-npm, publish-pubdev, publish-maven]
     if: >-
       always() &&
       (needs.publish-pypi.result == 'success' || needs.publish-pypi.result == 'skipped') &&
@@ -850,7 +854,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          ref: ${{ inputs.source_ref || github.ref }}
+          ref: ${{ needs.preflight.outputs.source_sha }}
 
       - name: Get version
         id: get-version

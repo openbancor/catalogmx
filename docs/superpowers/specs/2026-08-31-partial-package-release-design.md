@@ -18,7 +18,7 @@ The GitHub Release is created after PyPI, npm, and pub.dev succeed, provided Mav
 
 - `push` tags matching `v*.*.*` set `publish_maven=false`.
 - `workflow_dispatch` exposes required `version` and `source_ref` inputs plus required boolean `publish_pypi` and `publish_maven` inputs, both defaulting to `false`; `source_ref` must be exactly `v${version}` and resolve to an existing tag. When `publish_pypi=false`, `pypi_artifact_run_id` must identify a tag push at the same commit with a successful preflight. This supports recovering a failed existing tag without rewriting it or building bytes from a different branch.
-- Preflight outputs both selected modes. When PyPI is disabled, it downloads the verified artifact from the identified tag run and requires every PyPI file and SHA-256 digest to match before allowing npm/pub.dev recovery to proceed.
+- Preflight outputs the selected modes and the validated source SHA. When PyPI is disabled, it downloads the verified artifact from the identified tag run and requires every PyPI file and SHA-256 digest to match before allowing npm/pub.dev recovery to proceed. Downstream jobs check out that SHA rather than re-resolving the tag.
 - `publish-maven` runs only when the output is `true`, uses environment `maven`, and fails closed if any of the four Maven secrets is absent.
 - `publish-npm` and `publish-pubdev` can continue when PyPI is intentionally skipped, but not when preflight or any enabled upstream job fails. `create-release` requires successful npm and pub.dev plus successful or intentionally skipped PyPI/Maven. It writes explicit registry status to the release notes.
 - Existing registry checks remain authoritative: an existing version with different bytes fails, while an exact match is skipped.
@@ -29,7 +29,7 @@ OIDC remains the authentication mechanism for PyPI, npm, and pub.dev. Maven secr
 
 The npm publish path uses an explicit `./release/...tgz` path. Without the `./` prefix, npm interprets a relative string such as `release/catalogmx-0.7.0.tgz` as a GitHub package spec and attempts an SSH Git lookup. PyPI recovery is bound to a successful preflight artifact from the exact immutable tag. Maven Central publication polls until all files are visible and compares their SHA-256 digests with the verified build before reporting success.
 
-Manual recovery checkouts use `source_ref` and archive `HEAD`, so all verified artifacts and the release metadata come from the same immutable tag commit.
+Manual recovery preflight resolves `source_ref` once, validates its commit, and archives `HEAD`; downstream jobs use the emitted source SHA, so all verified artifacts and release metadata come from the same immutable tag commit even if a tag is later moved.
 
 ## Verification
 

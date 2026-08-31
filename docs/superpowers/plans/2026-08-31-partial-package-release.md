@@ -168,9 +168,9 @@ After a new Maven upload, poll Central until the JAR, sources, javadoc, POM, and
 
 For `workflow_dispatch`, read `inputs.version`, validate `^[0-9]+\\.[0-9]+\\.[0-9]+$`, require `inputs.source_ref == v${version}`, verify that the tag exists, and check that the checkout commit equals that tag. Tag pushes continue to derive the version from `GITHUB_REF`.
 
-- [ ] **Step 2: Use the verified version output in downstream jobs.**
+- [ ] **Step 2: Use the verified version and source SHA outputs in downstream jobs.**
 
-The Maven job and GitHub Release job must use the version output from preflight/pub.dev instead of parsing `GITHUB_REF`, and all manual-run checkouts must use `inputs.source_ref`, so a run started from `master` can recover the existing `v0.7.0` tag without changing it or using a different commit.
+The Maven job and GitHub Release job must use the version output from preflight/pub.dev instead of parsing `GITHUB_REF`, and all downstream checkouts must use the source SHA emitted by preflight, so a run started from `master` can recover the existing `v0.7.0` tag without changing it or using a different commit.
 
 - [ ] **Step 3: Fix npm tarball path resolution.**
 
