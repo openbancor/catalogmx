@@ -236,3 +236,8 @@ gh workflow run publish.yml --ref master -f version=0.7.0 -f source_ref=v0.7.0 -
 ```
 
 Expected: PyPI, npm, and pub.dev succeed; Maven is `skipped`; the GitHub Release says Maven is pending. Do not run the Maven opt-in until its four secrets and Central Portal namespace are ready.
+
+### Recovery evidence captured
+
+- The original tag run is `33440964241`, with a successful `Preflight Checks` job at the exact `v0.7.0` commit and an unexpired `catalogmx-python-0.7.0` artifact.
+- Its wheel and source distribution SHA-256 digests match the immutable PyPI `0.7.0` release. The recovery dispatch must pass this run ID as `pypi_artifact_run_id`.
