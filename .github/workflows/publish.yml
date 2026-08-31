@@ -6,6 +6,23 @@ on:
       - 'v*.*.*'
   workflow_dispatch:
     inputs:
+      version:
+        description: Version to publish from the selected ref (for example, 0.7.0)
+        required: true
+        type: string
+      source_ref:
+        description: Existing version tag to build (for example, v0.7.0)
+        required: true
+        type: string
+      publish_pypi:
+        description: Publish PyPI for this existing version tag
+        required: true
+        default: false
+        type: boolean
+      pypi_artifact_run_id:
+        description: Prior tag-run ID containing the verified PyPI artifact for recovery
+        required: false
+        type: string
       publish_maven:
         description: Publish Maven Central for this existing version tag
         required: true
@@ -17,27 +34,63 @@ jobs:
   preflight:
     name: Preflight Checks
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
     outputs:
       version: ${{ steps.get-version.outputs.version }}
+      publish_pypi: ${{ steps.release-mode.outputs.publish_pypi }}
       publish_maven: ${{ steps.release-mode.outputs.publish_maven }}
 
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.source_ref || github.ref }}
 
       - name: Get version from tag
         id: get-version
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          VERSION_INPUT: ${{ inputs.version }}
+          SOURCE_REF_INPUT: ${{ inputs.source_ref }}
         run: |
-          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Invalid release tag: $GITHUB_REF_NAME"
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            VERSION="$VERSION_INPUT"
+            SOURCE_REF="$SOURCE_REF_INPUT"
+            if [[ "$SOURCE_REF" != "v${VERSION}" ]]; then
+              echo "Manual recovery must build the matching version tag: v${VERSION}" >&2
+              exit 1
+            fi
+            if ! git rev-parse --verify --quiet "refs/tags/${SOURCE_REF}^{commit}" >/dev/null; then
+              echo "Version tag does not exist: ${SOURCE_REF}" >&2
+              exit 1
+            fi
+            if [[ "$(git rev-parse HEAD)" != "$(git rev-parse "refs/tags/${SOURCE_REF}^{commit}")" ]]; then
+              echo "Checked out commit does not match version tag: ${SOURCE_REF}" >&2
+              exit 1
+            fi
+          else
+            if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Invalid release tag: $GITHUB_REF_NAME"
+              exit 1
+            fi
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          fi
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid release version: $VERSION"
             exit 1
           fi
-          VERSION="${GITHUB_REF#refs/tags/v}"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Publishing version: $VERSION"
 
-      - name: Select Maven release mode
+      - name: Select release modes
         id: release-mode
         run: |
+          if [[ "${{ github.event_name }}" == "push" || ("${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.publish_pypi }}" == "true") ]]; then
+            echo "publish_pypi=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish_pypi=false" >> "$GITHUB_OUTPUT"
+          fi
           if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.publish_maven }}" == "true" ]]; then
             echo "publish_maven=true" >> "$GITHUB_OUTPUT"
           else
@@ -48,6 +101,89 @@ jobs:
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
+
+      - name: Validate recovery artifact run
+        if: steps.release-mode.outputs.publish_pypi != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ inputs.pypi_artifact_run_id }}
+          SOURCE_REF: ${{ inputs.source_ref }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$RUN_ID" =~ ^[0-9]+$ ]]; then
+            echo "A numeric pypi_artifact_run_id is required when PyPI publication is skipped" >&2
+            exit 1
+          fi
+          run_api="repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}"
+          event=$(gh api "$run_api" --jq '.event')
+          head_branch=$(gh api "$run_api" --jq '.head_branch')
+          head_sha=$(gh api "$run_api" --jq '.head_sha')
+          preflight_conclusion=$(gh api "${run_api}/jobs?per_page=100" --paginate --jq '.jobs[] | select(.name == "Preflight Checks") | .conclusion' | head -n 1)
+          expected_sha=$(git rev-parse HEAD)
+          if [ "$event" != "push" ] || [ "$head_branch" != "$SOURCE_REF" ] || [ "$head_sha" != "$expected_sha" ]; then
+            echo "Recovery artifact run ${RUN_ID} is not the tag push for ${SOURCE_REF} at ${expected_sha}" >&2
+            exit 1
+          fi
+          if [ "$preflight_conclusion" != "success" ]; then
+            echo "Recovery artifact run ${RUN_ID} does not have a successful preflight job" >&2
+            exit 1
+          fi
+          echo "Recovery artifact run ${RUN_ID} is the successful preflight for ${SOURCE_REF} at ${expected_sha}"
+
+      - name: Download verified PyPI artifact from recovery run
+        if: steps.release-mode.outputs.publish_pypi != 'true'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: catalogmx-python-${{ steps.get-version.outputs.version }}
+          path: packages/python/recovery-dist
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.pypi_artifact_run_id }}
+
+      - name: Verify existing PyPI release for recovery
+        if: steps.release-mode.outputs.publish_pypi != 'true'
+        env:
+          VERSION: ${{ steps.get-version.outputs.version }}
+        run: |
+          set -euo pipefail
+          metadata_file=$(mktemp)
+          http_code=$(curl --silent --show-error --location --output "$metadata_file" --write-out '%{http_code}' "https://pypi.org/pypi/catalogmx/json")
+          if [ "$http_code" != "200" ]; then
+            echo "Cannot verify existing PyPI release: HTTP $http_code" >&2
+            exit 1
+          fi
+          python - "$metadata_file" packages/python/recovery-dist "$VERSION" <<'PY'
+          import hashlib
+          import json
+          import sys
+          from pathlib import Path
+
+          metadata_path, dist_dir, version = sys.argv[1:]
+          metadata = json.loads(Path(metadata_path).read_text())
+          releases = metadata.get("releases", {}).get(version, [])
+          remote = {
+              item["filename"]: item["digests"]["sha256"]
+              for item in releases
+              if item.get("filename") and item.get("digests", {}).get("sha256")
+          }
+          local_paths = sorted(path for path in Path(dist_dir).iterdir() if path.is_file())
+          if not local_paths:
+              raise SystemExit("recovery run has no Python distributions")
+          local_names = {path.name for path in local_paths}
+          if set(remote) != local_names:
+              raise SystemExit(
+                  f"PyPI release files do not match the verified recovery artifact: "
+                  f"remote={sorted(remote)}, local={sorted(local_names)}"
+              )
+          mismatches = []
+          for path in local_paths:
+              digest = hashlib.sha256(path.read_bytes()).hexdigest()
+              if remote[path.name] != digest:
+                  mismatches.append(f"{path.name}: recovery {digest}, PyPI {remote[path.name]}")
+          if mismatches:
+              raise SystemExit("PyPI has different immutable artifacts: " + "; ".join(mismatches))
+          print(f"PyPI catalogmx {version} matches the verified tag-run artifacts; recovery will skip its upload")
+          PY
 
       - name: Set up Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
@@ -197,7 +333,7 @@ jobs:
       - name: Archive verified Dart source
         run: |
           mkdir -p release
-          git archive --format=tar.gz --prefix=packages/dart/ "$GITHUB_SHA" packages/dart > "release/catalogmx-dart-${{ steps.get-version.outputs.version }}.tar.gz"
+          git archive --format=tar.gz --prefix=packages/dart/ HEAD packages/dart > "release/catalogmx-dart-${{ steps.get-version.outputs.version }}.tar.gz"
 
       - name: Archive verified Maven artifacts
         run: |
@@ -247,6 +383,7 @@ jobs:
     name: Publish to PyPI
     runs-on: ubuntu-latest
     needs: preflight
+    if: needs.preflight.outputs.publish_pypi == 'true'
     outputs:
       version: ${{ needs.preflight.outputs.version }}
     environment: pypi
@@ -346,9 +483,13 @@ jobs:
   publish-npm:
     name: Publish to NPM
     runs-on: ubuntu-latest
-    needs: publish-pypi
+    needs: [preflight, publish-pypi]
+    if: >-
+      always() &&
+      needs.preflight.result == 'success' &&
+      (needs.publish-pypi.result == 'success' || needs.publish-pypi.result == 'skipped')
     outputs:
-      version: ${{ needs.publish-pypi.outputs.version }}
+      version: ${{ needs.preflight.outputs.version }}
     environment: npm
     permissions:
       contents: read
@@ -365,14 +506,15 @@ jobs:
       - name: Download verified release artifacts
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
-          name: catalogmx-npm-${{ needs.publish-pypi.outputs.version }}
+          name: catalogmx-npm-${{ needs.preflight.outputs.version }}
           path: release
 
       - name: Publish to NPM
         env:
-          VERSION: ${{ needs.publish-pypi.outputs.version }}
+          VERSION: ${{ needs.preflight.outputs.version }}
         run: |
-          npm_package="release/catalogmx-${VERSION}.tgz"
+          npm_package="./release/catalogmx-${VERSION}.tgz"
+          test -f "$npm_package"
           local_shasum=$(shasum -a 1 "$npm_package" | awk '{print $1}')
           npm_error=$(mktemp)
           if ! remote_shasum=$(npm view "catalogmx@${VERSION}" dist.shasum 2>"$npm_error"); then
@@ -398,9 +540,13 @@ jobs:
   publish-pubdev:
     name: Publish to pub.dev
     runs-on: ubuntu-latest
-    needs: publish-npm
+    needs: [preflight, publish-npm]
+    if: >-
+      always() &&
+      needs.preflight.result == 'success' &&
+      needs.publish-npm.result == 'success'
     outputs:
-      version: ${{ needs.publish-npm.outputs.version }}
+      version: ${{ needs.preflight.outputs.version }}
     environment: pubdev
     permissions:
       contents: read
@@ -409,16 +555,16 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ inputs.source_ref || github.ref }}
 
       - name: Download verified Dart source
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
-          name: catalogmx-dart-${{ needs.publish-npm.outputs.version }}
+          name: catalogmx-dart-${{ needs.preflight.outputs.version }}
           path: release
 
       - name: Restore verified Dart source
-        run: tar -xzf "release/catalogmx-dart-${{ needs.publish-npm.outputs.version }}.tar.gz" -C .
+        run: tar -xzf "release/catalogmx-dart-${{ needs.preflight.outputs.version }}.tar.gz" -C .
 
       - name: Set up Dart
         uses: dart-lang/setup-dart@7654d458321ee25acccccfdb86cd48bd95768ff1
@@ -431,7 +577,7 @@ jobs:
       - name: Check existing pub.dev version
         id: existing
         env:
-          VERSION: ${{ needs.publish-npm.outputs.version }}
+          VERSION: ${{ needs.preflight.outputs.version }}
         run: |
           python - "$VERSION" <<'PY'
           import hashlib
@@ -513,11 +659,11 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ inputs.source_ref || github.ref }}
 
       - name: Get version
         id: get-version
-        run: echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+        run: echo "version=${{ needs.preflight.outputs.version }}" >> "$GITHUB_OUTPUT"
 
       - name: Check Maven Central credentials
         env:
@@ -631,6 +777,62 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.MAVEN_SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
 
+      - name: Verify newly published Maven Central release
+        if: steps.existing.outputs.exists != 'true'
+        env:
+          VERSION: ${{ steps.get-version.outputs.version }}
+        run: |
+          set -euo pipefail
+          base="https://repo1.maven.org/maven2/com/openbancor/catalogmx/${VERSION}"
+          files=(
+            "catalogmx-${VERSION}.jar"
+            "catalogmx-${VERSION}-sources.jar"
+            "catalogmx-${VERSION}-javadoc.jar"
+            "catalogmx-${VERSION}.pom"
+            "catalogmx-${VERSION}.module"
+          )
+          deadline=$((SECONDS + 600))
+          while :; do
+            ready=true
+            for file in "${files[@]}"; do
+              http_code=$(curl --silent --show-error --location -o /dev/null --write-out '%{http_code}' "${base}/${file}")
+              case "$http_code" in
+                200) ;;
+                404) ready=false ;;
+                *) echo "Unexpected Maven Central response for ${file}: HTTP ${http_code}" >&2; exit 1 ;;
+              esac
+            done
+            if [ "$ready" = true ]; then
+              break
+            fi
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              echo "Maven Central release ${VERSION} did not become visible within 10 minutes" >&2
+              exit 1
+            fi
+            sleep 15
+          done
+
+          verified_dir=$(mktemp -d)
+          for file in "${files[@]}"; do
+            curl --fail --silent --show-error --location "${base}/${file}" -o "${verified_dir}/${file}"
+          done
+          declare -A local_files=(
+            ["catalogmx-${VERSION}.jar"]="packages/kotlin/build/libs/catalogmx-${VERSION}.jar"
+            ["catalogmx-${VERSION}-sources.jar"]="packages/kotlin/build/libs/catalogmx-${VERSION}-sources.jar"
+            ["catalogmx-${VERSION}-javadoc.jar"]="packages/kotlin/build/libs/catalogmx-${VERSION}-javadoc.jar"
+            ["catalogmx-${VERSION}.pom"]="packages/kotlin/build/publications/maven/pom-default.xml"
+            ["catalogmx-${VERSION}.module"]="packages/kotlin/build/publications/maven/module.json"
+          )
+          for file in "${files[@]}"; do
+            remote_sha=$(shasum -a 256 "${verified_dir}/${file}" | awk '{print $1}')
+            local_sha=$(shasum -a 256 "${local_files[$file]}" | awk '{print $1}')
+            if [ "$remote_sha" != "$local_sha" ]; then
+              echo "Maven Central ${file} differs from the verified artifact" >&2
+              exit 1
+            fi
+          done
+          echo "Maven Central ${VERSION} is visible and matches the verified artifacts"
+
   # Create GitHub Release
   create-release:
     name: Create GitHub Release
@@ -638,7 +840,7 @@ jobs:
     needs: [publish-pypi, publish-npm, publish-pubdev, publish-maven]
     if: >-
       always() &&
-      needs.publish-pypi.result == 'success' &&
+      (needs.publish-pypi.result == 'success' || needs.publish-pypi.result == 'skipped') &&
       needs.publish-npm.result == 'success' &&
       needs.publish-pubdev.result == 'success' &&
       (needs.publish-maven.result == 'success' || needs.publish-maven.result == 'skipped')
@@ -647,12 +849,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.source_ref || github.ref }}
 
       - name: Get version
         id: get-version
-        run: |
-          VERSION="${GITHUB_REF#refs/tags/v}"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        run: echo "version=${{ needs.publish-pubdev.outputs.version }}" >> "$GITHUB_OUTPUT"
 
       - name: Extract changelog
         id: changelog
@@ -677,8 +879,13 @@ jobs:
           # Save to file for multiline output
           echo "$CHANGELOG" > changelog.txt
 
-      - name: Annotate Maven publication status
+      - name: Annotate registry publication status
         run: |
+          if [ "${{ needs.publish-pypi.result }}" = "skipped" ]; then
+            printf '\n\nPyPI: existing version verified; upload skipped during recovery.\n' >> changelog.txt
+          else
+            printf '\n\nPyPI: published or already matched the verified artifacts.\n' >> changelog.txt
+          fi
           if [ "${{ needs.publish-maven.result }}" = "skipped" ]; then
             printf '\n\nMaven Central: pending separate opt-in publication.\n' >> changelog.txt
           else
@@ -701,7 +908,11 @@ jobs:
         run: |
           VERSION=${{ steps.get-version.outputs.version }}
           echo "🎉 Successfully published catalogmx v${VERSION} to:"
-          echo "  📦 PyPI:    https://pypi.org/project/catalogmx/${VERSION}/"
+          if [ "${{ needs.publish-pypi.result }}" = "skipped" ]; then
+            echo "  📦 PyPI:    already present (recovery verified): https://pypi.org/project/catalogmx/${VERSION}/"
+          else
+            echo "  📦 PyPI:    https://pypi.org/project/catalogmx/${VERSION}/"
+          fi
           echo "  📦 NPM:     https://www.npmjs.com/package/catalogmx/v/${VERSION}"
           echo "  📦 pub.dev: https://pub.dev/packages/catalogmx/versions/${VERSION}"
           if [ "${{ needs.publish-maven.result }}" = "skipped" ]; then
