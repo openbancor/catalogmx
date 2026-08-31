@@ -469,10 +469,9 @@ jobs:
 
           extra_remote = sorted(set(remote) - {path.name for path in local_paths})
           if extra_remote:
-              all_present = False
-              print(
-                  "PyPI has additional artifacts not produced by this build; "
-                  "publishing with skip-existing: " + ", ".join(extra_remote)
+              raise SystemExit(
+                  "PyPI contains additional immutable artifacts not produced by "
+                  "this build: " + ", ".join(extra_remote)
               )
 
           output = Path(os.environ["GITHUB_OUTPUT"])
@@ -898,6 +897,7 @@ jobs:
           else
             printf '\n\nPyPI: published or already matched the verified artifacts.\n' >> changelog.txt
           fi
+          printf 'NPM: published or already matched the verified artifact.\npub.dev: published or already matched the verified source.\n' >> changelog.txt
           if [ "${{ needs.publish-maven.result }}" = "skipped" ]; then
             printf '\n\nMaven Central: pending separate opt-in publication.\n' >> changelog.txt
           else
