@@ -165,14 +165,17 @@ jobs:
           metadata_path, dist_dir, version = sys.argv[1:]
           metadata = json.loads(Path(metadata_path).read_text())
           releases = metadata.get("releases", {}).get(version, [])
-          remote = {
-              item["filename"]: item.get("digests", {}).get("sha256")
-              for item in releases
-              if item.get("filename")
-          }
-          missing_digests = sorted(name for name, digest in remote.items() if not digest)
-          if missing_digests:
-              raise SystemExit("PyPI release files without SHA-256 digests: " + ", ".join(missing_digests))
+          remote = {}
+          for item in releases:
+              filename = item.get("filename")
+              if not filename:
+                  raise SystemExit("PyPI release contains a file without a filename")
+              if filename in remote:
+                  raise SystemExit(f"PyPI release contains duplicate filename: {filename}")
+              digest = item.get("digests", {}).get("sha256")
+              if not digest:
+                  raise SystemExit(f"PyPI release file lacks a SHA-256 digest: {filename}")
+              remote[filename] = digest
           local_paths = sorted(path for path in Path(dist_dir).iterdir() if path.is_file())
           if not local_paths:
               raise SystemExit("recovery run has no Python distributions")
@@ -447,14 +450,17 @@ jobs:
           metadata_path, dist_dir, version = sys.argv[1:]
           metadata = json.loads(Path(metadata_path).read_text())
           releases = metadata.get("releases", {}).get(version, [])
-          remote = {
-              item["filename"]: item.get("digests", {}).get("sha256")
-              for item in releases
-              if item.get("filename")
-          }
-          missing_digests = sorted(name for name, digest in remote.items() if not digest)
-          if missing_digests:
-              raise SystemExit("PyPI release files without SHA-256 digests: " + ", ".join(missing_digests))
+          remote = {}
+          for item in releases:
+              filename = item.get("filename")
+              if not filename:
+                  raise SystemExit("PyPI release contains a file without a filename")
+              if filename in remote:
+                  raise SystemExit(f"PyPI release contains duplicate filename: {filename}")
+              digest = item.get("digests", {}).get("sha256")
+              if not digest:
+                  raise SystemExit(f"PyPI release file lacks a SHA-256 digest: {filename}")
+              remote[filename] = digest
           local_paths = sorted(Path(dist_dir).glob("*"))
           if not local_paths:
               raise SystemExit("no Python distributions found")
