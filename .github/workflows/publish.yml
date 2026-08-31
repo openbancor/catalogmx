@@ -630,6 +630,10 @@ jobs:
             remote_file=$(mktemp)
             curl --fail --silent --show-error --location "$remote_tarball" -o "$remote_file"
             remote_actual_shasum=$(shasum -a 1 "$remote_file" | awk '{print $1}')
+            if ! cmp --silent "$remote_file" "$npm_package"; then
+              echo "NPM downloaded tarball differs from the verified artifact" >&2
+              exit 1
+            fi
             if [ "$remote_actual_shasum" != "$remote_shasum" ]; then
               echo "NPM metadata digest does not match the downloaded tarball" >&2
               exit 1
@@ -662,7 +666,7 @@ jobs:
                 remote_file=$(mktemp)
                 curl --fail --silent --show-error --location "$remote_tarball" -o "$remote_file"
                 remote_actual_shasum=$(shasum -a 1 "$remote_file" | awk '{print $1}')
-                if [ "$remote_actual_shasum" = "$remote_shasum" ]; then
+                if [ "$remote_actual_shasum" = "$remote_shasum" ] && cmp --silent "$remote_file" "$npm_package"; then
                   break
                 fi
                 echo "NPM registry tarball digest does not match dist.shasum; refusing publication" >&2
