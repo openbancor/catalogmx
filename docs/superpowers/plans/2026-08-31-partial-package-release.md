@@ -22,6 +22,10 @@ Add this trigger input after the existing tag trigger:
 ```yaml
   workflow_dispatch:
     inputs:
+      version:
+        description: Version to publish from the selected ref (for example, 0.7.0)
+        required: true
+        type: string
       publish_maven:
         description: Publish Maven Central for this existing version tag
         required: true
@@ -137,7 +141,31 @@ git add .github/workflows/publish.yml
 git commit -m "ci(release): report Maven as pending when deferred"
 ```
 
-### Task 3: Validate, review, merge, and publish
+### Task 3: Make failed-tag recovery safe
+
+**Files:**
+- Modify: `.github/workflows/publish.yml:5-55,375-400,520-535,640-660`
+
+- [ ] **Step 1: Accept an explicit version for manual runs.**
+
+For `workflow_dispatch`, read `inputs.version`, validate `^[0-9]+\\.[0-9]+\\.[0-9]+$`, and use it for the preflight output. Tag pushes continue to derive the version from `GITHUB_REF`.
+
+- [ ] **Step 2: Use the verified version output in downstream jobs.**
+
+The Maven job and GitHub Release job must use the version output from preflight/pub.dev instead of parsing `GITHUB_REF`, so a manual run from `master` can recover the existing `v0.7.0` tag without changing it.
+
+- [ ] **Step 3: Fix npm tarball path resolution.**
+
+Set `npm_package="./release/catalogmx-${VERSION}.tgz"` and assert `test -f "$npm_package"` before calculating its digest or publishing. The explicit `./` prevents npm from treating the path as a GitHub package spec.
+
+- [ ] **Step 4: Commit the recovery fix.**
+
+```bash
+git add .github/workflows/publish.yml docs/superpowers/specs/2026-08-31-partial-package-release-design.md docs/superpowers/plans/2026-08-31-partial-package-release.md
+git commit -m "fix(release): recover existing tags with verified npm artifact"
+```
+
+### Task 4: Validate, review, merge, and publish
 
 **Files:**
 - Test: `.github/workflows/publish.yml`
@@ -175,10 +203,18 @@ Record the merged commit SHA, fetch `origin/master`, and confirm it contains bot
 
 - [ ] **Step 6: Create and push `v0.7.0`, then monitor the run.**
 
+For a new release, create and push the tag only after merge:
+
 ```bash
 git tag -a v0.7.0 <merged-sha> -m "Release v0.7.0"
 git push origin v0.7.0
 gh run list --workflow publish.yml --limit 1
+```
+
+For the already-existing `v0.7.0` tag, run the merged workflow from the `master` ref with `version=0.7.0` and `publish_maven=false`; do not force-update the tag:
+
+```bash
+gh workflow run publish.yml --ref master -f version=0.7.0 -f publish_maven=false
 ```
 
 Expected: PyPI, npm, and pub.dev succeed; Maven is `skipped`; the GitHub Release says Maven is pending. Do not run the Maven opt-in until its four secrets and Central Portal namespace are ready.

@@ -6,6 +6,10 @@ on:
       - 'v*.*.*'
   workflow_dispatch:
     inputs:
+      version:
+        description: Version to publish from the selected ref (for example, 0.7.0)
+        required: true
+        type: string
       publish_maven:
         description: Publish Maven Central for this existing version tag
         required: true
@@ -27,11 +31,19 @@ jobs:
       - name: Get version from tag
         id: get-version
         run: |
-          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Invalid release tag: $GITHUB_REF_NAME"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ inputs.version }}"
+          else
+            if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Invalid release tag: $GITHUB_REF_NAME"
+              exit 1
+            fi
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          fi
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid release version: $VERSION"
             exit 1
           fi
-          VERSION="${GITHUB_REF#refs/tags/v}"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Publishing version: $VERSION"
 
@@ -372,7 +384,8 @@ jobs:
         env:
           VERSION: ${{ needs.publish-pypi.outputs.version }}
         run: |
-          npm_package="release/catalogmx-${VERSION}.tgz"
+          npm_package="./release/catalogmx-${VERSION}.tgz"
+          test -f "$npm_package"
           local_shasum=$(shasum -a 1 "$npm_package" | awk '{print $1}')
           npm_error=$(mktemp)
           if ! remote_shasum=$(npm view "catalogmx@${VERSION}" dist.shasum 2>"$npm_error"); then
@@ -517,7 +530,7 @@ jobs:
 
       - name: Get version
         id: get-version
-        run: echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+        run: echo "version=${{ needs.preflight.outputs.version }}" >> "$GITHUB_OUTPUT"
 
       - name: Check Maven Central credentials
         env:
@@ -650,9 +663,7 @@ jobs:
 
       - name: Get version
         id: get-version
-        run: |
-          VERSION="${GITHUB_REF#refs/tags/v}"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        run: echo "version=${{ needs.publish-pubdev.outputs.version }}" >> "$GITHUB_OUTPUT"
 
       - name: Extract changelog
         id: changelog
