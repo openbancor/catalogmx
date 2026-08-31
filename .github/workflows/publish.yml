@@ -740,7 +740,10 @@ jobs:
 
           version = sys.argv[1]
           api = json.load(urllib.request.urlopen("https://pub.dev/api/packages/catalogmx"))
-          entry = next((item for item in api.get("versions", []) if item.get("version") == version), None)
+          entries = [item for item in api.get("versions", []) if item.get("version") == version]
+          if len(entries) > 1:
+              raise SystemExit(f"pub.dev metadata contains duplicate version entries: {version}")
+          entry = entries[0] if entries else None
           output = Path(os.environ["GITHUB_OUTPUT"])
           if entry is None:
               output.write_text("exists=false\n")
@@ -759,24 +762,26 @@ jobs:
               and path.name not in ignored
               and not any(part.startswith(".") for part in path.relative_to(package_root).parts)
           }
+          archive_names = set()
           remote_names = set()
           mismatches = []
           with tarfile.open(fileobj=BytesIO(archive), mode="r:gz") as package:
               for member in package.getmembers():
-                  if member.isdir():
-                      continue
-                  if not member.isfile():
-                      raise SystemExit(f"pub.dev archive contains unsupported member: {member.name}")
                   relative = Path(member.name)
                   if relative.is_absolute() or ".." in relative.parts:
                       raise SystemExit(f"pub.dev archive contains unsafe path: {member.name}")
                   while relative.parts and relative.parts[0] == ".":
                       relative = Path(*relative.parts[1:])
                   if not relative.parts:
-                      raise SystemExit("pub.dev archive contains an empty file path")
+                      raise SystemExit("pub.dev archive contains an empty path")
                   relative_name = str(relative)
-                  if relative_name in remote_names:
-                      raise SystemExit(f"pub.dev archive contains duplicate file: {relative_name}")
+                  if relative_name in archive_names:
+                      raise SystemExit(f"pub.dev archive contains duplicate member: {relative_name}")
+                  archive_names.add(relative_name)
+                  if member.isdir():
+                      continue
+                  if not member.isfile():
+                      raise SystemExit(f"pub.dev archive contains unsupported member: {member.name}")
                   remote_names.add(relative_name)
                   local = package_root / relative
                   if not local.is_file():
@@ -838,24 +843,26 @@ jobs:
           }
 
           def verify_archive(archive: bytes) -> None:
+              archive_names = set()
               remote_names = set()
               mismatches = []
               with tarfile.open(fileobj=BytesIO(archive), mode="r:gz") as package:
                   for member in package.getmembers():
-                      if member.isdir():
-                          continue
-                      if not member.isfile():
-                          raise SystemExit(f"pub.dev archive contains unsupported member: {member.name}")
                       relative = Path(member.name)
                       if relative.is_absolute() or ".." in relative.parts:
                           raise SystemExit(f"pub.dev archive contains unsafe path: {member.name}")
                       while relative.parts and relative.parts[0] == ".":
                           relative = Path(*relative.parts[1:])
                       if not relative.parts:
-                          raise SystemExit("pub.dev archive contains an empty file path")
+                          raise SystemExit("pub.dev archive contains an empty path")
                       relative_name = str(relative)
-                      if relative_name in remote_names:
-                          raise SystemExit(f"pub.dev archive contains duplicate file: {relative_name}")
+                      if relative_name in archive_names:
+                          raise SystemExit(f"pub.dev archive contains duplicate member: {relative_name}")
+                      archive_names.add(relative_name)
+                      if member.isdir():
+                          continue
+                      if not member.isfile():
+                          raise SystemExit(f"pub.dev archive contains unsupported member: {member.name}")
                       remote_names.add(relative_name)
                       local = package_root / relative
                       if not local.is_file():
@@ -882,12 +889,25 @@ jobs:
                   if error.code != 404:
                       raise
                   api = {}
-              entry = next((item for item in api.get("versions", []) if item.get("version") == version), None)
+              entries = [item for item in api.get("versions", []) if item.get("version") == version]
+              if len(entries) > 1:
+                  raise SystemExit(f"pub.dev metadata contains duplicate version entries: {version}")
+              entry = entries[0] if entries else None
               archive_url = entry.get("archive_url") if entry else None
               if archive_url:
-                  verify_archive(urllib.request.urlopen(archive_url).read())
-                  print(f"pub.dev catalogmx {version} is visible and matches the verified source")
-                  break
+                  try:
+                      archive = urllib.request.urlopen(archive_url).read()
+                  except urllib.error.HTTPError as error:
+                      if error.code != 404:
+                          raise
+                  else:
+                      try:
+                          verify_archive(archive)
+                      except tarfile.ReadError:
+                          pass
+                      else:
+                          print(f"pub.dev catalogmx {version} is visible and matches the verified source")
+                          break
               if time.monotonic() >= deadline:
                   raise SystemExit(f"pub.dev release {version} did not become visible within 5 minutes")
               time.sleep(10)
