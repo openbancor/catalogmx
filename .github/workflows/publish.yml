@@ -85,7 +85,7 @@ jobs:
       - name: Python - Build and verify distributions
         working-directory: packages/python
         run: |
-          python -m pip install --upgrade build twine
+          python -m pip install --disable-pip-version-check build==1.6.0 twine==7.0.0
           rm -rf dist/ build/ ./*.egg-info
           python -m build
           python -m twine check dist/*
@@ -154,6 +154,12 @@ jobs:
         working-directory: packages/typescript
         run: npm run build
 
+      - name: TypeScript - Pack verified npm artifact
+        working-directory: packages/typescript
+        run: |
+          mkdir -p release
+          npm pack --pack-destination release
+
       - name: Dart - Get dependencies
         working-directory: packages/dart
         run: flutter pub get
@@ -186,44 +192,59 @@ jobs:
         working-directory: packages/kotlin
         run: ./gradlew publishToMavenLocal
 
+      - name: Upload verified Python artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalogmx-python-${{ steps.get-version.outputs.version }}
+          path: packages/python/dist/*
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload verified npm artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalogmx-npm-${{ steps.get-version.outputs.version }}
+          path: packages/typescript/release/*
+          if-no-files-found: error
+          retention-days: 7
+
   # Publish to PyPI
   publish-pypi:
     name: Publish to PyPI
     runs-on: ubuntu-latest
     needs: preflight
+    outputs:
+      version: ${{ needs.preflight.outputs.version }}
     environment: pypi
     permissions:
       contents: read
       id-token: write  # Required for trusted publishing
 
     steps:
-      - uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Install build dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install build twine
+      - name: Download verified release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: catalogmx-python-${{ needs.preflight.outputs.version }}
+          path: packages/python/dist
 
-      - name: Build Python package
-        working-directory: packages/python
+      - name: Install verification dependency
         run: |
-          rm -rf dist/ build/ ./*.egg-info
-          python -m build
+          python -m pip install --disable-pip-version-check twine==7.0.0
 
       - name: Verify distribution
-        working-directory: packages/python
         run: |
-          python -m twine check dist/*
+          python -m twine check packages/python/dist/*
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: packages/python/dist/
+          skip-existing: true
           verbose: true
 
   # Publish to NPM
@@ -231,14 +252,14 @@ jobs:
     name: Publish to NPM
     runs-on: ubuntu-latest
     needs: publish-pypi
+    outputs:
+      version: ${{ needs.publish-pypi.outputs.version }}
     environment: npm
     permissions:
       contents: read
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
@@ -246,28 +267,72 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           package-manager-cache: false
 
-      - name: Install dependencies
-        working-directory: packages/typescript
-        run: npm ci
-
-      - name: Build TypeScript package
-        working-directory: packages/typescript
-        run: npm run build
+      - name: Download verified release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: catalogmx-npm-${{ needs.publish-pypi.outputs.version }}
+          path: release
 
       - name: Publish to NPM
-        working-directory: packages/typescript
-        run: npm publish
+        env:
+          VERSION: ${{ needs.publish-pypi.outputs.version }}
+        run: |
+          npm_package="release/catalogmx-${VERSION}.tgz"
+          local_shasum=$(shasum -a 1 "$npm_package" | awk '{print $1}')
+          remote_shasum=$(npm view "catalogmx@${VERSION}" dist.shasum 2>/dev/null || true)
+          if [ -n "$remote_shasum" ]; then
+            if [ "$remote_shasum" != "$local_shasum" ]; then
+              echo "NPM already contains ${VERSION} with a different artifact"
+              exit 1
+            fi
+            echo "NPM ${VERSION} already matches the verified artifact; skipping"
+            exit 0
+          fi
+          npm publish "$npm_package"
 
   # Publish to pub.dev
   publish-pubdev:
     name: Publish to pub.dev
+    runs-on: ubuntu-latest
     needs: publish-npm
+    outputs:
+      version: ${{ needs.publish-npm.outputs.version }}
+    environment: pubdev
     permissions:
+      contents: read
       id-token: write
-    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
-    with:
-      environment: pubdev
-      working-directory: packages/dart
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@7654d458321ee25acccccfdb86cd48bd95768ff1
+
+      - name: Set up Flutter
+        uses: flutter-actions/setup-flutter@6e2468fd827c4a7337cd4b835a6049b78bc0bd1f
+        with:
+          channel: stable
+
+      - name: Check existing pub.dev version
+        id: existing
+        env:
+          VERSION: ${{ needs.publish-npm.outputs.version }}
+        run: |
+          versions=$(curl --fail --silent --show-error https://pub.dev/api/packages/catalogmx)
+          if jq -e --arg version "$VERSION" '.versions[] | select(.version == $version)' >/dev/null <<< "$versions"; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "pub.dev already contains catalogmx ${VERSION}; skipping immutable publish"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish to pub.dev
+        if: steps.existing.outputs.exists != 'true'
+        working-directory: packages/dart
+        run: |
+          flutter pub get
+          flutter pub publish --dry-run
+          flutter pub publish -f
 
   # Publish to Maven Central
   publish-maven:
@@ -279,6 +344,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Get version
+        id: get-version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+
+      - name: Check existing Maven Central release
+        id: existing
+        env:
+          VERSION: ${{ steps.get-version.outputs.version }}
+        run: |
+          count=$(curl --fail --silent --show-error \
+            "https://search.maven.org/solrsearch/select?q=g:%22com.openbancor%22%20AND%20a:%22catalogmx%22%20AND%20v:%22${VERSION}%22&rows=1&wt=json" \
+            | jq -r '.response.numFound')
+          if [ "$count" -gt 0 ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Maven Central already contains com.openbancor:catalogmx:${VERSION}; skipping immutable publish"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -288,13 +372,10 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Build package
+      - name: Build and publish package
+        if: steps.existing.outputs.exists != 'true'
         working-directory: packages/kotlin
-        run: ./gradlew build
-
-      - name: Publish to Maven Central
-        working-directory: packages/kotlin
-        run: ./gradlew publishAndReleaseToMavenCentral --no-daemon
+        run: ./gradlew build publishAndReleaseToMavenCentral --no-daemon
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
