@@ -8,7 +8,7 @@ Mexican financial and government catalog data library for Kotlin/JVM.
 
 ```kotlin
 dependencies {
-    implementation("com.openbancor:catalogmx:0.5.1")
+    implementation("com.openbancor:catalogmx:0.7.0")
 }
 ```
 
@@ -16,7 +16,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    implementation 'com.openbancor:catalogmx:0.5.1'
+    implementation 'com.openbancor:catalogmx:0.7.0'
 }
 ```
 
@@ -26,7 +26,7 @@ dependencies {
 <dependency>
     <groupId>com.openbancor</groupId>
     <artifactId>catalogmx</artifactId>
-    <version>0.5.1</version>
+    <version>0.7.0</version>
 </dependency>
 ```
 

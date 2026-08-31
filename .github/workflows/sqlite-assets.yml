@@ -83,7 +83,7 @@ jobs:
 
           echo ""
           echo "=== Checking for WAL files (should be none) ==="
-          ls -la *.sqlite3-* 2>/dev/null || echo "✓ No WAL files found"
+          ls -la -- *.sqlite3-* 2>/dev/null || echo "✓ No WAL files found"
 
       - name: Update or Create Release
         env:

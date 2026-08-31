@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'catalogmx'
-  s.version          = '0.5.0'
+  s.version          = '0.7.0'
   s.summary          = 'CatalogMX Flutter plugin for CFDI validation/signing.'
   s.description      = <<-DESC
 CatalogMX provides CFDI validation and signing helpers with native implementations.

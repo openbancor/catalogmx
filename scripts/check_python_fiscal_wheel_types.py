@@ -47,10 +47,19 @@ def main() -> int:
             check=True,
         )
         result = subprocess.run(
-            [python, "-m", "mypy", "--strict", "--disallow-any-expr", str(consumer)],
+            [
+                python,
+                "-m",
+                "mypy",
+                "--strict",
+                "--disallow-any-expr",
+                "--no-incremental",
+                str(consumer),
+            ],
             check=False,
             text=True,
             capture_output=True,
+            cwd=root,
         )
         sys.stdout.write(result.stdout)
         sys.stderr.write(result.stderr)

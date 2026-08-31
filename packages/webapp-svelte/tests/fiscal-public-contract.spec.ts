@@ -34,7 +34,7 @@ test('ISR exposes only its fail-closed audit state', async ({ page }) => {
 	await expect(state).toBeVisible();
 	await expect(state).toContainText('Temporalmente no disponible');
 	await expect(state).toContainText('pendientes de verificación documental');
-	await expect(state.locator('input, select, button, form')).toHaveCount(0);
+	await expect(page.locator('main').locator('input, select, button, form')).toHaveCount(0);
 });
 
 test('calculator landing labels ISR as under audit instead of available', async ({ page }) => {

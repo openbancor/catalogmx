@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import datetime
 import re
+from typing import ClassVar
 
 import unidecode
 
@@ -24,10 +25,10 @@ class RFCGeneral:
             Replace characters in RFC to calculate the checksum
     """
 
-    general_regex = re.compile(r"[A-Z&Ñ]{3,4}[0-9]{6}[A-Z0-9]{2}[0-9A]")
-    date_regex = r"[A-Z&Ñ]{3,4}([0-9]{6})[A-Z0-9]{2}[0-9A]"
-    homoclave_regex = r"[A-Z&Ñ]{3,4}[0-9]{6}([A-Z0-9]{2})[0-9A]"
-    homoclave_characters = "ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789"
+    general_regex: ClassVar[re.Pattern[str]] = re.compile(r"[A-Z&Ñ]{3,4}[0-9]{6}[A-Z0-9]{2}[0-9A]")
+    date_regex: ClassVar[str] = r"[A-Z&Ñ]{3,4}([0-9]{6})[A-Z0-9]{2}[0-9A]"
+    homoclave_regex: ClassVar[str] = r"[A-Z&Ñ]{3,4}[0-9]{6}([A-Z0-9]{2})[0-9A]"
+    homoclave_characters: ClassVar[str] = "ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789"
 
     checksum_table = {
         "0": "00",
@@ -172,7 +173,7 @@ class RFCValidator(RFCGeneral):
         else:
             self._general_validation = False
 
-    def validators(self, strict: bool = True) -> dict:
+    def validators(self, strict: bool = True) -> dict[str, bool]:
         """
         Returns a dictionary with the validations.
         :param strict: If False then checksum test won't be checked.
@@ -200,7 +201,7 @@ class RFCValidator(RFCGeneral):
         :param strict: If True checksum won't be checked:
         :return: True if the RFC is valid, False if the RFC is invalid.
         """
-        return False not in [result for name, result in self.validators(strict=strict).items()]
+        return all(self.validators(strict=strict).values())
 
     is_valid = validate
 
@@ -209,11 +210,11 @@ class RFCValidator(RFCGeneral):
         Checks if the date element in the RFC code is valid
         """
         if self.validate_general_regex():
-            date = re.findall(self.date_regex, self.rfc)
+            date = re.search(self.date_regex, self.rfc)
             try:
                 if not date:
                     raise ValueError()
-                datetime.datetime.strptime(date[0], "%y%m%d")
+                datetime.datetime.strptime(date.group(1), "%y%m%d")
                 return True
             except ValueError:
                 return False
@@ -224,16 +225,13 @@ class RFCValidator(RFCGeneral):
         Checks if the homoclave's first 2 characters are correct.
         """
         if self.validate_general_regex():
-            homoclave = re.findall(self.homoclave_regex, self.rfc)
+            homoclave = re.search(self.homoclave_regex, self.rfc)
             try:
                 if not homoclave:
                     raise ValueError()
-                for character in homoclave[0]:
-                    if character in self.homoclave_characters:
-                        pass
-                    else:
-                        raise ValueError()
-                return True
+                return all(
+                    character in self.homoclave_characters for character in homoclave.group(1)
+                )
             except ValueError:
                 return False
         return False
@@ -650,7 +648,7 @@ class RFCGeneratorUtils(RFCGeneral):
                 result.append(char)
             else:
                 # Convert non-allowed characters via unidecode
-                decoded = unidecode.unidecode(char).upper()
+                decoded = str(unidecode.unidecode(char)).upper()
                 result.append("".join(c for c in decoded if c in cls.allowed_chars or c == " "))
         final = "".join(result)
         return final.strip()
@@ -767,7 +765,11 @@ class RFCGeneratorFisicas(RFCGeneratorUtils):
         else:
             clave = paterno_first[0] if paterno_first else "X"
             # Find first vowel after first letter
-            second_value = list(filter(lambda x: x >= 0, map(paterno_first[1:].find, self.vocales)))
+            second_value = [
+                position
+                for position in (paterno_first[1:].find(vowel) for vowel in self.vocales)
+                if position >= 0
+            ]
             if second_value:
                 clave += paterno_first[min(second_value) + 1]
             else:
@@ -1021,7 +1023,7 @@ class RFCGeneratorMorales(RFCGeneratorUtils):
                 result += " "
             else:
                 # Use unidecode for accented characters
-                decoded = unidecode.unidecode(char)
+                decoded = str(unidecode.unidecode(char))
                 if decoded in self.allowed_chars:
                     result += decoded
 
