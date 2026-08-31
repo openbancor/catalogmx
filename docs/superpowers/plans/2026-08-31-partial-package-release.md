@@ -26,6 +26,10 @@ Add this trigger input after the existing tag trigger:
         description: Version to publish from the selected ref (for example, 0.7.0)
         required: true
         type: string
+      source_ref:
+        description: Existing version tag to build (for example, v0.7.0)
+        required: true
+        type: string
       publish_maven:
         description: Publish Maven Central for this existing version tag
         required: true
@@ -148,11 +152,11 @@ git commit -m "ci(release): report Maven as pending when deferred"
 
 - [ ] **Step 1: Accept an explicit version for manual runs.**
 
-For `workflow_dispatch`, read `inputs.version`, validate `^[0-9]+\\.[0-9]+\\.[0-9]+$`, and use it for the preflight output. Tag pushes continue to derive the version from `GITHUB_REF`.
+For `workflow_dispatch`, read `inputs.version`, validate `^[0-9]+\\.[0-9]+\\.[0-9]+$`, require `inputs.source_ref == v${version}`, verify that the tag exists, and check that the checkout commit equals that tag. Tag pushes continue to derive the version from `GITHUB_REF`.
 
 - [ ] **Step 2: Use the verified version output in downstream jobs.**
 
-The Maven job and GitHub Release job must use the version output from preflight/pub.dev instead of parsing `GITHUB_REF`, so a manual run from `master` can recover the existing `v0.7.0` tag without changing it.
+The Maven job and GitHub Release job must use the version output from preflight/pub.dev instead of parsing `GITHUB_REF`, and all manual-run checkouts must use `inputs.source_ref`, so a run started from `master` can recover the existing `v0.7.0` tag without changing it or using a different commit.
 
 - [ ] **Step 3: Fix npm tarball path resolution.**
 
@@ -211,10 +215,10 @@ git push origin v0.7.0
 gh run list --workflow publish.yml --limit 1
 ```
 
-For the already-existing `v0.7.0` tag, run the merged workflow from the `master` ref with `version=0.7.0` and `publish_maven=false`; do not force-update the tag:
+For the already-existing `v0.7.0` tag, run the merged workflow from the `master` ref with `version=0.7.0`, `source_ref=v0.7.0`, and `publish_maven=false`; do not force-update the tag:
 
 ```bash
-gh workflow run publish.yml --ref master -f version=0.7.0 -f publish_maven=false
+gh workflow run publish.yml --ref master -f version=0.7.0 -f source_ref=v0.7.0 -f publish_maven=false
 ```
 
 Expected: PyPI, npm, and pub.dev succeed; Maven is `skipped`; the GitHub Release says Maven is pending. Do not run the Maven opt-in until its four secrets and Central Portal namespace are ready.

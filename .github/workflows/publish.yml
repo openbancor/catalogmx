@@ -10,6 +10,10 @@ on:
         description: Version to publish from the selected ref (for example, 0.7.0)
         required: true
         type: string
+      source_ref:
+        description: Existing version tag to build (for example, v0.7.0)
+        required: true
+        type: string
       publish_maven:
         description: Publish Maven Central for this existing version tag
         required: true
@@ -27,12 +31,31 @@ jobs:
 
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.source_ref || github.ref }}
 
       - name: Get version from tag
         id: get-version
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          VERSION_INPUT: ${{ inputs.version }}
+          SOURCE_REF_INPUT: ${{ inputs.source_ref }}
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            VERSION="${{ inputs.version }}"
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            VERSION="$VERSION_INPUT"
+            SOURCE_REF="$SOURCE_REF_INPUT"
+            if [[ "$SOURCE_REF" != "v${VERSION}" ]]; then
+              echo "Manual recovery must build the matching version tag: v${VERSION}" >&2
+              exit 1
+            fi
+            if ! git rev-parse --verify --quiet "refs/tags/${SOURCE_REF}^{commit}" >/dev/null; then
+              echo "Version tag does not exist: ${SOURCE_REF}" >&2
+              exit 1
+            fi
+            if [[ "$(git rev-parse HEAD)" != "$(git rev-parse "refs/tags/${SOURCE_REF}^{commit}")" ]]; then
+              echo "Checked out commit does not match version tag: ${SOURCE_REF}" >&2
+              exit 1
+            fi
           else
             if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
               echo "Invalid release tag: $GITHUB_REF_NAME"
@@ -209,7 +232,7 @@ jobs:
       - name: Archive verified Dart source
         run: |
           mkdir -p release
-          git archive --format=tar.gz --prefix=packages/dart/ "$GITHUB_SHA" packages/dart > "release/catalogmx-dart-${{ steps.get-version.outputs.version }}.tar.gz"
+          git archive --format=tar.gz --prefix=packages/dart/ HEAD packages/dart > "release/catalogmx-dart-${{ steps.get-version.outputs.version }}.tar.gz"
 
       - name: Archive verified Maven artifacts
         run: |
@@ -422,7 +445,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ inputs.source_ref || github.ref }}
 
       - name: Download verified Dart source
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
@@ -526,7 +549,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ inputs.source_ref || github.ref }}
 
       - name: Get version
         id: get-version
@@ -660,6 +683,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.source_ref || github.ref }}
 
       - name: Get version
         id: get-version
