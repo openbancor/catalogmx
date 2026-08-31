@@ -4,7 +4,7 @@
 
 **Goal:** Publish catalogmx 0.7.0 to PyPI, npm, and pub.dev while making Maven Central an explicit, later opt-in step.
 
-**Architecture:** Keep `.github/workflows/publish.yml` as the release pipeline. Tag pushes publish the three registries by default and skip Maven; a manual run against an existing version tag can explicitly skip an already-published PyPI version or opt into Maven. The GitHub Release is gated on npm/pub.dev plus the selected PyPI/Maven outcomes and records deferred Maven status.
+**Architecture:** Keep `.github/workflows/publish.yml` as the release pipeline. Tag pushes publish the three registries by default and skip Maven; a manual run against an existing version tag can explicitly skip PyPI only when it supplies the original tag-run artifact and verifies its hashes, or opt into Maven. The GitHub Release is gated on npm/pub.dev plus the selected PyPI/Maven outcomes and records deferred Maven status.
 
 **Tech Stack:** GitHub Actions YAML, GitHub Environments, PyPI/npm/pub.dev OIDC, Gradle Maven Central publishing, `gh`, `actionlint` when available.
 
@@ -64,7 +64,7 @@ Add `publish_maven` to the preflight outputs and a step that emits `true` only f
 
 - [ ] **Step 2: Verify the existing PyPI version for skip-mode recovery.**
 
-When `publish_pypi=false`, query PyPI metadata and fail unless the requested version exists. This prevents a release from claiming PyPI completion when the skip was accidental.
+When `publish_pypi=false`, require `pypi_artifact_run_id`, verify that the run is a successful preflight for the exact immutable tag, download its Python artifact, and compare all PyPI files and SHA-256 digests. This prevents a release from claiming PyPI completion when the skip was accidental or points at different bytes.
 
 - [ ] **Step 3: Remove the Maven environment and credential gate from preflight.**
 
@@ -229,10 +229,10 @@ git push origin v0.7.0
 gh run list --workflow publish.yml --limit 1
 ```
 
-For the already-existing `v0.7.0` tag, run the merged workflow from the `master` ref with `version=0.7.0`, `source_ref=v0.7.0`, and `publish_maven=false`; do not force-update the tag:
+For the already-existing `v0.7.0` tag, run the merged workflow from the `master` ref with `version=0.7.0`, `source_ref=v0.7.0`, `publish_pypi=false`, `pypi_artifact_run_id=33440964241`, and `publish_maven=false`; do not force-update the tag:
 
 ```bash
-gh workflow run publish.yml --ref master -f version=0.7.0 -f source_ref=v0.7.0 -f publish_maven=false
+gh workflow run publish.yml --ref master -f version=0.7.0 -f source_ref=v0.7.0 -f publish_pypi=false -f pypi_artifact_run_id=33440964241 -f publish_maven=false
 ```
 
 Expected: PyPI, npm, and pub.dev succeed; Maven is `skipped`; the GitHub Release says Maven is pending. Do not run the Maven opt-in until its four secrets and Central Portal namespace are ready.
