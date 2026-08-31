@@ -467,6 +467,14 @@ jobs:
           if mismatches:
               raise SystemExit("PyPI has a different immutable artifact: " + "; ".join(mismatches))
 
+          extra_remote = sorted(set(remote) - {path.name for path in local_paths})
+          if extra_remote:
+              all_present = False
+              print(
+                  "PyPI has additional artifacts not produced by this build; "
+                  "publishing with skip-existing: " + ", ".join(extra_remote)
+              )
+
           output = Path(os.environ["GITHUB_OUTPUT"])
           output.write_text(f"exists={'true' if all_present else 'false'}\n")
           if all_present:
