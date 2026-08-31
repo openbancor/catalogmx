@@ -513,7 +513,21 @@ jobs:
           while :; do
             http_code=$(curl --silent --show-error --location --output "$metadata_file" --write-out '%{http_code}' "https://pypi.org/pypi/catalogmx/json")
             case "$http_code" in
-              200) break ;;
+              200)
+                version_ready=$(python - "$metadata_file" "$VERSION" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          metadata_path, version = sys.argv[1:]
+          releases = json.loads(Path(metadata_path).read_text()).get("releases", {}).get(version, [])
+          print("true" if releases else "false")
+          PY
+                )
+                if [ "$version_ready" = "true" ]; then
+                  break
+                fi
+                ;;
               404) ;;
               *) echo "Unexpected PyPI metadata response: HTTP ${http_code}" >&2; exit 1 ;;
             esac
@@ -592,6 +606,7 @@ jobs:
           path: release
 
       - name: Publish to NPM
+        id: publish
         env:
           VERSION: ${{ needs.preflight.outputs.version }}
         run: |
@@ -614,9 +629,43 @@ jobs:
               exit 1
             fi
             echo "NPM ${VERSION} already matches the verified artifact; skipping"
+            echo "published=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           npm publish "$npm_package"
+          echo "published=true" >> "$GITHUB_OUTPUT"
+
+      - name: Verify NPM release after publication
+        if: steps.publish.outputs.published == 'true'
+        env:
+          VERSION: ${{ needs.preflight.outputs.version }}
+        run: |
+          set -euo pipefail
+          npm_package="./release/catalogmx-${VERSION}.tgz"
+          local_shasum=$(shasum -a 1 "$npm_package" | awk '{print $1}')
+          deadline=$((SECONDS + 300))
+          while :; do
+            npm_error=$(mktemp)
+            if remote_shasum=$(npm view "catalogmx@${VERSION}" dist.shasum 2>"$npm_error"); then
+              if [[ "$remote_shasum" =~ ^[0-9a-f]{40}$ ]]; then
+                break
+              fi
+            elif ! grep -q 'E404' "$npm_error"; then
+              cat "$npm_error" >&2
+              echo "NPM registry evidence unavailable after publication" >&2
+              exit 1
+            fi
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              echo "NPM release ${VERSION} did not become visible within 5 minutes" >&2
+              exit 1
+            fi
+            sleep 10
+          done
+          if [ "$remote_shasum" != "$local_shasum" ]; then
+            echo "NPM post-publication digest mismatch: local ${local_shasum}, NPM ${remote_shasum}" >&2
+            exit 1
+          fi
+          echo "NPM ${VERSION} is visible and matches the verified artifact"
 
   # Publish to pub.dev
   publish-pubdev:
@@ -696,10 +745,21 @@ jobs:
           mismatches = []
           with tarfile.open(fileobj=BytesIO(archive), mode="r:gz") as package:
               for member in package.getmembers():
-                  if not member.isfile():
+                  if member.isdir():
                       continue
-                  relative = Path(member.name.lstrip("./"))
-                  remote_names.add(str(relative))
+                  if not member.isfile():
+                      raise SystemExit(f"pub.dev archive contains unsupported member: {member.name}")
+                  relative = Path(member.name)
+                  if relative.is_absolute() or ".." in relative.parts:
+                      raise SystemExit(f"pub.dev archive contains unsafe path: {member.name}")
+                  while relative.parts and relative.parts[0] == ".":
+                      relative = Path(*relative.parts[1:])
+                  if not relative.parts:
+                      raise SystemExit("pub.dev archive contains an empty file path")
+                  relative_name = str(relative)
+                  if relative_name in remote_names:
+                      raise SystemExit(f"pub.dev archive contains duplicate file: {relative_name}")
+                  remote_names.add(relative_name)
                   local = package_root / relative
                   if not local.is_file():
                       mismatches.append(f"missing local file: {relative}")
@@ -723,12 +783,97 @@ jobs:
           PY
 
       - name: Publish to pub.dev
+        id: publish
         if: steps.existing.outputs.exists != 'true'
         working-directory: packages/dart
         run: |
           flutter pub get
           flutter pub publish --dry-run
           flutter pub publish -f
+          echo "published=true" >> "$GITHUB_OUTPUT"
+
+      - name: Verify pub.dev release after publication
+        if: steps.publish.outputs.published == 'true'
+        env:
+          VERSION: ${{ needs.preflight.outputs.version }}
+        run: |
+          python - "$VERSION" <<'PY'
+          import hashlib
+          import json
+          import sys
+          import tarfile
+          import time
+          import urllib.error
+          import urllib.request
+          from io import BytesIO
+          from pathlib import Path
+
+          version = sys.argv[1]
+          package_root = Path("packages/dart")
+          ignored = {".gitignore", ".pubignore", "pubspec.lock"}
+          expected = {
+              str(path.relative_to(package_root))
+              for path in package_root.rglob("*")
+              if path.is_file()
+              and path.name not in ignored
+              and not any(part.startswith(".") for part in path.relative_to(package_root).parts)
+          }
+
+          def verify_archive(archive: bytes) -> None:
+              remote_names = set()
+              mismatches = []
+              with tarfile.open(fileobj=BytesIO(archive), mode="r:gz") as package:
+                  for member in package.getmembers():
+                      if member.isdir():
+                          continue
+                      if not member.isfile():
+                          raise SystemExit(f"pub.dev archive contains unsupported member: {member.name}")
+                      relative = Path(member.name)
+                      if relative.is_absolute() or ".." in relative.parts:
+                          raise SystemExit(f"pub.dev archive contains unsafe path: {member.name}")
+                      while relative.parts and relative.parts[0] == ".":
+                          relative = Path(*relative.parts[1:])
+                      if not relative.parts:
+                          raise SystemExit("pub.dev archive contains an empty file path")
+                      relative_name = str(relative)
+                      if relative_name in remote_names:
+                          raise SystemExit(f"pub.dev archive contains duplicate file: {relative_name}")
+                      remote_names.add(relative_name)
+                      local = package_root / relative
+                      if not local.is_file():
+                          mismatches.append(f"missing local file: {relative}")
+                          continue
+                      remote_digest = hashlib.sha256(package.extractfile(member).read()).hexdigest()
+                      local_digest = hashlib.sha256(local.read_bytes()).hexdigest()
+                      if remote_digest != local_digest:
+                          mismatches.append(f"{relative}: local {local_digest}, pub.dev {remote_digest}")
+              missing = sorted(expected - remote_names)
+              unexpected = sorted(remote_names - expected)
+              if missing:
+                  mismatches.append("missing from pub.dev: " + ", ".join(missing))
+              if unexpected:
+                  mismatches.append("unexpected files on pub.dev: " + ", ".join(unexpected))
+              if mismatches:
+                  raise SystemExit("pub.dev post-publication mismatch: " + "; ".join(mismatches))
+
+          deadline = time.monotonic() + 300
+          while True:
+              try:
+                  api = json.load(urllib.request.urlopen("https://pub.dev/api/packages/catalogmx"))
+              except urllib.error.HTTPError as error:
+                  if error.code != 404:
+                      raise
+                  api = {}
+              entry = next((item for item in api.get("versions", []) if item.get("version") == version), None)
+              archive_url = entry.get("archive_url") if entry else None
+              if archive_url:
+                  verify_archive(urllib.request.urlopen(archive_url).read())
+                  print(f"pub.dev catalogmx {version} is visible and matches the verified source")
+                  break
+              if time.monotonic() >= deadline:
+                  raise SystemExit(f"pub.dev release {version} did not become visible within 5 minutes")
+              time.sleep(10)
+          PY
 
   # Publish to Maven Central
   publish-maven:
