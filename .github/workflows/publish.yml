@@ -192,6 +192,22 @@ jobs:
         working-directory: packages/kotlin
         run: ./gradlew publishToMavenLocal
 
+      - name: Archive verified Dart source
+        run: |
+          mkdir -p release
+          git archive --format=tar.gz --prefix=packages/dart/ "$GITHUB_SHA" packages/dart > "release/catalogmx-dart-${{ steps.get-version.outputs.version }}.tar.gz"
+
+      - name: Archive verified Maven artifacts
+        run: |
+          mkdir -p release/maven
+          cp packages/kotlin/build/libs/catalogmx-${{ steps.get-version.outputs.version }}.jar release/maven/
+          cp packages/kotlin/build/libs/catalogmx-${{ steps.get-version.outputs.version }}-sources.jar release/maven/
+          cp packages/kotlin/build/libs/catalogmx-${{ steps.get-version.outputs.version }}-javadoc.jar release/maven/
+          cp packages/kotlin/build/publications/maven/pom-default.xml release/maven/
+          cp packages/kotlin/build/publications/maven/module.json release/maven/
+          (cd release/maven && sha256sum -- catalogmx-*.jar pom-default.xml module.json) > release/maven/SHA256SUMS
+          tar -czf "release/catalogmx-kotlin-${{ steps.get-version.outputs.version }}.tar.gz" -C release/maven .
+
       - name: Upload verified Python artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -205,6 +221,22 @@ jobs:
         with:
           name: catalogmx-npm-${{ steps.get-version.outputs.version }}
           path: packages/typescript/release/*
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload verified Dart source
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalogmx-dart-${{ steps.get-version.outputs.version }}
+          path: release/catalogmx-dart-${{ steps.get-version.outputs.version }}.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload verified Maven artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalogmx-kotlin-${{ steps.get-version.outputs.version }}
+          path: release/catalogmx-kotlin-${{ steps.get-version.outputs.version }}.tar.gz
           if-no-files-found: error
           retention-days: 7
 
@@ -357,6 +389,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Download verified Dart source
+        uses: actions/download-artifact@v4
+        with:
+          name: catalogmx-dart-${{ needs.publish-npm.outputs.version }}
+          path: release
+
+      - name: Restore verified Dart source
+        run: tar -xzf "release/catalogmx-dart-${{ needs.publish-npm.outputs.version }}.tar.gz" -C .
 
       - name: Set up Dart
         uses: dart-lang/setup-dart@7654d458321ee25acccccfdb86cd48bd95768ff1
@@ -371,13 +414,49 @@ jobs:
         env:
           VERSION: ${{ needs.publish-npm.outputs.version }}
         run: |
-          versions=$(curl --fail --silent --show-error https://pub.dev/api/packages/catalogmx)
-          if jq -e --arg version "$VERSION" '.versions[] | select(.version == $version)' >/dev/null <<< "$versions"; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "pub.dev already contains catalogmx ${VERSION}; skipping immutable publish"
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-          fi
+          python - "$VERSION" <<'PY'
+          import hashlib
+          import json
+          import os
+          import sys
+          import tarfile
+          import urllib.request
+          from io import BytesIO
+          from pathlib import Path
+
+          version = sys.argv[1]
+          api = json.load(urllib.request.urlopen("https://pub.dev/api/packages/catalogmx"))
+          entry = next((item for item in api.get("versions", []) if item.get("version") == version), None)
+          output = Path(os.environ["GITHUB_OUTPUT"])
+          if entry is None:
+              output.write_text("exists=false\n")
+              raise SystemExit(0)
+
+          archive_url = entry.get("archive_url")
+          if not archive_url:
+              raise SystemExit("pub.dev version has no archive URL")
+          archive = urllib.request.urlopen(archive_url).read()
+          package_root = Path("packages/dart")
+          mismatches = []
+          with tarfile.open(fileobj=BytesIO(archive), mode="r:gz") as package:
+              for member in package.getmembers():
+                  if not member.isfile():
+                      continue
+                  relative = Path(member.name.lstrip("./"))
+                  local = package_root / relative
+                  if not local.is_file():
+                      mismatches.append(f"missing local file: {relative}")
+                      continue
+                  remote_digest = hashlib.sha256(package.extractfile(member).read()).hexdigest()
+                  local_digest = hashlib.sha256(local.read_bytes()).hexdigest()
+                  if remote_digest != local_digest:
+                      mismatches.append(f"{relative}: local {local_digest}, pub.dev {remote_digest}")
+
+          if mismatches:
+              raise SystemExit("pub.dev has a different immutable artifact: " + "; ".join(mismatches))
+          output.write_text("exists=true\n")
+          print(f"pub.dev catalogmx {version} matches the verified source; skipping immutable publish")
+          PY
 
       - name: Publish to pub.dev
         if: steps.existing.outputs.exists != 'true'
@@ -396,25 +475,23 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
 
       - name: Get version
         id: get-version
         run: echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
 
-      - name: Check existing Maven Central release
-        id: existing
-        env:
-          VERSION: ${{ steps.get-version.outputs.version }}
+      - name: Download verified Maven artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: catalogmx-kotlin-${{ steps.get-version.outputs.version }}
+          path: release
+
+      - name: Restore verified Maven artifacts
         run: |
-          count=$(curl --fail --silent --show-error \
-            "https://search.maven.org/solrsearch/select?q=g:%22com.openbancor%22%20AND%20a:%22catalogmx%22%20AND%20v:%22${VERSION}%22&rows=1&wt=json" \
-            | jq -r '.response.numFound')
-          if [ "$count" -gt 0 ]; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "Maven Central already contains com.openbancor:catalogmx:${VERSION}; skipping immutable publish"
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-          fi
+          mkdir -p release/verified
+          tar -xzf "release/catalogmx-kotlin-${{ steps.get-version.outputs.version }}.tar.gz" -C release/verified
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -425,10 +502,71 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Build and publish package
+      - name: Rebuild and compare Maven artifacts
+        working-directory: packages/kotlin
+        run: |
+          ./gradlew build publishToMavenLocal --no-daemon
+          {
+            (cd build/libs && sha256sum "catalogmx-${{ steps.get-version.outputs.version }}.jar" "catalogmx-${{ steps.get-version.outputs.version }}-sources.jar" "catalogmx-${{ steps.get-version.outputs.version }}-javadoc.jar")
+            (cd build/publications/maven && sha256sum pom-default.xml module.json)
+          } > ../../release/current-maven.SHA256SUMS
+          diff -u <(sort ../../release/verified/SHA256SUMS) <(sort ../../release/current-maven.SHA256SUMS)
+
+      - name: Check existing Maven Central release
+        id: existing
+        env:
+          VERSION: ${{ steps.get-version.outputs.version }}
+        run: |
+          set -euo pipefail
+          base="https://repo1.maven.org/maven2/com/openbancor/catalogmx/${VERSION}"
+          files=(
+            "catalogmx-${VERSION}.jar"
+            "catalogmx-${VERSION}-sources.jar"
+            "catalogmx-${VERSION}-javadoc.jar"
+            "catalogmx-${VERSION}.pom"
+            "catalogmx-${VERSION}.module"
+          )
+          present=0
+          for file in "${files[@]}"; do
+            if curl --fail --silent --show-error --location -o /dev/null "${base}/${file}"; then
+              present=$((present + 1))
+            fi
+          done
+          if [ "$present" -eq 0 ]; then
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$present" -ne "${#files[@]}" ]; then
+            echo "Maven Central contains a partial immutable release for ${VERSION}" >&2
+            exit 1
+          fi
+
+          verified_dir=$(mktemp -d)
+          for file in "${files[@]}"; do
+            curl --fail --silent --show-error --location "${base}/${file}" -o "${verified_dir}/${file}"
+          done
+          declare -A local_files=(
+            ["catalogmx-${VERSION}.jar"]="packages/kotlin/build/libs/catalogmx-${VERSION}.jar"
+            ["catalogmx-${VERSION}-sources.jar"]="packages/kotlin/build/libs/catalogmx-${VERSION}-sources.jar"
+            ["catalogmx-${VERSION}-javadoc.jar"]="packages/kotlin/build/libs/catalogmx-${VERSION}-javadoc.jar"
+            ["catalogmx-${VERSION}.pom"]="packages/kotlin/build/publications/maven/pom-default.xml"
+            ["catalogmx-${VERSION}.module"]="packages/kotlin/build/publications/maven/module.json"
+          )
+          for file in "${files[@]}"; do
+            remote_sha=$(shasum -a 256 "${verified_dir}/${file}" | awk '{print $1}')
+            local_sha=$(shasum -a 256 "${local_files[$file]}" | awk '{print $1}')
+            if [ "$remote_sha" != "$local_sha" ]; then
+              echo "Maven Central ${file} differs from the verified artifact" >&2
+              exit 1
+            fi
+          done
+          echo "exists=true" >> "$GITHUB_OUTPUT"
+          echo "Maven Central ${VERSION} matches the verified artifacts; skipping immutable publish"
+
+      - name: Publish to Maven Central
         if: steps.existing.outputs.exists != 'true'
         working-directory: packages/kotlin
-        run: ./gradlew build publishAndReleaseToMavenCentral --no-daemon
+        run: ./gradlew publishAndReleaseToMavenCentral --no-daemon
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
