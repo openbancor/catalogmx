@@ -279,9 +279,17 @@ jobs:
         run: |
           set -euo pipefail
           metadata_file=$(mktemp)
-          if ! curl --fail --silent --show-error "https://pypi.org/pypi/catalogmx/json" > "$metadata_file"; then
+          if ! http_code=$(curl --silent --show-error --location --output "$metadata_file" --write-out '%{http_code}' "https://pypi.org/pypi/catalogmx/json"); then
+            echo "PyPI metadata request failed; refusing to publish without digest evidence" >&2
+            exit 1
+          fi
+          if [ "$http_code" = "404" ]; then
             echo "exists=false" >> "$GITHUB_OUTPUT"
             exit 0
+          fi
+          if [ "$http_code" != "200" ]; then
+            echo "Unexpected PyPI metadata response: HTTP $http_code" >&2
+            exit 1
           fi
           python - "$metadata_file" packages/python/dist "$VERSION" <<'PY'
           import hashlib
