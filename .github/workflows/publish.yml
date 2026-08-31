@@ -514,14 +514,16 @@ jobs:
             http_code=$(curl --silent --show-error --location --output "$metadata_file" --write-out '%{http_code}' "https://pypi.org/pypi/catalogmx/json")
             case "$http_code" in
               200)
-                version_ready=$(python - "$metadata_file" "$VERSION" <<'PY'
+                version_ready=$(python - "$metadata_file" packages/python/dist "$VERSION" <<'PY'
           import json
           import sys
           from pathlib import Path
 
-          metadata_path, version = sys.argv[1:]
+          metadata_path, dist_dir, version = sys.argv[1:]
           releases = json.loads(Path(metadata_path).read_text()).get("releases", {}).get(version, [])
-          print("true" if releases else "false")
+          local_names = {path.name for path in Path(dist_dir).iterdir() if path.is_file()}
+          remote_names = {item.get("filename") for item in releases if item.get("filename")}
+          print("true" if local_names and remote_names == local_names else "false")
           PY
                 )
                 if [ "$version_ready" = "true" ]; then
@@ -624,8 +626,16 @@ jobs:
             fi
           fi
           if [ -n "$remote_shasum" ]; then
+            remote_tarball=$(npm view "catalogmx@${VERSION}" dist.tarball)
+            remote_file=$(mktemp)
+            curl --fail --silent --show-error --location "$remote_tarball" -o "$remote_file"
+            remote_actual_shasum=$(shasum -a 1 "$remote_file" | awk '{print $1}')
+            if [ "$remote_actual_shasum" != "$remote_shasum" ]; then
+              echo "NPM metadata digest does not match the downloaded tarball" >&2
+              exit 1
+            fi
             if [ "$remote_shasum" != "$local_shasum" ]; then
-              echo "NPM already contains ${VERSION} with a different artifact"
+              echo "NPM already contains ${VERSION} with a different artifact" >&2
               exit 1
             fi
             echo "NPM ${VERSION} already matches the verified artifact; skipping"
@@ -648,7 +658,15 @@ jobs:
             npm_error=$(mktemp)
             if remote_shasum=$(npm view "catalogmx@${VERSION}" dist.shasum 2>"$npm_error"); then
               if [[ "$remote_shasum" =~ ^[0-9a-f]{40}$ ]]; then
-                break
+                remote_tarball=$(npm view "catalogmx@${VERSION}" dist.tarball)
+                remote_file=$(mktemp)
+                curl --fail --silent --show-error --location "$remote_tarball" -o "$remote_file"
+                remote_actual_shasum=$(shasum -a 1 "$remote_file" | awk '{print $1}')
+                if [ "$remote_actual_shasum" = "$remote_shasum" ]; then
+                  break
+                fi
+                echo "NPM registry tarball digest does not match dist.shasum; refusing publication" >&2
+                exit 1
               fi
             elif ! grep -q 'E404' "$npm_error"; then
               cat "$npm_error" >&2
@@ -661,7 +679,7 @@ jobs:
             fi
             sleep 10
           done
-          if [ "$remote_shasum" != "$local_shasum" ]; then
+          if [ "$remote_shasum" != "$local_shasum" ] || [ "$remote_actual_shasum" != "$local_shasum" ]; then
             echo "NPM post-publication digest mismatch: local ${local_shasum}, NPM ${remote_shasum}" >&2
             exit 1
           fi
