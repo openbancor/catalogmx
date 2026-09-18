@@ -779,6 +779,8 @@ jobs:
                   if relative.parts[:2] == ("packages", "dart"):
                       relative = Path(*relative.parts[2:])
                   if not relative.parts:
+                      if member.isdir():
+                          continue
                       raise SystemExit("pub.dev archive contains an empty path")
                   relative_name = str(relative)
                   if relative_name in archive_names:
@@ -862,6 +864,8 @@ jobs:
                       if relative.parts[:2] == ("packages", "dart"):
                           relative = Path(*relative.parts[2:])
                       if not relative.parts:
+                          if member.isdir():
+                              continue
                           raise SystemExit("pub.dev archive contains an empty path")
                       relative_name = str(relative)
                       if relative_name in archive_names:
