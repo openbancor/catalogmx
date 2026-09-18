@@ -759,14 +759,17 @@ jobs:
           archive = urllib.request.urlopen(archive_url).read()
           package_root = Path("packages/dart")
           ignored = {".gitignore", ".pubignore", "pubspec.lock"}
+          ignored_parts = {".dart_tool", "build", "coverage", "flutter"}
           expected = {
               str(path.relative_to(package_root))
               for path in package_root.rglob("*")
               if path.is_file()
               and path.name not in ignored
+              and not any(part in ignored_parts for part in path.relative_to(package_root).parts)
               and not any(part.startswith(".") for part in path.relative_to(package_root).parts)
           }
           archive_names = set()
+          archive_digests = {}
           remote_names = set()
           mismatches = []
           with tarfile.open(fileobj=BytesIO(archive), mode="r:gz") as package:
@@ -784,7 +787,12 @@ jobs:
                       raise SystemExit("pub.dev archive contains an empty path")
                   relative_name = str(relative)
                   if relative_name in archive_names:
-                      raise SystemExit(f"pub.dev archive contains duplicate member: {relative_name}")
+                      if member.isdir():
+                          continue
+                      remote_digest = hashlib.sha256(package.extractfile(member).read()).hexdigest()
+                      if remote_digest != archive_digests[relative_name]:
+                          raise SystemExit(f"pub.dev archive contains conflicting duplicate member: {relative_name}")
+                      continue
                   archive_names.add(relative_name)
                   if member.isdir():
                       continue
@@ -796,6 +804,7 @@ jobs:
                       mismatches.append(f"missing local file: {relative}")
                       continue
                   remote_digest = hashlib.sha256(package.extractfile(member).read()).hexdigest()
+                  archive_digests[relative_name] = remote_digest
                   local_digest = hashlib.sha256(local.read_bytes()).hexdigest()
                   if remote_digest != local_digest:
                       mismatches.append(f"{relative}: local {local_digest}, pub.dev {remote_digest}")
@@ -842,16 +851,19 @@ jobs:
           version = sys.argv[1]
           package_root = Path("packages/dart")
           ignored = {".gitignore", ".pubignore", "pubspec.lock"}
+          ignored_parts = {".dart_tool", "build", "coverage", "flutter"}
           expected = {
               str(path.relative_to(package_root))
               for path in package_root.rglob("*")
               if path.is_file()
               and path.name not in ignored
+              and not any(part in ignored_parts for part in path.relative_to(package_root).parts)
               and not any(part.startswith(".") for part in path.relative_to(package_root).parts)
           }
 
           def verify_archive(archive: bytes) -> None:
               archive_names = set()
+              archive_digests = {}
               remote_names = set()
               mismatches = []
               with tarfile.open(fileobj=BytesIO(archive), mode="r:gz") as package:
@@ -869,7 +881,12 @@ jobs:
                           raise SystemExit("pub.dev archive contains an empty path")
                       relative_name = str(relative)
                       if relative_name in archive_names:
-                          raise SystemExit(f"pub.dev archive contains duplicate member: {relative_name}")
+                          if member.isdir():
+                              continue
+                          remote_digest = hashlib.sha256(package.extractfile(member).read()).hexdigest()
+                          if remote_digest != archive_digests[relative_name]:
+                              raise SystemExit(f"pub.dev archive contains conflicting duplicate member: {relative_name}")
+                          continue
                       archive_names.add(relative_name)
                       if member.isdir():
                           continue
@@ -881,6 +898,7 @@ jobs:
                           mismatches.append(f"missing local file: {relative}")
                           continue
                       remote_digest = hashlib.sha256(package.extractfile(member).read()).hexdigest()
+                      archive_digests[relative_name] = remote_digest
                       local_digest = hashlib.sha256(local.read_bytes()).hexdigest()
                       if remote_digest != local_digest:
                           mismatches.append(f"{relative}: local {local_digest}, pub.dev {remote_digest}")
