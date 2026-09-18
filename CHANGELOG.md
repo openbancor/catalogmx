@@ -15,6 +15,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Normalized missing CFDI `c_TasaOCuota` spreadsheet cells to JSON `null` so the complete small-catalog allowlist can be bundled safely.
 
+## [0.8.0] - 2026-09-18
+
+### Added
+- Versioned effective monthly federal tax late-payment surcharge rates for 2024–2026.
+- Python accessors with separate LIF base-rate and normative provenance fields, official sources, and shared-data-root resolution for wheel consumers.
+- Tests and documentation that distinguish mora rates from installment/deferred-payment rates.
+
+### Changed
+- Synchronized Python, TypeScript, Dart, Kotlin, Android, and iOS package versions to `0.8.0`.
+
 ## [0.5.1] - 2026-02-04
 
 ### Fixed
