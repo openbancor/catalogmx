@@ -1,0 +1,38 @@
+[
+  {
+    "ejercicio": 2024,
+    "vigencia_inicio": "2024-01-01",
+    "vigencia_fin": "2024-12-31",
+    "tasa_base_lif": "0.0098",
+    "tasa_mora_mensual": "0.0147",
+    "unidad": "mensual",
+    "fuente_normativa": "LIF 2024, artículo 8, fracción I; RMF 2024, regla 2.1.20",
+    "fecha_publicacion": "2023-11-13",
+    "url_fuente": "https://sidof.segob.gob.mx/notas/docFuente/5708368",
+    "nota": "Tasa efectiva mensual de recargos por mora publicada por SAT; no es la tasa de pagos a plazos."
+  },
+  {
+    "ejercicio": 2025,
+    "vigencia_inicio": "2025-01-01",
+    "vigencia_fin": "2025-12-31",
+    "tasa_base_lif": "0.0098",
+    "tasa_mora_mensual": "0.0147",
+    "unidad": "mensual",
+    "fuente_normativa": "LIF 2025, artículo 8, fracción I; RMF 2025, regla 2.1.20",
+    "fecha_publicacion": "2024-12-30",
+    "url_fuente": "https://www.sat.gob.mx/minisitio/NormatividadRMFyRGCE/documentos2025/rmf/rmf/RMF_2025-30122024.pdf",
+    "nota": "Tasa efectiva mensual de recargos por mora publicada por SAT; no es la tasa de pagos a plazos."
+  },
+  {
+    "ejercicio": 2026,
+    "vigencia_inicio": "2026-01-01",
+    "vigencia_fin": "2026-12-31",
+    "tasa_base_lif": "0.0138",
+    "tasa_mora_mensual": "0.0207",
+    "unidad": "mensual",
+    "fuente_normativa": "LIF 2026, artículo 11, fracción I; RMF 2026, regla 2.1.20",
+    "fecha_publicacion": "2025-12-28",
+    "url_fuente": "https://www.sat.gob.mx/minisitio/NormatividadRMFyRGCE/documentos2026/rmf/rmf/RMF_2026-DOF-28122025.pdf",
+    "nota": "Tasa efectiva mensual de recargos por mora publicada por SAT; no es la tasa de pagos a plazos."
+  }
+]
