@@ -959,7 +959,11 @@ jobs:
     name: Publish to Maven Central
     runs-on: ubuntu-latest
     needs: [publish-pubdev, preflight]
-    if: needs.preflight.outputs.publish_maven == 'true'
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.publish_maven == true &&
+      needs.preflight.result == 'success' &&
+      needs.publish-pubdev.result == 'success'
     environment: maven
 
     steps:
