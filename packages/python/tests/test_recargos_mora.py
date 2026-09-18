@@ -1,6 +1,10 @@
 from decimal import Decimal
 
-from catalogmx.catalogs.mexico.recargos_mora import RecargosMoraCatalog
+from catalogmx.catalogs.mexico.recargos_mora import (
+    RecargosMoraCatalog,
+    get_recargos_mora_por_anio,
+    get_tasa_recargos_mora,
+)
 
 
 def test_exposes_effective_mora_rate_for_supported_fiscal_years():
@@ -57,6 +61,25 @@ def test_get_data_returns_defensive_records():
     records[0]["tasa_mora_mensual"] = "0"
 
     assert RecargosMoraCatalog.get_tasa_mensual(2024) == Decimal("0.0147")
+
+
+def test_public_helpers_and_current_record():
+    assert get_recargos_mora_por_anio(2025) == RecargosMoraCatalog.get_por_anio(2025)
+    assert get_tasa_recargos_mora(2026) == Decimal("0.0207")
+    assert RecargosMoraCatalog.get_actual()["ejercicio"] == 2026
+
+
+def test_loads_json_items_wrapper(monkeypatch, tmp_path):
+    shared_data = tmp_path / "mexico"
+    shared_data.mkdir()
+    (shared_data / "recargos_mora.json").write_text(
+        '{"items": [{"ejercicio": 2098, "tasa_mora_mensual": "0.4321"}]}',
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("CATALOGMX_SHARED_DATA", str(tmp_path))
+    monkeypatch.setattr(RecargosMoraCatalog, "_data", None)
+
+    assert RecargosMoraCatalog.get_tasa_mensual(2098) == Decimal("0.4321")
 
 
 def test_uses_configured_shared_data_root(monkeypatch, tmp_path):

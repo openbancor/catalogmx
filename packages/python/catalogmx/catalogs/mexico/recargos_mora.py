@@ -32,7 +32,15 @@ class RecargosMoraCatalog:
         if cls._data is None:
             shared_data_path = get_shared_data_path("mexico", "recargos_mora.json")
             with shared_data_path.open(encoding="utf-8") as file:
-                cls._data = json.load(file)
+                data = json.load(file)
+            records = (
+                data
+                if isinstance(data, list)
+                else data.get("items") if isinstance(data, dict) else None
+            )
+            if not isinstance(records, list):
+                raise ValueError("recargos_mora.json must contain a list or an items list")
+            cls._data = records
 
     @classmethod
     def get_data(cls) -> list[RecargosMoraRecord]:
