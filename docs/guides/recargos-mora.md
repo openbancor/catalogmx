@@ -23,3 +23,8 @@ La tasa `tasa_mora_mensual` es la tasa efectiva que el SAT publica para mora:
 No debe confundirse con las tasas de pagos en parcialidades o pagos diferidos.
 Los consumidores deben conservar la procedencia del registro junto con cada
 cálculo y no extrapolar la tasa a ejercicios que no estén en el catálogo.
+
+El catálogo se resuelve desde `packages/shared-data` en un checkout local. En
+una instalación del wheel, monta el root de datos versionados y configura
+`CATALOGMX_SHARED_DATA` con su ruta, por ejemplo
+`CATALOGMX_SHARED_DATA=/var/lib/catalogmx`.
