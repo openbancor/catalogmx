@@ -776,6 +776,8 @@ jobs:
                       raise SystemExit(f"pub.dev archive contains unsafe path: {member.name}")
                   while relative.parts and relative.parts[0] == ".":
                       relative = Path(*relative.parts[1:])
+                  if relative.parts[:2] == ("packages", "dart"):
+                      relative = Path(*relative.parts[2:])
                   if not relative.parts:
                       raise SystemExit("pub.dev archive contains an empty path")
                   relative_name = str(relative)
@@ -857,6 +859,8 @@ jobs:
                           raise SystemExit(f"pub.dev archive contains unsafe path: {member.name}")
                       while relative.parts and relative.parts[0] == ".":
                           relative = Path(*relative.parts[1:])
+                      if relative.parts[:2] == ("packages", "dart"):
+                          relative = Path(*relative.parts[2:])
                       if not relative.parts:
                           raise SystemExit("pub.dev archive contains an empty path")
                       relative_name = str(relative)
