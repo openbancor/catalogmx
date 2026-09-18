@@ -2,6 +2,16 @@
 Changelog
 =========
 
+0.8.0 (2026-09-18)
+-----------------------------------------
+
+* Add versioned effective monthly federal tax late-payment surcharge rates for
+  2024–2026 with official normative provenance.
+* Keep LIF base rates, effective mora rates, and installment-rate exclusions
+  semantically separate across the catalog API and documentation.
+* Synchronize package versions across Python, TypeScript, Dart, and Kotlin
+  release artifacts.
+
 0.7.0 (2026-08-30)
 -----------------------------------------
 

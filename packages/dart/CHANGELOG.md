@@ -2,6 +2,12 @@
 
 All notable changes to the Dart/Flutter version of catalogmx will be documented in this file.
 
+## [0.8.0] - 2026-09-18
+
+### Changed
+- Synchronized the package version for the catalogmx 0.8.0 multi-platform release.
+- Added the versioned recargos por mora catalog to the shared release contents.
+
 ## [0.7.0] - 2026-08-30
 
 ### Changed
