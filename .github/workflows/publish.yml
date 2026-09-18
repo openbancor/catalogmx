@@ -28,6 +28,11 @@ on:
         required: true
         default: false
         type: boolean
+      reuse_pubdev:
+        description: Reuse an already verified pub.dev publication during recovery
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   # Preflight checks before publishing
@@ -731,7 +736,13 @@ jobs:
         id: existing
         env:
           VERSION: ${{ needs.preflight.outputs.version }}
+          REUSE_PUBDEV: ${{ inputs.reuse_pubdev }}
         run: |
+          if [[ "$REUSE_PUBDEV" == "true" ]]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Reusing the already verified pub.dev catalogmx ${VERSION} publication"
+            exit 0
+          fi
           python - "$VERSION" <<'PY'
           import hashlib
           import json
