@@ -5,7 +5,9 @@
     "full_name": "Banco de México",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "banco_central"
+    "tipo_institucion": "banco_central",
+    "banxico_key": "2001",
+    "cep_current": true
   },
   {
     "code": "002",
@@ -13,7 +15,9 @@
     "full_name": "Banco Nacional de México, S.A.",
     "rfc": "BNM840515VB1",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40002",
+    "cep_current": true
   },
   {
     "code": "006",
@@ -21,7 +25,9 @@
     "full_name": "Banco Nacional de Comercio Exterior, S.N.C.",
     "rfc": "BNC861209914",
     "spei": true,
-    "tipo_institucion": "banca_desarrollo"
+    "tipo_institucion": "banca_desarrollo",
+    "banxico_key": "37006",
+    "cep_current": true
   },
   {
     "code": "009",
@@ -29,7 +35,9 @@
     "full_name": "Banco Nacional de Obras y Servicios Públicos, S.N.C.",
     "rfc": "BNO850915SM8",
     "spei": true,
-    "tipo_institucion": "banca_desarrollo"
+    "tipo_institucion": "banca_desarrollo",
+    "banxico_key": "37009",
+    "cep_current": true
   },
   {
     "code": "012",
@@ -37,7 +45,9 @@
     "full_name": "BBVA México, S.A.",
     "rfc": "BBA830831LJ2",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40012",
+    "cep_current": true
   },
   {
     "code": "014",
@@ -45,7 +55,9 @@
     "full_name": "Banco Santander (México), S.A.",
     "rfc": "BSM970519DU1",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40014",
+    "cep_current": true
   },
   {
     "code": "019",
@@ -53,7 +65,9 @@
     "full_name": "Banco Nacional del Ejército, Fuerza Aérea y Armada, S.N.C.",
     "rfc": "BNE820126KG5",
     "spei": true,
-    "tipo_institucion": "banca_desarrollo"
+    "tipo_institucion": "banca_desarrollo",
+    "banxico_key": "37019",
+    "cep_current": true
   },
   {
     "code": "021",
@@ -61,7 +75,9 @@
     "full_name": "HSBC México, S.A.",
     "rfc": "HMS850607FU8",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40021",
+    "cep_current": true
   },
   {
     "code": "030",
@@ -69,7 +85,9 @@
     "full_name": "Banco del Bajío, S.A.",
     "rfc": "BBV941221639",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40030",
+    "cep_current": true
   },
   {
     "code": "036",
@@ -77,7 +95,9 @@
     "full_name": "Banco Inbursa, S.A.",
     "rfc": "BIN840308893",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40036",
+    "cep_current": true
   },
   {
     "code": "042",
@@ -85,7 +105,9 @@
     "full_name": "Banca Mifel, S.A.",
     "rfc": "BMI8412295P9",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40042",
+    "cep_current": true
   },
   {
     "code": "044",
@@ -93,7 +115,9 @@
     "full_name": "Scotiabank Inverlat, S.A.",
     "rfc": "SIN9412025I4",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40044",
+    "cep_current": true
   },
   {
     "code": "058",
@@ -101,7 +125,9 @@
     "full_name": "Banco Regional de Monterrey, S.A.",
     "rfc": "BRE871116IE4",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40058",
+    "cep_current": true
   },
   {
     "code": "059",
@@ -109,7 +135,9 @@
     "full_name": "Banco Invex, S.A.",
     "rfc": "BIN9410285W3",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40059",
+    "cep_current": true
   },
   {
     "code": "060",
@@ -117,7 +145,9 @@
     "full_name": "Bansi, S.A.",
     "rfc": "BSI010226I77",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40060",
+    "cep_current": true
   },
   {
     "code": "062",
@@ -125,7 +155,9 @@
     "full_name": "Banca Afirme, S.A.",
     "rfc": "BAF950104P21",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40062",
+    "cep_current": true
   },
   {
     "code": "072",
@@ -133,7 +165,9 @@
     "full_name": "Banco Mercantil del Norte, S.A.",
     "rfc": "BMN930209927",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40072",
+    "cep_current": true
   },
   {
     "code": "106",
@@ -141,7 +175,9 @@
     "full_name": "Bank of America México, S.A.",
     "rfc": "BAM0307203T8",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40106",
+    "cep_current": true
   },
   {
     "code": "108",
@@ -149,7 +185,9 @@
     "full_name": "MUFG Bank México, S.A.",
     "rfc": "BMU030107SB0",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40108",
+    "cep_current": true
   },
   {
     "code": "110",
@@ -157,7 +195,9 @@
     "full_name": "Banco J.P. Morgan, S.A.",
     "rfc": "JPM021115468",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40110",
+    "cep_current": true
   },
   {
     "code": "112",
@@ -165,7 +205,9 @@
     "full_name": "Banco Monex, S.A.",
     "rfc": "BMO9704113T3",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40112",
+    "cep_current": true
   },
   {
     "code": "113",
@@ -173,7 +215,9 @@
     "full_name": "Banco Ve Por Mas, S.A.",
     "rfc": "BVM060525JF7",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40113",
+    "cep_current": true
   },
   {
     "code": "124",
@@ -181,7 +225,9 @@
     "full_name": "Citibanamex, S.A.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40124",
+    "cep_current": true
   },
   {
     "code": "127",
@@ -189,7 +235,9 @@
     "full_name": "Banco Azteca, S.A.",
     "rfc": "BAZ040715KE7",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40127",
+    "cep_current": true
   },
   {
     "code": "128",
@@ -197,7 +245,9 @@
     "full_name": "Banco Autofin México, S.A.",
     "rfc": "BAU0604299J5",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40128",
+    "cep_current": true
   },
   {
     "code": "129",
@@ -205,7 +255,9 @@
     "full_name": "Barclays Bank México, S.A.",
     "rfc": "BBM051212D49",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40129",
+    "cep_current": true
   },
   {
     "code": "130",
@@ -213,7 +265,9 @@
     "full_name": "Banco Compartamos, S.A.",
     "rfc": "BCA060313HK9",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40130",
+    "cep_current": true
   },
   {
     "code": "132",
@@ -221,7 +275,9 @@
     "full_name": "Banco Multiva, S.A.",
     "rfc": "BMU930607LF0",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40132",
+    "cep_current": true
   },
   {
     "code": "133",
@@ -229,7 +285,9 @@
     "full_name": "Banco Actinver, S.A.",
     "rfc": "BAC040816QE3",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40133",
+    "cep_current": true
   },
   {
     "code": "135",
@@ -237,7 +295,9 @@
     "full_name": "Nacional Financiera, S.N.C.",
     "rfc": "NFI8609162Z4",
     "spei": true,
-    "tipo_institucion": "banca_desarrollo"
+    "tipo_institucion": "banca_desarrollo",
+    "banxico_key": "37135",
+    "cep_current": true
   },
   {
     "code": "136",
@@ -245,7 +305,9 @@
     "full_name": "Inter Banco, S.A.",
     "rfc": "IBN081029IJ3",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40136",
+    "cep_current": true
   },
   {
     "code": "137",
@@ -253,7 +315,9 @@
     "full_name": "BanCoppel, S.A.",
     "rfc": "BCO060622P66",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40137",
+    "cep_current": true
   },
   {
     "code": "138",
@@ -261,7 +325,9 @@
     "full_name": "Ualá, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40138",
+    "cep_current": true
   },
   {
     "code": "140",
@@ -269,7 +335,9 @@
     "full_name": "Consubanco, S.A.",
     "rfc": "CSU061222KA3",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40140",
+    "cep_current": true
   },
   {
     "code": "141",
@@ -277,7 +345,9 @@
     "full_name": "Volkswagen Bank, S.A.",
     "rfc": "VBA100329E98",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40141",
+    "cep_current": true
   },
   {
     "code": "143",
@@ -285,7 +355,8 @@
     "full_name": "CIBanco, S.A.",
     "rfc": null,
     "spei": false,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "cep_current": false
   },
   {
     "code": "145",
@@ -293,7 +364,9 @@
     "full_name": "Banco Base, S.A.",
     "rfc": "BBA111215SB9",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40145",
+    "cep_current": true
   },
   {
     "code": "147",
@@ -301,7 +374,9 @@
     "full_name": "Bankaool, S.A.",
     "rfc": "BKL120313U64",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40147",
+    "cep_current": true
   },
   {
     "code": "148",
@@ -309,7 +384,9 @@
     "full_name": "Banco PagaTodo, S.A.",
     "rfc": "BPT130813UG9",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40148",
+    "cep_current": true
   },
   {
     "code": "150",
@@ -317,7 +394,9 @@
     "full_name": "Banco Inmobiliario Mexicano, S.A.",
     "rfc": "BIM141020P64",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40150",
+    "cep_current": true
   },
   {
     "code": "151",
@@ -325,7 +404,9 @@
     "full_name": "Banco Dondé, S.A.",
     "rfc": "BDO150126SY9",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40151",
+    "cep_current": true
   },
   {
     "code": "152",
@@ -333,7 +414,9 @@
     "full_name": "Bancrea, S.A.",
     "rfc": "BCR1412028W4",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40152",
+    "cep_current": true
   },
   {
     "code": "154",
@@ -341,7 +424,9 @@
     "full_name": "Banco Covalto, S.A.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40154",
+    "cep_current": true
   },
   {
     "code": "155",
@@ -349,7 +434,9 @@
     "full_name": "Industrial and Commercial Bank of China México, S.A.",
     "rfc": "ICB171030FX3",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40155",
+    "cep_current": true
   },
   {
     "code": "156",
@@ -357,7 +444,9 @@
     "full_name": "Banco Sabadell, S.A.",
     "rfc": "BSA180709BY8",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40156",
+    "cep_current": true
   },
   {
     "code": "157",
@@ -365,7 +454,9 @@
     "full_name": "Banco Shinhan de México, S.A.",
     "rfc": "BSH180710BU1",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40157",
+    "cep_current": true
   },
   {
     "code": "158",
@@ -373,7 +464,9 @@
     "full_name": "Mizuho Bank México, S.A.",
     "rfc": "MBM190617RY0",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40158",
+    "cep_current": true
   },
   {
     "code": "159",
@@ -381,7 +474,9 @@
     "full_name": "Bank of China México, S.A.",
     "rfc": "BCH191030H39",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40159",
+    "cep_current": true
   },
   {
     "code": "160",
@@ -389,7 +484,9 @@
     "full_name": "Banco S3 México, S.A.",
     "rfc": "BS3210106SG9",
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40160",
+    "cep_current": true
   },
   {
     "code": "166",
@@ -397,7 +494,9 @@
     "full_name": "Banco del Bienestar, S.N.C.",
     "rfc": "BAN021105KP5",
     "spei": true,
-    "tipo_institucion": "banca_desarrollo"
+    "tipo_institucion": "banca_desarrollo",
+    "banxico_key": "37166",
+    "cep_current": true
   },
   {
     "code": "167",
@@ -405,7 +504,9 @@
     "full_name": "Hey Banco, S.A.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "banca_multiple"
+    "tipo_institucion": "banca_multiple",
+    "banxico_key": "40167",
+    "cep_current": true
   },
   {
     "code": "168",
@@ -413,7 +514,18 @@
     "full_name": "Sociedad Hipotecaria Federal, S.N.C.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "banca_desarrollo"
+    "tipo_institucion": "banca_desarrollo",
+    "banxico_key": "37168",
+    "cep_current": true
+  },
+  {
+    "code": "170",
+    "name": "REVOLUT BANK",
+    "full_name": "REVOLUT BANK",
+    "rfc": null,
+    "spei": true,
+    "banxico_key": "40170",
+    "cep_current": true
   },
   {
     "code": "600",
@@ -421,7 +533,9 @@
     "full_name": "Monex Casa de Bolsa, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90600",
+    "cep_current": true
   },
   {
     "code": "601",
@@ -429,7 +543,9 @@
     "full_name": "GBM Grupo Bursátil Mexicano, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90601",
+    "cep_current": true
   },
   {
     "code": "602",
@@ -437,7 +553,9 @@
     "full_name": "Masari Casa de Bolsa, S.A.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90602",
+    "cep_current": true
   },
   {
     "code": "605",
@@ -445,7 +563,9 @@
     "full_name": "Value, S.A. de C.V. Casa de Bolsa",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90605",
+    "cep_current": true
   },
   {
     "code": "608",
@@ -453,7 +573,8 @@
     "full_name": "Vector Casa de Bolsa, S.A. de C.V.",
     "rfc": null,
     "spei": false,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "cep_current": false
   },
   {
     "code": "616",
@@ -461,7 +582,9 @@
     "full_name": "Casa de Bolsa Finamex, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90616",
+    "cep_current": true
   },
   {
     "code": "617",
@@ -469,7 +592,9 @@
     "full_name": "Valores Mexicanos Casa de Bolsa, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90617",
+    "cep_current": true
   },
   {
     "code": "620",
@@ -477,7 +602,9 @@
     "full_name": "Profuturo G.N.P., S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90620",
+    "cep_current": true
   },
   {
     "code": "630",
@@ -485,15 +612,18 @@
     "full_name": "Intercam Casa de Bolsa, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "cep_current": false
   },
   {
     "code": "631",
-    "name": "CI BOLSA",
+    "name": "TRF",
     "full_name": "CI Casa de Bolsa, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90631",
+    "cep_current": true
   },
   {
     "code": "634",
@@ -501,15 +631,19 @@
     "full_name": "Fincomún, Servicios Financieros Comunitarios, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90634",
+    "cep_current": true
   },
   {
     "code": "638",
-    "name": "NU MEXICO",
+    "name": "NUBANK",
     "full_name": "Nu México Financiera, S.A. de C.V. SOFOM ENR",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "40638",
+    "cep_current": true
   },
   {
     "code": "646",
@@ -517,7 +651,9 @@
     "full_name": "Sistema de Transferencias y Pagos STP, S.A. de C.V. SOFOM ENR",
     "rfc": "STP021225ES2",
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90646",
+    "cep_current": true
   },
   {
     "code": "652",
@@ -525,7 +661,9 @@
     "full_name": "Credicapital, S.A. de C.V. SOFOM ENR",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90652",
+    "cep_current": true
   },
   {
     "code": "653",
@@ -533,7 +671,9 @@
     "full_name": "Kuspit Casa de Bolsa, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90653",
+    "cep_current": true
   },
   {
     "code": "656",
@@ -541,7 +681,9 @@
     "full_name": "UNAGRA, S.A. de C.V. SOFOM ENR",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90656",
+    "cep_current": true
   },
   {
     "code": "659",
@@ -549,7 +691,18 @@
     "full_name": "ASP Integra OPC, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90659",
+    "cep_current": true
+  },
+  {
+    "code": "660",
+    "name": "Altor",
+    "full_name": "Altor",
+    "rfc": null,
+    "spei": true,
+    "banxico_key": "90660",
+    "cep_current": true
   },
   {
     "code": "661",
@@ -557,7 +710,9 @@
     "full_name": "Klar, S.A. de C.V. SOFOM ENR",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90661",
+    "cep_current": true
   },
   {
     "code": "670",
@@ -565,7 +720,9 @@
     "full_name": "Libertad Servicios Financieros, S.A. de C.V. SOFOM ENR",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90670",
+    "cep_current": true
   },
   {
     "code": "677",
@@ -573,7 +730,9 @@
     "full_name": "Caja Popular Mexicana, S.C. de A.P. de R.L. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90677",
+    "cep_current": true
   },
   {
     "code": "680",
@@ -581,7 +740,9 @@
     "full_name": "Caja Cristóbal Colón, S.C. de A.P. de R.L. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90680",
+    "cep_current": true
   },
   {
     "code": "683",
@@ -589,7 +750,9 @@
     "full_name": "Caja de Ahorro de los Telefonistas, S.C. de A.P. de R.L. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90683",
+    "cep_current": true
   },
   {
     "code": "684",
@@ -597,7 +760,9 @@
     "full_name": "Transfer de Capitales del Mundo, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90684",
+    "cep_current": true
   },
   {
     "code": "685",
@@ -605,7 +770,9 @@
     "full_name": "Fideicomisos Instituidos en Relación con la Agricultura (FIRA)",
     "rfc": "FIR650331UN3",
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90685",
+    "cep_current": true
   },
   {
     "code": "688",
@@ -613,7 +780,9 @@
     "full_name": "Crediclub, S.A. de C.V. SOFOM ENR",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90688",
+    "cep_current": true
   },
   {
     "code": "699",
@@ -621,7 +790,9 @@
     "full_name": "Fondeadora, S.A. de C.V. ITF",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90699",
+    "cep_current": true
   },
   {
     "code": "703",
@@ -629,7 +800,9 @@
     "full_name": "Tesored, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90703",
+    "cep_current": true
   },
   {
     "code": "706",
@@ -637,7 +810,9 @@
     "full_name": "Arcus Financial Intelligence, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90706",
+    "cep_current": true
   },
   {
     "code": "710",
@@ -645,7 +820,18 @@
     "full_name": "Nvio Pagos México, S.A. de C.V. ITF",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90710",
+    "cep_current": true
+  },
+  {
+    "code": "714",
+    "name": "PPBALANCEMX",
+    "full_name": "PPBALANCEMX",
+    "rfc": null,
+    "spei": true,
+    "banxico_key": "90714",
+    "cep_current": true
   },
   {
     "code": "715",
@@ -653,7 +839,9 @@
     "full_name": "Cashi, S.A. de C.V. ITF",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90715",
+    "cep_current": true
   },
   {
     "code": "720",
@@ -661,7 +849,9 @@
     "full_name": "MexPago, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90720",
+    "cep_current": true
   },
   {
     "code": "721",
@@ -669,7 +859,9 @@
     "full_name": "Albo, S.A. de C.V. ITF",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90721",
+    "cep_current": true
   },
   {
     "code": "722",
@@ -677,7 +869,9 @@
     "full_name": "Mercado Pago W, S.A. de C.V. ITF",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90722",
+    "cep_current": true
   },
   {
     "code": "723",
@@ -685,7 +879,9 @@
     "full_name": "Cuenca Tecnología Financiera, S.A. de C.V. ITF",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90723",
+    "cep_current": true
   },
   {
     "code": "725",
@@ -693,7 +889,9 @@
     "full_name": "Cooperativa de Desarrollo y Soluciones, S.C. de A.P. de R.L. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90725",
+    "cep_current": true
   },
   {
     "code": "727",
@@ -701,7 +899,9 @@
     "full_name": "Transfer Directo, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90727",
+    "cep_current": true
   },
   {
     "code": "728",
@@ -709,7 +909,9 @@
     "full_name": "Spin by OXXO, S.A. de C.V. ITF",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90728",
+    "cep_current": true
   },
   {
     "code": "729",
@@ -717,15 +919,19 @@
     "full_name": "Depósitos y Pagos Digitales, S.A. de C.V. ITF",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90729",
+    "cep_current": true
   },
   {
     "code": "730",
-    "name": "Swap",
+    "name": "Clip",
     "full_name": "Pocketgroup Technologies, S.A. de C.V. ITF",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90730",
+    "cep_current": true
   },
   {
     "code": "732",
@@ -733,7 +939,9 @@
     "full_name": "Peibo, S.A. de C.V. ITF",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90732",
+    "cep_current": true
   },
   {
     "code": "734",
@@ -741,7 +949,9 @@
     "full_name": "Finco Pay, S.A. de C.V. ITF",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90734",
+    "cep_current": true
   },
   {
     "code": "738",
@@ -749,7 +959,9 @@
     "full_name": "Fintoc, S.A. de C.V. ITF",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90738",
+    "cep_current": true
   },
   {
     "code": "901",
@@ -757,7 +969,9 @@
     "full_name": "CLS Bank International",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90901",
+    "cep_current": true
   },
   {
     "code": "902",
@@ -765,7 +979,9 @@
     "full_name": "S.D. Indeval, S.A. de C.V.",
     "rfc": "IVA950105N74",
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90902",
+    "cep_current": true
   },
   {
     "code": "903",
@@ -773,6 +989,8 @@
     "full_name": "CoDi Desarrollo de Soluciones, S.A. de C.V.",
     "rfc": null,
     "spei": true,
-    "tipo_institucion": "otra"
+    "tipo_institucion": "otra",
+    "banxico_key": "90903",
+    "cep_current": true
   }
 ]
