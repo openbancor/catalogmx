@@ -99,6 +99,25 @@ class CatalogsTest {
     }
 
     @Test
+    fun `BanxicoBanks default SPEI listing excludes historical banks even with spei true`() {
+        try {
+            BanxicoBanks.setDataForTesting(
+                listOf(
+                    mapOf("code" to "999", "name" to "OLD", "spei" to true, "status" to "historical"),
+                    mapOf("code" to "998", "name" to "NEW", "spei" to true, "status" to "active")
+                )
+            )
+            assertEquals(listOf("998"), BanxicoBanks.getSPEIBanks().map { it["code"] })
+            assertEquals(
+                listOf("999", "998"),
+                BanxicoBanks.getSPEIBanks(includeHistorical = true).map { it["code"] }
+            )
+        } finally {
+            BanxicoBanks.reload()
+        }
+    }
+
+    @Test
     fun `BanxicoBanks should check SPEI support`() {
         assertTrue(BanxicoBanks.supportsSPEI("002")) // BANAMEX
         assertTrue(BanxicoBanks.supportsSPEI("072")) // BANORTE
