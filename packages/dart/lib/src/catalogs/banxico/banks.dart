@@ -182,8 +182,7 @@ class BanxicoBanks {
     _loadData();
     return _data!
         .where((b) =>
-            b['spei'] == true ||
-            (includeHistorical && b['status'] == 'historical'))
+            b['status'] == 'historical' ? includeHistorical : b['spei'] == true)
         .toList();
   }
 

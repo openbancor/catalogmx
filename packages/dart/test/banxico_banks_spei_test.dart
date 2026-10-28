@@ -1,6 +1,7 @@
 /// Tests for the 5-digit SPEI participant code model of BanxicoBanks
 library;
 
+import 'package:catalogmx/src/catalogs/base_catalog.dart';
 import 'package:catalogmx/src/catalogs/banxico/banks.dart';
 import 'package:test/test.dart';
 
@@ -88,5 +89,27 @@ void main() {
       expect(speiCode.endsWith(bank['code'] as String), isTrue);
     }
     expect(BanxicoBanks.getAll().length, 100);
+  });
+
+  test('default listing excludes historical rows even when spei is true', () {
+    final data = BanxicoBanks.getAll();
+    final raw = BaseCatalog.loadJsonDataSync('banxico/banks.json');
+    raw.add({
+      'code': '999',
+      'name': 'OLD',
+      'spei': true,
+      'status': 'historical',
+      'spei_code': null,
+    });
+    try {
+      expect(data, isNotEmpty);
+      final codes = BanxicoBanks.getSPEIBanks().map((b) => b['code']);
+      expect(codes, isNot(contains('999')));
+      final all = BanxicoBanks.getSPEIBanks(includeHistorical: true)
+          .map((b) => b['code']);
+      expect(all, contains('999'));
+    } finally {
+      raw.removeLast();
+    }
   });
 }

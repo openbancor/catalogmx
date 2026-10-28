@@ -144,7 +144,7 @@ class BankCatalog:
         return [
             bank
             for bank in cls._data
-            if bank.get("spei", False)
+            if (bank.get("status") != "historical" and bank.get("spei", False))
             or (include_historical and bank.get("status") == "historical")
         ]
 

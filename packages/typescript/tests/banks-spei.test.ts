@@ -66,4 +66,20 @@ describe('BankCatalog SPEI participant codes', () => {
       expect(bank.code).toBe(bank.spei_code?.slice(-3));
     }
   });
+
+  test('default listing excludes historical rows even when spei is true', () => {
+    const rows = [
+      { code: '999', name: 'OLD', spei: true, status: 'historical', spei_code: null },
+      { code: '998', name: 'NEW', spei: true, status: 'active', spei_code: '40998' },
+    ];
+    const spy = jest
+      .spyOn(BankCatalog as unknown as { getData: () => unknown }, 'getData')
+      .mockReturnValue(rows);
+    try {
+      expect(BankCatalog.getSPEIBanks().map((b) => b.code)).toEqual(['998']);
+      expect(BankCatalog.getSPEIBanks(true).map((b) => b.code)).toEqual(['999', '998']);
+    } finally {
+      spy.mockRestore();
+    }
+  });
 });

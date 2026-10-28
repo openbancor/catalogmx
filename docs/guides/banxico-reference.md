@@ -71,6 +71,8 @@ Python `BankCatalog.get_spei_banks(include_historical=True)`, Dart
 `BanxicoBanks.getSPEIBanks(includeHistorical: true)` and TypeScript
 `BankCatalog.getSPEIBanks(true)` include them.
 
+The default SPEI listings exclude every row with `status == "historical"`, whatever its `spei` flag (so a participant dropped by a future source update is excluded even though `sync_banks()` does not infer `spei: false` from absence; only the three owner-declared banks get `spei: false`).
+
 APIs (Python / Dart / TypeScript): lookup by 5 digits
 (`get_bank_by_spei_code` / `getBySpeiCode` / `getBankBySpeiCode`), by 3 digits
 (`get_bank_by_clabe_code` / `getByClabeCode` / `getBankByClabeCode`) and

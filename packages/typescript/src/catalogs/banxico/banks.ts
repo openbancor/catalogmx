@@ -89,12 +89,13 @@ export class BankCatalog {
   }
 
   /**
-   * Get banks with SPEI support. Historical (disaffiliated) banks are only
-   * included when includeHistorical is true.
+   * Get banks with SPEI support. Historical (disaffiliated) rows are never
+   * listed by default, whatever their spei flag; they are only included when
+   * includeHistorical is true.
    */
   static getSPEIBanks(includeHistorical = false): Bank[] {
-    return this.getData().filter(
-      (bank) => bank.spei === true || (includeHistorical && bank.status === 'historical')
+    return this.getData().filter((bank) =>
+      bank.status === 'historical' ? includeHistorical : bank.spei === true
     );
   }
 

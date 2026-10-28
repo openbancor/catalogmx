@@ -253,7 +253,8 @@ def sync_banks(
     participant key, ``None`` when absent from the list) and ``status``
     (``active``/``historical``) are refreshed. ``spei`` is not
     inferred from absence in the CEP consultation list because that field has a
-    broader compatibility meaning in existing CatalogMX APIs.
+    broader compatibility meaning in existing CatalogMX APIs. Listings treat
+    ``status == "historical"`` as excluded regardless of ``spei``.
     """
     by_code: dict[str, dict[str, Any]] = {}
     for source_item in existing:

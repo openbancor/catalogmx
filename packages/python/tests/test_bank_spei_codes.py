@@ -10,10 +10,7 @@ import pytest
 from catalogmx.catalogs.banxico import BankCatalog
 
 SNAPSHOT = (
-    Path(__file__).resolve().parents[2]
-    / "shared-data"
-    / "banxico"
-    / "spei_institutions.json"
+    Path(__file__).resolve().parents[2] / "shared-data" / "banxico" / "spei_institutions.json"
 )
 HISTORICAL = ("143", "608", "630")
 NEW_PARTICIPANTS = {"40170": "REVOLUT BANK", "90660": "Altor", "90714": "PPBALANCEMX"}
@@ -28,9 +25,7 @@ def test_lookup_by_five_digit_spei_code():
 
 
 def test_lookup_by_three_digit_clabe_code_keeps_compatibility():
-    assert BankCatalog.get_bank_by_clabe_code("012") == BankCatalog.get_bank_by_code(
-        "012"
-    )
+    assert BankCatalog.get_bank_by_clabe_code("012") == BankCatalog.get_bank_by_code("012")
     assert BankCatalog.get_bank_by_code("12")["spei_code"] == "40012"
 
 
@@ -106,3 +101,13 @@ def test_provenance_fields_present_on_every_record():
     for bank in BankCatalog.get_all_banks():
         assert bank["spei_verified_at"] == "2026-10-27"
         assert "instituciones.do" in bank["spei_source"]
+
+
+def test_default_listing_excludes_historical_even_when_spei_flag_is_true(monkeypatch):
+    BankCatalog.get_all_banks()
+    rows = BankCatalog._data + [
+        {"code": "999", "name": "OLD", "spei": True, "status": "historical", "spei_code": None}
+    ]
+    monkeypatch.setattr(BankCatalog, "_data", rows)
+    assert "999" not in {b["code"] for b in BankCatalog.get_spei_banks()}
+    assert "999" in {b["code"] for b in BankCatalog.get_spei_banks(include_historical=True)}

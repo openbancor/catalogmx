@@ -238,7 +238,7 @@ object BanxicoBanks : CodeLookup, NameSearch {
     @JvmStatic
     fun getSPEIBanks(): List<Map<String, Any?>> {
         loadData()
-        return data!!.filter { it["spei"] == true }
+        return data!!.filter { it["spei"] == true && it["status"] != "historical" }
     }
 
     /**
