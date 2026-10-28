@@ -46,7 +46,15 @@ describe('identifier validation adapters', () => {
         name: 'BANAMEX',
         full_name: 'Banco Nacional de México, S.A.',
         spei: true,
+        spei_code: '40002',
+        status: 'active',
       },
+    });
+  });
+
+  test('marks a disaffiliated bank as historical without an SPEI code', () => {
+    expect(validateIdentifier('clabe', { value: '143010077777777771' })).toMatchObject({
+      banco: { code: '143', spei: false, spei_code: null, status: 'historical' },
     });
   });
 

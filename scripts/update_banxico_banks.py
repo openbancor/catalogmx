@@ -249,7 +249,9 @@ def sync_banks(
     """Merge current Banxico source fields into the enriched compatibility view.
 
     Historical rows and manual enrichment fields are retained. Source-owned
-    ``name``, ``banxico_key`` and ``cep_current`` are refreshed. ``spei`` is not
+    ``name``, ``banxico_key``, ``cep_current``, ``spei_code`` (5-digit SPEI
+    participant key, ``None`` when absent from the list) and ``status``
+    (``active``/``historical``) are refreshed. ``spei`` is not
     inferred from absence in the CEP consultation list because that field has a
     broader compatibility meaning in existing CatalogMX APIs.
     """
@@ -272,6 +274,8 @@ def sync_banks(
         current = current_by_code.get(code)
         if current is None:
             item["cep_current"] = False
+            item["spei_code"] = None
+            item["status"] = "historical"
             continue
         key, name = current
         if item.get("name") != name:
@@ -279,6 +283,8 @@ def sync_banks(
             renamed += 1
         item["banxico_key"] = key
         item["cep_current"] = True
+        item["spei_code"] = key
+        item["status"] = "active"
 
     for code, (key, name) in current_by_code.items():
         if code in by_code:
@@ -286,11 +292,15 @@ def sync_banks(
         by_code[code] = {
             "code": code,
             "name": name,
-            "full_name": name,
+            # No official legal name / RFC / type in the source: left unknown.
+            "full_name": None,
             "rfc": None,
+            "tipo_institucion": None,
             "spei": True,
             "banxico_key": key,
             "cep_current": True,
+            "spei_code": key,
+            "status": "active",
         }
         added += 1
 

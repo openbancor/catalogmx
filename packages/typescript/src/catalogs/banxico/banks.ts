@@ -34,6 +34,34 @@ export class BankCatalog {
   }
 
   /**
+   * Get bank by its 3-digit CLABE code (alias of getBankByCode).
+   * Historical (disaffiliated) banks are returned too, with status 'historical'.
+   */
+  static getBankByClabeCode(code: string): Bank | undefined {
+    return this.getBankByCode(code);
+  }
+
+  /**
+   * Get bank by its 5-digit SPEI participant code (e.g. '40012').
+   * BANXICO itself uses the official 4-digit key '2001'.
+   */
+  static getBankBySpeiCode(speiCode: string): Bank | undefined {
+    return this.getData().find((bank) => bank.spei_code === speiCode);
+  }
+
+  /**
+   * Validate an SPEI participant code and, optionally, that its last 3 digits
+   * equal the CLABE bank code.
+   */
+  static validateSpeiCode(speiCode: string, code?: string): boolean {
+    const bank = this.getBankBySpeiCode(speiCode);
+    if (bank === undefined) return false;
+    if (code === undefined) return true;
+    const padded = code.padStart(3, '0');
+    return bank.code === padded && speiCode.slice(-3) === padded;
+  }
+
+  /**
    * Get bank by name (case-insensitive search)
    */
   static getBankByName(name: string): Bank | undefined {
@@ -61,10 +89,13 @@ export class BankCatalog {
   }
 
   /**
-   * Get all banks with SPEI support
+   * Get banks with SPEI support. Historical (disaffiliated) banks are only
+   * included when includeHistorical is true.
    */
-  static getSPEIBanks(): Bank[] {
-    return this.getData().filter((bank) => bank.spei === true);
+  static getSPEIBanks(includeHistorical = false): Bank[] {
+    return this.getData().filter(
+      (bank) => bank.spei === true || (includeHistorical && bank.status === 'historical')
+    );
   }
 
   /**

@@ -17,8 +17,10 @@ export interface IdentifierValidationResponse {
   banco?: {
     code: string;
     name: string;
-    full_name?: string;
+    full_name?: string | null;
     spei: boolean;
+    spei_code?: string | null;
+    status?: 'active' | 'historical';
   };
 }
 
@@ -60,6 +62,8 @@ function validateClabeIdentifier(value: string): IdentifierValidationResponse {
             name: bank.name,
             full_name: bank.full_name,
             spei: bank.spei,
+            spei_code: bank.spei_code,
+            status: bank.status,
           },
         }
       : {}),

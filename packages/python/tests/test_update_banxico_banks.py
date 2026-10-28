@@ -102,15 +102,22 @@ def test_sync_preserves_enrichments_and_historical_rows(
 
     assert by_code["143"]["cep_current"] is False
     assert by_code["143"]["spei"] is False
+    assert by_code["143"]["spei_code"] is None
+    assert by_code["143"]["status"] == "historical"
+    assert by_code["002"]["spei_code"] == "40002"
+    assert by_code["002"]["status"] == "active"
 
     assert by_code["721"] == {
         "code": "721",
         "name": "albo",
-        "full_name": "albo",
+        "full_name": None,
         "rfc": None,
+        "tipo_institucion": None,
         "spei": True,
         "banxico_key": "90721",
         "cep_current": True,
+        "spei_code": "90721",
+        "status": "active",
     }
     assert summary == module.SyncSummary(
         current=2, added=1, renamed=1, historical=1

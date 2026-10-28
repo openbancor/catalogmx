@@ -18,6 +18,7 @@ class BankCatalog:
 
     _data: list[dict] | None = None
     _bank_by_code: dict[str, dict] | None = None
+    _bank_by_spei_code: dict[str, dict] | None = None
     _bank_by_name: dict[str, dict] | None = None
     _bank_by_name_normalized: dict[str, dict] | None = None
 
@@ -32,6 +33,9 @@ class BankCatalog:
 
             # Create lookup dictionaries
             cls._bank_by_code = {bank["code"]: bank for bank in cls._data}
+            cls._bank_by_spei_code = {
+                bank["spei_code"]: bank for bank in cls._data if bank.get("spei_code")
+            }
             cls._bank_by_name = {bank["name"].upper(): bank for bank in cls._data}
             # Accent-insensitive lookup
             cls._bank_by_name_normalized = {
@@ -61,6 +65,46 @@ class BankCatalog:
         return cls._bank_by_code.get(code)
 
     @classmethod
+    def get_bank_by_clabe_code(cls, code: str) -> dict | None:
+        """
+        Get bank information by its 3-digit CLABE bank code.
+
+        Alias of :meth:`get_bank_by_code`. Historical (disaffiliated) banks are
+        returned too, with ``status == "historical"``, so old CLABEs resolve.
+        """
+        return cls.get_bank_by_code(code)
+
+    @classmethod
+    def get_bank_by_spei_code(cls, spei_code: str) -> dict | None:
+        """
+        Get bank information by the Banxico SPEI participant code.
+
+        :param spei_code: 5-digit participant key (e.g. '40012' for BBVA MEXICO;
+            Banxico itself is the official 4-digit '2001')
+        :return: Bank dictionary or None if not an active SPEI participant
+        """
+        cls._load_data()
+        return cls._bank_by_spei_code.get(str(spei_code))
+
+    @classmethod
+    def validate_spei_code(cls, spei_code: str, code: str | None = None) -> bool:
+        """
+        Validate an SPEI participant code and, optionally, its 3-digit code.
+
+        :param spei_code: 5-digit SPEI participant code
+        :param code: optional 3-digit CLABE bank code; must equal ``spei_code[-3:]``
+            and the catalog record
+        :return: True if the code is an active participant and consistent
+        """
+        bank = cls.get_bank_by_spei_code(spei_code)
+        if bank is None:
+            return False
+        if code is None:
+            return True
+        code = str(code).zfill(3)
+        return bank["code"] == code and str(spei_code)[-3:] == code
+
+    @classmethod
     def get_bank_by_name(cls, name: str) -> dict | None:
         """
         Get bank information by name (accent-insensitive)
@@ -88,14 +132,21 @@ class BankCatalog:
         return bank.get("spei", False) if bank else False
 
     @classmethod
-    def get_spei_banks(cls) -> list[dict]:
+    def get_spei_banks(cls, include_historical: bool = False) -> list[dict]:
         """
-        Get all banks that participate in SPEI
+        Get the banks that participate in SPEI today
 
+        :param include_historical: also return banks marked ``status == "historical"``
+            (disaffiliated from SPEI), which are excluded by default
         :return: List of SPEI participant banks
         """
         cls._load_data()
-        return [bank for bank in cls._data if bank.get("spei", False)]
+        return [
+            bank
+            for bank in cls._data
+            if bank.get("spei", False)
+            or (include_historical and bank.get("status") == "historical")
+        ]
 
     @classmethod
     def validate_bank_code(cls, code: str) -> bool:
@@ -115,9 +166,9 @@ def get_banks_dict() -> dict[str, dict]:
     return BankCatalog._bank_by_code.copy()
 
 
-def get_spei_banks() -> list[dict]:
-    """Get list of all SPEI participant banks"""
-    return BankCatalog.get_spei_banks()
+def get_spei_banks(include_historical: bool = False) -> list[dict]:
+    """Get list of SPEI participant banks (active only by default)"""
+    return BankCatalog.get_spei_banks(include_historical=include_historical)
 
 
 # Export commonly used functions
