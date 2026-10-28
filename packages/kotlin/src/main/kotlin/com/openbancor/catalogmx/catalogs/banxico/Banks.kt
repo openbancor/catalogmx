@@ -233,12 +233,24 @@ object BanxicoBanks : CodeLookup, NameSearch {
     fun isValid(code: String) = isValidCode(code)
 
     /**
-     * Gets all SPEI banks
+     * Gets the SPEI banks. Historical (disaffiliated) rows are never listed by
+     * default, whatever their `spei` flag; they are included only when
+     * [includeHistorical] is true.
      */
     @JvmStatic
-    fun getSPEIBanks(): List<Map<String, Any?>> {
+    @JvmOverloads
+    fun getSPEIBanks(includeHistorical: Boolean = false): List<Map<String, Any?>> {
         loadData()
-        return data!!.filter { it["spei"] == true }
+        return data!!.filter {
+            if (it["status"] == "historical") includeHistorical else it["spei"] == true
+        }
+    }
+
+    /** Test hook: replaces the loaded rows (use [reload] to restore). */
+    internal fun setDataForTesting(rows: List<Map<String, Any?>>) {
+        data = rows
+        byCode = rows.associateBy { it["code"] as String }
+        byName = rows.associateBy { (it["name"] as? String ?: "").uppercase() }
     }
 
     /**

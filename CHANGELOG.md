@@ -8,11 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- SPEI participant codes: every Banxico bank now has `spei_code` (5-digit Banxico key; 4-digit `2001` for BANXICO) next to the 3-digit CLABE `code`, with `status` (`active`/`historical`) and provenance (`spei_source`, `spei_verified_at`). New lookups by 5 digits and 3 digits and `code == spei_code[-3:]` validation in Python, Dart and TypeScript; `scripts/update_banxico_spei.py --fecha aaaa-mm-dd` regenerates the data from the open Banxico CEP service.
+- Participants `40170` REVOLUT BANK, `90660` Altor and `90714` PPBALANCEMX (legal name, RFC and type unknown, left `null`).
+- Banks `143` CIBanco, `608` VECTOR and `630` CB INTERCAM marked `historical` (disaffiliated from SPEI per the project owner, 2026-10-28): still resolve by 3 digits, excluded from default SPEI listings (`include_historical` option).
 - N1 Cloudflare Worker API under `packages/api-worker` with authenticated RFC, CURP, CLABE, NSS, ISR, IMSS, SAT, INEGI, and SEPOMEX endpoints.
 - Deterministic D1 migration/query layer for large postal-code and SAT product/service catalogs, plus production-only deployment instructions.
 - Worker lint, typecheck, Jest coverage, and Wrangler dry-run gates with package coverage above 90%.
 
 ### Changed
+- `get_spei_banks`/`getSPEIBanks` no longer list `630` CB INTERCAM; Banxico's current short names replace `CI BOLSA`->`TRF`, `NU MEXICO`->`NUBANK`, `Swap`->`Clip`. The `banco` object of the API worker CLABE validation now includes `spei_code` and `status`.
 - Normalized missing CFDI `c_TasaOCuota` spreadsheet cells to JSON `null` so the complete small-catalog allowlist can be bundled safely.
 
 ## [0.8.0] - 2026-09-18

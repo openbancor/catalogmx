@@ -36,10 +36,18 @@ export interface Bank {
   code: string;
   name: string;
   short_name?: string;
-  full_name?: string;
+  full_name?: string | null;
   spei: boolean;
-  rfc?: string;
+  rfc?: string | null;
   razon_social?: string;
+  /** 5-digit Banxico SPEI participant code (null if not an active participant) */
+  spei_code?: string | null;
+  /** `active`, or `historical` for banks disaffiliated from SPEI */
+  status?: 'active' | 'historical';
+  spei_disaffiliated?: boolean;
+  spei_disaffiliation_date?: string | null;
+  spei_source?: string;
+  spei_verified_at?: string;
 }
 
 export interface State {

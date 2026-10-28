@@ -105,8 +105,8 @@ export function decodeClabe(clabe: string): DecodedCLABE | null {
     bankInfo = {
       code: bankData.code,
       name: bankData.name,
-      fullName: bankData.full_name,
-      rfc: bankData.rfc,
+      fullName: bankData.full_name ?? undefined,
+      rfc: bankData.rfc ?? undefined,
       spei: bankData.spei,
     };
   }
