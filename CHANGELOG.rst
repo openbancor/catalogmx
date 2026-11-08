@@ -2,6 +2,13 @@
 Changelog
 =========
 
+0.8.1 (2026-11-08)
+-----------------------------------------
+
+* Package an offline ``banxico.reference`` bootstrap (``data/bootstrap/banxico/banks.json``,
+  ``kind=directory``) and add ``BankCatalog.reload()``.
+* Include the 5-digit SPEI participant codes and historical-bank status.
+
 0.8.0 (2026-09-18)
 -----------------------------------------
 
