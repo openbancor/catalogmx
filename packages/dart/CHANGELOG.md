@@ -2,17 +2,23 @@
 
 All notable changes to the Dart/Flutter version of catalogmx will be documented in this file.
 
-## [0.8.0] - 2026-09-18
+## [0.9.0] - 2026-11-08
 
 ### Changed
-- Synchronized the package version for the catalogmx 0.8.0 multi-platform release.
-- Added the versioned recargos por mora catalog to the shared release contents.
+- Synchronized the package version for the catalogmx 0.9.0 multi-platform release.
+- **Behaviour change:** `DataUpdaterConfig.autoUpdate` now defaults to `false` (offline by default); set `autoUpdate: true` to download dynamic Banxico data.
 
 ## [0.8.1] - 2026-11-08
 
 ### Changed
 - Synchronized the package version for the catalogmx 0.8.1 multi-platform release.
 - Includes the SPEI participant codes and the packaged offline Banxico bootstrap shared with the Python release.
+
+## [0.8.0] - 2026-09-18
+
+### Changed
+- Synchronized the package version for the catalogmx 0.8.0 multi-platform release.
+- Added the versioned recargos por mora catalog to the shared release contents.
 
 ## [0.7.0] - 2026-08-30
 

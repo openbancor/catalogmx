@@ -67,7 +67,7 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  catalogmx: ^0.8.1
+  catalogmx: ^0.9.0
 ```
 
 Then run:
