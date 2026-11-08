@@ -46,7 +46,7 @@ import com.openbancor.catalogmx.data.DataUpdaterConfig
 /**
  * Library version
  */
-const val CATALOGMX_VERSION = "0.8.1"
+const val CATALOGMX_VERSION = "0.9.0"
 
 // ============================================================================
 // Data Configuration

@@ -2,6 +2,13 @@
 Changelog
 =========
 
+.. note:: 0.9.0 changes the default data mode to ``offline`` (``CATALOGMX_DATA_MODE=fetch-missing`` restores the previous behaviour); see CHANGELOG.md.
+
+0.9.0 (2026-11-08)
+-----------------------------------------
+
+* Default data mode is now ``offline``; set ``CATALOGMX_DATA_MODE=fetch-missing`` to download missing datasets. ``CATALOGMX_AUTO_UPDATE`` defaults to ``false``.
+
 0.8.1 (2026-11-08)
 -----------------------------------------
 
