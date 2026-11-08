@@ -1,5 +1,7 @@
 # 🚀 Flujo de Publicación a main/master
 
+> **Modo de datos:** desde este cambio el modo por defecto del resolvedor es `offline` (cambio de comportamiento: corresponde a versión **menor**, no parche). Los entornos de CI que necesiten descargar deben fijar `CATALOGMX_DATA_MODE=fetch-missing` (los workflows de datos ya lo hacen). El comportamiento anterior se recupera con esa variable.
+
 ## Antes de Commitear
 
 ### 1. Ejecutar el Script de Validación Completo

@@ -101,9 +101,7 @@ def mapped_downloader(manifest_payload: bytes, artifact_payload: bytes):
     return download, calls
 
 
-def test_configured_shared_data_is_strict_and_wins(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-):
+def test_configured_shared_data_is_strict_and_wins(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     shared = tmp_path / "shared"
     (shared / "banxico").mkdir(parents=True)
     (shared / "banxico" / "banks.json").write_text("[]\n", encoding="utf-8")
@@ -130,6 +128,7 @@ def test_fetch_missing_verifies_release_and_reuses_content_addressed_cache(tmp_p
     _, manifest_payload, artifact_payload = release_fixture()
     download, calls = mapped_downloader(manifest_payload, artifact_payload)
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache",
         contract=contract(),
         downloader=download,
@@ -145,6 +144,7 @@ def test_fetch_missing_verifies_release_and_reuses_content_addressed_cache(tmp_p
         raise AssertionError(f"cached lookup should not fetch: {url}")
 
     cached = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache",
         contract=contract(),
         downloader=fail_network,
@@ -158,6 +158,7 @@ def test_checksum_failure_does_not_publish_current_cache(tmp_path: Path):
     broken = artifact_payload + b"corrupt"
     download, _ = mapped_downloader(manifest_payload, broken)
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache",
         contract=contract(),
         downloader=download,
@@ -173,6 +174,7 @@ def test_manifest_rejects_non_hex_content_hash_before_cache_path_use(tmp_path: P
     manifest["dataset"]["content_sha256"] = "../" * 21 + "x"
     download, _ = mapped_downloader(json.dumps(manifest).encode(), artifact_payload)
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache",
         contract=contract(),
         downloader=download,
@@ -215,6 +217,7 @@ def test_archive_rejects_unsafe_member_path(tmp_path: Path, member_path: str):
     _, manifest_payload, artifact_payload = release_fixture(member_path=member_path)
     download, _ = mapped_downloader(manifest_payload, artifact_payload)
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache",
         contract=contract(),
         downloader=download,
@@ -229,6 +232,7 @@ def test_archive_rejects_duplicate_manifest_members_and_size_drift(tmp_path: Pat
     manifest["dataset"]["files"].append(dict(manifest["dataset"]["files"][0]))
     download, _ = mapped_downloader(json.dumps(manifest).encode(), artifact_payload)
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache-a",
         contract=contract(),
         downloader=download,
@@ -240,6 +244,7 @@ def test_archive_rejects_duplicate_manifest_members_and_size_drift(tmp_path: Pat
     manifest["dataset"]["files"][0]["bytes"] += 1
     download, _ = mapped_downloader(json.dumps(manifest).encode(), artifact_payload)
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache-b",
         contract=contract(),
         downloader=download,
@@ -258,6 +263,7 @@ def test_verify_detects_cached_file_and_manifest_tampering(tmp_path: Path):
     _, manifest_payload, artifact_payload = release_fixture()
     download, _ = mapped_downloader(manifest_payload, artifact_payload)
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache",
         contract=contract(),
         downloader=download,
@@ -280,14 +286,13 @@ def test_profile_materialization_creates_shared_root_and_manifest(tmp_path: Path
     _, manifest_payload, artifact_payload = release_fixture()
     download, _ = mapped_downloader(manifest_payload, artifact_payload)
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache",
         contract=contract(),
         downloader=download,
     )
     destination = resolver.materialize_profile("payglobal", tmp_path / "shared")
     assert (destination / "banxico" / "banks.json").exists()
-    assert (
-        destination / ".catalogmx" / "manifests" / "banxico.reference.json"
-    ).exists()
+    assert (destination / ".catalogmx" / "manifests" / "banxico.reference.json").exists()
     assert resolver.verify_profile("payglobal") == {"banxico.reference": True}
     assert resolver.dataset_ids_for_profile("core") == []

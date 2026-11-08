@@ -25,7 +25,7 @@ DEFAULT_RELEASE_BASE_URL = "https://github.com/openbancor/catalogmx/releases/dow
 DEFAULT_RELEASE_METADATA_BASE_URL = (
     "https://api.github.com/repos/openbancor/catalogmx/releases/tags"
 )
-DEFAULT_DATA_MODE = "fetch-missing"
+DEFAULT_DATA_MODE = "offline"
 ALLOWED_DATA_MODES = {"offline", "fetch-missing", "refresh"}
 CONTRACT_RESOURCE = "dataset_contract.json"
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -418,7 +418,12 @@ class DatasetResolver:
                 return cached[0]
             if bootstrap is not None:
                 return self._verify_bootstrap(dataset, bootstrap)
-            raise FileNotFoundError(f"dataset {dataset_id} is unavailable in offline mode")
+            raise FileNotFoundError(
+                f"dataset {dataset_id} is unavailable in offline mode (the default): "
+                "no verified cache or packaged fallback exists. To allow downloads set "
+                "CATALOGMX_DATA_MODE=fetch-missing (fetch only absent data) or "
+                "CATALOGMX_DATA_MODE=refresh (also renew stale data)"
+            )
 
         try:
             return self.fetch_dataset(dataset_id)

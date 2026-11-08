@@ -10,7 +10,7 @@ from catalogmx.data import cli as data_cli
 
 
 class FakeResolver:
-    instances: list["FakeResolver"] = []
+    instances: list[FakeResolver] = []
 
     def __init__(self, mode: str | None = None):
         self.mode = mode
@@ -127,3 +127,26 @@ def test_update_honors_offline_policy(monkeypatch):
     assert result.exit_code != 0
     assert "CATALOGMX_DATA_MODE=offline" in result.output
     assert FakeResolver.instances[-1].mode == "offline"
+
+
+def test_explicit_fetch_and_update_enable_download_despite_offline_default(monkeypatch):
+    """The default is offline, but explicit sync commands are a request to download."""
+    monkeypatch.delenv("CATALOGMX_DATA_MODE", raising=False)
+    FakeResolver.instances.clear()
+    monkeypatch.setattr(data_cli, "DatasetResolver", FakeResolver)
+    runner = CliRunner()
+
+    assert runner.invoke(data_cli.data, ["fetch", "--profile", "payglobal"]).exit_code == 0
+    assert FakeResolver.instances[-1].mode == "fetch-missing"
+
+    result = runner.invoke(data_cli.data, ["update", "--dataset", "banxico.reference"])
+    assert result.exit_code == 0
+    assert FakeResolver.instances[-1].mode == "refresh"
+
+
+def test_explicit_offline_environment_still_blocks_fetch(monkeypatch, tmp_path: Path):
+    monkeypatch.setenv("CATALOGMX_DATA_MODE", "offline")
+    monkeypatch.setenv("CATALOGMX_CACHE_DIR", str(tmp_path / "cache"))
+    result = CliRunner().invoke(data_cli.data, ["fetch", "--profile", "payglobal"])
+    assert result.exit_code != 0
+    assert "CATALOGMX_DATA_MODE=offline" in result.output

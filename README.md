@@ -84,6 +84,8 @@ cd packages/python
 uv pip install -e ".[dev]"
 ```
 
+**Data mode (offline by default):** the library never downloads data unless you ask. Without a verified cache it uses the hash-verified packaged fallback where one exists (e.g. the Banxico bank catalog) and otherwise fails closed with an error explaining how to enable downloads. To allow downloads set `CATALOGMX_DATA_MODE=fetch-missing` (only absent data) or `refresh` (also renew stale data), or run `catalogmx fetch --profile <profile>`. This is a behavior change from earlier releases, where `fetch-missing` was the default. In TypeScript, Dart and Kotlin the dynamic-data updater is likewise opt-in (`autoUpdate: true`).
+
 ### TypeScript/JavaScript
 
 ```bash

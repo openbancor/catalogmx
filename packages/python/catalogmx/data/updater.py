@@ -28,7 +28,7 @@ CACHE_DIR = default_cache_root()
 CACHE_DB = CACHE_DIR / DATABASE_NAME
 VERSION_FILE = CACHE_DIR / "version.json"
 EMBEDDED_DB = Path(__file__).parent / DATABASE_NAME
-AUTO_UPDATE_ENABLED = os.getenv("CATALOGMX_AUTO_UPDATE", "true").lower() in {
+AUTO_UPDATE_ENABLED = os.getenv("CATALOGMX_AUTO_UPDATE", "false").lower() in {
     "true",
     "1",
     "yes",

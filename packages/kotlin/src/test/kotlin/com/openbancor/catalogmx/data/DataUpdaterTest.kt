@@ -19,7 +19,7 @@ class DataUpdaterTest {
         assertEquals(".catalogmx", config.cacheDir)
         assertEquals(24, config.maxAgeHours)
         assertTrue(config.dataUrl.contains("mexico_dynamic.sqlite3"))
-        assertTrue(config.autoUpdate)
+        assertFalse(config.autoUpdate) // offline by default: opt in to downloads
     }
 
     @Test
