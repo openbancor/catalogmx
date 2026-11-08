@@ -20,6 +20,14 @@ export class BankCatalog {
   }
 
   /**
+   * Drop the in-process catalog so the next query reloads it (parity with
+   * Python ``BankCatalog.reload()``).
+   */
+  static reload(): void {
+    this._data = null;
+  }
+
+  /**
    * Get all banks
    */
   static getAll(): Bank[] {

@@ -83,3 +83,13 @@ describe('BankCatalog SPEI participant codes', () => {
     }
   });
 });
+
+describe('BankCatalog.reload', () => {
+  test('reloads the catalog and keeps lookups working', () => {
+    const before = BankCatalog.getAll();
+    BankCatalog.reload();
+    const after = BankCatalog.getAll();
+    expect(after).toEqual(before);
+    expect(BankCatalog.getBankByCode('002')).toBeDefined();
+  });
+});
