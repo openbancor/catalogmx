@@ -342,18 +342,48 @@ class DatasetResolver:
             raise RuntimeError("dataset bootstrap contract must be an object")
         if bootstrap.get("role") != "offline-fallback":
             raise RuntimeError("unsupported dataset bootstrap role")
-        if bootstrap.get("kind") != "file":
+        kind = bootstrap.get("kind")
+        if kind not in {"file", "directory"}:
             raise RuntimeError("unsupported dataset bootstrap kind")
         package_path = bootstrap.get("package_path")
         if not isinstance(package_path, str) or not package_path:
             raise RuntimeError("dataset bootstrap package_path must be a non-empty string")
         artifact = dataset["artifact"]
+        relative = _safe_relative_path(package_path)
+        package_root = Path(__file__).resolve().parents[1]
+        if kind == "directory":
+            # The directory mirrors a subset of the artifact's mount root. It is
+            # only usable together with per-file SHA-256 pins (verified lazily
+            # by ``_verify_bootstrap`` when the fallback is actually used).
+            if artifact.get("format") == "file":
+                raise RuntimeError("directory bootstrap requires an archive artifact")
+            candidate = package_root / relative
+            return candidate if candidate.is_dir() else None
         if artifact.get("format") != "file":
             raise RuntimeError("file bootstrap requires a file artifact")
-        candidate = Path(__file__).resolve().parents[1] / _safe_relative_path(package_path)
+        candidate = package_root / relative
         if candidate.name != artifact.get("file"):
             raise RuntimeError("dataset bootstrap filename mismatch")
         return candidate.parent if candidate.is_file() else None
+
+    def _verify_bootstrap(self, dataset: Mapping[str, Any], root: Path) -> Path:
+        """Fail closed unless a directory bootstrap matches its pinned hashes."""
+        bootstrap = dataset["bootstrap"]
+        if bootstrap.get("kind") != "directory":
+            return root
+        files = bootstrap.get("files")
+        if not isinstance(files, dict) or not files:
+            raise RuntimeError("dataset bootstrap files must be a non-empty object")
+        for name, expected in files.items():
+            relative = _safe_relative_path(name)
+            if not _is_sha256(expected):
+                raise RuntimeError("dataset bootstrap file hash must be sha256")
+            path = root / relative
+            if not path.is_file():
+                raise RuntimeError(f"dataset bootstrap file is missing: {name}")
+            if _sha256(path.read_bytes()) != expected:
+                raise RuntimeError(f"dataset bootstrap file hash mismatch: {name}")
+        return root
 
     def resolve_dataset_root(self, dataset_id: str) -> Path:
         dataset = self._dataset(dataset_id)
@@ -387,7 +417,7 @@ class DatasetResolver:
             if cached is not None:
                 return cached[0]
             if bootstrap is not None:
-                return bootstrap
+                return self._verify_bootstrap(dataset, bootstrap)
             raise FileNotFoundError(f"dataset {dataset_id} is unavailable in offline mode")
 
         try:
@@ -396,7 +426,7 @@ class DatasetResolver:
             if cached is not None and self.verify_cached_dataset(dataset_id):
                 return cached[0]
             if bootstrap is not None and isinstance(exc, _DatasetTransportError):
-                return bootstrap
+                return self._verify_bootstrap(dataset, bootstrap)
             raise
 
     def get_dataset_path(self, dataset_id: str, *parts: str) -> Path:
@@ -924,6 +954,25 @@ class DatasetResolver:
             shutil.rmtree(target)
 
 
+def cached_dataset_signature(dataset_id: str) -> str | None:
+    """Cheap identity of the verified-cache release for ``dataset_id``.
+
+    Reads only the small ``current.json`` state (no network, no hashing, no
+    contract load). Returns ``None`` when there is no usable cache state. Callers
+    use it to notice that a refresh replaced the cache; they must still resolve
+    through :class:`DatasetResolver` to obtain verified data.
+    """
+    state_path = default_cache_root() / "datasets" / dataset_id / "current.json"
+    try:
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(state, dict):
+        return None
+    content_sha = state.get("content_sha256")
+    return content_sha if _is_sha256(content_sha) else None
+
+
 def get_dataset_root(dataset_id: str) -> Path:
     return DatasetResolver().resolve_dataset_root(dataset_id)
 
@@ -935,6 +984,7 @@ def get_dataset_path(dataset_id: str, *parts: str) -> Path:
 __all__ = [
     "ALLOWED_DATA_MODES",
     "DatasetResolver",
+    "cached_dataset_signature",
     "get_dataset_path",
     "get_dataset_root",
     "load_dataset_contract",

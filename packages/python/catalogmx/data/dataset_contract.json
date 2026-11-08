@@ -10,6 +10,14 @@
         "mount_path": "banxico",
         "version": "1"
       },
+      "bootstrap": {
+        "files": {
+          "banks.json": "af5e23258d3761f1886f67e3a855684ae7a970106e18e99adff21904de34dd38"
+        },
+        "kind": "directory",
+        "package_path": "data/bootstrap/banxico",
+        "role": "offline-fallback"
+      },
       "freshness": {
         "max_age_days": 31,
         "mode": "interval",

@@ -7,8 +7,11 @@ participating in the SPEI (Sistema de Pagos Electrónicos Interbancarios).
 
 import json
 
+from catalogmx.data.resolver import cached_dataset_signature
 from catalogmx.utils.shared_data import get_shared_data_path
 from catalogmx.utils.text import normalize_text
+
+_DATASET_ID = "banxico.reference"
 
 
 class BankCatalog:
@@ -21,11 +24,31 @@ class BankCatalog:
     _bank_by_spei_code: dict[str, dict] | None = None
     _bank_by_name: dict[str, dict] | None = None
     _bank_by_name_normalized: dict[str, dict] | None = None
+    _cache_signature: str | None = None
+
+    @classmethod
+    def reload(cls) -> None:
+        """Drop the in-process catalog so the next query re-resolves it."""
+        cls._data = None
+        cls._bank_by_code = None
+        cls._bank_by_spei_code = None
+        cls._bank_by_name = None
+        cls._bank_by_name_normalized = None
+        cls._cache_signature = None
 
     @classmethod
     def _load_data(cls) -> None:
-        """Load bank data from JSON file"""
+        """Load bank data from JSON file.
+
+        The catalog is reloaded when the verified dataset cache is replaced
+        (new content hash). The check only reads the small cache state file;
+        it never downloads on the query path.
+        """
+        signature = cached_dataset_signature(_DATASET_ID)
+        if cls._data is not None and signature != cls._cache_signature:
+            cls.reload()
         if cls._data is None:
+            cls._cache_signature = signature
             shared_data_path = get_shared_data_path("banxico", "banks.json")
 
             with open(shared_data_path, encoding="utf-8") as f:

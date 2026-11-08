@@ -449,6 +449,14 @@
         "format": "tar.gz",
         "mount_path": "banxico"
       },
+      "bootstrap": {
+        "kind": "directory",
+        "package_path": "data/bootstrap/banxico",
+        "role": "offline-fallback",
+        "files": {
+          "banks.json": "af5e23258d3761f1886f67e3a855684ae7a970106e18e99adff21904de34dd38"
+        }
+      },
       "local_paths": [
         "packages/shared-data/banxico"
       ],
