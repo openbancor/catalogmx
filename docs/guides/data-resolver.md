@@ -20,9 +20,11 @@ Resolution occurs on explicit fetch or first access to a dataset-aware API. The 
 
 `CATALOGMX_DATA_MODE` is explicit:
 
-- `offline` — never use the network;
-- `fetch-missing` — default; fetch only when no usable local dataset exists;
+- `offline` — default; never use the network. With no verified cache it uses a hash-verified packaged fallback where one exists (e.g. `banxico.reference`) and otherwise fails closed with an error explaining how to enable downloads;
+- `fetch-missing` — opt-in; fetch only when no usable local dataset exists;
 - `refresh` — use the dataset freshness policy and refresh stale verified cache entries.
+
+The default changed from `fetch-missing` to `offline`: no consumer downloads unless it asks. Set `CATALOGMX_DATA_MODE=fetch-missing` (or `refresh`) for the previous behavior. The explicit `catalogmx fetch` / `catalogmx data update` commands count as a request to download and work without the variable, unless `CATALOGMX_DATA_MODE=offline` is set explicitly. The legacy `CATALOGMX_AUTO_UPDATE` flag now defaults to `false` as well (set it to `true` to opt in).
 
 `fetch-missing` deliberately does **not** become `refresh` when a cache entry ages. The modes are separate operational policies.
 

@@ -2,11 +2,25 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import click
 
 from catalogmx.data.resolver import DatasetResolver
+
+
+def _sync_resolver() -> DatasetResolver:
+    """Resolver for explicit synchronization commands.
+
+    The default data mode is ``offline``, but running ``fetch``/``update`` is itself
+    a request to download. An explicitly configured ``CATALOGMX_DATA_MODE`` still
+    wins, so ``offline`` keeps blocking synchronization.
+    """
+    resolver = DatasetResolver(mode=os.getenv("CATALOGMX_DATA_MODE") or "fetch-missing")
+    if resolver.mode == "offline":
+        raise click.ClickException("dataset update is disabled while CATALOGMX_DATA_MODE=offline")
+    return resolver
 
 
 def _echo_profile_status(profile: str) -> None:
@@ -48,7 +62,7 @@ def data_status(profile: str) -> None:
 )
 def data_fetch(profile: str, dest: Path | None) -> None:
     """Fetch a data profile and optionally materialize it to a shared root."""
-    resolver = DatasetResolver()
+    resolver = _sync_resolver()
     if dest is not None:
         root = resolver.materialize_profile(profile, dest)
         click.echo(f"Materialized {profile} at {root}")
@@ -66,9 +80,7 @@ def data_fetch(profile: str, dest: Path | None) -> None:
 @click.option("--dataset", "dataset_id", required=True)
 def data_update(dataset_id: str) -> None:
     """Force synchronization of one dataset release into the local cache."""
-    resolver = DatasetResolver()
-    if resolver.mode == "offline":
-        raise click.ClickException("dataset update is disabled while CATALOGMX_DATA_MODE=offline")
+    resolver = _sync_resolver()
     resolver.mode = "refresh"
     root = resolver.fetch_dataset(dataset_id)
     click.echo(f"{dataset_id}: {root}")

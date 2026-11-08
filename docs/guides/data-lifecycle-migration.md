@@ -42,7 +42,7 @@ The Python `DataUpdater` API is the first completed example: it retains the hist
 - `CATALOGMX_CACHE_TTL=86400` sets a 24-hour operational TTL override;
 - `CATALOGMX_DATA_MODE=fetch-missing` only fetches absent data;
 - `CATALOGMX_DATA_MODE=refresh` evaluates TTL/freshness;
-- `CATALOGMX_DATA_MODE=offline` prohibits network access.
+- `CATALOGMX_DATA_MODE=offline` (default) prohibits network access; set `fetch-missing` or `refresh` to allow downloads.
 
 `catalogmx fetch` is a synchronization operation. A bootstrap fallback does not make a failed explicit synchronization appear successful.
 
@@ -85,7 +85,7 @@ If a verified cache already exists, that cache outranks the bootstrap even in of
 
 ### Network outage on first use
 
-In `fetch-missing` mode CatalogMX first attempts the verified release. If the request fails and there is no verified cache, `banxico.sie_dynamic` may use its declared bootstrap. Once connectivity returns, an explicit synchronization performs a real fetch and verification:
+In `fetch-missing` mode (opt-in; the default is `offline`) CatalogMX first attempts the verified release. If the request fails and there is no verified cache, `banxico.sie_dynamic` may use its declared bootstrap. Once connectivity returns, an explicit synchronization performs a real fetch and verification:
 
 ```bash
 catalogmx fetch --profile banxico-dynamic

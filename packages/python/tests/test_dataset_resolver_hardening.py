@@ -138,6 +138,7 @@ def test_release_pointer_resolves_only_immutable_assets(tmp_path: Path):
     _, manifest_payload, artifact_payload = release_fixture()
     download, calls = pointer_downloader(manifest_payload, artifact_payload)
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache",
         contract=contract(discovery="release-pointer"),
         downloader=download,
@@ -166,6 +167,7 @@ def test_release_pointer_rejects_manifest_content_mismatch(tmp_path: Path):
         pointer_sha="b" * 64,
     )
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache",
         contract=contract(discovery="release-pointer"),
         downloader=download,
@@ -178,6 +180,7 @@ def test_release_pointer_rejects_manifest_content_mismatch(tmp_path: Path):
 def test_explicit_fetch_repairs_corrupt_content_addressed_object(tmp_path: Path):
     _, manifest_payload, artifact_payload = release_fixture()
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache",
         contract=contract(),
         downloader=direct_downloader(manifest_payload, artifact_payload),
@@ -199,6 +202,7 @@ def test_fetch_missing_repairs_corrupt_cache_before_returning(
 ):
     _, manifest_payload, artifact_payload = release_fixture()
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache",
         contract=contract(),
         downloader=direct_downloader(manifest_payload, artifact_payload),
@@ -221,6 +225,7 @@ def test_offline_resolution_fails_closed_on_corrupt_cache(
     _, manifest_payload, artifact_payload = release_fixture()
     cache_dir = tmp_path / "cache"
     online = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=cache_dir,
         contract=contract(),
         downloader=direct_downloader(manifest_payload, artifact_payload),
@@ -272,6 +277,7 @@ def test_offline_fetch_profile_rejects_without_downloading(tmp_path: Path):
 def _prepared_stage(tmp_path: Path):
     manifest, manifest_payload, artifact_payload = release_fixture()
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache",
         contract=contract(),
         downloader=direct_downloader(manifest_payload, artifact_payload),
@@ -364,6 +370,7 @@ def test_older_candidate_cannot_replace_current_release_state(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
     resolver = DatasetResolver(
+        mode="fetch-missing",
         cache_dir=tmp_path / "cache",
         contract=contract(discovery="release-pointer"),
         downloader=lambda url: (_ for _ in ()).throw(AssertionError(url)),

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Cambiado
+- **Cambio de comportamiento (corresponde a versión menor, no parche):** el modo de datos por defecto es `offline`; para el comportamiento anterior fija `CATALOGMX_DATA_MODE=fetch-missing`. Ningún consumidor descarga datos sin pedirlo. Sin caché verificada se usa el respaldo empaquetado verificado por hash donde existe (`banxico.reference`) y, donde no existe, falla cerrado con un error que indica `CATALOGMX_DATA_MODE=fetch-missing` o `refresh`. `catalogmx fetch` y `catalogmx data update` siguen descargando sin la variable (salvo `CATALOGMX_DATA_MODE=offline` explícito), y `CATALOGMX_AUTO_UPDATE` ahora vale `false` por defecto (Python). TypeScript, Dart y Kotlin: `autoUpdate` pasa a `false` por defecto en `DataUpdaterConfig` (actualizador de datos dinámicos de Banxico); para descargar, `autoUpdate: true`.
+
 ## [0.8.1] - 2026-11-08
 
 ### Added

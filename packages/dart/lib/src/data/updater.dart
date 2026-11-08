@@ -74,7 +74,7 @@ class DataUpdaterConfig {
     this.maxAgeHours = 24,
     this.dataUrl =
         'https://github.com/openbancor/catalogmx/releases/download/latest/mexico_dynamic.sqlite3',
-    this.autoUpdate = true,
+    this.autoUpdate = false,
   });
 }
 

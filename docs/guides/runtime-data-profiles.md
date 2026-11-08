@@ -26,9 +26,9 @@ Each resolver-ready dataset declares a stable metadata channel in `catalog-regis
 ## Runtime policy
 
 - `CATALOGMX_SHARED_DATA` is the strict highest-priority source for deployment/Kubernetes mounts.
-- `fetch-missing` is the default and only reaches the network when a requested dataset is absent.
+- `offline` is the default: no network, packaged hash-verified fallback where declared, otherwise fail closed.
+- `fetch-missing` is opt-in and only reaches the network when a requested dataset is absent.
 - `refresh` evaluates cache freshness and can update a stale verified object.
-- `offline` prohibits network resolution.
 - `CATALOGMX_CACHE_TTL` optionally overrides the registry freshness SLA in positive integer seconds; `86400` means 24 hours.
 
 The explicit synchronization command can be written either as:

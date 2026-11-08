@@ -45,7 +45,7 @@ data class DataUpdaterConfig(
     val cacheDir: String = ".catalogmx",
     val maxAgeHours: Int = 24,
     val dataUrl: String = "https://github.com/openbancor/catalogmx/releases/download/latest/mexico_dynamic.sqlite3",
-    val autoUpdate: Boolean = true,
+    val autoUpdate: Boolean = false,
     val verbose: Boolean = false
 )
 

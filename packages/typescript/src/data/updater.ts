@@ -28,7 +28,7 @@ const DEFAULT_CONFIG: Required<DataUpdaterConfig> = {
   maxAgeHours: 24,
   dataUrl:
     'https://github.com/openbancor/catalogmx/releases/download/latest/mexico_dynamic.sqlite3',
-  autoUpdate: true,
+  autoUpdate: false,
 };
 
 /**

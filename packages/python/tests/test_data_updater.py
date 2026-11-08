@@ -46,9 +46,12 @@ def test_auto_update_delegates_to_refresh_resolver_with_legacy_24h_ttl(
     resolver = mock.Mock()
     resolver.resolve_dataset_root.return_value = root
 
-    with mock.patch(
-        "catalogmx.data.updater.DatasetResolver", return_value=resolver
-    ) as resolver_type:
+    with (
+        mock.patch.object(updater_module, "AUTO_UPDATE_ENABLED", True),
+        mock.patch(
+            "catalogmx.data.updater.DatasetResolver", return_value=resolver
+        ) as resolver_type,
+    ):
         updater = DataUpdater(cache_dir=tmp_path / "cache")
         assert updater.auto_update(max_age_hours=24) == database
 
