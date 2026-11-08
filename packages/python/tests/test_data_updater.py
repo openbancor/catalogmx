@@ -39,8 +39,9 @@ def test_verify_database_reads_dynamic_metadata(tmp_path: Path) -> None:
 
 
 def test_auto_update_delegates_to_refresh_resolver_with_legacy_24h_ttl(
-    tmp_path: Path,
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.delenv("CATALOGMX_DATA_MODE", raising=False)
     root = tmp_path / "dynamic"
     database = _database(root)
     resolver = mock.Mock()
@@ -63,7 +64,10 @@ def test_auto_update_delegates_to_refresh_resolver_with_legacy_24h_ttl(
     resolver.resolve_dataset_root.assert_called_once_with(DATASET_ID)
 
 
-def test_auto_update_disabled_delegates_to_offline_resolver(tmp_path: Path) -> None:
+def test_auto_update_disabled_delegates_to_offline_resolver(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("CATALOGMX_DATA_MODE", raising=False)
     root = tmp_path / "dynamic"
     database = _database(root)
     resolver = mock.Mock()
