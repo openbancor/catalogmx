@@ -134,7 +134,7 @@ def test_default_downloader_is_used_only_when_a_download_mode_is_requested(
 
 
 def test_refresh_returns_fresh_verified_cache_without_download(tmp_path: Path) -> None:
-    from tests.test_dataset_resolver import contract, mapped_downloader, release_fixture
+    from test_dataset_resolver import contract, mapped_downloader, release_fixture
 
     _, manifest_payload, artifact_payload = release_fixture()
     download, _ = mapped_downloader(manifest_payload, artifact_payload)
