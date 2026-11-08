@@ -42,7 +42,7 @@ Usage:
     from catalogmx.catalogs.sepomex import CodigosPostales
 """
 
-__version__ = "0.8.0"
+__version__ = "0.8.1"
 
 # =============================================================================
 # Modern Helper Functions (recommended API)
