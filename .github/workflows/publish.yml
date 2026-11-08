@@ -507,16 +507,42 @@ jobs:
           skip-existing: true
           verbose: true
 
+  # Verify the PyPI publication in its own job: a slow-to-appear index must not
+  # skip npm / pub.dev / the GitHub Release (openbancor/catalogmx#112). The SHA-256
+  # and file-set checks are unchanged and still fail this job on any mismatch.
+  verify-pypi:
+    name: Verify PyPI publication
+    runs-on: ubuntu-latest
+    needs: [preflight, publish-pypi]
+    if: >-
+      always() &&
+      needs.preflight.result == 'success' &&
+      needs.publish-pypi.result == 'success'
+    permissions:
+      contents: read
+
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+
+      - name: Download verified release artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: catalogmx-python-${{ needs.preflight.outputs.version }}
+          path: packages/python/dist
+
       - name: Verify PyPI release after publication
-        if: steps.existing.outputs.exists != 'true'
         env:
           VERSION: ${{ needs.preflight.outputs.version }}
         run: |
           set -euo pipefail
           metadata_file=$(mktemp)
-          deadline=$((SECONDS + 300))
+          deadline=$((SECONDS + 1200))
+          delay=10
           while :; do
-            http_code=$(curl --silent --show-error --location --output "$metadata_file" --write-out '%{http_code}' "https://pypi.org/pypi/catalogmx/json")
+            http_code=$(curl --silent --show-error --location --output "$metadata_file" --write-out '%{http_code}' --header 'Cache-Control: no-cache' "https://pypi.org/pypi/catalogmx/json?cb=${RANDOM}${SECONDS}")
             case "$http_code" in
               200)
                 version_ready=$(python - "$metadata_file" packages/python/dist "$VERSION" <<'PY'
@@ -539,10 +565,11 @@ jobs:
               *) echo "Unexpected PyPI metadata response: HTTP ${http_code}" >&2; exit 1 ;;
             esac
             if [ "$SECONDS" -ge "$deadline" ]; then
-              echo "PyPI release ${VERSION} did not become visible within 5 minutes" >&2
+              echo "PyPI release ${VERSION} did not become visible within 20 minutes" >&2
               exit 1
             fi
-            sleep 10
+            sleep "$delay"
+            delay=$((delay * 2 > 60 ? 60 : delay * 2))
           done
           python - "$metadata_file" packages/python/dist "$VERSION" <<'PY'
           import hashlib
@@ -705,6 +732,7 @@ jobs:
       needs.publish-npm.result == 'success'
     outputs:
       version: ${{ needs.preflight.outputs.version }}
+      published: ${{ steps.publish.outputs.published }}
     environment: pubdev
     permissions:
       contents: read
@@ -843,8 +871,34 @@ jobs:
           flutter pub publish -f
           echo "published=true" >> "$GITHUB_OUTPUT"
 
+  # Verify the pub.dev publication in its own job (see verify-pypi).
+  verify-pubdev:
+    name: Verify pub.dev publication
+    runs-on: ubuntu-latest
+    needs: [preflight, publish-pubdev]
+    if: >-
+      always() &&
+      needs.preflight.result == 'success' &&
+      needs.publish-pubdev.result == 'success' &&
+      needs.publish-pubdev.outputs.published == 'true'
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ needs.preflight.outputs.source_sha }}
+
+      - name: Download verified Dart source
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: catalogmx-dart-${{ needs.preflight.outputs.version }}
+          path: release
+
+      - name: Restore verified Dart source
+        run: tar -xzf "release/catalogmx-dart-${{ needs.preflight.outputs.version }}.tar.gz" -C .
+
       - name: Verify pub.dev release after publication
-        if: steps.publish.outputs.published == 'true'
         env:
           VERSION: ${{ needs.preflight.outputs.version }}
         run: |
@@ -922,7 +976,8 @@ jobs:
               if mismatches:
                   raise SystemExit("pub.dev post-publication mismatch: " + "; ".join(mismatches))
 
-          deadline = time.monotonic() + 300
+          deadline = time.monotonic() + 1200
+          delay = 10
           while True:
               try:
                   api = json.load(urllib.request.urlopen("https://pub.dev/api/packages/catalogmx"))
@@ -950,8 +1005,9 @@ jobs:
                           print(f"pub.dev catalogmx {version} is visible and matches the verified source")
                           break
               if time.monotonic() >= deadline:
-                  raise SystemExit(f"pub.dev release {version} did not become visible within 5 minutes")
-              time.sleep(10)
+                  raise SystemExit(f"pub.dev release {version} did not become visible within 20 minutes")
+              time.sleep(delay)
+              delay = min(delay * 2, 60)
           PY
 
   # Publish to Maven Central
@@ -1148,12 +1204,14 @@ jobs:
   create-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: [preflight, publish-pypi, publish-npm, publish-pubdev, publish-maven]
+    needs: [preflight, publish-pypi, verify-pypi, publish-npm, publish-pubdev, verify-pubdev, publish-maven]
     if: >-
       always() &&
       (needs.publish-pypi.result == 'success' || needs.publish-pypi.result == 'skipped') &&
+      (needs.verify-pypi.result == 'success' || needs.verify-pypi.result == 'skipped') &&
       needs.publish-npm.result == 'success' &&
       needs.publish-pubdev.result == 'success' &&
+      (needs.verify-pubdev.result == 'success' || needs.verify-pubdev.result == 'skipped') &&
       (needs.publish-maven.result == 'success' || needs.publish-maven.result == 'skipped')
     permissions:
       contents: write
